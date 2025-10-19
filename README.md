@@ -172,9 +172,9 @@ VITE_STRIPE_PUBLIC_KEY=your_public_key_here
 
 ## 🧑‍💻 Developer
 
-**Author:** [Your Name](https://github.com/dominionbanjo)  
-**Email:** your.email@example.com  
-**Twitter:** [@yourhandle](https://twitter.com/j_d_banjo)
+**Author:** [Dominion Adebanjo](https://github.com/dominionbanjo)  
+**Email:** dominionbanjo@gmail.com  
+**Twitter:** [@j_d_banjo](https://twitter.com/j_d_banjo)
 
 ---
 
