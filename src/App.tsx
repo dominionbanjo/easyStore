@@ -12,7 +12,7 @@ import OrdersPage from "./pages/users/OrdersPage";
 import OrderDetailsPage from "./pages/users/OrderDetailsPage";
 
 // Seller dashboard imports
-import DashboardLayout from "./modules/adminDashboard/layouts/DashboardLayout";
+import DashboardLayout from "./modules/sellerDashboard/layouts/DashboardLayout";
 import DashboardHome from "./pages/sellers/DashboardHome";
 import MyStore from "./pages/sellers/MyStore";
 import Orders from "./pages/sellers/Orders";

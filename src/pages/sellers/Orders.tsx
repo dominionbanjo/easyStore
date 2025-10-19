@@ -17,7 +17,7 @@ export default function Orders() {
   ];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 fade-in-up">
       <h2 className="text-2xl font-semibold">Orders</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
         {orders.map((order) => (

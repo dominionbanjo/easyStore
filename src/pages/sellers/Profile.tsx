@@ -56,7 +56,7 @@ export default function Profile() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 fade-in-up">
       <h2 className="text-2xl font-semibold">Profile Settings</h2>
 
       <Tabs defaultValue="personal" className="space-y-6">

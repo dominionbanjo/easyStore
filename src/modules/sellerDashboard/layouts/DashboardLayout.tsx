@@ -1,5 +1,6 @@
 import { Outlet } from "react-router-dom";
-import Sidebar from "@/modules/adminDashboard/components/Sidebar";
+// import Sidebar from "@/modules/adminDashboard/components/Sidebar";
+import Sidebar from "../components/Sidebar";
 import DashboardHeader from "../components/DashboardHeader";
 
 export default function DashboardLayout() {
@@ -18,7 +19,7 @@ export default function DashboardLayout() {
         "
       >
         <DashboardHeader />
-        <section className="p-5">
+        <section className="p-5 fade-in-up">
           <Outlet />
         </section>
       </main>

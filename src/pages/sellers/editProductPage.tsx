@@ -1,8 +1,8 @@
-import AddEditProductForm from "@/modules/adminDashboard/components/AddEditProduct";
+import AddEditProductForm from "@/modules/sellerDashboard/components/AddEditProduct";
 
 export default function AddProductPage() {
   return (
-    <div className="p-8">
+    <div className="p-8 fade-in-up">
       <AddEditProductForm />
     </div>
   );

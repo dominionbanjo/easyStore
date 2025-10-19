@@ -18,7 +18,7 @@ export default function Settings() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 fade-in-up">
       <h2 className="text-2xl font-semibold">Account Settings</h2>
 
       {/* SUBSCRIPTION PLAN */}

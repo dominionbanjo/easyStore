@@ -1,6 +1,6 @@
 "use client";
 
-import StoreProductCard from "@/modules/adminDashboard/components/StoreProductCard";
+import StoreProductCard from "@/modules/sellerDashboard/components/StoreProductCard";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -30,7 +30,7 @@ export default function MyStore() {
   ];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 fade-in-up">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-semibold">My Store</h2>
         <Button
