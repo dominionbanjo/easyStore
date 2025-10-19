@@ -22,32 +22,48 @@ export default function Sidebar() {
   const location = useLocation();
 
   return (
-    <aside className="w-64 bg-white shadow-md border-r border-border flex flex-col">
+    <aside
+      className="
+        fixed top-0 left-0 
+        h-screen w-64 
+        bg-white shadow-md border-r border-border 
+        flex flex-col justify-between
+        z-40
+      "
+    >
+      {/* Brand */}
       <div className="px-6 py-6 text-2xl font-bold text-primary">
         Easy<span className="text-secondary">Store</span>
       </div>
 
-      <nav className="flex-1 flex flex-col gap-1 px-3">
+      {/* Navigation */}
+      <nav className="flex-1 flex flex-col gap-2 px-3">
         {links.map(({ label, icon: Icon, path }) => {
-          const active = location.pathname === path;
+          // FIX: Only match exact or nested paths without false positives
+          const active =
+            location.pathname === path ||
+            (location.pathname.startsWith(path) &&
+              location.pathname.split("/").length === path.split("/").length);
+
           return (
             <Link
               key={path}
               to={path}
               className={cn(
-                "flex items-center gap-3 px-4 py-2 rounded-md text-sm font-medium transition-colors",
+                "flex items-center gap-3 px-4 py-3 rounded-md text-sm font-medium transition-colors",
                 active
-                  ? "bg-primary text-white"
+                  ? "bg-primary text-white shadow-sm"
                   : "text-muted-foreground hover:bg-muted hover:text-foreground"
               )}
             >
-              <Icon className="h-4 w-4" />
-              {label}
+              <Icon className="h-4 w-4 shrink-0" />
+              <span>{label}</span>
             </Link>
           );
         })}
       </nav>
 
+      {/* Footer */}
       <div className="p-4 border-t border-border/50 text-xs text-center text-muted-foreground">
         © 2025 EasyStore
       </div>

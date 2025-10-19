@@ -1,7 +1,7 @@
 "use client";
 
 import HomepageLayout from "@/components/layout/homepage/HomePageLayout";
-import { useParams, Link } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -37,6 +37,8 @@ const mockOrders = [
 
 export default function OrderDetailsPage() {
   const { id } = useParams();
+  const navigate = useNavigate();
+
   const order = mockOrders.find((o) => o.id === Number(id));
 
   if (!order) {
@@ -68,20 +70,22 @@ export default function OrderDetailsPage() {
     <HomepageLayout>
       <main className="min-h-screen bg-emerald-50 px-6 py-16">
         <div className="max-w-4xl mx-auto">
+          {/* Back Button */}
           <div className="flex items-center gap-3 mb-10">
-            <Link to="/orders">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="flex items-center gap-2"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                Back
-              </Button>
-            </Link>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="flex items-center gap-2"
+              onClick={() => navigate(-1)} // 👈 go one step back
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back
+            </Button>
+
             <h1 className="text-3xl font-bold text-primary">Order Details</h1>
           </div>
 
+          {/* Order Card */}
           <Card className="rounded-2xl shadow-sm bg-white overflow-hidden">
             <img
               src={order.image}
@@ -134,11 +138,12 @@ export default function OrderDetailsPage() {
               </div>
 
               <div className="pt-6 flex justify-end">
-                <Link to={`/product/${order.id}`}>
-                  <Button className="rounded-full px-6 bg-primary text-primary-foreground hover:bg-primary/90">
-                    View Product
-                  </Button>
-                </Link>
+                <Button
+                  onClick={() => navigate(`/product/${order.id}`)}
+                  className="rounded-full px-6 bg-primary text-primary-foreground hover:bg-primary/90"
+                >
+                  View Product
+                </Button>
               </div>
             </CardContent>
           </Card>

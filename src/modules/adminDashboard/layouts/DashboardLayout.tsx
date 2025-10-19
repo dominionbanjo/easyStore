@@ -1,22 +1,27 @@
-"use client";
-
 import { Outlet } from "react-router-dom";
+import Sidebar from "@/modules/adminDashboard/components/Sidebar";
 import DashboardHeader from "../components/DashboardHeader";
-import Sidebar from "../components/Sidebar";
 
 export default function DashboardLayout() {
   return (
-    <div className="min-h-screen flex bg-emerald-50 text-foreground">
-      {/* Sidebar */}
+    <div className="min-h-screen bg-emerald-50">
+      {/* Sidebar (fixed) */}
       <Sidebar />
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col">
+      <main
+        className="
+          md:ml-64 
+          pt-16 md:pt-0 
+          overflow-y-auto 
+          h-screen 
+        "
+      >
         <DashboardHeader />
-        <main className="flex-1 px-6 py-8 overflow-y-auto">
+        <section className="p-5">
           <Outlet />
-        </main>
-      </div>
+        </section>
+      </main>
     </div>
   );
 }
