@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -7,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { useState } from "react";
+import UploadArea from "@/components/shared/UploadArea";
 
 const ProductSchema = z.object({
   name: z.string().min(2, "Product name is required"),
@@ -26,22 +27,28 @@ export default function AddEditProductForm({
   isEditing?: boolean;
 }) {
   const [images, setImages] = useState<File[]>([]);
-  const { register, handleSubmit, reset } = useForm<ProductFormValues>({
-    resolver: zodResolver(ProductSchema),
-    defaultValues,
-  });
+  const { register, handleSubmit, reset, formState } =
+    useForm<ProductFormValues>({
+      resolver: zodResolver(ProductSchema),
+      defaultValues,
+    });
+
+  const { errors } = formState;
 
   const onSubmit = (data: ProductFormValues) => {
     if (images.length < 3) {
       toast.error("Please upload at least 3 images.");
       return;
     }
-    console.log("Product submitted:", { ...data, images });
+
+    console.log("Submitted Product:", { ...data, images });
+
     toast.success(
       isEditing
         ? "Product updated successfully!"
         : "Product added successfully!"
     );
+
     reset();
     setImages([]);
   };
@@ -60,66 +67,103 @@ export default function AddEditProductForm({
   };
 
   return (
-    <div className="max-w-2xl mx-auto bg-white p-8 rounded-2xl shadow-sm">
-      <h2 className="text-2xl font-semibold mb-6">
+    <div className="max-w-3xl mx-auto bg-white p-10 rounded-2xl shadow-md border border-gray-100">
+      <h2 className="text-3xl font-bold mb-8 text-gray-800">
         {isEditing ? "Edit Product" : "Add New Product"}
       </h2>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        <div>
-          <Label>Product Name</Label>
-          <Input placeholder="Enter product name" {...register("name")} />
-        </div>
-
-        <div>
-          <Label>Price</Label>
-          <Input type="text" placeholder="$120" {...register("price")} />
-        </div>
-
-        <div>
-          <Label>Category</Label>
-          <Input placeholder="e.g. Fashion" {...register("category")} />
-        </div>
-
-        <div>
-          <Label>Description</Label>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+        {/* Product Name */}
+        <div className="space-y-2">
+          <Label className="text-gray-700 font-medium">Product Name</Label>
           <Input
-            placeholder="Write a short description..."
-            {...register("description")}
+            placeholder="Enter product name"
+            {...register("name")}
+            className="rounded-md h-11"
           />
+          {errors.name && (
+            <p className="text-red-500 text-xs">{errors.name.message}</p>
+          )}
         </div>
 
-        <div>
-          <Label>Product Images (min 3)</Label>
+        {/* Price */}
+        <div className="space-y-2">
+          <Label className="text-gray-700 font-medium">Price</Label>
           <Input
-            type="file"
-            multiple
-            accept="image/*"
+            type="text"
+            placeholder="$120"
+            {...register("price")}
+            className="rounded-md h-11"
+          />
+          {errors.price && (
+            <p className="text-red-500 text-xs">{errors.price.message}</p>
+          )}
+        </div>
+
+        {/* Category */}
+        <div className="space-y-2">
+          <Label className="text-gray-700 font-medium">Category</Label>
+          <Input
+            placeholder="e.g. Fashion, Electronics"
+            {...register("category")}
+            className="rounded-md h-11"
+          />
+          {errors.category && (
+            <p className="text-red-500 text-xs">{errors.category.message}</p>
+          )}
+        </div>
+
+        {/* Description */}
+        <div className="space-y-2">
+          <Label className="text-gray-700 font-medium">Description</Label>
+          <textarea
+            {...register("description")}
+            placeholder="Write a short description..."
+            className="w-full h-28 border rounded-md p-3 resize-none focus:ring-2 focus:ring-primary focus:outline-none"
+          />
+          {errors.description && (
+            <p className="text-red-500 text-xs">{errors.description.message}</p>
+          )}
+        </div>
+
+        {/* Image Upload Section */}
+        <div className="space-y-2">
+          <Label className="text-gray-700 font-medium">
+            Product Images (min 3)
+          </Label>
+
+          <UploadArea
+            id="product-images"
+            label="Upload Product Images"
             onChange={handleImageUpload}
           />
-          <div className="mt-3 flex flex-wrap gap-4">
-            {images.map((file, index) => (
-              <div key={index} className="relative">
-                <img
-                  src={URL.createObjectURL(file)}
-                  alt="Preview"
-                  className="h-24 w-24 object-cover rounded-lg border"
-                />
-                <button
-                  type="button"
-                  onClick={() => removeImage(index)}
-                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
-                >
-                  ✕
-                </button>
-              </div>
-            ))}
-          </div>
+
+          {images.length > 0 && (
+            <div className="mt-4 flex flex-wrap gap-4">
+              {images.map((file, index) => (
+                <div key={index} className="relative group">
+                  <img
+                    src={URL.createObjectURL(file)}
+                    alt="Preview"
+                    className="h-24 w-24 object-cover rounded-lg border shadow-sm"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeImage(index)}
+                    className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
+        {/* Submit Button */}
         <Button
           type="submit"
-          className="w-full bg-primary text-white rounded-full hover:bg-primary/90"
+          className="w-full bg-primary text-white rounded-full py-3 text-base font-medium hover:bg-primary/90 transition"
         >
           {isEditing ? "Update Product" : "Add Product"}
         </Button>
