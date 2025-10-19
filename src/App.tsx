@@ -11,11 +11,21 @@ import FavouritesPage from "./pages/users/FavouritesPage";
 import OrdersPage from "./pages/users/OrdersPage";
 import OrderDetailsPage from "./pages/users/OrderDetailsPage";
 
+// Seller dashboard imports
+import DashboardLayout from "./modules/adminDashboard/layouts/DashboardLayout";
+import DashboardHome from "./pages/sellers/DashboardHome";
+import MyStore from "./pages/sellers/MyStore";
+import Orders from "./pages/sellers/Orders";
+import Profile from "./pages/sellers/Profile";
+import Settings from "./pages/sellers/Settings";
+import AddProductPage from "./pages/sellers/addProductPage";
+import EditProductPage from "./pages/sellers/editProductPage";
+
 export default function App() {
   return (
     <Router>
       <Routes>
-        {/* Main Pages */}
+        {/* Public Website Pages */}
         <Route path="/" element={<LandingPage />} />
         <Route path="/shop" element={<ShopPage />} />
         <Route path="/categories" element={<CategoriesPage />} />
@@ -24,12 +34,25 @@ export default function App() {
         <Route path="/orders" element={<OrdersPage />} />
         <Route path="/orders/:id" element={<OrderDetailsPage />} />
 
-        {/* Auth */}
+        {/* Authentication */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
 
         {/* Misc */}
         <Route path="/about" element={<AboutPage />} />
+
+        {/* Seller Dashboard Routes */}
+        <Route path="/dashboard" element={<DashboardLayout />}>
+          <Route index element={<DashboardHome />} />
+          <Route path="store" element={<MyStore />} />
+          <Route path="store/add-product" element={<AddProductPage />} />
+          <Route path="store/edit/:id" element={<EditProductPage />} />
+          <Route path="orders" element={<Orders />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="settings" element={<Settings />} />
+        </Route>
+
+        {/* 404 */}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>
