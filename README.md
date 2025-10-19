@@ -1,73 +1,187 @@
-# React + TypeScript + Vite
+[README.md](https://github.com/user-attachments/files/22991690/README.md)
+# 🛍️ EasyStore — Modern E-Commerce Platform (React + TypeScript + Shadcn UI)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+EasyStore is a modern, full-featured e-commerce platform built with **React**, **TypeScript**, **Vite**, and **Shadcn UI**.  
+It supports both **regular buyers** and **sellers (hosts)** with dedicated flows — including authentication, product listings, shopping, order management, and a clean, responsive seller dashboard.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Features
 
-## React Compiler
+### 🏠 Public Website
+- Beautiful **landing page** showcasing categories and featured products  
+- **Shop** page with product search and category filters  
+- **Product details** page with ratings, reviews, and add-to-cart functionality  
+- **Favourites** and **Orders** pages for buyers  
+- Fully responsive layout powered by **Shadcn UI** and **TailwindCSS**
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 👩‍💼 Seller Dashboard
+- Dedicated **dashboard for sellers/hosts** upon login  
+- Clean layout with **sidebar + header**  
+- Dashboard home with **analytics cards** (revenue, orders, rating, growth)  
+- **My Store** page listing all uploaded products  
+- **Orders** page showing all sales with statuses (Pending, Shipped, Delivered)  
+- **Profile** and **Settings** pages for personal & store customization  
+- Reusable UI components for cards, metrics, and modals  
 
-## Expanding the ESLint configuration
+### 💅 Built-In UI Components
+- Fully typed and composable **React components** using Shadcn UI  
+- **Zod + React Hook Form** for validation and form management  
+- **Lucide Icons** for clean iconography  
+- **Framer Motion** support for subtle animations  
+- Toast notifications and loading skeletons included
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 🧱 Tech Stack
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+| Layer | Technology |
+|-------|-------------|
+| Frontend Framework | **React 18 + Vite** |
+| Language | **TypeScript** |
+| Styling | **TailwindCSS + Shadcn UI** |
+| Form Handling | **React Hook Form + Zod** |
+| Icons | **Lucide React** |
+| State & Routing | **React Router DOM v6** |
+| Charts (optional) | **Recharts** |
+| Notifications | **Sonner / Toastify** |
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+---
+
+## 🗂️ Folder Structure
+
+```
+src/
+ ├── components/
+ │   ├── layout/
+ │   │   ├── homepage/
+ │   │   │   └── HomePageLayout.tsx
+ │   │   └── dashboard/
+ │   │       ├── DashboardLayout.tsx
+ │   │       ├── Sidebar.tsx
+ │   │       └── DashboardHeader.tsx
+ │   ├── cards/
+ │   │   ├── OrderCard.tsx
+ │   │   └── ProductCard.tsx
+ │   └── ui/...
+ │
+ ├── pages/
+ │   ├── website/
+ │   │   ├── LandingPage.tsx
+ │   │   ├── AboutPage.tsx
+ │   │   ├── ShopPage.tsx
+ │   │   └── ProductDetails.tsx
+ │   ├── auth/
+ │   │   ├── Login.tsx
+ │   │   └── Signup.tsx
+ │   ├── buyer/
+ │   │   ├── FavouritesPage.tsx
+ │   │   └── OrdersPage.tsx
+ │   └── dashboard/
+ │       ├── DashboardHome.tsx
+ │       ├── MyStore.tsx
+ │       ├── Orders.tsx
+ │       ├── Profile.tsx
+ │       └── Settings.tsx
+ │
+ ├── constants/
+ │   └── routes.ts
+ │
+ ├── lib/
+ │   └── utils.ts
+ │
+ └── App.tsx
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## ⚙️ Setup & Installation
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 1️⃣ Clone the Repository
+```bash
+git clone https://github.com/<your-username>/easystore.git
+cd easystore
 ```
+
+### 2️⃣ Install Dependencies
+```bash
+npm install
+# or
+yarn install
+```
+
+### 3️⃣ Start the Development Server
+```bash
+npm run dev
+# or
+yarn dev
+```
+
+### 4️⃣ Build for Production
+```bash
+npm run build
+```
+
+---
+
+## 🧩 Environment Variables
+
+Create a `.env` file in the project root:
+
+```
+VITE_API_BASE_URL=https://api.easystore.com
+VITE_CLOUDINARY_KEY=your_key_here
+VITE_CLOUDINARY_SECRET=your_secret_here
+VITE_STRIPE_PUBLIC_KEY=your_public_key_here
+```
+
+---
+
+## 🎨 UI & Components
+
+- Built entirely with **Shadcn UI** + **TailwindCSS**
+- Reusable design system:
+  - `Button`, `Card`, `Badge`, `Input`, `Separator`
+  - `Sheet`, `Dialog`, `Toast`, `Skeleton`
+- Consistent brand theme (`bg-primary`, `text-secondary`)
+
+---
+
+## 🧠 Key Components
+
+| Component | Purpose |
+|------------|----------|
+| `ProductCard` | Displays a product with image, rating, and like button |
+| `OrderCard` | Displays a user’s or seller’s order summary |
+| `DashboardLayout` | Base layout for all seller pages |
+| `Sidebar` | Seller dashboard navigation |
+| `DashboardHeader` | Top header with avatar and actions |
+
+---
+
+## 🧪 Roadmap
+
+- [ ] Integrate Paystack/Stripe payments  
+- [ ] Add cart and checkout flow  
+- [ ] Connect backend (Node.js )  
+- [ ] Add product analytics charts  
+- [ ] Seller revenue breakdowns  
+- [ ] Live notifications and real-time updates  
+
+---
+
+## 🧑‍💻 Developer
+
+**Author:** [Your Name](https://github.com/dominionbanjo)  
+**Email:** your.email@example.com  
+**Twitter:** [@yourhandle](https://twitter.com/j_d_banjo)
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
+
+---
+
+> ⚡ *Built with passion using React, TypeScript, and Shadcn UI.*
