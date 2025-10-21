@@ -6,7 +6,7 @@ import ProductCard from "@/components/shared/ProductCard";
 
 export default function LandingPage() {
   const categories = [
-    { name: "Fashion", image: "/images/fashion.jpg" },
+    { name: "Fashion", image: "/images/fashion.png" },
     { name: "Electronics", image: "/images/electronics.jpg" },
     { name: "Home & Living", image: "/images/home.jpg" },
     { name: "Beauty", image: "/images/beauty.jpg" },
