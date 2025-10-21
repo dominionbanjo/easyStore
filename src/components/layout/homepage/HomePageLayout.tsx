@@ -8,10 +8,14 @@ interface HomepageLayoutProps {
 
 export default function HomepageLayout({ children }: HomepageLayoutProps) {
   return (
-    <div className="min-h-screen flex flex-col bg-emerald-50 text-foreground ">
+    <div className="min-h-screen flex flex-col ">
       <Header />
-      <main className="flex-1 fade-in-up">{children}</main>
+      <main className="flex-1 fade-in-up mt-6 md:mt-8 lg:mt-12">
+        {children}
+      </main>
       <Footer />
     </div>
   );
 }
+
+
