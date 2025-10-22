@@ -1,4 +1,3 @@
-
 // "use client";
 
 // import { motion, type Variants } from "framer-motion";
@@ -28,7 +27,6 @@
 //                 <div className="absolute inset-0 bg-[radial-gradient(100%_100%_at_0%_0%,rgba(0,0,0,0.02)_0%,transparent_70%)]" />
 //             </div>
 
-
 //             <div className="flex justify-center w-full">
 //                 <div className="max-w-[1800px] w-full px-7 sm:px-8 flex flex-col items-center lg:flex-row lg:items-center lg:justify-between gap-12">
 
@@ -50,7 +48,7 @@
 //                             transition={{ delay: 0.2 }}
 //                             className="mt-6 max-w-xl mx-auto lg:mx-0  text-lg sm:text-xl leading-relaxed"
 //                         >
-//                             Shop the best deals in fashion, electronics, home decor, and more 
+//                             Shop the best deals in fashion, electronics, home decor, and more
 //                             all curated for your lifestyle.
 //                         </motion.p>
 
@@ -71,7 +69,6 @@
 //                         </motion.div>
 //                     </div>
 
-
 //                     <motion.div
 //                         variants={transitionVariants}
 //                         initial="hidden"
@@ -81,11 +78,11 @@
 //                     >
 //                         <div
 //                             className="
-//       relative w-full max-w-lg       
-//       aspect-[5/3]                 
+//       relative w-full max-w-lg
+//       aspect-[5/3]
 //       rounded-3xl overflow-hidden
 //       bg-muted shadow-lg border border-border/20
-//       lg:max-w-xl xl:max-w-2xl       
+//       lg:max-w-xl xl:max-w-2xl
 //       transition-all duration-500 ease-in-out
 //     "
 //                         >
@@ -109,7 +106,6 @@
 //                                         <img src="/logos/favicon-transparent.png" alt="logo" width={20} height={20} />
 //                                     </button>
 
-
 //                                     <div className="absolute right-full mr-3 flex items-center">
 //                                         <div
 //                                             role="tooltip"
@@ -128,13 +124,6 @@
 //         </section>
 //     );
 // }
-
-
-
-
-
-
-
 
 "use client";
 
@@ -158,9 +147,12 @@ const transitionVariants: Variants = {
 
 export default function HeroSection() {
   return (
-    <section className="relative isolate overflow-hidden  pt-32 pb-28 sm:pt-40 sm:pb-32">
+    <section className="relative isolate overflow-hidden  pt-32 pb-28 sm:pt-40 sm:pb-32 mx-auto">
       {/* ───────────── Background Layer (kept for layout, no color) ───────────── */}
-      <div aria-hidden="true" className="absolute inset-0 -z-10 overflow-hidden " />
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 -z-10 overflow-hidden "
+      />
 
       {/* ───────────── Main Container ───────────── */}
       <div className="flex justify-center w-full">
@@ -184,8 +176,8 @@ export default function HeroSection() {
               transition={{ delay: 0.2 }}
               className="mt-6 max-w-xl mx-auto lg:mx-0 text-lg sm:text-xl leading-relaxed text-foreground"
             >
-              Shop the best deals in fashion, electronics, home decor, and more —
-              all curated for your lifestyle.
+              Shop the best deals in fashion, electronics, home decor, and more
+              — all curated for your lifestyle.
             </motion.p>
 
             <motion.div
