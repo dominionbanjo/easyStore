@@ -27,7 +27,6 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // ───────────── Magnetic link ─────────────
   const MagneticLink = ({
     name,
     path,
@@ -84,17 +83,16 @@ export default function Header() {
     );
   };
 
-  // ───────────── Return ─────────────
   return (
-    <header className="fixed top-0 z-20 w-full transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]">
+    <header className="fixed top-0 z-20 w-full transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]  ">
       <nav
         className={cn(
-          "w-full fixed top-0 sm:top-3 left-1/2 -translate-x-1/2 flex items-center justify-between backdrop-blur-md border border-transparent  px-7 py-4 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
+          " w-full fixed top-0 sm:top-3 left-1/2 -translate-x-1/2 flex items-center justify-between backdrop-blur-md border border-transparent  px-7 py-4 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
 
           // Desktop-only scroll effect
           isScrolled
-            ? "sm:max-w-[98%] sm:bg-card/20 rounded-2xl sm:border-border/10 sm:shadow-sm sm:py-3 sm:px-6"
-            : "sm:max-w-[100%] sm:bg-transparent sm:py-5 sm:px-8"
+            ? "sm:max-w-[98%] sm:bg-white/50  rounded-2xl sm:border-border/10 sm:shadow-sm sm:py-3 sm:px-6"
+            : "sm:max-w-[100%]  sm:bg-white/10 sm:py-5 sm:px-8"
         )}
       >
         {/* Left Section */}
@@ -113,7 +111,7 @@ export default function Header() {
           </Link>
 
           {/* Desktop Nav Links */}
-          <nav className="hidden sm:flex items-center gap-7 text-sm font-medium">
+          <nav className="hidden sm:flex items-center gap-7 text-sm font-medium ">
             {[
               { name: "Home", path: "/" },
               { name: "Shop", path: "/shop" },

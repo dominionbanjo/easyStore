@@ -62,7 +62,7 @@ export default function CategoriesSection() {
             >
               <motion.div
                 layout
-                className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  mx-auto px-4"
+                className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5  mx-auto px-4"
               >
                 {tab.categories.map((cat, i) => (
                   <motion.div
