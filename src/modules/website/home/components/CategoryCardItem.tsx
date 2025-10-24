@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 
 interface CategoryCardProps {
   name: string;
-  image: string;
+  thumbnail: string; // can be image or video
   seller?: string;
   purchases?: number;
   likes?: number;
@@ -15,12 +15,12 @@ interface CategoryCardProps {
 
 export default function CategoryCard({
   name,
-  image,
+  thumbnail,
   seller = "Dominion",
   purchases = 12000,
   likes = 76,
 }: CategoryCardProps) {
-  const [liked, setLiked] = useState(false);``
+  const [liked, setLiked] = useState(false);
 
   const handleLike = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -32,19 +32,31 @@ export default function CategoryCard({
     });
   };
 
+  // Detect video type from file extension
+  const isVideo = /\.(mp4|webm|ogg)$/i.test(thumbnail);
+
   return (
     <div className="group relative w-full max-w-sm cursor-pointer overflow-hidden rounded-xl bg-card shadow-sm transition-all hover:shadow-lg">
-      {/* ─────── Image Layer ─────── */}
+      {/* ─────── Media Layer (Auto-detect image or video) ─────── */}
       <div className="relative h-[26rem] w-full overflow-hidden">
-        {/* ↑ increased height from h-64 (~16rem) to h-[22rem] */}
+        {isVideo ? (
+          <video
+            src={thumbnail}
+            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+            autoPlay
+            loop
+            muted
+            playsInline
+          />
+        ) : (
+          <img
+            src={thumbnail}
+            alt={name}
+            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+          />
+        )}
 
-        <img
-          src={image}
-          alt={name}
-          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-        />
-
-        {/* Gradient (sits behind hover elements) */}
+        {/* Overlay Gradient */}
         <div className="absolute inset-0 z-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent transition-opacity duration-700 group-hover:opacity-100" />
 
         {/* Like Button (top-right) */}
@@ -63,7 +75,7 @@ export default function CategoryCard({
           />
         </motion.button>
 
-        {/* Always-visible title (bottom-left) */}
+        {/* Always-visible title */}
         <div className="absolute bottom-4 left-4 z-10 text-white">
           <h3 className="text-xl font-semibold leading-tight">{name}</h3>
           <p className="text-sm font-medium opacity-90">Story (series)</p>

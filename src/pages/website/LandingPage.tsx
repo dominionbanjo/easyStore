@@ -7,12 +7,10 @@ import TestimonialsSection from "@/modules/website/home/components/TestimonialsS
 export default function LandingPage() {
   return (
     <HomepageLayout>
-      <main className="min-h-screen flex flex-col bg-emerald-50 text-foreground">
         <HeroSection />
         <CategoriesSection />
         <FeaturedProductsSection />
         <TestimonialsSection />
-      </main>
     </HomepageLayout>
   );
 }
