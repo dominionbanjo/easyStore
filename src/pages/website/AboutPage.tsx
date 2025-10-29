@@ -2,11 +2,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Users, Heart, ShoppingBag } from "lucide-react";
-import HomepageLayout from "@/components/layout/homepage/HomePageLayout";
 
 export default function AboutPage() {
   return (
-    <HomepageLayout>
+    <>
       <main className="min-h-screen bg-emerald-50 text-foreground">
         {/* ──────────────── HERO SECTION ──────────────── */}
         <section className="py-24 px-6 text-center bg-gradient-to-b from-white to-emerald-50">
@@ -158,6 +157,6 @@ export default function AboutPage() {
           </Button>
         </section>
       </main>
-    </HomepageLayout>
+    </>
   );
 }

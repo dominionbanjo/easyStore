@@ -5,7 +5,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Star, ShoppingCart, ChevronLeft } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import HomepageLayout from "@/components/layout/homepage/HomePageLayout";
 
 export default function ProductDetailPage() {
   const { id } = useParams(); // e.g. /product/:id
@@ -45,7 +44,7 @@ export default function ProductDetailPage() {
   };
 
   return (
-    <HomepageLayout>
+    <>
       <main className="bg-emerald-50 min-h-screen py-12">
         <div className="max-w-6xl mx-auto px-6 space-y-10">
           {/* Back Link */}
@@ -185,6 +184,6 @@ export default function ProductDetailPage() {
           </section>
         </div>
       </main>
-    </HomepageLayout>
+    </>
   );
 }

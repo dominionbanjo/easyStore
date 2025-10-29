@@ -1,6 +1,5 @@
 "use client";
 
-import HomepageLayout from "@/components/layout/homepage/HomePageLayout";
 import { useState } from "react";
 import ProductCard from "@/components/shared/ProductCard";
 import { Heart } from "lucide-react";
@@ -37,7 +36,7 @@ export default function FavouritesPage() {
   ]);
 
   return (
-    <HomepageLayout>
+    <>
       <main className="min-h-screen bg-emerald-50 px-6 py-16">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-center mb-10">
@@ -58,6 +57,6 @@ export default function FavouritesPage() {
           )}
         </div>
       </main>
-    </HomepageLayout>
+    </>
   );
 }

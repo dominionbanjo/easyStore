@@ -1,5 +1,4 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import HomepageLayout from "@/components/layout/homepage/HomePageLayout";
 
 export default function Categories() {
   const categories = [
@@ -27,7 +26,7 @@ export default function Categories() {
   ];
 
   return (
-    <HomepageLayout>
+    <>
       <main className="max-w-6xl mx-auto px-6 py-16 space-y-10">
         <div className="text-center space-y-4">
           <h1 className="text-3xl font-bold">Shop by Category</h1>
@@ -57,6 +56,6 @@ export default function Categories() {
           ))}
         </div>
       </main>
-    </HomepageLayout>
+    </>
   );
 }
