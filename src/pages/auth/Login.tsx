@@ -14,6 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Link, useNavigate } from "react-router-dom";
+import Cookies from "js-cookie"; // ✅ Add this import
 import { useLoginMutation } from "@/services/authApi";
 import { AUTH_ROUTES } from "@/routes/temp";
 import {
@@ -33,11 +34,24 @@ export default function LoginPage() {
 
   const { handleSubmit } = methods;
 
-  // ✅ Redirect on success
+  /**
+   * ✅ Auto-redirect if already logged in
+   */
+  useEffect(() => {
+    const token = Cookies.get("token");
+    if (token) {
+      console.log("🔐 Existing session detected, redirecting...");
+      navigate("/", { replace: true });
+    }
+  }, [navigate]);
+
+  /**
+   * ✅ Redirect after login success
+   */
   useEffect(() => {
     if (isSuccess) {
       toast.success("Login successful!");
-      navigate("/");
+      navigate("/", { replace: true });
     }
   }, [isSuccess, navigate]);
 
@@ -45,7 +59,7 @@ export default function LoginPage() {
     try {
       await login(data).unwrap();
     } catch (err: any) {
-      toast.error(err?.data?.message || "Invalid email or password");
+      toast.error(err?.data?.message || "Something went wrong");
     }
   };
 

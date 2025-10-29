@@ -31,6 +31,7 @@ import {
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { AUTH_ROUTES, USER_ROUTES, WEBSITE_ROUTES } from "@/routes/temp";
+import { toast } from "sonner";
 
 export default function Header() {
   const dispatch = useDispatch();
@@ -53,6 +54,7 @@ export default function Header() {
   const handleLogout = async () => {
     await logout();
     dispatch(clearUser());
+    toast.success("Logged out successfully");
   };
 
   return (
