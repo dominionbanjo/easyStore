@@ -14,6 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useVerifyOtpMutation, useResendOtpMutation } from "@/services/authApi";
 import { cn } from "@/lib/utils";
+import { WEBSITE_ROUTES } from "@/routes/temp";
 
 export default function VerifyOtpPage() {
   const navigate = useNavigate();
@@ -57,7 +58,7 @@ export default function VerifyOtpPage() {
     try {
       const res = await verifyOtp({ email, otp }).unwrap();
       toast.success(res.message || "Verification successful!");
-      navigate("/auth/login");
+      navigate(WEBSITE_ROUTES.HOME);
     } catch (error: any) {
       toast.error(error?.data?.message || "OTP verification failed");
     }
