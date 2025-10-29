@@ -20,8 +20,11 @@ const transitionVariants: Variants = {
 
 export default function HeroSection() {
   return (
-    <section className="relative isolate overflow-hidden  pt-32 pb-10 sm:pt-40 sm:pb-20 px-4">
-      <div aria-hidden="true" className="absolute inset-0 -z-10 overflow-hidden " />
+    <section className="relative isolate overflow-hidden pb-10 sm:pb-20 px-4">
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 -z-10 overflow-hidden "
+      />
       <div className="flex justify-center w-full">
         <div className="w-full  flex flex-col items-center lg:flex-row lg:items-center lg:justify-between gap-12">
           <div className="flex-1 text-center lg:text-left">
@@ -42,8 +45,8 @@ export default function HeroSection() {
               transition={{ delay: 0.2 }}
               className="mt-6 max-w-xl mx-auto lg:mx-0 text-lg sm:text-xl leading-relaxed text-foreground"
             >
-              Shop the best deals in fashion, electronics, home decor, and more —
-              all curated for your lifestyle.
+              Shop the best deals in fashion, electronics, home decor, and more
+              — all curated for your lifestyle.
             </motion.p>
 
             <motion.div

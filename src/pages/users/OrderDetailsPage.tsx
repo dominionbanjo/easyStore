@@ -1,6 +1,5 @@
 "use client";
 
-import HomepageLayout from "@/components/layout/homepage/HomePageLayout";
 import { useParams, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -43,13 +42,13 @@ export default function OrderDetailsPage() {
 
   if (!order) {
     return (
-      <HomepageLayout>
+      <>
         <main className="min-h-screen flex items-center justify-center bg-emerald-50">
           <p className="text-muted-foreground text-lg">
             Order not found or may have been deleted.
           </p>
         </main>
-      </HomepageLayout>
+      </>
     );
   }
 
@@ -67,7 +66,7 @@ export default function OrderDetailsPage() {
   };
 
   return (
-    <HomepageLayout>
+    <>
       <main className="min-h-screen bg-emerald-50 px-6 py-16">
         <div className="max-w-4xl mx-auto">
           {/* Back Button */}
@@ -149,6 +148,6 @@ export default function OrderDetailsPage() {
           </Card>
         </div>
       </main>
-    </HomepageLayout>
+    </>
   );
 }

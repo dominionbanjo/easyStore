@@ -5,6 +5,7 @@ import { Provider } from "react-redux";
 import App from "./App.tsx";
 import "./index.css";
 import { store } from "./store.ts";
+import AuthProvider from "./providers/AuthProvider.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -19,7 +20,9 @@ createRoot(document.getElementById("root")!).render(
           },
         }}
       />
-      <App />
+      <AuthProvider>
+        <App />
+      </AuthProvider>
     </Provider>
   </StrictMode>
 );

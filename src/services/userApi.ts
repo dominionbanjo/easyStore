@@ -1,29 +1,47 @@
+// src/services/userApi.ts
 import { apiManager } from "./apiManager";
+import type { User } from "@/features/userSlice";
+
+export interface IUserProfileResponse {
+  status: number;
+  success: boolean;
+  message: string;
+  user: User;
+}
 
 export const userApi = apiManager.injectEndpoints({
   endpoints: (builder) => ({
-    getUserProfile: builder.query<any, void>({
-      query: () => "/users/me/",
+    getUserProfile: builder.query<IUserProfileResponse, void>({
+      query: () => ({
+        url: "/api/v1/users",
+        method: "GET",
+      }),
       providesTags: ["User"],
     }),
 
-    getAllUsers: builder.query<any, void>({
-      query: () => "/users/",
+    getAllUsers: builder.query<IUserProfileResponse[], void>({
+      query: () => ({
+        url: "/api/v1/users",
+        method: "GET",
+      }),
       providesTags: ["User"],
     }),
 
-    getUserById: builder.query<any, string>({
-      query: (id) => `/users/${id}/`,
+    getUserById: builder.query<IUserProfileResponse, string>({
+      query: (id) => ({
+        url: `/api/v1/users/${id}`,
+        method: "GET",
+      }),
       providesTags: (_result, _error, id) => [{ type: "User", id }],
     }),
 
     updateUserProfile: builder.mutation<
-      any,
-      { id: string; data: Record<string, any> }
+      IUserProfileResponse,
+      { id: string; data: Partial<User> }
     >({
       query: ({ id, data }) => ({
-        url: `/users/${id}/`,
-        method: "PUT",
+        url: `/api/v1/users/${id}`,
+        method: "PATCH",
         body: data,
       }),
       invalidatesTags: (_result, _error, { id }) => [{ type: "User", id }],
@@ -31,14 +49,15 @@ export const userApi = apiManager.injectEndpoints({
 
     deleteUser: builder.mutation<any, string>({
       query: (id) => ({
-        url: `/users/${id}/`,
+        url: `/api/v1/users/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["User"],
     }),
+
     logout: builder.mutation<void, void>({
       query: () => ({
-        url: "/auth/logout/",
+        url: "/api/v1/auth/logout",
         method: "POST",
       }),
       invalidatesTags: ["User"],
@@ -52,4 +71,5 @@ export const {
   useGetUserByIdQuery,
   useUpdateUserProfileMutation,
   useDeleteUserMutation,
+  useLogoutMutation,
 } = userApi;

@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { useEffect } from "react";
+import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Card,
@@ -13,36 +12,47 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Link } from "react-router-dom";
-
-const LoginSchema = z.object({
-  email: z.string().email("Enter a valid email"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-});
-
-type LoginFormValues = z.infer<typeof LoginSchema>;
+import { Link, useNavigate } from "react-router-dom";
+import { useLoginMutation } from "@/services/authApi";
+import { AUTH_ROUTES } from "@/routes/temp";
+import {
+  LoginSchema,
+  type LoginFormValues,
+} from "@/modules/auth/validators/loginValidator";
+import { FormInput } from "@/components/shared/FormInput";
 
 export default function LoginPage() {
-  const [isLoading, setIsLoading] = useState(false);
-  const form = useForm<LoginFormValues>({
+  const navigate = useNavigate();
+  const [login, { isLoading, isSuccess }] = useLoginMutation();
+
+  const methods = useForm<LoginFormValues>({
     resolver: zodResolver(LoginSchema),
+    mode: "onTouched",
   });
 
+  const { handleSubmit } = methods;
+
+  // ✅ Redirect on success
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success("Login successful!");
+      navigate("/");
+    }
+  }, [isSuccess, navigate]);
+
   const onSubmit = async (data: LoginFormValues) => {
-    setIsLoading(true);
-    console.log("Login data:", data);
-    setTimeout(() => {
-      toast.success(`Welcome back, ${data.email}!`);
-      setIsLoading(false);
-    }, 1200);
+    try {
+      await login(data).unwrap();
+    } catch (err: any) {
+      toast.error(err?.data?.message || "Invalid email or password");
+    }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-emerald-50 px-4">
       <Card className="w-full max-w-md bg-white rounded-2xl shadow-md">
+        {/* Header */}
         <CardHeader className="text-center space-y-2">
           <CardTitle className="text-2xl font-bold text-primary">
             Welcome Back
@@ -52,53 +62,51 @@ export default function LoginPage() {
           </CardDescription>
         </CardHeader>
 
+        {/* Form */}
         <CardContent>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-            {/* Email */}
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
+          <FormProvider {...methods}>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+              <FormInput
+                label="Email"
+                name="email"
                 type="email"
                 placeholder="you@example.com"
-                {...form.register("email")}
               />
-              {form.formState.errors.email && (
-                <p className="text-sm text-destructive">
-                  {form.formState.errors.email.message}
-                </p>
-              )}
-            </div>
 
-            {/* Password */}
-            <div className="grid gap-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
+              <FormInput
+                label="Password"
+                name="password"
                 type="password"
                 placeholder="••••••••"
-                {...form.register("password")}
               />
-              {form.formState.errors.password && (
-                <p className="text-sm text-destructive">
-                  {form.formState.errors.password.message}
-                </p>
-              )}
-            </div>
 
-            <Button
-              type="submit"
-              className="w-full bg-primary text-primary-foreground rounded-full py-2 mt-2"
-              disabled={isLoading}
-            >
-              {isLoading ? "Signing In..." : "Log In"}
-            </Button>
-          </form>
+              <div className="text-right text-sm">
+                <Link
+                  to={AUTH_ROUTES.FORGOT_PASSWORD}
+                  className="text-primary hover:underline font-medium"
+                >
+                  Forgot Password?
+                </Link>
+              </div>
+
+              <Button
+                type="submit"
+                className="w-full bg-primary text-white rounded-full py-2 mt-2"
+                disabled={isLoading}
+              >
+                {isLoading ? "Signing In..." : "Log In"}
+              </Button>
+            </form>
+          </FormProvider>
         </CardContent>
 
+        {/* Footer */}
         <CardFooter className="text-center text-sm text-muted-foreground">
           Don’t have an account?{" "}
-          <Link to="/signup" className="text-primary hover:underline ml-1">
+          <Link
+            to={AUTH_ROUTES.SIGNUP}
+            className="text-primary hover:underline ml-1 font-medium"
+          >
             Sign up
           </Link>
         </CardFooter>

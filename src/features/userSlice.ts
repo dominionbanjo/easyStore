@@ -1,48 +1,49 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
+/** 🔹 Unified User type that matches backend + extended profile */
 export type User = {
   id: string;
-  first_name: string;
-  last_name: string;
   email: string;
-  phone?: string;
+  account_type: "user" | "vendor" | "admin"; // backend uses this
+  first_name?: string;
+  last_name?: string;
+  phone_number?: string;
   avatar?: string;
-  role: "vendor" | "user" | "admin";
-  is_verified: boolean;
-  date_joined: string;
-  last_login?: string | null;
+  avatar_public_id?: string;
+  is_verified?: boolean;
   country?: string;
   bio?: string;
   products_count?: number;
+  created_at?: string;
+  updated_at?: string;
 };
 
-export type UserState = {
+/** 🔹 Redux State */
+export interface UserState {
   currentUser: User | null;
-  token: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-};
+}
 
+/** 🔹 Initial State */
 const initialState: UserState = {
   currentUser: null,
-  token: null,
   isAuthenticated: false,
   isLoading: false,
 };
 
+/** 🔹 Slice */
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    setUser: (state, action: PayloadAction<{ user: User; token?: string }>) => {
+    setUser: (state, action: PayloadAction<{ user: User }>) => {
       state.currentUser = action.payload.user;
-      state.token = action.payload.token ?? null;
       state.isAuthenticated = true;
     },
     clearUser: (state) => {
       state.currentUser = null;
-      state.token = null;
       state.isAuthenticated = false;
     },
     updateUser: (state, action: PayloadAction<Partial<User>>) => {

@@ -5,6 +5,7 @@
       "@/*": ["./src/*"],
       "@/public/*": ["./public/*"],
       "@/pages/*": ["./src/pages/*"],
+      "@/types/*": ["./src/types/*"],
       "@/components/*": ["./src/components/*"],
       "@/utils/*": ["./src/utils/*"],
       "@/lib/*": ["./src/lib/*"],
@@ -32,7 +33,7 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "erasableSyntaxOnly": true,
+    "erasableSyntaxOnly": false,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
