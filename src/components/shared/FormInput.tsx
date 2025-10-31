@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
 interface FormFieldProps {
-  label: string;
+  label?: string;
   name: string;
   type?: string;
   placeholder?: string;
@@ -30,15 +30,17 @@ export function FormInput({
 
   return (
     <div className={cn("space-y-1.5", className)}>
-      <Label
-        htmlFor={name}
-        className={cn(
-          "font-medium text-[15px]",
-          shouldShowError && "text-destructive"
-        )}
-      >
-        {label}
-      </Label>
+      {label && (
+        <Label
+          htmlFor={name}
+          className={cn(
+            "font-medium text-[15px]",
+            shouldShowError && "text-destructive"
+          )}
+        >
+          {label}
+        </Label>
+      )}
 
       <Input
         id={name}

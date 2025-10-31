@@ -1,4 +1,4 @@
-import { ShoppingBag } from "lucide-react";
+import { WEBSITE_ROUTES } from "@/routes/temp";
 import { Link } from "react-router-dom";
 
 export default function Footer() {
@@ -7,12 +7,13 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-6 py-12">
         <div className="flex flex-col md:flex-row items-center justify-between gap-8">
           {/* Logo */}
-          <Link
-            to="/"
-            className="flex items-center gap-2 text-2xl font-bold text-primary"
-          >
-            <ShoppingBag className="h-6 w-6 text-primary" />
-            Easy<span className="text-secondary">Store</span>
+          <Link to={WEBSITE_ROUTES.HOME} className="flex items-center gap-2">
+            <img
+              src="/logos/inline-stripe-transparent.png"
+              alt="EasyStore logo"
+              className="h-12 w-auto"
+              loading="lazy"
+            />
           </Link>
 
           {/* Links */}

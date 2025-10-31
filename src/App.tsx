@@ -16,6 +16,7 @@ import OrderDetailsPage from "./pages/users/OrderDetailsPage";
 import CartPage from "./pages/users/CartPage";
 import WishlistPage from "./pages/users/WishlistPage";
 import SettingsPage from "./pages/users/SettingsPage";
+import CategoryDetailsPage from "./pages/users/SingleCategoryPage";
 
 // Auth Pages
 import LoginPage from "./pages/auth/Login";
@@ -33,6 +34,7 @@ import Profile from "./pages/sellers/Profile";
 import Settings from "./pages/sellers/Settings";
 import AddProductPage from "./pages/sellers/addProductPage";
 import EditProductPage from "./pages/sellers/editProductPage";
+import StoreDetailsPage from "./pages/sellers/StoreDetailsPage";
 
 export default function App() {
   return (
@@ -41,7 +43,9 @@ export default function App() {
         <Route path="/" element={<HomepageLayout />}>
           <Route path="" element={<LandingPage />} />
           <Route path="shop" element={<ShopPage />} />
+          <Route path="shop/:id" element={<StoreDetailsPage />} />
           <Route path="categories" element={<CategoriesPage />} />
+          <Route path="categories/:id" element={<CategoryDetailsPage />} />
           <Route path="product/:id" element={<ProductDetailPage />} />
           {/* <Route path="/favourites" element={<FavouritesPage />} /> */}
           <Route path="orders" element={<OrdersPage />} />

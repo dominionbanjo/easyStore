@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -6,6 +7,7 @@ import type { RootState } from "@/store";
 import { clearUser } from "@/features/userSlice";
 import { useLogoutMutation } from "@/services/authApi";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   ShoppingBag,
   Menu,
@@ -15,6 +17,7 @@ import {
   Settings,
   ShoppingCart,
   Package,
+  Search,
 } from "lucide-react";
 import {
   Sheet,
@@ -28,6 +31,13 @@ import {
   PopoverTrigger,
   PopoverContent,
 } from "@/components/ui/popover";
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+} from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { AUTH_ROUTES, USER_ROUTES, WEBSITE_ROUTES } from "@/routes/temp";
@@ -36,9 +46,11 @@ import { toast } from "sonner";
 export default function Header() {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false); // 🔹 mobile search modal
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
   const [logout] = useLogoutMutation();
+  const [query, setQuery] = useState("");
 
   const user = useSelector((state: RootState) => state.user.currentUser);
   const isAuthenticated = useSelector(
@@ -57,6 +69,12 @@ export default function Header() {
     toast.success("Logged out successfully");
   };
 
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    toast.info(`Searching for: ${query}`);
+    setSearchOpen(false);
+  };
+
   return (
     <header
       className={cn(
@@ -67,11 +85,11 @@ export default function Header() {
         className={cn(
           "w-full fixed top-0 sm:top-3 left-1/2 -translate-x-1/2 flex items-center justify-between backdrop-blur-md border border-transparent px-7 py-4 transition-all duration-500",
           isScrolled
-            ? "sm:max-w-[98%] sm:bg-white/50 rounded-2xl sm:border-border/10 sm:shadow-sm sm:py-3 sm:px-6"
-            : "sm:max-w-[100%] sm:bg-white/10 sm:py-5 sm:px-8"
+            ? "sm:max-w-[98%] sm:bg-white/60 rounded-2xl sm:border-border/10 sm:shadow-sm sm:py-3 sm:px-6"
+            : "sm:max-w-[100%] sm:bg-white/20 sm:py-5 sm:px-8"
         )}
       >
-        {/* Left */}
+        {/* Left: Logo & Nav */}
         <div className="flex items-center gap-10">
           <Link to={WEBSITE_ROUTES.HOME} className="flex items-center gap-2">
             <img
@@ -104,8 +122,92 @@ export default function Header() {
           </nav>
         </div>
 
-        {/* Right */}
+        {/* Middle: Search Bar (desktop only) */}
+        <form
+          onSubmit={handleSearch}
+          className="hidden md:flex items-center bg-white border border-border/30 rounded-full overflow-hidden w-[370px] lg:w-[460px] shadow-sm transition-all focus-within:ring-1 focus-within:ring-primary/20"
+        >
+          <div className="pl-4 flex items-center justify-center">
+            <Search className="h-5 w-5 text-muted-foreground" />
+          </div>
+
+          <Input
+            type="text"
+            placeholder="Search for products..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="border-none bg-transparent focus-visible:ring-0 text-sm placeholder:text-muted-foreground px-3 flex-1"
+          />
+
+          <div className="h-6 w-px bg-border/50 mx-2" />
+
+          <Select defaultValue="products">
+            <SelectTrigger className="border-none bg-transparent text-sm font-medium focus:ring-0 focus:outline-none text-foreground px-3 rounded-r-full hover:bg-muted/40 transition-colors">
+              <SelectValue placeholder="Products" />
+            </SelectTrigger>
+            <SelectContent align="end">
+              <SelectItem value="products">Products</SelectItem>
+              <SelectItem value="stores">Stores</SelectItem>
+              <SelectItem value="brands">Brands</SelectItem>
+            </SelectContent>
+          </Select>
+        </form>
+
+        {/* Right: Auth/Profile + Mobile Search */}
         <div className="flex items-center gap-3">
+          {/* 🔹 Mobile Search Trigger */}
+          <Sheet open={searchOpen} onOpenChange={setSearchOpen}>
+            <SheetTrigger asChild>
+              <button className="md:hidden flex items-center justify-center p-2 rounded-full hover:bg-muted/50 transition-all">
+                <Search className="h-5 w-5 text-neutral-700" />
+              </button>
+            </SheetTrigger>
+
+            {/* 🔹 Search Sheet Content */}
+            <SheetContent
+              side="top"
+              className="bg-white border-b border-border/20 shadow-lg rounded-b-2xl p-4"
+            >
+              <SheetHeader>
+                <SheetTitle className="text-lg font-semibold mb-4">
+                  Search
+                </SheetTitle>
+              </SheetHeader>
+
+              <form
+                onSubmit={handleSearch}
+                className="flex items-center bg-white border border-border/30 rounded-full overflow-hidden shadow-sm focus-within:ring-1 focus-within:ring-primary/20"
+              >
+                <div className="pl-4 flex items-center justify-center">
+                  <Search className="h-5 w-5 text-muted-foreground" />
+                </div>
+
+                <Input
+                  autoFocus
+                  type="text"
+                  placeholder="Search for products..."
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  className="border-none bg-transparent focus-visible:ring-0 text-sm placeholder:text-muted-foreground px-3 flex-1"
+                />
+
+                <div className="h-6 w-px bg-border/50 mx-2" />
+
+                <Select defaultValue="products">
+                  <SelectTrigger className="border-none bg-transparent text-sm font-medium focus:ring-0 focus:outline-none text-foreground px-3 rounded-r-full hover:bg-muted/40 transition-colors">
+                    <SelectValue placeholder="Products" />
+                  </SelectTrigger>
+                  <SelectContent align="end">
+                    <SelectItem value="products">Products</SelectItem>
+                    <SelectItem value="stores">Stores</SelectItem>
+                    <SelectItem value="brands">Brands</SelectItem>
+                  </SelectContent>
+                </Select>
+              </form>
+            </SheetContent>
+          </Sheet>
+
+          {/* Auth/Profile */}
           {isAuthenticated && user ? (
             <Popover>
               <PopoverTrigger asChild>
@@ -155,7 +257,7 @@ export default function Header() {
                   </Link>
 
                   <Link
-                    to="/cart" // ❗ add USER_ROUTES.CART later
+                    to="/cart"
                     className="flex items-center gap-2 p-2 rounded-md hover:bg-gray-50"
                   >
                     <ShoppingCart className="h-4 w-4 text-gray-600" /> My Cart
@@ -196,7 +298,6 @@ export default function Header() {
                   </Button>
                 </Link>
               </motion.div>
-
               <motion.div
                 whileHover={{ scale: 1.07 }}
                 whileTap={{ scale: 0.95 }}
@@ -247,40 +348,6 @@ export default function Header() {
                     </Link>
                   ))}
                 </nav>
-
-                <div className="mt-8 px-4 flex flex-col gap-3">
-                  {isAuthenticated ? (
-                    <Button
-                      onClick={handleLogout}
-                      variant="outline"
-                      className="rounded-full"
-                    >
-                      Logout
-                    </Button>
-                  ) : (
-                    <>
-                      <Link
-                        to={AUTH_ROUTES.LOGIN}
-                        onClick={() => setOpen(false)}
-                      >
-                        <Button
-                          variant="outline"
-                          className="w-full rounded-full border-border hover:bg-neutral-100"
-                        >
-                          Sign In
-                        </Button>
-                      </Link>
-                      <Link
-                        to={AUTH_ROUTES.SIGNUP}
-                        onClick={() => setOpen(false)}
-                      >
-                        <Button className="w-full rounded-full bg-primary text-white hover:bg-primary/90">
-                          Sign Up
-                        </Button>
-                      </Link>
-                    </>
-                  )}
-                </div>
               </SheetContent>
             </Sheet>
           </div>

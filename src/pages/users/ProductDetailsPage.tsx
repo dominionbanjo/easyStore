@@ -1,189 +1,140 @@
-import { useParams, Link } from "react-router-dom";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Star, ShoppingCart, ChevronLeft } from "lucide-react";
+"use client";
+
 import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
 
-export default function ProductDetailPage() {
-  const { id } = useParams(); // e.g. /product/:id
-  const [quantity, setQuantity] = useState(1);
+import ProductGallery from "@/modules/website/productDetailsPage/components/ProductGallery";
+import ProductInfoSidebar from "@/modules/website/productDetailsPage/components/ProductInfoSidebar";
+import ProductDetailsTabs from "@/modules/website/productDetailsPage/components/ProductDetailsTabs";
+import ReviewsSection from "@/modules/website/productDetailsPage/components/ReviewsSection";
+import RelatedProductsGrid from "@/modules/website/productDetailsPage/components/RelatedProductsGrid";
 
-  // Mock product data (in real app, fetch from API)
+export default function ProductDetailsPage() {
   const product = {
-    id,
-    name: "Leather Handbag",
-    category: "Fashion",
-    price: 120,
-    rating: 4.5,
-    reviewsCount: 24,
-    description:
-      "This handcrafted leather handbag combines timeless design with modern functionality. Perfect for casual outings or professional wear.",
+    id: 101,
+    name: "Wireless Headphones Pro Max",
+    vendor: "SoundMaster",
+    price: "₦99,999",
+    category: "Electronics",
+    rating: 4.8,
+    stock: 8,
+
+    // ─── Media ────────────────────────────────────────────────
     images: [
-      "/images/products/handbag1.jpg",
-      "/images/products/handbag2.jpg",
-      "/images/products/handbag3.jpg",
+      "/images/elect0.png",
+      "/images/elect1.png",
+      "/images/elect2.png",
+      "/videos/campaign2.mp4", // autoplay silently
     ],
+
+    // ─── Core Description ─────────────────────────────────────
+    description:
+      "Experience next-level sound quality with the Wireless Headphones Pro Max. Designed for immersive music and comfort — featuring adaptive noise cancellation, studio-grade sound, and a premium finish that complements your lifestyle.",
+
+    // ─── Highlights ───────────────────────────────────────────
+    highlights: [
+      "Active Noise Cancelling (ANC)",
+      "40-hour playback time",
+      "Bluetooth 5.3 with multipoint connection",
+      "Soft memory foam cushions",
+      "Fast USB-C charging",
+      "Seamless pairing with all devices",
+      "Premium matte aluminum finish",
+    ],
+
+    // ─── Specifications ──────────────────────────────────────
+    specs: {
+      driver: "40mm dynamic drivers",
+      frequencyResponse: "20Hz–20kHz",
+      batteryLife: "Up to 40 hours (ANC off)",
+      chargingTime: "1.5 hours (USB-C)",
+      connectivity: "Bluetooth 5.3, 3.5mm jack",
+      compatibility: "iOS, Android, Windows, macOS",
+      weight: "280g",
+      warranty: "1 Year Limited Warranty",
+    },
+
+    // ─── Shipping Info ───────────────────────────────────────
+    shipping: {
+      delivery: "Ships within 2–4 business days",
+      returns:
+        "Returns accepted within 7 days of delivery if the item is unused and in its original packaging.",
+      location: "Lagos, Nigeria",
+      shippingCost: "₦2,500 nationwide",
+    },
+
+    // ─── Customization ────────────────────────────────────────
+    sizes: ["S", "M", "L", "XL"], // for apparel-type extension
+    colors: ["#000000", "#E63946", "#457B9D", "#F4A261", "#FFFFFF"], // black, red, blue, orange, white
+
+    // ─── Related Products ────────────────────────────────────
+    related: [
+      {
+        id: 102,
+        name: "SoundMaster Mini Pods",
+        price: "₦49,999",
+        image: "/images/elect3.png",
+        rating: 4.7,
+        vendor: "SoundMaster",
+      },
+      {
+        id: 103,
+        name: "Bluetooth Speaker Pro",
+        price: "₦79,000",
+        image: "/images/elect4.png",
+        rating: 4.5,
+        vendor: "TechSync",
+      },
+      {
+        id: 104,
+        name: "Noise Cancelling Earbuds X",
+        price: "₦59,999",
+        image: "/images/elect5.png",
+        rating: 4.6,
+        vendor: "UrbanSound",
+      },
+    ],
+
+    // ─── Reviews (Optional Seed Data) ─────────────────────────
     reviews: [
       {
-        name: "Sarah Johnson",
+        id: 1,
+        user: "Jane Doe",
         rating: 5,
-        comment: "Beautiful design and top quality! Highly recommend.",
+        comment:
+          "Absolutely love these headphones! The ANC is top-notch and the sound is crystal clear.",
+        date: "2 days ago",
       },
       {
-        name: "David Lee",
+        id: 2,
+        user: "John Smith",
         rating: 4,
-        comment: "Great value for money. Would buy again.",
+        comment:
+          "Comfortable and stylish. Battery life is great, but wish the bass was a bit deeper.",
+        date: "1 week ago",
       },
     ],
-  };
-
-  const handleAddToCart = () => {
-    alert(`Added ${quantity} ${product.name} to cart`);
   };
 
   return (
-    <>
-      <main className="bg-emerald-50 min-h-screen py-12">
-        <div className="max-w-6xl mx-auto px-6 space-y-10">
-          {/* Back Link */}
-          <div>
-            <Link
-              to="/shop"
-              className="flex items-center gap-1 text-muted-foreground hover:text-primary transition-colors"
-            >
-              <ChevronLeft className="h-4 w-4" />
-              Back to Shop
-            </Link>
-          </div>
+    <section className="max-w-[1480px] mx-auto px-4 py-14 space-y-16">
+      {/* ─── Gallery + Info Grid ─── */}
+      <div className="grid md:grid-cols-[1.2fr_1fr] gap-10">
+        <ProductGallery images={product.images} />
+        <ProductInfoSidebar product={product} />
+      </div>
 
-          {/* ──────────────── PRODUCT SECTION ──────────────── */}
-          <section className="grid md:grid-cols-2 gap-10 bg-white rounded-2xl shadow-sm p-6">
-            {/* Left: Image Gallery */}
-            <div className="flex flex-col gap-4">
-              <img
-                src={product.images[0]}
-                alt={product.name}
-                className="w-full h-[400px] object-cover rounded-xl"
-              />
+      <Separator />
 
-              <div className="flex gap-3">
-                {product.images.slice(1).map((img, i) => (
-                  <img
-                    key={i}
-                    src={img}
-                    alt={`Preview ${i}`}
-                    className="w-24 h-24 rounded-lg object-cover border cursor-pointer hover:ring-2 hover:ring-primary transition-all"
-                  />
-                ))}
-              </div>
-            </div>
+      {/* ─── Tabs for description / specs / shipping ─── */}
+      <ProductDetailsTabs product={product} />
 
-            {/* Right: Product Info */}
-            <div className="flex flex-col justify-between space-y-6">
-              <div className="space-y-4">
-                <h1 className="text-3xl font-bold">{product.name}</h1>
-                <Badge className="bg-muted text-foreground font-medium">
-                  {product.category}
-                </Badge>
+      <Separator />
 
-                <div className="flex items-center gap-2">
-                  {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      className={`h-5 w-5 ${
-                        i < Math.floor(product.rating)
-                          ? "text-yellow-500 fill-yellow-500"
-                          : "text-gray-300"
-                      }`}
-                    />
-                  ))}
-                  <span className="text-sm text-muted-foreground">
-                    ({product.reviewsCount} reviews)
-                  </span>
-                </div>
+      {/* ─── Reviews Section ─── */}
+      <ReviewsSection productId={product.id} />
 
-                <p className="text-muted-foreground leading-relaxed">
-                  {product.description}
-                </p>
-
-                <div className="text-3xl font-semibold text-primary">
-                  ${product.price}
-                </div>
-              </div>
-
-              {/* Quantity & Add to Cart */}
-              <div className="flex items-center gap-3 mt-6">
-                <div className="flex items-center border rounded-full px-4 py-1.5 bg-muted/30">
-                  <button
-                    onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                    className="text-xl font-bold px-2"
-                  >
-                    -
-                  </button>
-                  <span className="mx-2 w-6 text-center font-medium">
-                    {quantity}
-                  </span>
-                  <button
-                    onClick={() => setQuantity((q) => q + 1)}
-                    className="text-xl font-bold px-2"
-                  >
-                    +
-                  </button>
-                </div>
-
-                <Button
-                  onClick={handleAddToCart}
-                  className="bg-primary text-primary-foreground flex items-center gap-2 rounded-full px-6 py-2 hover:bg-primary/90"
-                >
-                  <ShoppingCart className="h-4 w-4" />
-                  Add to Cart
-                </Button>
-              </div>
-            </div>
-          </section>
-
-          <Separator className="my-10" />
-
-          {/* ──────────────── REVIEWS SECTION ──────────────── */}
-          <section>
-            <h2 className="text-2xl font-semibold mb-6">
-              Customer Reviews ({product.reviewsCount})
-            </h2>
-
-            <div className="grid gap-6 md:grid-cols-2">
-              {product.reviews.map((review, index) => (
-                <Card
-                  key={index}
-                  className="bg-white shadow-sm rounded-xl hover:shadow-md transition-all"
-                >
-                  <CardContent className="p-6 space-y-3">
-                    <div className="flex items-center justify-between">
-                      <h3 className="font-semibold">{review.name}</h3>
-                      <div className="flex items-center gap-1">
-                        {[...Array(5)].map((_, i) => (
-                          <Star
-                            key={i}
-                            className={`h-4 w-4 ${
-                              i < review.rating
-                                ? "text-yellow-500 fill-yellow-500"
-                                : "text-gray-300"
-                            }`}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                      {review.comment}
-                    </p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </section>
-        </div>
-      </main>
-    </>
+      {/* ─── Related Products ─── */}
+      <RelatedProductsGrid category={product.category} />
+    </section>
   );
 }
