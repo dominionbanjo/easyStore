@@ -13,8 +13,8 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Link, useNavigate } from "react-router-dom";
-import Cookies from "js-cookie"; // ✅ Add this import
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import Cookies from "js-cookie";
 import { useLoginMutation } from "@/services/authApi";
 import { AUTH_ROUTES } from "@/routes/temp";
 import {
@@ -25,35 +25,34 @@ import { FormInput } from "@/components/shared/FormInput";
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [login, { isLoading, isSuccess }] = useLoginMutation();
 
   const methods = useForm<LoginFormValues>({
     resolver: zodResolver(LoginSchema),
     mode: "onTouched",
   });
-
   const { handleSubmit } = methods;
 
-  /**
-   * ✅ Auto-redirect if already logged in
-   */
+  // ✅ Determine redirect destination
+  const redirectTo =
+    new URLSearchParams(location.search).get("redirect") || "/";
+
+  // Auto-redirect if already logged in
   useEffect(() => {
     const token = Cookies.get("token");
     if (token) {
-      console.log("🔐 Existing session detected, redirecting...");
-      navigate("/", { replace: true });
+      navigate(redirectTo, { replace: true });
     }
-  }, [navigate]);
+  }, [navigate, redirectTo]);
 
-  /**
-   * ✅ Redirect after login success
-   */
+  // Redirect after successful login
   useEffect(() => {
     if (isSuccess) {
       toast.success("Login successful!");
-      navigate("/", { replace: true });
+      navigate(redirectTo, { replace: true });
     }
-  }, [isSuccess, navigate]);
+  }, [isSuccess, navigate, redirectTo]);
 
   const onSubmit = async (data: LoginFormValues) => {
     try {
@@ -66,7 +65,6 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-emerald-50 px-4">
       <Card className="w-full max-w-md bg-white rounded-2xl shadow-md">
-        {/* Header */}
         <CardHeader className="text-center space-y-2">
           <CardTitle className="text-2xl font-bold text-primary">
             Welcome Back
@@ -76,7 +74,6 @@ export default function LoginPage() {
           </CardDescription>
         </CardHeader>
 
-        {/* Form */}
         <CardContent>
           <FormProvider {...methods}>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
@@ -86,7 +83,6 @@ export default function LoginPage() {
                 type="email"
                 placeholder="you@example.com"
               />
-
               <FormInput
                 label="Password"
                 name="password"
@@ -114,7 +110,6 @@ export default function LoginPage() {
           </FormProvider>
         </CardContent>
 
-        {/* Footer */}
         <CardFooter className="text-center text-sm text-muted-foreground">
           Don’t have an account?{" "}
           <Link

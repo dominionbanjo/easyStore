@@ -1,153 +1,247 @@
 "use client";
 
-import { useParams, useNavigate } from "react-router-dom";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState } from "react";
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import {
+  Package,
+  Truck,
+  CheckCircle,
+  XCircle,
+  Calendar,
+  MapPin,
+  ArrowLeft,
+  Mail,
+  Phone,
+} from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import { toast } from "sonner";
+import { cn } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
 
-const mockOrders = [
-  {
-    id: 1,
-    name: "Leather Handbag",
-    price: "$120",
-    quantity: 1,
-    image: "https://images.unsplash.com/photo-1575936123452-b67c3203c357?w=800",
-    status: "Delivered",
-    date: "Oct 12, 2025",
-    address: "42 Lekki Phase 1, Lagos, Nigeria",
-    paymentMethod: "Credit Card (**** 2345)",
-    trackingNumber: "ESY-348921",
+// ✅ Mock Order Details Data
+const mockOrderDetails = {
+  id: "ORD-98432",
+  date: "2025-10-12",
+  status: "Delivered",
+  paymentStatus: "Paid",
+  trackingNumber: "TRK123456NG",
+  paymentMethod: "Card (Visa **** 3321)",
+  shippingAddress: {
+    name: "John Doe",
+    phone: "+234 812 345 6789",
+    email: "john.doe@example.com",
+    address: "12A Lekki Gardens, Phase II, Lagos, Nigeria",
   },
-  {
-    id: 2,
-    name: "Wireless Headphones",
-    price: "$99.99",
-    quantity: 2,
-    image: "https://images.unsplash.com/photo-1585386959984-a41552231693?w=800",
-    status: "Shipped",
-    date: "Oct 15, 2025",
-    address: "12 Gwarimpa Avenue, Abuja, Nigeria",
-    paymentMethod: "Paystack",
-    trackingNumber: "ESY-553841",
-  },
-];
+  items: [
+    {
+      name: "Handcrafted Leather Bag",
+      image: "/images/mock-bag.jpg",
+      price: 95000,
+      quantity: 1,
+    },
+    {
+      name: "Minimal Ceramic Vase",
+      image: "/images/mock-vase.jpg",
+      price: 18000,
+      quantity: 2,
+    },
+  ],
+  subtotal: 131000,
+  shippingFee: 2000,
+  total: 133000,
+};
 
 export default function OrderDetailsPage() {
-  const { id } = useParams();
   const navigate = useNavigate();
+  const [order] = useState(mockOrderDetails);
 
-  const order = mockOrders.find((o) => o.id === Number(id));
-
-  if (!order) {
-    return (
-      <>
-        <main className="min-h-screen flex items-center justify-center bg-emerald-50">
-          <p className="text-muted-foreground text-lg">
-            Order not found or may have been deleted.
-          </p>
-        </main>
-      </>
-    );
-  }
-
-  const statusColor = (status: string) => {
-    switch (status) {
-      case "Delivered":
-        return "bg-green-100 text-green-700 border-green-200";
-      case "Shipped":
-        return "bg-blue-100 text-blue-700 border-blue-200";
-      case "Pending":
-        return "bg-yellow-100 text-yellow-700 border-yellow-200";
-      default:
-        return "bg-gray-100 text-gray-600 border-gray-200";
-    }
-  };
+  const handleReorder = () => toast.success("Items added to cart again!");
+  const handleTrack = () => toast.info("Tracking link coming soon.");
 
   return (
-    <>
-      <main className="min-h-screen bg-emerald-50 px-6 py-16">
-        <div className="max-w-4xl mx-auto">
-          {/* Back Button */}
-          <div className="flex items-center gap-3 mb-10">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="flex items-center gap-2"
-              onClick={() => navigate(-1)} // 👈 go one step back
-            >
-              <ArrowLeft className="h-4 w-4" />
-              Back
-            </Button>
+    <section className="min-h-screen bg-emerald-50/40 py-10 px-4">
+      <div className="max-w-5xl mx-auto space-y-8">
+        {/* 🔙 Back Button */}
+        <Button
+          variant="ghost"
+          className="flex items-center gap-2 text-gray-700 hover:text-gray-900"
+          onClick={() => navigate("/orders")}
+        >
+          <ArrowLeft className="h-4 w-4" /> Back to Orders
+        </Button>
 
-            <h1 className="text-3xl font-bold text-primary">Order Details</h1>
+        {/* 🧾 Order Header */}
+        <div className="flex flex-col sm:flex-row justify-between sm:items-center">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">
+              Order #{order.id}
+            </h1>
+            <p className="text-gray-600 flex items-center gap-2 mt-1 text-sm">
+              <Calendar className="h-4 w-4 text-gray-500" />
+              Ordered on {new Date(order.date).toLocaleDateString()}
+            </p>
           </div>
 
-          {/* Order Card */}
-          <Card className="rounded-2xl shadow-sm bg-white overflow-hidden">
-            <img
-              src={order.image}
-              alt={order.name}
-              className="w-full h-64 object-cover"
-            />
-
-            <CardHeader>
-              <CardTitle className="text-2xl font-semibold">
-                {order.name}
-              </CardTitle>
-              <Badge className={`${statusColor(order.status)} mt-2`}>
-                {order.status}
-              </Badge>
-            </CardHeader>
-
-            <CardContent className="space-y-5">
-              <div className="flex justify-between items-center">
-                <span className="text-muted-foreground">Order Date:</span>
-                <span className="font-medium">{order.date}</span>
-              </div>
-
-              <div className="flex justify-between items-center">
-                <span className="text-muted-foreground">Price:</span>
-                <span className="font-medium">{order.price}</span>
-              </div>
-
-              <div className="flex justify-between items-center">
-                <span className="text-muted-foreground">Quantity:</span>
-                <span className="font-medium">{order.quantity}</span>
-              </div>
-
-              <div className="flex justify-between items-center">
-                <span className="text-muted-foreground">Tracking Number:</span>
-                <span className="font-medium">{order.trackingNumber}</span>
-              </div>
-
-              <Separator />
-
-              <div className="flex flex-col space-y-2">
-                <span className="text-muted-foreground">Shipping Address:</span>
-                <p className="font-medium text-sm leading-relaxed">
-                  {order.address}
-                </p>
-              </div>
-
-              <div className="flex flex-col space-y-2">
-                <span className="text-muted-foreground">Payment Method:</span>
-                <p className="font-medium text-sm">{order.paymentMethod}</p>
-              </div>
-
-              <div className="pt-6 flex justify-end">
-                <Button
-                  onClick={() => navigate(`/product/${order.id}`)}
-                  className="rounded-full px-6 bg-primary text-primary-foreground hover:bg-primary/90"
-                >
-                  View Product
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+          <Badge
+            variant="outline"
+            className={cn(
+              "flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium capitalize mt-3 sm:mt-0",
+              order.status === "Delivered" &&
+                "bg-green-100 text-green-700 border-green-300",
+              order.status === "Pending" &&
+                "bg-yellow-100 text-yellow-700 border-yellow-300",
+              order.status === "Cancelled" &&
+                "bg-red-100 text-red-700 border-red-300",
+              order.status === "Shipped" &&
+                "bg-blue-100 text-blue-700 border-blue-300"
+            )}
+          >
+            {order.status === "Delivered" && (
+              <CheckCircle className="h-4 w-4" />
+            )}
+            {order.status === "Pending" && <Package className="h-4 w-4" />}
+            {order.status === "Shipped" && <Truck className="h-4 w-4" />}
+            {order.status === "Cancelled" && <XCircle className="h-4 w-4" />}
+            {order.status}
+          </Badge>
         </div>
-      </main>
-    </>
+
+        {/* 📦 Order Items */}
+        <Card className="bg-white border rounded-xl shadow-sm">
+          <CardHeader>
+            <CardTitle className="text-lg font-semibold text-gray-800">
+              Items in this Order
+            </CardTitle>
+          </CardHeader>
+
+          <CardContent className="divide-y">
+            {order.items.map((item, idx) => (
+              <div
+                key={idx}
+                className="flex flex-col sm:flex-row justify-between gap-4 py-4"
+              >
+                <div className="flex items-center gap-4">
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="w-24 h-24 object-cover rounded-md border"
+                  />
+                  <div>
+                    <h3 className="font-medium text-gray-900">{item.name}</h3>
+                    <p className="text-gray-600 text-sm">
+                      ₦{item.price.toLocaleString()} × {item.quantity}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="text-right">
+                  <p className="text-gray-900 font-semibold">
+                    ₦{(item.price * item.quantity).toLocaleString()}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+
+        {/* 🚚 Shipping Info */}
+        <Card className="bg-white border rounded-xl shadow-sm">
+          <CardHeader>
+            <CardTitle className="text-lg font-semibold text-gray-800">
+              Shipping Information
+            </CardTitle>
+            <CardDescription>
+              Tracking number:{" "}
+              <span className="font-medium">{order.trackingNumber}</span>
+            </CardDescription>
+          </CardHeader>
+
+          <CardContent className="space-y-3 flex items-center justify-between">
+            <div className="flex items-start gap-3 text-gray-700">
+              <MapPin className="h-5 w-5 text-gray-500 mt-1" />
+              <div>
+                <p className="font-medium">{order.shippingAddress.name}</p>
+                <p className="text-sm">{order.shippingAddress.address}</p>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-6 text-sm text-gray-600">
+              <div className="flex items-center gap-2">
+                <Phone className="h-4 w-4" />
+                {order.shippingAddress.phone}
+              </div>
+              <div className="flex items-center gap-2">
+                <Mail className="h-4 w-4" />
+                {order.shippingAddress.email}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* 💳 Payment Summary */}
+        <Card className="bg-white border rounded-xl shadow-sm">
+          <CardHeader>
+            <CardTitle className="text-lg font-semibold text-gray-800">
+              Payment Summary
+            </CardTitle>
+          </CardHeader>
+
+          <CardContent className="space-y-2 text-gray-700">
+            <div className="flex justify-between">
+              <span>Subtotal</span>
+              <span>₦{order.subtotal.toLocaleString()}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Shipping Fee</span>
+              <span>₦{order.shippingFee.toLocaleString()}</span>
+            </div>
+            <Separator />
+            <div className="flex justify-between font-semibold text-gray-900">
+              <span>Total</span>
+              <span>₦{order.total.toLocaleString()}</span>
+            </div>
+            <div className="flex justify-between text-sm text-gray-600 mt-1">
+              <span>Payment Method</span>
+              <span>{order.paymentMethod}</span>
+            </div>
+            <div className="flex justify-between text-sm text-gray-600">
+              <span>Status</span>
+              <Badge
+                variant="outline"
+                className={cn(
+                  "capitalize",
+                  order.paymentStatus === "Paid"
+                    ? "bg-green-100 text-green-700 border-green-300"
+                    : "bg-yellow-100 text-yellow-700 border-yellow-300"
+                )}
+              >
+                {order.paymentStatus}
+              </Badge>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* ⚙️ Actions */}
+        <div className="flex flex-wrap justify-end gap-3">
+          <Button variant="outline" onClick={handleTrack}>
+            Track Package
+          </Button>
+          <Button
+            onClick={handleReorder}
+            className="bg-primary text-white hover:bg-primary/90 rounded-full"
+          >
+            Reorder Items
+          </Button>
+        </div>
+      </div>
+    </section>
   );
 }

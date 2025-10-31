@@ -26,6 +26,7 @@ import {
   Calendar,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
 
 // ✅ Mock data for demo
 const mockOrders = [
@@ -70,6 +71,7 @@ const mockOrders = [
 export default function MyOrdersPage() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
+  const navigate = useNavigate();
 
   const filteredOrders = mockOrders.filter((order) => {
     const matchesSearch = order.product
@@ -202,6 +204,7 @@ export default function MyOrdersPage() {
                       variant="outline"
                       size="sm"
                       className="rounded-full"
+                      onClick={() => navigate("/orders/1")}
                     >
                       View Details
                     </Button>
