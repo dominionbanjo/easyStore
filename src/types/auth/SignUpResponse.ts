@@ -29,3 +29,19 @@ export interface IRegisterUserResponse {
   token: string;
   user: IUser;
 }
+
+export interface GUser {
+  id: string;
+  name: string;
+  email: string;
+  account_type: "user" | "vendor";
+  avatar?: string;
+}
+
+export interface IAuthResponse {
+  status: number;
+  success: boolean;
+  message: string;
+  token: string;
+  user: GUser;
+}

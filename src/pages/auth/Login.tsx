@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import Cookies from "js-cookie";
-import { useLoginMutation } from "@/services/authApi";
+import { useLoginMutation, useGoogleLoginMutation } from "@/services/authApi";
 import { AUTH_ROUTES } from "@/routes/temp";
 import {
   LoginSchema,
@@ -26,7 +26,9 @@ import { FormInput } from "@/components/shared/FormInput";
 export default function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
+  const googleButtonRef = useRef<HTMLDivElement>(null);
   const [login, { isLoading, isSuccess }] = useLoginMutation();
+  const [googleLogin] = useGoogleLoginMutation();
 
   const methods = useForm<LoginFormValues>({
     resolver: zodResolver(LoginSchema),
@@ -34,19 +36,16 @@ export default function LoginPage() {
   });
   const { handleSubmit } = methods;
 
-  // ✅ Determine redirect destination
   const redirectTo =
     new URLSearchParams(location.search).get("redirect") || "/";
 
-  // Auto-redirect if already logged in
+  // 🔹 Auto-redirect if already logged in
   useEffect(() => {
     const token = Cookies.get("token");
-    if (token) {
-      navigate(redirectTo, { replace: true });
-    }
+    if (token) navigate(redirectTo, { replace: true });
   }, [navigate, redirectTo]);
 
-  // Redirect after successful login
+  // 🔹 Redirect after successful login
   useEffect(() => {
     if (isSuccess) {
       toast.success("Login successful!");
@@ -54,17 +53,61 @@ export default function LoginPage() {
     }
   }, [isSuccess, navigate, redirectTo]);
 
+  // 🔹 Handle normal login
   const onSubmit = async (data: LoginFormValues) => {
     try {
-      await login(data).unwrap();
+      const res = await login(data).unwrap();
+      const user = res.user;
+
+      // ✅ Check if user is unverified
+      if (user && user.email_verified === false) {
+        toast.warning("Please verify your email before logging in");
+        navigate(
+          `/verify-otp?email=${encodeURIComponent(user.email)}&reset=true`
+        );
+        return;
+      }
+
+      // ✅ Normal verified login
+      toast.success("Login successful!");
+      navigate(redirectTo, { replace: true });
     } catch (err: any) {
-      toast.error(err?.data?.message || "Something went wrong");
+      const msg = err?.data?.message || "Something went wrong";
+      toast.error(msg);
     }
   };
 
+  // 🔹 Google OAuth initialization
+  useEffect(() => {
+    if (window.google && googleButtonRef.current) {
+      window.google.accounts.id.initialize({
+        client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID!,
+        callback: async (response: any) => {
+          try {
+            const token = response.credential;
+            await googleLogin({ token }).unwrap();
+
+            // result is of type IAuthResponse
+            toast.success("Logged in with Google!");
+            navigate(redirectTo, { replace: true });
+          } catch (err: any) {
+            toast.error(err?.data?.message || "Google login failed");
+          }
+        },
+      });
+
+      window.google.accounts.id.renderButton(googleButtonRef.current, {
+        theme: "outline",
+        size: "large",
+        shape: "pill",
+        width: 340,
+      });
+    }
+  }, [googleLogin, navigate, redirectTo]);
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-emerald-50 px-4">
-      <Card className="w-full max-w-md bg-white rounded-2xl shadow-md">
+    <div className="min-h-screen flex items-center justify-center bg-muted px-4">
+      <Card className="w-full max-w-md bg-card rounded-2xl shadow-sm border">
         <CardHeader className="text-center space-y-2">
           <CardTitle className="text-2xl font-bold text-primary">
             Welcome Back
@@ -101,13 +144,24 @@ export default function LoginPage() {
 
               <Button
                 type="submit"
-                className="w-full bg-primary text-white rounded-full py-2 mt-2"
+                className="w-full rounded-full py-2 mt-2 text-white"
                 disabled={isLoading}
               >
                 {isLoading ? "Signing In..." : "Log In"}
               </Button>
             </form>
           </FormProvider>
+
+          {/* ─────────────── OR Divider ─────────────── */}
+          <div className="relative my-6 text-center">
+            <span className="absolute left-0 right-0 top-1/2 border-t border-border" />
+            <span className="relative bg-card px-3 text-sm text-muted-foreground">
+              or continue with
+            </span>
+          </div>
+
+          {/* ─────────────── GOOGLE BUTTON ─────────────── */}
+          <div ref={googleButtonRef} className="flex justify-center" />
         </CardContent>
 
         <CardFooter className="text-center text-sm text-muted-foreground">

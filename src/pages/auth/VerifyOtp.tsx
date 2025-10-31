@@ -29,19 +29,19 @@ export default function VerifyOtpPage() {
   const [verifyOtp, { isLoading }] = useVerifyOtpMutation();
   const [resendOtp, { isLoading: isResending }] = useResendOtpMutation();
 
-  // 🔹 If user came from password reset flow, trigger resend immediately
-  if (email && isResetFlow) {
-    (async () => {
-      try {
-        await resendOtp({ email }).unwrap();
-        toast.success("Verification code has been sent to your email");
-      } catch (error: any) {
-        toast.error(error?.data?.message || "Failed to send OTP");
-      }
-    })();
-  }
+  useEffect(() => {
+    if (email && isResetFlow) {
+      (async () => {
+        try {
+          await resendOtp({ email }).unwrap();
+          toast.success("Verification code has been sent to your email");
+        } catch (error: any) {
+          toast.error(error?.data?.message || "Failed to send OTP");
+        }
+      })();
+    }
+  }, []);
 
-  // 🔹 Countdown timer logic
   useEffect(() => {
     const interval = setInterval(() => {
       setTimer((t) => (t > 0 ? t - 1 : 0));
