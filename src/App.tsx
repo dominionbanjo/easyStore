@@ -1,3 +1,4 @@
+import ScrollToTop from "./utils/ScrollToTop";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 // Public Website Pages
@@ -24,23 +25,33 @@ import VerifyOtpPage from "./pages/auth/VerifyOtp";
 import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/auth/ResetPasswordPage";
 
-// Seller Dashboard
-import DashboardLayout from "./modules/sellerDashboard/layouts/DashboardLayout";
-import DashboardHome from "./pages/sellers/DashboardHome";
-import MyStore from "./pages/sellers/MyStore";
-import Orders from "./pages/sellers/Orders";
-import Profile from "./pages/sellers/Profile";
-import Settings from "./pages/sellers/Settings";
-import AddProductPage from "./pages/sellers/addProductPage";
-import EditProductPage from "./pages/sellers/editProductPage";
-import StoreDetailsPage from "./pages/sellers/StoreDetailsPage";
-import ScrollToTop from "./utils/ScrollToTop";
+//vendor
+import VendorDashboardPage from "./modules/vendor/pages/VendorDashboardPage";
+import VendorDashboardLayout from "./modules/vendor/layout/VendorDashboardLayout";
+import CustomersPage from "./modules/vendor/pages/CustomersPage";
+import VendorOrdersPage from "./modules/vendor/pages/OrdersPage";
+import ProductsPage from "./modules/vendor/pages/ProductsPage";
+import VendorSettingsPage from "./modules/vendor/pages/SettingsPage";
+import HelpPage from "./modules/vendor/pages/HelpPage";
+import AnalyticsPage from "./modules/vendor/pages/AnalyticsPage";
+
+import StoreDetailsPage from "./modules/store/storeDetailsPage";
 
 export default function App() {
   return (
     <Router>
       <ScrollToTop />
       <Routes>
+        <Route path="/vendor" element={<VendorDashboardLayout />}>
+          <Route path="" element={<VendorDashboardPage />} />
+          <Route path="customers" element={<CustomersPage />} />
+          <Route path="orders" element={<VendorOrdersPage />} />
+          <Route path="products" element={<ProductsPage />} />
+          <Route path="settings" element={<VendorSettingsPage />} />
+          <Route path="help" element={<HelpPage />} />
+          <Route path="analytics" element={<AnalyticsPage />} />
+        </Route>
+
         <Route path="/" element={<HomepageLayout />}>
           <Route path="" element={<LandingPage />} />
           <Route path="shop" element={<ShopPage />} />
@@ -62,16 +73,6 @@ export default function App() {
           <Route path="verify-otp" element={<VerifyOtpPage />} />
           <Route path="forgot-password" element={<ForgotPasswordPage />} />
           <Route path="reset-password" element={<ResetPasswordPage />} />
-        </Route>
-
-        <Route path="/dashboard" element={<DashboardLayout />}>
-          <Route index element={<DashboardHome />} />
-          <Route path="store" element={<MyStore />} />
-          <Route path="store/add-product" element={<AddProductPage />} />
-          <Route path="store/edit/:id" element={<EditProductPage />} />
-          <Route path="orders" element={<Orders />} />
-          <Route path="profile" element={<Profile />} />
-          <Route path="settings" element={<Settings />} />
         </Route>
 
         <Route path="*" element={<NotFoundPage />} />
