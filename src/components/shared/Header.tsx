@@ -9,7 +9,6 @@ import { useLogoutMutation } from "@/services/authApi";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
-  ShoppingBag,
   Menu,
   LogOut,
   User,
@@ -19,13 +18,6 @@ import {
   Package,
   Search,
 } from "lucide-react";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
 import {
   Popover,
   PopoverTrigger,
@@ -45,12 +37,15 @@ import { toast } from "sonner";
 
 export default function Header() {
   const dispatch = useDispatch();
-  const [open, setOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false); // 🔹 mobile search modal
+  const [searchOpen, setSearchOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
   const [logout] = useLogoutMutation();
   const [query, setQuery] = useState("");
+
+  console.log(searchOpen);
 
   const user = useSelector((state: RootState) => state.user.currentUser);
   const isAuthenticated = useSelector(
@@ -155,61 +150,9 @@ export default function Header() {
 
         {/* Right: Auth/Profile + Mobile Search */}
         <div className="flex items-center gap-3">
-          {/* 🔹 Mobile Search Trigger */}
-          <Sheet open={searchOpen} onOpenChange={setSearchOpen}>
-            <SheetTrigger asChild>
-              <button className="md:hidden flex items-center justify-center p-2 rounded-full hover:bg-muted/50 transition-all">
-                <Search className="h-5 w-5 text-neutral-700" />
-              </button>
-            </SheetTrigger>
-
-            {/* 🔹 Search Sheet Content */}
-            <SheetContent
-              side="top"
-              className="bg-white border-b border-border/20 shadow-lg rounded-b-2xl p-4"
-            >
-              <SheetHeader>
-                <SheetTitle className="text-lg font-semibold mb-4">
-                  Search
-                </SheetTitle>
-              </SheetHeader>
-
-              <form
-                onSubmit={handleSearch}
-                className="flex items-center bg-white border border-border/30 rounded-full overflow-hidden shadow-sm focus-within:ring-1 focus-within:ring-primary/20"
-              >
-                <div className="pl-4 flex items-center justify-center">
-                  <Search className="h-5 w-5 text-muted-foreground" />
-                </div>
-
-                <Input
-                  autoFocus
-                  type="text"
-                  placeholder="Search for products..."
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  className="border-none bg-transparent focus-visible:ring-0 text-sm placeholder:text-muted-foreground px-3 flex-1"
-                />
-
-                <div className="h-6 w-px bg-border/50 mx-2" />
-
-                <Select defaultValue="products">
-                  <SelectTrigger className="border-none bg-transparent text-sm font-medium focus:ring-0 focus:outline-none text-foreground px-3 rounded-r-full hover:bg-muted/40 transition-colors">
-                    <SelectValue placeholder="Products" />
-                  </SelectTrigger>
-                  <SelectContent align="end">
-                    <SelectItem value="products">Products</SelectItem>
-                    <SelectItem value="stores">Stores</SelectItem>
-                    <SelectItem value="brands">Brands</SelectItem>
-                  </SelectContent>
-                </Select>
-              </form>
-            </SheetContent>
-          </Sheet>
-
           {/* Auth/Profile */}
           {isAuthenticated && user ? (
-            <Popover>
+            <Popover open={profileOpen} onOpenChange={setProfileOpen}>
               <PopoverTrigger asChild>
                 <button className="flex items-center justify-center rounded-full border border-border hover:shadow-sm transition-all p-0.5">
                   {user.avatar ? (
@@ -251,6 +194,7 @@ export default function Header() {
                 <nav className="space-y-1 text-sm">
                   <Link
                     to={USER_ROUTES.ORDERS}
+                    onClick={() => setProfileOpen(false)}
                     className="flex items-center gap-2 p-2 rounded-md hover:bg-gray-50"
                   >
                     <Package className="h-4 w-4 text-gray-600" /> My Orders
@@ -258,6 +202,7 @@ export default function Header() {
 
                   <Link
                     to="/cart"
+                    onClick={() => setProfileOpen(false)}
                     className="flex items-center gap-2 p-2 rounded-md hover:bg-gray-50"
                   >
                     <ShoppingCart className="h-4 w-4 text-gray-600" /> My Cart
@@ -265,6 +210,7 @@ export default function Header() {
 
                   <Link
                     to={USER_ROUTES.WISHLIST}
+                    onClick={() => setProfileOpen(false)}
                     className="flex items-center gap-2 p-2 rounded-md hover:bg-gray-50"
                   >
                     <Heart className="h-4 w-4 text-gray-600" /> Wishlist
@@ -272,13 +218,17 @@ export default function Header() {
 
                   <Link
                     to={WEBSITE_ROUTES.SETTINGS}
+                    onClick={() => setProfileOpen(false)}
                     className="flex items-center gap-2 p-2 rounded-md hover:bg-gray-50"
                   >
                     <Settings className="h-4 w-4 text-gray-600" /> Settings
                   </Link>
 
                   <button
-                    onClick={handleLogout}
+                    onClick={() => {
+                      handleLogout();
+                      setProfileOpen(false);
+                    }}
                     className="w-full flex items-center gap-2 p-2 rounded-md hover:bg-red-50 text-red-600 mt-2"
                   >
                     <LogOut className="h-4 w-4" /> Logout
@@ -311,23 +261,20 @@ export default function Header() {
             </div>
           )}
 
-          {/* Mobile Menu */}
+          {/* Mobile Menu (Popover Style) */}
           <div className="sm:hidden">
-            <Sheet open={open} onOpenChange={setOpen}>
-              <SheetTrigger asChild>
+            <Popover open={menuOpen} onOpenChange={setMenuOpen}>
+              <PopoverTrigger asChild>
                 <Button variant="ghost" size="icon" className="p-2">
                   <Menu className="h-6 w-6 text-neutral-700" />
                 </Button>
-              </SheetTrigger>
-              <SheetContent side="left" className="w-64 bg-card flex flex-col">
-                <SheetHeader className="pt-4 pb-2 border-b border-border/10">
-                  <SheetTitle className="flex items-center gap-2 text-primary font-bold text-xl">
-                    <ShoppingBag className="h-5 w-5 text-primary" />
-                    Easy<span className="text-secondary">Store</span>
-                  </SheetTitle>
-                </SheetHeader>
+              </PopoverTrigger>
 
-                <nav className="flex flex-col gap-4 mt-6 px-4 text-base font-medium">
+              <PopoverContent
+                align="end"
+                className="w-56 mt-2 p-3 bg-white shadow-md rounded-lg border border-border"
+              >
+                <nav className="space-y-2 text-sm">
                   {[
                     { name: "Home", path: WEBSITE_ROUTES.HOME },
                     { name: "Shop", path: WEBSITE_ROUTES.SHOP },
@@ -337,19 +284,51 @@ export default function Header() {
                     <Link
                       key={item.path}
                       to={item.path}
-                      onClick={() => setOpen(false)}
+                      onClick={() => setMenuOpen(false)}
                       className={cn(
                         location.pathname === item.path
                           ? "text-primary font-semibold"
-                          : "text-neutral-800 hover:text-primary"
+                          : "text-neutral-800 hover:text-primary",
+                        "block px-3 py-2 rounded-md hover:bg-muted/30"
                       )}
                     >
                       {item.name}
                     </Link>
                   ))}
+
+                  <div className="border-t border-border/20 my-2"></div>
+
+                  {isAuthenticated ? (
+                    <button
+                      onClick={() => {
+                        handleLogout();
+                        setMenuOpen(false);
+                      }}
+                      className="w-full flex items-center gap-2 px-3 py-2 rounded-md hover:bg-red-50 text-red-600"
+                    >
+                      <LogOut className="h-4 w-4" /> Logout
+                    </button>
+                  ) : (
+                    <>
+                      <Link
+                        to={AUTH_ROUTES.LOGIN}
+                        onClick={() => setMenuOpen(false)}
+                        className="block px-3 py-2 rounded-md hover:bg-muted/30 text-neutral-800"
+                      >
+                        Sign In
+                      </Link>
+                      <Link
+                        to={AUTH_ROUTES.SIGNUP}
+                        onClick={() => setMenuOpen(false)}
+                        className="block px-3 py-2 rounded-md hover:bg-muted/30 text-primary font-medium"
+                      >
+                        Sign Up
+                      </Link>
+                    </>
+                  )}
                 </nav>
-              </SheetContent>
-            </Sheet>
+              </PopoverContent>
+            </Popover>
           </div>
         </div>
       </nav>

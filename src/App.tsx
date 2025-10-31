@@ -10,7 +10,6 @@ import HomepageLayout from "./components/layout/homepage/HomePageLayout";
 import ShopPage from "./pages/users/Shop";
 import CategoriesPage from "./pages/users/Categories";
 import ProductDetailPage from "./pages/users/ProductDetailsPage";
-// import FavouritesPage from "./pages/users/FavouritesPage";
 import OrdersPage from "./pages/users/OrdersPage";
 import OrderDetailsPage from "./pages/users/OrderDetailsPage";
 import CartPage from "./pages/users/CartPage";
@@ -35,10 +34,12 @@ import Settings from "./pages/sellers/Settings";
 import AddProductPage from "./pages/sellers/addProductPage";
 import EditProductPage from "./pages/sellers/editProductPage";
 import StoreDetailsPage from "./pages/sellers/StoreDetailsPage";
+import ScrollToTop from "./utils/ScrollToTop";
 
 export default function App() {
   return (
     <Router>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<HomepageLayout />}>
           <Route path="" element={<LandingPage />} />
@@ -47,7 +48,6 @@ export default function App() {
           <Route path="categories" element={<CategoriesPage />} />
           <Route path="categories/:id" element={<CategoryDetailsPage />} />
           <Route path="product/:id" element={<ProductDetailPage />} />
-          {/* <Route path="/favourites" element={<FavouritesPage />} /> */}
           <Route path="orders" element={<OrdersPage />} />
           <Route path="orders/:id" element={<OrderDetailsPage />} />
           <Route path="about" element={<AboutPage />} />
