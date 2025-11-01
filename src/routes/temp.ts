@@ -1,23 +1,14 @@
-// src/enums/routes.ts
-
+// 🌐 Public-facing website routes
 export enum WEBSITE_ROUTES {
-  HOME = "/", // renamed from LANDING for clarity
+  HOME = "/",
   ABOUT = "/about",
-  NOT_FOUND = "*",
   SHOP = "/shop",
   CATEGORIES = "/categories",
   SETTINGS = "/settings",
+  NOT_FOUND = "*",
 }
 
-export enum USER_ROUTES {
-  SHOP = "/shop",
-  CATEGORIES = "/categories",
-  PRODUCT_DETAIL = "/product/:id",
-  WISHLIST = "/wishlist",
-  ORDERS = "/orders",
-  ORDER_DETAILS = "/orders/:id",
-}
-
+// 👤 Auth-related routes
 export enum AUTH_ROUTES {
   LOGIN = "/auth/login",
   SIGNUP = "/auth/signup",
@@ -25,13 +16,44 @@ export enum AUTH_ROUTES {
   FORGOT_PASSWORD = "/auth/forgot-password",
 }
 
+// 🛒 User-facing dashboard or account routes
+export enum USER_ROUTES {
+  SHOP = "/shop",
+  CATEGORIES = "/categories",
+  PRODUCT_DETAIL = "/product/:id",
+  WISHLIST = "/wishlist",
+  ORDERS = "/orders",
+  ORDER_DETAILS = "/orders/:id",
+  PROFILE = "/account/profile",
+  SETTINGS = "/account/settings",
+}
+
+// 🧑‍💼 Seller / Vendor dashboard routes
 export enum SELLER_DASHBOARD_ROUTES {
-  DASHBOARD = "/dashboard",
-  HOME = "/dashboard", // index route
-  STORE = "/dashboard/store",
-  ADD_PRODUCT = "/dashboard/store/add-product",
-  EDIT_PRODUCT = "/dashboard/store/edit/:id",
-  ORDERS = "/dashboard/orders",
-  PROFILE = "/dashboard/profile",
-  SETTINGS = "/dashboard/settings",
+  // Overview analytics
+  DASHBOARD = "/vendor",
+  ANALYTICS = "/vendor/analytics",
+
+  // Store management
+  PRODUCTS = "/vendor/products",
+  ADD_PRODUCT = "/vendor/products/add",
+  EDIT_PRODUCT = "/vendor/products/edit/:id",
+  CATEGORIES = "/vendor/products/categories",
+
+  // Orders management
+  ORDERS = "/vendor/orders",
+  ORDER_DETAIL = "/vendor/orders/:id",
+
+  // Customers
+  CUSTOMERS = "/vendor/customers",
+
+  // Reviews & Ratings
+  REVIEWS = "/vendor/reviews",
+
+  // Reports
+  REPORTS = "/vendor/reports",
+
+  // Profile and Settings
+  PROFILE = "/vendor/profile",
+  SETTINGS = "/vendor/settings",
 }

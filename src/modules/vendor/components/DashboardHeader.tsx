@@ -1,5 +1,3 @@
-"use client";
-
 import { useState, useEffect } from "react";
 import { Menu, Bell, UserCircle, Sun, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
