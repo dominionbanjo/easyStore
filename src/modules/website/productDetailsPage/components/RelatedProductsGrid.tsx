@@ -1,4 +1,3 @@
-"use client";
 import ProductCard from "@/components/shared/ProductCard";
 import { mockCategories } from "../../lib/data";
 

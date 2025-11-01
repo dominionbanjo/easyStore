@@ -1,4 +1,3 @@
-"use client";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { motion, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";

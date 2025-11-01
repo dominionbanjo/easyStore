@@ -1,5 +1,3 @@
-"use client";
-
 import { useForm, FormProvider } from "react-hook-form";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";

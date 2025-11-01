@@ -1,5 +1,3 @@
-"use client";
-
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart2, Package, ShoppingBag, Users } from "lucide-react";
