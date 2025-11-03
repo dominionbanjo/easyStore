@@ -149,3 +149,20 @@
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+
+
+@keyframes fadeSlideDown {
+  0% { opacity: 0; transform: translateY(-6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.fade-slide-down {
+  animation: fadeSlideDown .25s ease forwards;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; scale: .98; }
+  100% { opacity: 1; scale: 1; }
+}
+.fade-in {
+  animation: fadeIn .18s ease forwards;
+}

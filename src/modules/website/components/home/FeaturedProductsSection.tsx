@@ -1,4 +1,5 @@
-import ProductCard from "@/components/shared/ProductCard";
+import { ProductCard } from "@/components/shared/ProductCard";
+
 
 const featuredProducts = [
   {
@@ -56,11 +57,11 @@ export default function FeaturedProductsSection() {
         {/* Responsive Grid */}
         <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-5 justify-items-center">
           {featuredProducts.map((product) => (
-            <ProductCard key={product.id} {...product}>
+            <ProductCard.Root key={product.id} {...product}>
               <ProductCard.Image />
               <ProductCard.Info />
-              <ProductCard.Actions />
-            </ProductCard>
+         
+            </ProductCard.Root>
           ))}
         </div>
       </div>

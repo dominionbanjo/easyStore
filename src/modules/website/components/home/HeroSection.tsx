@@ -32,7 +32,7 @@ export default function HeroSection() {
               animate="visible"
               className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight text-balance leading-tight"
             >
-              Discover products <br /> you’ll{" "}
+              Discover products <br /> you gonna{" "}
               <span className="text-primary">love</span>
             </motion.h1>
 
@@ -44,7 +44,7 @@ export default function HeroSection() {
               className="mt-6 max-w-xl mx-auto lg:mx-0 text-lg sm:text-xl leading-relaxed text-foreground"
             >
               Shop the best deals in fashion, electronics, home decor, and more
-              — all curated for your lifestyle.
+              all curated for your lifestyle.
             </motion.p>
 
             <motion.div

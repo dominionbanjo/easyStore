@@ -1,4 +1,5 @@
-import ProductCard from "@/components/shared/ProductCard";
+
+import { ProductCard } from "@/components/shared/ProductCard";
 import { mockCategories } from "../../lib/data";
 
 export default function RelatedProductsGrid({
@@ -14,11 +15,11 @@ export default function RelatedProductsGrid({
       <h2 className="text-2xl font-semibold text-gray-900">Related Products</h2>
       <div className="grid md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
         {related.slice(0, 4).map((p) => (
-          <ProductCard key={p.id} {...p}>
+          <ProductCard.Root key={p.id} {...p}>
             <ProductCard.Image />
             <ProductCard.Info />
             <ProductCard.Actions />
-          </ProductCard>
+          </ProductCard.Root>
         ))}
       </div>
     </section>

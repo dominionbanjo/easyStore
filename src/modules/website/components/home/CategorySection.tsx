@@ -1,6 +1,7 @@
 import { TabbedGrid } from "@/components/shared/TabbedGrid";
-import ProductCard from "@/components/shared/ProductCard";
 import { mockCategories } from "../../lib/data";
+import { ProductCard } from "@/components/shared/ProductCard";
+
 
 export default function CategoriesSection() {
   const tabGroups = Object.keys(mockCategories).map((key) => ({
@@ -13,11 +14,24 @@ export default function CategoriesSection() {
     <TabbedGrid
       tabGroups={tabGroups}
       renderItem={(product) => (
-        <ProductCard {...product}>
-          <ProductCard.Image />
-          <ProductCard.Info />
-          <ProductCard.Actions />
-        </ProductCard>
+    <ProductCard.Root
+        image={product.image}
+        name="Dunk High 'Green Satin'"
+        price={`${product.price}`}
+        brand={""}
+        stock={product.stock}
+        rating={product.rating}
+        category={product.category}
+        vendor={product.vendor}
+        id={product.id}
+        avatar={product.image}
+      >
+        <ProductCard.Image />
+        <ProductCard.Info />
+        <ProductCard.Footer />
+        {/* <ProductCard.Actions onClick={() => console.log("Buy clicked")} /> */}
+      </ProductCard.Root>
+
       )}
     />
   );

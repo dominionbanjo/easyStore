@@ -53,7 +53,7 @@ export function TabbedGrid<T>({
                 className={cn(
                   "px-5 py-4 text-sm font-medium rounded-full transition-all duration-200",
                   "text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                  "data-[state=active]:bg-primary/30 data-[state=active]:text-foreground"
+                  "data-[state=active]:bg-primary/90 data-[state=active]:text-white"
                 )}
               >
                 {tab.label}
