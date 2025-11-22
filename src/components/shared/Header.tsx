@@ -16,13 +16,6 @@ import {
   PopoverTrigger,
   PopoverContent,
 } from "@/components/ui/popover";
-import {
-  Select,
-  SelectTrigger,
-  SelectContent,
-  SelectItem,
-  SelectValue,
-} from "@/components/ui/select";
 
 import {
   Sheet,
@@ -41,6 +34,8 @@ export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState("products");
   const location = useLocation();
   const [logout] = useLogoutMutation();
   const [query, setQuery] = useState("");
@@ -53,10 +48,17 @@ export default function Header() {
   );
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 50);
-    window.addEventListener("scroll", handleScroll);
+    const handleScroll = () => {
+      const scrolled = window.scrollY > 50;
+      if (scrolled !== isScrolled) {
+        setIsScrolled(scrolled);
+      }
+    };
+    
+    // Use passive listener for better performance
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [isScrolled]);
 
   const handleLogout = async () => {
     await logout();
@@ -79,18 +81,19 @@ export default function Header() {
     >
       <nav
         className={cn(
-          "flex w-full items-center justify-between gap-3 backdrop-blur-md transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] px-4 sm:px-6 py-3",
+          "flex w-full items-center justify-between backdrop-blur-md transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] px-4 sm:px-6 py-3",
           "fixed top-0 left-1/2 -translate-x-1/2",
+          "will-change-[transform,background-color,border-color,box-shadow]",
           isScrolled
-            ? "sm:max-w-[95%] bg-white/80 rounded-xl shadow-md sm:top-3 border border-border/20 fade-in"
-            : "sm:max-w-[100%] bg-white/30 sm:top-3 border border-transparent"
+            ? "max-w-[100%] sm:max-w-[95%] bg-white/80 rounded-none sm:rounded-xl shadow-md sm:top-3 border border-border/20"
+            : "max-w-[100%] bg-white/30 sm:top-3 border border-transparent"
         )}
       >
 
         {/* ---------- LEFT: Logo + Desktop Nav ---------- */}
-        <div className="flex items-center gap-4 flex-shrink-0">
+        <div className="flex items-center gap-4 lg:gap-6 flex-shrink-0 min-w-0" style={{ width: '30%' }}>
           {/* Mobile Menu */}
-          <div className="flex sm:hidden">
+          <div className="flex sm:hidden flex-shrink-0">
             <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className="p-2">
@@ -116,7 +119,7 @@ export default function Header() {
                         location.pathname === item.path
                           ? "text-primary font-semibold"
                           : "text-neutral-800 hover:text-primary",
-                        "transition-all duration-200 hover:scale-[1.04]"
+                        "transition-all duration-200 hover:scale-[1.04] block"
                       )}
                     >
                       {item.name}
@@ -159,17 +162,17 @@ export default function Header() {
           </div>
 
           {/* Logo */}
-          <Link to={WEBSITE_ROUTES.HOME} className="flex items-center gap-2">
+          <Link to={WEBSITE_ROUTES.HOME} className="flex items-center gap-2 flex-shrink-0">
             <img
               src="/logos/inline-stripe-transparent.png"
               alt="EasyStore logo"
-              className="h-10 w-auto sm:h-12"
+              className="h-9 w-auto sm:h-10 lg:h-11"
               loading="lazy"
             />
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden sm:flex items-center gap-6 text-sm font-medium">
+          <nav className="hidden lg:flex items-center gap-5 xl:gap-6 text-sm font-medium whitespace-nowrap">
             {[
               { name: "Home", path: WEBSITE_ROUTES.HOME },
               { name: "Shop", path: WEBSITE_ROUTES.SHOP },
@@ -180,6 +183,7 @@ export default function Header() {
                 key={item.path}
                 to={item.path}
                 className={cn(
+                  "transition-colors duration-200",
                   location.pathname === item.path
                     ? "text-primary font-semibold"
                     : "text-neutral-800 hover:text-primary"
@@ -191,14 +195,11 @@ export default function Header() {
           </nav>
         </div>
 
-        {/* ---------- MIDDLE: Search (Desktop & Tablet) ---------- */}
-        <div className="hidden md:flex flex-1 justify-center px-2">
-          <form
-            onSubmit={handleSearch}
-            className="flex w-full max-w-[600px] items-center rounded-full bg-white border border-border/40 overflow-hidden shadow-sm focus-within:ring-2 focus-within:ring-primary/30"
-          >
-            <div className="pl-3">
-              <Search className="h-5 w-5 text-muted-foreground" />
+        {/* ---------- MIDDLE: Search ---------- */}
+        <div className="hidden md:flex flex-1 justify-center px-4 lg:px-6  max-w-[45%] min-w-0">
+          <div className="flex w-full items-center rounded-full  bg-white border border-border/40 overflow-hidden shadow-sm focus-within:ring-2 focus-within:ring-primary/30 transition-all">
+            <div className="pl-4 flex-shrink-0">
+              <Search className="h-4 w-4 text-muted-foreground" />
             </div>
 
             <Input
@@ -206,42 +207,85 @@ export default function Header() {
               placeholder="Search products..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="border-none bg-transparent focus-visible:ring-0 text-sm px-3 flex-1"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handleSearch(e);
+                }
+              }}
+              className="border-none bg-transparent py-6 focus-visible:ring-0 text-sm px-3 flex-1 min-w-0"
             />
 
-            <div className="h-6 w-px bg-border/40 mx-2" />
+            <div className="h-6 w-px bg-border/40 mx-2 flex-shrink-0" />
 
-            <Select defaultValue="products">
-              <SelectTrigger className="border-none bg-transparent text-sm px-3">
-                <SelectValue placeholder="Products" />
-              </SelectTrigger>
-              <SelectContent align="end">
-                <SelectItem value="products">Products</SelectItem>
-                <SelectItem value="stores">Stores</SelectItem>
-                <SelectItem value="brands">Brands</SelectItem>
-              </SelectContent>
-            </Select>
-          </form>
+            <div className="flex-shrink-0" style={{ width: '110px' }}>
+              <Popover open={filterOpen} onOpenChange={setFilterOpen}>
+                <PopoverTrigger asChild>
+                  <button 
+                    className="flex items-center justify-between w-full h-auto border-none bg-transparent text-sm px-3 pr-4 text-neutral-700 hover:text-neutral-900 transition-colors capitalize"
+                    style={{ width: '110px' }}
+                  >
+                    <span className="truncate">{selectedFilter}</span>
+                    <svg
+                      className={cn(
+                        "h-4 w-4 flex-shrink-0 transition-transform duration-200",
+                        filterOpen && "rotate-180"
+                      )}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent 
+                  align="end" 
+                  sideOffset={8} 
+                  className="w-[140px] p-2 bg-white border border-border/40 shadow-lg rounded-lg"
+                >
+                  <div className="flex flex-col gap-1">
+                    {["products", "stores", "brands"].map((filter) => (
+                      <button
+                        key={filter}
+                        onClick={() => {
+                          setSelectedFilter(filter);
+                          setFilterOpen(false);
+                        }}
+                        className={cn(
+                          "px-3 py-2 text-sm text-left rounded-md transition-colors capitalize",
+                          selectedFilter === filter
+                            ? "bg-black text-white font-medium"
+                            : "text-neutral-700 hover:bg-gray-100"
+                        )}
+                      >
+                        {filter}
+                      </button>
+                    ))}
+                  </div>
+                </PopoverContent>
+              </Popover>
+            </div>
+          </div>
         </div>
 
         {/* ---------- RIGHT: Auth / Cart / Mobile Search ---------- */}
-        <div className="flex items-center gap-3 flex-shrink-0">
+        <div className="flex items-center justify-end gap-2 sm:gap-3 flex-shrink-0" style={{ width: '25%' }}>
 
           {/* Mobile Search Trigger */}
           <Button
             variant="ghost"
             size="icon"
-            className="sm:hidden p-2"
+            className="md:hidden p-2 flex-shrink-0"
             onClick={() => setSearchOpen(!searchOpen)}
           >
-            <Search className="h-6 w-6" />
+            <Search className="h-5 w-5" />
           </Button>
 
           {/* Profile/Login */}
           {isAuthenticated && user ? (
             <Popover open={profileOpen} onOpenChange={setProfileOpen}>
               <PopoverTrigger asChild>
-                <button className="flex items-center justify-center rounded-full border border-border hover:shadow-sm transition p-1">
+                <button className="flex items-center justify-center rounded-full border border-border hover:shadow-sm transition p-1 flex-shrink-0">
                   {user.avatar ? (
                     <img
                       src={user.avatar}
@@ -258,19 +302,46 @@ export default function Header() {
                 align="end"
                 className="w-56 p-3 bg-white shadow-md rounded-lg border border-border fade-in"
               >
-                {/* user info + menu */}
-                …
+                <div className="space-y-2">
+                  <div className="border-b pb-2">
+                    <p className="font-semibold text-sm">{user.first_name} {user.last_name}</p>
+                    <p className="text-xs text-muted-foreground">{user.email}</p>
+                  </div>
+                  <Link 
+                    to={USER_ROUTES.PROFILE} 
+                    onClick={() => setProfileOpen(false)}
+                    className="block px-2 py-1.5 text-sm hover:bg-gray-100 rounded"
+                  >
+                    Profile
+                  </Link>
+                  <Link 
+                    to={USER_ROUTES.ORDERS} 
+                    onClick={() => setProfileOpen(false)}
+                    className="block px-2 py-1.5 text-sm hover:bg-gray-100 rounded"
+                  >
+                    Orders
+                  </Link>
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      setProfileOpen(false);
+                    }}
+                    className="w-full text-left px-2 py-1.5 text-sm text-red-600 hover:bg-red-50 rounded"
+                  >
+                    Logout
+                  </button>
+                </div>
               </PopoverContent>
             </Popover>
           ) : (
-            <div className="hidden sm:flex items-center gap-2">
+            <div className="hidden sm:flex items-center gap-2 flex-shrink-0">
               <Link to={AUTH_ROUTES.LOGIN}>
-                <Button variant="outline" className="rounded-full px-4">
+                <Button variant="outline" className="rounded-full px-4 text-sm h-9">
                   Sign In
                 </Button>
               </Link>
               <Link to={AUTH_ROUTES.SIGNUP}>
-                <Button className="rounded-full px-4 text-white">Sign Up</Button>
+                <Button className="rounded-full px-4 text-sm h-9 text-white">Sign Up</Button>
               </Link>
             </div>
           )}
@@ -281,16 +352,22 @@ export default function Header() {
       {/* ✅ Mobile Expand Search */}
       {searchOpen && (
         <div className="fixed top-[64px] left-0 w-full z-40 md:hidden bg-white border-b shadow-md px-4 py-3 fade-slide-down">
-          <form onSubmit={handleSearch} className="flex items-center gap-2">
+          <div className="flex items-center gap-2">
             <Input
               type="text"
               placeholder="Search products..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handleSearch(e);
+                }
+              }}
               className="flex-1"
+              autoFocus
             />
-            <Button size="sm">Search</Button>
-          </form>
+            <Button size="sm" type="button" onClick={handleSearch}>Search</Button>
+          </div>
         </div>
       )}
 
@@ -300,3 +377,4 @@ export default function Header() {
 
 
 }
+
