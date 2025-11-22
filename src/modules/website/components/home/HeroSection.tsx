@@ -1,7 +1,10 @@
-import { motion, type Variants } from "framer-motion";
+import { motion, useAnimationControls, type Variants } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import { useEffect } from "react";
+import TrustedBy from "./TrustedBy";
 
+// Hero main fade-in animation
 const transitionVariants: Variants = {
   hidden: { opacity: 0, y: 30, filter: "blur(10px)" },
   visible: {
@@ -16,25 +19,86 @@ const transitionVariants: Variants = {
   },
 };
 
+
+
+
+export function HeroTitleGradient() {
+  const highlightControls = useAnimationControls();
+  const textControls = useAnimationControls();
+
+  useEffect(() => {
+    const runAnimation = async () => {
+      // Slide IN from left (expand width from left edge)
+      await Promise.all([
+        highlightControls.start({
+          width: ["0%", "100%"],
+          left: "0%",
+          transition: { duration: 0.7, ease: [0.42, 0, 0.58, 1] },
+        }),
+        textControls.start({
+          width: ["0%", "100%"],
+          left: "0%",
+          transition: { duration: 0.7, ease: [0.42, 0, 0.58, 1] },
+        }),
+      ]);
+
+      // Wait
+      await new Promise((res) => setTimeout(res, 400));
+
+      // Slide OUT from right (left edge moves right while width shrinks)
+      await Promise.all([
+        highlightControls.start({
+          width: ["100%", "0%"],
+          left: ["0%", "100%"],
+          transition: { duration: 0.7, ease: [0.42, 0, 0.58, 1] },
+        }),
+        textControls.start({
+          width: ["100%", "0%"],
+          left: ["0%", "100%"],
+          transition: { duration: 0.7, ease: [0.42, 0, 0.58, 1] },
+        }),
+      ]);
+    };
+
+    runAnimation();
+  }, [highlightControls, textControls]);
+
+  return (
+    <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-5xl font-medium tracking-tight text-balance leading-[1.2]">
+      Small Business. <br />
+
+      <span className="relative inline-block">
+        {/* Highlight bar */}
+        <motion.span
+          animate={highlightControls}
+          initial={{ width: "0%", left: "0%" }}
+          className="absolute top-0 bottom-0 bg-black -z-10 rounded-sm"
+        />
+
+        {/* Base black text */}
+        <span className="relative z-10 text-black">Big League Presence.</span>
+
+        {/* White text overlay that disappears with highlight */}
+        <motion.span
+          animate={textControls}
+          initial={{ width: "0%", left: "0%" }}
+          className="absolute top-0 bottom-0 text-white overflow-hidden whitespace-nowrap z-20"
+        >
+          Big League Presence.
+        </motion.span>
+      </span>
+    </h1>
+  );
+}
 export default function HeroSection() {
   return (
     <section className="relative isolate overflow-hidden pb-10 sm:pb-20 px-4">
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 -z-10 overflow-hidden "
-      />
       <div className="flex justify-center w-full">
-        <div className="w-full  flex flex-col items-center lg:flex-row lg:items-center lg:justify-between gap-12">
+        <div className="w-full flex flex-col items-center lg:flex-row lg:items-center lg:justify-between gap-12">
+
+          {/* LEFT SIDE */}
           <div className="flex-1 text-center lg:text-left">
-            <motion.h1
-              variants={transitionVariants}
-              initial="hidden"
-              animate="visible"
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight text-balance leading-tight"
-            >
-              Discover products <br /> you gonna{" "}
-              <span className="text-primary">love</span>
-            </motion.h1>
+            <HeroTitleGradient />
 
             <motion.p
               variants={transitionVariants}
@@ -43,8 +107,8 @@ export default function HeroSection() {
               transition={{ delay: 0.2 }}
               className="mt-6 max-w-xl mx-auto lg:mx-0 text-lg sm:text-xl leading-relaxed text-foreground"
             >
-              Shop the best deals in fashion, electronics, home decor, and more
-              all curated for your lifestyle.
+              We help customers see your value instantly, trust you confidently,
+              and buy from you consistently.
             </motion.p>
 
             <motion.div
@@ -56,14 +120,15 @@ export default function HeroSection() {
             >
               <Button
                 size="lg"
-                className="bg-primary text-primary-foreground rounded-full px-8 hover:bg-primary/90 transition-transform hover:scale-[1.03]"
+                className="bg-primary text-primary-foreground rounded-full px-8 py-7 hover:bg-primary/90 transition-transform hover:scale-[1.03]"
               >
-                Start Shopping
+                Start Shopping Freely
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </motion.div>
           </div>
 
+          {/* RIGHT SIDE (unchanged) */}
           <motion.div
             variants={transitionVariants}
             initial="hidden"
@@ -72,15 +137,7 @@ export default function HeroSection() {
             className="flex-1 flex justify-center lg:justify-end"
           >
             <div
-              className="
-                relative w-full max-w-lg
-                aspect-[5/3]
-                rounded-3xl overflow-hidden
-                shadow-lg border border-border/20
-                lg:max-w-xl xl:max-w-2xl
-                bg-transparent
-                transition-all duration-500 ease-in-out
-              "
+              className="relative w-full max-w-lg aspect-[5/3] rounded-3xl overflow-hidden shadow-lg border border-border/20 lg:max-w-xl xl:max-w-2xl bg-transparent transition-all duration-500 ease-in-out"
             >
               <video
                 className="w-full h-full object-cover"
@@ -122,6 +179,7 @@ export default function HeroSection() {
           </motion.div>
         </div>
       </div>
+        <TrustedBy />
     </section>
   );
 }

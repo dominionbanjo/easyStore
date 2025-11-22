@@ -197,7 +197,7 @@ export default function Header() {
 
         {/* ---------- MIDDLE: Search ---------- */}
         <div className="hidden md:flex flex-1 justify-center px-4 lg:px-6  max-w-[45%] min-w-0">
-          <div className="flex w-full items-center rounded-full  bg-white border border-border/40 overflow-hidden shadow-sm focus-within:ring-2 focus-within:ring-primary/30 transition-all">
+          <div className="flex w-full items-center rounded-full  bg-white border-2 border-border/40 overflow-hiddenshadow-sm focus-within:ring-1 focus-within:ring-primary/10 transition-all">
             <div className="pl-4 flex-shrink-0">
               <Search className="h-4 w-4 text-muted-foreground" />
             </div>
@@ -212,7 +212,7 @@ export default function Header() {
                   handleSearch(e);
                 }
               }}
-              className="border-none bg-transparent py-6 focus-visible:ring-0 text-sm px-3 flex-1 min-w-0"
+              className="border-0 shadow-none bg-white py-6 focus-visible:ring-0 text-sm px-3 flex-1 min-w-0"
             />
 
             <div className="h-6 w-px bg-border/40 mx-2 flex-shrink-0" />
