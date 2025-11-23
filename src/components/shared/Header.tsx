@@ -27,6 +27,7 @@ import { cn } from "@/lib/utils";
 import { AUTH_ROUTES, USER_ROUTES, WEBSITE_ROUTES } from "@/routes/temp";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
+import FancyHoverText from "./FancyTextHover";
 
 export default function Header() {
   const dispatch = useDispatch();
@@ -187,9 +188,11 @@ export default function Header() {
                   location.pathname === item.path
                     ? "text-primary font-semibold"
                     : "text-neutral-800 hover:text-primary"
+                    
                 )}
               >
                 {item.name}
+                <FancyHoverText text={item.name} />
               </Link>
             ))}
           </nav>

@@ -65,7 +65,7 @@ export function HeroTitleGradient() {
 
   return (
     <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-5xl font-medium tracking-tight text-balance leading-[1.2]">
-      Small Business. <br />
+      Scale Your Small Business <br />
 
       <span className="relative inline-block">
         {/* Highlight bar */}
@@ -76,20 +76,21 @@ export function HeroTitleGradient() {
         />
 
         {/* Base black text */}
-        <span className="relative z-10 text-black">Big League Presence.</span>
+        <span className="relative z-10 text-black">With a <span className="text-[#17c06e] font-">Big Brand</span> Experience.</span>
 
         {/* White text overlay that disappears with highlight */}
         <motion.span
           animate={textControls}
           initial={{ width: "0%", left: "0%" }}
-          className="absolute top-0 bottom-0 text-white overflow-hidden whitespace-nowrap z-20"
+          className="absolute top-0 bottom-0 text-white overflow-hidden whitespace-nowrap z-20 "
         >
-          Big League Presence.
+          With a Big Brand Experience
         </motion.span>
       </span>
     </h1>
   );
 }
+
 export default function HeroSection() {
   return (
     <section className="relative isolate overflow-hidden pb-10 sm:pb-20 px-4">
@@ -98,7 +99,15 @@ export default function HeroSection() {
 
           {/* LEFT SIDE */}
           <div className="flex-1 text-center lg:text-left">
-            <HeroTitleGradient />
+            <motion.h1
+              variants={transitionVariants}
+              initial="hidden"
+              animate="visible"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight text-balance leading-tight"
+            >
+
+              <HeroTitleGradient />
+            </motion.h1>
 
             <motion.p
               variants={transitionVariants}
@@ -107,8 +116,10 @@ export default function HeroSection() {
               transition={{ delay: 0.2 }}
               className="mt-6 max-w-xl mx-auto lg:mx-0 text-lg sm:text-xl leading-relaxed text-foreground"
             >
-              We help customers see your value instantly, trust you confidently,
-              and buy from you consistently.
+              {/* We help customers see your value instantly, trust you confidently,
+              and buy from you consistently. */}
+
+              Create a beautiful portfolio to showcase your products, gain trust instantly, and make it easier for customers to shop fast, reliable, and stress-free
             </motion.p>
 
             <motion.div
@@ -122,7 +133,7 @@ export default function HeroSection() {
                 size="lg"
                 className="bg-primary text-primary-foreground rounded-full px-8 py-7 hover:bg-primary/90 transition-transform hover:scale-[1.03]"
               >
-                Start Shopping Freely
+                Get Started
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </motion.div>
@@ -179,7 +190,7 @@ export default function HeroSection() {
           </motion.div>
         </div>
       </div>
-        <TrustedBy />
+      <TrustedBy />
     </section>
   );
 }
