@@ -1,7 +1,6 @@
-import { motion, useAnimationControls, type Variants } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-import { useEffect } from "react";
 import SocialProofBadge from "./SocialProofBadge";
 
 
