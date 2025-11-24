@@ -45,7 +45,7 @@ export function TabbedGrid<T>({
           className="mx-auto"
         >
           {/* ─── Tab Buttons ─── */}
-          <TabsList className="flex flex-wrap justify-center gap-2 sm:gap-6 bg-transparent py-4 px-4 mb-5 sm-mb-0">
+          <TabsList className="flex flex-wrap  justify-center gap-2 sm:gap-6 bg-transparent py-4 px-4 mb-5 sm-mb-0">
             {tabGroups.map((tab) => (
               <TabsTrigger
                 key={tab.value}

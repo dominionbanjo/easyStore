@@ -2,7 +2,8 @@ import { motion, useAnimationControls, type Variants } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { useEffect } from "react";
-import TrustedBy from "./TrustedBy";
+import SocialProofBadge from "./SocialProofBadge";
+
 
 // Hero main fade-in animation
 const transitionVariants: Variants = {
@@ -22,70 +23,16 @@ const transitionVariants: Variants = {
 
 
 
-export function HeroTitleGradient() {
-  const highlightControls = useAnimationControls();
-  const textControls = useAnimationControls();
-
-  useEffect(() => {
-    const runAnimation = async () => {
-      // Slide IN from left (expand width from left edge)
-      await Promise.all([
-        highlightControls.start({
-          width: ["0%", "100%"],
-          left: "0%",
-          transition: { duration: 0.7, ease: [0.42, 0, 0.58, 1] },
-        }),
-        textControls.start({
-          width: ["0%", "100%"],
-          left: "0%",
-          transition: { duration: 0.7, ease: [0.42, 0, 0.58, 1] },
-        }),
-      ]);
-
-      // Wait
-      await new Promise((res) => setTimeout(res, 400));
-
-      // Slide OUT from right (left edge moves right while width shrinks)
-      await Promise.all([
-        highlightControls.start({
-          width: ["100%", "0%"],
-          left: ["0%", "100%"],
-          transition: { duration: 0.7, ease: [0.42, 0, 0.58, 1] },
-        }),
-        textControls.start({
-          width: ["100%", "0%"],
-          left: ["0%", "100%"],
-          transition: { duration: 0.7, ease: [0.42, 0, 0.58, 1] },
-        }),
-      ]);
-    };
-
-    runAnimation();
-  }, [highlightControls, textControls]);
-
+export function HeroTitle() {
+  // 
   return (
     <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-5xl font-medium tracking-tight text-balance leading-[1.2]">
-      Scale Your Small Business <br />
-
+      Scale Your Small Business
+      <br />
       <span className="relative inline-block">
-        {/* Highlight bar */}
-        <motion.span
-          animate={highlightControls}
-          initial={{ width: "0%", left: "0%" }}
-          className="absolute top-0 bottom-0 bg-black -z-10 rounded-sm"
-        />
 
-        {/* Base black text */}
-        <span className="relative z-10 text-black">With a <span className="text-[#17c06e] font-">Big Brand</span> Experience.</span>
+        <span className="relative z-10 text-black">With a <span className="text-[#17c06e] font-bold">Big Brand</span> Experience.</span>
 
-        {/* White text overlay that disappears with highlight */}
-        <motion.span
-          animate={textControls}
-          initial={{ width: "0%", left: "0%" }}
-          className="absolute top-0 bottom-0 text-white overflow-hidden whitespace-nowrap z-20 "
-        >
-          With a Big Brand Experience
-        </motion.span>
       </span>
     </h1>
   );
@@ -99,6 +46,15 @@ export default function HeroSection() {
 
           {/* LEFT SIDE */}
           <div className="flex-1 text-center lg:text-left">
+            {/* Catchy TAG */}
+            <motion.p
+              variants={transitionVariants}
+              initial="hidden"
+              animate="visible"
+              className="italic text-[#367e5c]">
+              # Nigeria's easiest marketplace for discovering everyday essentials.
+            </motion.p>
+
             <motion.h1
               variants={transitionVariants}
               initial="hidden"
@@ -106,7 +62,7 @@ export default function HeroSection() {
               className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight text-balance leading-tight"
             >
 
-              <HeroTitleGradient />
+              <HeroTitle />
             </motion.h1>
 
             <motion.p
@@ -116,10 +72,9 @@ export default function HeroSection() {
               transition={{ delay: 0.2 }}
               className="mt-6 max-w-xl mx-auto lg:mx-0 text-lg sm:text-xl leading-relaxed text-foreground"
             >
-              {/* We help customers see your value instantly, trust you confidently,
-              and buy from you consistently. */}
 
               Create a beautiful portfolio to showcase your products, gain trust instantly, and make it easier for customers to shop fast, reliable, and stress-free
+
             </motion.p>
 
             <motion.div
@@ -127,16 +82,31 @@ export default function HeroSection() {
               initial="hidden"
               animate="visible"
               transition={{ delay: 0.4 }}
-              className="mt-10 flex justify-center lg:justify-start"
+              className="mt-10 flex flex-col items-center lg:items-start gap-4"
             >
               <Button
                 size="lg"
-                className="bg-primary text-primary-foreground rounded-full px-8 py-7 hover:bg-primary/90 transition-transform hover:scale-[1.03]"
+                className="bg-primary text-primary-foreground rounded-full px-8 py-7 hover:bg-[#17c06e]/90 transition-transform hover:scale-[1.03]"
               >
                 Get Started
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
+
+              <SocialProofBadge
+                users={[
+                  { src: "/images/fash4.png", alt: "@shadcn", fallback: "CN" },
+                  { src: "/images/fash0.png", alt: "@maxleiter", fallback: "ML" },
+                  { src: "/images/fash1.png", alt: "@evilrabbit", fallback: "ER" },
+                ]}
+                rating={4.9}
+                totalUsers={100}
+                maxAvatars={3}
+              />
             </motion.div>
+
+
+
+
           </div>
 
           {/* RIGHT SIDE (unchanged) */}
@@ -190,7 +160,7 @@ export default function HeroSection() {
           </motion.div>
         </div>
       </div>
-      <TrustedBy />
+
     </section>
   );
 }

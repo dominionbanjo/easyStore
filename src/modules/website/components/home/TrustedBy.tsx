@@ -1,46 +1,49 @@
-import { Slack, Chrome, Zap, ShoppingBag, Youtube, Laptop, type LucideIcon } from 'lucide-react';
-
 interface Company {
   name: string;
-  Icon: LucideIcon;
+  img: string;
 }
 
 export default function TrustedBy() {
   const companies: Company[] = [
-    { name: 'Slack', Icon: Slack },
-    { name: 'Chrome', Icon: Chrome },
-    { name: 'Zap', Icon: Zap },
-    { name: 'Shop', Icon: ShoppingBag },
-    { name: 'YouTube', Icon: Youtube },
-    { name: 'Tech', Icon: Laptop }
+    { name: "Facebook", img: '/logos/company/fb.png' },
+    { name: "Instagram", img: '/logos/company/ig.png' },
+    { name: "Tiktok", img: '/logos/company/TKTK.png' },
+    { name: "Tiktok", img: '/logos/company/re.png' },
+    { name: "Tiktok", img: '/logos/company/ty.png' },
+    { name: "Tiktok", img: '/logos/company/ui.png' },
+    { name: "Tiktok", img: '/logos/company/qw.png' },
+    { name: "Tiktok", img: '/logos/company/yu.png' },
   ];
 
   return (
-    <section className="py-8 bg-gradient-to-r from-blue-500 via-[#17c06e] to-white mt-20 transform -skew-y-2">
-      <div className="max-w-[1700px] mx-auto px-6 transform skew-y-2">
-        <div className="flex items-center justify-center gap-8 flex-wrap">
-          {/* Left text */}
-          <div className="text-white font-medium text-sm md:text-base">
-            They trust and <br/> grow with us
-          </div>
+    <section className="py-12 mt-5 bg-gradient-to-r from-[#17c06e] via-[#5ed49c] to-[#17c06e] border w-full rounded-xl">
+      <div className="max-w-[1700px] mx-auto px-6">
 
-          {/* Company logos */}
-          {companies.map((company, index) => {
-            const IconComponent = company.Icon;
-            return (
+        <div className="flex flex-col items-center justify-center gap-8">
+
+          {/* Text */}
+          <p className="text-white font-semibold text-center text-lg md:text-xl leading-tight">
+            Trusted By 40,000+ Company From Various Platforms
+          </p>
+
+          {/* Icons */}
+          <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12">
+            {companies.map((company) => (
               <div
-                key={`${company.name}-${index}`}
+                key={company.name}
                 className="flex items-center justify-center group"
               >
-                <IconComponent 
-                  size={32}
-                  className="text-white group-hover:scale-110 transition-transform duration-300"
-                  strokeWidth={1.5}
+                <img
+                  src={company.img}
+                  alt={company.name}
+                  className="h-16 w-auto md:h-15 transition-transform duration-300 group-hover:scale-110 filter brightness-0 invert"
                 />
               </div>
-            );
-          })}
+            ))}
+          </div>
+
         </div>
+
       </div>
     </section>
   );
