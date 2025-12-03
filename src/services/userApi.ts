@@ -11,30 +11,37 @@ export interface IUserProfileResponse {
 
 export const userApi = apiManager.injectEndpoints({
   endpoints: (builder) => ({
+    // ✔ Auth required
     getUserProfile: builder.query<IUserProfileResponse, void>({
       query: () => ({
         url: "/api/v1/users",
         method: "GET",
       }),
+      extraOptions: { auth: true },
       providesTags: ["User"],
     }),
 
+    // ✔ Auth required
     getAllUsers: builder.query<IUserProfileResponse[], void>({
       query: () => ({
         url: "/api/v1/users",
         method: "GET",
       }),
+      extraOptions: { auth: true },
       providesTags: ["User"],
     }),
 
+    // ✔ Auth required
     getUserById: builder.query<IUserProfileResponse, string>({
       query: (id) => ({
         url: `/api/v1/users/${id}`,
         method: "GET",
       }),
-      providesTags: (_result, _error, id) => [{ type: "User", id }],
+      extraOptions: { auth: true },
+      providesTags: (_res, _err, id) => [{ type: "User", id }],
     }),
 
+    // ✔ Auth required
     updateUserProfile: builder.mutation<
       IUserProfileResponse,
       { id: string; data: Partial<User> }
@@ -44,22 +51,27 @@ export const userApi = apiManager.injectEndpoints({
         method: "PATCH",
         body: data,
       }),
-      invalidatesTags: (_result, _error, { id }) => [{ type: "User", id }],
+      extraOptions: { auth: true },
+      invalidatesTags: (_res, _err, { id }) => [{ type: "User", id }],
     }),
 
+    // ✔ Auth required
     deleteUser: builder.mutation<any, string>({
       query: (id) => ({
         url: `/api/v1/users/${id}`,
         method: "DELETE",
       }),
+      extraOptions: { auth: true },
       invalidatesTags: ["User"],
     }),
 
+    // ✔ Auth required
     logout: builder.mutation<void, void>({
       query: () => ({
         url: "/api/v1/auth/logout",
         method: "POST",
       }),
+      extraOptions: { auth: true },
       invalidatesTags: ["User"],
     }),
   }),
