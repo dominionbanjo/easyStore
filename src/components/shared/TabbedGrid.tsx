@@ -45,7 +45,7 @@ export function TabbedGrid<T>({
           className="mx-auto"
         >
           {/* ─── Tab Buttons ─── */}
-          <TabsList className="flex flex-wrap justify-center gap-2 sm:gap-6 bg-transparent py-4 px-4 mb-5 sm-mb-0">
+          <TabsList className="flex flex-wrap  justify-center gap-2 sm:gap-6 bg-transparent py-4 px-4 mb-5 sm-mb-0">
             {tabGroups.map((tab) => (
               <TabsTrigger
                 key={tab.value}
@@ -53,7 +53,7 @@ export function TabbedGrid<T>({
                 className={cn(
                   "px-5 py-4 text-sm font-medium rounded-full transition-all duration-200",
                   "text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                  "data-[state=active]:bg-primary/30 data-[state=active]:text-foreground"
+                  "data-[state=active]:bg-primary/90 data-[state=active]:text-white"
                 )}
               >
                 {tab.label}
@@ -71,7 +71,7 @@ export function TabbedGrid<T>({
               <motion.div
                 layout
                 className={cn(
-                  "grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 mx-auto px-4",
+                  "grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 mx-auto px-4",
                   gridClassName
                 )}
               >

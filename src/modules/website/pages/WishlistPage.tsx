@@ -5,13 +5,14 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import ProductCard from "@/components/shared/ProductCard";
+
 
 import {
   useGetWishlistQuery,
   useRemoveFromWishlistMutation,
   useClearWishlistMutation,
 } from "@/services/wishlistApi";
+import { ProductCard } from "@/components/shared/ProductCard";
 
 export default function WishlistPage() {
   // ✅ Query & Mutations
@@ -172,14 +173,20 @@ export default function WishlistPage() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                 >
-                  <ProductCard
+                  <ProductCard.Root
                     id={product.id}
                     name={product.name}
                     price={`₦${Number(product.price).toLocaleString()}`}
                     image={product.image || ""}
                     category={product.product_type ?? "Wishlist"}
                     rating={4.5}
-                  />
+                  >
+                    <ProductCard.Image />
+                    <ProductCard.Info />
+                    <ProductCard.Footer />
+                    <ProductCard.Actions onClick={() => console.log("Buy", product.id)} />
+                  </ProductCard.Root>
+
 
                   {/* Remove button */}
                   <div className="flex justify-end mt-2">

@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import Cookies from "js-cookie";
 
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5300"; ///"https://easystore-backend.onrender.com";
+const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000"; ///"https://easystore-backend.onrender.com";
 
 export const apiManager = createApi({
   reducerPath: "apiManager",

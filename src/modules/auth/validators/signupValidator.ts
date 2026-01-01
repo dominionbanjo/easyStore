@@ -10,7 +10,7 @@ export const SignupSchema = z
     phone_number: z.string().min(7, "Enter a valid phone number"),
     account_type: z.enum(["user", "vendor"]),
     store_name: z.string().optional(),
-    username: z.string().optional(),
+    description: z.string().optional(),
     referral_code: z.string().optional(),
     current_sales_channel: z.string().optional(),
     agree_to_terms: z.boolean(),
@@ -35,7 +35,7 @@ export const SignupSchema = z
         });
       }
 
-      if (!data.username || data.username.trim().length < 2) {
+      if (!data.description || data.description.trim().length < 2) {
         ctx.addIssue({
           path: ["username"],
           message: "Username is required for vendors",

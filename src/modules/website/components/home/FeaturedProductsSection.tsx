@@ -1,4 +1,6 @@
-import ProductCard from "@/components/shared/ProductCard";
+import { ProductCard } from "@/components/shared/ProductCard";
+import { USER_ROUTES } from "@/routes/temp";
+import { useNavigate } from "react-router-dom";
 
 const featuredProducts = [
   {
@@ -18,7 +20,7 @@ const featuredProducts = [
     vendor: "Urban Threads",
     price: "₦59,000",
     image:
-      "https://images.unsplash.com/photo-1526178613552-2e06a31b1d39?auto=format&fit=crop&w=1200&q=60",
+      "https://images.unsplash.com/photo-1580894732444-8ecded7900cd?auto=format&fit=crop&w=1200&q=60",
     category: "Fashion",
     rating: 4.6,
     stock: 5,
@@ -48,19 +50,22 @@ const featuredProducts = [
 ];
 
 export default function FeaturedProductsSection() {
+  const navigate = useNavigate();
+
   return (
     <section className="py-20 px-2 bg-card">
       <div className=" mx-auto text-center space-y-10">
         <h2 className="text-3xl font-semibold">Featured Products</h2>
 
         {/* Responsive Grid */}
-        <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-5 justify-items-center">
+        <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 mx-auto px-4">
           {featuredProducts.map((product) => (
-            <ProductCard key={product.id} {...product}>
+            <ProductCard.Root key={product.id} {...product}>
               <ProductCard.Image />
-              <ProductCard.Info />
-              <ProductCard.Actions />
-            </ProductCard>
+              <ProductCard.Info
+                onClick={() => navigate(`${USER_ROUTES.PRODUCT_DETAIL}`)}
+              />
+            </ProductCard.Root>
           ))}
         </div>
       </div>

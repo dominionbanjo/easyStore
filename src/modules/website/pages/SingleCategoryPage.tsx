@@ -7,7 +7,7 @@ import { FormSelect } from "@/components/shared/FormSelect";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Layers, Search } from "lucide-react";
-import ProductCard from "@/components/shared/ProductCard";
+import { ProductCard } from "@/components/shared/ProductCard";
 
 //
 // ─── Mock Products By Category ─────────────────────────────────────────────
@@ -175,9 +175,8 @@ export default function CategoryDetailsPage() {
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 rounded-xl overflow-hidden border border-border">
               <img
-                src={`/images/${
-                  decodedCategory.toLowerCase().split(" ")[0]
-                }1.png`}
+                src={`/images/${decodedCategory.toLowerCase().split(" ")[0]
+                  }1.png`}
                 alt={decodedCategory}
                 className="w-full h-full object-cover"
               />
@@ -218,12 +217,12 @@ export default function CategoryDetailsPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.05 }}
               >
-                <ProductCard
+                <ProductCard.Root
                   id={product.id}
                   name={product.name}
-                  price={product.price}
+                  price={`₦${Number(product.price).toLocaleString()}`}
                   image={product.image}
-                  category={product.category}
+                  category={product.category ?? "Wishlist"}
                   rating={4.5}
                   stock={product.stock}
                   options={{
@@ -234,8 +233,11 @@ export default function CategoryDetailsPage() {
                 >
                   <ProductCard.Image />
                   <ProductCard.Info />
-                  <ProductCard.Actions />
-                </ProductCard>
+                  <ProductCard.Footer />
+                  <ProductCard.Actions onClick={() => console.log("Buy product")} />
+                </ProductCard.Root>
+
+
               </motion.div>
             ))}
           </motion.div>

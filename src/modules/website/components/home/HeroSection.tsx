@@ -1,7 +1,9 @@
 import { motion, type Variants } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import SocialProofBadge from "./SocialProofBadge";
 
+// Hero main fade-in animation
 const transitionVariants: Variants = {
   hidden: { opacity: 0, y: 30, filter: "blur(10px)" },
   visible: {
@@ -16,24 +18,47 @@ const transitionVariants: Variants = {
   },
 };
 
+export function HeroTitle() {
+  //
+  return (
+    <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-5xl font-medium tracking-tight text-balance leading-[1.2]">
+      Scale Your Small Business
+      <br />
+      <span className="relative inline-block">
+        <span className="relative z-10 text-black">
+          With a <span className="text-[#17c06e] font-bold">Big Brand</span>{" "}
+          Experience.
+        </span>
+      </span>
+    </h1>
+  );
+}
+
 export default function HeroSection() {
   return (
     <section className="relative isolate overflow-hidden pb-10 sm:pb-20 px-4">
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 -z-10 overflow-hidden "
-      />
       <div className="flex justify-center w-full">
-        <div className="w-full  flex flex-col items-center lg:flex-row lg:items-center lg:justify-between gap-12">
+        <div className="w-full flex flex-col items-center lg:flex-row lg:items-center lg:justify-between gap-12">
+          {/* LEFT SIDE */}
           <div className="flex-1 text-center lg:text-left">
+            {/* Catchy TAG */}
+            <motion.p
+              variants={transitionVariants}
+              initial="hidden"
+              animate="visible"
+              className="italic text-[#367e5c]"
+            >
+              # Nigeria's easiest marketplace for discovering everyday
+              essentials.
+            </motion.p>
+
             <motion.h1
               variants={transitionVariants}
               initial="hidden"
               animate="visible"
               className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight text-balance leading-tight"
             >
-              Discover products <br /> you’ll{" "}
-              <span className="text-primary">love</span>
+              <HeroTitle />
             </motion.h1>
 
             <motion.p
@@ -43,8 +68,9 @@ export default function HeroSection() {
               transition={{ delay: 0.2 }}
               className="mt-6 max-w-xl mx-auto lg:mx-0 text-lg sm:text-xl leading-relaxed text-foreground"
             >
-              Shop the best deals in fashion, electronics, home decor, and more
-              — all curated for your lifestyle.
+              Create a beautiful portfolio to showcase your products, gain trust
+              instantly, and make it easier for customers to shop fast,
+              reliable, and stress-free
             </motion.p>
 
             <motion.div
@@ -52,18 +78,38 @@ export default function HeroSection() {
               initial="hidden"
               animate="visible"
               transition={{ delay: 0.4 }}
-              className="mt-10 flex justify-center lg:justify-start"
+              className="mt-10 flex flex-col items-center lg:items-start gap-4"
             >
               <Button
                 size="lg"
-                className="bg-primary text-primary-foreground rounded-full px-8 hover:bg-primary/90 transition-transform hover:scale-[1.03]"
+                className="bg-primary text-primary-foreground rounded-full px-8 py-7 hover:bg-[#17c06e]/90 transition-transform hover:scale-[1.03]"
               >
-                Start Shopping
+                Get Started
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
+
+              <SocialProofBadge
+                users={[
+                  { src: "/images/fash4.png", alt: "@shadcn", fallback: "CN" },
+                  {
+                    src: "/images/fash0.png",
+                    alt: "@maxleiter",
+                    fallback: "ML",
+                  },
+                  {
+                    src: "/images/fash1.png",
+                    alt: "@evilrabbit",
+                    fallback: "ER",
+                  },
+                ]}
+                rating={4.9}
+                totalUsers={100}
+                maxAvatars={3}
+              />
             </motion.div>
           </div>
 
+          {/* RIGHT SIDE (unchanged) */}
           <motion.div
             variants={transitionVariants}
             initial="hidden"
@@ -71,17 +117,7 @@ export default function HeroSection() {
             transition={{ delay: 0.5 }}
             className="flex-1 flex justify-center lg:justify-end"
           >
-            <div
-              className="
-                relative w-full max-w-lg
-                aspect-[5/3]
-                rounded-3xl overflow-hidden
-                shadow-lg border border-border/20
-                lg:max-w-xl xl:max-w-2xl
-                bg-transparent
-                transition-all duration-500 ease-in-out
-              "
-            >
+            <div className="relative w-full max-w-lg aspect-[5/3] rounded-3xl overflow-hidden shadow-lg border border-border/20 lg:max-w-xl xl:max-w-2xl bg-transparent transition-all duration-500 ease-in-out">
               <video
                 className="w-full h-full object-cover"
                 src="/videos/campaign0.mp4"
