@@ -13,7 +13,7 @@ export default function CategoriesSection() {
   }));
   const navigate = useNavigate();
   function handleBuyNow(): void {
-    navigate(`/${USER_ROUTES.PRODUCT_DETAIL}`);
+    navigate(`${USER_ROUTES.PRODUCT_DETAIL}`);
   }
 
   return (
@@ -34,10 +34,9 @@ export default function CategoriesSection() {
         >
           <ProductCard.Image />
           <ProductCard.Info onClick={() => handleBuyNow()} />
-          <ProductCard.Footer />
+          {/* <ProductCard.Footer /> */}
           {/* <ProductCard.Actions onClick={() => console.log("Buy clicked")} /> */}
         </ProductCard.Root>
-
       )}
     />
   );

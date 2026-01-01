@@ -5,6 +5,7 @@ import Cookies from "js-cookie";
 // ✅ Import the strongly-typed interfaces you already defined
 import {
   type IAuthResponse,
+  type ILoginResponse,
   type IRegisterUserPayload,
   type IRegisterUserResponse,
 } from "@/types/auth/SignUpResponse"; // adjust path if needed
@@ -39,13 +40,13 @@ export const authApi = apiManager.injectEndpoints({
       },
     }),
 
-    // 🔹 LOGIN
+    /* ───────── LOGIN ───────── */
     login: builder.mutation<
-      IRegisterUserResponse,
+      ILoginResponse,
       { email: string; password: string }
     >({
       query: (body) => ({
-        url: "/api/v1/auth/login",
+        url: "/auth/login",
         method: "POST",
         body,
       }),
@@ -53,14 +54,13 @@ export const authApi = apiManager.injectEndpoints({
         try {
           const { data } = await queryFulfilled;
 
-          if (data.token && data.user) {
-            Cookies.set("token", data.token, {
-              expires: 7,
-              secure: true,
-              sameSite: "strict",
-            });
-            dispatch(setUser({ user: data.user }));
-          }
+          Cookies.set("token", data.data.access, {
+            expires: 7,
+            secure: true,
+            sameSite: "strict",
+          });
+
+          dispatch(setUser({ user: data.data.user }));
         } catch (error) {
           console.error("❌ Login failed:", error);
         }
@@ -120,7 +120,7 @@ export const authApi = apiManager.injectEndpoints({
     // inside authApi (authApi.ts)
     googleLogin: builder.mutation<IAuthResponse, { token: string }>({
       query: (body) => ({
-        url: "/api/v1/auth/google",
+        url: "/auth/google",
         method: "POST",
         body,
       }),

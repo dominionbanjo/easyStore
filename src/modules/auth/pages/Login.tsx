@@ -1,10 +1,10 @@
+import { ArrowLeft } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Card,
   CardHeader,
-  CardContent,
   CardFooter,
   CardTitle,
   CardDescription,
@@ -21,10 +21,33 @@ import {
 } from "@/modules/auth/validators/loginValidator";
 import { FormInput } from "@/components/shared/FormInput";
 
+/* -------------------- Google button width helper -------------------- */
+const getGoogleButtonWidth = () => {
+  if (window.innerWidth < 360) return 260;
+  if (window.innerWidth < 480) return 280;
+  if (window.innerWidth < 640) return 300;
+  return 340;
+};
+
+/* -------------------- Type guard for Google -------------------- */
+function hasGoogleIdentity(win: Window): win is Window & {
+  google: {
+    accounts: {
+      id: {
+        initialize: Function;
+        renderButton: Function;
+      };
+    };
+  };
+} {
+  return Boolean((win as any).google?.accounts?.id);
+}
+
 export default function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const googleButtonRef = useRef<HTMLDivElement>(null);
+
   const [login, { isLoading, isSuccess }] = useLoginMutation();
   const [googleLogin] = useGoogleLoginMutation();
 
@@ -37,13 +60,13 @@ export default function LoginPage() {
   const redirectTo =
     new URLSearchParams(location.search).get("redirect") || "/";
 
-  // 🔹 Auto-redirect if already logged in
+  /* Auto redirect if logged in */
   useEffect(() => {
     const token = Cookies.get("token");
     if (token) navigate(redirectTo, { replace: true });
   }, [navigate, redirectTo]);
 
-  // 🔹 Redirect after successful login
+  /* Redirect after success */
   useEffect(() => {
     if (isSuccess) {
       toast.success("Login successful!");
@@ -51,13 +74,12 @@ export default function LoginPage() {
     }
   }, [isSuccess, navigate, redirectTo]);
 
-  // 🔹 Handle normal login
+  /* Normal login */
   const onSubmit = async (data: LoginFormValues) => {
     try {
       const res = await login(data).unwrap();
-      const user = res.user;
+      const user = res.data.user;
 
-      // ✅ Check if user is unverified
       if (user && user.email_verified === false) {
         toast.warning("Please verify your email before logging in");
         navigate(
@@ -68,26 +90,34 @@ export default function LoginPage() {
         return;
       }
 
-      // ✅ Normal verified login
       toast.success("Login successful!");
-      navigate(redirectTo, { replace: true });
+      // navigate(redirectTo, { replace: true });
     } catch (err: any) {
-      const msg = err?.data?.message || "Something went wrong";
-      toast.error(msg);
+      toast.error(err?.data?.message || "Something went wrong");
     }
   };
 
-  // 🔹 Google OAuth initialization
+  /* Google OAuth (TS-safe) */
   useEffect(() => {
-    if (window.google && googleButtonRef.current) {
-      window.google.accounts.id.initialize({
+    if (!googleButtonRef.current) return;
+
+    // ✅ Type-safe guard
+    if (!hasGoogleIdentity(window)) return;
+
+    // ✅ Capture google AFTER guard (this fixes TS error)
+    const google = window.google;
+
+    const renderGoogleButton = () => {
+      if (!googleButtonRef.current) return;
+
+      googleButtonRef.current.innerHTML = "";
+
+      google.accounts.id.initialize({
         client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID!,
         callback: async (response: any) => {
           try {
             const token = response.credential;
             await googleLogin({ token }).unwrap();
-
-            // result is of type IAuthResponse
             toast.success("Logged in with Google!");
             navigate(redirectTo, { replace: true });
           } catch (err: any) {
@@ -96,28 +126,60 @@ export default function LoginPage() {
         },
       });
 
-      window.google.accounts.id.renderButton(googleButtonRef.current, {
+      google.accounts.id.renderButton(googleButtonRef.current, {
         theme: "outline",
         size: "large",
         shape: "pill",
-        width: 340,
+        width: getGoogleButtonWidth(),
       });
-    }
+    };
+
+    renderGoogleButton();
+    window.addEventListener("resize", renderGoogleButton);
+
+    return () => {
+      window.removeEventListener("resize", renderGoogleButton);
+    };
   }, [googleLogin, navigate, redirectTo]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-muted px-4">
-      <Card className="w-full max-w-md bg-card rounded-2xl shadow-sm border">
-        <CardHeader className="text-center space-y-2">
-          <CardTitle className="text-2xl font-bold text-primary">
-            Welcome Back
-          </CardTitle>
+    <div
+      className="fixed inset-0 flex items-center justify-center px-4 bg-cover bg-center"
+      style={{ backgroundImage: "url('/images/easyshop.jpg')" }}
+    >
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" />
+
+      {/* Back */}
+      <Link
+        to="/"
+        className="
+    absolute top-4 left-4 z-20
+    inline-flex items-center gap-2
+    rounded-full
+    bg-white/90 backdrop-blur
+    text-black shadow-md
+    transition hover:bg-white
+    px-2.5 py-2 text-sm
+    sm:px-4 sm:py-2
+  "
+        aria-label="Back to homepage"
+      >
+        <ArrowLeft className="h-4 w-4" />
+        <span className="hidden sm:inline">Back to homepage</span>
+      </Link>
+
+      {/* CARD */}
+      <Card className="relative w-full max-w-md max-h-[90vh] bg-white/95 rounded-2xl shadow-xl flex flex-col overflow-hidden mt-12">
+        <CardHeader className="space-y-3 text-center">
+          <CardTitle className="text-2xl font-bold">Welcome Back</CardTitle>
           <CardDescription>
             Log in to continue shopping on EasyStore.
           </CardDescription>
         </CardHeader>
 
-        <CardContent>
+        {/* Scroll container */}
+        <div className="relative flex-1 overflow-y-auto px-6 pb-8">
           <FormProvider {...methods}>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
               <FormInput
@@ -144,7 +206,7 @@ export default function LoginPage() {
 
               <Button
                 type="submit"
-                className="w-full rounded-full py-2 mt-2 text-white"
+                className="w-full rounded-full py-2 mt-2 bg-[#17c06e] text-black hover:bg-[#17c06e]/90"
                 disabled={isLoading}
               >
                 {isLoading ? "Signing In..." : "Log In"}
@@ -152,23 +214,23 @@ export default function LoginPage() {
             </form>
           </FormProvider>
 
-          {/* ─────────────── OR Divider ─────────────── */}
+          {/* Divider */}
           <div className="relative my-6 text-center">
             <span className="absolute left-0 right-0 top-1/2 border-t border-border" />
-            <span className="relative bg-card px-3 text-sm text-muted-foreground">
+            <span className="relative bg-white px-3 text-sm text-muted-foreground">
               or continue with
             </span>
           </div>
 
-          {/* ─────────────── GOOGLE BUTTON ─────────────── */}
+          {/* Google */}
           <div ref={googleButtonRef} className="flex justify-center" />
-        </CardContent>
+        </div>
 
         <CardFooter className="text-center text-sm text-muted-foreground">
-          Don’t have an account?{" "}
+          Don’t have an account?
           <Link
             to={AUTH_ROUTES.SIGNUP}
-            className="text-primary hover:underline ml-1 font-medium"
+            className="text-black ml-1 hover:underline"
           >
             Sign up
           </Link>

@@ -5,15 +5,19 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 export type User = {
   id: string;
   email: string;
-  account_type: "user" | "vendor" | "admin"; // backend uses this
-  first_name?: string;
-  last_name?: string;
-  phone_number?: string;
-  avatar?: string;
-  avatar_public_id?: string;
+  account_type: "user" | "vendor" | "admin";
+
+  first_name?: string | null;
+  last_name?: string | null;
+  phone_number?: string | null;
+
+  avatar?: string | null;
+  avatar_public_id?: string | null;
+
   is_verified?: boolean;
-  country?: string;
-  bio?: string;
+  country?: string | null;
+  bio?: string | null;
+
   products_count?: number;
   created_at?: string;
   updated_at?: string;
