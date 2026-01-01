@@ -17,6 +17,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
+import { AuthRoutes } from "@/routes/authRoutes";
 
 /* ------------------------- Schema ------------------------- */
 const SignupSchema = z.object({
@@ -190,7 +191,10 @@ export default function SignupPage() {
 
         <CardFooter className="text-center text-sm text-muted-foreground">
           Already have an account?
-          <Link to="/login" className="text-black ml-1 hover:underline">
+          <Link
+            to={AuthRoutes.LOGIN}
+            className="text-black ml-1 hover:underline"
+          >
             Log in
           </Link>
         </CardFooter>
