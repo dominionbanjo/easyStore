@@ -6,7 +6,7 @@ export interface IRegisterUserPayload {
   password: string;
   account_type: "user" | "vendor";
   store_name?: string;
-  username?: string;
+  description?: string;
   referral_code?: string;
   current_sales_channel?: string;
   agree_to_terms?: boolean;
@@ -42,27 +42,12 @@ export interface IRegisterUserResponse {
   user: IUser;
 }
 
-export interface GUser {
-  id: string;
-  name: string;
-  email: string;
-  account_type: "user" | "vendor";
-  avatar?: string;
-}
-
-export interface IAuthResponse {
-  status: number;
-  success: boolean;
-  message: string;
-  token: string;
-  user: GUser;
-}
 export interface IAuthData {
   user: IUser;
   access: string; // JWT access token
 }
 
-export interface ILoginResponse {
+export interface IAuthResponse {
   status: "success" | "error";
   message: string;
   data: IAuthData;

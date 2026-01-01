@@ -2,20 +2,18 @@ import { apiManager } from "./apiManager";
 import { setUser, clearUser } from "@/features/userSlice";
 import Cookies from "js-cookie";
 
-// ✅ Import the strongly-typed interfaces you already defined
-import {
-  type IAuthResponse,
-  type ILoginResponse,
-  type IRegisterUserPayload,
-  type IRegisterUserResponse,
-} from "@/types/auth/SignUpResponse"; // adjust path if needed
+import type {
+  IAuthResponse,
+  IRegisterUserPayload,
+  IRegisterUserResponse,
+} from "@/types/auth/authTypes";
 
 export const authApi = apiManager.injectEndpoints({
   endpoints: (builder) => ({
-    // 🔹 REGISTER
-    register: builder.mutation<IRegisterUserResponse, IRegisterUserPayload>({
+    /* ───────── REGISTER ───────── */
+    register: builder.mutation<IAuthResponse, IRegisterUserPayload>({
       query: (body) => ({
-        url: "/api/v1/auth/register",
+        url: "auth/register",
         method: "POST",
         body,
       }),
@@ -23,16 +21,16 @@ export const authApi = apiManager.injectEndpoints({
         try {
           const { data } = await queryFulfilled;
 
-          if (data.token && data.user) {
-            // ✅ Store JWT token in cookies
-            Cookies.set("token", data.token, {
+          const authData = data.data;
+
+          if (authData?.access && authData?.user) {
+            Cookies.set("token", authData.access, {
               expires: 7,
               secure: true,
               sameSite: "strict",
             });
 
-            // ✅ Update Redux store with user
-            dispatch(setUser({ user: data.user }));
+            dispatch(setUser({ user: authData.user }));
           }
         } catch (error) {
           console.error("❌ Register failed:", error);
@@ -41,12 +39,39 @@ export const authApi = apiManager.injectEndpoints({
     }),
 
     /* ───────── LOGIN ───────── */
-    login: builder.mutation<
-      ILoginResponse,
-      { email: string; password: string }
-    >({
+    login: builder.mutation<IAuthResponse, { email: string; password: string }>(
+      {
+        query: (body) => ({
+          url: "auth/login",
+          method: "POST",
+          body,
+        }),
+        async onQueryStarted(_, { queryFulfilled, dispatch }) {
+          try {
+            const { data } = await queryFulfilled;
+
+            const authData = data.data;
+
+            if (authData?.access && authData?.user) {
+              Cookies.set("token", authData.access, {
+                expires: 7,
+                secure: true,
+                sameSite: "strict",
+              });
+
+              dispatch(setUser({ user: authData.user }));
+            }
+          } catch (error) {
+            console.error("❌ Login failed:", error);
+          }
+        },
+      }
+    ),
+
+    /* ───────── GOOGLE LOGIN ───────── */
+    googleLogin: builder.mutation<IAuthResponse, { token: string }>({
       query: (body) => ({
-        url: "/auth/login",
+        url: "auth/google",
         method: "POST",
         body,
       }),
@@ -54,89 +79,81 @@ export const authApi = apiManager.injectEndpoints({
         try {
           const { data } = await queryFulfilled;
 
-          Cookies.set("token", data.data.access, {
-            expires: 7,
-            secure: true,
-            sameSite: "strict",
-          });
+          const authData = data.data;
 
-          dispatch(setUser({ user: data.data.user }));
+          if (authData?.access && authData?.user) {
+            Cookies.set("token", authData.access, {
+              expires: 7,
+              secure: true,
+              sameSite: "strict",
+            });
+
+            dispatch(setUser({ user: authData.user }));
+          }
         } catch (error) {
-          console.error("❌ Login failed:", error);
+          console.error("❌ Google login failed:", error);
         }
       },
     }),
 
-    // 🔹 VERIFY OTP
+    /* ───────── VERIFY OTP ───────── */
     verifyOtp: builder.mutation<
       IRegisterUserResponse,
       { email: string; otp: string }
     >({
       query: (body) => ({
-        url: "/api/v1/auth/verify-otp",
+        url: "auth/verify-otp",
         method: "POST",
         body,
       }),
     }),
 
-    // 🔹 RESEND OTP
+    /* ───────── RESEND OTP ───────── */
     resendOtp: builder.mutation<IRegisterUserResponse, { email: string }>({
       query: (body) => ({
-        url: "/api/v1/auth/resend-otp",
+        url: "auth/resend-otp",
         method: "POST",
         body,
       }),
     }),
 
-    // 🔹 FORGOT PASSWORD
+    /* ───────── FORGOT PASSWORD ───────── */
     forgotPassword: builder.mutation<IRegisterUserResponse, { email: string }>({
       query: (body) => ({
-        url: "/api/v1/auth/forgot-password",
+        url: "auth/forgot-password",
         method: "POST",
         body,
       }),
     }),
 
-    // 🔹 RESET PASSWORD
+    /* ───────── RESET PASSWORD ───────── */
     resetPassword: builder.mutation<
       IRegisterUserResponse,
       { email: string; password: string; token: string }
     >({
       query: (body) => ({
-        url: "/api/v1/auth/reset-password",
+        url: "auth/reset-password",
         method: "POST",
         body,
       }),
     }),
 
-    // 🔹 LOGOUT (client-side only)
+    /* ───────── LOGOUT ───────── */
     logout: builder.mutation<void, void>({
-      queryFn: async (_arg, { dispatch }) => {
-        Cookies.remove("token");
-        dispatch(clearUser());
-        return { data: undefined };
-      },
-    }),
-    // inside authApi (authApi.ts)
-    googleLogin: builder.mutation<IAuthResponse, { token: string }>({
-      query: (body) => ({
-        url: "/auth/google",
+      query: () => ({
+        url: "auth/logout",
         method: "POST",
-        body,
       }),
       async onQueryStarted(_, { queryFulfilled, dispatch }) {
         try {
-          const { data } = await queryFulfilled;
-          if (data.token && data.user) {
-            Cookies.set("token", data.token, {
-              expires: 7,
-              secure: true,
-              sameSite: "strict",
-            });
-            dispatch(setUser({ user: data.user }));
-          }
+          await queryFulfilled;
         } catch (error) {
-          console.error("❌ Google login failed:", error);
+          console.warn(
+            "⚠️ Logout request failed, clearing client state anyway"
+          );
+        } finally {
+          Cookies.remove("token");
+          dispatch(clearUser());
         }
       },
     }),
@@ -146,10 +163,10 @@ export const authApi = apiManager.injectEndpoints({
 export const {
   useRegisterMutation,
   useLoginMutation,
+  useGoogleLoginMutation,
   useVerifyOtpMutation,
   useResendOtpMutation,
   useForgotPasswordMutation,
   useResetPasswordMutation,
   useLogoutMutation,
-  useGoogleLoginMutation,
 } = authApi;

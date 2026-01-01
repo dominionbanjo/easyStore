@@ -40,6 +40,7 @@ export default function ForgotPasswordPage() {
     try {
       const res = await forgotPassword(data).unwrap();
       toast.success(res.message || "Password reset link sent successfully");
+      navigate("/");
     } catch (error: any) {
       toast.error(error?.data?.message || "Failed to send password reset link");
     }
