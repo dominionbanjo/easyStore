@@ -1,10 +1,10 @@
 import { Separator } from "@/components/ui/separator";
 
-import ProductGallery from "@/modules/website/productDetailsPage/components/ProductGallery";
-import ProductInfoSidebar from "@/modules/website/productDetailsPage/components/ProductInfoSidebar";
-import ProductDetailsTabs from "@/modules/website/productDetailsPage/components/ProductDetailsTabs";
-import ReviewsSection from "@/modules/website/productDetailsPage/components/ReviewsSection";
-import RelatedProductsGrid from "@/modules/website/productDetailsPage/components/RelatedProductsGrid";
+import ProductGallery from "@/modules/website/components/products/ProductGallery";
+import ProductInfoSidebar from "@/modules/website/components/products/ProductInfoSidebar";
+import ProductDetailsTabs from "@/modules/website/components/products/ProductDetailsTabs";
+import ReviewsSection from "@/modules/website/components/products/ReviewsSection";
+import RelatedProductsGrid from "@/modules/website/components/products/RelatedProductsGrid";
 
 export default function ProductDetailsPage() {
   const product = {
