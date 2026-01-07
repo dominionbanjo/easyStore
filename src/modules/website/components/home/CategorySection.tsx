@@ -1,43 +1,70 @@
 import { TabbedGrid } from "@/components/shared/TabbedGrid";
-import { mockCategories } from "../../lib/data";
 import { ProductCard } from "@/components/shared/ProductCard";
-// import { Router } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { USER_ROUTES } from "@/routes/temp";
+import { useGetProductsGroupedByCategoryQuery } from "@/services/productApi";
+
+const FALLBACK_IMAGE =
+  "https://images.unsplash.com/photo-1580894732444-8ecded7900cd?auto=format&fit=crop&w=1200&q=60";
 
 export default function CategoriesSection() {
-  const tabGroups = Object.keys(mockCategories).map((key) => ({
-    value: key.toLowerCase(),
-    label: key.charAt(0).toUpperCase() + key.slice(1),
-    items: mockCategories[key as keyof typeof mockCategories],
-  }));
   const navigate = useNavigate();
-  function handleBuyNow(): void {
-    navigate(`${USER_ROUTES.PRODUCT_DETAIL}`);
+
+  const { data, isLoading, isError } = useGetProductsGroupedByCategoryQuery({
+    limit: 16,
+  });
+
+  if (isLoading) {
+    return <div className="py-20 text-center">Loading categories…</div>;
   }
+
+  if (isError || !data?.data?.length) {
+    return <div className="py-20 text-center">No products available.</div>;
+  }
+
+  const tabGroups = data.data.map((category) => ({
+    value: category.slug,
+    label: category.name,
+    items: category.products,
+  }));
+  const resolveImage = (
+    image?: string | { url: string } | null,
+    fallback?: string
+  ): string => {
+    if (!image) return fallback ?? "";
+    if (typeof image === "string") return image;
+    return image.url;
+  };
 
   return (
     <TabbedGrid
       tabGroups={tabGroups}
-      renderItem={(product) => (
-        <ProductCard.Root
-          image={product.image}
-          name="Dunk High 'Green Satin'"
-          price={`${product.price}`}
-          brand={""}
-          stock={product.stock}
-          rating={product.rating}
-          category={product.category}
-          vendor={product.vendor}
-          id={product.id}
-          avatar={product.image}
-        >
-          <ProductCard.Image />
-          <ProductCard.Info onClick={() => handleBuyNow()} />
-          {/* <ProductCard.Footer /> */}
-          {/* <ProductCard.Actions onClick={() => console.log("Buy clicked")} /> */}
-        </ProductCard.Root>
-      )}
+      renderItem={(product) => {
+        const price = product.discount_price ?? product.price;
+
+        return (
+          <ProductCard.Root
+            key={product.id}
+            id={product.id}
+            name={product.name}
+            image={resolveImage(product.image, FALLBACK_IMAGE)}
+            price={`₦${price.toLocaleString()}`}
+            stock={product.stock}
+            rating={product.rating_average ?? 0}
+            category=""
+            vendor={product.store_name ?? "Seller"}
+          >
+            <ProductCard.Image />
+            <ProductCard.Info
+              onClick={() =>
+                navigate(
+                  USER_ROUTES.PRODUCT_DETAIL.replace(":id", product.slug)
+                )
+              }
+            />
+          </ProductCard.Root>
+        );
+      }}
     />
   );
 }

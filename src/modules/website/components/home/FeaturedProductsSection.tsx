@@ -1,72 +1,72 @@
 import { ProductCard } from "@/components/shared/ProductCard";
 import { USER_ROUTES } from "@/routes/temp";
 import { useNavigate } from "react-router-dom";
+import { useGetFeaturedProductsQuery } from "@/services/productApi";
 
-const featuredProducts = [
-  {
-    id: 1,
-    name: "Wireless Headphones Pro",
-    vendor: "SoundMaster",
-    price: "₦99,999",
-    image:
-      "https://images.unsplash.com/photo-1580894732444-8ecded7900cd?auto=format&fit=crop&w=1200&q=60",
-    category: "Electronics",
-    rating: 4.8,
-    stock: 12,
-  },
-  {
-    id: 2,
-    name: "Classic Denim Jacket",
-    vendor: "Urban Threads",
-    price: "₦59,000",
-    image:
-      "https://images.unsplash.com/photo-1580894732444-8ecded7900cd?auto=format&fit=crop&w=1200&q=60",
-    category: "Fashion",
-    rating: 4.6,
-    stock: 5,
-  },
-  {
-    id: 3,
-    name: "Smart Fitness Watch",
-    vendor: "TechSync",
-    price: "₦149,999",
-    image:
-      "https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?auto=format&fit=crop&w=1200&q=60",
-    category: "Wearables",
-    rating: 4.9,
-    stock: 8,
-  },
-  {
-    id: 4,
-    name: "Contemporary Living Sofa",
-    vendor: "HomeScape",
-    price: "₦499,000",
-    image:
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=60",
-    category: "Furniture",
-    rating: 4.7,
-    stock: 2,
-  },
-];
+const FALLBACK_IMAGE =
+  "https://images.unsplash.com/photo-1580894732444-8ecded7900cd?auto=format&fit=crop&w=1200&q=60";
 
 export default function FeaturedProductsSection() {
   const navigate = useNavigate();
 
+  const { data, isLoading, isError } = useGetFeaturedProductsQuery({
+    limit: 8,
+  });
+
+  const products = data?.data ?? [];
+
+  if (isLoading) {
+    return (
+      <section className="py-20 px-2 bg-card text-center">
+        <p>Loading featured products…</p>
+      </section>
+    );
+  }
+
+  if (isError || !products?.length) {
+    return (
+      <section className="py-20 px-2 bg-card text-center">
+        <p>No featured products available.</p>
+      </section>
+    );
+  }
+
   return (
     <section className="py-20 px-2 bg-card">
-      <div className=" mx-auto text-center space-y-10">
+      <div className="mx-auto text-center space-y-10">
         <h2 className="text-3xl font-semibold">Featured Products</h2>
 
         {/* Responsive Grid */}
-        <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 mx-auto px-4">
-          {featuredProducts.map((product) => (
-            <ProductCard.Root key={product.id} {...product}>
-              <ProductCard.Image />
-              <ProductCard.Info
-                onClick={() => navigate(`${USER_ROUTES.PRODUCT_DETAIL}`)}
-              />
-            </ProductCard.Root>
-          ))}
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mx-auto px-4">
+          {products.map((product) => {
+            const price = product.discount_price ?? product.price;
+
+            return (
+              <ProductCard.Root
+                key={product.id}
+                id={product.id}
+                name={product.name}
+                image={
+                  typeof product.image === "string"
+                    ? product.image
+                    : product.image?.url ?? FALLBACK_IMAGE
+                }
+                price={`₦${price.toLocaleString()}`}
+                rating={product.rating_average ?? 0}
+                stock={product.stock}
+                vendor={product.store_name ?? "Seller"}
+              >
+                <ProductCard.Image />
+                <ProductCard.Info
+                  onClick={() =>
+                    navigate(
+                      USER_ROUTES.PRODUCT_DETAIL.replace(":id", product.slug)
+                    )
+                  }
+                />
+              </ProductCard.Root>
+            );
+          })}
         </div>
       </div>
     </section>

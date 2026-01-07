@@ -1,19 +1,43 @@
-// src/services/userApi.ts
+import type { IUser } from "@/types/auth/authTypes";
 import { apiManager } from "./apiManager";
-import type { User } from "@/features/userSlice";
+
+export interface IUserWithStore extends IUser {
+  username?: string | null;
+
+  rating_average?: string;
+  rating_count?: number;
+  review_count?: number;
+
+  address?: {
+    city: string;
+    state: string;
+    country: string;
+  } | null;
+
+  payout_verified?: boolean;
+
+  store_id?: string | null;
+  store_name?: string | null;
+}
 
 export interface IUserProfileResponse {
   status: number;
   success: boolean;
   message: string;
-  user: User;
+  data: {
+    user: IUserWithStore;
+  };
+}
+
+export interface UpdateProfileArgs {
+  data: FormData;
 }
 
 export const userApi = apiManager.injectEndpoints({
   endpoints: (builder) => ({
     getUserProfile: builder.query<IUserProfileResponse, void>({
       query: () => ({
-        url: "/api/v1/users",
+        url: "users/me",
         method: "GET",
       }),
       providesTags: ["User"],
@@ -21,7 +45,7 @@ export const userApi = apiManager.injectEndpoints({
 
     getAllUsers: builder.query<IUserProfileResponse[], void>({
       query: () => ({
-        url: "/api/v1/users",
+        url: "users",
         method: "GET",
       }),
       providesTags: ["User"],
@@ -37,14 +61,15 @@ export const userApi = apiManager.injectEndpoints({
 
     updateUserProfile: builder.mutation<
       IUserProfileResponse,
-      { id: string; data: Partial<User> }
+      UpdateProfileArgs
     >({
-      query: ({ id, data }) => ({
-        url: `/api/v1/users/${id}`,
+      query: ({ data }) => ({
+        url: "users/me",
         method: "PATCH",
         body: data,
+        formData: true,
       }),
-      invalidatesTags: (_result, _error, { id }) => [{ type: "User", id }],
+      invalidatesTags: ["User"],
     }),
 
     deleteUser: builder.mutation<any, string>({

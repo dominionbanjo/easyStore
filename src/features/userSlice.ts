@@ -1,31 +1,10 @@
+import type { IUser } from "@/types/auth/authTypes";
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
-/** 🔹 Unified User type that matches backend + extended profile */
-export type User = {
-  id: string;
-  email: string;
-  account_type: "user" | "vendor" | "admin";
-
-  first_name?: string | null;
-  last_name?: string | null;
-  phone_number?: string | null;
-
-  avatar?: string | null;
-  avatar_public_id?: string | null;
-
-  is_verified?: boolean;
-  country?: string | null;
-  bio?: string | null;
-
-  products_count?: number;
-  created_at?: string;
-  updated_at?: string;
-};
-
 /** 🔹 Redux State */
 export interface UserState {
-  currentUser: User | null;
+  currentUser: IUser | null;
   isAuthenticated: boolean;
   isLoading: boolean;
 }
@@ -42,7 +21,7 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    setUser: (state, action: PayloadAction<{ user: User }>) => {
+    setUser: (state, action: PayloadAction<{ user: IUser }>) => {
       state.currentUser = action.payload.user;
       state.isAuthenticated = true;
     },
@@ -50,7 +29,7 @@ const userSlice = createSlice({
       state.currentUser = null;
       state.isAuthenticated = false;
     },
-    updateUser: (state, action: PayloadAction<Partial<User>>) => {
+    updateUser: (state, action: PayloadAction<Partial<IUser>>) => {
       if (state.currentUser) {
         state.currentUser = { ...state.currentUser, ...action.payload };
       }

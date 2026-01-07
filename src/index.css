@@ -49,7 +49,7 @@
   --card-foreground: oklch(0.141 0.005 285.823);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.141 0.005 285.823);
-  --primary: oklch(0.21 0.006 285.885);
+  --primary: #17c06e;
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.967 0.001 286.375);
   --secondary-foreground: oklch(0.21 0.006 285.885);
@@ -150,19 +150,38 @@
   scrollbar-width: none; /* Firefox */
 }
 
-
 @keyframes fadeSlideDown {
-  0% { opacity: 0; transform: translateY(-6px); }
-  100% { opacity: 1; transform: translateY(0); }
+  0% {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 .fade-slide-down {
-  animation: fadeSlideDown .25s ease forwards;
+  animation: fadeSlideDown 0.25s ease forwards;
 }
 
 @keyframes fadeIn {
-  0% { opacity: 0; scale: .98; }
-  100% { opacity: 1; scale: 1; }
+  0% {
+    opacity: 0;
+    scale: 0.98;
+  }
+  100% {
+    opacity: 1;
+    scale: 1;
+  }
 }
 .fade-in {
-  animation: fadeIn .18s ease forwards;
+  animation: fadeIn 0.18s ease forwards;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }

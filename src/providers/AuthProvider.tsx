@@ -24,8 +24,8 @@ export default function AuthProvider({
   const [googleLogin] = useGoogleLoginMutation();
 
   useEffect(() => {
-    if (data?.user) {
-      dispatch(setUser({ user: data.user }));
+    if (data?.data.user) {
+      dispatch(setUser({ user: data.data.user }));
       return;
     }
 

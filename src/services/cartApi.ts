@@ -1,96 +1,130 @@
 import { apiManager } from "./apiManager";
 
+/* ───────────────── TYPES ───────────────── */
+
 export interface ICartItem {
-  id: string;
   product_id: string;
   name: string;
+  slug: string;
+
   price: number;
-  image: string;
+  discount_price?: number | null;
+
   quantity: number;
-  stock: number;
+
+  image?: string | null;
+  size?: string | null;
+  color?: string | null;
+
+  shipping_cost?: number | null;
 }
-export interface ICartResponse {
-  status: number;
-  success: boolean;
+
+export interface ICart {
+  id: string;
+  items: ICartItem[];
+  subtotal: number;
+  shipping: number;
+  total: number;
+}
+
+export interface GetCartResponse {
+  status: "success" | "error";
   message: string;
-  cartItems: ICartItem[];
+  data: {
+    cart: ICart;
+  };
 }
+
+/* ───────────────── DTO ARGS ───────────────── */
+
+export interface AddToCartArgs {
+  product_id: string;
+  quantity: number;
+  size?: string | null;
+  color?: string | null;
+}
+
+export interface UpdateCartItemArgs {
+  productId: string;
+  quantity?: number;
+  size?: string | null;
+  color?: string | null;
+}
+
+/* ───────────────── API ───────────────── */
 
 export const cartApi = apiManager.injectEndpoints({
   endpoints: (builder) => ({
-    // 🧾 Fetch all cart items
-    getCart: builder.query<ICartResponse, void>({
+    /* ───────── GET CART ───────── */
+
+    getCart: builder.query<GetCartResponse, void>({
       query: () => ({
-        url: "/api/v1/cart",
+        url: "cart",
         method: "GET",
       }),
-
-      // 👇 Generate tags for every item & list
-      providesTags: (result) =>
-        result
-          ? [
-              ...result.cartItems.map(({ id }) => ({
-                type: "Cart" as const,
-                id,
-              })),
-              { type: "Cart", id: "LIST" },
-            ]
-          : [{ type: "Cart", id: "LIST" }],
+      providesTags: ["Cart"],
     }),
 
-    // ➕ Add new item(s)
-    addToCart: builder.mutation<ICartResponse, ICartItem[]>({
+    /* ───────── ADD ITEM ───────── */
+
+    addItemToCart: builder.mutation<GetCartResponse, AddToCartArgs>({
       query: (body) => ({
-        url: "/api/v1/cart",
+        url: "cart/items",
         method: "POST",
         body,
       }),
-      // New item added → refresh full cart list
-      invalidatesTags: [{ type: "Cart", id: "LIST" }],
+      invalidatesTags: ["Cart"],
     }),
 
-    // 🔄 Update a specific cart item
-    updateCartItem: builder.mutation<
-      ICartResponse,
-      { id: string; quantity: number }
-    >({
-      query: ({ id, quantity }) => ({
-        url: `/api/v1/cart/${id}`,
+    /* ───────── UPDATE ITEM ───────── */
+
+    updateCartItem: builder.mutation<GetCartResponse, UpdateCartItemArgs>({
+      query: ({ productId, ...body }) => ({
+        url: `cart/items/${productId}`,
         method: "PATCH",
-        body: { quantity },
+        body,
       }),
-      // Invalidate only that specific item
-      invalidatesTags: (_result, _error, { id }) => [{ type: "Cart", id }],
+      invalidatesTags: ["Cart"],
     }),
 
-    // 🗑️ Remove a specific item from cart
-    removeCartItem: builder.mutation<
-      { success: boolean; message: string },
-      string
+    /* ───────── REMOVE ITEM ───────── */
+
+    removeCartItem: builder.mutation<GetCartResponse, string>({
+      query: (productId) => ({
+        url: `cart/items/${productId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Cart"],
+    }),
+
+    /* ───────── CLEAR CART ───────── */
+
+    clearCart: builder.mutation<
+      {
+        message: string;
+        cart: {
+          items: [];
+          subtotal: 0;
+          shipping: 0;
+          total: 0;
+        };
+      },
+      void
     >({
-      query: (id) => ({
-        url: `/api/v1/cart/${id}`,
-        method: "DELETE",
-      }),
-      // Invalidate only that item
-      invalidatesTags: (_result, _error, id) => [{ type: "Cart", id }],
-    }),
-
-    // ❌ Clear entire cart
-    clearCart: builder.mutation<{ success: boolean; message: string }, void>({
       query: () => ({
-        url: "/api/v1/cart",
+        url: "cart",
         method: "DELETE",
       }),
-      // Invalidate everything
-      invalidatesTags: [{ type: "Cart", id: "LIST" }],
+      invalidatesTags: ["Cart"],
     }),
   }),
 });
 
+/* ───────────────── HOOK EXPORTS ───────────────── */
+
 export const {
   useGetCartQuery,
-  useAddToCartMutation,
+  useAddItemToCartMutation,
   useUpdateCartItemMutation,
   useRemoveCartItemMutation,
   useClearCartMutation,

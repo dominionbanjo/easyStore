@@ -19,9 +19,8 @@ const transitionVariants: Variants = {
 };
 
 export function HeroTitle() {
-  //
   return (
-    <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-5xl font-medium tracking-tight text-balance leading-[1.2]">
+    <>
       Scale Your Small Business
       <br />
       <span className="relative inline-block">
@@ -30,7 +29,7 @@ export function HeroTitle() {
           Experience.
         </span>
       </span>
-    </h1>
+    </>
   );
 }
 

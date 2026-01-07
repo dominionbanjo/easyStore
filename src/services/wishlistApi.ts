@@ -1,69 +1,83 @@
 import { apiManager } from "./apiManager";
 
-// 🧩 Wishlist Item Interface
+/* ───────────────── TYPES ───────────────── */
+
 export interface IWishlistItem {
   id: string;
   user_id: string;
   product_id: string;
-  product_type?: string;
   name: string;
-  image?: string;
+  image?: string | null;
   price: number;
-  currency?: string;
-  stock?: number;
-  added_at?: string;
+  created_at: string;
 }
 
-// 🧾 API Response Interface
-export interface IWishlistResponse {
-  status: number;
-  success: boolean;
+/* ───────────────── RESPONSES ───────────────── */
+
+export interface GetWishlistResponse {
   message: string;
-  wishlist?: IWishlistItem | null;
+  wishlist: IWishlistItem[];
 }
 
-// ⚙️ Wishlist API
+/* ───────────────── DTO ARGS ───────────────── */
+
+export interface AddToWishlistArgs {
+  product_id: string;
+  name: string;
+  image?: string | null;
+  price: number;
+}
+
+export interface RemoveFromWishlistArgs {
+  productId: string;
+}
+
+/* ───────────────── API ───────────────── */
+
 export const wishlistApi = apiManager.injectEndpoints({
   endpoints: (builder) => ({
-    /** 🧭 GET: Retrieve the user's wishlist (only one allowed) */
-    getWishlist: builder.query<IWishlistResponse, void>({
+    /* ───────── GET MY WISHLIST ───────── */
+
+    getMyWishlist: builder.query<GetWishlistResponse, void>({
       query: () => ({
-        url: "/api/v1/wishlist",
+        url: "wishlist",
         method: "GET",
       }),
       providesTags: ["Wishlist"],
     }),
 
-    /** ➕ POST: Add a new product to the wishlist (replaces existing one) */
-    addToWishlist: builder.mutation<IWishlistResponse, Partial<IWishlistItem>>({
+    /* ───────── ADD TO WISHLIST ───────── */
+
+    addToWishlist: builder.mutation<
+      { message: string; wishlist: IWishlistItem },
+      AddToWishlistArgs
+    >({
       query: (body) => ({
-        url: "/api/v1/wishlist",
+        url: "wishlist",
         method: "POST",
         body,
       }),
-      // ensures fresh wishlist after add
       invalidatesTags: ["Wishlist"],
     }),
 
-    /** ❌ DELETE: Remove a product from wishlist by product_id */
+    /* ───────── REMOVE FROM WISHLIST ───────── */
+
     removeFromWishlist: builder.mutation<
-      { success: boolean; message: string },
-      string
+      { message: string },
+      RemoveFromWishlistArgs
     >({
-      query: (productId) => ({
-        url: `/api/v1/wishlist/${productId}`,
+      query: ({ productId }) => ({
+        url: `wishlist/${productId}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Wishlist"],
     }),
 
-    /** 🗑️ DELETE: Clear entire wishlist (rarely used, but supported) */
-    clearWishlist: builder.mutation<
-      { success: boolean; message: string },
-      void
-    >({
+    /* ───────── CLEAR WISHLIST ───────── */
+
+    clearWishlist: builder.mutation<{ message: string }, void>({
       query: () => ({
-        url: "/api/v1/wishlist",
+        url: "wishlist",
         method: "DELETE",
       }),
       invalidatesTags: ["Wishlist"],
@@ -71,9 +85,10 @@ export const wishlistApi = apiManager.injectEndpoints({
   }),
 });
 
-// 🧩 Export RTK Query Hooks
+/* ───────────────── HOOK EXPORTS ───────────────── */
+
 export const {
-  useGetWishlistQuery,
+  useGetMyWishlistQuery,
   useAddToWishlistMutation,
   useRemoveFromWishlistMutation,
   useClearWishlistMutation,

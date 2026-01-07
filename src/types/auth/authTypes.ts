@@ -15,23 +15,24 @@ export type AccountType = "user" | "vendor" | "admin";
 
 export interface IUser {
   id: string;
-  first_name: string;
-  last_name: string;
   email: string;
+  account_type: "user" | "vendor" | "admin";
+
+  first_name: string | null;
+  last_name: string | null;
   phone_number: string | null;
 
-  username: string | null;
   avatar: string | null;
-
-  account_type: AccountType;
-
-  store_id: string | null;
-  store_name: string | null;
+  avatar_public_id: string | null;
 
   email_verified: boolean;
-  signup_medium: "signed" | "google" | "facebook" | string;
+  country: string | null;
+  bio: string | null;
 
-  created_at: string; // ISO date string
+  products_count: number | null;
+
+  created_at: string;
+  updated_at: string | null;
 }
 
 export interface IRegisterUserResponse {

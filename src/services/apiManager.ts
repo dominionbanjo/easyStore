@@ -10,10 +10,13 @@ export const apiManager = createApi({
     credentials: "include",
     prepareHeaders: (headers) => {
       const cookieToken = Cookies.get("token");
-      if (cookieToken) headers.set("Authorization", `Bearer ${cookieToken}`);
-      if (!headers.has("Content-Type"))
-        headers.set("Content-Type", "application/json");
+      if (cookieToken) {
+        headers.set("Authorization", `Bearer ${cookieToken}`);
+      }
+
       headers.set("Accept", "application/json");
+
+      // ❌ DO NOT set Content-Type here
       return headers;
     },
   }),
@@ -23,6 +26,6 @@ export const apiManager = createApi({
   refetchOnReconnect: true,
   refetchOnFocus: false,
 
-  tagTypes: ["Auth", "User", "Cart", "Wishlist", "Store"],
+  tagTypes: ["Auth", "User", "Cart", "Wishlist", "Store", "Product"],
   endpoints: () => ({}),
 });
