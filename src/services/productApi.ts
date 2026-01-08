@@ -9,17 +9,15 @@ import type {
   CreateProductArgs,
   UpdateProductArgs,
   IProductsGroupedByCategoryResponse,
+  GetSingleProductResponse,
 } from "@/types/product/productTypes";
 import { apiManager } from "./apiManager";
-
-/* ───────────────── TYPES ───────────────── */
 
 /* ───────────────── API ───────────────── */
 
 export const productApi = apiManager.injectEndpoints({
   endpoints: (builder) => ({
-    /* ───────── LISTING ───────── */
-
+    /* ───────── GROUPED BY CATEGORY ───────── */
     getProductsGroupedByCategory: builder.query<
       IProductsGroupedByCategoryResponse,
       PaginationArgs
@@ -31,6 +29,7 @@ export const productApi = apiManager.injectEndpoints({
       }),
     }),
 
+    /* ───────── FEATURED ───────── */
     getFeaturedProducts: builder.query<
       IFeaturedProductsResponse,
       PaginationArgs
@@ -42,6 +41,7 @@ export const productApi = apiManager.injectEndpoints({
       }),
     }),
 
+    /* ───────── ALL PRODUCTS ───────── */
     getAllProducts: builder.query<IPaginatedResponse<IProduct>, PaginationArgs>(
       {
         query: (params) => ({
@@ -52,6 +52,7 @@ export const productApi = apiManager.injectEndpoints({
       }
     ),
 
+    /* ───────── BY CATEGORY ───────── */
     getProductsByCategory: builder.query<
       IPaginatedResponse<IProduct>,
       ProductsByCategoryArgs
@@ -63,6 +64,7 @@ export const productApi = apiManager.injectEndpoints({
       }),
     }),
 
+    /* ───────── BY STORE ───────── */
     getProductsByStore: builder.query<
       IPaginatedResponse<IProduct>,
       ProductsByStoreArgs
@@ -74,6 +76,7 @@ export const productApi = apiManager.injectEndpoints({
       }),
     }),
 
+    /* ───────── SEARCH ───────── */
     searchProducts: builder.query<
       IPaginatedResponse<IProduct>,
       SearchProductsArgs
@@ -85,10 +88,8 @@ export const productApi = apiManager.injectEndpoints({
       }),
     }),
 
-    getSingleProduct: builder.query<
-      { message: string; product: IProduct },
-      string
-    >({
+    /* ───────── SINGLE PRODUCT (FIXED) ───────── */
+    getSingleProduct: builder.query<GetSingleProductResponse, string>({
       query: (identifier) => ({
         url: `product/${identifier}`,
         method: "GET",
@@ -96,12 +97,11 @@ export const productApi = apiManager.injectEndpoints({
     }),
 
     /* ───────── MUTATIONS ───────── */
-
     createProduct: builder.mutation<any, CreateProductArgs>({
       query: ({ data }) => ({
         url: "product",
         method: "POST",
-        body: data, // FormData
+        body: data,
       }),
       invalidatesTags: ["Store"],
     }),

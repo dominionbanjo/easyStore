@@ -144,16 +144,23 @@ export const authApi = apiManager.injectEndpoints({
         url: "auth/logout",
         method: "POST",
       }),
+
       async onQueryStarted(_, { queryFulfilled, dispatch }) {
         try {
           await queryFulfilled;
-        } catch (error) {
-          console.warn(
-            "⚠️ Logout request failed, clearing client state anyway"
-          );
+        } catch {
+          // backend may fail — client MUST still logout
         } finally {
-          Cookies.remove("token");
+          // ✅ ALWAYS clear client auth
+          Cookies.remove("token", {
+            secure: true,
+            sameSite: "strict",
+          });
+
           dispatch(clearUser());
+
+          // OPTIONAL but recommended:
+          dispatch(apiManager.util.resetApiState());
         }
       },
     }),

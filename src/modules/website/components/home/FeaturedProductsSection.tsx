@@ -37,7 +37,7 @@ export default function FeaturedProductsSection() {
         <h2 className="text-3xl font-semibold">Featured Products</h2>
 
         {/* Responsive Grid */}
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mx-auto px-4">
+        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mx-auto px-4">
           {products.map((product) => {
             const price = product.discount_price ?? product.price;
 
@@ -55,6 +55,7 @@ export default function FeaturedProductsSection() {
                 rating={product.rating_average ?? 0}
                 stock={product.stock}
                 vendor={product.store_name ?? "Seller"}
+                isFavorite={product.is_in_wishlist}
               >
                 <ProductCard.Image />
                 <ProductCard.Info
