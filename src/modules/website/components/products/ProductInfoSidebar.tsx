@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/store";
+
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -13,11 +16,17 @@ import {
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
+import { useAddItemToCartMutation } from "@/services/cartApi";
+import {
+  useAddToWishlistMutation,
+  useRemoveFromWishlistMutation,
+} from "@/services/wishlistApi";
+
 interface ProductInfoSidebarProps {
   product: {
-    id: string | number;
+    id: string;
     name: string;
-    price: string;
+    price: number;
     description: string;
     category: string;
     vendor: string;
@@ -26,45 +35,111 @@ interface ProductInfoSidebarProps {
     highlights: string[];
     sizes?: string[];
     colors?: string[];
+    image?: string | null;
+
+    /** 🔹 backend flag */
+    is_in_wishlist?: boolean;
   };
 }
 
 export default function ProductInfoSidebar({
   product,
 }: ProductInfoSidebarProps) {
-  const [liked, setLiked] = useState(false);
+  const { isAuthenticated } = useSelector((state: RootState) => state.user);
+
   const [quantity, setQuantity] = useState(1);
+
+  /** ⭐ optimistic wishlist state */
+  const [liked, setLiked] = useState<boolean>(Boolean(product.is_in_wishlist));
+
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
 
-  const toggleLike = () => {
-    setLiked(!liked);
-    toast.info(!liked ? "Added to wishlist" : "Removed from wishlist");
-  };
+  const [addToCart, { isLoading: addingToCart }] = useAddItemToCartMutation();
 
-  const handleAddToCart = () => {
-    if (!selectedSize && product.sizes?.length) {
+  const [addToWishlist] = useAddToWishlistMutation();
+  const [removeFromWishlist] = useRemoveFromWishlistMutation();
+
+  /* ───────────────── ACTIONS ───────────────── */
+
+  const handleAddToCart = async () => {
+    if (!isAuthenticated) {
+      toast.error("Please login to add items to cart");
+      return;
+    }
+
+    // 🔒 FORCE OPTION SELECTION
+    if (product.sizes?.length && !selectedSize) {
       toast.error("Please select a size");
       return;
     }
-    if (!selectedColor && product.colors?.length) {
+
+    if (product.colors?.length && !selectedColor) {
       toast.error("Please select a color");
       return;
     }
-    toast.success(`${product.name} added to cart`);
+
+    try {
+      await addToCart({
+        product_id: product.id,
+        quantity,
+        size: selectedSize,
+        color: selectedColor,
+      }).unwrap();
+
+      toast.success(`${product.name} added to cart`);
+    } catch (err: any) {
+      toast.error(err?.data?.message || "Failed to add product to cart");
+    }
   };
+
+  const toggleWishlist = async () => {
+    if (!isAuthenticated) {
+      toast.error("Please login to manage wishlist");
+      return;
+    }
+
+    const prev = liked;
+
+    // ✅ optimistic UI
+    setLiked(!prev);
+
+    try {
+      if (prev) {
+        await removeFromWishlist({ productId: product.id }).unwrap();
+      } else {
+        await addToWishlist({
+          product_id: product.id,
+          name: product.name,
+          price: product.price,
+          image: product.image ?? null,
+        }).unwrap();
+      }
+    } catch (err: any) {
+      // ❌ revert on failure
+      setLiked(prev);
+      toast.error(
+        err?.data?.message || err?.message || "Wishlist action failed"
+      );
+    }
+  };
+
+  /* ───────────────── RENDER ───────────────── */
 
   return (
     <div className="space-y-7">
-      {/* ─── Product Title + Meta ─── */}
+      {/* ─── Title + Meta ─── */}
       <div>
         <h1 className="text-3xl font-bold text-gray-900">{product.name}</h1>
+
         <div className="flex items-center flex-wrap gap-3 mt-3">
           <Badge variant="outline">{product.category}</Badge>
+
           <div className="flex items-center gap-1 text-yellow-500">
             <Star className="h-4 w-4 fill-yellow-500" />
-            <span>{product.rating}</span>
+            <span>{product.rating.toFixed(1)}</span>
           </div>
+
           <p
             className={cn(
               "text-sm",
@@ -77,20 +152,28 @@ export default function ProductInfoSidebar({
       </div>
 
       {/* ─── Price ─── */}
-      <div className="text-3xl font-semibold text-primary">{product.price}</div>
+      <div className="text-3xl font-semibold text-primary">
+        ₦
+        {Number(product.price).toLocaleString("en-NG", {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 2,
+        })}
+      </div>
 
       {/* ─── Description ─── */}
       <p className="text-gray-700 leading-relaxed">{product.description}</p>
 
       {/* ─── Highlights ─── */}
-      <ul className="space-y-1 text-gray-600 list-disc pl-5">
-        {product.highlights.map((h, i) => (
-          <li key={i}>{h}</li>
-        ))}
-      </ul>
+      {product.highlights?.length > 0 && (
+        <ul className="space-y-1 text-gray-600 list-disc pl-5">
+          {product.highlights.map((h, i) => (
+            <li key={i}>{h}</li>
+          ))}
+        </ul>
+      )}
 
       {/* ─── Sizes ─── */}
-      {product.sizes && product.sizes.length > 0 && (
+      {product.sizes?.length ? (
         <div>
           <h4 className="font-medium mb-2">Select Size</h4>
           <div className="flex gap-2 flex-wrap">
@@ -100,20 +183,17 @@ export default function ProductInfoSidebar({
                 type="button"
                 variant={selectedSize === size ? "default" : "outline"}
                 onClick={() => setSelectedSize(size)}
-                className={cn(
-                  "rounded-full px-4 py-2 text-sm transition-all",
-                  selectedSize === size && "bg-primary text-white"
-                )}
+                className="rounded-full px-4 py-2 text-sm"
               >
                 {size}
               </Button>
             ))}
           </div>
         </div>
-      )}
+      ) : null}
 
       {/* ─── Colors ─── */}
-      {product.colors && product.colors.length > 0 && (
+      {product.colors?.length ? (
         <div>
           <h4 className="font-medium mb-2">Select Color</h4>
           <div className="flex gap-3 flex-wrap">
@@ -123,10 +203,10 @@ export default function ProductInfoSidebar({
                 type="button"
                 onClick={() => setSelectedColor(color)}
                 className={cn(
-                  "relative w-9 h-9 rounded-full border-2 transition-all duration-200 flex items-center justify-center",
+                  "relative w-9 h-9 rounded-full border-2 flex items-center justify-center",
                   selectedColor === color
                     ? "ring-2 ring-primary border-primary"
-                    : "border-gray-300 hover:border-gray-400"
+                    : "border-gray-300"
                 )}
                 style={{ backgroundColor: color }}
               >
@@ -137,7 +217,7 @@ export default function ProductInfoSidebar({
             ))}
           </div>
         </div>
-      )}
+      ) : null}
 
       {/* ─── Quantity ─── */}
       <div>
@@ -151,9 +231,11 @@ export default function ProductInfoSidebar({
           >
             <Minus className="h-4 w-4" />
           </Button>
+
           <span className="font-medium text-lg w-6 text-center">
             {quantity}
           </span>
+
           <Button
             variant="outline"
             size="icon"
@@ -169,20 +251,22 @@ export default function ProductInfoSidebar({
       <div className="flex items-center gap-2 pt-2">
         <Button
           size="lg"
-          disabled={product.stock <= 0}
-          className="rounded-full bg-primary text-white flex items-center gap-2"
+          disabled={product.stock <= 0 || addingToCart}
           onClick={handleAddToCart}
+          className="rounded-full bg-primary text-white flex items-center gap-2"
         >
-          <ShoppingCart className="h-5 w-5" /> Add to Cart
+          <ShoppingCart className="h-5 w-5" />
+          {addingToCart ? "Adding…" : "Add to Cart"}
         </Button>
+
         <Button
           size="icon"
           variant="outline"
+          onClick={toggleWishlist}
           className={cn(
-            "rounded-full border transition-all",
-            liked ? "bg-red-50 border-red-300" : ""
+            "rounded-full border",
+            liked && "bg-red-50 border-red-300"
           )}
-          onClick={toggleLike}
         >
           <Heart
             className={cn(
@@ -193,10 +277,10 @@ export default function ProductInfoSidebar({
         </Button>
       </div>
 
-      {/* ─── Vendor Info ─── */}
+      {/* ─── Vendor ─── */}
       <div className="flex items-center text-sm text-gray-500 gap-1">
         <Store className="h-4 w-4" />
-        Sold by{" "}
+        Sold by
         <span className="font-medium text-gray-800 ml-1">{product.vendor}</span>
       </div>
     </div>

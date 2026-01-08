@@ -1,6 +1,6 @@
+import type { IWishlistItem } from "@/types/wishlist/wishlistType";
 import { createSlice } from "@reduxjs/toolkit";
 import { type PayloadAction } from "@reduxjs/toolkit";
-import type { IWishlistItem } from "@/services/wishlistApi";
 
 export interface WishlistState {
   item: IWishlistItem | null;

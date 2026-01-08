@@ -53,6 +53,7 @@ export default function CategoriesSection() {
             rating={product.rating_average ?? 0}
             category=""
             vendor={product.store_name ?? "Seller"}
+            isFavorite={product.is_in_wishlist}
           >
             <ProductCard.Image />
             <ProductCard.Info

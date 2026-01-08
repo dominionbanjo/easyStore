@@ -161,13 +161,35 @@ export default function SignupPage() {
             <FormProvider {...form}>
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
                 <div className="grid grid-cols-2 gap-4">
-                  <FormInput label="First Name" name="first_name" />
-                  <FormInput label="Last Name" name="last_name" />
+                  <FormInput
+                    label="First Name"
+                    name="first_name"
+                    placeholder="Enter your first name"
+                  />
+                  <FormInput
+                    label="Last Name"
+                    name="last_name"
+                    placeholder="Enter your first name"
+                  />
                 </div>
 
-                <FormInput label="Email" name="email" type="email" />
-                <FormInput label="Phone Number" name="phone_number" />
-                <FormInput label="Password" name="password" type="password" />
+                <FormInput
+                  label="Email"
+                  name="email"
+                  type="email"
+                  placeholder="example@mail.com"
+                />
+                <FormInput
+                  label="Phone Number"
+                  name="phone_number"
+                  placeholder="0808888888 or +23444444444"
+                />
+                <FormInput
+                  label="Password"
+                  name="password"
+                  type="password"
+                  placeholder="**********"
+                />
 
                 {accountType === "vendor" && (
                   <div className="space-y-4 rounded-xl border bg-gray-50 p-4">
@@ -180,7 +202,7 @@ export default function SignupPage() {
                       <FormInput
                         label="Store Name"
                         name="store_name"
-                        placeholder="Your store name"
+                        placeholder="Enter Your store name"
                       />
 
                       {storeNameStatus !== "idle" && (
@@ -210,7 +232,7 @@ export default function SignupPage() {
                     <FormInput
                       label="About Store"
                       name="description"
-                      placeholder="Short description"
+                      placeholder="What do you sell or provide"
                     />
 
                     <FormSelect

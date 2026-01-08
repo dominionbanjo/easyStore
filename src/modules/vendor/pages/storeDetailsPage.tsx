@@ -78,8 +78,8 @@ function StoreCategoriesSection({ tabGroups }: { tabGroups: any[] }) {
             stock={product.stock}
             vendor={product.vendor}
             avatar={product.avatar}
-            brand={product.brand}
-            options={product.options}
+            // brand={product.brand}
+            // options={product.options}
           >
             <ProductCard.Image />
             <ProductCard.Info

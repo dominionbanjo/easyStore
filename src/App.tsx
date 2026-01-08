@@ -50,6 +50,7 @@ import SuperAdminAccessControlPage from "./modules/admin/pages/SuperAdminAccessC
 import SuperAdminSettingsPage from "./modules/admin/pages/SuperAdminSettingsPage";
 import SuperAdminServerConfigPage from "./modules/admin/pages/SuperAdminServerConfigPage";
 import UserProfilePage from "./modules/website/pages/ProfilePage";
+import AccountsLayout from "./modules/website/layout/AccountsLayout";
 
 export default function App() {
   return (
@@ -69,7 +70,7 @@ export default function App() {
           <Route path="wishlist" element={<WishlistPage />} />
         </Route>
 
-        <Route path="/account" element={<HomepageLayout />}>
+        <Route path="/account" element={<AccountsLayout />}>
           <Route path="profile" element={<UserProfilePage />} />
           <Route path="settings" element={<SettingsPage />} />
           <Route path="cart" element={<CartPage />} />
