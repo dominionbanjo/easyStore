@@ -18,7 +18,7 @@ export default function TrustedBy() {
   return (
     <section className="py-12 mt-5 bg-gradient-to-r from-[#17c06e] via-[#5ed49c] to-[#17c06e] border w-full rounded-xl">
       <div className="max-w-[1700px] mx-auto px-6">
-
+                                          
         <div className="flex flex-col items-center justify-center gap-8">
 
           {/* Text */}
