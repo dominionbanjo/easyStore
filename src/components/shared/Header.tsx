@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "@/store";
 import { clearUser } from "@/features/userSlice";
@@ -27,8 +27,6 @@ export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [filterOpen, setFilterOpen] = useState(false);
-  const [selectedFilter, setSelectedFilter] = useState("products");
   const location = useLocation();
   const [logout] = useLogoutMutation();
   const [query, setQuery] = useState("");
@@ -56,9 +54,24 @@ export default function Header() {
     toast.success("Logged out successfully");
   };
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    toast.info(`Searching for: ${query}`);
+  const navigate = useNavigate();
+
+  const handleSearch = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+
+    const trimmed = query.trim();
+    if (!trimmed) return;
+
+    const params = new URLSearchParams();
+    params.set("q", trimmed);
+
+    // If already on /s → just update params
+    if (location.pathname === "/s") {
+      navigate({ search: params.toString() }, { replace: true });
+    } else {
+      navigate(`/s?${params.toString()}`);
+    }
+
     setSearchOpen(false);
   };
 
@@ -188,7 +201,10 @@ export default function Header() {
 
         {/* ---------- MIDDLE: Search ---------- */}
         <div className="hidden md:flex flex-1 justify-center px-4 lg:px-6 max-w-[500px]">
-          <div className="flex w-full items-center rounded-full bg-white border-2 border-border/40 overflow-hidden shadow-sm focus-within:ring-1 focus-within:ring-primary/10 transition-all">
+          <form
+            onSubmit={handleSearch}
+            className="flex w-[80%] items-center rounded-full bg-white border-2 border-border/40 overflow-hidden shadow-sm focus-within:ring-1 focus-within:ring-primary/10 transition-all"
+          >
             <div className="pl-4 flex-shrink-0">
               <Search className="h-4 w-4 text-muted-foreground" />
             </div>
@@ -198,67 +214,13 @@ export default function Header() {
               placeholder="Search products..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  handleSearch(e);
-                }
-              }}
               className="border-0 shadow-none bg-white py-6 focus-visible:ring-0 text-sm px-3 flex-1 min-w-0"
             />
 
-            <div className="h-6 w-px bg-border/40 mx-2 flex-shrink-0" />
-
-            <div className="flex-shrink-0 pr-2">
-              <Popover open={filterOpen} onOpenChange={setFilterOpen}>
-                <PopoverTrigger asChild>
-                  <button className="flex items-center justify-between gap-2 h-auto border-none bg-transparent text-sm px-2 text-neutral-700 hover:text-neutral-900 transition-colors capitalize min-w-[90px]">
-                    <span className="truncate">{selectedFilter}</span>
-                    <svg
-                      className={cn(
-                        "h-4 w-4 flex-shrink-0 transition-transform duration-200",
-                        filterOpen && "rotate-180"
-                      )}
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
-                  </button>
-                </PopoverTrigger>
-                <PopoverContent
-                  align="end"
-                  sideOffset={8}
-                  className="w-[140px] p-2 bg-white border border-border/40 shadow-lg rounded-lg"
-                >
-                  <div className="flex flex-col gap-1">
-                    {["products", "stores", "brands"].map((filter) => (
-                      <button
-                        key={filter}
-                        onClick={() => {
-                          setSelectedFilter(filter);
-                          setFilterOpen(false);
-                        }}
-                        className={cn(
-                          "px-3 py-2 text-sm text-left rounded-md transition-colors capitalize",
-                          selectedFilter === filter
-                            ? "bg-black text-white font-medium"
-                            : "text-neutral-700 hover:bg-gray-100"
-                        )}
-                      >
-                        {filter}
-                      </button>
-                    ))}
-                  </div>
-                </PopoverContent>
-              </Popover>
-            </div>
-          </div>
+            <Button type="submit" size="sm" className="rounded-full mr-2">
+              Search
+            </Button>
+          </form>
         </div>
 
         {/* ---------- RIGHT: Auth / Cart / Mobile Search ---------- */}
@@ -366,24 +328,19 @@ export default function Header() {
       {/* Mobile Expand Search */}
       {searchOpen && (
         <div className="fixed top-[64px] left-0 w-full z-40 md:hidden bg-white border-b shadow-md px-4 py-3 fade-slide-down">
-          <div className="flex items-center gap-2">
+          <form onSubmit={handleSearch} className="flex items-center gap-2">
             <Input
               type="text"
               placeholder="Search products..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  handleSearch(e);
-                }
-              }}
               className="flex-1"
               autoFocus
             />
-            <Button size="sm" type="button" onClick={handleSearch}>
+            <Button size="sm" type="submit">
               Search
             </Button>
-          </div>
+          </form>
         </div>
       )}
     </header>

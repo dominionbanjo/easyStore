@@ -37,35 +37,41 @@ export default function CategoriesSection() {
   };
 
   return (
-    <TabbedGrid
-      tabGroups={tabGroups}
-      renderItem={(product) => {
-        const price = product.discount_price ?? product.price;
+    <div className="space-y-4 text-center">
+      <h2 className="text-3xl font-semibold text-primary">
+        Browse Products by Category
+      </h2>
 
-        return (
-          <ProductCard.Root
-            key={product.id}
-            id={product.id}
-            name={product.name}
-            image={resolveImage(product.image, FALLBACK_IMAGE)}
-            price={`₦${price.toLocaleString()}`}
-            stock={product.stock}
-            rating={product.rating_average ?? 0}
-            category=""
-            vendor={product.store_name ?? "Seller"}
-            isFavorite={product.is_in_wishlist}
-          >
-            <ProductCard.Image />
-            <ProductCard.Info
-              onClick={() =>
-                navigate(
-                  USER_ROUTES.PRODUCT_DETAIL.replace(":id", product.slug)
-                )
-              }
-            />
-          </ProductCard.Root>
-        );
-      }}
-    />
+      <TabbedGrid
+        tabGroups={tabGroups}
+        renderItem={(product) => {
+          const price = product.discount_price ?? product.price;
+
+          return (
+            <ProductCard.Root
+              key={product.id}
+              id={product.id}
+              name={product.name}
+              image={resolveImage(product.image, FALLBACK_IMAGE)}
+              price={`₦${price.toLocaleString()}`}
+              stock={product.stock}
+              rating={product.rating_average ?? 0}
+              category=""
+              vendor={product.store_name ?? "Seller"}
+              isFavorite={product.is_in_wishlist}
+            >
+              <ProductCard.Image />
+              <ProductCard.Info
+                onClick={() =>
+                  navigate(
+                    USER_ROUTES.PRODUCT_DETAIL.replace(":id", product.slug)
+                  )
+                }
+              />
+            </ProductCard.Root>
+          );
+        }}
+      />
+    </div>
   );
 }

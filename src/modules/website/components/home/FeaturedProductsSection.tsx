@@ -34,7 +34,9 @@ export default function FeaturedProductsSection() {
   return (
     <section className="py-20 px-2 bg-card">
       <div className="mx-auto text-center space-y-10">
-        <h2 className="text-3xl font-semibold">Featured Products</h2>
+        <h2 className="text-3xl font-semibold text-primary">
+          Featured Products
+        </h2>
 
         {/* Responsive Grid */}
         <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mx-auto px-4">
