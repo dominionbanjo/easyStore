@@ -10,10 +10,15 @@ import RelatedProductsGrid from "@/modules/website/components/products/RelatedPr
 import { useGetSingleProductQuery } from "@/services/productApi";
 
 export default function ProductDetailsPage() {
-  /* ✅ id, NOT ID */
   const { id } = useParams<{ id: string }>();
 
-  const { data, isLoading, isError } = useGetSingleProductQuery(id!, {
+  return <ProductDetailsInner key={id} id={id!} />;
+}
+
+/* ───────────────── INNER (KEYED) ───────────────── */
+
+function ProductDetailsInner({ id }: { id: string }) {
+  const { data, isLoading, isError } = useGetSingleProductQuery(id, {
     skip: !id,
   });
 
@@ -37,7 +42,7 @@ export default function ProductDetailsPage() {
 
   const { product, store, reviews, related_products } = data.data;
 
-  /* ───────────────── ADAPT BACKEND → UI SHAPE ───────────────── */
+  /* ───────────────── ADAPT BACKEND → UI ───────────────── */
 
   const images = [
     ...(product.gallery?.map((g) => g.url) ?? []),
@@ -51,20 +56,13 @@ export default function ProductDetailsPage() {
     name: product.name,
     vendor: store.store_name,
     price: product.discount_price ?? product.price,
-
     category: product.category_ref?.name ?? "",
-
     rating: Number(product.rating_average ?? 0),
     stock: product.stock,
-
     images,
-
     description: product.description ?? "",
-
     highlights: product.highlights ?? [],
-
     specs: product.specs ?? {},
-
     shipping: {
       delivery: product.shipping_note ?? "",
       returns: product.returns_note ?? "",
@@ -73,7 +71,6 @@ export default function ProductDetailsPage() {
         ? `₦${product.shipping_cost.toLocaleString()}`
         : "Calculated at checkout",
     },
-
     sizes: product.sizes ?? [],
     colors: product.colors ?? [],
     is_in_wishlist: product.is_in_wishlist,
@@ -83,7 +80,7 @@ export default function ProductDetailsPage() {
 
   return (
     <section className="max-w-[1480px] mx-auto px-4 py-14 space-y-16">
-      {/* ─── Gallery + Info ─── */}
+      {/* Gallery + Info */}
       <div className="grid md:grid-cols-[1.2fr_1fr] gap-10">
         <ProductGallery images={uiProduct.images} />
         <ProductInfoSidebar product={uiProduct} />
@@ -91,12 +88,12 @@ export default function ProductDetailsPage() {
 
       <Separator />
 
-      {/* ─── Tabs ─── */}
+      {/* Tabs */}
       <ProductDetailsTabs product={uiProduct} />
 
       <Separator />
 
-      {/* ─── Reviews ─── */}
+      {/* Reviews */}
       <ReviewsSection
         productId={product.id}
         reviews={reviews}
@@ -104,7 +101,7 @@ export default function ProductDetailsPage() {
         reviewCount={product.review_count ?? reviews.length}
       />
 
-      {/* ─── Related Products (FROM BACKEND) ─── */}
+      {/* Related */}
       {related_products?.length > 0 && (
         <RelatedProductsGrid products={related_products} />
       )}

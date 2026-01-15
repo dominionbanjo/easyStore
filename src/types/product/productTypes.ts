@@ -169,3 +169,23 @@ export interface UpdateProductArgs {
   id: string;
   data: Partial<Record<string, any>>;
 }
+
+/* ───────────────── SEARCH PAGINATION ───────────────── */
+export interface IPagination {
+  total: number;
+  page: number;
+  limit: number;
+  pages: number;
+  hasNext: boolean;
+  hasPrev: boolean;
+}
+
+/* ───────────────── SEARCH RESPONSE ───────────────── */
+export interface ISearchProductsResponse {
+  status: "success" | "error";
+  message: string;
+  data: {
+    items: IProduct[];
+    pagination: IPagination;
+  };
+}

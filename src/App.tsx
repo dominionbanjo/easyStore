@@ -51,6 +51,7 @@ import SuperAdminSettingsPage from "./modules/admin/pages/SuperAdminSettingsPage
 import SuperAdminServerConfigPage from "./modules/admin/pages/SuperAdminServerConfigPage";
 import UserProfilePage from "./modules/website/pages/ProfilePage";
 import AccountsLayout from "./modules/website/layout/AccountsLayout";
+import SearchResultsPage from "./modules/website/pages/SearchResultsPage";
 
 export default function App() {
   return (
@@ -59,6 +60,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<HomepageLayout />}>
           <Route path="" element={<LandingPage />} />
+          <Route path="s" element={<SearchResultsPage />} />
           <Route path="shop" element={<ShopPage />} />
           <Route path="shop/:id" element={<StoreDetailsPage />} />
           <Route path="categories" element={<CategoriesPage />} />
