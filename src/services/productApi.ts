@@ -10,6 +10,7 @@ import type {
   UpdateProductArgs,
   IProductsGroupedByCategoryResponse,
   GetSingleProductResponse,
+  ISearchProductsResponse,
 } from "@/types/product/productTypes";
 import { apiManager } from "./apiManager";
 
@@ -40,7 +41,6 @@ export const productApi = apiManager.injectEndpoints({
         params,
       }),
     }),
-
     /* ───────── ALL PRODUCTS ───────── */
     getAllProducts: builder.query<IPaginatedResponse<IProduct>, PaginationArgs>(
       {
@@ -77,10 +77,7 @@ export const productApi = apiManager.injectEndpoints({
     }),
 
     /* ───────── SEARCH ───────── */
-    searchProducts: builder.query<
-      IPaginatedResponse<IProduct>,
-      SearchProductsArgs
-    >({
+    searchProducts: builder.query<ISearchProductsResponse, SearchProductsArgs>({
       query: ({ q, ...params }) => ({
         url: "product/search",
         method: "GET",
@@ -90,10 +87,21 @@ export const productApi = apiManager.injectEndpoints({
 
     /* ───────── SINGLE PRODUCT (FIXED) ───────── */
     getSingleProduct: builder.query<GetSingleProductResponse, string>({
-      query: (identifier) => ({
-        url: `product/${identifier}`,
+      query: (slug) => ({
+        url: `product/${slug}`,
         method: "GET",
       }),
+
+      providesTags: (result) => {
+        const productId = result?.data?.product?.id;
+
+        return productId
+          ? [
+              { type: "Product", id: productId },
+              { type: "Product", id: "SINGLE" }, // ✅ fallback
+            ]
+          : [{ type: "Product", id: "SINGLE" }];
+      },
     }),
 
     /* ───────── MUTATIONS ───────── */

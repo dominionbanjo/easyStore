@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import ProductGallery from "@/modules/website/components/products/ProductGallery";
 import ProductInfoSidebar from "@/modules/website/components/products/ProductInfoSidebar";
@@ -10,23 +11,87 @@ import RelatedProductsGrid from "@/modules/website/components/products/RelatedPr
 import { useGetSingleProductQuery } from "@/services/productApi";
 
 export default function ProductDetailsPage() {
-  /* ✅ id, NOT ID */
-  const { id } = useParams<{ id: string }>();
+  const { slug } = useParams<{ slug: string }>();
+  return <ProductDetailsInner key={slug} id={slug!} />;
+}
 
-  const { data, isLoading, isError } = useGetSingleProductQuery(id!, {
+/* ───────────────── INNER (KEYED) ───────────────── */
+
+function ProductDetailsInner({ id }: { id: string }) {
+  const { data, isLoading, isError } = useGetSingleProductQuery(id, {
     skip: !id,
   });
 
-  /* ───────────────── LOADING ───────────────── */
+  /* ───────────────── SKELETON LOADER ───────────────── */
+
   if (isLoading) {
     return (
-      <div className="min-h-[60vh] flex items-center justify-center text-muted-foreground">
-        Loading product…
-      </div>
+      <section className="max-w-[1480px] mx-auto px-4 py-14 space-y-16">
+        {/* Gallery + Sidebar */}
+        <div className="grid md:grid-cols-[1.2fr_1fr] gap-10">
+          {/* Gallery */}
+          <div className="space-y-4">
+            <Skeleton className="h-[420px] rounded-2xl" />
+            <div className="flex gap-3">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <Skeleton key={i} className="h-20 w-20 rounded-xl" />
+              ))}
+            </div>
+          </div>
+
+          {/* Sidebar */}
+          <div className="space-y-6">
+            <Skeleton className="h-8 w-3/4" />
+            <Skeleton className="h-6 w-1/3" />
+            <Skeleton className="h-10 w-1/2" />
+
+            <div className="space-y-3">
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-5/6" />
+              <Skeleton className="h-4 w-4/6" />
+            </div>
+
+            <Skeleton className="h-12 w-full rounded-xl" />
+          </div>
+        </div>
+
+        <Separator />
+
+        {/* Tabs */}
+        <div className="space-y-6">
+          <div className="flex gap-4">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <Skeleton key={i} className="h-10 w-28 rounded-full" />
+            ))}
+          </div>
+          <Skeleton className="h-40 w-full rounded-2xl" />
+        </div>
+
+        <Separator />
+
+        {/* Reviews */}
+        <div className="space-y-6">
+          <Skeleton className="h-8 w-1/4" />
+          {Array.from({ length: 3 }).map((_, i) => (
+            <Skeleton key={i} className="h-24 w-full rounded-xl" />
+          ))}
+        </div>
+
+        {/* Related products */}
+        <div className="space-y-6">
+          <Skeleton className="h-8 w-1/3" />
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <Skeleton key={i} className="h-[280px] rounded-2xl" />
+            ))}
+          </div>
+        </div>
+      </section>
     );
   }
 
   /* ───────────────── ERROR ───────────────── */
+
   if (isError || !data?.data?.product) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center text-red-500">
@@ -37,7 +102,7 @@ export default function ProductDetailsPage() {
 
   const { product, store, reviews, related_products } = data.data;
 
-  /* ───────────────── ADAPT BACKEND → UI SHAPE ───────────────── */
+  /* ───────────────── ADAPT BACKEND → UI ───────────────── */
 
   const images = [
     ...(product.gallery?.map((g) => g.url) ?? []),
@@ -51,20 +116,13 @@ export default function ProductDetailsPage() {
     name: product.name,
     vendor: store.store_name,
     price: product.discount_price ?? product.price,
-
     category: product.category_ref?.name ?? "",
-
     rating: Number(product.rating_average ?? 0),
     stock: product.stock,
-
     images,
-
     description: product.description ?? "",
-
     highlights: product.highlights ?? [],
-
     specs: product.specs ?? {},
-
     shipping: {
       delivery: product.shipping_note ?? "",
       returns: product.returns_note ?? "",
@@ -73,7 +131,6 @@ export default function ProductDetailsPage() {
         ? `₦${product.shipping_cost.toLocaleString()}`
         : "Calculated at checkout",
     },
-
     sizes: product.sizes ?? [],
     colors: product.colors ?? [],
     is_in_wishlist: product.is_in_wishlist,
@@ -83,7 +140,7 @@ export default function ProductDetailsPage() {
 
   return (
     <section className="max-w-[1480px] mx-auto px-4 py-14 space-y-16">
-      {/* ─── Gallery + Info ─── */}
+      {/* Gallery + Info */}
       <div className="grid md:grid-cols-[1.2fr_1fr] gap-10">
         <ProductGallery images={uiProduct.images} />
         <ProductInfoSidebar product={uiProduct} />
@@ -91,12 +148,12 @@ export default function ProductDetailsPage() {
 
       <Separator />
 
-      {/* ─── Tabs ─── */}
+      {/* Tabs */}
       <ProductDetailsTabs product={uiProduct} />
 
       <Separator />
 
-      {/* ─── Reviews ─── */}
+      {/* Reviews */}
       <ReviewsSection
         productId={product.id}
         reviews={reviews}
@@ -104,7 +161,7 @@ export default function ProductDetailsPage() {
         reviewCount={product.review_count ?? reviews.length}
       />
 
-      {/* ─── Related Products (FROM BACKEND) ─── */}
+      {/* Related */}
       {related_products?.length > 0 && (
         <RelatedProductsGrid products={related_products} />
       )}

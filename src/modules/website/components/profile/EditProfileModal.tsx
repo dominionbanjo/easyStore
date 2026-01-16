@@ -2,9 +2,8 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { User } from "lucide-react";
-import { Country, State, City } from "country-state-city";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,11 +16,21 @@ import {
   type EditProfileFormValues,
 } from "../../validators/updateProfileValidator";
 
+/* ───────────────── TYPES ───────────────── */
+
 interface EditProfileModalProps {
   open: boolean;
   onClose: () => void;
   user: any;
 }
+
+type Option = { label: string; value: string };
+
+/* ───────────────── UTIL ───────────────── */
+
+const importCSC = () => import("country-state-city");
+
+/* ───────────────── COMPONENT ───────────────── */
 
 export function EditProfileModal({
   open,
@@ -29,10 +38,15 @@ export function EditProfileModal({
   user,
 }: EditProfileModalProps) {
   const [updateProfile, { isLoading }] = useUpdateUserProfileMutation();
+
   const [avatarPreview, setAvatarPreview] = useState<string | null>(
     user?.avatar ?? null
   );
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
+
+  const [countryOptions, setCountryOptions] = useState<Option[]>([]);
+  const [stateOptions, setStateOptions] = useState<Option[]>([]);
+  const [cityOptions, setCityOptions] = useState<Option[]>([]);
 
   const form = useForm<EditProfileFormValues>({
     resolver: zodResolver(EditProfileSchema),
@@ -51,54 +65,75 @@ export function EditProfileModal({
     },
   });
 
-  const { handleSubmit, setValue } = form;
+  const { handleSubmit, setValue, control } = form;
 
-  // 🔗 Watch dependent fields
-  const countryCode = useWatch({
-    name: "address.country",
-    control: form.control,
-  });
-  const stateCode = useWatch({ name: "address.state", control: form.control });
+  /* ───────────────── WATCH DEPENDENCIES ───────────────── */
 
-  // 🌍 Country options
-  const countryOptions = useMemo(
-    () =>
-      Country.getAllCountries().map((c) => ({
-        label: c.name,
-        value: c.isoCode,
-      })),
-    []
-  );
+  const countryCode = useWatch({ name: "address.country", control });
+  const stateCode = useWatch({ name: "address.state", control });
 
-  // 🏛 State options
-  const stateOptions = useMemo(() => {
-    if (!countryCode) return [];
-    return State.getStatesOfCountry(countryCode).map((s) => ({
-      label: s.name,
-      value: s.isoCode,
-    }));
-  }, [countryCode]);
+  /* ───────────────── LOAD COUNTRIES (ON OPEN) ───────────────── */
 
-  // 🏙 City options
-  const cityOptions = useMemo(() => {
-    if (!countryCode || !stateCode) return [];
-    return City.getCitiesOfState(countryCode, stateCode).map((c) => ({
-      label: c.name,
-      value: c.name,
-    }));
-  }, [countryCode, stateCode]);
-
-  // 🔁 Reset dependent fields
   useEffect(() => {
+    if (!open) return;
+
+    (async () => {
+      const { Country } = await importCSC();
+      setCountryOptions(
+        Country.getAllCountries().map((c) => ({
+          label: c.name,
+          value: c.isoCode,
+        }))
+      );
+    })();
+  }, [open]);
+
+  /* ───────────────── LOAD STATES ───────────────── */
+
+  useEffect(() => {
+    if (!countryCode) {
+      setStateOptions([]);
+      setCityOptions([]);
+      return;
+    }
+
+    (async () => {
+      const { State } = await importCSC();
+      setStateOptions(
+        State.getStatesOfCountry(countryCode).map((s) => ({
+          label: s.name,
+          value: s.isoCode,
+        }))
+      );
+    })();
+
     setValue("address.state", "");
     setValue("address.city", "");
-  }, [countryCode]);
+  }, [countryCode, setValue]);
+
+  /* ───────────────── LOAD CITIES ───────────────── */
 
   useEffect(() => {
-    setValue("address.city", "");
-  }, [stateCode]);
+    if (!countryCode || !stateCode) {
+      setCityOptions([]);
+      return;
+    }
 
-  // Cleanup avatar preview
+    (async () => {
+      const { City } = await importCSC();
+      setCityOptions(
+        City.getCitiesOfState(countryCode, stateCode).map((c) => ({
+          label: c.name,
+          value: c.name,
+        }))
+      );
+    })();
+
+    setValue("address.city", "");
+  }, [countryCode, stateCode, setValue]);
+
+  /* ───────────────── CLEANUP AVATAR PREVIEW ───────────────── */
+
   useEffect(() => {
     return () => {
       if (avatarPreview?.startsWith("blob:")) {
@@ -107,26 +142,24 @@ export function EditProfileModal({
     };
   }, [avatarPreview]);
 
+  /* ───────────────── SUBMIT ───────────────── */
+
   const onSubmit = async (values: EditProfileFormValues) => {
     try {
       const formData = new FormData();
 
-      // ✅ append avatar FIRST
       if (avatarFile) {
         formData.append("avatar", avatarFile);
       }
 
       Object.entries(values).forEach(([key, value]) => {
         if (!value) return;
-
         if (key === "address") {
           formData.append("address", JSON.stringify(value));
         } else {
           formData.append(key, value as string);
         }
       });
-
-      console.log([...formData.entries()]); // 🔥 DEBUG
 
       await updateProfile({ data: formData }).unwrap();
       toast.success("Profile updated successfully");
@@ -135,6 +168,8 @@ export function EditProfileModal({
       toast.error(error?.data?.message || "Update failed");
     }
   };
+
+  /* ───────────────── UI ───────────────── */
 
   return (
     <Dialog.Root open={open} onOpenChange={(v) => !v && onClose()}>
@@ -153,7 +188,6 @@ export function EditProfileModal({
             <CardContent>
               <FormProvider {...form}>
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-                  {/* BASIC INFO */}
                   <div className="grid grid-cols-2 gap-4">
                     <FormInput label="First Name" name="first_name" />
                     <FormInput label="Last Name" name="last_name" />
@@ -184,7 +218,6 @@ export function EditProfileModal({
                         onChange={(e) => {
                           const file = e.target.files?.[0];
                           if (!file) return;
-
                           setAvatarFile(file);
                           setAvatarPreview(URL.createObjectURL(file));
                         }}
@@ -211,14 +244,12 @@ export function EditProfileModal({
                     <FormSelect
                       label="Country"
                       name="address.country"
-                      placeholder="Select country"
                       options={countryOptions}
                     />
 
                     <FormSelect
                       label="State"
                       name="address.state"
-                      placeholder="Select state"
                       options={stateOptions}
                       disabled={!countryCode}
                     />
@@ -226,7 +257,6 @@ export function EditProfileModal({
                     <FormSelect
                       label="City"
                       name="address.city"
-                      placeholder="Select city"
                       options={cityOptions}
                       disabled={!stateCode}
                     />
@@ -234,7 +264,6 @@ export function EditProfileModal({
                     <FormInput label="Postal Code" name="address.postal_code" />
                   </div>
 
-                  {/* ACTIONS */}
                   <div className="flex gap-3">
                     <Button type="button" variant="outline" onClick={onClose}>
                       Cancel

@@ -1,247 +1,156 @@
-import { useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { FormProvider, useForm } from "react-hook-form";
-import { FormInput } from "@/components/shared/FormInput";
-import { FormSelect } from "@/components/shared/FormSelect";
+import { ArrowLeft, Layers, Search } from "lucide-react";
+
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Layers, Search } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { ProductCard } from "@/components/shared/ProductCard";
+import { Pagination } from "@/components/shared/Pagination";
 
-//
-// ─── Mock Products By Category ─────────────────────────────────────────────
-//
-const mockProducts = [
-  {
-    id: 1,
-    name: "iPhone 15 Pro Max",
-    price: "₦1,200,000",
-    image: "/images/elect1.png",
-    category: "Electronics",
-    description:
-      "The latest Apple flagship with A17 Bionic and titanium frame.",
-    stock: 6,
-  },
-  {
-    id: 2,
-    name: "Samsung Smart TV 65”",
-    price: "₦780,000",
-    image: "/images/elect2.png",
-    category: "Electronics",
-    description: "Crystal UHD 4K display with dynamic contrast enhancer.",
-    stock: 4,
-  },
-  {
-    id: 3,
-    name: "Casual Men’s Sneakers",
-    price: "₦32,000",
-    image: "/images/fash1.png",
-    category: "Fashion",
-    description: "Lightweight sneakers designed for comfort and daily style.",
-    stock: 10,
-  },
-  {
-    id: 4,
-    name: "Luxury Handbag",
-    price: "₦180,000",
-    image: "/images/fash2.png",
-    category: "Fashion",
-    description: "Elegant premium leather handbag for modern women.",
-    stock: 7,
-  },
-  {
-    id: 5,
-    name: "Sofa Couch (3 Seater)",
-    price: "₦250,000",
-    image: "/images/home1.png",
-    category: "Home & Living",
-    description: "Comfortable modern sofa with breathable linen fabric.",
-    stock: 2,
-  },
-  {
-    id: 6,
-    name: "Vitamin C Serum",
-    price: "₦9,500",
-    image: "/images/beauty1.png",
-    category: "Beauty",
-    description: "Brightening formula for smooth, radiant, youthful skin.",
-    stock: 12,
-  },
-  {
-    id: 7,
-    name: "Trail Running Shoes",
-    price: "₦48,000",
-    image: "/images/sport1.png",
-    category: "Sports & Outdoors",
-    description: "Light, durable shoes designed for speed and endurance.",
-    stock: 5,
-  },
-];
+import { useGetProductsByCategoryQuery } from "@/services/productApi";
+import { USER_ROUTES } from "@/routes/temp";
 
-const sortOptions = [
-  { label: "Default", value: "default" },
-  { label: "Price: Low to High", value: "low" },
-  { label: "Price: High to Low", value: "high" },
-  { label: "Alphabetical", value: "az" },
-];
+/* ───────────────── CONSTANTS ───────────────── */
 
-//
-// ─── Category Details Page ─────────────────────────────────────────────────
-//
+const FALLBACK_IMAGE =
+  "https://images.unsplash.com/photo-1580894732444-8ecded7900cd?auto=format&fit=crop&w=1200&q=60";
+
+/* ───────────────── COMPONENT ───────────────── */
+
 export default function CategoryDetailsPage() {
   const { slug } = useParams<{ slug: string }>();
-  const decodedCategory = decodeURIComponent(slug || "");
+  const navigate = useNavigate();
+  const sectionRef = useRef<HTMLDivElement>(null);
 
-  const methods = useForm({
-    defaultValues: { search: "", sort: "default" },
-  });
-  const { watch } = methods;
-  const search = watch("search");
-  const sort = watch("sort");
+  const [page, setPage] = useState(1);
 
-  const [filtered, setFiltered] = useState(
-    mockProducts.filter((p) => p.category === decodedCategory)
-  );
-
-  // ✅ Filter + Sort Logic
-  useEffect(() => {
-    let result = mockProducts.filter((p) =>
-      p.category.toLowerCase().includes(decodedCategory.toLowerCase())
+  const { data, isLoading, isFetching, isError } =
+    useGetProductsByCategoryQuery(
+      {
+        identifier: slug!,
+        page,
+        limit: 20,
+      },
+      { skip: !slug }
     );
 
-    if (search) {
-      result = result.filter((p) =>
-        p.name.toLowerCase().includes(search.toLowerCase())
-      );
-    }
+  const products = data?.data.items ?? [];
+  const pagination = data?.data.pagination;
 
-    if (sort === "low") {
-      result = [...result].sort(
-        (a, b) =>
-          parseInt(a.price.replace(/\D/g, "")) -
-          parseInt(b.price.replace(/\D/g, ""))
-      );
-    } else if (sort === "high") {
-      result = [...result].sort(
-        (a, b) =>
-          parseInt(b.price.replace(/\D/g, "")) -
-          parseInt(a.price.replace(/\D/g, ""))
-      );
-    } else if (sort === "az") {
-      result = [...result].sort((a, b) => a.name.localeCompare(b.name));
-    }
+  /* ───────────────── SCROLL ON PAGE CHANGE ───────────────── */
 
-    setFiltered(result);
-  }, [decodedCategory, search, sort]);
+  useEffect(() => {
+    sectionRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [page]);
+
+  /* ───────────────── STATES ───────────────── */
+
+  if (isError) {
+    return (
+      <section className="py-24 text-center text-muted-foreground">
+        Failed to load category products.
+      </section>
+    );
+  }
+
+  /* ───────────────── RENDER ───────────────── */
 
   return (
     <section className="min-h-screen bg-muted/30">
-      {/* ─── Header Section ─── */}
-      <div className="bg-gradient-to-r from-muted/40 via-background to-muted/40 py-14 text-center border-b border-border">
-        <div className="max-w-4xl mx-auto px-4 space-y-5">
-          <h1 className="text-3xl font-bold text-foreground capitalize">
-            {decodedCategory}
-          </h1>
-          <p className="text-muted-foreground">
-            Discover the best items in {decodedCategory}. Filter, sort, and shop
-            effortlessly.
-          </p>
+      {/* ─── HEADER / SUMMARY ─── */}
+      <div className="max-w-6xl mx-auto px-4 py-10 space-y-6" ref={sectionRef}>
+        {/* Back Button */}
+        <button
+          onClick={() => navigate(USER_ROUTES.CATEGORIES)}
+          className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back to Categories
+        </button>
 
-          <FormProvider {...methods}>
-            <form className="flex flex-col sm:flex-row justify-center gap-3 mt-8">
-              <div className="w-full sm:w-80">
-                <FormInput
-                  name="search"
-                  placeholder="Search products..."
-                  className="!space-y-0"
-                />
-              </div>
-              <div className="w-full sm:w-56">
-                <FormSelect
-                  name="sort"
-                  placeholder="Sort by"
-                  options={sortOptions}
-                />
-              </div>
-            </form>
-          </FormProvider>
-        </div>
-      </div>
-
-      {/* ─── Category Summary ─── */}
-      <div className="max-w-6xl mx-auto px-4 py-10">
-        <Card className="border border-border bg-background rounded-2xl shadow-sm p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-xl overflow-hidden border border-border">
-              <img
-                src={`/images/${
-                  decodedCategory.toLowerCase().split(" ")[0]
-                }1.png`}
-                alt={decodedCategory}
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <div>
-              <CardHeader className="p-0">
-                <CardTitle className="text-xl font-semibold text-foreground">
-                  {decodedCategory}
-                </CardTitle>
-              </CardHeader>
-              <p className="text-sm text-muted-foreground">
-                {filtered.length} products available
-              </p>
-            </div>
+        <Card className="rounded-2xl p-6 flex items-center justify-between gap-4">
+          <div>
+            <CardHeader className="p-0">
+              <CardTitle className="text-xl capitalize">
+                {slug?.replace(/-/g, " ")}
+              </CardTitle>
+            </CardHeader>
+            <p className="text-sm text-muted-foreground">
+              {pagination?.total ?? 0} products available
+            </p>
           </div>
 
-          <Badge
-            variant="outline"
-            className="text-xs border-border bg-muted/40 text-foreground"
-          >
+          <Badge variant="secondary">
             <Layers className="h-3 w-3 mr-1 text-primary" />
-            Shop smart — find your favorites
+            Category products
           </Badge>
         </Card>
       </div>
 
-      {/* ─── Product Grid ─── */}
+      {/* ─── PRODUCT GRID ─── */}
       <div className="max-w-7xl mx-auto px-4 pb-16">
-        {filtered.length > 0 ? (
-          <motion.div
-            layout
-            className="grid gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
-          >
-            {filtered.map((product, i) => (
-              <motion.div
-                key={product.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.05 }}
-              >
-                <ProductCard.Root
-                  id={product.id.toString()}
-                  name={product.name}
-                  price={`₦${Number(product.price).toLocaleString()}`}
-                  image={product.image}
-                  category={product.category ?? "Wishlist"}
-                  rating={4.5}
-                  stock={product.stock}
-                  // options={{
-                  //   image: { showFavorite: true },
-                  //   info: { showVendor: false },
-                  //   actions: { showStock: true },
-                  // }}
-                >
-                  <ProductCard.Image />
-                  <ProductCard.Info />
-                  <ProductCard.Footer />
-                  <ProductCard.Actions
-                    onClick={() => console.log("Buy product")}
-                  />
-                </ProductCard.Root>
-              </motion.div>
+        {isLoading || isFetching ? (
+          <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <Skeleton key={i} className="h-[280px] rounded-2xl" />
             ))}
-          </motion.div>
+          </div>
+        ) : products.length > 0 ? (
+          <>
+            <motion.div
+              layout
+              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6"
+            >
+              {products.map((product, i) => (
+                <motion.div
+                  key={product.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.03 }}
+                >
+                  <ProductCard.Root
+                    id={product.id}
+                    name={product.name}
+                    image={
+                      typeof product.image === "string"
+                        ? product.image
+                        : product.image?.url ?? FALLBACK_IMAGE
+                    }
+                    price={`₦${product.price.toLocaleString("en-NG")}`}
+                    rating={product.rating_average ?? 0}
+                    stock={product.stock}
+                    isFavorite={product.is_in_wishlist}
+                  >
+                    <ProductCard.Image />
+                    <ProductCard.Info
+                      onClick={() =>
+                        navigate(
+                          `${USER_ROUTES.PRODUCT_DETAIL}/${encodeURIComponent(
+                            product.slug
+                          )}`
+                        )
+                      }
+                    />
+                  </ProductCard.Root>
+                </motion.div>
+              ))}
+            </motion.div>
+
+            {/* ─── PAGINATION ─── */}
+            {pagination && pagination.pages > 1 && (
+              <div className="mt-14">
+                <Pagination
+                  page={pagination.page}
+                  pages={pagination.pages}
+                  hasNext={pagination.hasNext}
+                  hasPrev={pagination.hasPrev}
+                  onPageChange={setPage}
+                />
+              </div>
+            )}
+          </>
         ) : (
           <div className="text-center py-20 text-muted-foreground">
             <Search className="h-8 w-8 mx-auto mb-2 opacity-50" />

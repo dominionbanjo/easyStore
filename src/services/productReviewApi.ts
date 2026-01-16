@@ -38,7 +38,11 @@ export const productReviewApi = apiManager.injectEndpoints({
           method: "POST",
           body,
         }),
-        invalidatesTags: ["Product"],
+
+        invalidatesTags: (_r, _e, { productId }) => [
+          { type: "Product", id: productId }, // exact
+          { type: "Product", id: "SINGLE" }, // fallback
+        ],
       }
     ),
 
@@ -62,7 +66,11 @@ export const productReviewApi = apiManager.injectEndpoints({
         url: `products/${productId}/reviews/${reviewId}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Product"],
+
+      invalidatesTags: (_r, _e, { productId }) => [
+        { type: "Product", id: productId },
+        { type: "Product", id: "SINGLE" },
+      ],
     }),
   }),
 });

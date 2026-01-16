@@ -1,95 +1,159 @@
-import ProductCard from "@/components/shared/ProductCard";
-import { TabbedGrid } from "@/components/shared/TabbedGrid";
-import { mockCategories } from "@/modules/website/lib/data";
+import { useState } from "react";
+import { useParams } from "react-router-dom";
+
 import StoreHeaderSection from "@/modules/vendor/components/StoreHeaderSection";
-import { useNavigate } from "react-router-dom";
-import { USER_ROUTES } from "@/routes/temp";
+
+import {
+  useGetStoreDetailsQuery,
+  useGetStoreProductsQuery,
+  useGetStoreCategoryProductsQuery,
+} from "@/services/storeApi";
+
+import { Skeleton } from "@/components/ui/skeleton";
+import { StoreCategoriesGrid } from "../components/Store-details-page/StoreCategoriesGrid";
+import { StoreProductsGrid } from "../components/Store-details-page/StoreProductsGrid";
+import { StoreTabs } from "../components/Store-details-page/StoreTabs";
+
+/* ───────────────── COMPONENT ───────────────── */
 
 export default function StoreDetailsPage() {
-  // ✅ Mock Store Data
-  const store = {
-    id: 1,
-    name: "Urban Threads",
-    banner: "/images/fash1.png",
-    logo: "/images/store-logo1.png",
-    description:
-      "Urban Threads is your destination for streetwear, casual fashion, and statement accessories. We blend modern African styles with global trends to create authentic looks that stand out.",
-    rating: 4.8,
-    location: "Lagos, Nigeria",
-    email: "support@urbanthreads.ng",
-    phone: "+234 812 345 6789",
-    website: "https://urbanthreads.ng",
-    totalProducts: 120,
-    categories: mockCategories,
-  };
+  const { slug } = useParams<{ slug: string }>();
 
-  // ✅ Convert mockCategories to tabGroups for TabbedGrid
-  const tabGroups = Object.keys(store.categories).map((key) => ({
-    value: key.toLowerCase(),
-    label: key.charAt(0).toUpperCase() + key.slice(1),
-    items: store.categories[key as keyof typeof mockCategories],
-  }));
+  const [activeTab, setActiveTab] = useState<"products" | "categories">(
+    "products"
+  );
+  const [page, setPage] = useState(1);
+  const [selectedCategory, setSelectedCategory] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
+
+  /* ─── STORE DETAILS ─── */
+
+  const { data: storeData, isLoading: storeLoading } = useGetStoreDetailsQuery(
+    { slug: slug ?? "", includeCategories: true },
+    { skip: !slug }
+  );
+
+  /* ─── ALL PRODUCTS ─── */
+
+  const {
+    data: productsData,
+    isLoading: productsLoading,
+    isFetching: productsFetching,
+  } = useGetStoreProductsQuery(
+    { slug: slug ?? "", page, limit: 20 },
+    { skip: activeTab !== "products" }
+  );
+
+  /* ─── CATEGORY PRODUCTS ─── */
+
+  const {
+    data: categoryProductsData,
+    isLoading: categoryLoading,
+    isFetching: categoryFetching,
+  } = useGetStoreCategoryProductsQuery(
+    {
+      slug: slug ?? "",
+      categoryId: selectedCategory?.id ?? "",
+      page,
+      limit: 20,
+    },
+    { skip: activeTab !== "categories" || !selectedCategory }
+  );
+
+  /* ─── NORMALIZED DATA ─── */
+
+  const store = storeData?.data.store;
+  const categories = storeData?.data.categories ?? [];
+
+  const products =
+    activeTab === "products"
+      ? productsData?.data.items ?? []
+      : categoryProductsData?.data.items ?? [];
+
+  const pagination =
+    activeTab === "products"
+      ? productsData?.data.pagination
+      : categoryProductsData?.data.pagination;
+
+  const isProductsLoading =
+    activeTab === "products"
+      ? productsLoading || productsFetching
+      : categoryLoading || categoryFetching;
+
+  /* ─── STORE LOADING STATE ─── */
+
+  if (storeLoading || !store) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 py-20">
+        <Skeleton className="h-[300px] rounded-2xl mb-8" />
+      </div>
+    );
+  }
+
+  /* ───────────────── RENDER ───────────────── */
+
   return (
     <section className="min-h-screen bg-muted/30">
-      {/* ─── Store Header ─── */}
-      <StoreHeaderSection store={store} />
-
-      {/* ─── Store Categories ─── */}
-      <div className="mt-10">
-        <StoreCategoriesSection tabGroups={tabGroups} />
-      </div>
-    </section>
-  );
-}
-
-//
-// ─── Store Header Section ─────────────────────────────────────────────────
-//
-
-//
-// ─── Store Categories Section ───────────────────────────────────────────────
-//
-function StoreCategoriesSection({ tabGroups }: { tabGroups: any[] }) {
-  const navigate = useNavigate();
-
-  return (
-    <section className="mx-auto px-4">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
-        <div className="space-y-2.5">
-          <h2 className="text-2xl font-semibold text-foreground">
-            Shop by Category
-          </h2>
-          <p className="text-muted-foreground text-sm">
-            Browse through product categories from this store
-          </p>
-        </div>
-      </div>
-
-      <TabbedGrid
-        tabGroups={tabGroups}
-        renderItem={(product: any) => (
-          <ProductCard.Root
-            id={product.id}
-            image={product.image}
-            name={product.name}
-            price={product.price}
-            category={product.category}
-            rating={product.rating}
-            stock={product.stock}
-            vendor={product.vendor}
-            avatar={product.avatar}
-            // brand={product.brand}
-            // options={product.options}
-          >
-            <ProductCard.Image />
-            <ProductCard.Info
-              onClick={() => navigate(`${USER_ROUTES.PRODUCT_DETAIL}`)}
-            />
-            {/* <ProductCard.Footer /> */}
-            {/* <ProductCard.Actions /> */}
-          </ProductCard.Root>
-        )}
+      {/* ─── HEADER ─── */}
+      <StoreHeaderSection
+        store={{
+          id: store.id,
+          name: store.store_name ?? "Unnamed Store",
+          banner: store.cover_image ?? undefined,
+          logo: store.logo ?? undefined,
+          description:
+            store.description ?? "This store has not added a description yet.",
+          rating: Number(store.rating_average ?? 0),
+          location: store.address ?? "Location not specified",
+          email: store.email ?? undefined,
+          phone: store.phone_number ?? undefined,
+          website: store.website ?? undefined,
+          totalProducts: store.total_products ?? 0,
+        }}
       />
+
+      {/* ─── TABS ─── */}
+      <StoreTabs
+        activeTab={activeTab}
+        onChange={(tab) => {
+          setActiveTab(tab);
+          setSelectedCategory(null);
+          setPage(1);
+        }}
+      />
+
+      {/* ─── CONTENT ─── */}
+      <div className="mt-10 px-4">
+        {/* ─── CATEGORY GRID ─── */}
+        {activeTab === "categories" && !selectedCategory && (
+          <StoreCategoriesGrid
+            categories={categories}
+            onSelect={(cat) => {
+              setSelectedCategory(cat);
+              setPage(1);
+            }}
+          />
+        )}
+
+        {/* ─── PRODUCTS GRID ─── */}
+        {(activeTab === "products" || selectedCategory) && (
+          <StoreProductsGrid
+            products={products}
+            pagination={pagination}
+            isLoading={isProductsLoading}
+            selectedCategory={selectedCategory}
+            onBackToCategories={() => {
+              setSelectedCategory(null);
+              setPage(1);
+            }}
+            onPageChange={(p) => {
+              setPage(p);
+            }}
+          />
+        )}
+      </div>
     </section>
   );
 }

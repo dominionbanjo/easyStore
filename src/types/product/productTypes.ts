@@ -114,19 +114,19 @@ export interface GetSingleProductResponse {
   };
 }
 
-/* 🔹 PAGINATED LIST */
-export interface IPaginatedResponse<T> {
-  message: string;
-  data: {
-    items: T[];
-    meta: {
-      total: number;
-      page: number;
-      limit: number;
-      pages: number;
-    };
-  };
-}
+// /* 🔹 PAGINATED LIST */
+// export interface IPaginatedResponse<T> {
+//   message: string;
+//   data: {
+//     items: T[];
+//     meta: {
+//       total: number;
+//       page: number;
+//       limit: number;
+//       pages: number;
+//     };
+//   };
+// }
 
 /* 🔹 FEATURED PRODUCTS */
 export interface IFeaturedProductsResponse {
@@ -168,4 +168,44 @@ export interface CreateProductArgs {
 export interface UpdateProductArgs {
   id: string;
   data: Partial<Record<string, any>>;
+}
+
+/* ───────────────── SEARCH PAGINATION ───────────────── */
+export interface IPagination {
+  total: number;
+  page: number;
+  limit: number;
+  pages: number;
+  hasNext: boolean;
+  hasPrev: boolean;
+}
+
+/* ───────────────── SEARCH RESPONSE ───────────────── */
+export interface ISearchProductsResponse {
+  status: "success" | "error";
+  message: string;
+  data: {
+    items: IProduct[];
+    pagination: IPagination;
+  };
+}
+
+/* ───────────────── PAGINATION ───────────────── */
+export interface IPagination {
+  total: number;
+  page: number;
+  limit: number;
+  pages: number;
+  hasNext: boolean;
+  hasPrev: boolean;
+}
+
+/* ───────────────── PAGINATED RESPONSE ───────────────── */
+export interface IPaginatedResponse<T> {
+  status: "success" | "error";
+  message: string;
+  data: {
+    items: T[];
+    pagination: IPagination;
+  };
 }

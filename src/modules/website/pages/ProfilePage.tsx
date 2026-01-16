@@ -13,35 +13,34 @@ import {
 import { format } from "date-fns";
 import { useGetUserProfileQuery, useLogoutMutation } from "@/services/userApi";
 import LoadingScreen from "@/Loading";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { EditProfileModal } from "../components/profile/EditProfileModal";
 import { LogoutConfirmModal } from "../components/home/LogoutModal";
 import { toast } from "sonner";
-import { Country, State } from "country-state-city";
 
-function getCountryName(countryCode?: string) {
-  if (!countryCode) return "—";
-  return Country.getCountryByCode(countryCode)?.name ?? countryCode;
-}
+/* ───────────────── LAZY CSC IMPORT ───────────────── */
 
-function getStateName(stateCode?: string, countryCode?: string) {
-  if (!stateCode || !countryCode) return "—";
-  return (
-    State.getStateByCodeAndCountry(stateCode, countryCode)?.name ?? stateCode
-  );
-}
+// cached promise → imported once
+const importCSC = () => import("country-state-city");
+
+/* ───────────────── COMPONENT ───────────────── */
 
 export default function UserProfilePage() {
   const { data, isLoading, isError } = useGetUserProfileQuery();
-  const [editOpen, setEditOpen] = useState(false);
 
+  const [editOpen, setEditOpen] = useState(false);
   const [logoutOpen, setLogoutOpen] = useState(false);
+
   const [logoutUser, { isLoading: isLoggingOut }] = useLogoutMutation();
+
+  /* ── resolved names (lazy) ── */
+  const [countryName, setCountryName] = useState<string>("—");
+  const [stateName, setStateName] = useState<string>("—");
 
   const handleLogout = async () => {
     try {
       await logoutUser().unwrap();
-      window.location.href = "/auth/login"; // or navigate(AUTH_ROUTES.LOGIN)
+      window.location.href = "/auth/login";
     } catch {
       toast.error("Logout Failed");
     }
@@ -58,6 +57,42 @@ export default function UserProfilePage() {
   }
 
   const user = data.data.user;
+
+  /* ───────────────── RESOLVE COUNTRY / STATE (LAZY) ───────────────── */
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function resolveLocation() {
+      if (!user.address?.country) return;
+
+      const { Country, State } = await importCSC();
+
+      if (cancelled) return;
+
+      setCountryName(
+        Country.getCountryByCode(user.address.country)?.name ??
+          user.address.country
+      );
+
+      if (user.address.state) {
+        setStateName(
+          State.getStateByCodeAndCountry(
+            user.address.state,
+            user.address.country
+          )?.name ?? user.address.state
+        );
+      }
+    }
+
+    resolveLocation();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [user.address?.country, user.address?.state]);
+
+  /* ───────────────── RENDER ───────────────── */
 
   return (
     <>
@@ -133,10 +168,7 @@ export default function UserProfilePage() {
                 value={user.phone_number || "—"}
               />
 
-              <Detail
-                label="Country"
-                value={getCountryName(user.address?.country) || "-"}
-              />
+              <Detail label="Country" value={countryName} />
 
               <Detail
                 label="Joined"
@@ -161,7 +193,7 @@ export default function UserProfilePage() {
               <Detail
                 icon={<Star size={14} />}
                 label="Average Rating"
-                value={user.rating_average ?? "0.00"}
+                value={String(user.rating_average ?? "0.00")}
               />
               <Detail label="Ratings" value={`${user.rating_count ?? 0}`} />
               <Detail label="Reviews" value={`${user.review_count ?? 0}`} />
@@ -178,9 +210,7 @@ export default function UserProfilePage() {
               <Separator />
 
               <p className="text-sm font-medium">
-                {user.address.city},{" "}
-                {getStateName(user.address.state, user.address.country)},{" "}
-                {getCountryName(user.address.country)}
+                {user.address.city}, {stateName}, {countryName}
               </p>
             </div>
           )}
@@ -215,6 +245,7 @@ export default function UserProfilePage() {
 }
 
 /* ================= SHARED DETAIL COMPONENT ================= */
+
 function Detail({
   label,
   value,
