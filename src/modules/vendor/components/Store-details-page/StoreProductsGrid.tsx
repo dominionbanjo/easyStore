@@ -115,7 +115,7 @@ export function StoreProductsGrid({
                   onClick={() =>
                     navigate(
                       `${USER_ROUTES.PRODUCT_DETAIL}/${encodeURIComponent(
-                        product.name
+                        product.slug
                       )}`
                     )
                   }

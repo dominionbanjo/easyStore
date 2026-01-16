@@ -87,10 +87,9 @@ export default function AllProductsSection() {
                     <ProductCard.Info
                       onClick={() =>
                         navigate(
-                          USER_ROUTES.PRODUCT_DETAIL.replace(
-                            ":id",
+                          `${USER_ROUTES.PRODUCT_DETAIL}/${encodeURIComponent(
                             product.slug
-                          )
+                          )}`
                         )
                       }
                     />
