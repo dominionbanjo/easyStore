@@ -35,22 +35,34 @@ export default function StoreDetailsPage() {
     { skip: !slug }
   );
 
-  const { data: productsData, isLoading: productsLoading } =
-    useGetStoreProductsQuery(
-      { slug: slug ?? "", page, limit: 20 },
-      { skip: activeTab !== "products" }
-    );
+  /* ─── ALL PRODUCTS ─── */
 
-  const { data: categoryProductsData, isLoading: categoryLoading } =
-    useGetStoreCategoryProductsQuery(
-      {
-        slug: slug ?? "",
-        categoryId: selectedCategory?.id ?? "",
-        page,
-        limit: 20,
-      },
-      { skip: activeTab !== "categories" || !selectedCategory }
-    );
+  const {
+    data: productsData,
+    isLoading: productsLoading,
+    isFetching: productsFetching,
+  } = useGetStoreProductsQuery(
+    { slug: slug ?? "", page, limit: 20 },
+    { skip: activeTab !== "products" }
+  );
+
+  /* ─── CATEGORY PRODUCTS ─── */
+
+  const {
+    data: categoryProductsData,
+    isLoading: categoryLoading,
+    isFetching: categoryFetching,
+  } = useGetStoreCategoryProductsQuery(
+    {
+      slug: slug ?? "",
+      categoryId: selectedCategory?.id ?? "",
+      page,
+      limit: 20,
+    },
+    { skip: activeTab !== "categories" || !selectedCategory }
+  );
+
+  /* ─── NORMALIZED DATA ─── */
 
   const store = storeData?.data.store;
   const categories = storeData?.data.categories ?? [];
@@ -65,8 +77,12 @@ export default function StoreDetailsPage() {
       ? productsData?.data.pagination
       : categoryProductsData?.data.pagination;
 
-  const isLoading =
-    activeTab === "products" ? productsLoading : categoryLoading;
+  const isProductsLoading =
+    activeTab === "products"
+      ? productsLoading || productsFetching
+      : categoryLoading || categoryFetching;
+
+  /* ─── STORE LOADING STATE ─── */
 
   if (storeLoading || !store) {
     return (
@@ -76,8 +92,11 @@ export default function StoreDetailsPage() {
     );
   }
 
+  /* ───────────────── RENDER ───────────────── */
+
   return (
     <section className="min-h-screen bg-muted/30">
+      {/* ─── HEADER ─── */}
       <StoreHeaderSection
         store={{
           id: store.id,
@@ -95,6 +114,7 @@ export default function StoreDetailsPage() {
         }}
       />
 
+      {/* ─── TABS ─── */}
       <StoreTabs
         activeTab={activeTab}
         onChange={(tab) => {
@@ -104,7 +124,9 @@ export default function StoreDetailsPage() {
         }}
       />
 
+      {/* ─── CONTENT ─── */}
       <div className="mt-10 px-4">
+        {/* ─── CATEGORY GRID ─── */}
         {activeTab === "categories" && !selectedCategory && (
           <StoreCategoriesGrid
             categories={categories}
@@ -115,11 +137,12 @@ export default function StoreDetailsPage() {
           />
         )}
 
+        {/* ─── PRODUCTS GRID ─── */}
         {(activeTab === "products" || selectedCategory) && (
           <StoreProductsGrid
             products={products}
             pagination={pagination}
-            isLoading={isLoading}
+            isLoading={isProductsLoading}
             selectedCategory={selectedCategory}
             onBackToCategories={() => {
               setSelectedCategory(null);
@@ -127,7 +150,6 @@ export default function StoreDetailsPage() {
             }}
             onPageChange={(p) => {
               setPage(p);
-              window.scrollTo({ top: 0, behavior: "smooth" });
             }}
           />
         )}
