@@ -1,0 +1,154 @@
+import type {
+  PaginationArgs,
+  IFeaturedProductsResponse,
+  IPaginatedResponse,
+  IProduct,
+  ProductsByCategoryArgs,
+  ProductsByStoreArgs,
+  SearchProductsArgs,
+  CreateProductArgs,
+  UpdateProductArgs,
+  IProductsGroupedByCategoryResponse,
+  GetSingleProductResponse,
+} from "@/types/product/productTypes";
+import { apiManager } from "./apiManager";
+
+/* ───────────────── API ───────────────── */
+
+export const productApi = apiManager.injectEndpoints({
+  endpoints: (builder) => ({
+    /* ───────── GROUPED BY CATEGORY ───────── */
+    getProductsGroupedByCategory: builder.query<
+      IProductsGroupedByCategoryResponse,
+      PaginationArgs
+    >({
+      query: (params) => ({
+        url: "product/by-category",
+        method: "GET",
+        params,
+      }),
+    }),
+
+    /* ───────── FEATURED ───────── */
+    getFeaturedProducts: builder.query<
+      IFeaturedProductsResponse,
+      PaginationArgs
+    >({
+      query: (params) => ({
+        url: "product/featured",
+        method: "GET",
+        params,
+      }),
+    }),
+
+    /* ───────── ALL PRODUCTS ───────── */
+    getAllProducts: builder.query<IPaginatedResponse<IProduct>, PaginationArgs>(
+      {
+        query: (params) => ({
+          url: "product",
+          method: "GET",
+          params,
+        }),
+      }
+    ),
+
+    /* ───────── BY CATEGORY ───────── */
+    getProductsByCategory: builder.query<
+      IPaginatedResponse<IProduct>,
+      ProductsByCategoryArgs
+    >({
+      query: ({ identifier, ...params }) => ({
+        url: `product/category/${identifier}`,
+        method: "GET",
+        params,
+      }),
+    }),
+
+    /* ───────── BY STORE ───────── */
+    getProductsByStore: builder.query<
+      IPaginatedResponse<IProduct>,
+      ProductsByStoreArgs
+    >({
+      query: ({ storeId, ...params }) => ({
+        url: `product/store/${storeId}`,
+        method: "GET",
+        params,
+      }),
+    }),
+
+    /* ───────── SEARCH ───────── */
+    searchProducts: builder.query<
+      IPaginatedResponse<IProduct>,
+      SearchProductsArgs
+    >({
+      query: ({ q, ...params }) => ({
+        url: "product/search",
+        method: "GET",
+        params: { q, ...params },
+      }),
+    }),
+
+    /* ───────── SINGLE PRODUCT (FIXED) ───────── */
+    getSingleProduct: builder.query<GetSingleProductResponse, string>({
+      query: (identifier) => ({
+        url: `product/${identifier}`,
+        method: "GET",
+      }),
+    }),
+
+    /* ───────── MUTATIONS ───────── */
+    createProduct: builder.mutation<any, CreateProductArgs>({
+      query: ({ data }) => ({
+        url: "product",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Store"],
+    }),
+
+    createManyProducts: builder.mutation<
+      any,
+      { products: Record<string, any>[] }
+    >({
+      query: (body) => ({
+        url: "product/bulk",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Store"],
+    }),
+
+    updateProduct: builder.mutation<any, UpdateProductArgs>({
+      query: ({ id, data }) => ({
+        url: `product/${id}`,
+        method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags: ["Store"],
+    }),
+
+    deleteProduct: builder.mutation<any, string>({
+      query: (id) => ({
+        url: `product/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Store"],
+    }),
+  }),
+});
+
+/* ───────────────── HOOK EXPORTS ───────────────── */
+
+export const {
+  useGetProductsGroupedByCategoryQuery,
+  useGetFeaturedProductsQuery,
+  useGetAllProductsQuery,
+  useGetProductsByCategoryQuery,
+  useGetProductsByStoreQuery,
+  useSearchProductsQuery,
+  useGetSingleProductQuery,
+  useCreateProductMutation,
+  useCreateManyProductsMutation,
+  useUpdateProductMutation,
+  useDeleteProductMutation,
+} = productApi;

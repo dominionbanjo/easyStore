@@ -2,6 +2,8 @@ import ProductCard from "@/components/shared/ProductCard";
 import { TabbedGrid } from "@/components/shared/TabbedGrid";
 import { mockCategories } from "@/modules/website/lib/data";
 import StoreHeaderSection from "@/modules/vendor/components/StoreHeaderSection";
+import { useNavigate } from "react-router-dom";
+import { USER_ROUTES } from "@/routes/temp";
 
 export default function StoreDetailsPage() {
   // ✅ Mock Store Data
@@ -27,7 +29,6 @@ export default function StoreDetailsPage() {
     label: key.charAt(0).toUpperCase() + key.slice(1),
     items: store.categories[key as keyof typeof mockCategories],
   }));
-
   return (
     <section className="min-h-screen bg-muted/30">
       {/* ─── Store Header ─── */}
@@ -49,6 +50,8 @@ export default function StoreDetailsPage() {
 // ─── Store Categories Section ───────────────────────────────────────────────
 //
 function StoreCategoriesSection({ tabGroups }: { tabGroups: any[] }) {
+  const navigate = useNavigate();
+
   return (
     <section className="mx-auto px-4">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
@@ -65,11 +68,26 @@ function StoreCategoriesSection({ tabGroups }: { tabGroups: any[] }) {
       <TabbedGrid
         tabGroups={tabGroups}
         renderItem={(product: any) => (
-          <ProductCard {...product}>
+          <ProductCard.Root
+            id={product.id}
+            image={product.image}
+            name={product.name}
+            price={product.price}
+            category={product.category}
+            rating={product.rating}
+            stock={product.stock}
+            vendor={product.vendor}
+            avatar={product.avatar}
+            // brand={product.brand}
+            // options={product.options}
+          >
             <ProductCard.Image />
-            <ProductCard.Info />
-            <ProductCard.Actions />
-          </ProductCard>
+            <ProductCard.Info
+              onClick={() => navigate(`${USER_ROUTES.PRODUCT_DETAIL}`)}
+            />
+            {/* <ProductCard.Footer /> */}
+            {/* <ProductCard.Actions /> */}
+          </ProductCard.Root>
         )}
       />
     </section>

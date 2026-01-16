@@ -6,20 +6,33 @@ export interface IRegisterUserPayload {
   password: string;
   account_type: "user" | "vendor";
   store_name?: string;
-  username?: string;
+  description?: string;
   referral_code?: string;
   current_sales_channel?: string;
   agree_to_terms?: boolean;
 }
+export type AccountType = "user" | "vendor" | "admin";
 
 export interface IUser {
   id: string;
-  first_name: string;
-  last_name: string;
   email: string;
-  account_type: "user" | "vendor";
-  created: boolean;
+  account_type: "user" | "vendor" | "admin";
+
+  first_name: string | null;
+  last_name: string | null;
+  phone_number: string | null;
+
+  avatar: string | null;
+  avatar_public_id: string | null;
+
   email_verified: boolean;
+  country: string | null;
+  bio: string | null;
+
+  products_count: number | null;
+
+  created_at: string;
+  updated_at: string | null;
 }
 
 export interface IRegisterUserResponse {
@@ -30,18 +43,13 @@ export interface IRegisterUserResponse {
   user: IUser;
 }
 
-export interface GUser {
-  id: string;
-  name: string;
-  email: string;
-  account_type: "user" | "vendor";
-  avatar?: string;
+export interface IAuthData {
+  user: IUser;
+  access: string; // JWT access token
 }
 
 export interface IAuthResponse {
-  status: number;
-  success: boolean;
+  status: "success" | "error";
   message: string;
-  token: string;
-  user: GUser;
+  data: IAuthData;
 }

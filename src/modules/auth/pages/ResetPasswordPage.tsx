@@ -1,3 +1,4 @@
+import { ArrowLeft } from "lucide-react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useForm, FormProvider } from "react-hook-form";
@@ -16,7 +17,7 @@ import { FormInput } from "@/components/shared/FormInput";
 import { cn } from "@/lib/utils";
 import { AUTH_ROUTES } from "@/routes/temp";
 
-// ✅ Zod validation schema
+/* ------------------------- Schema ------------------------- */
 const ResetPasswordSchema = z.object({
   password: z
     .string()
@@ -42,7 +43,6 @@ export default function ResetPasswordPage() {
 
   const { handleSubmit } = methods;
 
-  // 🔹 Submit handler
   const onSubmit = async (data: ResetPasswordValues) => {
     if (!email || !token) {
       toast.error("Invalid or missing reset link");
@@ -63,66 +63,99 @@ export default function ResetPasswordPage() {
     }
   };
 
+  /* ---------------- Invalid / Expired Link ---------------- */
   if (!email || !token) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-emerald-50 px-4">
-        <Card className="w-full max-w-md bg-white rounded-2xl shadow-md p-6 md:p-8 text-center">
-          <CardTitle className="text-xl font-semibold text-primary mb-2">
-            Invalid Reset Link
-          </CardTitle>
-          <CardDescription className="text-gray-600">
-            The password reset link is missing or has expired.
-          </CardDescription>
-          <Button
-            className="mt-6"
-            onClick={() => navigate(AUTH_ROUTES.FORGOT_PASSWORD)}
-          >
-            Request a New Link
-          </Button>
-        </Card>
+      <div
+        className="fixed inset-0 bg-cover bg-center"
+        style={{ backgroundImage: "url('/images/easyshop.jpg')" }}
+      >
+        <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" />
+
+        <div className="relative z-10 flex items-center justify-center h-full px-4">
+          <Card className="w-full max-w-md bg-white/95 rounded-2xl shadow-xl text-center p-6">
+            <CardTitle className="text-xl font-semibold mb-2">
+              Invalid Reset Link
+            </CardTitle>
+            <CardDescription className="text-gray-600">
+              The password reset link is missing or has expired.
+            </CardDescription>
+
+            <Button
+              className="mt-6 rounded-full bg-[#17c06e] text-black hover:bg-[#17c06e]/90"
+              onClick={() => navigate(AUTH_ROUTES.FORGOT_PASSWORD)}
+            >
+              Request a New Link
+            </Button>
+          </Card>
+        </div>
       </div>
     );
   }
 
+  /* ---------------- Normal Reset Page ---------------- */
   return (
-    <div className="min-h-screen flex items-center justify-center bg-emerald-50 px-4 py-10">
-      <Card className="w-full max-w-md bg-white rounded-2xl shadow-md p-6 md:p-8">
-        <CardHeader className="text-center space-y-2">
-          <CardTitle className="text-2xl font-bold text-primary">
-            Reset Your Password
-          </CardTitle>
-          <CardDescription className="text-gray-600">
-            Enter your new password below to complete the reset process.
-          </CardDescription>
-        </CardHeader>
+    <div
+      className="fixed inset-0 bg-cover bg-center"
+      style={{ backgroundImage: "url('/images/easyshop.jpg')" }}
+    >
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" />
 
-        <CardContent>
-          <FormProvider {...methods}>
-            <form
-              onSubmit={handleSubmit(onSubmit)}
-              className="flex flex-col items-center space-y-6 w-full"
-            >
-              <FormInput
-                label="New Password"
-                name="password"
-                type="password"
-                placeholder="Enter new password"
-              />
+      {/* Back button */}
+      <button
+        onClick={() => navigate(AUTH_ROUTES.LOGIN)}
+        className="
+          fixed top-4 left-4 z-30
+          inline-flex items-center gap-2
+          rounded-full bg-white/90 backdrop-blur
+          text-black shadow-md
+          px-3 py-2 text-sm
+          hover:bg-white transition
+        "
+        aria-label="Back to login"
+      >
+        <ArrowLeft className="h-4 w-4" />
+        <span className="hidden sm:inline">Back</span>
+      </button>
 
-              <Button
-                type="submit"
-                disabled={isLoading}
-                className={cn(
-                  "w-full bg-primary text-white rounded-full py-2 hover:bg-primary/90",
-                  isLoading && "opacity-70 cursor-not-allowed"
-                )}
-              >
-                {isLoading ? "Resetting..." : "Reset Password"}
-              </Button>
-            </form>
-          </FormProvider>
-        </CardContent>
-      </Card>
+      {/* Card */}
+      <div className="relative z-10 flex items-center justify-center h-full px-4 pt-16 sm:pt-0">
+        <Card className="w-full max-w-md bg-white/95 rounded-2xl shadow-xl overflow-hidden">
+          <CardHeader className="text-center space-y-2">
+            <CardTitle className="text-2xl font-bold">
+              Reset Your Password
+            </CardTitle>
+            <CardDescription className="text-gray-600">
+              Enter your new password below to complete the reset process.
+            </CardDescription>
+          </CardHeader>
+
+          <CardContent className="px-6">
+            <FormProvider {...methods}>
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                <FormInput
+                  label="New Password"
+                  name="password"
+                  type="password"
+                  placeholder="Enter new password"
+                />
+
+                <Button
+                  type="submit"
+                  disabled={isLoading}
+                  className={cn(
+                    "w-full rounded-full py-2 bg-[#17c06e] text-black hover:bg-[#17c06e]/90",
+                    isLoading && "opacity-70 cursor-not-allowed"
+                  )}
+                >
+                  {isLoading ? "Resetting..." : "Reset Password"}
+                </Button>
+              </form>
+            </FormProvider>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

@@ -175,8 +175,9 @@ export default function CategoryDetailsPage() {
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 rounded-xl overflow-hidden border border-border">
               <img
-                src={`/images/${decodedCategory.toLowerCase().split(" ")[0]
-                  }1.png`}
+                src={`/images/${
+                  decodedCategory.toLowerCase().split(" ")[0]
+                }1.png`}
                 alt={decodedCategory}
                 className="w-full h-full object-cover"
               />
@@ -218,26 +219,26 @@ export default function CategoryDetailsPage() {
                 transition={{ delay: i * 0.05 }}
               >
                 <ProductCard.Root
-                  id={product.id}
+                  id={product.id.toString()}
                   name={product.name}
                   price={`₦${Number(product.price).toLocaleString()}`}
                   image={product.image}
                   category={product.category ?? "Wishlist"}
                   rating={4.5}
                   stock={product.stock}
-                  options={{
-                    image: { showFavorite: true },
-                    info: { showVendor: false },
-                    actions: { showStock: true },
-                  }}
+                  // options={{
+                  //   image: { showFavorite: true },
+                  //   info: { showVendor: false },
+                  //   actions: { showStock: true },
+                  // }}
                 >
                   <ProductCard.Image />
                   <ProductCard.Info />
                   <ProductCard.Footer />
-                  <ProductCard.Actions onClick={() => console.log("Buy product")} />
+                  <ProductCard.Actions
+                    onClick={() => console.log("Buy product")}
+                  />
                 </ProductCard.Root>
-
-
               </motion.div>
             ))}
           </motion.div>

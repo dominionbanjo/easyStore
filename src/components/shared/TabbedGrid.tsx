@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
+import { useEffect, useRef } from "react";
 
 export interface TabGroup<T> {
   value: string;
@@ -16,20 +17,6 @@ interface TabbedGridProps<T> {
   gridClassName?: string;
 }
 
-/**
- * A reusable tabbed grid component that displays categorized content
- * with smooth animations and Radix Tabs.
- *
- * Example usage:
- *
- * <TabbedGrid
- *   tabGroups={[
- *     { value: "fashion", label: "Fashion", items: fashionProducts },
- *     { value: "tech", label: "Electronics", items: techProducts },
- *   ]}
- *   renderItem={(item) => <ProductCard {...item} />}
- * />
- */
 export function TabbedGrid<T>({
   tabGroups,
   renderItem,
@@ -37,59 +24,95 @@ export function TabbedGrid<T>({
   className,
   gridClassName,
 }: TabbedGridProps<T>) {
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+
+  /* enable horizontal scroll with mouse wheel */
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+
+    const onWheel = (e: WheelEvent) => {
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+        e.preventDefault();
+        el.scrollLeft += e.deltaY;
+      }
+    };
+
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, []);
+
   return (
     <section className={cn("w-full", className)}>
-      <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-md border-b border-border/20">
-        <Tabs
-          defaultValue={defaultValue || tabGroups[0].value}
-          className="mx-auto"
-        >
-          {/* ─── Tab Buttons ─── */}
-          <TabsList className="flex flex-wrap  justify-center gap-2 sm:gap-6 bg-transparent py-4 px-4 mb-5 sm-mb-0">
-            {tabGroups.map((tab) => (
-              <TabsTrigger
-                key={tab.value}
-                value={tab.value}
-                className={cn(
-                  "px-5 py-4 text-sm font-medium rounded-full transition-all duration-200",
-                  "text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                  "data-[state=active]:bg-primary/90 data-[state=active]:text-white"
-                )}
-              >
-                {tab.label}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-
-          {/* ─── Tab Content ─── */}
-          {tabGroups.map((tab) => (
-            <TabsContent
-              key={tab.value}
-              value={tab.value}
-              className="mt-10 focus-visible:outline-none"
+      <Tabs
+        defaultValue={defaultValue || tabGroups[0]?.value}
+        className="w-full"
+      >
+        {/* ───────── CATEGORY HEADER ───────── */}
+        <div className="sticky top-0 z-20 bg-background/95 backdrop-blur border-b">
+          <div ref={scrollRef} className="overflow-x-auto no-scrollbar">
+            <TabsList
+              className={cn(
+                // layout
+                "grid grid-flow-col grid-rows-2",
+                // spacing (THIS fixes your issue)
+                "gap-x-4 gap-y-4",
+                // padding & height
+                "px-6 py-6 min-h-[104px]",
+                // width behavior
+                "w-max bg-transparent"
+              )}
             >
-              <motion.div
-                layout
-                className={cn(
-                  "grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 mx-auto px-4",
-                  gridClassName
-                )}
-              >
-                {tab.items.map((item, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.05 }}
-                  >
-                    {renderItem(item, i)}
-                  </motion.div>
-                ))}
-              </motion.div>
-            </TabsContent>
-          ))}
-        </Tabs>
-      </div>
+              {tabGroups.map((tab) => (
+                <TabsTrigger
+                  key={tab.value}
+                  value={tab.value}
+                  className={cn(
+                    // keep pill styling
+                    "px-5 py-3 rounded-full text-sm font-medium",
+                    // text behavior (important)
+                    "leading-tight text-center whitespace-nowrap",
+                    // colors
+                    "text-muted-foreground hover:text-foreground hover:bg-muted/50",
+                    "transition-all duration-200",
+                    "data-[state=active]:bg-primary/90 data-[state=active]:text-white"
+                  )}
+                >
+                  {tab.label}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </div>
+        </div>
+
+        {/* ───────── TAB CONTENT ───────── */}
+        {tabGroups.map((tab) => (
+          <TabsContent
+            key={tab.value}
+            value={tab.value}
+            className="mt-10 focus-visible:outline-none"
+          >
+            <motion.div
+              layout
+              className={cn(
+                "grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 px-4 mx-auto",
+                gridClassName
+              )}
+            >
+              {tab.items.map((item, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.04 }}
+                >
+                  {renderItem(item, i)}
+                </motion.div>
+              ))}
+            </motion.div>
+          </TabsContent>
+        ))}
+      </Tabs>
     </section>
   );
 }
