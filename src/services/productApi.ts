@@ -41,7 +41,6 @@ export const productApi = apiManager.injectEndpoints({
         params,
       }),
     }),
-
     /* ───────── ALL PRODUCTS ───────── */
     getAllProducts: builder.query<IPaginatedResponse<IProduct>, PaginationArgs>(
       {

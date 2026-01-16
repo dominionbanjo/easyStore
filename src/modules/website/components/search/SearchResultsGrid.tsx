@@ -1,11 +1,12 @@
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useMemo, useEffect, useState } from "react";
 
 import { useSearchProductsQuery } from "@/services/productApi";
 import { ProductCard } from "@/components/shared/ProductCard";
 
 import { Skeleton } from "@/components/ui/skeleton";
-import { Button } from "@/components/ui/button";
+import { Pagination } from "@/components/shared/Pagination";
+import { USER_ROUTES } from "@/routes/temp";
 
 /* ───────────────── DEBOUNCE HOOK ───────────────── */
 
@@ -20,27 +21,11 @@ function useDebouncedValue<T>(value: T, delay = 400): T {
   return debounced;
 }
 
-/* ───────────────── PAGINATION HELPERS ───────────────── */
-
-const getVisiblePages = (current: number, total: number, maxVisible = 4) => {
-  if (total <= maxVisible) {
-    return Array.from({ length: total }, (_, i) => i + 1);
-  }
-
-  const start = Math.max(1, current - Math.floor(maxVisible / 2));
-  const end = Math.min(total, start + maxVisible - 1);
-
-  const pages: number[] = [];
-  for (let i = start; i <= end; i++) {
-    pages.push(i);
-  }
-
-  return pages;
-};
-
 /* ───────────────── COMPONENT ───────────────── */
 
 export function SearchResultsGrid() {
+  const navigate = useNavigate();
+
   const [searchParams, setSearchParams] = useSearchParams();
 
   /* ───────────────── QUERY PARAMS ───────────────── */
@@ -162,77 +147,29 @@ export function SearchResultsGrid() {
             isFavorite={product.is_in_wishlist}
           >
             <ProductCard.Image />
-            <ProductCard.Info />
+            <ProductCard.Info
+              onClick={() =>
+                navigate(
+                  USER_ROUTES.PRODUCT_DETAIL.replace(":slug", product.slug)
+                )
+              }
+            />{" "}
           </ProductCard.Root>
         ))}
       </div>
 
       {/* ─── PAGINATION ─── */}
-      {pagination && pagination.pages > 1 && (
-        <div className="flex items-center justify-center gap-2 pt-6 flex-wrap">
-          {/* Previous */}
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={!pagination.hasPrev}
-            onClick={() => {
-              setPage(pagination.page - 1);
-              window.scrollTo({ top: 0, behavior: "smooth" });
-            }}
-          >
-            Prev
-          </Button>
-
-          {/* Page Numbers */}
-          {getVisiblePages(pagination.page, pagination.pages).map((page) => (
-            <Button
-              key={page}
-              size="sm"
-              variant={page === pagination.page ? "default" : "outline"}
-              onClick={() => {
-                setPage(page);
-                window.scrollTo({ top: 0, behavior: "smooth" });
-              }}
-            >
-              {page}
-            </Button>
-          ))}
-
-          {/* Ellipsis + Last Page */}
-          {pagination.pages > 4 &&
-            !getVisiblePages(pagination.page, pagination.pages).includes(
-              pagination.pages
-            ) && (
-              <>
-                <span className="px-2 text-muted-foreground">…</span>
-                <Button
-                  size="sm"
-                  variant={
-                    pagination.page === pagination.pages ? "default" : "outline"
-                  }
-                  onClick={() => {
-                    setPage(pagination.pages);
-                    window.scrollTo({ top: 0, behavior: "smooth" });
-                  }}
-                >
-                  {pagination.pages}
-                </Button>
-              </>
-            )}
-
-          {/* Next */}
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={!pagination.hasNext}
-            onClick={() => {
-              setPage(pagination.page + 1);
-              window.scrollTo({ top: 0, behavior: "smooth" });
-            }}
-          >
-            Next
-          </Button>
-        </div>
+      {pagination && (
+        <Pagination
+          page={pagination.page}
+          pages={pagination.pages}
+          hasNext={pagination.hasNext}
+          hasPrev={pagination.hasPrev}
+          onPageChange={(page) => {
+            setPage(page);
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+        />
       )}
     </div>
   );
