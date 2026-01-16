@@ -127,10 +127,9 @@ export default function CategoryDetailsPage() {
                     <ProductCard.Info
                       onClick={() =>
                         navigate(
-                          USER_ROUTES.PRODUCT_DETAIL.replace(
-                            ":slug",
+                          `${USER_ROUTES.PRODUCT_DETAIL}/${encodeURIComponent(
                             product.slug
-                          )
+                          )}`
                         )
                       }
                     />

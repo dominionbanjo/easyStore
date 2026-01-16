@@ -20,7 +20,7 @@ export enum AUTH_ROUTES {
 export enum USER_ROUTES {
   SHOP = "/shop",
   CATEGORIES = "/categories",
-  PRODUCT_DETAIL = "/product/:slug",
+  PRODUCT_DETAIL = "/product",
   WISHLIST = "/wishlist",
   ORDERS = "/orders",
   ORDER_DETAILS = "/orders/:id",
