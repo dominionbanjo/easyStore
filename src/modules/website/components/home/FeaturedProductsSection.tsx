@@ -2,6 +2,7 @@ import { ProductCard } from "@/components/shared/ProductCard";
 import { USER_ROUTES } from "@/routes/temp";
 import { useNavigate } from "react-router-dom";
 import { useGetFeaturedProductsQuery } from "@/services/productApi";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const FALLBACK_IMAGE =
   "https://images.unsplash.com/photo-1580894732444-8ecded7900cd?auto=format&fit=crop&w=1200&q=60";
@@ -15,21 +16,38 @@ export default function FeaturedProductsSection() {
 
   const products = data?.data ?? [];
 
+  /* ───────────────── LOADING STATE ───────────────── */
+
   if (isLoading) {
     return (
-      <section className="py-20 px-2 bg-card text-center">
-        <p>Loading featured products…</p>
+      <section className="py-20 px-2 bg-card">
+        <div className="mx-auto text-center space-y-10">
+          <h2 className="text-3xl font-semibold text-primary">
+            Featured Products
+          </h2>
+          <Skeleton className="h-8 w-64 mx-auto rounded-md" />
+
+          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mx-auto px-4">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <Skeleton key={i} className="h-[320px] rounded-2xl" />
+            ))}
+          </div>
+        </div>
       </section>
     );
   }
 
-  if (isError || !products?.length) {
+  /* ───────────────── EMPTY / ERROR STATE ───────────────── */
+
+  if (isError || !products.length) {
     return (
       <section className="py-20 px-2 bg-card text-center">
         <p>No featured products available.</p>
       </section>
     );
   }
+
+  /* ───────────────── RENDER ───────────────── */
 
   return (
     <section className="py-20 px-2 bg-card">

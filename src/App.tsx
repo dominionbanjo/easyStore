@@ -1,126 +1,209 @@
-import ScrollToTop from "./utils/ScrollToTop";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { lazy, Suspense } from "react";
+import ScrollToTop from "./utils/ScrollToTop";
+import AppLoader from "./components/shared/AppLoader";
 
-// Public Website Pages
-import LandingPage from "./modules/website/pages/LandingPage";
-import AboutPage from "./modules/website/pages/AboutPage";
-import NotFoundPage from "./modules/website/pages/NotFoundPage";
-import HomepageLayout from "./modules/website/layout/HomePageLayout";
+/* ───────────────── LAYOUTS ───────────────── */
 
-// User Pages
-import ShopPage from "./modules/website/pages/Shop";
-import CategoriesPage from "./modules/website/pages/Categories";
-import ProductDetailPage from "./modules/website/pages/ProductDetailsPage";
-import OrdersPage from "./modules/website/pages/OrdersPage";
-import OrderDetailsPage from "./modules/website/pages/OrderDetailsPage";
-import CartPage from "./modules/website/pages/CartPage";
-import WishlistPage from "./modules/website/pages/WishlistPage";
-import SettingsPage from "./modules/website/pages/SettingsPage";
-import CategoryDetailsPage from "./modules/website/pages/SingleCategoryPage";
-
-// Auth Pages
-import LoginPage from "./modules/auth/pages/Login";
-import SignupPage from "./modules/auth/pages/Register";
-import VerifyOtpPage from "./modules/auth/pages/VerifyOtp";
-import ForgotPasswordPage from "./modules/auth/pages/ForgotPasswordPage";
-import ResetPasswordPage from "./modules/auth/pages/ResetPasswordPage";
+// Website
+const HomepageLayout = lazy(
+  () => import("./modules/website/layout/HomePageLayout")
+);
+const AccountsLayout = lazy(
+  () => import("./modules/website/layout/AccountsLayout")
+);
 
 // Vendor
-import VendorDashboardPage from "./modules/vendor/pages/VendorDashboardPage";
-import VendorDashboardLayout from "./modules/vendor/layout/VendorDashboardLayout";
-import CustomersPage from "./modules/vendor/pages/CustomersPage";
-import VendorOrdersPage from "./modules/vendor/pages/OrdersPage";
-import ProductsPage from "./modules/vendor/pages/ProductsPage";
-import VendorSettingsPage from "./modules/vendor/pages/SettingsPage";
-import HelpPage from "./modules/vendor/pages/HelpPage";
-import AnalyticsPage from "./modules/vendor/pages/AnalyticsPage";
+const VendorDashboardLayout = lazy(
+  () => import("./modules/vendor/layout/VendorDashboardLayout")
+);
 
-// Super Admin
-import StoreDetailsPage from "./modules/vendor/pages/storeDetailsPage";
-import SuperAdminDashboardLayout from "./modules/admin/layout/SuperAdminDashboardLayout";
-import SuperAdminOverviewPage from "./modules/admin/pages/SuperAdminOverviewPage";
-import SuperAdminVendorsPage from "./modules/admin/pages/SuperAdminVendorsPage";
-import SuperAdminUsersPage from "./modules/admin/pages/SuperAdminUsersPage";
-import SuperAdminTransactionsPage from "./modules/admin/pages/SuperAdminTransactionsPage";
-import SuperAdminReportsPage from "./modules/admin/pages/SuperAdminReportsPage";
-import SuperAdminLogsPage from "./modules/admin/pages/SuperAdminLogsPage";
-import SuperAdminNotificationsPage from "./modules/admin/pages/SuperAdminNotificationsPage";
-import SuperAdminPlatformAnalysisPage from "./modules/admin/pages/SuperAdminPlatformAnalysisPage";
-import SuperAdminAccessControlPage from "./modules/admin/pages/SuperAdminAccessControlPage";
-import SuperAdminSettingsPage from "./modules/admin/pages/SuperAdminSettingsPage";
-import SuperAdminServerConfigPage from "./modules/admin/pages/SuperAdminServerConfigPage";
-import UserProfilePage from "./modules/website/pages/ProfilePage";
-import AccountsLayout from "./modules/website/layout/AccountsLayout";
-import SearchResultsPage from "./modules/website/pages/SearchResultsPage";
+// Admin
+const SuperAdminDashboardLayout = lazy(
+  () => import("./modules/admin/layout/SuperAdminDashboardLayout")
+);
+
+/* ───────────────── WEBSITE PAGES ───────────────── */
+
+const LandingPage = lazy(() => import("./modules/website/pages/LandingPage"));
+const AboutPage = lazy(() => import("./modules/website/pages/AboutPage"));
+const StoresPage = lazy(() => import("./modules/website/pages/StoresPage"));
+const StoreDetailsPage = lazy(
+  () => import("./modules/vendor/pages/storeDetailsPage")
+);
+const CategoriesPage = lazy(() => import("./modules/website/pages/Categories"));
+const CategoryDetailsPage = lazy(
+  () => import("./modules/website/pages/SingleCategoryPage")
+);
+const ProductDetailPage = lazy(
+  () => import("./modules/website/pages/ProductDetailsPage")
+);
+const OrdersPage = lazy(() => import("./modules/website/pages/OrdersPage"));
+const OrderDetailsPage = lazy(
+  () => import("./modules/website/pages/OrderDetailsPage")
+);
+const WishlistPage = lazy(() => import("./modules/website/pages/WishlistPage"));
+const CartPage = lazy(() => import("./modules/website/pages/CartPage"));
+const SettingsPage = lazy(() => import("./modules/website/pages/SettingsPage"));
+const UserProfilePage = lazy(
+  () => import("./modules/website/pages/ProfilePage")
+);
+const SearchResultsPage = lazy(
+  () => import("./modules/website/pages/SearchResultsPage")
+);
+const NotFoundPage = lazy(() => import("./modules/website/pages/NotFoundPage"));
+
+/* ───────────────── AUTH PAGES ───────────────── */
+
+const LoginPage = lazy(() => import("./modules/auth/pages/Login"));
+const SignupPage = lazy(() => import("./modules/auth/pages/Register"));
+const VerifyOtpPage = lazy(() => import("./modules/auth/pages/VerifyOtp"));
+const ForgotPasswordPage = lazy(
+  () => import("./modules/auth/pages/ForgotPasswordPage")
+);
+const ResetPasswordPage = lazy(
+  () => import("./modules/auth/pages/ResetPasswordPage")
+);
+
+/* ───────────────── VENDOR PAGES ───────────────── */
+
+const VendorDashboardPage = lazy(
+  () => import("./modules/vendor/pages/VendorDashboardPage")
+);
+const CustomersPage = lazy(
+  () => import("./modules/vendor/pages/CustomersPage")
+);
+const VendorOrdersPage = lazy(
+  () => import("./modules/vendor/pages/OrdersPage")
+);
+const ProductsPage = lazy(() => import("./modules/vendor/pages/ProductsPage"));
+const VendorSettingsPage = lazy(
+  () => import("./modules/vendor/pages/SettingsPage")
+);
+const HelpPage = lazy(() => import("./modules/vendor/pages/HelpPage"));
+const AnalyticsPage = lazy(
+  () => import("./modules/vendor/pages/AnalyticsPage")
+);
+
+/* ───────────────── ADMIN PAGES ───────────────── */
+
+const SuperAdminOverviewPage = lazy(
+  () => import("./modules/admin/pages/SuperAdminOverviewPage")
+);
+const SuperAdminVendorsPage = lazy(
+  () => import("./modules/admin/pages/SuperAdminVendorsPage")
+);
+const SuperAdminUsersPage = lazy(
+  () => import("./modules/admin/pages/SuperAdminUsersPage")
+);
+const SuperAdminTransactionsPage = lazy(
+  () => import("./modules/admin/pages/SuperAdminTransactionsPage")
+);
+const SuperAdminReportsPage = lazy(
+  () => import("./modules/admin/pages/SuperAdminReportsPage")
+);
+const SuperAdminLogsPage = lazy(
+  () => import("./modules/admin/pages/SuperAdminLogsPage")
+);
+const SuperAdminNotificationsPage = lazy(
+  () => import("./modules/admin/pages/SuperAdminNotificationsPage")
+);
+const SuperAdminPlatformAnalysisPage = lazy(
+  () => import("./modules/admin/pages/SuperAdminPlatformAnalysisPage")
+);
+const SuperAdminAccessControlPage = lazy(
+  () => import("./modules/admin/pages/SuperAdminAccessControlPage")
+);
+const SuperAdminSettingsPage = lazy(
+  () => import("./modules/admin/pages/SuperAdminSettingsPage")
+);
+const SuperAdminServerConfigPage = lazy(
+  () => import("./modules/admin/pages/SuperAdminServerConfigPage")
+);
+
+/* ───────────────── APP ───────────────── */
 
 export default function App() {
   return (
     <Router>
       <ScrollToTop />
-      <Routes>
-        <Route path="/" element={<HomepageLayout />}>
-          <Route path="" element={<LandingPage />} />
-          <Route path="s" element={<SearchResultsPage />} />
-          <Route path="shop" element={<ShopPage />} />
-          <Route path="shop/:id" element={<StoreDetailsPage />} />
-          <Route path="categories" element={<CategoriesPage />} />
-          <Route path="categories/:id" element={<CategoryDetailsPage />} />
-          <Route path="product/:id" element={<ProductDetailPage />} />
-          <Route path="orders" element={<OrdersPage />} />
-          <Route path="orders/:id" element={<OrderDetailsPage />} />
-          <Route path="about" element={<AboutPage />} />
-          <Route path="wishlist" element={<WishlistPage />} />
-        </Route>
 
-        <Route path="/account" element={<AccountsLayout />}>
-          <Route path="profile" element={<UserProfilePage />} />
-          <Route path="settings" element={<SettingsPage />} />
-          <Route path="cart" element={<CartPage />} />
-        </Route>
+      {/* Global Suspense Boundary */}
+      <Suspense fallback={<AppLoader />}>
+        <Routes>
+          {/* ─── WEBSITE ─── */}
+          <Route path="/" element={<HomepageLayout />}>
+            <Route index element={<LandingPage />} />
+            <Route path="s" element={<SearchResultsPage />} />
+            <Route path="stores" element={<StoresPage />} />
+            <Route path="stores/:slug" element={<StoreDetailsPage />} />
+            <Route path="categories" element={<CategoriesPage />} />
+            <Route path="categories/:slug" element={<CategoryDetailsPage />} />
+            <Route path="product/:slug" element={<ProductDetailPage />} />
+            <Route path="orders" element={<OrdersPage />} />
+            <Route path="orders/:id" element={<OrderDetailsPage />} />
+            <Route path="about" element={<AboutPage />} />
+            <Route path="wishlist" element={<WishlistPage />} />
+          </Route>
 
-        <Route path="/auth">
-          <Route path="login" element={<LoginPage />} />
-          <Route path="signup" element={<SignupPage />} />
-          <Route path="verify-otp" element={<VerifyOtpPage />} />
-          <Route path="forgot-password" element={<ForgotPasswordPage />} />
-          <Route path="reset-password" element={<ResetPasswordPage />} />
-        </Route>
+          {/* ─── ACCOUNT ─── */}
+          <Route path="/account" element={<AccountsLayout />}>
+            <Route path="profile" element={<UserProfilePage />} />
+            <Route path="settings" element={<SettingsPage />} />
+            <Route path="cart" element={<CartPage />} />
+          </Route>
 
-        <Route path="/vendor" element={<VendorDashboardLayout />}>
-          <Route path="" element={<VendorDashboardPage />} />
-          <Route path="customers" element={<CustomersPage />} />
-          <Route path="orders" element={<VendorOrdersPage />} />
-          <Route path="products" element={<ProductsPage />} />
-          <Route path="settings" element={<VendorSettingsPage />} />
-          <Route path="help" element={<HelpPage />} />
-          <Route path="analytics" element={<AnalyticsPage />} />
-        </Route>
+          {/* ─── AUTH ─── */}
+          <Route path="/auth">
+            <Route path="login" element={<LoginPage />} />
+            <Route path="signup" element={<SignupPage />} />
+            <Route path="verify-otp" element={<VerifyOtpPage />} />
+            <Route path="forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="reset-password" element={<ResetPasswordPage />} />
+          </Route>
 
-        <Route path="/admin" element={<SuperAdminDashboardLayout />}>
-          <Route index element={<SuperAdminOverviewPage />} />
-          <Route path="vendors" element={<SuperAdminVendorsPage />} />
-          <Route path="users" element={<SuperAdminUsersPage />} />
-          <Route path="transactions" element={<SuperAdminTransactionsPage />} />
-          <Route path="reports" element={<SuperAdminReportsPage />} />
-          <Route path="logs" element={<SuperAdminLogsPage />} />
-          <Route
-            path="notifications"
-            element={<SuperAdminNotificationsPage />}
-          />
-          <Route
-            path="analytics"
-            element={<SuperAdminPlatformAnalysisPage />}
-          />
-          <Route
-            path="access-control"
-            element={<SuperAdminAccessControlPage />}
-          />
-          <Route path="settings" element={<SuperAdminSettingsPage />} />
-          <Route path="system" element={<SuperAdminServerConfigPage />} />
-        </Route>
+          {/* ─── VENDOR ─── */}
+          <Route path="/vendor" element={<VendorDashboardLayout />}>
+            <Route index element={<VendorDashboardPage />} />
+            <Route path="customers" element={<CustomersPage />} />
+            <Route path="orders" element={<VendorOrdersPage />} />
+            <Route path="products" element={<ProductsPage />} />
+            <Route path="settings" element={<VendorSettingsPage />} />
+            <Route path="help" element={<HelpPage />} />
+            <Route path="analytics" element={<AnalyticsPage />} />
+          </Route>
 
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
+          {/* ─── ADMIN ─── */}
+          <Route path="/admin" element={<SuperAdminDashboardLayout />}>
+            <Route index element={<SuperAdminOverviewPage />} />
+            <Route path="vendors" element={<SuperAdminVendorsPage />} />
+            <Route path="users" element={<SuperAdminUsersPage />} />
+            <Route
+              path="transactions"
+              element={<SuperAdminTransactionsPage />}
+            />
+            <Route path="reports" element={<SuperAdminReportsPage />} />
+            <Route path="logs" element={<SuperAdminLogsPage />} />
+            <Route
+              path="notifications"
+              element={<SuperAdminNotificationsPage />}
+            />
+            <Route
+              path="analytics"
+              element={<SuperAdminPlatformAnalysisPage />}
+            />
+            <Route
+              path="access-control"
+              element={<SuperAdminAccessControlPage />}
+            />
+            <Route path="settings" element={<SuperAdminSettingsPage />} />
+            <Route path="system" element={<SuperAdminServerConfigPage />} />
+          </Route>
+
+          {/* ─── FALLBACK ─── */}
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </Suspense>
     </Router>
   );
 }

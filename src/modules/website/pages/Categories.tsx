@@ -1,204 +1,176 @@
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { useForm, FormProvider } from "react-hook-form";
-import { FormInput } from "@/components/shared/FormInput";
-import { FormSelect } from "@/components/shared/FormSelect";
-import { Search, Layers, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { Search, FolderTree, ChevronRight } from "lucide-react";
 
-const mockCategories = [
-  {
-    id: 1,
-    name: "Electronics",
-    image: "/images/elect1.png",
-    description:
-      "Explore the latest gadgets, phones, laptops, and smart home devices.",
-    productCount: 540,
-    subcategories: ["Phones", "Laptops", "Headphones", "Smartwatches"],
-  },
-  {
-    id: 2,
-    name: "Fashion",
-    image: "/images/fash1.png",
-    description:
-      "From casual to couture — find clothing, shoes, and accessories for every occasion.",
-    productCount: 820,
-    subcategories: ["Men", "Women", "Shoes", "Accessories"],
-  },
-  {
-    id: 3,
-    name: "Home & Living",
-    image: "/images/home1.png",
-    description:
-      "Elevate your space with furniture, décor, and modern home essentials.",
-    productCount: 420,
-    subcategories: ["Furniture", "Décor", "Lighting", "Kitchen"],
-  },
-  {
-    id: 4,
-    name: "Beauty",
-    image: "/images/home5.png",
-    description:
-      "Discover premium skincare, cosmetics, and personal care products.",
-    productCount: 275,
-    subcategories: ["Makeup", "Skincare", "Fragrance", "Haircare"],
-  },
-  {
-    id: 5,
-    name: "Sports & Outdoors",
-    image: "/images/fash2.png",
-    description:
-      "Gear up for adventure with fitness equipment, outdoor wear, and accessories.",
-    productCount: 300,
-    subcategories: ["Gym", "Cycling", "Camping", "Running"],
-  },
-];
+import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
-const sortOptions = [
-  { label: "Default", value: "default" },
-  { label: "Most Popular", value: "popular" },
-  { label: "Highest Products", value: "products" },
-  { label: "A-Z", value: "alphabetical" },
-];
+import { useGetCategoriesQuery } from "@/services/categoryApi";
+import { USER_ROUTES } from "@/routes/temp";
+
+/* ───────────────── COMPONENT ───────────────── */
 
 export default function CategoriesPage() {
   const navigate = useNavigate();
-  const [filtered, setFiltered] = useState(mockCategories);
-  const methods = useForm({
-    defaultValues: { search: "", sort: "default" },
+  const [search, setSearch] = useState("");
+
+  const { data, isLoading, isError } = useGetCategoriesQuery({
+    page: 1,
+    limit: 50,
   });
 
-  const { watch } = methods;
-  const search = watch("search");
-  const sort = watch("sort");
+  /* ───────────────── DATA ───────────────── */
 
-  useEffect(() => {
-    let result = mockCategories.filter((cat) =>
-      cat.name.toLowerCase().includes(search.toLowerCase())
+  const categories = data?.data ?? [];
+
+  /* ───────────────── SEARCH (FRONTEND ONLY) ───────────────── */
+
+  const filteredCategories = useMemo(() => {
+    if (!search.trim()) return categories;
+
+    const q = search.toLowerCase();
+
+    return categories
+      .map((parent) => {
+        const parentMatch = parent.name.toLowerCase().includes(q);
+
+        const children = parent.children.filter((child) =>
+          child.name.toLowerCase().includes(q)
+        );
+
+        if (parentMatch || children.length > 0) {
+          return {
+            ...parent,
+            children: parentMatch ? parent.children : children,
+          };
+        }
+
+        return null;
+      })
+      .filter((c): c is (typeof categories)[number] => c !== null);
+  }, [categories, search]);
+
+  /* ───────────────── STATES ───────────────── */
+
+  if (isLoading) {
+    return (
+      <section className="max-w-7xl mx-auto px-4 py-16 space-y-12">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div key={i} className="space-y-5">
+            <Skeleton className="h-7 w-72" />
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+              {Array.from({ length: 4 }).map((_, j) => (
+                <Skeleton key={j} className="h-24 rounded-xl" />
+              ))}
+            </div>
+          </div>
+        ))}
+      </section>
     );
+  }
 
-    if (sort === "products") {
-      result = [...result].sort((a, b) => b.productCount - a.productCount);
-    } else if (sort === "alphabetical") {
-      result = [...result].sort((a, b) => a.name.localeCompare(b.name));
-    }
+  if (isError) {
+    return (
+      <section className="py-24 text-center text-muted-foreground">
+        Failed to load categories.
+      </section>
+    );
+  }
 
-    setFiltered(result);
-  }, [search, sort]);
+  /* ───────────────── RENDER ───────────────── */
 
   return (
     <section className="min-h-screen bg-muted/30">
-      {/* ─── Hero Section ─── */}
-      <div className="bg-gradient-to-r from-muted/40 via-background to-muted/40 py-14 text-center border-b border-border">
-        <div className="max-w-4xl mx-auto px-4 space-y-5">
+      {/* ─── HEADER ─── */}
+      <div className="border-b bg-background">
+        <div className="max-w-4xl mx-auto px-4 py-14 space-y-6 text-center">
           <h1 className="text-3xl font-bold text-foreground">
-            Shop by Categories
+            Shop by Category
           </h1>
           <p className="text-muted-foreground">
-            Browse through all available categories and find products that match
-            your interests.
+            Explore our product categories and quickly find what you’re looking
+            for.
           </p>
 
-          <FormProvider {...methods}>
-            <form className="flex flex-col sm:flex-row justify-center gap-3 mt-8">
-              <div className="w-full sm:w-80">
-                <FormInput
-                  name="search"
-                  placeholder="Search categories..."
-                  className="!space-y-0"
-                />
-              </div>
-              <div className="w-full sm:w-56">
-                <FormSelect
-                  name="sort"
-                  placeholder="Sort by"
-                  options={sortOptions}
-                />
-              </div>
-            </form>
-          </FormProvider>
+          {/* Search */}
+          <div className="relative max-w-md mx-auto">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search categories or subcategories..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-9 h-11"
+            />
+          </div>
         </div>
       </div>
 
-      {/* ─── Categories Grid ─── */}
-      <div className="max-w-7xl mx-auto px-4 py-14">
-        {filtered.length > 0 ? (
-          <motion.div
-            layout
-            className="grid gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
-          >
-            {filtered.map((cat, i) => (
-              <motion.div
-                key={cat.id}
-                initial={{ opacity: 0, y: 25 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.05 }}
-              >
-                <Card className="overflow-hidden rounded-2xl bg-background border hover:shadow-sm transition-all">
-                  <div className="relative w-full h-40">
-                    <img
-                      src={cat.image}
-                      alt={cat.name}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-                    <div className="absolute top-2 left-2 bg-background/80 px-2 py-1 rounded-md text-xs font-medium text-muted-foreground flex items-center gap-1">
-                      <Layers className="h-3 w-3 text-primary" />
-                      {cat.productCount} products
-                    </div>
-                  </div>
-
-                  <CardHeader className="px-5 pt-4">
-                    <CardTitle className="text-lg font-semibold text-foreground">
-                      {cat.name}
-                    </CardTitle>
-                  </CardHeader>
-
-                  <CardContent className="px-5 pb-5 space-y-3">
-                    <p className="text-sm text-muted-foreground line-clamp-2">
-                      {cat.description}
-                    </p>
-
-                    <div className="flex flex-wrap gap-2">
-                      {cat.subcategories.slice(0, 3).map((sub, j) => (
-                        <Badge
-                          key={j}
-                          variant="outline"
-                          className="text-xs border-border bg-muted/40"
-                        >
-                          {sub}
-                        </Badge>
-                      ))}
-                      {cat.subcategories.length > 3 && (
-                        <Badge
-                          variant="outline"
-                          className="text-xs border-border text-muted-foreground"
-                        >
-                          +{cat.subcategories.length - 3} more
-                        </Badge>
-                      )}
-                    </div>
-
-                    <Button
-                      size="sm"
-                      onClick={() => navigate("/categories/1")}
-                      className="mt-3 w-full rounded-full text-white"
-                    >
-                      Explore <ArrowRight className="h-4 w-4 ml-1" />
-                    </Button>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </motion.div>
-        ) : (
-          <div className="text-center py-20 text-muted-foreground">
-            <Search className="h-8 w-8 mx-auto mb-2 opacity-50" />
-            <p>No categories found.</p>
+      {/* ─── CONTENT ─── */}
+      <div className="max-w-7xl mx-auto px-4 py-16 space-y-16">
+        {filteredCategories.length === 0 ? (
+          <div className="text-center py-24 text-muted-foreground">
+            <Search className="h-10 w-10 mx-auto mb-3 opacity-40" />
+            <p>No categories match your search.</p>
           </div>
+        ) : (
+          filteredCategories.map((parent, index) => (
+            <motion.section
+              key={parent.id}
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.05 }}
+              className="space-y-6"
+            >
+              {/* Parent Category Header */}
+              <div className="flex items-center justify-between flex-wrap gap-3">
+                <div className="flex items-center gap-3">
+                  <FolderTree className="h-6 w-6 text-primary" />
+                  <h2 className="text-2xl font-semibold text-foreground">
+                    {parent.name}
+                  </h2>
+                </div>
+
+                <Badge variant="secondary">
+                  {parent.products_count} products
+                </Badge>
+              </div>
+
+              {/* Subcategories */}
+              {parent.children.length > 0 ? (
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                  {parent.children.map((child) => (
+                    <Card
+                      key={child.id}
+                      onClick={() =>
+                        navigate(`${USER_ROUTES.CATEGORIES}/${child.slug}`)
+                      }
+                      className="group cursor-pointer rounded-xl border bg-background p-5 hover:shadow-md transition"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="font-medium text-foreground">
+                            {child.name}
+                          </p>
+                          <p className="text-sm text-muted-foreground mt-1">
+                            {child.products_count} products
+                          </p>
+                        </div>
+
+                        <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition" />
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground pl-9">
+                  No subcategories available.
+                </p>
+              )}
+            </motion.section>
+          ))
         )}
       </div>
     </section>

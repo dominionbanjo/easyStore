@@ -2,7 +2,7 @@
 export enum WEBSITE_ROUTES {
   HOME = "/",
   ABOUT = "/about",
-  SHOP = "/shop",
+  STORES = "/stores",
   CATEGORIES = "/categories",
   SETTINGS = "/settings",
   NOT_FOUND = "*",
@@ -20,7 +20,7 @@ export enum AUTH_ROUTES {
 export enum USER_ROUTES {
   SHOP = "/shop",
   CATEGORIES = "/categories",
-  PRODUCT_DETAIL = "/product/:id",
+  PRODUCT_DETAIL = "/product/:slug",
   WISHLIST = "/wishlist",
   ORDERS = "/orders",
   ORDER_DETAILS = "/orders/:id",

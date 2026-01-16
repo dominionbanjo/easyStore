@@ -1,7 +1,6 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useForm, FormProvider, useWatch } from "react-hook-form";
-import { Country, State, City } from "country-state-city";
 
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -16,7 +15,6 @@ import { FormSelect } from "@/components/shared/FormSelect";
 const SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
 const COLORS = ["Black", "White", "Red", "Blue", "Green", "Yellow"];
 const RATINGS = [4, 3, 2, 1];
-
 const DEFAULT_COUNTRY = "NG";
 
 /* ───────────────── TYPES ───────────────── */
@@ -27,10 +25,20 @@ type FilterForm = {
   city?: string;
 };
 
+type Option = { label: string; value: string };
+
+/* ───────────────── UTIL ───────────────── */
+
+const importCSC = () => import("country-state-city");
+
 /* ───────────────── COMPONENT ───────────────── */
 
 export function SearchFiltersSidebar() {
   const [params, setParams] = useSearchParams();
+
+  const [countryOptions, setCountryOptions] = useState<Option[]>([]);
+  const [stateOptions, setStateOptions] = useState<Option[]>([]);
+  const [cityOptions, setCityOptions] = useState<Option[]>([]);
 
   const methods = useForm<FilterForm>({
     defaultValues: {
@@ -48,32 +56,63 @@ export function SearchFiltersSidebar() {
   const stateCode = useWatch({ name: "state", control });
   const cityValue = useWatch({ name: "city", control });
 
-  /* ───────────────── OPTIONS (country-state-city) ───────────────── */
+  /* ───────────────── LOAD COUNTRIES (ONCE) ───────────────── */
 
-  const countryOptions = useMemo(
-    () =>
-      Country.getAllCountries().map((c) => ({
-        label: c.name,
-        value: c.isoCode,
-      })),
-    []
-  );
+  useEffect(() => {
+    (async () => {
+      const { Country } = await importCSC();
+      setCountryOptions(
+        Country.getAllCountries().map((c) => ({
+          label: c.name,
+          value: c.isoCode,
+        }))
+      );
+    })();
+  }, []);
 
-  const stateOptions = useMemo(() => {
-    if (!countryCode) return [];
-    return State.getStatesOfCountry(countryCode).map((s) => ({
-      label: s.name,
-      value: s.isoCode,
-    }));
-  }, [countryCode]);
+  /* ───────────────── LOAD STATES ───────────────── */
 
-  const cityOptions = useMemo(() => {
-    if (!countryCode || !stateCode) return [];
-    return City.getCitiesOfState(countryCode, stateCode).map((c) => ({
-      label: c.name,
-      value: c.name,
-    }));
-  }, [countryCode, stateCode]);
+  useEffect(() => {
+    if (!countryCode) {
+      setStateOptions([]);
+      setCityOptions([]);
+      return;
+    }
+
+    (async () => {
+      const { State } = await importCSC();
+      setStateOptions(
+        State.getStatesOfCountry(countryCode).map((s) => ({
+          label: s.name,
+          value: s.isoCode,
+        }))
+      );
+    })();
+
+    setValue("state", undefined);
+    setValue("city", undefined);
+  }, [countryCode, setValue]);
+
+  /* ───────────────── LOAD CITIES ───────────────── */
+
+  useEffect(() => {
+    if (!countryCode || !stateCode) {
+      setCityOptions([]);
+      return;
+    }
+
+    (async () => {
+      const { City } = await importCSC();
+      setCityOptions(
+        City.getCitiesOfState(countryCode, stateCode).map((c) => ({
+          label: c.name,
+          value: c.name,
+        }))
+      );
+    })();
+
+    setValue("city", undefined);
+  }, [countryCode, stateCode, setValue]);
 
   /* ───────────────── HELPERS ───────────────── */
 
@@ -103,18 +142,7 @@ export function SearchFiltersSidebar() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  /* ───────────────── RESET DEPENDENT FIELDS ───────────────── */
-
-  useEffect(() => {
-    setValue("state", undefined);
-    setValue("city", undefined);
-  }, [countryCode, setValue]);
-
-  useEffect(() => {
-    setValue("city", undefined);
-  }, [stateCode, setValue]);
-
-  /* ───────────────── FORM → QUERY SYNC (IMMEDIATE) ───────────────── */
+  /* ───────────────── FORM → QUERY SYNC ───────────────── */
 
   useEffect(() => {
     setParam("country", countryCode);
@@ -134,7 +162,7 @@ export function SearchFiltersSidebar() {
     <FormProvider {...methods}>
       <aside className="space-y-6">
         <Card className="p-5 rounded-2xl shadow-sm space-y-6">
-          {/* ─── PRICE ─── */}
+          {/* PRICE */}
           <div>
             <h4 className="font-semibold mb-3">Price (₦)</h4>
             <div className="flex gap-2">
@@ -159,7 +187,7 @@ export function SearchFiltersSidebar() {
 
           <Separator />
 
-          {/* ─── LOCATION ─── */}
+          {/* LOCATION */}
           <div className="space-y-3">
             <h4 className="font-semibold">Location</h4>
 
@@ -186,7 +214,7 @@ export function SearchFiltersSidebar() {
 
           <Separator />
 
-          {/* ─── RATING ─── */}
+          {/* RATING */}
           <div className="space-y-2">
             <h4 className="font-semibold">Customer Rating</h4>
             {RATINGS.map((r) => (
@@ -207,7 +235,7 @@ export function SearchFiltersSidebar() {
 
           <Separator />
 
-          {/* ─── SIZES ─── */}
+          {/* SIZES */}
           <div className="space-y-2">
             <h4 className="font-semibold">Sizes</h4>
             {SIZES.map((size) => (
@@ -223,7 +251,7 @@ export function SearchFiltersSidebar() {
 
           <Separator />
 
-          {/* ─── COLORS ─── */}
+          {/* COLORS */}
           <div className="space-y-2">
             <h4 className="font-semibold">Colors</h4>
             {COLORS.map((color) => (
@@ -239,7 +267,7 @@ export function SearchFiltersSidebar() {
 
           <Separator />
 
-          {/* ─── RESET ─── */}
+          {/* RESET */}
           <Button
             variant="outline"
             className="w-full"

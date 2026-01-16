@@ -108,7 +108,7 @@ export default function Header() {
                 <nav className="space-y-4 text-base font-medium">
                   {[
                     { name: "Home", path: WEBSITE_ROUTES.HOME },
-                    { name: "Shop", path: WEBSITE_ROUTES.SHOP },
+                    { name: "Stores", path: WEBSITE_ROUTES.STORES },
                     { name: "Categories", path: WEBSITE_ROUTES.CATEGORIES },
                     { name: "About", path: WEBSITE_ROUTES.ABOUT },
                   ].map((item) => (
@@ -179,7 +179,7 @@ export default function Header() {
           <nav className="hidden lg:flex items-center gap-5 xl:gap-6 text-sm font-medium whitespace-nowrap">
             {[
               { name: "Home", path: WEBSITE_ROUTES.HOME },
-              { name: "Shop", path: WEBSITE_ROUTES.SHOP },
+              { name: "Stores", path: WEBSITE_ROUTES.STORES },
               { name: "Categories", path: WEBSITE_ROUTES.CATEGORIES },
               { name: "About", path: WEBSITE_ROUTES.ABOUT },
             ].map((item) => (
