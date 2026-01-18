@@ -209,3 +209,61 @@ export interface IPaginatedResponse<T> {
     pagination: IPagination;
   };
 }
+
+/* ───────────────── STORE PRODUCT (STORE LIST RESPONSE) ───────────────── */
+export interface IStoreProduct {
+  id: string;
+  vendor_id: string;
+  store_id: string;
+  category_id: string;
+
+  name: string;
+  slug: string;
+  description: string;
+
+  price: string;
+  discount_price: string | null;
+
+  stock: number;
+  tags: string[];
+
+  image: IProductImage | null;
+  gallery: IProductImage[];
+
+  highlights: string[] | null;
+  specs: Record<string, any> | null;
+
+  colors: string[] | null;
+  sizes: string[] | null;
+
+  shipping_note: string | null;
+  returns_note: string | null;
+  status?: "active" | "inactive";
+
+  country: string;
+  state: string;
+  city: string;
+  shipping_cost: string;
+
+  rating_average: string;
+  rating_count: number;
+  review_count: number;
+
+  total_sold: number;
+  featured: boolean;
+
+  category_ref: IProductCategoryRef;
+
+  created_at: string;
+  updated_at: string;
+}
+
+/* ───────────────── STORE PRODUCTS RESPONSE ───────────────── */
+export interface IStoreProductsResponse {
+  status: "success" | "error";
+  message: string;
+  data: {
+    items: IStoreProduct[];
+    pagination: IPagination;
+  };
+}

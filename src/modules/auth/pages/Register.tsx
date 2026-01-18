@@ -26,8 +26,8 @@ import {
   type SignupFormValues,
 } from "@/modules/auth/validators/signupValidator";
 
-import { FormInput } from "@/components/shared/FormInput";
-import { FormSelect } from "@/components/shared/FormSelect";
+import { FormInput } from "@/components/shared/form/FormInput";
+import { FormSelect } from "@/components/shared/form/FormSelect";
 import { cn } from "@/lib/utils";
 import { AUTH_ROUTES } from "@/routes/temp";
 
@@ -92,8 +92,8 @@ export default function SignupPage() {
 
       navigate(
         `${AUTH_ROUTES.VERIFY_OTP}?email=${encodeURIComponent(
-          res.data.user.email
-        )}`
+          res.data.user.email,
+        )}`,
       );
     } catch (error: any) {
       toast.error(error?.data?.message || "Signup failed. Please try again.");
@@ -136,7 +136,7 @@ export default function SignupPage() {
                   "flex-1 rounded-full px-4 py-2 text-sm font-semibold border",
                   accountType === "user"
                     ? "bg-[#17c06e] text-black border-[#17c06e]"
-                    : "bg-white border-gray-300"
+                    : "bg-white border-gray-300",
                 )}
               >
                 I want to buy
@@ -149,7 +149,7 @@ export default function SignupPage() {
                   "flex-1 rounded-full px-4 py-2 text-sm font-semibold border",
                   accountType === "vendor"
                     ? "bg-[#17c06e] text-black border-[#17c06e]"
-                    : "bg-white border-gray-300"
+                    : "bg-white border-gray-300",
                 )}
               >
                 I want to sell
@@ -264,7 +264,7 @@ export default function SignupPage() {
                   className={cn(
                     "w-full rounded-full py-2 bg-[#17c06e] text-black",
                     (isLoading || !agreeToTerms || isStoreNameInvalid) &&
-                      "opacity-70 cursor-not-allowed"
+                      "opacity-70 cursor-not-allowed",
                   )}
                 >
                   {isLoading ? "Creating account..." : "Create account"}

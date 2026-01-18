@@ -11,6 +11,7 @@ import type {
   IProductsGroupedByCategoryResponse,
   GetSingleProductResponse,
   ISearchProductsResponse,
+  IStoreProductsResponse,
 } from "@/types/product/productTypes";
 import { apiManager } from "./apiManager";
 
@@ -49,7 +50,7 @@ export const productApi = apiManager.injectEndpoints({
           method: "GET",
           params,
         }),
-      }
+      },
     ),
 
     /* ───────── BY CATEGORY ───────── */
@@ -66,7 +67,7 @@ export const productApi = apiManager.injectEndpoints({
 
     /* ───────── BY STORE ───────── */
     getProductsByStore: builder.query<
-      IPaginatedResponse<IProduct>,
+      IStoreProductsResponse,
       ProductsByStoreArgs
     >({
       query: ({ storeId, ...params }) => ({
@@ -74,6 +75,16 @@ export const productApi = apiManager.injectEndpoints({
         method: "GET",
         params,
       }),
+    }),
+
+    /* ───────── MY STORE (AUTH USER) ───────── */
+    getMyStoreProducts: builder.query<IStoreProductsResponse, PaginationArgs>({
+      query: (params) => ({
+        url: "product/store/me",
+        method: "GET",
+        params,
+      }),
+      providesTags: ["Store"],
     }),
 
     /* ───────── SEARCH ───────── */
@@ -159,4 +170,5 @@ export const {
   useCreateManyProductsMutation,
   useUpdateProductMutation,
   useDeleteProductMutation,
+  useGetMyStoreProductsQuery,
 } = productApi;

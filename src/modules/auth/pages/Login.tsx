@@ -19,7 +19,7 @@ import {
   LoginSchema,
   type LoginFormValues,
 } from "@/modules/auth/validators/loginValidator";
-import { FormInput } from "@/components/shared/FormInput";
+import { FormInput } from "@/components/shared/form/FormInput";
 
 /* -------------------- Google button width helper -------------------- */
 const getGoogleButtonWidth = () => {
@@ -84,8 +84,8 @@ export default function LoginPage() {
         toast.warning("Please verify your email before logging in");
         navigate(
           `${AUTH_ROUTES.VERIFY_OTP}?email=${encodeURIComponent(
-            user.email
-          )}&reset=true`
+            user.email,
+          )}&reset=true`,
         );
         return;
       }
