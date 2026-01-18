@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -23,6 +24,8 @@ const categories = ["All"];
 
 /* ───────────────── PAGE ───────────────── */
 export default function ProductsPage() {
+  const navigate = useNavigate();
+
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
   const [page, setPage] = useState(1);
@@ -94,7 +97,11 @@ export default function ProductsPage() {
             </PopoverContent>
           </Popover>
 
-          <Button className="bg-primary text-white gap-2 rounded-full">
+          {/* ✅ ADD PRODUCT BUTTON */}
+          <Button
+            className="bg-primary text-white gap-2 rounded-full"
+            onClick={() => navigate("/vendor/products/new")}
+          >
             <Plus className="h-4 w-4" />
             Add Product
           </Button>

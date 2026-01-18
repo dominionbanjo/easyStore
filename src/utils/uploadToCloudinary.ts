@@ -58,3 +58,14 @@ export async function uploadToCloudinary(
     );
   }
 }
+
+const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
+export async function deleteFromCloudinary(public_id: string) {
+  if (!public_id) return;
+
+  await axios.delete(`${BASE_URL}/uploads/cloudinary`, {
+    data: { public_id },
+    withCredentials: true, // keep auth if needed
+  });
+}

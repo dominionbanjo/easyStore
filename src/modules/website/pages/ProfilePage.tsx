@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 import { format } from "date-fns";
 import { useGetUserProfileQuery, useLogoutMutation } from "@/services/userApi";
-import LoadingScreen from "@/Loading";
 import { useEffect, useState } from "react";
 import { EditProfileModal } from "../components/profile/EditProfileModal";
 import { LogoutConfirmModal } from "../components/home/LogoutModal";
@@ -46,7 +45,7 @@ export default function UserProfilePage() {
     }
   };
 
-  if (isLoading) return <LoadingScreen />;
+  if (isLoading) return <UserProfileSkeleton />;
 
   if (isError || !data?.data?.user) {
     return (
@@ -72,15 +71,15 @@ export default function UserProfilePage() {
 
       setCountryName(
         Country.getCountryByCode(user.address.country)?.name ??
-          user.address.country
+          user.address.country,
       );
 
       if (user.address.state) {
         setStateName(
           State.getStateByCodeAndCountry(
             user.address.state,
-            user.address.country
-          )?.name ?? user.address.state
+            user.address.country,
+          )?.name ?? user.address.state,
         );
       }
     }
@@ -263,5 +262,74 @@ function Detail({
       </p>
       <p className="font-medium">{value}</p>
     </div>
+  );
+}
+
+import { Skeleton } from "@/components/ui/skeleton";
+
+function UserProfileSkeleton() {
+  return (
+    <section className="py-4 px-4">
+      <div className="max-w-5xl mx-auto space-y-10">
+        {/* ================= HEADER ================= */}
+        <div className="flex flex-col sm:flex-row items-center gap-6 bg-card p-6 rounded-xl">
+          <Skeleton className="h-28 w-28 rounded-full" />
+
+          <div className="flex-1 space-y-2 text-center sm:text-left">
+            <Skeleton className="h-6 w-48 mx-auto sm:mx-0" />
+            <Skeleton className="h-4 w-32 mx-auto sm:mx-0" />
+            <Skeleton className="h-4 w-56 mx-auto sm:mx-0" />
+
+            <div className="flex gap-2 justify-center sm:justify-start mt-3">
+              <Skeleton className="h-6 w-24 rounded-full" />
+              <Skeleton className="h-6 w-32 rounded-full" />
+            </div>
+          </div>
+        </div>
+
+        {/* ================= ACCOUNT DETAILS ================= */}
+        <div className="bg-card p-6 rounded-xl space-y-4">
+          <Skeleton className="h-5 w-40" />
+          <Skeleton className="h-px w-full" />
+
+          <div className="grid sm:grid-cols-2 gap-6">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="space-y-1">
+                <Skeleton className="h-3 w-24" />
+                <Skeleton className="h-4 w-40" />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ================= RATINGS ================= */}
+        <div className="bg-card p-6 rounded-xl space-y-4">
+          <Skeleton className="h-5 w-40" />
+          <Skeleton className="h-px w-full" />
+
+          <div className="grid sm:grid-cols-3 gap-6">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="space-y-1">
+                <Skeleton className="h-3 w-24" />
+                <Skeleton className="h-4 w-20" />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ================= ADDRESS ================= */}
+        <div className="bg-card p-6 rounded-xl space-y-4">
+          <Skeleton className="h-5 w-32" />
+          <Skeleton className="h-px w-full" />
+          <Skeleton className="h-4 w-72" />
+        </div>
+
+        {/* ================= ACTIONS ================= */}
+        <div className="flex gap-4">
+          <Skeleton className="h-10 w-32 rounded-md" />
+          <Skeleton className="h-10 w-28 rounded-md" />
+        </div>
+      </div>
+    </section>
   );
 }

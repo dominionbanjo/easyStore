@@ -12,6 +12,7 @@ import type {
   GetSingleProductResponse,
   ISearchProductsResponse,
   IStoreProductsResponse,
+  CreateProductCloudinaryArgs,
 } from "@/types/product/productTypes";
 import { apiManager } from "./apiManager";
 
@@ -153,6 +154,19 @@ export const productApi = apiManager.injectEndpoints({
       }),
       invalidatesTags: ["Store"],
     }),
+
+    /* ───────── VENDOR: CREATE PRODUCT (CLOUDINARY) ───────── */
+    createProductWithCloudinary: builder.mutation<
+      { status: string; data: any },
+      CreateProductCloudinaryArgs
+    >({
+      query: (data) => ({
+        url: "vendor/products",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Store"],
+    }),
   }),
 });
 
@@ -171,4 +185,5 @@ export const {
   useUpdateProductMutation,
   useDeleteProductMutation,
   useGetMyStoreProductsQuery,
+  useCreateProductWithCloudinaryMutation,
 } = productApi;

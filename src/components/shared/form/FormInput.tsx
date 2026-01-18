@@ -33,7 +33,7 @@ export function FormInput({
           htmlFor={name}
           className={cn(
             "font-medium text-[15px]",
-            shouldShowError && "text-destructive"
+            shouldShowError && "text-destructive",
           )}
         >
           {label}
@@ -44,12 +44,23 @@ export function FormInput({
         id={name}
         type={type}
         placeholder={placeholder}
-        aria-invalid={!!shouldShowError}
-        {...register(name)}
+        aria-invalid={shouldShowError}
+        min={type === "number" ? 0 : undefined} // 🚫 no negatives via UI
+        {...register(name, {
+          // 🔑 Ensure numbers are numbers (not strings)
+          setValueAs:
+            type === "number"
+              ? (v) => {
+                  if (v === "" || v === null) return undefined;
+                  const n = Number(v);
+                  return Number.isNaN(n) ? undefined : Math.max(0, n);
+                }
+              : undefined,
+        })}
         className={cn(
-          "h-11 rounded-md text-[15px] px-3 py-2", // taller input
+          "h-11 rounded-md text-[15px] px-3 py-2",
           shouldShowError &&
-            "border-destructive ring-0 focus-visible:ring-destructive/30"
+            "border-destructive ring-0 focus-visible:ring-destructive/30",
         )}
       />
 

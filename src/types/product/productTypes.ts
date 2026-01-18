@@ -50,12 +50,19 @@ export interface IProductDetails extends IProduct {
   highlights?: string[] | null;
   specs?: Record<string, string> | null;
 
-  colors?: string[];
+  colors?: {
+    id: string;
+    name: string;
+    hex: string;
+  }[];
   sizes?: string[];
 
   shipping_note?: string | null;
   returns_note?: string | null;
-  location?: string | null;
+  // location?: string | null;
+  country: string;
+  state?: string | null;
+  city: string;
   shipping_cost?: number | null;
 
   rating_count?: number;
@@ -267,3 +274,42 @@ export interface IStoreProductsResponse {
     pagination: IPagination;
   };
 }
+
+// types/product/createProductCloudinary.ts
+
+export type CloudinaryAsset = {
+  url: string;
+  public_id: string;
+};
+
+export type CreateProductCloudinaryArgs = {
+  /* ───────── REQUIRED CORE ───────── */
+  category_id: string;
+  name: string;
+  price: number;
+  stock: number;
+
+  /* ───────── OPTIONAL DETAILS ───────── */
+  description?: string;
+  discount_price?: number;
+
+  /* ───────── PRODUCT META ───────── */
+  tags?: string[];
+  highlights?: string[];
+  sizes?: string[];
+  colors?: string[]; // color IDs only
+
+  /* ───────── SPECIFICATIONS ───────── */
+  specs?: Record<string, string>;
+
+  /* ───────── SHIPPING ───────── */
+  shipping_cost?: number;
+  shipping_note?: string;
+  returns_note?: string;
+  country?: string;
+  state?: string;
+  city?: string;
+  /* ───────── MEDIA ───────── */
+  image?: CloudinaryAsset | null;
+  gallery?: CloudinaryAsset[];
+};

@@ -3,6 +3,7 @@ import { lazy, Suspense } from "react";
 import ScrollToTop from "./utils/ScrollToTop";
 import AppLoader from "./components/shared/AppLoader";
 import AddProductPage from "./modules/vendor/pages/AddProductsPage";
+import ProductPreviewPage from "./modules/vendor/pages/ProductPreviewPage";
 
 /* ───────────────── LAYOUTS ───────────────── */
 
@@ -144,7 +145,6 @@ export default function App() {
             <Route path="orders" element={<OrdersPage />} />
             <Route path="orders/:id" element={<OrderDetailsPage />} />
             <Route path="about" element={<AboutPage />} />
-            <Route path="wishlist" element={<WishlistPage />} />
           </Route>
 
           {/* ─── ACCOUNT ─── */}
@@ -152,6 +152,7 @@ export default function App() {
             <Route path="profile" element={<UserProfilePage />} />
             <Route path="settings" element={<SettingsPage />} />
             <Route path="cart" element={<CartPage />} />
+            <Route path="wishlist" element={<WishlistPage />} />
           </Route>
 
           {/* ─── AUTH ─── */}
@@ -173,6 +174,7 @@ export default function App() {
             {/* Products */}
             <Route path="products" element={<ProductsPage />} />
             <Route path="products/new" element={<AddProductPage />} />
+            <Route path="products/preview" element={<ProductPreviewPage />} />
 
             <Route path="analytics" element={<AnalyticsPage />} />
             <Route path="settings" element={<VendorSettingsPage />} />
