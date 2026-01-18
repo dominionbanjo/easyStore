@@ -1,4 +1,3 @@
-// src/types/global.d.ts
 export {};
 
 declare global {
@@ -17,7 +16,7 @@ declare global {
               size?: "large" | "medium" | "small";
               shape?: "rectangular" | "pill" | "circle";
               width?: number | string;
-            }
+            },
           ) => void;
           prompt: () => void;
         };

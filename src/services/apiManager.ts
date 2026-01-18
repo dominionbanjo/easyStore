@@ -26,6 +26,14 @@ export const apiManager = createApi({
   refetchOnReconnect: true,
   refetchOnFocus: false,
 
-  tagTypes: ["Auth", "User", "Cart", "Wishlist", "Store", "Product"],
+  tagTypes: [
+    "Auth",
+    "User",
+    "Cart",
+    "Wishlist",
+    "Store",
+    "Product",
+    "Analytics",
+  ],
   endpoints: () => ({}),
 });

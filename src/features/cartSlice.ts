@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
-import type { ICartItem } from "@/services/cartApi";
+// import type { ICartItem } from "@/services/cartApi";
 import { cartApi } from "@/services/cartApi";
+import type { ICartItem } from "@/types/cart/cartTypes";
 
 /* ───────────────── STATE ───────────────── */
 
@@ -61,7 +62,7 @@ const cartSlice = createSlice({
         state.subtotal = payload.data.cart.subtotal;
         state.shipping = payload.data.cart.shipping;
         state.total = payload.data.cart.total;
-      }
+      },
     );
 
     builder.addMatcher(
@@ -69,7 +70,7 @@ const cartSlice = createSlice({
       (state, { error }) => {
         state.isLoading = false;
         state.error = error?.message ?? "Failed to fetch cart";
-      }
+      },
     );
 
     /* ───────── SHARED CART SYNC HANDLER ───────── */
@@ -85,7 +86,7 @@ const cartSlice = createSlice({
       cartApi.endpoints.addItemToCart.matchFulfilled,
       (state, { payload }) => {
         syncCart(state, payload);
-      }
+      },
     );
 
     /* ───────── UPDATE ITEM ───────── */
@@ -93,7 +94,7 @@ const cartSlice = createSlice({
       cartApi.endpoints.updateCartItem.matchFulfilled,
       (state, { payload }) => {
         syncCart(state, payload);
-      }
+      },
     );
 
     /* ───────── REMOVE ITEM ───────── */
@@ -101,7 +102,7 @@ const cartSlice = createSlice({
       cartApi.endpoints.removeCartItem.matchFulfilled,
       (state, { payload }) => {
         syncCart(state, payload);
-      }
+      },
     );
 
     /* ───────── CLEAR CART ───────── */
@@ -109,7 +110,7 @@ const cartSlice = createSlice({
       cartApi.endpoints.clearCart.matchFulfilled,
       (state, { payload }) => {
         syncCart(state, payload);
-      }
+      },
     );
   },
 });

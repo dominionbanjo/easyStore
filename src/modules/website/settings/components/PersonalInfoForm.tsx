@@ -1,7 +1,7 @@
 import { useForm, FormProvider } from "react-hook-form";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { FormInput } from "@/components/shared/FormInput"; // adjust import path as needed
+import { FormInput } from "@/components/shared/form/FormInput"; // adjust import path as needed
 
 interface PersonalInfoFormValues {
   first_name: string;

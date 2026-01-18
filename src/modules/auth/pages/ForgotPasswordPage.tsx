@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useForgotPasswordMutation } from "@/services/authApi";
-import { FormInput } from "@/components/shared/FormInput";
+import { FormInput } from "@/components/shared/form/FormInput";
 import { cn } from "@/lib/utils";
 import { AUTH_ROUTES } from "@/routes/temp";
 
@@ -99,7 +99,7 @@ export default function ForgotPasswordPage() {
                   disabled={isLoading}
                   className={cn(
                     "w-full rounded-full py-2 bg-[#17c06e] text-black hover:bg-[#17c06e]/90",
-                    isLoading && "opacity-70 cursor-not-allowed"
+                    isLoading && "opacity-70 cursor-not-allowed",
                   )}
                 >
                   {isLoading ? "Sending..." : "Send Reset Link"}

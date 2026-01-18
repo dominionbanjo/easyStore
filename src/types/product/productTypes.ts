@@ -50,12 +50,19 @@ export interface IProductDetails extends IProduct {
   highlights?: string[] | null;
   specs?: Record<string, string> | null;
 
-  colors?: string[];
+  colors?: {
+    id: string;
+    name: string;
+    hex: string;
+  }[];
   sizes?: string[];
 
   shipping_note?: string | null;
   returns_note?: string | null;
-  location?: string | null;
+  // location?: string | null;
+  country: string;
+  state?: string | null;
+  city: string;
   shipping_cost?: number | null;
 
   rating_count?: number;
@@ -209,3 +216,100 @@ export interface IPaginatedResponse<T> {
     pagination: IPagination;
   };
 }
+
+/* ───────────────── STORE PRODUCT (STORE LIST RESPONSE) ───────────────── */
+export interface IStoreProduct {
+  id: string;
+  vendor_id: string;
+  store_id: string;
+  category_id: string;
+
+  name: string;
+  slug: string;
+  description: string;
+
+  price: string;
+  discount_price: string | null;
+
+  stock: number;
+  tags: string[];
+
+  image: IProductImage | null;
+  gallery: IProductImage[];
+
+  highlights: string[] | null;
+  specs: Record<string, any> | null;
+
+  colors: string[] | null;
+  sizes: string[] | null;
+
+  shipping_note: string | null;
+  returns_note: string | null;
+  status?: "active" | "inactive";
+
+  country: string;
+  state: string;
+  city: string;
+  shipping_cost: string;
+
+  rating_average: string;
+  rating_count: number;
+  review_count: number;
+
+  total_sold: number;
+  featured: boolean;
+
+  category_ref: IProductCategoryRef;
+
+  created_at: string;
+  updated_at: string;
+}
+
+/* ───────────────── STORE PRODUCTS RESPONSE ───────────────── */
+export interface IStoreProductsResponse {
+  status: "success" | "error";
+  message: string;
+  data: {
+    items: IStoreProduct[];
+    pagination: IPagination;
+  };
+}
+
+// types/product/createProductCloudinary.ts
+
+export type CloudinaryAsset = {
+  url: string;
+  public_id: string;
+};
+
+export type CreateProductCloudinaryArgs = {
+  /* ───────── REQUIRED CORE ───────── */
+  category_id: string;
+  name: string;
+  price: number;
+  stock: number;
+
+  /* ───────── OPTIONAL DETAILS ───────── */
+  description?: string;
+  discount_price?: number;
+
+  /* ───────── PRODUCT META ───────── */
+  tags?: string[];
+  highlights?: string[];
+  sizes?: string[];
+  colors?: string[]; // color IDs only
+
+  /* ───────── SPECIFICATIONS ───────── */
+  specs?: Record<string, string>;
+
+  /* ───────── SHIPPING ───────── */
+  shipping_cost?: number;
+  shipping_note?: string;
+  returns_note?: string;
+  country?: string;
+  state?: string;
+  city?: string;
+  /* ───────── MEDIA ───────── */
+  image?: CloudinaryAsset | null;
+  gallery?: CloudinaryAsset[];
+};

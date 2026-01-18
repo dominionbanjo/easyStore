@@ -6,7 +6,19 @@ import { clearUser } from "@/features/userSlice";
 import { useLogoutMutation } from "@/services/authApi";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Menu, User, Search } from "lucide-react";
+import {
+  Menu,
+  User,
+  Search,
+  Home,
+  Store,
+  Layers,
+  Info,
+  LogOut,
+  ShoppingBag,
+  Heart,
+  User as UserIcon,
+} from "lucide-react";
 import {
   Popover,
   PopoverTrigger,
@@ -107,25 +119,37 @@ export default function Header() {
               <SheetContent side="left" className="w-64 p-6 bg-white">
                 <nav className="space-y-4 text-base font-medium">
                   {[
-                    { name: "Home", path: WEBSITE_ROUTES.HOME },
-                    { name: "Stores", path: WEBSITE_ROUTES.STORES },
-                    { name: "Categories", path: WEBSITE_ROUTES.CATEGORIES },
-                    { name: "About", path: WEBSITE_ROUTES.ABOUT },
-                  ].map((item) => (
-                    <Link
-                      key={item.path}
-                      to={item.path}
-                      onClick={() => setMenuOpen(false)}
-                      className={cn(
-                        location.pathname === item.path
-                          ? "text-primary font-semibold"
-                          : "text-neutral-800 hover:text-primary",
-                        "transition-all duration-200 hover:scale-[1.04] block"
-                      )}
-                    >
-                      {item.name}
-                    </Link>
-                  ))}
+                    { name: "Home", path: WEBSITE_ROUTES.HOME, icon: Home },
+                    {
+                      name: "Stores",
+                      path: WEBSITE_ROUTES.STORES,
+                      icon: Store,
+                    },
+                    {
+                      name: "Categories",
+                      path: WEBSITE_ROUTES.CATEGORIES,
+                      icon: Layers,
+                    },
+                    { name: "About", path: WEBSITE_ROUTES.ABOUT, icon: Info },
+                  ].map((item) => {
+                    const Icon = item.icon;
+                    return (
+                      <Link
+                        key={item.path}
+                        to={item.path}
+                        onClick={() => setMenuOpen(false)}
+                        className={cn(
+                          "flex items-center gap-3 transition-all duration-200",
+                          location.pathname === item.path
+                            ? "text-primary font-semibold"
+                            : "text-neutral-800 hover:text-primary"
+                        )}
+                      >
+                        <Icon className="h-4 w-4" />
+                        {item.name}
+                      </Link>
+                    );
+                  })}
 
                   <div className="border-t my-3" />
 
@@ -135,28 +159,12 @@ export default function Header() {
                         handleLogout();
                         setMenuOpen(false);
                       }}
-                      className="text-red-600 py-2 text-left w-full"
+                      className="flex items-center gap-3 text-red-600 py-2 w-full"
                     >
+                      <LogOut className="h-4 w-4" />
                       Logout
                     </button>
-                  ) : (
-                    <>
-                      <Link
-                        to={AUTH_ROUTES.LOGIN}
-                        onClick={() => setMenuOpen(false)}
-                        className="block py-2"
-                      >
-                        Sign In
-                      </Link>
-                      <Link
-                        to={AUTH_ROUTES.SIGNUP}
-                        onClick={() => setMenuOpen(false)}
-                        className="block py-2 text-primary"
-                      >
-                        Sign Up
-                      </Link>
-                    </>
-                  )}
+                  ) : null}
                 </nav>
               </SheetContent>
             </Sheet>
@@ -265,41 +273,64 @@ export default function Header() {
                       {user.email}
                     </p>
                   </div>
+
+                  {/* 🔹 CONDITIONAL DASHBOARD LINK (ADD ABOVE PROFILE) */}
+                  {(user.account_type === "vendor" ||
+                    user.account_type === "admin") && (
+                    <Link
+                      to={user.account_type === "vendor" ? "/vendor" : "/admin"}
+                      onClick={() => setProfileOpen(false)}
+                      className="flex items-center gap-3 px-2 py-1.5 text-sm hover:bg-gray-100 rounded"
+                    >
+                      <Layers className="h-4 w-4" />
+                      Go to Dashboard
+                    </Link>
+                  )}
+
                   <Link
                     to={USER_ROUTES.PROFILE}
                     onClick={() => setProfileOpen(false)}
-                    className="block px-2 py-1.5 text-sm hover:bg-gray-100 rounded"
+                    className="flex items-center gap-3 px-2 py-1.5 text-sm hover:bg-gray-100 rounded"
                   >
+                    <UserIcon className="h-4 w-4" />
                     Profile
                   </Link>
+
                   <Link
                     to={USER_ROUTES.ORDERS}
                     onClick={() => setProfileOpen(false)}
-                    className="block px-2 py-1.5 text-sm hover:bg-gray-100 rounded"
+                    className="flex items-center gap-3 px-2 py-1.5 text-sm hover:bg-gray-100 rounded"
                   >
+                    <ShoppingBag className="h-4 w-4" />
                     Orders
                   </Link>
+
                   <Link
                     to={USER_ROUTES.CART}
                     onClick={() => setProfileOpen(false)}
-                    className="block px-2 py-1.5 text-sm hover:bg-gray-100 rounded"
+                    className="flex items-center gap-3 px-2 py-1.5 text-sm hover:bg-gray-100 rounded"
                   >
+                    <ShoppingBag className="h-4 w-4" />
                     Cart
                   </Link>
+
                   <Link
                     to={USER_ROUTES.WISHLIST}
                     onClick={() => setProfileOpen(false)}
-                    className="block px-2 py-1.5 text-sm hover:bg-gray-100 rounded"
+                    className="flex items-center gap-3 px-2 py-1.5 text-sm hover:bg-gray-100 rounded"
                   >
+                    <Heart className="h-4 w-4" />
                     Wishlist
                   </Link>
+
                   <button
                     onClick={() => {
                       handleLogout();
                       setProfileOpen(false);
                     }}
-                    className="w-full text-left px-2 py-1.5 text-sm text-red-600 hover:bg-red-50 rounded"
+                    className="flex items-center gap-3 w-full text-left px-2 py-1.5 text-sm text-red-600 hover:bg-red-50 rounded"
                   >
+                    <LogOut className="h-4 w-4" />
                     Logout
                   </button>
                 </div>

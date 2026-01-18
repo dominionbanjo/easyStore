@@ -2,7 +2,7 @@ import { useForm, FormProvider } from "react-hook-form";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Lock } from "lucide-react";
-import { FormInput } from "@/components/shared/FormInput"; // adjust path as needed
+import { FormInput } from "@/components/shared/form/FormInput"; // adjust path as needed
 
 interface SecuritySettingsValues {
   current_password: string;

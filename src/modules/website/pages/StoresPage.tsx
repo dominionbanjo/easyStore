@@ -5,7 +5,7 @@ import { useSearchParams } from "react-router-dom";
 import { FormProvider, useForm } from "react-hook-form";
 
 import StoreCard from "@/components/shared/StoreCard";
-import { FormInput } from "@/components/shared/FormInput";
+import { FormInput } from "@/components/shared/form/FormInput";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import { useGetStoresQuery, useSearchStoresQuery } from "@/services/storeApi";
@@ -57,7 +57,7 @@ export default function StoresPage() {
       page,
       limit: 20,
     }),
-    [page]
+    [page],
   );
 
   const searchArgs = useMemo(
@@ -66,7 +66,7 @@ export default function StoresPage() {
       page,
       limit: 20,
     }),
-    [search, page]
+    [search, page],
   );
 
   /* ───────────────── API CALLS ───────────────── */
