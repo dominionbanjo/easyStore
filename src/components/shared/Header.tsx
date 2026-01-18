@@ -40,12 +40,12 @@ export default function Header() {
   const [profileOpen, setProfileOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
-  const [logout] = useLogoutMutation();
+  const [logoutUser] = useLogoutMutation();
   const [query, setQuery] = useState("");
 
   const user = useSelector((state: RootState) => state.user.currentUser);
   const isAuthenticated = useSelector(
-    (state: RootState) => state.user.isAuthenticated
+    (state: RootState) => state.user.isAuthenticated,
   );
 
   useEffect(() => {
@@ -61,9 +61,13 @@ export default function Header() {
   }, [isScrolled]);
 
   const handleLogout = async () => {
-    await logout();
-    dispatch(clearUser());
-    toast.success("Logged out successfully");
+    try {
+      await logoutUser().unwrap();
+      dispatch(clearUser());
+      toast.success("Logged out successfully");
+    } catch {
+      toast.error("Failed to log out");
+    }
   };
 
   const navigate = useNavigate();
@@ -90,7 +94,7 @@ export default function Header() {
   return (
     <header
       className={cn(
-        "fixed top-0 z-50 w-full transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
+        "fixed top-0 z-50 w-full transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
       )}
     >
       <nav
@@ -100,7 +104,7 @@ export default function Header() {
           "will-change-[transform,background-color,border-color,box-shadow]",
           isScrolled
             ? "max-w-[100%] sm:max-w-[95%] bg-white/80 rounded-none sm:rounded-xl shadow-md sm:top-3 border border-border/20"
-            : "max-w-[100%] bg-white/30 sm:top-3 border border-transparent"
+            : "max-w-[100%] bg-white/30 sm:top-3 border border-transparent",
         )}
       >
         {/* ---------- LEFT: Logo + Desktop Nav ---------- */}
@@ -142,7 +146,7 @@ export default function Header() {
                           "flex items-center gap-3 transition-all duration-200",
                           location.pathname === item.path
                             ? "text-primary font-semibold"
-                            : "text-neutral-800 hover:text-primary"
+                            : "text-neutral-800 hover:text-primary",
                         )}
                       >
                         <Icon className="h-4 w-4" />
@@ -153,7 +157,10 @@ export default function Header() {
 
                   <div className="border-t my-3" />
 
+                  <div className="border-t my-3" />
+
                   {isAuthenticated ? (
+                    /* ===== LOGGED IN ===== */
                     <button
                       onClick={() => {
                         handleLogout();
@@ -164,7 +171,28 @@ export default function Header() {
                       <LogOut className="h-4 w-4" />
                       Logout
                     </button>
-                  ) : null}
+                  ) : (
+                    /* ===== LOGGED OUT ===== */
+                    <div className="space-y-2">
+                      <Link
+                        to={AUTH_ROUTES.LOGIN}
+                        onClick={() => setMenuOpen(false)}
+                        className="flex items-center gap-3 py-2 text-neutral-800 hover:text-primary"
+                      >
+                        <UserIcon className="h-4 w-4" />
+                        Sign In
+                      </Link>
+
+                      <Link
+                        to={AUTH_ROUTES.SIGNUP}
+                        onClick={() => setMenuOpen(false)}
+                        className="flex items-center gap-3 py-2 text-neutral-800 hover:text-primary"
+                      >
+                        <Store className="h-4 w-4" />
+                        Create Account
+                      </Link>
+                    </div>
+                  )}
                 </nav>
               </SheetContent>
             </Sheet>
@@ -198,7 +226,7 @@ export default function Header() {
                   "transition-colors duration-200 relative inline-block group",
                   location.pathname === item.path
                     ? "text-primary font-semibold"
-                    : "text-neutral-800 hover:text-primary"
+                    : "text-neutral-800 hover:text-primary",
                 )}
               >
                 <FancyHoverText text={item.name} />
