@@ -119,7 +119,7 @@ export default function HeroSection() {
             <div className="relative w-full max-w-lg aspect-[5/3] rounded-3xl overflow-hidden shadow-lg border border-border/20 lg:max-w-xl xl:max-w-2xl bg-transparent transition-all duration-500 ease-in-out">
               <video
                 className="w-full h-full object-cover"
-                src="/videos/campaign0.mp4"
+                src="/videos/campaign5.mp4"
                 poster="/vid/video-poster.jpg"
                 autoPlay
                 muted
