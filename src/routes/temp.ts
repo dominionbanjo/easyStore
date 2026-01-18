@@ -21,7 +21,7 @@ export enum USER_ROUTES {
   SHOP = "/shop",
   CATEGORIES = "/categories",
   PRODUCT_DETAIL = "/product",
-  WISHLIST = "/wishlist",
+  WISHLIST = "/account/wishlist",
   ORDERS = "/orders",
   ORDER_DETAILS = "/orders/:id",
   PROFILE = "/account/profile",
