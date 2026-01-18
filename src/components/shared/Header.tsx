@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import type { RootState } from "@/store";
-import { clearUser } from "@/features/userSlice";
 import { useLogoutMutation } from "@/services/authApi";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -34,7 +33,6 @@ import { motion } from "framer-motion";
 import FancyHoverText from "./FancyTextHover";
 
 export default function Header() {
-  const dispatch = useDispatch();
   const [searchOpen, setSearchOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
@@ -63,7 +61,6 @@ export default function Header() {
   const handleLogout = async () => {
     try {
       await logoutUser().unwrap();
-      dispatch(clearUser());
       toast.success("Logged out successfully");
     } catch {
       toast.error("Failed to log out");
