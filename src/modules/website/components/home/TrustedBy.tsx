@@ -1,19 +1,19 @@
-interface Brand {
-  name: string;
-  img: string;
-}
+// interface Brand {
+//   name: string;
+//   img: string;
+// }
 
 export default function FeaturedBrands() {
-  const brands: Brand[] = [
-    { name: "Urban Threads", img: "/logos/company/fb.png" },
-    { name: "Luxe Essentials", img: "/logos/company/ig.png" },
-    { name: "FreshMart", img: "/logos/company/TKTK.png" },
-    { name: "Glow Beauty", img: "/logos/company/re.png" },
-    { name: "Style Hub", img: "/logos/company/ty.png" },
-    { name: "Nova Wear", img: "/logos/company/ui.png" },
-    { name: "Prime Picks", img: "/logos/company/qw.png" },
-    { name: "Everyday Store", img: "/logos/company/yu.png" },
-  ];
+  // const brands: Brand[] = [
+  //   { name: "Urban Threads", img: "/logos/company/fb.png" },
+  //   { name: "Luxe Essentials", img: "/logos/company/ig.png" },
+  //   { name: "FreshMart", img: "/logos/company/TKTK.png" },
+  //   { name: "Glow Beauty", img: "/logos/company/re.png" },
+  //   { name: "Style Hub", img: "/logos/company/ty.png" },
+  //   { name: "Nova Wear", img: "/logos/company/ui.png" },
+  //   { name: "Prime Picks", img: "/logos/company/qw.png" },
+  //   { name: "Everyday Store", img: "/logos/company/yu.png" },
+  // ];
 
   return (
     <section className="py-12 mt-5 bg-gradient-to-r from-[#17c06e] via-[#5ed49c] to-[#17c06e] border w-full rounded-xl">
@@ -31,7 +31,7 @@ export default function FeaturedBrands() {
           </p>
 
           {/* Brand Logos */}
-          <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12">
+          {/* <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12">
             {brands.map((brand) => (
               <div
                 key={brand.name}
@@ -50,7 +50,7 @@ export default function FeaturedBrands() {
                 />
               </div>
             ))}
-          </div>
+          </div> */}
         </div>
       </div>
     </section>
