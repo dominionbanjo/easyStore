@@ -13,7 +13,7 @@ import { NavLink } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
 const menuItems = [
-  { label: "Dashboard", icon: LayoutDashboard, to: "/vendor" },
+  { label: "Dashboard", icon: LayoutDashboard, to: "/vendor", exact: true },
   { label: "Products", icon: Package, to: "/vendor/products" },
   { label: "Orders", icon: ShoppingCart, to: "/vendor/orders" },
   { label: "Customers", icon: Users, to: "/vendor/customers" },
@@ -33,31 +33,29 @@ export default function DashboardSidebar({
 }: DashboardSidebarProps) {
   return (
     <>
-      {/* ─── Desktop Sidebar (always open from md↑) ─── */}
+      {/* ─── Desktop Sidebar ─── */}
       <aside
         className={cn(
           "hidden md:flex flex-col border-r border-border/30 bg-card text-card-foreground",
-          "fixed top-0 left-0 h-screen w-[260px] z-30"
+          "fixed top-0 left-0 h-screen w-[260px] z-30",
         )}
       >
-        <div className="flex items-center justify-between px-4 py-5 border-b border-border/20">
-          <div className="flex items-center gap-2">
-            <Store className="h-6 w-6 text-primary" />
-            <span className="font-semibold text-lg">My Store</span>
-          </div>
+        <div className="flex items-center gap-2 px-4 py-5 border-b border-border/20">
+          <Store className="h-6 w-6 text-primary" />
+          <span className="font-semibold text-lg">My Store</span>
         </div>
 
         <nav className="flex flex-col gap-1 px-2 mt-4">
-          {menuItems.map(({ label, icon: Icon, to }) => (
+          {menuItems.map(({ label, icon: Icon, to, exact }) => (
             <NavLink
               key={label}
               to={to}
-              end
+              end={exact}
               className={({ isActive }) =>
                 cn(
                   "flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors",
                   "text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                  isActive && "bg-muted text-foreground font-medium"
+                  isActive && "bg-muted text-foreground font-medium",
                 )
               }
             >
@@ -68,7 +66,7 @@ export default function DashboardSidebar({
         </nav>
       </aside>
 
-      {/* ─── Mobile Sidebar (slides in on click) ─── */}
+      {/* ─── Mobile Sidebar ─── */}
       <AnimatePresence>
         {open && (
           <>
@@ -81,36 +79,35 @@ export default function DashboardSidebar({
               onClick={onToggle}
               className="fixed inset-0 bg-black/70 z-40 md:hidden"
             />
-            {/* Sidebar Drawer */}
+
+            {/* Drawer */}
             <motion.aside
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "tween", duration: 0.3 }}
               className={cn(
+                "fixed left-0 top-0 h-screen w-[260px] z-50 md:hidden",
                 "flex flex-col border-r border-border/30 bg-card text-card-foreground",
-                "fixed left-0 top-0 h-screen w-[260px] z-50 md:hidden"
               )}
             >
-              <div className="flex items-center justify-between px-4 py-5 border-b border-border/20">
-                <div className="flex items-center gap-2">
-                  <Store className="h-6 w-6 text-primary" />
-                  <span className="font-semibold text-lg">My Store</span>
-                </div>
+              <div className="flex items-center gap-2 px-4 py-5 border-b border-border/20">
+                <Store className="h-6 w-6 text-primary" />
+                <span className="font-semibold text-lg">My Store</span>
               </div>
 
               <nav className="flex flex-col gap-1 px-2 mt-4">
-                {menuItems.map(({ label, icon: Icon, to }) => (
+                {menuItems.map(({ label, icon: Icon, to, exact }) => (
                   <NavLink
                     key={label}
                     to={to}
-                    end
+                    end={exact}
                     onClick={onToggle}
                     className={({ isActive }) =>
                       cn(
                         "flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors",
                         "text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "bg-muted text-foreground font-medium"
+                        isActive && "bg-muted text-foreground font-medium",
                       )
                     }
                   >

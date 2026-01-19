@@ -7,6 +7,7 @@ import ProductInfoSidebar from "@/modules/website/components/products/ProductInf
 import ProductDetailsTabs from "@/modules/website/components/products/ProductDetailsTabs";
 import ReviewsSection from "@/modules/website/components/products/ReviewsSection";
 import RelatedProductsGrid from "@/modules/website/components/products/RelatedProductsGrid";
+import { formatLocation } from "@/utils/location";
 
 import { useGetSingleProductQuery } from "@/services/productApi";
 
@@ -15,82 +16,80 @@ export default function ProductDetailsPage() {
   return <ProductDetailsInner key={slug} id={slug!} />;
 }
 
-/* ───────────────── INNER (KEYED) ───────────────── */
+/* ───────────────── INNER ───────────────── */
 
 function ProductDetailsInner({ id }: { id: string }) {
   const { data, isLoading, isError } = useGetSingleProductQuery(id, {
     skip: !id,
   });
 
-  /* ───────────────── SKELETON LOADER ───────────────── */
+  /* ───────── LOADING ───────── */
 
   if (isLoading) {
     return (
-      <section className="max-w-[1480px] mx-auto px-4 py-14 space-y-16">
+      <section className="max-w-[1480px] mx-auto px-4 py-10 space-y-12">
         {/* Gallery + Sidebar */}
-        <div className="grid md:grid-cols-[1.2fr_1fr] gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-[1.2fr_1fr] gap-8">
           {/* Gallery */}
           <div className="space-y-4">
-            <Skeleton className="h-[420px] rounded-2xl" />
-            <div className="flex gap-3">
+            {/* Main image */}
+            <Skeleton className="w-full aspect-square md:aspect-[4/5] rounded-2xl" />
+
+            {/* Thumbnails */}
+            <div className="flex gap-3 overflow-x-auto">
               {Array.from({ length: 4 }).map((_, i) => (
-                <Skeleton key={i} className="h-20 w-20 rounded-xl" />
+                <Skeleton key={i} className="h-20 w-20 shrink-0 rounded-xl" />
               ))}
             </div>
           </div>
 
-          {/* Sidebar */}
-          <div className="space-y-6">
-            <Skeleton className="h-8 w-3/4" />
-            <Skeleton className="h-6 w-1/3" />
-            <Skeleton className="h-10 w-1/2" />
+          {/* Info sidebar */}
+          <div className="space-y-5">
+            <Skeleton className="h-7 w-4/5" />
+            <Skeleton className="h-5 w-2/5" />
 
-            <div className="space-y-3">
+            <Skeleton className="h-8 w-1/3" />
+
+            {/* Price / CTA */}
+            <Skeleton className="h-12 w-full rounded-xl" />
+
+            {/* Meta rows */}
+            <div className="space-y-3 pt-2">
+              <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="h-4 w-2/3" />
+              <Skeleton className="h-4 w-1/2" />
+            </div>
+          </div>
+        </div>
+
+        <Separator />
+
+        {/* Tabs skeleton */}
+        <div className="space-y-4">
+          <Skeleton className="h-6 w-40" />
+          <Skeleton className="h-4 w-full" />
+          <Skeleton className="h-4 w-11/12" />
+          <Skeleton className="h-4 w-10/12" />
+        </div>
+
+        <Separator />
+
+        {/* Reviews skeleton */}
+        <div className="space-y-4">
+          <Skeleton className="h-6 w-48" />
+          {Array.from({ length: 2 }).map((_, i) => (
+            <div key={i} className="space-y-2">
+              <Skeleton className="h-4 w-32" />
               <Skeleton className="h-4 w-full" />
               <Skeleton className="h-4 w-5/6" />
-              <Skeleton className="h-4 w-4/6" />
             </div>
-
-            <Skeleton className="h-12 w-full rounded-xl" />
-          </div>
-        </div>
-
-        <Separator />
-
-        {/* Tabs */}
-        <div className="space-y-6">
-          <div className="flex gap-4">
-            {Array.from({ length: 3 }).map((_, i) => (
-              <Skeleton key={i} className="h-10 w-28 rounded-full" />
-            ))}
-          </div>
-          <Skeleton className="h-40 w-full rounded-2xl" />
-        </div>
-
-        <Separator />
-
-        {/* Reviews */}
-        <div className="space-y-6">
-          <Skeleton className="h-8 w-1/4" />
-          {Array.from({ length: 3 }).map((_, i) => (
-            <Skeleton key={i} className="h-24 w-full rounded-xl" />
           ))}
-        </div>
-
-        {/* Related products */}
-        <div className="space-y-6">
-          <Skeleton className="h-8 w-1/3" />
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <Skeleton key={i} className="h-[280px] rounded-2xl" />
-            ))}
-          </div>
         </div>
       </section>
     );
   }
 
-  /* ───────────────── ERROR ───────────────── */
+  /* ───────── ERROR ───────── */
 
   if (isError || !data?.data?.product) {
     return (
@@ -102,14 +101,23 @@ function ProductDetailsInner({ id }: { id: string }) {
 
   const { product, store, reviews, related_products } = data.data;
 
-  /* ───────────────── ADAPT BACKEND → UI ───────────────── */
+  /* ───────── IMAGE NORMALIZATION (FIXED) ───────── */
 
-  const images = [
-    ...(product.gallery?.map((g) => g.url) ?? []),
-    ...(product.image
-      ? [typeof product.image === "string" ? product.image : product.image.url]
-      : []),
-  ];
+  const primaryImage =
+    typeof product.image === "string"
+      ? product.image
+      : (product.image?.url ?? null);
+
+  const galleryImages =
+    product.gallery
+      ?.map((g) => g.url)
+      .filter((url) => url && url !== primaryImage) ?? [];
+
+  const images = primaryImage
+    ? [primaryImage, ...galleryImages]
+    : galleryImages;
+
+  /* ───────── UI ADAPTER ───────── */
 
   const uiProduct = {
     id: product.id,
@@ -119,28 +127,43 @@ function ProductDetailsInner({ id }: { id: string }) {
     category: product.category_ref?.name ?? "",
     rating: Number(product.rating_average ?? 0),
     stock: product.stock,
-    images,
+
+    image: primaryImage, // ✅ used by wishlist
+    images, // ✅ used by gallery
+
     description: product.description ?? "",
     highlights: product.highlights ?? [],
     specs: product.specs ?? {},
+
     shipping: {
       delivery: product.shipping_note ?? "",
       returns: product.returns_note ?? "",
-      location: product.location ?? "",
+      location: formatLocation({
+        city: product.city,
+        state: product.state,
+        country: product.country,
+      }),
       shippingCost: product.shipping_cost
-        ? `₦${product.shipping_cost.toLocaleString()}`
+        ? `₦${Number(product.shipping_cost).toLocaleString()}`
         : "Calculated at checkout",
     },
+
     sizes: product.sizes ?? [],
-    colors: product.colors ?? [],
+    colors:
+      product.colors?.map((c) => ({
+        id: c.id,
+        name: c.name,
+        hex: c.hex,
+      })) ?? [],
+
     is_in_wishlist: product.is_in_wishlist,
   };
 
-  /* ───────────────── RENDER ───────────────── */
+  /* ───────── RENDER ───────── */
 
   return (
     <section className="max-w-[1480px] mx-auto px-4 py-14 space-y-16">
-      {/* Gallery + Info */}
+      {/* Gallery + Sidebar */}
       <div className="grid md:grid-cols-[1.2fr_1fr] gap-10">
         <ProductGallery images={uiProduct.images} />
         <ProductInfoSidebar product={uiProduct} />
@@ -148,7 +171,7 @@ function ProductDetailsInner({ id }: { id: string }) {
 
       <Separator />
 
-      {/* Tabs */}
+      {/* Details */}
       <ProductDetailsTabs product={uiProduct} />
 
       <Separator />

@@ -7,8 +7,8 @@ import { User } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { FormInput } from "@/components/shared/FormInput";
-import { FormSelect } from "@/components/shared/FormSelect";
+import { FormInput } from "@/components/shared/form/FormInput";
+import { FormSelect } from "@/components/shared/form/FormSelect";
 
 import { useUpdateUserProfileMutation } from "@/services/userApi";
 import {
@@ -40,7 +40,7 @@ export function EditProfileModal({
   const [updateProfile, { isLoading }] = useUpdateUserProfileMutation();
 
   const [avatarPreview, setAvatarPreview] = useState<string | null>(
-    user?.avatar ?? null
+    user?.avatar ?? null,
   );
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
@@ -83,7 +83,7 @@ export function EditProfileModal({
         Country.getAllCountries().map((c) => ({
           label: c.name,
           value: c.isoCode,
-        }))
+        })),
       );
     })();
   }, [open]);
@@ -103,7 +103,7 @@ export function EditProfileModal({
         State.getStatesOfCountry(countryCode).map((s) => ({
           label: s.name,
           value: s.isoCode,
-        }))
+        })),
       );
     })();
 
@@ -125,7 +125,7 @@ export function EditProfileModal({
         City.getCitiesOfState(countryCode, stateCode).map((c) => ({
           label: c.name,
           value: c.name,
-        }))
+        })),
       );
     })();
 

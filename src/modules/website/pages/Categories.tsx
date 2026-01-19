@@ -8,7 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
-import { useGetCategoriesQuery } from "@/services/categoryApi";
+import { useGetCategoriesQuery } from "@/services/productDetailsApi";
 import { USER_ROUTES } from "@/routes/temp";
 
 /* ───────────────── COMPONENT ───────────────── */
@@ -38,7 +38,7 @@ export default function CategoriesPage() {
         const parentMatch = parent.name.toLowerCase().includes(q);
 
         const children = parent.children.filter((child) =>
-          child.name.toLowerCase().includes(q)
+          child.name.toLowerCase().includes(q),
         );
 
         if (parentMatch || children.length > 0) {

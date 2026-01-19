@@ -11,16 +11,15 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { format } from "date-fns";
-import { useGetUserProfileQuery, useLogoutMutation } from "@/services/userApi";
-import LoadingScreen from "@/Loading";
+import { useGetUserProfileQuery } from "@/services/userApi";
 import { useEffect, useState } from "react";
 import { EditProfileModal } from "../components/profile/EditProfileModal";
 import { LogoutConfirmModal } from "../components/home/LogoutModal";
 import { toast } from "sonner";
+import { useLogoutMutation } from "@/services/authApi";
+import { Skeleton } from "@/components/ui/skeleton";
 
 /* ───────────────── LAZY CSC IMPORT ───────────────── */
-
-// cached promise → imported once
 const importCSC = () => import("country-state-city");
 
 /* ───────────────── COMPONENT ───────────────── */
@@ -33,9 +32,10 @@ export default function UserProfilePage() {
 
   const [logoutUser, { isLoading: isLoggingOut }] = useLogoutMutation();
 
-  /* ── resolved names (lazy) ── */
-  const [countryName, setCountryName] = useState<string>("—");
-  const [stateName, setStateName] = useState<string>("—");
+  const [countryName, setCountryName] = useState("—");
+  const [stateName, setStateName] = useState("—");
+
+  const user = data?.data?.user;
 
   const handleLogout = async () => {
     try {
@@ -46,42 +46,34 @@ export default function UserProfilePage() {
     }
   };
 
-  if (isLoading) return <LoadingScreen />;
-
-  if (isError || !data?.data?.user) {
-    return (
-      <section className="py-20 text-center text-destructive">
-        Failed to load profile.
-      </section>
-    );
-  }
-
-  const user = data.data.user;
-
-  /* ───────────────── RESOLVE COUNTRY / STATE (LAZY) ───────────────── */
-
+  /* ───────────────── RESOLVE COUNTRY / STATE (ALWAYS CALLED) ───────────────── */
   useEffect(() => {
     let cancelled = false;
 
     async function resolveLocation() {
-      if (!user.address?.country) return;
+      if (!user?.address?.country) {
+        setCountryName("—");
+        setStateName("—");
+        return;
+      }
 
       const { Country, State } = await importCSC();
-
       if (cancelled) return;
 
       setCountryName(
         Country.getCountryByCode(user.address.country)?.name ??
-          user.address.country
+          user.address.country,
       );
 
       if (user.address.state) {
         setStateName(
           State.getStateByCodeAndCountry(
             user.address.state,
-            user.address.country
-          )?.name ?? user.address.state
+            user.address.country,
+          )?.name ?? user.address.state,
         );
+      } else {
+        setStateName("—");
       }
     }
 
@@ -90,7 +82,25 @@ export default function UserProfilePage() {
     return () => {
       cancelled = true;
     };
-  }, [user.address?.country, user.address?.state]);
+  }, [user?.address?.country, user?.address?.state]);
+
+  /* ───────────────── SAFE EARLY RETURNS ───────────────── */
+
+  if (isLoading) {
+    return <UserProfileSkeleton />;
+  }
+
+  if (isError) {
+    return (
+      <section className="py-20 text-center text-destructive">
+        Failed to load profile.
+      </section>
+    );
+  }
+
+  if (!user) {
+    return <UserProfileSkeleton />;
+  }
 
   /* ───────────────── RENDER ───────────────── */
 
@@ -104,7 +114,6 @@ export default function UserProfilePage() {
             animate={{ opacity: 1, y: 0 }}
             className="flex flex-col sm:flex-row items-center gap-6 bg-card p-6 rounded-xl shadow-sm"
           >
-            {/* Avatar */}
             <div className="h-28 w-28 rounded-full overflow-hidden border bg-muted flex items-center justify-center">
               {user.avatar ? (
                 <img
@@ -117,7 +126,6 @@ export default function UserProfilePage() {
               )}
             </div>
 
-            {/* Identity */}
             <div className="text-center sm:text-left space-y-1">
               <h1 className="text-2xl font-semibold">
                 {user.first_name ?? "—"} {user.last_name ?? ""}
@@ -167,14 +175,11 @@ export default function UserProfilePage() {
                 label="Phone"
                 value={user.phone_number || "—"}
               />
-
               <Detail label="Country" value={countryName} />
-
               <Detail
                 label="Joined"
                 value={format(new Date(user.created_at), "PPP")}
               />
-
               {user.updated_at && (
                 <Detail
                   label="Last Updated"
@@ -208,7 +213,6 @@ export default function UserProfilePage() {
                 Address
               </h2>
               <Separator />
-
               <p className="text-sm font-medium">
                 {user.address.city}, {stateName}, {countryName}
               </p>
@@ -220,7 +224,6 @@ export default function UserProfilePage() {
             <Button variant="outline" onClick={() => setEditOpen(true)}>
               Edit Profile
             </Button>
-
             <Button variant="destructive" onClick={() => setLogoutOpen(true)}>
               Logout
             </Button>
@@ -263,5 +266,24 @@ function Detail({
       </p>
       <p className="font-medium">{value}</p>
     </div>
+  );
+}
+
+/* ================= SKELETON ================= */
+
+function UserProfileSkeleton() {
+  return (
+    <section className="py-4 px-4">
+      <div className="max-w-5xl mx-auto space-y-10">
+        <div className="flex flex-col sm:flex-row items-center gap-6 bg-card p-6 rounded-xl">
+          <Skeleton className="h-28 w-28 rounded-full" />
+          <div className="flex-1 space-y-2">
+            <Skeleton className="h-6 w-48" />
+            <Skeleton className="h-4 w-32" />
+            <Skeleton className="h-4 w-56" />
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }

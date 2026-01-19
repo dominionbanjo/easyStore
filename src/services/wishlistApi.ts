@@ -31,7 +31,7 @@ export const wishlistApi = apiManager.injectEndpoints({
         method: "POST",
         body,
       }),
-      invalidatesTags: ["Wishlist"],
+      invalidatesTags: ["Wishlist", "Product"],
     }),
 
     /* ───────── REMOVE FROM WISHLIST ───────── */
@@ -44,7 +44,7 @@ export const wishlistApi = apiManager.injectEndpoints({
         url: `wishlist/${productId}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Wishlist"],
+      invalidatesTags: ["Wishlist", "Product"],
     }),
 
     /* ───────── CLEAR WISHLIST ───────── */

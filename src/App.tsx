@@ -2,25 +2,27 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import ScrollToTop from "./utils/ScrollToTop";
 import AppLoader from "./components/shared/AppLoader";
+import AddProductPage from "./modules/vendor/pages/AddProductsPage";
+import ProductPreviewPage from "./modules/vendor/pages/ProductPreviewPage";
 
 /* ───────────────── LAYOUTS ───────────────── */
 
 // Website
 const HomepageLayout = lazy(
-  () => import("./modules/website/layout/HomePageLayout")
+  () => import("./modules/website/layout/HomePageLayout"),
 );
 const AccountsLayout = lazy(
-  () => import("./modules/website/layout/AccountsLayout")
+  () => import("./modules/website/layout/AccountsLayout"),
 );
 
 // Vendor
 const VendorDashboardLayout = lazy(
-  () => import("./modules/vendor/layout/VendorDashboardLayout")
+  () => import("./modules/vendor/layout/VendorDashboardLayout"),
 );
 
 // Admin
 const SuperAdminDashboardLayout = lazy(
-  () => import("./modules/admin/layout/SuperAdminDashboardLayout")
+  () => import("./modules/admin/layout/SuperAdminDashboardLayout"),
 );
 
 /* ───────────────── WEBSITE PAGES ───────────────── */
@@ -29,27 +31,27 @@ const LandingPage = lazy(() => import("./modules/website/pages/LandingPage"));
 const AboutPage = lazy(() => import("./modules/website/pages/AboutPage"));
 const StoresPage = lazy(() => import("./modules/website/pages/StoresPage"));
 const StoreDetailsPage = lazy(
-  () => import("./modules/vendor/pages/storeDetailsPage")
+  () => import("./modules/vendor/pages/storeDetailsPage"),
 );
 const CategoriesPage = lazy(() => import("./modules/website/pages/Categories"));
 const CategoryDetailsPage = lazy(
-  () => import("./modules/website/pages/SingleCategoryPage")
+  () => import("./modules/website/pages/SingleCategoryPage"),
 );
 const ProductDetailPage = lazy(
-  () => import("./modules/website/pages/ProductDetailsPage")
+  () => import("./modules/website/pages/ProductDetailsPage"),
 );
 const OrdersPage = lazy(() => import("./modules/website/pages/OrdersPage"));
 const OrderDetailsPage = lazy(
-  () => import("./modules/website/pages/OrderDetailsPage")
+  () => import("./modules/website/pages/OrderDetailsPage"),
 );
 const WishlistPage = lazy(() => import("./modules/website/pages/WishlistPage"));
 const CartPage = lazy(() => import("./modules/website/pages/CartPage"));
 const SettingsPage = lazy(() => import("./modules/website/pages/SettingsPage"));
 const UserProfilePage = lazy(
-  () => import("./modules/website/pages/ProfilePage")
+  () => import("./modules/website/pages/ProfilePage"),
 );
 const SearchResultsPage = lazy(
-  () => import("./modules/website/pages/SearchResultsPage")
+  () => import("./modules/website/pages/SearchResultsPage"),
 );
 const NotFoundPage = lazy(() => import("./modules/website/pages/NotFoundPage"));
 
@@ -59,66 +61,66 @@ const LoginPage = lazy(() => import("./modules/auth/pages/Login"));
 const SignupPage = lazy(() => import("./modules/auth/pages/Register"));
 const VerifyOtpPage = lazy(() => import("./modules/auth/pages/VerifyOtp"));
 const ForgotPasswordPage = lazy(
-  () => import("./modules/auth/pages/ForgotPasswordPage")
+  () => import("./modules/auth/pages/ForgotPasswordPage"),
 );
 const ResetPasswordPage = lazy(
-  () => import("./modules/auth/pages/ResetPasswordPage")
+  () => import("./modules/auth/pages/ResetPasswordPage"),
 );
 
 /* ───────────────── VENDOR PAGES ───────────────── */
 
 const VendorDashboardPage = lazy(
-  () => import("./modules/vendor/pages/VendorDashboardPage")
+  () => import("./modules/vendor/pages/VendorDashboardPage"),
 );
 const CustomersPage = lazy(
-  () => import("./modules/vendor/pages/CustomersPage")
+  () => import("./modules/vendor/pages/CustomersPage"),
 );
 const VendorOrdersPage = lazy(
-  () => import("./modules/vendor/pages/OrdersPage")
+  () => import("./modules/vendor/pages/OrdersPage"),
 );
 const ProductsPage = lazy(() => import("./modules/vendor/pages/ProductsPage"));
 const VendorSettingsPage = lazy(
-  () => import("./modules/vendor/pages/SettingsPage")
+  () => import("./modules/vendor/pages/SettingsPage"),
 );
 const HelpPage = lazy(() => import("./modules/vendor/pages/HelpPage"));
 const AnalyticsPage = lazy(
-  () => import("./modules/vendor/pages/AnalyticsPage")
+  () => import("./modules/vendor/pages/AnalyticsPage"),
 );
 
 /* ───────────────── ADMIN PAGES ───────────────── */
 
 const SuperAdminOverviewPage = lazy(
-  () => import("./modules/admin/pages/SuperAdminOverviewPage")
+  () => import("./modules/admin/pages/SuperAdminOverviewPage"),
 );
 const SuperAdminVendorsPage = lazy(
-  () => import("./modules/admin/pages/SuperAdminVendorsPage")
+  () => import("./modules/admin/pages/SuperAdminVendorsPage"),
 );
 const SuperAdminUsersPage = lazy(
-  () => import("./modules/admin/pages/SuperAdminUsersPage")
+  () => import("./modules/admin/pages/SuperAdminUsersPage"),
 );
 const SuperAdminTransactionsPage = lazy(
-  () => import("./modules/admin/pages/SuperAdminTransactionsPage")
+  () => import("./modules/admin/pages/SuperAdminTransactionsPage"),
 );
 const SuperAdminReportsPage = lazy(
-  () => import("./modules/admin/pages/SuperAdminReportsPage")
+  () => import("./modules/admin/pages/SuperAdminReportsPage"),
 );
 const SuperAdminLogsPage = lazy(
-  () => import("./modules/admin/pages/SuperAdminLogsPage")
+  () => import("./modules/admin/pages/SuperAdminLogsPage"),
 );
 const SuperAdminNotificationsPage = lazy(
-  () => import("./modules/admin/pages/SuperAdminNotificationsPage")
+  () => import("./modules/admin/pages/SuperAdminNotificationsPage"),
 );
 const SuperAdminPlatformAnalysisPage = lazy(
-  () => import("./modules/admin/pages/SuperAdminPlatformAnalysisPage")
+  () => import("./modules/admin/pages/SuperAdminPlatformAnalysisPage"),
 );
 const SuperAdminAccessControlPage = lazy(
-  () => import("./modules/admin/pages/SuperAdminAccessControlPage")
+  () => import("./modules/admin/pages/SuperAdminAccessControlPage"),
 );
 const SuperAdminSettingsPage = lazy(
-  () => import("./modules/admin/pages/SuperAdminSettingsPage")
+  () => import("./modules/admin/pages/SuperAdminSettingsPage"),
 );
 const SuperAdminServerConfigPage = lazy(
-  () => import("./modules/admin/pages/SuperAdminServerConfigPage")
+  () => import("./modules/admin/pages/SuperAdminServerConfigPage"),
 );
 
 /* ───────────────── APP ───────────────── */
@@ -143,7 +145,6 @@ export default function App() {
             <Route path="orders" element={<OrdersPage />} />
             <Route path="orders/:id" element={<OrderDetailsPage />} />
             <Route path="about" element={<AboutPage />} />
-            <Route path="wishlist" element={<WishlistPage />} />
           </Route>
 
           {/* ─── ACCOUNT ─── */}
@@ -151,6 +152,7 @@ export default function App() {
             <Route path="profile" element={<UserProfilePage />} />
             <Route path="settings" element={<SettingsPage />} />
             <Route path="cart" element={<CartPage />} />
+            <Route path="wishlist" element={<WishlistPage />} />
           </Route>
 
           {/* ─── AUTH ─── */}
@@ -165,12 +167,18 @@ export default function App() {
           {/* ─── VENDOR ─── */}
           <Route path="/vendor" element={<VendorDashboardLayout />}>
             <Route index element={<VendorDashboardPage />} />
+
             <Route path="customers" element={<CustomersPage />} />
             <Route path="orders" element={<VendorOrdersPage />} />
+
+            {/* Products */}
             <Route path="products" element={<ProductsPage />} />
+            <Route path="products/new" element={<AddProductPage />} />
+            <Route path="products/preview" element={<ProductPreviewPage />} />
+
+            <Route path="analytics" element={<AnalyticsPage />} />
             <Route path="settings" element={<VendorSettingsPage />} />
             <Route path="help" element={<HelpPage />} />
-            <Route path="analytics" element={<AnalyticsPage />} />
           </Route>
 
           {/* ─── ADMIN ─── */}

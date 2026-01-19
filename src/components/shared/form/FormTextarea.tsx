@@ -1,23 +1,23 @@
 import { useFormContext } from "react-hook-form";
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 
-interface FormFieldProps {
+interface FormTextareaProps {
   label?: string;
   name: string;
-  type?: string;
   placeholder?: string;
+  rows?: number;
   className?: string;
 }
 
-export function FormInput({
+export function FormTextarea({
   label,
   name,
-  type = "text",
   placeholder,
+  rows = 4,
   className,
-}: FormFieldProps) {
+}: FormTextareaProps) {
   const {
     register,
     formState: { errors, touchedFields, submitCount },
@@ -33,23 +33,23 @@ export function FormInput({
           htmlFor={name}
           className={cn(
             "font-medium text-[15px]",
-            shouldShowError && "text-destructive"
+            shouldShowError && "text-destructive",
           )}
         >
           {label}
         </Label>
       )}
 
-      <Input
+      <Textarea
         id={name}
-        type={type}
+        rows={rows}
         placeholder={placeholder}
         aria-invalid={!!shouldShowError}
         {...register(name)}
         className={cn(
-          "h-11 rounded-md text-[15px] px-3 py-2", // taller input
+          "rounded-md text-[15px] px-3 py-2 resize-none",
           shouldShowError &&
-            "border-destructive ring-0 focus-visible:ring-destructive/30"
+            "border-destructive ring-0 focus-visible:ring-destructive/30",
         )}
       />
 

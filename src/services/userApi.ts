@@ -80,13 +80,13 @@ export const userApi = apiManager.injectEndpoints({
       invalidatesTags: ["User"],
     }),
 
-    logout: builder.mutation<void, void>({
-      query: () => ({
-        url: "/api/v1/auth/logout",
-        method: "POST",
-      }),
-      invalidatesTags: ["User"],
-    }),
+    // logout: builder.mutation<void, void>({
+    //   query: () => ({
+    //     url: "/api/v1/auth/logout",
+    //     method: "POST",
+    //   }),
+    //   invalidatesTags: ["User"],
+    // }),
   }),
 });
 
@@ -96,5 +96,5 @@ export const {
   useGetUserByIdQuery,
   useUpdateUserProfileMutation,
   useDeleteUserMutation,
-  useLogoutMutation,
+  // useLogoutMutation,
 } = userApi;

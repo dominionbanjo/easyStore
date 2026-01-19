@@ -29,3 +29,15 @@ export interface GetCategoriesArgs {
   page?: number;
   limit?: number;
 }
+
+export interface IColor {
+  id: string;
+  name: string;
+  hex: string;
+}
+
+export interface IGetColorsResponse {
+  status: "success" | "error";
+  message: string;
+  data: IColor[];
+}

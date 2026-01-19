@@ -1,12 +1,23 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import type { RootState } from "@/store";
-import { clearUser } from "@/features/userSlice";
 import { useLogoutMutation } from "@/services/authApi";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Menu, User, Search } from "lucide-react";
+import {
+  Menu,
+  User,
+  Search,
+  Home,
+  Store,
+  Layers,
+  Info,
+  LogOut,
+  ShoppingBag,
+  Heart,
+  User as UserIcon,
+} from "lucide-react";
 import {
   Popover,
   PopoverTrigger,
@@ -22,18 +33,17 @@ import { motion } from "framer-motion";
 import FancyHoverText from "./FancyTextHover";
 
 export default function Header() {
-  const dispatch = useDispatch();
   const [searchOpen, setSearchOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
-  const [logout] = useLogoutMutation();
+  const [logoutUser] = useLogoutMutation();
   const [query, setQuery] = useState("");
 
   const user = useSelector((state: RootState) => state.user.currentUser);
   const isAuthenticated = useSelector(
-    (state: RootState) => state.user.isAuthenticated
+    (state: RootState) => state.user.isAuthenticated,
   );
 
   useEffect(() => {
@@ -49,9 +59,12 @@ export default function Header() {
   }, [isScrolled]);
 
   const handleLogout = async () => {
-    await logout();
-    dispatch(clearUser());
-    toast.success("Logged out successfully");
+    try {
+      await logoutUser().unwrap();
+      toast.success("Logged out successfully");
+    } catch {
+      toast.error("Failed to log out");
+    }
   };
 
   const navigate = useNavigate();
@@ -78,7 +91,7 @@ export default function Header() {
   return (
     <header
       className={cn(
-        "fixed top-0 z-50 w-full transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
+        "fixed top-0 z-50 w-full transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
       )}
     >
       <nav
@@ -88,7 +101,7 @@ export default function Header() {
           "will-change-[transform,background-color,border-color,box-shadow]",
           isScrolled
             ? "max-w-[100%] sm:max-w-[95%] bg-white/80 rounded-none sm:rounded-xl shadow-md sm:top-3 border border-border/20"
-            : "max-w-[100%] bg-white/30 sm:top-3 border border-transparent"
+            : "max-w-[100%] bg-white/30 sm:top-3 border border-transparent",
         )}
       >
         {/* ---------- LEFT: Logo + Desktop Nav ---------- */}
@@ -107,55 +120,75 @@ export default function Header() {
               <SheetContent side="left" className="w-64 p-6 bg-white">
                 <nav className="space-y-4 text-base font-medium">
                   {[
-                    { name: "Home", path: WEBSITE_ROUTES.HOME },
-                    { name: "Stores", path: WEBSITE_ROUTES.STORES },
-                    { name: "Categories", path: WEBSITE_ROUTES.CATEGORIES },
-                    { name: "About", path: WEBSITE_ROUTES.ABOUT },
-                  ].map((item) => (
-                    <Link
-                      key={item.path}
-                      to={item.path}
-                      onClick={() => setMenuOpen(false)}
-                      className={cn(
-                        location.pathname === item.path
-                          ? "text-primary font-semibold"
-                          : "text-neutral-800 hover:text-primary",
-                        "transition-all duration-200 hover:scale-[1.04] block"
-                      )}
-                    >
-                      {item.name}
-                    </Link>
-                  ))}
+                    { name: "Home", path: WEBSITE_ROUTES.HOME, icon: Home },
+                    {
+                      name: "Stores",
+                      path: WEBSITE_ROUTES.STORES,
+                      icon: Store,
+                    },
+                    {
+                      name: "Categories",
+                      path: WEBSITE_ROUTES.CATEGORIES,
+                      icon: Layers,
+                    },
+                    { name: "About", path: WEBSITE_ROUTES.ABOUT, icon: Info },
+                  ].map((item) => {
+                    const Icon = item.icon;
+                    return (
+                      <Link
+                        key={item.path}
+                        to={item.path}
+                        onClick={() => setMenuOpen(false)}
+                        className={cn(
+                          "flex items-center gap-3 transition-all duration-200",
+                          location.pathname === item.path
+                            ? "text-primary font-semibold"
+                            : "text-neutral-800 hover:text-primary",
+                        )}
+                      >
+                        <Icon className="h-4 w-4" />
+                        {item.name}
+                      </Link>
+                    );
+                  })}
+
+                  <div className="border-t my-3" />
 
                   <div className="border-t my-3" />
 
                   {isAuthenticated ? (
+                    /* ===== LOGGED IN ===== */
                     <button
                       onClick={() => {
                         handleLogout();
                         setMenuOpen(false);
                       }}
-                      className="text-red-600 py-2 text-left w-full"
+                      className="flex items-center gap-3 text-red-600 py-2 w-full"
                     >
+                      <LogOut className="h-4 w-4" />
                       Logout
                     </button>
                   ) : (
-                    <>
+                    /* ===== LOGGED OUT ===== */
+                    <div className="space-y-2">
                       <Link
                         to={AUTH_ROUTES.LOGIN}
                         onClick={() => setMenuOpen(false)}
-                        className="block py-2"
+                        className="flex items-center gap-3 py-2 text-neutral-800 hover:text-primary"
                       >
+                        <UserIcon className="h-4 w-4" />
                         Sign In
                       </Link>
+
                       <Link
                         to={AUTH_ROUTES.SIGNUP}
                         onClick={() => setMenuOpen(false)}
-                        className="block py-2 text-primary"
+                        className="flex items-center gap-3 py-2 text-neutral-800 hover:text-primary"
                       >
-                        Sign Up
+                        <Store className="h-4 w-4" />
+                        Create Account
                       </Link>
-                    </>
+                    </div>
                   )}
                 </nav>
               </SheetContent>
@@ -190,7 +223,7 @@ export default function Header() {
                   "transition-colors duration-200 relative inline-block group",
                   location.pathname === item.path
                     ? "text-primary font-semibold"
-                    : "text-neutral-800 hover:text-primary"
+                    : "text-neutral-800 hover:text-primary",
                 )}
               >
                 <FancyHoverText text={item.name} />
@@ -265,41 +298,64 @@ export default function Header() {
                       {user.email}
                     </p>
                   </div>
+
+                  {/* 🔹 CONDITIONAL DASHBOARD LINK (ADD ABOVE PROFILE) */}
+                  {(user.account_type === "vendor" ||
+                    user.account_type === "admin") && (
+                    <Link
+                      to={user.account_type === "vendor" ? "/vendor" : "/admin"}
+                      onClick={() => setProfileOpen(false)}
+                      className="flex items-center gap-3 px-2 py-1.5 text-sm hover:bg-gray-100 rounded"
+                    >
+                      <Layers className="h-4 w-4" />
+                      Go to Dashboard
+                    </Link>
+                  )}
+
                   <Link
                     to={USER_ROUTES.PROFILE}
                     onClick={() => setProfileOpen(false)}
-                    className="block px-2 py-1.5 text-sm hover:bg-gray-100 rounded"
+                    className="flex items-center gap-3 px-2 py-1.5 text-sm hover:bg-gray-100 rounded"
                   >
+                    <UserIcon className="h-4 w-4" />
                     Profile
                   </Link>
+
                   <Link
                     to={USER_ROUTES.ORDERS}
                     onClick={() => setProfileOpen(false)}
-                    className="block px-2 py-1.5 text-sm hover:bg-gray-100 rounded"
+                    className="flex items-center gap-3 px-2 py-1.5 text-sm hover:bg-gray-100 rounded"
                   >
+                    <ShoppingBag className="h-4 w-4" />
                     Orders
                   </Link>
+
                   <Link
                     to={USER_ROUTES.CART}
                     onClick={() => setProfileOpen(false)}
-                    className="block px-2 py-1.5 text-sm hover:bg-gray-100 rounded"
+                    className="flex items-center gap-3 px-2 py-1.5 text-sm hover:bg-gray-100 rounded"
                   >
+                    <ShoppingBag className="h-4 w-4" />
                     Cart
                   </Link>
+
                   <Link
                     to={USER_ROUTES.WISHLIST}
                     onClick={() => setProfileOpen(false)}
-                    className="block px-2 py-1.5 text-sm hover:bg-gray-100 rounded"
+                    className="flex items-center gap-3 px-2 py-1.5 text-sm hover:bg-gray-100 rounded"
                   >
+                    <Heart className="h-4 w-4" />
                     Wishlist
                   </Link>
+
                   <button
                     onClick={() => {
                       handleLogout();
                       setProfileOpen(false);
                     }}
-                    className="w-full text-left px-2 py-1.5 text-sm text-red-600 hover:bg-red-50 rounded"
+                    className="flex items-center gap-3 w-full text-left px-2 py-1.5 text-sm text-red-600 hover:bg-red-50 rounded"
                   >
+                    <LogOut className="h-4 w-4" />
                     Logout
                   </button>
                 </div>

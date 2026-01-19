@@ -34,7 +34,11 @@ interface ProductInfoSidebarProps {
     stock: number;
     highlights: string[];
     sizes?: string[];
-    colors?: string[];
+    colors?: {
+      id: string;
+      name: string;
+      hex: string;
+    }[];
     image?: string | null;
 
     /** 🔹 backend flag */
@@ -53,7 +57,11 @@ export default function ProductInfoSidebar({
   const [liked, setLiked] = useState<boolean>(Boolean(product.is_in_wishlist));
 
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
-  const [selectedColor, setSelectedColor] = useState<string | null>(null);
+  const [selectedColor, setSelectedColor] = useState<{
+    id: string;
+    name: string;
+    hex: string;
+  } | null>(null);
 
   const [addToCart, { isLoading: addingToCart }] = useAddItemToCartMutation();
 
@@ -84,7 +92,7 @@ export default function ProductInfoSidebar({
         product_id: product.id,
         quantity,
         size: selectedSize,
-        color: selectedColor,
+        color: selectedColor?.id,
       }).unwrap();
 
       toast.success(`${product.name} added to cart`);
@@ -119,7 +127,7 @@ export default function ProductInfoSidebar({
       // ❌ revert on failure
       setLiked(prev);
       toast.error(
-        err?.data?.message || err?.message || "Wishlist action failed"
+        err?.data?.message || err?.message || "Wishlist action failed",
       );
     }
   };
@@ -143,7 +151,7 @@ export default function ProductInfoSidebar({
           <p
             className={cn(
               "text-sm",
-              product.stock > 0 ? "text-gray-500" : "text-red-500 font-medium"
+              product.stock > 0 ? "text-gray-500" : "text-red-500 font-medium",
             )}
           >
             {product.stock > 0 ? `${product.stock} in stock` : "Out of stock"}
@@ -196,25 +204,31 @@ export default function ProductInfoSidebar({
       {product.colors?.length ? (
         <div>
           <h4 className="font-medium mb-2">Select Color</h4>
+
           <div className="flex gap-3 flex-wrap">
-            {product.colors.map((color) => (
-              <button
-                key={color}
-                type="button"
-                onClick={() => setSelectedColor(color)}
-                className={cn(
-                  "relative w-9 h-9 rounded-full border-2 flex items-center justify-center",
-                  selectedColor === color
-                    ? "ring-2 ring-primary border-primary"
-                    : "border-gray-300"
-                )}
-                style={{ backgroundColor: color }}
-              >
-                {selectedColor === color && (
-                  <Check className="h-4 w-4 text-white" strokeWidth={3} />
-                )}
-              </button>
-            ))}
+            {product.colors.map((color) => {
+              const isSelected = selectedColor?.id === color.id;
+
+              return (
+                <button
+                  key={color.id}
+                  type="button"
+                  onClick={() => setSelectedColor(color)}
+                  title={color.name}
+                  className={cn(
+                    "relative w-9 h-9 rounded-full border-2 flex items-center justify-center",
+                    isSelected
+                      ? "ring-2 ring-primary border-primary"
+                      : "border-gray-300",
+                  )}
+                  style={{ backgroundColor: color.hex }}
+                >
+                  {isSelected && (
+                    <Check className="h-4 w-4 text-white" strokeWidth={3} />
+                  )}
+                </button>
+              );
+            })}
           </div>
         </div>
       ) : null}
@@ -265,13 +279,13 @@ export default function ProductInfoSidebar({
           onClick={toggleWishlist}
           className={cn(
             "rounded-full border",
-            liked && "bg-red-50 border-red-300"
+            liked && "bg-red-50 border-red-300",
           )}
         >
           <Heart
             className={cn(
               "h-5 w-5",
-              liked ? "fill-red-500 text-red-500" : "text-gray-500"
+              liked ? "fill-red-500 text-red-500" : "text-gray-500",
             )}
           />
         </Button>

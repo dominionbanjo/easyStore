@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { FormSelect } from "@/components/shared/FormSelect";
+import { FormSelect } from "@/components/shared/form/FormSelect";
 
 /* ───────────────── CONSTANTS ───────────────── */
 
@@ -65,7 +65,7 @@ export function SearchFiltersSidebar() {
         Country.getAllCountries().map((c) => ({
           label: c.name,
           value: c.isoCode,
-        }))
+        })),
       );
     })();
   }, []);
@@ -85,7 +85,7 @@ export function SearchFiltersSidebar() {
         State.getStatesOfCountry(countryCode).map((s) => ({
           label: s.name,
           value: s.isoCode,
-        }))
+        })),
       );
     })();
 
@@ -107,7 +107,7 @@ export function SearchFiltersSidebar() {
         City.getCitiesOfState(countryCode, stateCode).map((c) => ({
           label: c.name,
           value: c.name,
-        }))
+        })),
       );
     })();
 
@@ -224,7 +224,9 @@ export function SearchFiltersSidebar() {
                   onCheckedChange={() =>
                     setParam(
                       "rating",
-                      params.get("rating") === String(r) ? undefined : String(r)
+                      params.get("rating") === String(r)
+                        ? undefined
+                        : String(r),
                     )
                   }
                 />
