@@ -3,18 +3,20 @@ import FeaturedProductsSection from "@/modules/website/components/home/FeaturedP
 import HeroSection from "@/modules/website/components/home/HeroSection";
 import TestimonialsCarousel from "@/modules/website/components/home/TestimonialsSection";
 import TrustedBy from "../components/home/TrustedBy";
+import BusinessStorySection from "../components/home/BusinessStorySection";
 
 export default function LandingPage() {
   return (
-    <>
-      {/* <main className=" flex flex-col"> */}
+    <div className="flex flex-col">
       <HeroSection />
-      <TrustedBy />
-      <FeaturedProductsSection />
-      <AllProductsSection />
-      {/* <TestimonialsSection /> */}
-      <TestimonialsCarousel />
-      {/* </main> */}
-    </>
+
+      <div className="space-y-0">
+        <TrustedBy />
+        <BusinessStorySection />
+        <FeaturedProductsSection />
+        <AllProductsSection />
+        <TestimonialsCarousel />
+      </div>
+    </div>
   );
 }

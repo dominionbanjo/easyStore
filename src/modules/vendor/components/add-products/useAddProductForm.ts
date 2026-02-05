@@ -18,7 +18,6 @@ export function useAddProductForm(extras: any) {
     mode: "onTouched",
     defaultValues: {
       stock: 0,
-      country: "NG",
       colors: [],
     },
   });
@@ -30,9 +29,6 @@ export function useAddProductForm(extras: any) {
 
     reset({
       ...draft,
-      country: draft.country ?? "NG",
-      state: draft.state ?? "",
-      city: draft.city ?? "",
       colors: draft.colors ?? [],
     });
 

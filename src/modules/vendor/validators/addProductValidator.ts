@@ -11,34 +11,34 @@ export const addProductSchema = z.object({
     .min(10, "Description must be at least 10 characters long"),
 
   /* ───────── PRICING ───────── */
-  price: z.number().refine((v) => v > 0, "Price must be greater than 0"),
-
-  discount_price: z
+  price: z.coerce
     .number()
-    .refine((v) => v >= 0, "Discount price cannot be negative")
-    .optional(),
+    .positive("Price must be greater than 0")
+    .min(1, "Price is required"),
 
-  stock: z.number().refine((v) => v >= 0, "Stock quantity cannot be negative"),
-
-  /* ───────── LOCATION ───────── */
-  country: z.string().min(1, "Country is required"),
-
-  state: z.string().min(1, "State is required"),
-
-  city: z.string().min(1, "City is required"),
-
-  /* ───────── SHIPPING (REQUIRED) ───────── */
-  shipping_cost: z
+  discount_price: z.coerce
     .number()
-    .refine((v) => v >= 0, "Shipping cost cannot be negative"),
+    .nonnegative("Discount price cannot be negative")
+    .optional()
+    .nullable(),
 
-  shipping_note: z
-    .string()
-    .min(3, "Shipping note must be at least 3 characters long"),
+  stock: z.coerce
+    .number()
+    .int("Stock must be a whole number")
+    .positive("Stock must be greater than 0"),
 
-  returns_note: z
-    .string()
-    .min(5, "Returns policy must be at least 5 characters long"),
+  // /* ───────── SHIPPING (REQUIRED) ───────── */
+  // shipping_cost: z
+  //   .number()
+  //   .refine((v) => v >= 0, "Shipping cost cannot be negative"),
+
+  // shipping_note: z
+  //   .string()
+  //   .min(3, "Shipping note must be at least 3 characters long"),
+
+  // returns_note: z
+  //   .string()
+  //   .min(5, "Returns policy must be at least 5 characters long"),
 
   /* ───────── COLORS (OPTIONAL) ───────── */
   colors: z

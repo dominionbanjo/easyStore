@@ -17,6 +17,7 @@ import {
   ShoppingBag,
   Heart,
   User as UserIcon,
+  X,
 } from "lucide-react";
 import {
   Popover,
@@ -24,7 +25,14 @@ import {
   PopoverContent,
 } from "@/components/ui/popover";
 
-import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetTrigger,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+} from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 
 import { AUTH_ROUTES, USER_ROUTES, WEBSITE_ROUTES } from "@/routes/temp";
@@ -117,80 +125,88 @@ export default function Header() {
                 </Button>
               </SheetTrigger>
 
-              <SheetContent side="left" className="w-64 p-6 bg-white">
-                <nav className="space-y-4 text-base font-medium">
-                  {[
-                    { name: "Home", path: WEBSITE_ROUTES.HOME, icon: Home },
-                    {
-                      name: "Stores",
-                      path: WEBSITE_ROUTES.STORES,
-                      icon: Store,
-                    },
-                    {
-                      name: "Categories",
-                      path: WEBSITE_ROUTES.CATEGORIES,
-                      icon: Layers,
-                    },
-                    { name: "About", path: WEBSITE_ROUTES.ABOUT, icon: Info },
-                  ].map((item) => {
-                    const Icon = item.icon;
-                    return (
-                      <Link
-                        key={item.path}
-                        to={item.path}
-                        onClick={() => setMenuOpen(false)}
-                        className={cn(
-                          "flex items-center gap-3 transition-all duration-200",
-                          location.pathname === item.path
-                            ? "text-primary font-semibold"
-                            : "text-neutral-800 hover:text-primary",
-                        )}
+              <SheetContent side="left" className="w-64 p-0 bg-white">
+                <SheetHeader className="p-6 border-b">
+                  <SheetTitle>Navigation Menu</SheetTitle>
+                  <SheetDescription className="sr-only">
+                    Access secondary navigation links and user account options.
+                  </SheetDescription>
+                </SheetHeader>
+                <div className="p-6">
+                  <nav className="space-y-4 text-base font-medium">
+                    {[
+                      { name: "Home", path: WEBSITE_ROUTES.HOME, icon: Home },
+                      {
+                        name: "Stores",
+                        path: WEBSITE_ROUTES.STORES,
+                        icon: Store,
+                      },
+                      {
+                        name: "Categories",
+                        path: WEBSITE_ROUTES.CATEGORIES,
+                        icon: Layers,
+                      },
+                      { name: "About", path: WEBSITE_ROUTES.ABOUT, icon: Info },
+                    ].map((item) => {
+                      const Icon = item.icon;
+                      return (
+                        <Link
+                          key={item.path}
+                          to={item.path}
+                          onClick={() => setMenuOpen(false)}
+                          className={cn(
+                            "flex items-center gap-3 transition-all duration-200",
+                            location.pathname === item.path
+                              ? "text-primary font-semibold"
+                              : "text-neutral-800 hover:text-primary",
+                          )}
+                        >
+                          <Icon className="h-4 w-4" />
+                          {item.name}
+                        </Link>
+                      );
+                    })}
+
+                    <div className="border-t my-3" />
+
+                    <div className="border-t my-3" />
+
+                    {isAuthenticated ? (
+                      /* ===== LOGGED IN ===== */
+                      <button
+                        onClick={() => {
+                          handleLogout();
+                          setMenuOpen(false);
+                        }}
+                        className="flex items-center gap-3 text-red-600 py-2 w-full"
                       >
-                        <Icon className="h-4 w-4" />
-                        {item.name}
-                      </Link>
-                    );
-                  })}
+                        <LogOut className="h-4 w-4" />
+                        Logout
+                      </button>
+                    ) : (
+                      /* ===== LOGGED OUT ===== */
+                      <div className="space-y-2">
+                        <Link
+                          to={AUTH_ROUTES.LOGIN}
+                          onClick={() => setMenuOpen(false)}
+                          className="flex items-center gap-3 py-2 text-neutral-800 hover:text-primary"
+                        >
+                          <UserIcon className="h-4 w-4" />
+                          Sign In
+                        </Link>
 
-                  <div className="border-t my-3" />
-
-                  <div className="border-t my-3" />
-
-                  {isAuthenticated ? (
-                    /* ===== LOGGED IN ===== */
-                    <button
-                      onClick={() => {
-                        handleLogout();
-                        setMenuOpen(false);
-                      }}
-                      className="flex items-center gap-3 text-red-600 py-2 w-full"
-                    >
-                      <LogOut className="h-4 w-4" />
-                      Logout
-                    </button>
-                  ) : (
-                    /* ===== LOGGED OUT ===== */
-                    <div className="space-y-2">
-                      <Link
-                        to={AUTH_ROUTES.LOGIN}
-                        onClick={() => setMenuOpen(false)}
-                        className="flex items-center gap-3 py-2 text-neutral-800 hover:text-primary"
-                      >
-                        <UserIcon className="h-4 w-4" />
-                        Sign In
-                      </Link>
-
-                      <Link
-                        to={AUTH_ROUTES.SIGNUP}
-                        onClick={() => setMenuOpen(false)}
-                        className="flex items-center gap-3 py-2 text-neutral-800 hover:text-primary"
-                      >
-                        <Store className="h-4 w-4" />
-                        Create Account
-                      </Link>
-                    </div>
-                  )}
-                </nav>
+                        <Link
+                          to={AUTH_ROUTES.SIGNUP}
+                          onClick={() => setMenuOpen(false)}
+                          className="flex items-center gap-3 py-2 text-neutral-800 hover:text-primary"
+                        >
+                          <Store className="h-4 w-4" />
+                          Create Account
+                        </Link>
+                      </div>
+                    )}
+                  </nav>
+                </div>
               </SheetContent>
             </Sheet>
           </div>
@@ -233,13 +249,13 @@ export default function Header() {
         </div>
 
         {/* ---------- MIDDLE: Search ---------- */}
-        <div className="hidden md:flex flex-1 justify-center px-4 lg:px-6 max-w-[500px]">
+        <div className="hidden md:flex flex-1 justify-center px-4 lg:px-6 max-w-[600px] mx-auto">
           <form
             onSubmit={handleSearch}
-            className="flex w-[80%] items-center rounded-full bg-white border-2 border-border/40 overflow-hidden shadow-sm focus-within:ring-1 focus-within:ring-primary/10 transition-all"
+            className="flex w-full items-center rounded-full bg-white border border-border/50 shadow-sm focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all duration-300"
           >
-            <div className="pl-4 flex-shrink-0">
-              <Search className="h-4 w-4 text-muted-foreground" />
+            <div className="pl-5 flex-shrink-0">
+              <Search className="h-5 w-5 text-muted-foreground" />
             </div>
 
             <Input
@@ -247,10 +263,13 @@ export default function Header() {
               placeholder="Search products..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="border-0 shadow-none bg-white py-6 focus-visible:ring-0 text-sm px-3 flex-1 min-w-0"
+              className="border-0 shadow-none bg-transparent py-6 focus-visible:ring-0 text-base px-4 flex-1 min-w-0 placeholder:text-muted-foreground/70"
             />
 
-            <Button type="submit" size="sm" className="rounded-full mr-2">
+            <Button
+              type="submit"
+              className="rounded-full mr-1.5 h-10 px-6 font-semibold bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm transition-all"
+            >
               Search
             </Button>
           </form>
@@ -269,132 +288,163 @@ export default function Header() {
           </Button>
 
           {/* Profile/Login */}
-          {isAuthenticated && user ? (
-            <Popover open={profileOpen} onOpenChange={setProfileOpen}>
-              <PopoverTrigger asChild>
-                <button className="flex items-center justify-center rounded-full border border-border hover:shadow-sm transition p-1 flex-shrink-0">
-                  {user.avatar ? (
-                    <img
-                      src={user.avatar}
-                      alt={user.first_name || "User"}
-                      className="h-8 w-8 sm:h-9 sm:w-9 rounded-full object-cover"
-                    />
-                  ) : (
-                    <User className="h-6 w-6 text-neutral-700" />
-                  )}
-                </button>
-              </PopoverTrigger>
+          <div className="flex items-center gap-2">
+            {isAuthenticated && user ? (
+              <Popover open={profileOpen} onOpenChange={setProfileOpen}>
+                <PopoverTrigger asChild>
+                  <button className="flex items-center justify-center rounded-full border border-border hover:shadow-sm transition p-1 flex-shrink-0">
+                    {user.avatar ? (
+                      <img
+                        src={user.avatar}
+                        alt={user.first_name || "User"}
+                        className="h-8 w-8 sm:h-9 sm:w-9 rounded-full object-cover"
+                      />
+                    ) : (
+                      <User className="h-6 w-6 text-neutral-700" />
+                    )}
+                  </button>
+                </PopoverTrigger>
 
-              <PopoverContent
-                align="end"
-                className="w-56 p-3 bg-white shadow-md rounded-lg border border-border fade-in"
-              >
-                <div className="space-y-2">
-                  <div className="border-b pb-2">
-                    <p className="font-semibold text-sm">
-                      {user.first_name} {user.last_name}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {user.email}
-                    </p>
-                  </div>
+                <PopoverContent
+                  align="end"
+                  className="w-56 p-3 bg-white shadow-md rounded-lg border border-border fade-in"
+                >
+                  <div className="space-y-2">
+                    <div className="border-b pb-2">
+                      <p className="font-semibold text-sm">
+                        {user.first_name} {user.last_name}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {user.email}
+                      </p>
+                    </div>
 
-                  {/* 🔹 CONDITIONAL DASHBOARD LINK (ADD ABOVE PROFILE) */}
-                  {(user.account_type === "vendor" ||
-                    user.account_type === "admin") && (
+                    {/* 🔹 CONDITIONAL DASHBOARD LINK */}
+                    {(user.account_type === "vendor" ||
+                      user.account_type === "admin") && (
+                      <Link
+                        to={
+                          user.account_type === "vendor" ? "/vendor" : "/admin"
+                        }
+                        onClick={() => setProfileOpen(false)}
+                        className="flex items-center gap-3 px-2 py-1.5 text-sm hover:bg-gray-100 rounded"
+                      >
+                        <Layers className="h-4 w-4" />
+                        Go to Dashboard
+                      </Link>
+                    )}
+
                     <Link
-                      to={user.account_type === "vendor" ? "/vendor" : "/admin"}
+                      to={USER_ROUTES.PROFILE}
                       onClick={() => setProfileOpen(false)}
                       className="flex items-center gap-3 px-2 py-1.5 text-sm hover:bg-gray-100 rounded"
                     >
-                      <Layers className="h-4 w-4" />
-                      Go to Dashboard
+                      <UserIcon className="h-4 w-4" />
+                      Profile
                     </Link>
-                  )}
 
-                  <Link
-                    to={USER_ROUTES.PROFILE}
-                    onClick={() => setProfileOpen(false)}
-                    className="flex items-center gap-3 px-2 py-1.5 text-sm hover:bg-gray-100 rounded"
-                  >
-                    <UserIcon className="h-4 w-4" />
-                    Profile
+                    <Link
+                      to={USER_ROUTES.ORDERS}
+                      onClick={() => setProfileOpen(false)}
+                      className="flex items-center gap-3 px-2 py-1.5 text-sm hover:bg-gray-100 rounded"
+                    >
+                      <ShoppingBag className="h-4 w-4" />
+                      Orders
+                    </Link>
+
+                    <Link
+                      to={USER_ROUTES.CART}
+                      onClick={() => setProfileOpen(false)}
+                      className="flex items-center gap-3 px-2 py-1.5 text-sm hover:bg-gray-100 rounded"
+                    >
+                      <ShoppingBag className="h-4 w-4" />
+                      Cart
+                    </Link>
+
+                    <Link
+                      to={USER_ROUTES.WISHLIST}
+                      onClick={() => setProfileOpen(false)}
+                      className="flex items-center gap-3 px-2 py-1.5 text-sm hover:bg-gray-100 rounded"
+                    >
+                      <Heart className="h-4 w-4" />
+                      Wishlist
+                    </Link>
+
+                    <button
+                      onClick={() => {
+                        handleLogout();
+                        setProfileOpen(false);
+                      }}
+                      className="flex items-center gap-3 w-full text-left px-2 py-1.5 text-sm text-red-600 hover:bg-red-50 rounded"
+                    >
+                      <LogOut className="h-4 w-4" />
+                      Logout
+                    </button>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            ) : (
+              <>
+                {/* Desktop Buttons */}
+                <div className="hidden lg:flex items-center gap-2">
+                  <Link to={AUTH_ROUTES.LOGIN}>
+                    <Button
+                      variant="outline"
+                      className="rounded-full px-4 text-sm h-9"
+                    >
+                      Sign In
+                    </Button>
                   </Link>
-
-                  <Link
-                    to={USER_ROUTES.ORDERS}
-                    onClick={() => setProfileOpen(false)}
-                    className="flex items-center gap-3 px-2 py-1.5 text-sm hover:bg-gray-100 rounded"
-                  >
-                    <ShoppingBag className="h-4 w-4" />
-                    Orders
+                  <Link to={AUTH_ROUTES.SIGNUP}>
+                    <Button className="rounded-full px-4 text-sm h-9 text-white">
+                      Sign Up
+                    </Button>
                   </Link>
-
-                  <Link
-                    to={USER_ROUTES.CART}
-                    onClick={() => setProfileOpen(false)}
-                    className="flex items-center gap-3 px-2 py-1.5 text-sm hover:bg-gray-100 rounded"
-                  >
-                    <ShoppingBag className="h-4 w-4" />
-                    Cart
-                  </Link>
-
-                  <Link
-                    to={USER_ROUTES.WISHLIST}
-                    onClick={() => setProfileOpen(false)}
-                    className="flex items-center gap-3 px-2 py-1.5 text-sm hover:bg-gray-100 rounded"
-                  >
-                    <Heart className="h-4 w-4" />
-                    Wishlist
-                  </Link>
-
-                  <button
-                    onClick={() => {
-                      handleLogout();
-                      setProfileOpen(false);
-                    }}
-                    className="flex items-center gap-3 w-full text-left px-2 py-1.5 text-sm text-red-600 hover:bg-red-50 rounded"
-                  >
-                    <LogOut className="h-4 w-4" />
-                    Logout
-                  </button>
                 </div>
-              </PopoverContent>
-            </Popover>
-          ) : (
-            <div className="hidden lg:flex items-center gap-2 flex-shrink-0">
-              <Link to={AUTH_ROUTES.LOGIN}>
-                <Button
-                  variant="outline"
-                  className="rounded-full px-4 text-sm h-9"
+
+                {/* Mobile/Medium Profile Icon (Login Link) */}
+                <Link
+                  to={AUTH_ROUTES.LOGIN}
+                  className="lg:hidden flex items-center justify-center rounded-full border border-border hover:shadow-sm transition p-1 flex-shrink-0"
                 >
-                  Sign In
-                </Button>
-              </Link>
-              <Link to={AUTH_ROUTES.SIGNUP}>
-                <Button className="rounded-full px-4 text-sm h-9 text-white">
-                  Sign Up
-                </Button>
-              </Link>
-            </div>
-          )}
+                  <User className="h-6 w-6 text-neutral-700" />
+                </Link>
+              </>
+            )}
+          </div>
         </div>
       </nav>
 
       {/* Mobile Expand Search */}
       {searchOpen && (
-        <div className="fixed top-[64px] left-0 w-full z-40 md:hidden bg-white border-b shadow-md px-4 py-3 fade-slide-down">
-          <form onSubmit={handleSearch} className="flex items-center gap-2">
-            <Input
-              type="text"
-              placeholder="Search products..."
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              className="flex-1"
-              autoFocus
-            />
-            <Button size="sm" type="submit">
+        <div className="fixed top-[64px] left-0 w-full z-40 md:hidden bg-white border-b shadow-md px-4 py-4 fade-slide-down">
+          <form onSubmit={handleSearch} className="flex items-center gap-3">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                type="text"
+                placeholder="Search products..."
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                className="pl-9 h-10 bg-muted/30 border-muted-foreground/20 focus-visible:ring-primary/20"
+                autoFocus
+              />
+            </div>
+            <Button
+              size="sm"
+              type="submit"
+              className="bg-primary text-primary-foreground h-10 px-4"
+            >
               Search
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="h-10 w-10 text-muted-foreground hover:text-destructive"
+              onClick={() => setSearchOpen(false)}
+            >
+              <X className="h-5 w-5" />
             </Button>
           </form>
         </div>

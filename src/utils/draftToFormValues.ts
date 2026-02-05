@@ -21,11 +21,6 @@ export type BuildCreatePayloadArgs = {
     colors?: DraftColor[];
   };
 
-  // ✅ LOCATION LIVES HERE
-  country?: string;
-  state?: string;
-  city?: string;
-
   image: UploadedImage | null;
   gallery: UploadedImage[];
   tags: string[];
@@ -37,18 +32,7 @@ export type BuildCreatePayloadArgs = {
 export function buildCreateProductPayload(
   args: BuildCreatePayloadArgs,
 ): CreateProductCloudinaryArgs {
-  const {
-    values,
-    country,
-    state,
-    city,
-    image,
-    gallery,
-    tags,
-    highlights,
-    sizes,
-    specItems,
-  } = args;
+  const { values, image, gallery, tags, highlights, sizes, specItems } = args;
 
   return {
     category_id: values.category_id,
@@ -65,11 +49,6 @@ export function buildCreateProductPayload(
     colors: values.colors?.map((c) => c.id),
 
     specs: buildSpecsObject(specItems),
-
-    // ✅ LOCATION PASSED CORRECTLY
-    country,
-    state,
-    city,
 
     shipping_cost: values.shipping_cost,
     shipping_note: values.shipping_note,

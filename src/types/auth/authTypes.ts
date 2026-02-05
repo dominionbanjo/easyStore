@@ -12,24 +12,34 @@ export interface IRegisterUserPayload {
   agree_to_terms?: boolean;
 }
 export type AccountType = "user" | "vendor" | "admin";
-
 export interface IUser {
   id: string;
-  email: string;
-  account_type: "user" | "vendor" | "admin";
 
   first_name: string | null;
   last_name: string | null;
+
+  email: string;
   phone_number: string | null;
+  username: string | null;
+
+  account_type: "user" | "vendor" | "admin";
 
   avatar: string | null;
-  avatar_public_id: string | null;
 
   email_verified: boolean;
-  country: string | null;
-  bio: string | null;
+  payout_verified: boolean;
 
-  products_count: number | null;
+  rating_average: string; // backend sends string "0.00"
+  rating_count: number;
+  review_count: number;
+
+  address: {
+    city: string;
+    state: string;
+    street: string;
+    country: string;
+    postal_code: string;
+  } | null;
 
   created_at: string;
   updated_at: string | null;

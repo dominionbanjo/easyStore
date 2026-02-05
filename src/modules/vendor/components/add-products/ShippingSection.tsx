@@ -1,34 +1,8 @@
 import { FormInput } from "@/components/shared/form/FormInput";
-import { FormSelect } from "@/components/shared/form/FormSelect";
 
-export function ShippingSection({ countries, states }: any) {
+export function ShippingSection() {
   return (
     <>
-      <FormSelect
-        name="country"
-        label="Country"
-        options={countries}
-        placeholder="Select the country this product ships from"
-      />
-
-      <FormSelect
-        name="state"
-        label="State"
-        options={states}
-        disabled={!states.length}
-        placeholder={
-          states.length
-            ? "Select the state or region"
-            : "Select a country first"
-        }
-      />
-
-      <FormInput
-        name="city"
-        label="City"
-        placeholder="e.g. Ikeja, Lekki, Wuse"
-      />
-
       <FormInput
         name="shipping_cost"
         label="Shipping Cost"

@@ -106,7 +106,7 @@ export default function UserProfilePage() {
 
   return (
     <>
-      <section className="py-4 px-4">
+      <section className="py-4 px-4 mt-[30px]">
         <div className="max-w-5xl mx-auto space-y-10">
           {/* ================= PROFILE HEADER ================= */}
           <motion.div

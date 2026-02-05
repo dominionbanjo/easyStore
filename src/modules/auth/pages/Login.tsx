@@ -1,5 +1,6 @@
 import { ArrowLeft } from "lucide-react";
 import { useEffect, useRef } from "react";
+import { useSelector } from "react-redux";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -46,9 +47,10 @@ function hasGoogleIdentity(win: Window): win is Window & {
 export default function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { isAuthenticated } = useSelector((state: any) => state.user);
   const googleButtonRef = useRef<HTMLDivElement>(null);
 
-  const [login, { isLoading, isSuccess }] = useLoginMutation();
+  const [login, { isLoading }] = useLoginMutation();
   const [googleLogin] = useGoogleLoginMutation();
 
   const methods = useForm<LoginFormValues>({
@@ -63,16 +65,10 @@ export default function LoginPage() {
   /* Auto redirect if logged in */
   useEffect(() => {
     const token = Cookies.get("token");
-    if (token) navigate(redirectTo, { replace: true });
-  }, [navigate, redirectTo]);
-
-  /* Redirect after success */
-  useEffect(() => {
-    if (isSuccess) {
-      toast.success("Login successful!");
+    if (token && isAuthenticated) {
       navigate(redirectTo, { replace: true });
     }
-  }, [isSuccess, navigate, redirectTo]);
+  }, [navigate, redirectTo, isAuthenticated]);
 
   /* Normal login */
   const onSubmit = async (data: LoginFormValues) => {
@@ -91,7 +87,7 @@ export default function LoginPage() {
       }
 
       toast.success("Login successful!");
-      // navigate(redirectTo, { replace: true });
+      navigate(redirectTo, { replace: true });
     } catch (err: any) {
       toast.error(err?.data?.message || "Something went wrong");
     }

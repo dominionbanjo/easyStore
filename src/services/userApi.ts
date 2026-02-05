@@ -1,37 +1,29 @@
 import type { IUser } from "@/types/auth/authTypes";
 import { apiManager } from "./apiManager";
 
-export interface IUserWithStore extends IUser {
-  username?: string | null;
-
-  rating_average?: string;
-  rating_count?: number;
-  review_count?: number;
-
-  address?: {
-    city: string;
-    state: string;
-    country: string;
-  } | null;
-
-  payout_verified?: boolean;
-
-  store_id?: string | null;
-  store_name?: string | null;
-}
-
 export interface IUserProfileResponse {
   status: number;
   success: boolean;
   message: string;
   data: {
-    user: IUserWithStore;
+    user: IUser;
   };
 }
 
 export interface UpdateProfileArgs {
   data: FormData;
 }
+
+type VerifyBankApiResponse = {
+  status: string;
+  message: string;
+  data: {
+    account_name: string;
+    account_number: string;
+    bank_id: number;
+    bank_name: string;
+  };
+};
 
 export const userApi = apiManager.injectEndpoints({
   endpoints: (builder) => ({
@@ -80,13 +72,53 @@ export const userApi = apiManager.injectEndpoints({
       invalidatesTags: ["User"],
     }),
 
-    // logout: builder.mutation<void, void>({
-    //   query: () => ({
-    //     url: "/api/v1/auth/logout",
-    //     method: "POST",
-    //   }),
-    //   invalidatesTags: ["User"],
-    // }),
+    registerBankAccount: builder.mutation<
+      { success: boolean; message: string },
+      {
+        bank_code: string;
+        account_number: string;
+        settlement_email?: string;
+      }
+    >({
+      query: (body) => ({
+        url: "users/bank/register",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["User"],
+    }),
+
+    verifyBankAccount: builder.mutation<
+      VerifyBankApiResponse["data"],
+      { account_number: string; bank_code: string }
+    >({
+      query: (body) => ({
+        url: "payments/paystack/bank/verify",
+        method: "POST",
+        body,
+      }),
+
+      transformResponse: (response: VerifyBankApiResponse) => response.data,
+    }),
+
+    getNigerianBanks: builder.query<
+      {
+        status: string;
+        message: string;
+        data: {
+          name: string;
+          code: string;
+          slug: string;
+          type: string;
+        }[];
+      },
+      void
+    >({
+      query: () => ({
+        url: "payments/paystack/banks",
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -96,5 +128,7 @@ export const {
   useGetUserByIdQuery,
   useUpdateUserProfileMutation,
   useDeleteUserMutation,
-  // useLogoutMutation,
+  useRegisterBankAccountMutation,
+  useVerifyBankAccountMutation,
+  useGetNigerianBanksQuery,
 } = userApi;

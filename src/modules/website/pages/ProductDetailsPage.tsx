@@ -139,9 +139,10 @@ function ProductDetailsInner({ id }: { id: string }) {
       delivery: product.shipping_note ?? "",
       returns: product.returns_note ?? "",
       location: formatLocation({
-        city: product.city,
-        state: product.state,
-        country: product.country,
+        city: store.address_city,
+        state: store.address_state,
+        country: store.address_country,
+        postalCode: store.address_postal_code,
       }),
       shippingCost: product.shipping_cost
         ? `₦${Number(product.shipping_cost).toLocaleString()}`
@@ -162,7 +163,7 @@ function ProductDetailsInner({ id }: { id: string }) {
   /* ───────── RENDER ───────── */
 
   return (
-    <section className="max-w-[1480px] mx-auto px-4 py-14 space-y-16">
+    <section className="max-w-[1480px] mx-auto px-4 py-10 space-y-16">
       {/* Gallery + Sidebar */}
       <div className="grid md:grid-cols-[1.2fr_1fr] gap-10">
         <ProductGallery images={uiProduct.images} />

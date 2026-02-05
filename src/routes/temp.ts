@@ -27,6 +27,7 @@ export enum USER_ROUTES {
   PROFILE = "/account/profile",
   SETTINGS = "/account/settings",
   CART = "/account/cart",
+  PREVIEW = "/account/cart/preview",
 }
 
 // 🧑‍💼 Seller / Vendor dashboard routes

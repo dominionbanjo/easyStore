@@ -6,6 +6,7 @@ import {
   Trash2,
   CheckCircle,
   XCircle,
+  Loader2,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -17,6 +18,14 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import type { IStoreProduct } from "@/types/product/productTypes";
+import { useNavigate } from "react-router-dom";
+import { ConfirmDeleteDialog } from "../components/ConfirmDeleteDialog";
+import { useState } from "react";
+import {
+  useDeleteProductMutation,
+  useUpdateProductOnSaleMutation,
+  useUpdateProductStatusMutation,
+} from "@/services/productApi";
 
 export const productColumns: ColumnDef<IStoreProduct>[] = [
   /* ───────────── Product (LEFT ALIGNED) ───────────── */
@@ -99,10 +108,10 @@ export const productColumns: ColumnDef<IStoreProduct>[] = [
               variant="outline"
               className={cn(
                 base,
-                "bg-green-50 text-green-700 border-green-200",
+                "bg-emerald-100 text-emerald-800 border-emerald-200",
               )}
             >
-              <CheckCircle className="h-3.5 w-3.5" />
+              <CheckCircle className="h-3 w-3" />
               Active
             </Badge>
           </div>
@@ -113,10 +122,34 @@ export const productColumns: ColumnDef<IStoreProduct>[] = [
         <div className="flex justify-center">
           <Badge
             variant="outline"
-            className={cn(base, "bg-red-50 text-red-700 border-red-200")}
+            className={cn(base, "bg-rose-50 text-rose-700 border-rose-100")}
           >
-            <XCircle className="h-3.5 w-3.5" />
-            Inactive
+            <XCircle className="h-3 w-3" />
+            Hidden
+          </Badge>
+        </div>
+      );
+    },
+  },
+  /* ───────────── On Sale (CENTERED) ───────────── */
+  {
+    accessorKey: "on_sale",
+    header: () => <div className="text-center">On Sale</div>,
+    cell: ({ row }) => {
+      const onSale = row.original.on_sale;
+
+      return (
+        <div className="flex justify-center">
+          <Badge
+            variant="outline"
+            className={cn(
+              "font-medium",
+              onSale
+                ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                : "bg-slate-50 text-slate-600 border-slate-200",
+            )}
+          >
+            {onSale ? "True" : "False"}
           </Badge>
         </div>
       );
@@ -138,42 +171,162 @@ export const productColumns: ColumnDef<IStoreProduct>[] = [
   {
     id: "actions",
     header: () => <div className="text-center" />,
-    cell: () => (
-      <div className="flex justify-center">
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="ghost" size="icon">
-              <MoreVertical className="h-4 w-4" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-40 p-1.5">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="w-full justify-start gap-2"
-            >
-              <Eye className="h-4 w-4" />
-              View
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="w-full justify-start gap-2"
-            >
-              <Edit className="h-4 w-4" />
-              Edit
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="w-full justify-start gap-2 text-destructive"
-            >
-              <Trash2 className="h-4 w-4" />
-              Delete
-            </Button>
-          </PopoverContent>
-        </Popover>
-      </div>
-    ),
+    cell: ({ row }) => {
+      const navigate = useNavigate();
+      const product = row.original;
+
+      const [open, setOpen] = useState(false);
+
+      const [deleteProduct, { isLoading: deleting }] =
+        useDeleteProductMutation();
+
+      const [updateStatus, { isLoading: updatingStatus }] =
+        useUpdateProductStatusMutation();
+
+      const [updateOnSale, { isLoading: updatingOnSale }] =
+        useUpdateProductOnSaleMutation();
+
+      const isActive = product.status === "active";
+      const isOnSale = product.on_sale === true;
+      const hasDiscount = product.discount_price !== null;
+
+      const handleDelete = async () => {
+        try {
+          await deleteProduct(product.id).unwrap();
+          setOpen(false);
+        } catch {
+          // optional toast
+        }
+      };
+
+      const handleToggleStatus = async () => {
+        await updateStatus({
+          id: product.id,
+          status: isActive ? "inactive" : "active",
+        }).unwrap();
+      };
+
+      const handleToggleOnSale = async () => {
+        await updateOnSale({
+          id: product.id,
+          on_sale: !isOnSale,
+        }).unwrap();
+      };
+
+      return (
+        <div className="flex justify-center">
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <MoreVertical className="h-4 w-4" />
+              </Button>
+            </PopoverTrigger>
+
+            <PopoverContent className="w-48 p-1.5 space-y-1">
+              {/* 👁 VIEW */}
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-full justify-start gap-2"
+                onClick={() => navigate(`/product/${product.slug}`)}
+              >
+                <Eye className="h-4 w-4" />
+                View
+              </Button>
+
+              {/* ✏️ EDIT */}
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-full justify-start gap-2"
+                onClick={() =>
+                  navigate(`/vendor/products/${product.slug}/edit`)
+                }
+              >
+                <Edit className="h-4 w-4" />
+                Edit
+              </Button>
+
+              {/* 🟢 ACTIVE / 🔴 INACTIVE */}
+              <Button
+                variant="ghost"
+                size="sm"
+                className={cn(
+                  "w-full justify-start gap-2",
+                  isActive ? "text-red-600" : "text-green-600",
+                )}
+                disabled={updatingStatus}
+                onClick={handleToggleStatus}
+              >
+                {isActive ? (
+                  <>
+                    <XCircle className="h-4 w-4" />
+                    Set Inactive
+                  </>
+                ) : (
+                  <>
+                    <CheckCircle className="h-4 w-4" />
+                    Set Active
+                  </>
+                )}
+
+                {updatingStatus && (
+                  <Loader2 className="ml-auto h-4 w-4 animate-spin" />
+                )}
+              </Button>
+
+              {/* 🏷️ ON SALE TOGGLE */}
+              <Button
+                variant="ghost"
+                size="sm"
+                className={cn(
+                  "w-full justify-start gap-2",
+                  isOnSale ? "text-orange-600" : "text-green-600",
+                )}
+                disabled={updatingOnSale || (!hasDiscount && !isOnSale)}
+                onClick={handleToggleOnSale}
+              >
+                {isOnSale ? (
+                  <>
+                    <XCircle className="h-4 w-4" />
+                    Remove from Sale
+                  </>
+                ) : (
+                  <>
+                    <CheckCircle className="h-4 w-4" />
+                    Mark as On Sale
+                  </>
+                )}
+
+                {updatingOnSale && (
+                  <Loader2 className="ml-auto h-4 w-4 animate-spin" />
+                )}
+              </Button>
+
+              {/* 🗑 DELETE */}
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-full justify-start gap-2 text-destructive"
+                onClick={() => setOpen(true)}
+              >
+                <Trash2 className="h-4 w-4" />
+                Delete
+              </Button>
+            </PopoverContent>
+          </Popover>
+
+          {/* ❗ CONFIRM DELETE */}
+          <ConfirmDeleteDialog
+            open={open}
+            loading={deleting}
+            title="Delete product"
+            description={`Are you sure you want to delete "${product.name}"?`}
+            onConfirm={handleDelete}
+            onClose={() => setOpen(false)}
+          />
+        </div>
+      );
+    },
   },
 ];

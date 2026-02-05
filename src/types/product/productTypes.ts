@@ -59,10 +59,7 @@ export interface IProductDetails extends IProduct {
 
   shipping_note?: string | null;
   returns_note?: string | null;
-  // location?: string | null;
-  country: string;
-  state?: string | null;
-  city: string;
+
   shipping_cost?: number | null;
 
   rating_count?: number;
@@ -83,6 +80,10 @@ export interface IProductStore {
   rating_average: string;
   rating_count: number;
   logo: string | null;
+  address_city?: string | null;
+  address_state?: string | null;
+  address_country?: string | null;
+  address_postal_code?: string | null;
 }
 
 /* ───────────────── REVIEW ───────────────── */
@@ -153,6 +154,7 @@ export interface IProductsGroupedByCategoryResponse {
 export interface PaginationArgs {
   page?: number;
   limit?: number;
+  q?: string;
 }
 
 export interface SearchProductsArgs extends PaginationArgs {
@@ -228,8 +230,8 @@ export interface IStoreProduct {
   slug: string;
   description: string;
 
-  price: string;
-  discount_price: string | null;
+  price: number;
+  discount_price: number | null;
 
   stock: number;
   tags: string[];
@@ -247,19 +249,18 @@ export interface IStoreProduct {
   returns_note: string | null;
   status?: "active" | "inactive";
 
-  country: string;
-  state: string;
-  city: string;
-  shipping_cost: string;
+  shipping_cost: number;
 
-  rating_average: string;
+  rating_average: number;
   rating_count: number;
   review_count: number;
 
   total_sold: number;
   featured: boolean;
+  on_sale: boolean;
 
   category_ref: IProductCategoryRef;
+  store_name?: string;
 
   created_at: string;
   updated_at: string;
@@ -306,10 +307,115 @@ export type CreateProductCloudinaryArgs = {
   shipping_cost?: number;
   shipping_note?: string;
   returns_note?: string;
-  country?: string;
-  state?: string;
-  city?: string;
   /* ───────── MEDIA ───────── */
   image?: CloudinaryAsset | null;
   gallery?: CloudinaryAsset[];
 };
+
+export interface VendorProductSearchParams {
+  q?: string;
+  page?: number;
+  limit?: number;
+
+  minPrice?: number;
+  maxPrice?: number;
+
+  rating?: number;
+  inStock?: boolean | string;
+  onSale?: boolean | string;
+  status?: string;
+
+  colors?: string[];
+  sizes?: string[];
+}
+
+/* ───────────────── BASE UI PRODUCT ───────────────── */
+export interface IBaseProduct {
+  id: string;
+  name: string;
+  slug: string;
+
+  price: number;
+  discount_price?: number | null;
+
+  rating_average?: number;
+  stock: number;
+
+  image?: string | IProductImage | null;
+  is_in_wishlist?: boolean;
+}
+
+export interface ProductImage {
+  url: string;
+  public_id: string;
+}
+
+export interface ProductCategoryRef {
+  id: string;
+  name: string;
+  slug: string;
+  parent_id: string | null;
+  created_at: string;
+  updated_at: string;
+}
+export interface VendorProductSearchItem {
+  id: string;
+  vendor_id: string;
+  store_id: string;
+  category_id: string;
+
+  name: string;
+  slug: string;
+  description: string;
+
+  price: string;
+  discount_price: string | null;
+
+  stock: number;
+  tags: string[];
+
+  image: ProductImage | null;
+  gallery: ProductImage[];
+
+  highlights: string[];
+  specs: Record<string, any> | null;
+  colors: unknown | null;
+  sizes: unknown | null;
+
+  shipping_note: string | null;
+  returns_note: string | null;
+
+  status: "active" | "inactive";
+  shipping_cost: string;
+  rating_average: string;
+  rating_count: number;
+  review_count: number;
+  total_sold: number;
+
+  featured: boolean;
+  on_sale: boolean;
+
+  created_at: string;
+  updated_at: string;
+
+  /** new */
+  category_ref: ProductCategoryRef;
+}
+
+export type ProductStatus = "active" | "inactive";
+
+export interface VendorProductSearchResponse {
+  status: "success";
+  message: string;
+  data: {
+    items: VendorProductSearchItem[];
+    pagination: {
+      total: number;
+      page: number;
+      limit: number;
+      pages: number;
+      hasNext: boolean;
+      hasPrev: boolean;
+    };
+  };
+}

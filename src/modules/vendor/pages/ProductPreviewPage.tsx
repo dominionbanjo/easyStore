@@ -10,7 +10,6 @@ import ProductInfoSidebar from "@/modules/website/components/products/ProductInf
 import ProductDetailsTabs from "@/modules/website/components/products/ProductDetailsTabs";
 
 import type { RootState } from "@/store";
-import { formatLocation } from "@/utils/location";
 
 /* ───────────────── PAGE ───────────────── */
 
@@ -59,11 +58,7 @@ export default function ProductPreviewPage() {
     shipping: {
       delivery: draft.shipping_note ?? "",
       returns: draft.returns_note ?? "",
-      location: formatLocation({
-        city: draft.city,
-        state: draft.state,
-        country: draft.country,
-      }),
+      location: "Ships from your store location",
       shippingCost: draft.shipping_cost
         ? `₦${Number(draft.shipping_cost).toLocaleString()}`
         : "Calculated at checkout",

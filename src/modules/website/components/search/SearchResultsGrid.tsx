@@ -1,4 +1,4 @@
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { useMemo, useEffect, useState } from "react";
 
 import { useSearchProductsQuery } from "@/services/productApi";
@@ -6,7 +6,6 @@ import { ProductCard } from "@/components/shared/ProductCard";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { Pagination } from "@/components/shared/Pagination";
-import { USER_ROUTES } from "@/routes/temp";
 
 /* ───────────────── DEBOUNCE HOOK ───────────────── */
 
@@ -24,8 +23,6 @@ function useDebouncedValue<T>(value: T, delay = 400): T {
 /* ───────────────── COMPONENT ───────────────── */
 
 export function SearchResultsGrid() {
-  const navigate = useNavigate();
-
   const [searchParams, setSearchParams] = useSearchParams();
 
   /* ───────────────── QUERY PARAMS ───────────────── */
@@ -138,6 +135,7 @@ export function SearchResultsGrid() {
           <ProductCard.Root
             key={product.id}
             id={product.id}
+            slug={product.slug}
             name={product.name}
             price={`₦${product.price.toLocaleString("en-NG")}`}
             image={product.image as string}
@@ -147,15 +145,7 @@ export function SearchResultsGrid() {
             isFavorite={product.is_in_wishlist}
           >
             <ProductCard.Image />
-            <ProductCard.Info
-              onClick={() =>
-                navigate(
-                  `${USER_ROUTES.PRODUCT_DETAIL}/${encodeURIComponent(
-                    product.slug,
-                  )}`,
-                )
-              }
-            />{" "}
+            <ProductCard.Info />
           </ProductCard.Root>
         ))}
       </div>

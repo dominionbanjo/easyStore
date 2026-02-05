@@ -7,7 +7,7 @@ import {
 } from "react";
 import { Heart, Star } from "lucide-react";
 import { BuyNowButton } from "./BuyNowButton";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 import {
@@ -19,6 +19,7 @@ import {
 
 interface ProductCardContextType {
   id: string;
+  slug: string;
   image: string;
   name: string;
   price: string;
@@ -34,6 +35,7 @@ interface ProductCardContextType {
 
 interface ProductCardRootProps {
   id: string;
+  slug: string;
   image: string;
   name: string;
   price: string;
@@ -55,7 +57,7 @@ const useProductCard = () => {
   const ctx = useContext(ProductCardContext);
   if (!ctx)
     throw new Error(
-      "ProductCard components must be used inside <ProductCard.Root>"
+      "ProductCard components must be used inside <ProductCard.Root>",
     );
   return ctx;
 };
@@ -64,6 +66,7 @@ const useProductCard = () => {
 
 const Root = ({
   id,
+  slug,
   image,
   name,
   price,
@@ -76,6 +79,7 @@ const Root = ({
   children,
 }: ProductCardRootProps) => {
   const [isFavorited, setIsFavorited] = useState<boolean>(isFavorite);
+  const navigate = useNavigate();
 
   const [addToWishlist] = useAddToWishlistMutation();
   const [removeFromWishlist] = useRemoveFromWishlistMutation();
@@ -102,14 +106,19 @@ const Root = ({
       setIsFavorited(prev);
 
       toast.error(
-        err?.data?.message || err?.message || "Failed to update wishlist"
+        err?.data?.message || err?.message || "Failed to update wishlist",
       );
     }
+  };
+
+  const handleCardClick = () => {
+    navigate(`/product/${encodeURIComponent(slug)}`);
   };
 
   const value = useMemo(
     () => ({
       id,
+      slug,
       image,
       name,
       price,
@@ -123,6 +132,7 @@ const Root = ({
     }),
     [
       id,
+      slug,
       image,
       name,
       price,
@@ -132,12 +142,15 @@ const Root = ({
       vendor,
       avatar,
       isFavorited,
-    ]
+    ],
   );
 
   return (
     <ProductCardContext.Provider value={value}>
-      <div className="w-full max-w-[340px] bg-white rounded-[24px] p-3 shadow-sm border border-gray-100 transition-all hover:shadow-xl hover:-translate-y-1">
+      <div
+        onClick={handleCardClick}
+        className="w-full max-w-[375px] bg-white rounded-[24px] p-3 shadow-sm border border-gray-100 transition-all hover:shadow-xl hover:-translate-y-1 cursor-pointer group/card"
+      >
         {children}
       </div>
     </ProductCardContext.Provider>
@@ -153,7 +166,10 @@ const Image = () => {
     <div className="relative rounded-[20px] overflow-hidden h-[260px] mb-3 bg-gray-100">
       {/* ❤️ Favourite */}
       <button
-        onClick={toggleFavorite}
+        onClick={(e) => {
+          e.stopPropagation();
+          toggleFavorite();
+        }}
         aria-label="Toggle wishlist"
         className="absolute top-3 right-3 z-10 rounded-full bg-white/90 p-2 shadow-sm hover:scale-110 transition"
       >
@@ -219,7 +235,8 @@ const Footer = () => {
     <div className="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between text-sm">
       <Link
         to={`/vendor/${vendor}`}
-        className="flex items-center gap-2 truncate"
+        className="flex items-center gap-2 truncate relative z-10"
+        onClick={(e) => e.stopPropagation()}
       >
         <img
           src={avatar || "/avatars/default.png"}
@@ -238,8 +255,8 @@ const Footer = () => {
           stock <= 0
             ? "text-red-500"
             : stock <= 5
-            ? "text-orange-500"
-            : "text-gray-600"
+              ? "text-orange-500"
+              : "text-gray-600"
         }`}
       >
         {stock <= 0 ? "Out" : `${stock} left`}

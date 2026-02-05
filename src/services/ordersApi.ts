@@ -107,7 +107,7 @@ export const ordersApi = apiManager.injectEndpoints({
           body,
         }),
         invalidatesTags: ["User", "Store"],
-      }
+      },
     ),
 
     createOnlineOrder: builder.mutation<
@@ -123,15 +123,23 @@ export const ordersApi = apiManager.injectEndpoints({
     }),
 
     /* ───────── PAYMENT ───────── */
-
-    verifyPayment: builder.mutation<any, string>({
+    verifyPayment: builder.mutation<
+      {
+        status: "success" | "error";
+        data: {
+          status: "success" | "pending" | "failed";
+          reference: string;
+          order_id?: string;
+        };
+        message?: string;
+      },
+      string
+    >({
       query: (reference) => ({
         url: `orders/verify/${reference}`,
         method: "POST",
       }),
-      invalidatesTags: ["User", "Store"],
     }),
-
     /* ───────── READ ───────── */
 
     getMyOrders: builder.query<IOrder[], void>({

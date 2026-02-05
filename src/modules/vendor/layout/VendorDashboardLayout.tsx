@@ -3,7 +3,6 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import { toast } from "sonner";
-import { motion } from "framer-motion";
 
 import { cn } from "@/lib/utils";
 import type { RootState } from "@/store";
@@ -17,7 +16,7 @@ export default function VendorDashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const { isAuthenticated, isLoading, currentUser } = useSelector(
-    (state: RootState) => state.user
+    (state: RootState) => state.user,
   );
 
   const token = Cookies.get("token");
@@ -63,14 +62,14 @@ export default function VendorDashboardLayout() {
       <div
         className={cn(
           "flex flex-col flex-1 min-w-0 transition-all duration-300",
-          "md:ml-[260px]"
+          "md:ml-[260px]",
         )}
       >
         <DashboardHeader onMenuToggle={() => setSidebarOpen(!sidebarOpen)} />
 
-        <motion.main layout className="p-6 md:p-10 w-full max-w-7xl mx-auto">
+        <main className="p-6 md:p-10 w-full max-w-7xl mx-auto">
           <Outlet />
-        </motion.main>
+        </main>
       </div>
     </section>
   );

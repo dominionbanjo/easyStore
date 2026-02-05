@@ -4,6 +4,8 @@ import ScrollToTop from "./utils/ScrollToTop";
 import AppLoader from "./components/shared/AppLoader";
 import AddProductPage from "./modules/vendor/pages/AddProductsPage";
 import ProductPreviewPage from "./modules/vendor/pages/ProductPreviewPage";
+import CheckoutPage from "./modules/website/pages/CheckoutPage";
+import VerifyPaymentPage from "./modules/website/pages/VerifyPayment";
 
 /* ───────────────── LAYOUTS ───────────────── */
 
@@ -153,6 +155,8 @@ export default function App() {
             <Route path="settings" element={<SettingsPage />} />
             <Route path="cart" element={<CartPage />} />
             <Route path="wishlist" element={<WishlistPage />} />
+            <Route path="cart/preview" element={<CheckoutPage />} />
+            <Route path="verify-payment" element={<VerifyPaymentPage />} />
           </Route>
 
           {/* ─── AUTH ─── */}
@@ -174,6 +178,7 @@ export default function App() {
             {/* Products */}
             <Route path="products" element={<ProductsPage />} />
             <Route path="products/new" element={<AddProductPage />} />
+            <Route path="products/:slug/edit" element={<AddProductPage />} />
             <Route path="products/preview" element={<ProductPreviewPage />} />
 
             <Route path="analytics" element={<AnalyticsPage />} />
