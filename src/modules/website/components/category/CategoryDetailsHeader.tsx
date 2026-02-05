@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { ArrowLeft, Tag } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { USER_ROUTES } from "@/routes/temp";
+import { WEBSITE_ROUTES } from "@/routes";
 
 interface CategoryDetailsHeaderProps {
   name: string;
@@ -24,7 +24,7 @@ export function CategoryDetailsHeader({
         <motion.button
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
-          onClick={() => navigate(USER_ROUTES.CATEGORIES)}
+          onClick={() => navigate(WEBSITE_ROUTES.CATEGORIES)}
           className="group flex items-center gap-2 text-sm font-bold text-muted-foreground hover:text-primary transition-colors mb-12"
         >
           <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />

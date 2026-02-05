@@ -1,147 +1,196 @@
 import { useNavigate } from "react-router-dom";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import {
   Package,
-  Truck,
-  CheckCircle,
-  XCircle,
-  Clock,
   ChevronRight,
-  CreditCard,
+  Calendar,
+  ShoppingBag,
+  CheckCircle,
+  Clock,
+  XCircle,
+  Truck,
 } from "lucide-react";
 import { type IOrder } from "@/services/ordersApi";
+import { buildRoute } from "@/routes";
+import { motion } from "framer-motion";
 
 interface OrderCardProps {
   order: IOrder;
+  index?: number;
 }
 
-export function OrderCard({ order }: OrderCardProps) {
+export function OrderCard({ order, index = 0 }: OrderCardProps) {
   const navigate = useNavigate();
   const firstItem = order.order_items?.[0];
   const itemCount = order.order_items?.length || 0;
 
-  const getStatusConfig = (status: string) => {
+  const getPaymentStatusConfig = (status: string) => {
     switch (status.toLowerCase()) {
-      case "delivered":
-      case "completed":
+      case "paid":
+      case "success":
         return {
-          color: "bg-emerald-50 text-emerald-700 border-emerald-200",
-          icon: <CheckCircle className="h-3.5 w-3.5 mr-1.5" />,
+          bgColor: "bg-emerald-600",
+          textColor: "text-white",
+          label: "Paid",
+          icon: <CheckCircle className="h-4 w-4 text-emerald-600" />,
+          iconText: "text-emerald-600",
         };
-      case "shipped":
+      case "pending":
         return {
-          color: "bg-blue-50 text-blue-700 border-blue-200",
-          icon: <Truck className="h-3.5 w-3.5 mr-1.5" />,
+          bgColor: "bg-amber-500",
+          textColor: "text-white",
+          label: "Pending",
+          icon: <Clock className="h-4 w-4 text-amber-600" />,
+          iconText: "text-amber-600",
         };
-      case "canceled":
+      case "failed":
         return {
-          color: "bg-red-50 text-red-700 border-red-200",
-          icon: <XCircle className="h-3.5 w-3.5 mr-1.5" />,
+          bgColor: "bg-red-500",
+          textColor: "text-white",
+          label: "Failed",
+          icon: <XCircle className="h-4 w-4 text-red-600" />,
+          iconText: "text-red-600",
         };
       default:
         return {
-          color: "bg-amber-50 text-amber-700 border-amber-200",
-          icon: <Clock className="h-3.5 w-3.5 mr-1.5" />,
+          bgColor: "bg-gray-500",
+          textColor: "text-white",
+          label: status,
+          icon: <Clock className="h-4 w-4 text-gray-600" />,
+          iconText: "text-gray-600",
         };
     }
   };
 
-  const statusConfig = getStatusConfig(order.status);
+  const paymentConfig = getPaymentStatusConfig(order.payment_status);
+  const orderDate = new Date(order.created_at);
+  const formattedDate = orderDate.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
 
   return (
-    <Card
-      className="group relative bg-white border border-slate-200 hover:border-emerald-200 hover:shadow-xl hover:shadow-emerald-500/5 transition-all duration-300 overflow-hidden cursor-pointer"
-      onClick={() => navigate(`/orders/${order.id}`)}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, delay: index * 0.05 }}
     >
-      <CardContent className="p-0">
-        <div className="flex flex-col sm:flex-row items-stretch">
-          {/* Thumbnail Section - Rounded & Bordered */}
-          <div className="w-full sm:w-28 h-28 sm:h-auto bg-white relative flex-shrink-0 p-3 flex items-center justify-center">
-            <div className="w-full aspect-square relative rounded-lg overflow-hidden border border-slate-200 shadow-sm group-hover:border-emerald-200 transition-colors">
+      <Card
+        className="group relative bg-white border border-gray-200 hover:shadow-lg transition-all duration-300 overflow-hidden cursor-pointer rounded-2xl"
+        onClick={() => navigate(buildRoute.orderDetails(order.id))}
+      >
+        <div className="p-5 sm:p-6">
+          {/* Header: Order ID & Payment Status Pill */}
+          <div className="flex items-start justify-between gap-3 mb-3">
+            <div className="flex-1 min-w-0">
+              {/* Order Reference */}
+              <div className="flex items-center gap-2 mb-2">
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-100">
+                  <ShoppingBag className="h-4 w-4 text-gray-600 flex-shrink-0" />
+                  <span className="text-sm font-semibold text-gray-700">
+                    Order #
+                    {order.payment_reference?.slice(0, 8).toUpperCase() ||
+                      order.id.slice(0, 8).toUpperCase()}
+                  </span>
+                </div>
+              </div>
+
+              {/* Date */}
+              <div className="flex items-center gap-2 text-gray-500">
+                <Calendar className="h-4 w-4 flex-shrink-0" />
+                <span className="text-sm font-medium">{formattedDate}</span>
+              </div>
+            </div>
+
+            {/* Payment Status Pill - Top Right */}
+            <div
+              className={`px-4 py-2 rounded-full ${paymentConfig.bgColor} ${paymentConfig.textColor} text-sm font-bold capitalize flex-shrink-0`}
+            >
+              {paymentConfig.label}
+            </div>
+          </div>
+
+          {/* Product Section */}
+          <div className="flex gap-4 mb-5 pb-5 border-b border-gray-200">
+            {/* Product Image */}
+            <div className="w-24 h-24 sm:w-28 sm:h-28 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl overflow-hidden flex-shrink-0 relative">
               {firstItem?.image ? (
                 <img
                   src={firstItem.image}
                   alt={firstItem.name}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="flex items-center justify-center h-full text-slate-300 bg-slate-50">
-                  <Package className="h-6 w-6" />
-                </div>
-              )}
-              {itemCount > 1 && (
-                <div className="absolute inset-x-0 bottom-0 bg-black/60 backdrop-blur-[1px] text-white text-[9px] py-0.5 text-center font-medium">
-                  +{itemCount - 1} more
+                <div className="flex items-center justify-center h-full text-gray-300 bg-white">
+                  <Package className="h-10 w-10" />
                 </div>
               )}
             </div>
-          </div>
 
-          {/* Info Section - Clean & Spaced */}
-          <div className="flex-1 p-4 flex flex-col sm:flex-row justify-between gap-4">
-            <div className="space-y-1.5">
-              <div className="flex items-center gap-2">
-                <span className="text-[10px] font-bold tracking-wider text-slate-400 uppercase">
-                  Batch #
-                  {order.payment_reference?.slice(0, 8) || order.id.slice(0, 8)}
-                </span>
-                <span className="text-[10px] text-slate-300">•</span>
-                <span className="text-[10px] font-medium text-slate-500">
-                  {new Date(order.created_at).toLocaleDateString(undefined, {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                  })}
-                </span>
-              </div>
-
-              <h3 className="font-bold text-slate-900 line-clamp-1 text-sm sm:text-base group-hover:text-emerald-600 transition-colors">
-                {order.order_items?.map((item) => item.name).join(", ") ||
-                  "Order Items"}
+            {/* Product Info */}
+            <div className="flex-1 min-w-0 flex flex-col justify-center">
+              {/* Product Name */}
+              <h3 className="font-bold text-gray-900 text-base sm:text-lg mb-2 line-clamp-2">
+                {firstItem?.name || "Order Items"}
+                {itemCount > 1 && (
+                  <span className="text-gray-500 font-normal ml-1">
+                    +{itemCount - 1} more
+                  </span>
+                )}
               </h3>
 
-              <div className="flex items-center gap-3">
-                <div className="flex items-center text-[11px] text-slate-500">
-                  <CreditCard className="h-3 w-3 mr-1 text-slate-400" />
-                  <span className="capitalize">{order.payment_status}</span>
-                </div>
-                <div className="flex items-center text-[11px] text-slate-500">
-                  <Package className="h-3 w-3 mr-1 text-slate-400" />
-                  <span>
+              {/* Item Count & Delivery Status */}
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 text-gray-600">
+                  <Package className="h-4 w-4 flex-shrink-0" />
+                  <span className="text-sm font-medium">
                     {itemCount} {itemCount === 1 ? "Item" : "Items"}
                   </span>
                 </div>
+
+                {/* Delivery Status */}
+                {order.delivery && (
+                  <div className="flex items-center gap-2">
+                    <Truck className="h-4 w-4 flex-shrink-0 text-gray-500" />
+                    <span className="text-xs font-semibold text-gray-600 capitalize">
+                      {order.delivery.delivery_status.replace("_", " ")}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
+          </div>
 
-            {/* Price & Status - Clear & Premium */}
-            <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-3">
-              <div className="flex flex-col items-start sm:items-end">
-                <span className="text-[10px] uppercase tracking-widest text-slate-400 font-bold">
-                  Total Amount
-                </span>
-                <span className="text-lg font-black text-slate-900">
+          {/* Footer: Payment Status Icon + Total + Arrow */}
+          <div className="flex items-center justify-between">
+            {/* Payment Status with Icon */}
+            <div className="flex items-center gap-2">
+              {paymentConfig.icon}
+              <span className={`text-base font-bold ${paymentConfig.iconText}`}>
+                {paymentConfig.label}
+              </span>
+            </div>
+
+            {/* Total & Arrow */}
+            <div className="flex items-center gap-4">
+              <div className="text-right">
+                <div className="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-0.5">
+                  TOTAL
+                </div>
+                <div className="text-xl sm:text-2xl font-black text-emerald-600">
                   ₦{Number(order.total).toLocaleString()}
-                </span>
+                </div>
               </div>
 
-              <div className="flex items-center gap-3">
-                <Badge
-                  variant="outline"
-                  className={`capitalize px-2.5 py-0.5 text-[10px] font-bold rounded-full ${statusConfig.color}`}
-                >
-                  {statusConfig.icon}
-                  {order.status}
-                </Badge>
-                <div className="h-8 w-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-all border border-slate-100 group-hover:border-emerald-100">
-                  <ChevronRight className="h-4 w-4" />
-                </div>
+              {/* Arrow Button */}
+              <div className="h-12 w-12 rounded-full border-2 border-emerald-600 flex items-center justify-center text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition-all flex-shrink-0">
+                <ChevronRight className="h-5 w-5" />
               </div>
             </div>
           </div>
         </div>
-      </CardContent>
-    </Card>
+      </Card>
+    </motion.div>
   );
 }

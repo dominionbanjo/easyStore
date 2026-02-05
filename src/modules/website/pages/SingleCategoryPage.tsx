@@ -45,7 +45,7 @@ export default function CategoryDetailsPage() {
     return (
       <div className="min-h-screen bg-neutral-50/50">
         <div className="bg-white border-b border-border/50">
-          <div className="max-w-7xl mx-auto px-4 py-24 space-y-12">
+          <div className="max-w-7xl mx-auto px-1.5 sm:px-4 py-24 space-y-12">
             <Skeleton className="h-6 w-32" />
             <div className="flex justify-between items-end gap-8">
               <div className="space-y-4">
@@ -57,8 +57,8 @@ export default function CategoryDetailsPage() {
             </div>
           </div>
         </div>
-        <div className="max-w-7xl mx-auto px-4 py-16">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="max-w-7xl mx-auto px-1.5 sm:px-4 py-16">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-8">
             {Array.from({ length: 8 }).map((_, i) => (
               <Skeleton key={i} className="h-[400px] rounded-[2.5rem]" />
             ))}
@@ -92,7 +92,7 @@ export default function CategoryDetailsPage() {
 
       <CategoryDetailsHeader name={slug || ""} count={pagination?.total || 0} />
 
-      <div className="max-w-7xl mx-auto px-4 py-20 space-y-16">
+      <div className="max-w-7xl mx-auto px-1.5 sm:px-4 py-20 space-y-16">
         <AnimatePresence mode="wait">
           {isFetching && !products.length ? (
             <motion.div
@@ -100,7 +100,7 @@ export default function CategoryDetailsPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-8 px-0"
             >
               {Array.from({ length: 8 }).map((_, i) => (
                 <Skeleton key={i} className="h-[400px] rounded-[2.5rem]" />
@@ -120,7 +120,7 @@ export default function CategoryDetailsPage() {
                 </h2>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-8 px-0">
                 {products.map((product, i) => (
                   <motion.div
                     key={product.id}

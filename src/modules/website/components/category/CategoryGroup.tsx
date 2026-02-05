@@ -3,7 +3,7 @@ import { FolderTree, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
-import { USER_ROUTES } from "@/routes/temp";
+import { WEBSITE_ROUTES } from "@/routes";
 
 interface SubCategory {
   id: string;
@@ -62,7 +62,7 @@ export function CategoryGroup({ category, index }: CategoryGroupProps) {
             >
               <Card
                 onClick={() =>
-                  navigate(`${USER_ROUTES.CATEGORIES}/${child.slug}`)
+                  navigate(`${WEBSITE_ROUTES.CATEGORIES}/${child.slug}`)
                 }
                 className="group cursor-pointer rounded-[2rem] border-2 border-border/50 bg-white p-6 md:p-8 hover:shadow-2xl hover:border-primary/20 transition-all duration-300"
               >

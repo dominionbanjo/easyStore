@@ -251,7 +251,7 @@ const Root = ({
         whileHover={{ y: -8 }}
         onClick={handleCardClick}
         className={cn(
-          "group relative w-full bg-white dark:bg-zinc-900 rounded-[2.5rem] p-3 shadow-sm border border-zinc-100 dark:border-zinc-800 transition-all hover:shadow-2xl hover:shadow-emerald-500/10 cursor-pointer overflow-hidden flex flex-col h-full",
+          "group relative w-full bg-white dark:bg-zinc-900 rounded-3xl p-1 shadow-sm border border-zinc-100 dark:border-zinc-800 transition-all hover:shadow-2xl hover:shadow-emerald-500/10 cursor-pointer overflow-hidden flex flex-col h-full",
           className,
         )}
       >
@@ -370,7 +370,7 @@ const Image = () => {
   const isOutOfStock = stock <= 0;
 
   return (
-    <div className="relative aspect-square w-full rounded-[2rem] overflow-hidden mb-4 bg-zinc-50 dark:bg-zinc-800 group-hover:shadow-inner transition-all duration-500 mt-0.5">
+    <div className="relative aspect-square w-full rounded-2xl overflow-hidden bg-zinc-50 dark:bg-zinc-800 group-hover:shadow-inner transition-all duration-500">
       {/* 🏷️ Status Badges */}
       <div className="absolute top-3 left-3 z-20 flex flex-col gap-2">
         {isOutOfStock ? (
@@ -443,7 +443,7 @@ const Info = () => {
   const isOutOfStock = stock <= 0;
 
   return (
-    <div className="px-1.5 flex flex-col flex-1">
+    <div className="px-1.5 pt-2 flex flex-col flex-1">
       {/* Category & Rating Row */}
       <div className="flex items-center justify-between mb-2">
         <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest bg-emerald-50 dark:bg-emerald-500/10 px-2 py-0.5 rounded-md">
@@ -458,19 +458,19 @@ const Info = () => {
       </div>
 
       {/* Name */}
-      <h3 className="text-zinc-900 dark:text-zinc-100 font-bold text-sm sm:text-base leading-snug line-clamp-2 min-h-[2.5rem] mb-3 group-hover:text-emerald-600 transition-colors">
+      <h3 className="text-zinc-900 dark:text-zinc-100 font-bold text-sm sm:text-base leading-tight line-clamp-2 mb-1 group-hover:text-emerald-600 transition-colors">
         {name}
       </h3>
 
       {/* Price Section */}
-      <div className="mt-auto pt-2 flex items-center justify-between">
+      <div className="mt-auto pt-0 flex items-center justify-between">
         <div className="flex flex-col">
           {discountPrice && (
             <span className="text-[10px] text-zinc-400 line-through decoration-rose-500/30">
               {price}
             </span>
           )}
-          <span className="text-lg font-black text-zinc-900 dark:text-white tracking-tight">
+          <span className="text-lg font-extrabold text-zinc-900 dark:text-white tracking-tight">
             {discountPrice || price}
           </span>
         </div>
@@ -483,7 +483,7 @@ const Info = () => {
           }}
           disabled={isOutOfStock || isAddingToCart}
           className={cn(
-            "p-2.5 rounded-2xl transition-all shadow-md group/btn relative overflow-hidden",
+            "p-2 rounded-2xl transition-all shadow-md group/btn relative overflow-hidden",
             isOutOfStock
               ? "bg-zinc-100 text-zinc-400 cursor-not-allowed"
               : "bg-zinc-900 text-white hover:bg-emerald-500 hover:shadow-emerald-500/40 active:scale-95",
@@ -498,7 +498,7 @@ const Info = () => {
       </div>
 
       {/* Stock Footer */}
-      <div className="mt-3 flex items-center gap-2">
+      <div className="mt-1.5 flex items-center gap-2">
         <div className="flex-1 h-1 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
           <div
             className={cn(
@@ -535,7 +535,7 @@ const Footer = () => {
   const { vendor, avatar } = useProductCard();
 
   return (
-    <div className="mt-4 pt-4 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between gap-3">
+    <div className="mt-2 pt-2 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between gap-3">
       <Link
         to={`/vendor/${vendor}`}
         className="flex items-center gap-2.5 truncate relative z-10 group/vendor"

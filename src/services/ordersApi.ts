@@ -35,6 +35,7 @@ export interface IOrder {
   order_items: IOrderItem[];
 
   subtotal: number;
+  shipping_fee?: number;
   tax?: number;
   total: number;
 
@@ -49,6 +50,35 @@ export interface IOrder {
   delivery_id?: string | null;
 
   notes?: string | null;
+
+  // Relations
+  delivery?: {
+    id: string;
+    delivery_status:
+      | "pending"
+      | "assigned"
+      | "in_transit"
+      | "delivered"
+      | "confirmed"
+      | "failed"
+      | "returned";
+    tracking_number?: string | null;
+    estimated_delivery?: string | null;
+    delivered_at?: string | null;
+    address?: string | null;
+    city?: string | null;
+    state?: string | null;
+    country?: string | null;
+    postal_code?: string | null;
+  } | null;
+
+  vendor?: {
+    id: string;
+    first_name: string;
+    last_name: string;
+    email: string;
+    phone_number?: string | null;
+  } | null;
 
   created_at: string;
   updated_at?: string;
@@ -233,6 +263,10 @@ export const ordersApi = apiManager.injectEndpoints({
         url: `orders/${id}`,
         method: "GET",
       }),
+      transformResponse: (response: any): IOrder => {
+        // Backend returns { status, message, data: order }
+        return response?.data || response;
+      },
       providesTags: (_r, _e, id) => [{ type: "Store", id }],
     }),
 

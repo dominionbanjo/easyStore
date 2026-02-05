@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { buildRoute } from "@/routes";
 
 interface OrderCardProps {
   id: number;
@@ -60,7 +61,7 @@ export default function OrderCard({
         </div>
 
         <div className="flex justify-between gap-2 pt-2">
-          <Link to={`/orders/${id}`} className="flex-1">
+          <Link to={buildRoute.orderDetails(id.toString())} className="flex-1">
             <Button
               size="sm"
               variant="outline"

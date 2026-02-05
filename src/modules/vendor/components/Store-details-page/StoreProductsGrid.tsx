@@ -90,7 +90,7 @@ export function StoreProductsGrid({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 px-2"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-8 px-0 sm:px-2"
           >
             {Array.from({ length: 8 }).map((_, i) => (
               <Skeleton key={i} className="h-[400px] rounded-[2.5rem]" />
@@ -128,7 +128,7 @@ export function StoreProductsGrid({
             animate={{ opacity: 1 }}
             className="space-y-20"
           >
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 px-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-8 px-0 sm:px-2">
               {products.map((product, index) => (
                 <motion.div
                   key={product.id}

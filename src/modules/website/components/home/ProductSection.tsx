@@ -36,10 +36,12 @@ export function ProductSection({
   skeletonCount = 8,
 }: ProductSectionProps) {
   return (
-    <section className={`py-24 px-4 overflow-hidden ${className}`}>
+    <section
+      className={`py-12 md:py-24 px-1 sm:px-6 overflow-hidden ${className}`}
+    >
       <div className="max-w-7xl mx-auto space-y-12">
         {/* Header Section */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 px-2">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 px-1">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -50,7 +52,7 @@ export function ProductSection({
               {title}
             </h2>
             {subtitle && (
-              <p className="text-muted-foreground text-lg max-w-xl">
+              <p className="text-muted-foreground text-base md:text-lg max-w-xl">
                 {subtitle}
               </p>
             )}
@@ -69,9 +71,9 @@ export function ProductSection({
 
         {/* Content Section */}
         {isLoading ? (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid gap-2 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {Array.from({ length: skeletonCount }).map((_, i) => (
-              <Skeleton key={i} className="h-[350px] rounded-[2rem]" />
+              <Skeleton key={i} className="h-[320px] rounded-[2rem]" />
             ))}
           </div>
         ) : isError || isEmpty ? (
@@ -86,7 +88,7 @@ export function ProductSection({
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+            className="grid gap-2 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
           >
             {children}
           </motion.div>

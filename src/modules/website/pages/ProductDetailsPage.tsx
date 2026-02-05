@@ -163,7 +163,7 @@ function ProductDetailsInner({ id }: { id: string }) {
   /* ───────── RENDER ───────── */
 
   return (
-    <section className="max-w-[1480px] mx-auto px-4 py-10 space-y-16">
+    <section className="max-w-[1480px] mx-auto px-1.5 sm:px-4 py-10 space-y-16">
       {/* Gallery + Sidebar */}
       <div className="grid md:grid-cols-[1.2fr_1fr] gap-10">
         <ProductGallery images={uiProduct.images} />

@@ -20,4 +20,22 @@ export default defineConfig({
       "@/modules": path.resolve(__dirname, "./src/modules"),
     },
   },
+  build: {
+    chunkSizeWarningLimit: 1000, // 1MB
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          "vendor-react": ["react", "react-dom", "react-router-dom"],
+          "vendor-ui": [
+            "@radix-ui/react-icons",
+            "lucide-react",
+            "clsx",
+            "tailwind-merge",
+          ],
+          "vendor-charts": ["recharts"],
+          "vendor-animation": ["framer-motion"],
+        },
+      },
+    },
+  },
 });

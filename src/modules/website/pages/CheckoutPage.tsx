@@ -1,68 +1,73 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
-
-import { Info, ArrowLeft, MapPin } from "lucide-react";
-
+import { ArrowLeft, ShoppingBag } from "lucide-react";
 import { useGetCartQuery } from "@/services/cartApi";
 import { useGetUserProfileQuery } from "@/services/userApi";
 import { useCreateOnlineOrderDirectMutation } from "@/services/ordersApi";
 import type { RootState } from "@/store";
 import { toast } from "sonner";
-
 import { AddressRequiredModal } from "../components/modals/AddressRequiredModal";
 import { BankAccountModal } from "../components/modals/BankAccountModal";
+import { DeliveryInfo } from "../components/checkout/DeliveryInfo";
+import { CheckoutSummary } from "../components/checkout/CheckoutSummary";
 
 type RequiredModal = "address" | "bank" | null;
 
 export default function CheckoutPage() {
   const navigate = useNavigate();
-  const { data, isLoading } = useGetCartQuery();
-  const cart = data?.data.cart;
+  const { data: cartData, isLoading: isCartLoading } = useGetCartQuery();
+  const cart = cartData?.data.cart;
 
-  // Refetch user profile to get updated payout_verified status
+  // Refetch user profile to get updated address or status
   const { refetch: refetchUser } = useGetUserProfileQuery();
-
   const user = useSelector((state: RootState) => state.user.currentUser);
 
   const [requiredModal, setRequiredModal] = useState<RequiredModal>(null);
   const [createOrder, { isLoading: isCreatingOrder }] =
     useCreateOnlineOrderDirectMutation();
 
-  /* ───────── MODAL SEQUENCING LOGIC ───────── */
+  /* ───────── MODAL SEQUENCING & REFETCHING ───────── */
   useEffect(() => {
     if (!user) return;
 
+    // Check for missing data
     if (!user.address) {
       setRequiredModal("address");
-      return;
+    } else {
+      setRequiredModal(null);
     }
-
-    setRequiredModal(null);
   }, [user]);
+
+  const handleModalClose = () => {
+    setRequiredModal(null);
+    refetchUser(); // Crucial: Refetch data when user updates details
+  };
+
+  /* ───────── CALCULATIONS ───────── */
+  const hasAddress = Boolean(user?.address);
+  const fullName =
+    user?.first_name || user?.last_name
+      ? `${user?.first_name ?? ""} ${user?.last_name ?? ""}`.trim()
+      : "No name provided";
+  const phone = user?.phone_number ?? "No phone provided";
+  const street = user?.address?.street ?? "";
+  const state = user?.address?.state ?? "";
+  const postalCode = user?.address?.postal_code ?? "";
+  const city = user?.address?.city ?? "";
 
   /* ───────── HANDLE CHECKOUT ───────── */
   const handleCheckout = async () => {
     if (!hasAddress) {
       toast.error("Please add your delivery address");
+      setRequiredModal("address");
       return;
     }
 
     if (!cart || !user) return;
 
     try {
-      // Transform cart items to only include fields required by backend DTO
       const orderItems = cart.items.map((item) => ({
         product_id: item.product_id,
         quantity: item.quantity,
@@ -75,11 +80,9 @@ export default function CheckoutPage() {
         order_items: orderItems,
       }).unwrap();
 
-      // Response interceptor wraps data in { status, message, data }
       const data = result.data || result;
 
       if (data.success && data.payment_url) {
-        // Redirect to Paystack payment page
         window.location.href = data.payment_url;
       }
     } catch (error: any) {
@@ -87,204 +90,90 @@ export default function CheckoutPage() {
     }
   };
 
-  if (isLoading || !cart) return null;
-
-  const hasAddress = Boolean(user?.address);
-
-  const fullName =
-    user?.first_name || user?.last_name
-      ? `${user?.first_name ?? ""} ${user?.last_name ?? ""}`.trim()
-      : "";
-
-  const phone = user?.phone_number ?? "";
-  const city = user?.address?.city ?? "";
-  const address = user?.address
-    ? `${user.address.street}, ${user.address.state}, ${user.address.postal_code}`
-    : "";
+  if (isCartLoading || !cart) return null;
 
   return (
-    <>
-      {/* ───────── REQUIRED MODALS ───────── */}
-
+    <div className="min-h-screen bg-gray-50/50 dark:bg-zinc-950 pb-20">
+      {/* ───────── MODALS ───────── */}
       <AddressRequiredModal
         open={requiredModal === "address"}
-        onClose={() => {
-          setRequiredModal(null);
-          refetchUser(); // Refetch to update address
-        }}
+        onClose={handleModalClose}
         user={user}
         mode={user?.address ? "edit" : "create"}
       />
 
       <BankAccountModal
         open={requiredModal === "bank"}
-        onClose={() => {
-          setRequiredModal(null);
-          refetchUser(); // Refetch to update payout_verified status
-        }}
+        onClose={handleModalClose}
       />
 
-      {/* ───────── PAGE ───────── */}
-
-      <section className="min-h-screen px-1 sm:px-4 lg:px-8 py-3">
-        <Card className="w-full max-w-5xl mx-auto rounded-xl shadow-sm">
-          {/* HEADER */}
-          <CardHeader className="flex items-center gap-2 px-3 py-3 sm:px-6">
-            <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-
-            <CardTitle className="text-lg sm:text-2xl font-semibold">
+      {/* ───────── PAGE CONTENT ───────── */}
+      <div className="max-w-7xl mx-auto px-0 sm:px-4 py-8 sm:py-12 space-y-8 sm:space-y-12">
+        {/* Header Section */}
+        <div className="px-4 sm:px-0 flex items-center gap-4">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => navigate(-1)}
+            className="rounded-xl h-10 w-10 shrink-0"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+          <div>
+            <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-gray-900 dark:text-white flex items-center gap-3">
               Checkout
-            </CardTitle>
-          </CardHeader>
+              <ShoppingBag className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
+            </h1>
+            <p className="text-sm sm:text-base text-muted-foreground mt-1 font-medium">
+              Complete your order with secure payment
+            </p>
+          </div>
+        </div>
 
-          <CardContent className="px-3 sm:px-6 pb-4">
-            <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-4 lg:gap-8">
-              {/* LEFT */}
-              <div className="space-y-4">
-                {/* DELIVERY */}
-                <Card className="border rounded-lg">
-                  <CardHeader className="px-4 py-3 flex justify-between items-center">
-                    <CardTitle className="text-sm font-semibold">
-                      Delivery Information
-                    </CardTitle>
+        <div className="grid grid-cols-1 lg:grid-cols-[1.8fr_1fr] gap-8 items-start">
+          {/* Left Column: Information */}
+          <div className="space-y-6 px-1 sm:px-0">
+            {/* Delivery Info Component */}
+            <DeliveryInfo
+              fullName={fullName}
+              phone={phone}
+              street={street}
+              state={state}
+              postalCode={postalCode}
+              city={city}
+              hasAddress={hasAddress}
+              onEditAddress={() => setRequiredModal("address")}
+            />
 
-                    {hasAddress && (
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => setRequiredModal("address")}
-                      >
-                        <MapPin className="h-4 w-4 mr-1" />
-                        Edit Address
-                      </Button>
-                    )}
-
-                    {!hasAddress && (
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => setRequiredModal("address")}
-                      >
-                        <MapPin className="h-4 w-4 mr-1" />
-                        Add Address
-                      </Button>
-                    )}
-                  </CardHeader>
-
-                  <CardContent className="px-4 pb-4 grid gap-3">
-                    <Input value={fullName} disabled />
-                    <Input value={phone} disabled />
-                    <Input value={city} disabled />
-                    <Input value={address} disabled />
-                  </CardContent>
-                </Card>
-
-                {/* ═══════════════════════════════════════════════════════
-                    PAYMENT OPTIONS SECTION - TEMPORARILY DISABLED
-                    ═══════════════════════════════════════════════════════
-                    NOTE: DO NOT DELETE THIS SECTION
-                    This will be re-enabled in future updates to support:
-                    - Escrow payments
-                    - Pay on delivery
-                    For now, only direct online payment is allowed.
-                    ═══════════════════════════════════════════════════════
-                */}
-                {/* <Card className="border-2 border-primary/20 rounded-lg">
-                  <CardHeader className="px-4 py-3">
-                    <CardTitle className="flex items-center gap-2 text-sm font-semibold">
-                      Payment Method
-                      <Badge className="bg-primary text-white text-xs">
-                        Recommended
-                      </Badge>
-                    </CardTitle>
-                  </CardHeader>
-
-                  <CardContent className="px-4 pb-4 space-y-3">
-                    <PaymentOption
-                      active={orderType === "escrow"}
-                      onClick={() => setOrderType("escrow")}
-                      icon={<ShieldCheck className="h-5 w-5 text-primary" />}
-                      title="Online Payment (Escrow)"
-                      badge="Paystack"
-                      description={`Pay ₦${cart.total.toLocaleString()} securely. Funds released after delivery.`}
-                      points={[
-                        "Buyer & seller protection",
-                        "Refund if order fails",
-                        "Escrow tracking",
-                      ]}
-                    />
-
-                    <PaymentOption
-                      active={orderType === "online"}
-                      onClick={() => setOrderType("online")}
-                      icon={<CreditCard className="h-5 w-5 text-gray-700" />}
-                      title="Online Payment (No Escrow)"
-                      description="Direct Paystack payment without escrow."
-                    />
-
-                    <PaymentOption
-                      active={orderType === "offline"}
-                      onClick={() => setOrderType("offline")}
-                      icon={<Truck className="h-5 w-5 text-gray-600" />}
-                      title="Pay on Delivery"
-                      description="Pay when item arrives. Limited protection."
-                    />
-                  </CardContent>
-                </Card> */}
+            {/* Note about direct payment */}
+            <div className="p-5 rounded-2xl bg-primary/5 border border-primary/10 flex gap-4">
+              <div className="w-10 h-10 bg-primary/20 rounded-xl flex items-center justify-center shrink-0">
+                <p className="font-black text-primary">!</p>
               </div>
-
-              {/* RIGHT */}
-              <Card className="border rounded-lg h-fit">
-                <CardHeader className="px-4 py-3">
-                  <CardTitle className="text-sm font-semibold">
-                    Order Summary
-                  </CardTitle>
-                </CardHeader>
-
-                <CardContent className="px-4 pb-4 space-y-3 text-sm">
-                  {cart.items.map((item) => (
-                    <div key={item.product_id} className="flex justify-between">
-                      <span className="truncate">
-                        {item.name} × {item.quantity}
-                      </span>
-                      <span>
-                        ₦
-                        {(
-                          (item.discount_price ?? item.price) * item.quantity
-                        ).toLocaleString()}
-                      </span>
-                    </div>
-                  ))}
-
-                  <Separator />
-
-                  <div className="flex justify-between font-semibold">
-                    <span>Total</span>
-                    <span>₦{cart.total.toLocaleString()}</span>
-                  </div>
-                </CardContent>
-
-                <CardFooter className="px-4 pb-4 flex flex-col gap-2">
-                  <Button
-                    className="w-full rounded-full bg-primary text-white"
-                    disabled={!hasAddress || isCreatingOrder}
-                    onClick={handleCheckout}
-                  >
-                    {isCreatingOrder ? "Processing..." : "Pay with Paystack"}
-                  </Button>
-
-                  <p className="text-[11px] text-gray-500 flex gap-1">
-                    <Info className="h-3 w-3 mt-0.5" />
-                    Secure payment powered by Paystack.
-                  </p>
-                </CardFooter>
-              </Card>
+              <div className="space-y-1">
+                <p className="text-sm font-bold text-primary">
+                  Direct Secure Payment
+                </p>
+                <p className="text-xs text-primary/70 font-medium leading-relaxed">
+                  We currently support direct online payments through Paystack.
+                  Escrow and other payment methods are coming soon.
+                </p>
+              </div>
             </div>
-          </CardContent>
-        </Card>
-      </section>
-    </>
+          </div>
+
+          {/* Right Column: Order Summary */}
+          <div className="sticky top-24 px-1 sm:px-0">
+            <CheckoutSummary
+              items={cart.items}
+              total={cart.total}
+              isProcessing={isCreatingOrder}
+              disabled={!hasAddress}
+              onCheckout={handleCheckout}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
