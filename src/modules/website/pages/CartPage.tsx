@@ -1,22 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { motion } from "framer-motion";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardFooter,
-} from "@/components/ui/card";
+import { ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Trash2,
-  Plus,
-  Minus,
-  ShoppingCart,
-  ArrowRight,
-  Package,
-} from "lucide-react";
 import {
   useGetCartQuery,
   useUpdateCartItemMutation,
@@ -24,21 +8,12 @@ import {
   useClearCartMutation,
 } from "@/services/cartApi";
 import type { ICartItem } from "@/types/cart/cartTypes";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 import { USER_ROUTES, WEBSITE_ROUTES } from "@/routes/temp";
 import { useNavigate } from "react-router-dom";
 import { CartSkeleton } from "../components/skeletons/CartSkeleton";
+import { CartItem } from "../components/cart/CartItem";
+import { CartSummary } from "../components/cart/CartSummary";
 
 /* ───────── DEBOUNCE HELPER ───────── */
 function debounce<T extends (...args: any[]) => void>(fn: T, delay = 500) {
@@ -53,7 +28,6 @@ export default function CartPage() {
   const navigate = useNavigate();
 
   const { data, isLoading, isFetching, isError, refetch } = useGetCartQuery();
-
   const [updateCartItem] = useUpdateCartItemMutation();
   const [removeCartItem] = useRemoveCartItemMutation();
   const [clearCart] = useClearCartMutation();
@@ -94,8 +68,14 @@ export default function CartPage() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center px-4">
         <ShoppingCart className="h-12 w-12 text-gray-400 mb-2" />
-        <p className="text-gray-600 mb-4">Failed to load cart</p>
-        <Button onClick={() => refetch()}>Retry</Button>
+        <p className="text-gray-600 mb-4 font-medium">Failed to load cart</p>
+        <Button
+          onClick={() => refetch()}
+          variant="outline"
+          className="rounded-full"
+        >
+          Retry
+        </Button>
       </div>
     );
   }
@@ -103,12 +83,10 @@ export default function CartPage() {
   /* ───────── HANDLERS ───────── */
   const handleQuantityChange = (productId: string, quantity: number) => {
     const safeQty = Math.max(1, quantity);
-
     setLocalQty((prev) => ({
       ...prev,
       [productId]: safeQty,
     }));
-
     debouncedUpdate(productId, safeQty);
   };
 
@@ -132,196 +110,71 @@ export default function CartPage() {
 
   /* ───────── UI ───────── */
   return (
-    <section className="min-h-screen py-6 px-1 sm:px-4">
-      <Card className="max-w-6xl mx-auto shadow-sm rounded-xl">
-        <CardHeader className="px-4 py-4">
-          <CardTitle className="text-xl sm:text-2xl font-semibold">
-            My Cart
-          </CardTitle>
-          <p className="text-sm text-gray-500 mt-1">
-            {cart.items.length} item{cart.items.length !== 1 ? "s" : ""}
-          </p>
-        </CardHeader>
+    <section className="min-h-screen bg-gray-50/50 dark:bg-zinc-950 pb-20">
+      <div className="max-w-7xl mx-auto px-0 sm:px-4 py-8 sm:py-12 space-y-8 sm:space-y-12">
+        {/* Page Header */}
+        <div className="px-4 sm:px-0 flex items-end justify-between">
+          <div>
+            <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-gray-900 dark:text-white">
+              Shopping Cart
+            </h1>
+            <p className="text-sm sm:text-base text-muted-foreground mt-2 font-medium">
+              You have {cart.items.length}{" "}
+              {cart.items.length === 1 ? "item" : "items"} in your cart
+            </p>
+          </div>
+        </div>
 
-        <CardContent className="px-3 sm:px-4">
-          {cart.items.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-16">
-              <ShoppingCart className="h-16 w-16 text-gray-400 mb-4" />
-              <h2 className="text-lg font-medium text-gray-700 mb-2">
-                Your cart is empty
-              </h2>
-              <p className="text-sm text-gray-500 mb-6">
-                Looks like you haven’t added any items yet.
-              </p>
-              <Button
-                onClick={() => navigate(WEBSITE_ROUTES.HOME)}
-                className="rounded-full bg-primary text-white px-6 py-2"
-              >
-                Start Shopping
-              </Button>
+        {cart.items.length === 0 ? (
+          /* Empty State */
+          <div className="flex flex-col items-center justify-center py-20 px-4 text-center bg-white dark:bg-zinc-900 rounded-3xl sm:border border-dashed border-gray-200 dark:border-zinc-800 mx-4 sm:mx-0">
+            <div className="w-20 h-20 bg-gray-100 dark:bg-zinc-800 rounded-full flex items-center justify-center mb-6">
+              <ShoppingCart className="h-10 w-10 text-gray-400" />
             </div>
-          ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-6">
-              {/* ITEMS */}
-              <div className="space-y-4">
-                {cart.items.map((item: ICartItem) => {
-                  const qty = localQty[item.product_id] ?? item.quantity;
-
-                  return (
-                    <motion.div
-                      key={`${item.product_id}-${item.size}-${item.color}`}
-                      layout
-                    >
-                      <Card className="flex flex-col sm:flex-row gap-4 p-3 sm:p-4 rounded-lg border">
-                        <img
-                          src={item.image ?? "/placeholder.png"}
-                          alt={item.name}
-                          className="h-24 w-24 rounded-md object-cover shrink-0"
-                        />
-
-                        <div className="flex-1 text-left space-y-1">
-                          <h3 className="text-base font-semibold">
-                            {item.name}
-                          </h3>
-
-                          <p className="text-primary font-medium text-sm">
-                            ₦
-                            {(
-                              item.discount_price ?? item.price
-                            ).toLocaleString()}
-                          </p>
-
-                          <div className="flex items-center gap-2 mt-3">
-                            <Button
-                              size="icon"
-                              variant="outline"
-                              onClick={() =>
-                                handleQuantityChange(item.product_id, qty - 1)
-                              }
-                            >
-                              <Minus className="h-4 w-4" />
-                            </Button>
-
-                            <Input
-                              value={qty}
-                              readOnly
-                              className="w-12 text-center"
-                            />
-
-                            <Button
-                              size="icon"
-                              variant="outline"
-                              onClick={() =>
-                                handleQuantityChange(item.product_id, qty + 1)
-                              }
-                            >
-                              <Plus className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </div>
-
-                        <div className="flex sm:flex-col items-center sm:items-end justify-between gap-2">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => handleRemove(item.product_id)}
-                            className="text-red-500"
-                          >
-                            <Trash2 className="h-5 w-5" />
-                          </Button>
-
-                          <p className="text-sm font-medium">
-                            ₦
-                            {(
-                              (item.discount_price ?? item.price) * qty
-                            ).toLocaleString()}
-                          </p>
-                        </div>
-                      </Card>
-                    </motion.div>
-                  );
-                })}
-              </div>
-
-              {/* SUMMARY */}
-              <Card className="h-fit rounded-lg border">
-                <CardHeader className="px-4 py-3 flex justify-between">
-                  <CardTitle className="text-base font-semibold">
-                    Order Summary
-                  </CardTitle>
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="text-red-500 hover:text-red-600 hover:bg-red-50"
-                      >
-                        Clear
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent className="rounded-2xl">
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>
-                          Clear Shopping Cart?
-                        </AlertDialogTitle>
-                        <AlertDialogDescription>
-                          This will permanently remove all items from your cart.
-                          This action cannot be undone.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel className="rounded-full">
-                          Cancel
-                        </AlertDialogCancel>
-                        <AlertDialogAction
-                          onClick={handleClearCart}
-                          className="bg-red-500 hover:bg-red-600 text-white rounded-full px-6"
-                        >
-                          Clear Everything
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                </CardHeader>
-
-                <CardContent className="px-4 pb-4 space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span>Subtotal</span>
-                    <span>₦{cart.subtotal.toLocaleString()}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Shipping</span>
-                    <span>₦{cart.shipping.toLocaleString()}</span>
-                  </div>
-                  <div className="flex justify-between font-semibold">
-                    <span>Total</span>
-                    <span>₦{cart.total.toLocaleString()}</span>
-                  </div>
-                </CardContent>
-
-                <CardFooter className="px-4 pb-4 flex flex-col gap-3">
-                  <Button
-                    className="w-full rounded-full bg-primary text-white"
-                    onClick={() => navigate(USER_ROUTES.PREVIEW)}
-                  >
-                    Preview Orders
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-
-                  <Button
-                    variant="outline"
-                    className="w-full rounded-full"
-                    onClick={() => navigate(WEBSITE_ROUTES.HOME)}
-                  >
-                    <Package className="mr-2 h-4 w-4" />
-                    Continue Shopping
-                  </Button>
-                </CardFooter>
-              </Card>
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-2">
+              Your cart is empty
+            </h2>
+            <p className="text-muted-foreground mb-8 max-w-sm mx-auto">
+              Looks like you haven’t added any items yet. Explore our
+              marketplace to find great products.
+            </p>
+            <Button
+              onClick={() => navigate(WEBSITE_ROUTES.HOME)}
+              className="rounded-full h-12 px-8 text-base font-bold bg-gray-900 text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200"
+            >
+              Start Shopping
+            </Button>
+          </div>
+        ) : (
+          /* Cart Grid */
+          <div className="grid grid-cols-1 lg:grid-cols-[1.8fr_1fr] gap-8 items-start">
+            {/* Items List */}
+            <div className="space-y-4 px-1 sm:px-0">
+              {cart.items.map((item: ICartItem) => (
+                <CartItem
+                  key={`${item.product_id}-${item.size}-${item.color}`}
+                  item={item}
+                  quantity={localQty[item.product_id] ?? item.quantity}
+                  onQuantityChange={handleQuantityChange}
+                  onRemove={handleRemove}
+                />
+              ))}
             </div>
-          )}
-        </CardContent>
-      </Card>
+
+            {/* Sticky Summary */}
+            <div className="px-0 sm:px-0 sticky top-24">
+              <CartSummary
+                subtotal={cart.subtotal}
+                shipping={cart.shipping}
+                total={cart.total}
+                onClear={handleClearCart}
+                onPreview={() => navigate(USER_ROUTES.CHECKOUT)}
+                onContinueShopping={() => navigate(WEBSITE_ROUTES.HOME)}
+              />
+            </div>
+          </div>
+        )}
+      </div>
     </section>
   );
 }

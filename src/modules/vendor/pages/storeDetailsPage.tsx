@@ -94,13 +94,13 @@ export default function StoreDetailsPage() {
 
   if (storeLoading || !store) {
     return (
-      <div className="min-h-screen bg-neutral-50/50 py-20 px-4">
+      <div className="min-h-screen bg-neutral-50/50 py-20 px-1.5 sm:px-4">
         <div className="max-w-7xl mx-auto space-y-8">
           <Skeleton className="h-[400px] rounded-[3rem]" />
           <div className="flex justify-center">
             <Skeleton className="h-14 w-64 rounded-full" />
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8">
             {Array.from({ length: 8 }).map((_, i) => (
               <Skeleton key={i} className="h-[400px] rounded-[2.5rem]" />
             ))}
@@ -152,7 +152,7 @@ export default function StoreDetailsPage() {
         <div className="mt-16">
           {/* ─── CATEGORY GRID ─── */}
           {activeTab === "categories" && !selectedCategory && (
-            <div className="px-4">
+            <div className="px-1.5 sm:px-4">
               <StoreCategoriesGrid
                 key={slug}
                 categories={categories}
@@ -167,7 +167,7 @@ export default function StoreDetailsPage() {
 
           {/* ─── PRODUCTS GRID ─── */}
           {(activeTab === "products" || selectedCategory) && (
-            <div className="px-4">
+            <div className="px-1.5 sm:px-4">
               <StoreProductsGrid
                 key={productsKey}
                 products={products}

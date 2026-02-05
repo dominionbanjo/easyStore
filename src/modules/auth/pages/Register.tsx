@@ -240,10 +240,10 @@ export default function SignupPage() {
                       label="Current Sales Channel"
                       placeholder="Select channel"
                       options={[
-                        { label: "WhatsApp", value: "whatsApp" },
+                        { label: "WhatsApp", value: "whatsapp" },
                         { label: "Instagram", value: "instagram" },
                         { label: "Facebook", value: "facebook" },
-                        { label: "TikTok", value: "tikTok" },
+                        { label: "TikTok", value: "tiktok" },
                         { label: "Other", value: "other" },
                       ]}
                     />

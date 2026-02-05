@@ -1,61 +1,11 @@
-// 🌐 Public-facing website routes
-export enum WEBSITE_ROUTES {
-  HOME = "/",
-  ABOUT = "/about",
-  STORES = "/stores",
-  CATEGORIES = "/categories",
-  SETTINGS = "/settings",
-  NOT_FOUND = "*",
-}
+/**
+ * @deprecated This file is deprecated. Please use @/routes instead.
+ * This file is kept for backward compatibility and will be removed in a future version.
+ */
 
-// 👤 Auth-related routes
-export enum AUTH_ROUTES {
-  LOGIN = "/auth/login",
-  SIGNUP = "/auth/signup",
-  VERIFY_OTP = "/auth/verify-otp",
-  FORGOT_PASSWORD = "/auth/forgot-password",
-}
-
-// 🛒 User-facing dashboard or account routes
-export enum USER_ROUTES {
-  SHOP = "/shop",
-  CATEGORIES = "/categories",
-  PRODUCT_DETAIL = "/product",
-  WISHLIST = "/account/wishlist",
-  ORDERS = "/orders",
-  ORDER_DETAILS = "/orders/:id",
-  PROFILE = "/account/profile",
-  SETTINGS = "/account/settings",
-  CART = "/account/cart",
-  PREVIEW = "/account/cart/preview",
-}
-
-// 🧑‍💼 Seller / Vendor dashboard routes
-export enum SELLER_DASHBOARD_ROUTES {
-  // Overview analytics
-  DASHBOARD = "/vendor",
-  ANALYTICS = "/vendor/analytics",
-
-  // Store management
-  PRODUCTS = "/vendor/products",
-  ADD_PRODUCT = "/vendor/products/add",
-  EDIT_PRODUCT = "/vendor/products/edit/:id",
-  CATEGORIES = "/vendor/products/categories",
-
-  // Orders management
-  ORDERS = "/vendor/orders",
-  ORDER_DETAIL = "/vendor/orders/:id",
-
-  // Customers
-  CUSTOMERS = "/vendor/customers",
-
-  // Reviews & Ratings
-  REVIEWS = "/vendor/reviews",
-
-  // Reports
-  REPORTS = "/vendor/reports",
-
-  // Profile and Settings
-  PROFILE = "/vendor/profile",
-  SETTINGS = "/vendor/settings",
-}
+export {
+  WEBSITE_ROUTES,
+  AUTH_ROUTES,
+  ACCOUNT_ROUTES as USER_ROUTES,
+  VENDOR_ROUTES as SELLER_DASHBOARD_ROUTES,
+} from "./index";

@@ -10,11 +10,11 @@ export default function LandingPage() {
     <div className="flex flex-col">
       <HeroSection />
 
+      <BusinessStorySection />
       <div className="space-y-0">
-        <TrustedBy />
-        <BusinessStorySection />
         <FeaturedProductsSection />
         <AllProductsSection />
+        <TrustedBy />
         <TestimonialsCarousel />
       </div>
     </div>

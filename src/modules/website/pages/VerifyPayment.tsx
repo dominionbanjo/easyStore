@@ -13,6 +13,7 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { useVerifyPaymentMutation } from "@/services/ordersApi";
+import { ACCOUNT_ROUTES } from "@/routes";
 
 export default function VerifyPaymentPage() {
   const [searchParams] = useSearchParams();
@@ -161,7 +162,10 @@ export default function VerifyPaymentPage() {
               Reference: {reference}
             </div>
 
-            <Button className="w-full" onClick={() => navigate("/orders")}>
+            <Button
+              className="w-full"
+              onClick={() => navigate(ACCOUNT_ROUTES.ORDERS)}
+            >
               <CreditCard className="mr-2 h-4 w-4" />
               View My Orders
             </Button>
@@ -199,7 +203,7 @@ export default function VerifyPaymentPage() {
             <Button
               variant="outline"
               className="w-full"
-              onClick={() => navigate("/orders")}
+              onClick={() => navigate(ACCOUNT_ROUTES.ORDERS)}
             >
               Go to Orders
             </Button>

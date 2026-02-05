@@ -144,8 +144,6 @@ export default function App() {
             <Route path="categories" element={<CategoriesPage />} />
             <Route path="categories/:slug" element={<CategoryDetailsPage />} />
             <Route path="product/:slug" element={<ProductDetailPage />} />
-            <Route path="orders" element={<OrdersPage />} />
-            <Route path="orders/:id" element={<OrderDetailsPage />} />
             <Route path="about" element={<AboutPage />} />
           </Route>
 
@@ -157,6 +155,8 @@ export default function App() {
             <Route path="wishlist" element={<WishlistPage />} />
             <Route path="cart/preview" element={<CheckoutPage />} />
             <Route path="verify-payment" element={<VerifyPaymentPage />} />
+            <Route path="orders" element={<OrdersPage />} />
+            <Route path="orders/:id" element={<OrderDetailsPage />} />
           </Route>
 
           {/* ─── AUTH ─── */}
