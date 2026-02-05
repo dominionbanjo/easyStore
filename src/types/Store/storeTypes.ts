@@ -46,6 +46,7 @@ export interface GetStoresArgs {
   page?: number;
   limit?: number;
   search?: string;
+  state?: string;
 }
 
 /* ───────────────── SEARCH STORES ───────────────── */
@@ -54,6 +55,7 @@ export interface SearchStoresArgs {
   q: string;
   page?: number;
   limit?: number;
+  state?: string;
 }
 
 export interface ISearchStoresResponse {

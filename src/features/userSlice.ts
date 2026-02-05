@@ -1,4 +1,3 @@
-// features/userSlice.ts
 import type { IUser } from "@/types/auth/authTypes";
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 

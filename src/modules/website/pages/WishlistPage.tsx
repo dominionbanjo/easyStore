@@ -47,7 +47,7 @@ export default function WishlistPage() {
   /* ───────────────── RENDER ───────────────── */
 
   return (
-    <section className="min-h-screen bg-neutral-50 py-2 px-4 sm:px-8">
+    <section className="min-h-screen py-2 px-4 sm:px-8 mt-[40px]">
       <div className="max-w-6xl mx-auto space-y-10">
         {/* ─── Header ─── */}
         <div className="flex flex-col sm:flex-row justify-between gap-4">
@@ -104,6 +104,7 @@ export default function WishlistPage() {
                 >
                   <ProductCard.Root
                     id={item.product_id}
+                    slug={item.product_id}
                     name={item.name}
                     price={`₦${Number(item.price).toLocaleString("en-NG")}`}
                     image={item.image || ""}

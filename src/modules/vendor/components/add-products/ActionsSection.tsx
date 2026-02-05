@@ -1,6 +1,20 @@
 import { Button } from "@/components/ui/button";
 
-export function ActionsSection({ creating, onCreate }: any) {
+interface ActionsSectionProps {
+  creating: boolean;
+  onCreate: () => void;
+  submitLabel?: string;
+  loadingLabel?: string;
+  disabled?: boolean;
+}
+
+export function ActionsSection({
+  creating,
+  onCreate,
+  submitLabel = "Create Product",
+  loadingLabel = "Creating…",
+  disabled,
+}: ActionsSectionProps) {
   return (
     <div className="flex gap-4">
       <Button type="submit" variant="outline" className="flex-1">
@@ -11,9 +25,9 @@ export function ActionsSection({ creating, onCreate }: any) {
         type="button"
         className="flex-1"
         onClick={onCreate}
-        disabled={creating}
+        disabled={disabled || creating}
       >
-        {creating ? "Creating…" : "Create Product"}
+        {creating ? loadingLabel : submitLabel}
       </Button>
     </div>
   );

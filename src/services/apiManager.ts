@@ -1,25 +1,14 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import Cookies from "js-cookie";
+import { createApi, retry } from "@reduxjs/toolkit/query/react";
+import { baseQueryWithAuth } from "./authModes/authModes";
 
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000"; ///"https://easystore-backend.onrender.com";
+// 🔄 STAGGERED RETRY LOGIC
+const staggeredBaseQuery = retry(baseQueryWithAuth, {
+  maxRetries: 3,
+});
 
 export const apiManager = createApi({
   reducerPath: "apiManager",
-  baseQuery: fetchBaseQuery({
-    baseUrl: BASE_URL,
-    credentials: "include",
-    prepareHeaders: (headers) => {
-      const cookieToken = Cookies.get("token");
-      if (cookieToken) {
-        headers.set("Authorization", `Bearer ${cookieToken}`);
-      }
-
-      headers.set("Accept", "application/json");
-
-      // ❌ DO NOT set Content-Type here
-      return headers;
-    },
-  }),
+  baseQuery: staggeredBaseQuery,
 
   // ⏱ GLOBAL CACHING SETTINGS
   keepUnusedDataFor: 300, // seconds (5 minutes)

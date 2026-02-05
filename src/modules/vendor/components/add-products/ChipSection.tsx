@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { X, Plus } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -20,12 +20,17 @@ export default function ChipSection({
   onRemove,
 }: ChipSectionProps) {
   const [input, setInput] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
 
   function handleAdd() {
     const v = input.trim();
-    if (!v) return;
+    if (!v) {
+      inputRef.current?.focus();
+      return;
+    }
     onAdd(v);
     setInput("");
+    inputRef.current?.focus();
   }
 
   return (
@@ -35,6 +40,7 @@ export default function ChipSection({
       {/* Input row */}
       <div className="flex items-center gap-2">
         <input
+          ref={inputRef}
           className={cn(
             "border rounded-md flex-1 min-w-0",
             "h-9 px-3 text-sm",

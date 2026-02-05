@@ -17,6 +17,7 @@ createRoot(document.getElementById("root")!).render(
           style: {
             borderRadius: "0.5rem",
             fontSize: "0.9rem",
+            marginTop: "60px",
           },
         }}
       />
@@ -24,5 +25,5 @@ createRoot(document.getElementById("root")!).render(
         <App />
       </AuthProvider>
     </Provider>
-  </StrictMode>
+  </StrictMode>,
 );

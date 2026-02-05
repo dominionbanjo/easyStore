@@ -21,12 +21,14 @@ const transitionVariants: Variants = {
 export function HeroTitle() {
   return (
     <>
-      Scale Your Small Business
+      Transform Your Business with a
       <br />
-      <span className="relative inline-block">
-        <span className="relative z-10 text-black">
-          With a <span className="text-[#17c06e] font-bold">Big Brand</span>{" "}
-          Experience.
+      <span className="relative inline-block mt-2">
+        <span className="relative z-10 text-primary">
+          Professional{" "}
+          <span className="text-[#17c06e] font-bold underline decoration-dotted underline-offset-8">
+            Online Storefront
+          </span>
         </span>
       </span>
     </>
@@ -35,27 +37,29 @@ export function HeroTitle() {
 
 export default function HeroSection() {
   return (
-    <section className="relative isolate overflow-hidden pb-10 sm:pb-20 px-4">
-      <div className="flex justify-center w-full">
-        <div className="w-full flex flex-col items-center lg:flex-row lg:items-center lg:justify-between gap-12">
+    <section className="relative isolate overflow-hidden py-12 sm:py-24 px-4 bg-gradient-to-b from-background to-muted/20">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-16">
           {/* LEFT SIDE */}
-          <div className="flex-1 text-center lg:text-left">
+          <div className="flex-1 text-center lg:text-left space-y-8">
             {/* Catchy TAG */}
-            <motion.p
-              variants={transitionVariants}
-              initial="hidden"
-              animate="visible"
-              className="italic text-[#367e5c]"
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium border border-primary/20"
             >
-              # Nigeria's easiest marketplace for discovering everyday
-              essentials.
-            </motion.p>
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+              </span>
+              Empowering 40,000+ Nigerian Businesses
+            </motion.div>
 
             <motion.h1
               variants={transitionVariants}
               initial="hidden"
               animate="visible"
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight text-balance leading-tight"
+              className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-balance leading-[1.1]"
             >
               <HeroTitle />
             </motion.h1>
@@ -65,11 +69,12 @@ export default function HeroSection() {
               initial="hidden"
               animate="visible"
               transition={{ delay: 0.2 }}
-              className="mt-6 max-w-xl mx-auto lg:mx-0 text-lg sm:text-xl leading-relaxed text-foreground"
+              className="mt-6 max-w-xl mx-auto lg:mx-0 text-lg sm:text-xl leading-relaxed text-muted-foreground"
             >
-              Create a beautiful portfolio to showcase your products, gain trust
-              instantly, and make it easier for customers to shop fast,
-              reliable, and stress-free
+              EasyStore gives you everything you need to sell online. Create
+              your professional storefront in minutes, showcase your products to
+              millions, and manage your entire business from one simple
+              dashboard.
             </motion.p>
 
             <motion.div
@@ -77,29 +82,21 @@ export default function HeroSection() {
               initial="hidden"
               animate="visible"
               transition={{ delay: 0.4 }}
-              className="mt-10 flex flex-col items-center lg:items-start gap-4"
+              className="mt-10 flex flex-col sm:flex-row items-center lg:items-start gap-6"
             >
               <Button
                 size="lg"
-                className="bg-primary text-primary-foreground rounded-full px-8 py-7 hover:bg-[#17c06e]/90 transition-transform hover:scale-[1.03]"
+                className="bg-primary text-primary-foreground rounded-xl h-14 px-10 text-lg font-semibold hover:scale-[1.05] active:scale-95 transition-all shadow-lg hover:shadow-primary/20"
               >
-                Get Started
+                Start Selling Now
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
 
               <SocialProofBadge
                 users={[
-                  { src: "/images/fash4.png", alt: "@shadcn", fallback: "CN" },
-                  {
-                    src: "/images/fash0.png",
-                    alt: "@maxleiter",
-                    fallback: "ML",
-                  },
-                  {
-                    src: "/images/fash1.png",
-                    alt: "@evilrabbit",
-                    fallback: "ER",
-                  },
+                  { src: "/images/fash4.png", alt: "@user1", fallback: "U1" },
+                  { src: "/images/fash0.png", alt: "@user2", fallback: "U2" },
+                  { src: "/images/fash1.png", alt: "@user3", fallback: "U3" },
                 ]}
                 rating={4.9}
                 totalUsers={100}
@@ -108,48 +105,37 @@ export default function HeroSection() {
             </motion.div>
           </div>
 
-          {/* RIGHT SIDE (unchanged) */}
+          {/* RIGHT SIDE */}
           <motion.div
             variants={transitionVariants}
             initial="hidden"
             animate="visible"
             transition={{ delay: 0.5 }}
-            className="flex-1 flex justify-center lg:justify-end"
+            className="flex-1 w-full max-w-2xl"
           >
-            <div className="relative w-full max-w-lg aspect-[5/3] rounded-3xl overflow-hidden shadow-lg border border-border/20 lg:max-w-xl xl:max-w-2xl bg-transparent transition-all duration-500 ease-in-out">
-              <video
-                className="w-full h-full object-cover"
-                src="/videos/campaign5.mp4"
-                poster="/vid/video-poster.jpg"
-                autoPlay
-                muted
-                loop
-                playsInline
-                aria-label="Product showcase video placeholder"
-              />
+            <div className="relative group p-2 bg-white rounded-[2.5rem] shadow-2xl border border-border/50 overflow-hidden transform hover:-rotate-1 transition-transform duration-700">
+              <div className="relative aspect-[4/3] rounded-[2rem] overflow-hidden bg-muted">
+                <video
+                  className="w-full h-full object-cover"
+                  src="/videos/campaign5.mp4"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                />
 
-              <div className="absolute inset-0 flex items-end justify-end p-4 pointer-events-none">
-                <div className="pointer-events-auto group relative flex items-center">
-                  <button
-                    type="button"
-                    aria-label="Open message"
-                    className="bg-black/60 text-white p-2 rounded-full backdrop-blur-md flex items-center justify-center shadow-sm"
-                  >
-                    <img
-                      src="/logos/favicon-transparent.png"
-                      alt="logo"
-                      width={20}
-                      height={20}
-                    />
-                  </button>
-
-                  <div className="absolute right-full mr-3 flex items-center">
-                    <div
-                      role="tooltip"
-                      className="transform translate-x-2 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-200 ease-out bg-black/80 text-white text-xs sm:text-sm font-medium rounded-md px-3 py-2 whitespace-nowrap shadow-lg"
-                    >
-                      EasyStore
-                    </div>
+                {/* Floating Elements for "Story" feel */}
+                <div className="absolute top-6 right-6 bg-white/90 backdrop-blur px-4 py-2 rounded-2xl shadow-xl flex items-center gap-3 animate-bounce">
+                  <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white text-xs">
+                    ✓
+                  </div>
+                  <div>
+                    <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
+                      New Sale
+                    </p>
+                    <p className="text-sm font-bold text-foreground">
+                      ₦45,000 received
+                    </p>
                   </div>
                 </div>
               </div>
