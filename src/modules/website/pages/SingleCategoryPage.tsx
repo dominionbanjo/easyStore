@@ -142,6 +142,9 @@ export default function CategoryDetailsPage() {
                       stock={product.stock}
                       isFavorite={product.is_in_wishlist}
                       vendor={product.store_name}
+                      colors={product.colors}
+                      sizes={product.sizes}
+                      category={product.category ?? slug}
                     >
                       <ProductCard.Image />
                       <ProductCard.Info />

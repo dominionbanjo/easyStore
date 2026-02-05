@@ -20,7 +20,7 @@ export default function VerifyPaymentPage() {
 
   const reference = searchParams.get("reference");
 
-  const [verifyPayment, { data, isLoading, isError, reset }] =
+  const [verifyPayment, { data, isLoading, isError, error, reset }] =
     useVerifyPaymentMutation();
 
   /* ───────────────── AUTO VERIFY ───────────────── */
@@ -30,7 +30,8 @@ export default function VerifyPaymentPage() {
     }
 
     return () => reset();
-  }, [reference, verifyPayment, reset]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [reference]);
 
   /* ───────────────── NO REFERENCE ───────────────── */
   if (!reference) {
@@ -86,6 +87,12 @@ export default function VerifyPaymentPage() {
 
   /* ───────────────── ERROR ───────────────── */
   if (isError) {
+    // Extract error message from RTK Query error
+    const errorMessage =
+      (error as any)?.data?.message ||
+      (error as any)?.message ||
+      "We couldn't verify this payment right now.";
+
     return (
       <section className="min-h-screen flex items-center justify-center px-4">
         <Card className="w-full max-w-md text-center">
@@ -97,9 +104,11 @@ export default function VerifyPaymentPage() {
           </CardHeader>
 
           <CardContent className="space-y-4">
-            <p className="text-sm text-muted-foreground">
-              We couldn’t verify this payment right now.
-            </p>
+            <p className="text-sm text-muted-foreground">{errorMessage}</p>
+
+            <div className="rounded-md bg-muted p-3 text-xs font-mono">
+              Reference: {reference}
+            </div>
 
             <div className="flex flex-col gap-2">
               <Button
@@ -123,10 +132,16 @@ export default function VerifyPaymentPage() {
     );
   }
 
-  const paymentStatus = data?.data?.status;
+  // Check if payment was successful by looking at the orders
+  // Show success if at least one order has been confirmed (webhook may process asynchronously)
+  const orders = data?.data?.orders;
+  const isSuccess =
+    orders &&
+    orders.length > 0 &&
+    orders.some((order: any) => order.payment_status === "success");
 
   /* ───────────────── SUCCESS ───────────────── */
-  if (paymentStatus === "success") {
+  if (isSuccess) {
     return (
       <section className="min-h-screen flex items-center justify-center px-4">
         <Card className="w-full max-w-md text-center">

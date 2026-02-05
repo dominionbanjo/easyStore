@@ -146,6 +146,13 @@ export function StoreProductsGrid({
                     stock={product.stock ?? 0}
                     vendor={product.store_name}
                     isFavorite={product.is_in_wishlist}
+                    colors={product.colors}
+                    sizes={product.sizes}
+                    category={
+                      product.category ??
+                      selectedCategory?.name ??
+                      "Store Product"
+                    }
                   >
                     <ProductCard.Image />
                     <ProductCard.Info />

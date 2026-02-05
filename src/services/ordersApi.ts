@@ -56,6 +56,14 @@ export interface IOrder {
 
 /* ───────────────── DTO ARGS ───────────────── */
 
+// DTO for creating order items - matches backend validation
+export interface CreateOrderItemDto {
+  product_id: string;
+  quantity: number;
+  size?: string | null;
+  color?: string | null;
+}
+
 export interface CreateOfflineOrderArgs {
   order_items: IOrderItem[];
   tax?: number;
@@ -64,12 +72,33 @@ export interface CreateOfflineOrderArgs {
 
 export interface CreateOnlineOrderArgs {
   email: string;
-  order_items: IOrderItem[];
+  order_items: CreateOrderItemDto[];
 }
 
 export interface UpdateOrderStatusArgs {
   id: string;
   status: OrderStatus;
+}
+
+export interface GetMyOrdersArgs {
+  search?: string;
+  status?: OrderStatus | "all";
+  page?: number;
+  limit?: number;
+}
+
+export interface PaginationMeta {
+  total: number;
+  page: number;
+  limit: number;
+  pages: number;
+  hasNext: boolean;
+  hasPrev: boolean;
+}
+
+export interface PaginatedResult<T> {
+  items: T[];
+  pagination: PaginationMeta;
 }
 
 /* ───────────────── RESPONSES ───────────────── */
@@ -106,7 +135,7 @@ export const ordersApi = apiManager.injectEndpoints({
           method: "POST",
           body,
         }),
-        invalidatesTags: ["User", "Store"],
+        invalidatesTags: ["User", "Store", "Cart"],
       },
     ),
 
@@ -119,7 +148,28 @@ export const ordersApi = apiManager.injectEndpoints({
         method: "POST",
         body,
       }),
-      invalidatesTags: ["User", "Store"],
+      invalidatesTags: ["User", "Store", "Cart"],
+    }),
+
+    createOnlineOrderDirect: builder.mutation<
+      {
+        status: string;
+        message: string;
+        data: {
+          success: boolean;
+          payment_url: string;
+          reference: string;
+          orders: IOrder[];
+        };
+      },
+      CreateOnlineOrderArgs
+    >({
+      query: (body) => ({
+        url: "orders/online/direct",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["User", "Store", "Cart"],
     }),
 
     /* ───────── PAYMENT ───────── */
@@ -127,9 +177,10 @@ export const ordersApi = apiManager.injectEndpoints({
       {
         status: "success" | "error";
         data: {
-          status: "success" | "pending" | "failed";
-          reference: string;
-          order_id?: string;
+          success: boolean;
+          idempotent?: boolean;
+          message?: string;
+          orders?: IOrder[];
         };
         message?: string;
       },
@@ -140,15 +191,34 @@ export const ordersApi = apiManager.injectEndpoints({
         method: "POST",
       }),
     }),
-    /* ───────── READ ───────── */
 
-    getMyOrders: builder.query<IOrder[], void>({
-      query: () => ({
-        url: "orders",
-        method: "GET",
-      }),
-      providesTags: ["User"],
-    }),
+    getMyOrders: builder.query<PaginatedResult<IOrder>, GetMyOrdersArgs | void>(
+      {
+        query: (params) => ({
+          url: "orders",
+          method: "GET",
+          params: params || {},
+        }),
+        transformResponse: (response: any): PaginatedResult<IOrder> => {
+          // The backend typically returns { status, message, data: { items, pagination } }
+          // but some base queries or interceptors might partially unwrap it.
+          const payload = response?.data || response;
+
+          return {
+            items: payload?.items || [],
+            pagination: payload?.pagination || {
+              total: 0,
+              page: 1,
+              limit: 10,
+              pages: 0,
+              hasNext: false,
+              hasPrev: false,
+            },
+          };
+        },
+        providesTags: ["User"],
+      },
+    ),
 
     getVendorOrders: builder.query<IOrder[], void>({
       query: () => ({
@@ -202,6 +272,7 @@ export const ordersApi = apiManager.injectEndpoints({
 export const {
   useCreateOfflineOrderMutation,
   useCreateOnlineOrderMutation,
+  useCreateOnlineOrderDirectMutation,
   useVerifyPaymentMutation,
   useGetMyOrdersQuery,
   useGetVendorOrdersQuery,

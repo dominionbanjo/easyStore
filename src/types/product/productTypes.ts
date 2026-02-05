@@ -31,6 +31,14 @@ export interface IProduct {
   /* legacy / list usage */
   store_name?: string;
   is_in_wishlist: boolean;
+
+  colors?: {
+    id: string;
+    name: string;
+    hex: string;
+  }[];
+  sizes?: string[];
+  category?: string;
 }
 
 /* ───────────────── FULL PRODUCT (DETAIL PAGE) ───────────────── */

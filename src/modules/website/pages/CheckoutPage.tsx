@@ -11,27 +11,19 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 
-import {
-  ShieldCheck,
-  CreditCard,
-  Truck,
-  Info,
-  ArrowLeft,
-  MapPin,
-  Landmark,
-} from "lucide-react";
+import { Info, ArrowLeft, MapPin } from "lucide-react";
 
 import { useGetCartQuery } from "@/services/cartApi";
+import { useGetUserProfileQuery } from "@/services/userApi";
+import { useCreateOnlineOrderDirectMutation } from "@/services/ordersApi";
 import type { RootState } from "@/store";
+import { toast } from "sonner";
 
 import { AddressRequiredModal } from "../components/modals/AddressRequiredModal";
 import { BankAccountModal } from "../components/modals/BankAccountModal";
-import PaymentOption from "../components/PaymentOption";
 
-type OrderType = "escrow" | "online" | "offline";
 type RequiredModal = "address" | "bank" | null;
 
 export default function CheckoutPage() {
@@ -39,10 +31,14 @@ export default function CheckoutPage() {
   const { data, isLoading } = useGetCartQuery();
   const cart = data?.data.cart;
 
+  // Refetch user profile to get updated payout_verified status
+  const { refetch: refetchUser } = useGetUserProfileQuery();
+
   const user = useSelector((state: RootState) => state.user.currentUser);
 
-  const [orderType, setOrderType] = useState<OrderType>("escrow");
   const [requiredModal, setRequiredModal] = useState<RequiredModal>(null);
+  const [createOrder, { isLoading: isCreatingOrder }] =
+    useCreateOnlineOrderDirectMutation();
 
   /* ───────── MODAL SEQUENCING LOGIC ───────── */
   useEffect(() => {
@@ -53,18 +49,47 @@ export default function CheckoutPage() {
       return;
     }
 
-    if (!user.payout_verified) {
-      setRequiredModal("bank");
+    setRequiredModal(null);
+  }, [user]);
+
+  /* ───────── HANDLE CHECKOUT ───────── */
+  const handleCheckout = async () => {
+    if (!hasAddress) {
+      toast.error("Please add your delivery address");
       return;
     }
 
-    setRequiredModal(null);
-  }, [user]);
+    if (!cart || !user) return;
+
+    try {
+      // Transform cart items to only include fields required by backend DTO
+      const orderItems = cart.items.map((item) => ({
+        product_id: item.product_id,
+        quantity: item.quantity,
+        size: item.size,
+        color: item.color,
+      }));
+
+      const result = await createOrder({
+        email: user.email,
+        order_items: orderItems,
+      }).unwrap();
+
+      // Response interceptor wraps data in { status, message, data }
+      const data = result.data || result;
+
+      if (data.success && data.payment_url) {
+        // Redirect to Paystack payment page
+        window.location.href = data.payment_url;
+      }
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Failed to create order");
+    }
+  };
 
   if (isLoading || !cart) return null;
 
   const hasAddress = Boolean(user?.address);
-  const hasBank = Boolean(user?.payout_verified);
 
   const fullName =
     user?.first_name || user?.last_name
@@ -83,14 +108,20 @@ export default function CheckoutPage() {
 
       <AddressRequiredModal
         open={requiredModal === "address"}
-        onClose={() => setRequiredModal(null)}
+        onClose={() => {
+          setRequiredModal(null);
+          refetchUser(); // Refetch to update address
+        }}
         user={user}
         mode={user?.address ? "edit" : "create"}
       />
 
       <BankAccountModal
         open={requiredModal === "bank"}
-        onClose={() => setRequiredModal(null)}
+        onClose={() => {
+          setRequiredModal(null);
+          refetchUser(); // Refetch to update payout_verified status
+        }}
       />
 
       {/* ───────── PAGE ───────── */}
@@ -150,8 +181,17 @@ export default function CheckoutPage() {
                   </CardContent>
                 </Card>
 
-                {/* PAYMENT */}
-                <Card className="border-2 border-primary/20 rounded-lg">
+                {/* ═══════════════════════════════════════════════════════
+                    PAYMENT OPTIONS SECTION - TEMPORARILY DISABLED
+                    ═══════════════════════════════════════════════════════
+                    NOTE: DO NOT DELETE THIS SECTION
+                    This will be re-enabled in future updates to support:
+                    - Escrow payments
+                    - Pay on delivery
+                    For now, only direct online payment is allowed.
+                    ═══════════════════════════════════════════════════════
+                */}
+                {/* <Card className="border-2 border-primary/20 rounded-lg">
                   <CardHeader className="px-4 py-3">
                     <CardTitle className="flex items-center gap-2 text-sm font-semibold">
                       Payment Method
@@ -192,7 +232,7 @@ export default function CheckoutPage() {
                       description="Pay when item arrives. Limited protection."
                     />
                   </CardContent>
-                </Card>
+                </Card> */}
               </div>
 
               {/* RIGHT */}
@@ -229,27 +269,15 @@ export default function CheckoutPage() {
                 <CardFooter className="px-4 pb-4 flex flex-col gap-2">
                   <Button
                     className="w-full rounded-full bg-primary text-white"
-                    disabled={!hasAddress || !hasBank}
+                    disabled={!hasAddress || isCreatingOrder}
+                    onClick={handleCheckout}
                   >
-                    {orderType === "offline"
-                      ? "Place Order"
-                      : "Pay with Paystack"}
+                    {isCreatingOrder ? "Processing..." : "Pay with Paystack"}
                   </Button>
-
-                  {!hasBank && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setRequiredModal("bank")}
-                    >
-                      <Landmark className="h-4 w-4 mr-1" />
-                      Add bank account to continue
-                    </Button>
-                  )}
 
                   <p className="text-[11px] text-gray-500 flex gap-1">
                     <Info className="h-3 w-3 mt-0.5" />
-                    Escrow provides the highest protection.
+                    Secure payment powered by Paystack.
                   </p>
                 </CardFooter>
               </Card>
