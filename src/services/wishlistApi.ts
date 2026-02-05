@@ -48,13 +48,21 @@ export const wishlistApi = apiManager.injectEndpoints({
     }),
 
     /* ───────── CLEAR WISHLIST ───────── */
-
     clearWishlist: builder.mutation<{ message: string }, void>({
       query: () => ({
         url: "wishlist",
         method: "DELETE",
       }),
       invalidatesTags: ["Wishlist"],
+    }),
+
+    /* ───────── MOVE ALL TO CART ───────── */
+    moveAllToCart: builder.mutation<{ message: string }, void>({
+      query: () => ({
+        url: "wishlist/move-to-cart",
+        method: "POST",
+      }),
+      invalidatesTags: ["Wishlist", "Cart"],
     }),
   }),
 });
@@ -66,4 +74,5 @@ export const {
   useAddToWishlistMutation,
   useRemoveFromWishlistMutation,
   useClearWishlistMutation,
+  useMoveAllToCartMutation,
 } = wishlistApi;

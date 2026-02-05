@@ -139,10 +139,12 @@ export function SearchResultsGrid() {
             name={product.name}
             price={`₦${product.price.toLocaleString("en-NG")}`}
             image={product.image as string}
-            category=""
+            category={product.category || ""}
             rating={Number(product.rating_average ?? 0)}
             stock={product.stock}
             isFavorite={product.is_in_wishlist}
+            colors={product.colors}
+            sizes={product.sizes}
           >
             <ProductCard.Image />
             <ProductCard.Info />

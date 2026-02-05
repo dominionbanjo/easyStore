@@ -126,7 +126,10 @@ export default function StoreDetailsPage() {
           description:
             store.description ?? "This store has not added a description yet.",
           rating: Number(store.rating_average ?? 0),
-          location: store.address ?? "Location not specified",
+          location:
+            [store.address_city, store.address_state, store.address_country]
+              .filter(Boolean)
+              .join(", ") || "Location not specified",
           email: store.email ?? undefined,
           phone: store.phone_number ?? undefined,
           website: store.website ?? undefined,

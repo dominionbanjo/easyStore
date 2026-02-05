@@ -3,6 +3,7 @@ import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { X } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -125,12 +126,22 @@ export function AddressRequiredModal({
         <Dialog.Overlay className="fixed inset-0 bg-black/50 z-50" />
         <Dialog.Content className="fixed inset-0 z-50 flex items-center justify-center px-4">
           <Card className="w-full max-w-lg rounded-xl">
-            <CardHeader>
+            <CardHeader className="relative">
               <CardTitle>
                 {mode === "edit"
                   ? "Edit Delivery Address"
                   : "Add Delivery Address"}
               </CardTitle>
+              <Dialog.Close asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-4 top-4 rounded-full"
+                  onClick={onClose}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </Dialog.Close>
             </CardHeader>
 
             <CardContent>

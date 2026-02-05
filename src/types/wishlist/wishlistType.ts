@@ -2,6 +2,8 @@
 
 /* ───────────────── TYPES ───────────────── */
 
+import type { IProduct } from "../product/productTypes";
+
 export interface IWishlistItem {
   id: string;
   user_id: string;
@@ -10,6 +12,7 @@ export interface IWishlistItem {
   image?: string | null;
   price: string;
   created_at: string;
+  product?: IProduct;
 }
 
 /* ───────────────── RESPONSES ───────────────── */

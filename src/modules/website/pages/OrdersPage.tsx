@@ -1,11 +1,7 @@
-import { useState } from "react";
-import {
-  Card,
-  CardTitle,
-  CardContent,
-  CardDescription,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { useForm, FormProvider } from "react-hook-form";
+import { FormInput } from "@/components/shared/form/FormInput";
 import {
   Select,
   SelectTrigger,
@@ -13,211 +9,207 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  Search,
-  Package,
-  Truck,
-  CheckCircle,
-  XCircle,
-  Calendar,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
-import { useNavigate } from "react-router-dom";
 
-// ✅ Mock data for demo
-const mockOrders = [
-  {
-    id: "ORD-98432",
-    product: "Handcrafted Leather Bag",
-    image: "/images/mock-bag.jpg",
-    price: 95000,
-    quantity: 1,
-    status: "Delivered",
-    date: "2025-10-12",
-  },
-  {
-    id: "ORD-72143",
-    product: "Minimal Ceramic Vase",
-    image: "/images/mock-vase.jpg",
-    price: 18000,
-    quantity: 2,
-    status: "Shipped",
-    date: "2025-10-16",
-  },
-  {
-    id: "ORD-41237",
-    product: "Classic White Sneakers",
-    image: "/images/mock-shoes.jpg",
-    price: 52000,
-    quantity: 1,
-    status: "Pending",
-    date: "2025-10-21",
-  },
-  {
-    id: "ORD-30215",
-    product: "Wireless Bluetooth Speaker",
-    image: "/images/mock-speaker.jpg",
-    price: 40000,
-    quantity: 1,
-    status: "Cancelled",
-    date: "2025-09-25",
-  },
-];
+import { Button } from "@/components/ui/button";
+import { Search, Package, Loader2 } from "lucide-react";
+import {
+  useGetMyOrdersQuery,
+  type OrderStatus,
+  type IOrder,
+} from "@/services/ordersApi";
+import { Pagination } from "@/components/shared/Pagination";
+import { OrderCard } from "../components/orders/OrderCard";
+import { OrdersSkeleton } from "../components/skeletons/OrdersSkeleton";
+
+// ─────────────────────────────────────────────────────────────
+// COMPONENT: MAIN PAGE
+// ─────────────────────────────────────────────────────────────
 
 export default function MyOrdersPage() {
-  const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState("All");
-  const navigate = useNavigate();
-
-  const filteredOrders = mockOrders.filter((order) => {
-    const matchesSearch = order.product
-      .toLowerCase()
-      .includes(search.toLowerCase());
-    const matchesStatus =
-      statusFilter === "All" || order.status === statusFilter;
-    return matchesSearch && matchesStatus;
+  const methods = useForm({
+    defaultValues: {
+      search: "",
+    },
+    mode: "onChange",
   });
 
-  return (
-    <section className="min-h-screen bg-emerald-50/40 py-10 px-4">
-      <div className="max-w-6xl mx-auto space-y-8">
-        {/* 🧭 Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-800">My Orders</h1>
-            <p className="text-gray-600">
-              Track, filter, and manage all your purchases.
-            </p>
-          </div>
+  const search = methods.watch("search");
 
-          {/* 🔍 Search & Filter */}
-          <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto sm:items-center">
-            <div className="relative w-full sm:w-64">
-              <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
-              <Input
-                type="text"
-                placeholder="Search orders..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="pl-9"
-              />
+  // debouncedSearch state to control API calls
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [page, setPage] = useState(1);
+  const limit = 10;
+
+  // Debounce logic
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+      setPage(1); // Reset page on search
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [search]);
+
+  // Reset page on filter change
+  useEffect(() => {
+    setPage(1);
+  }, [statusFilter]);
+
+  // RTK Query Hook
+  const {
+    data: paginatedOrders,
+    isLoading,
+    isFetching,
+    error,
+  } = useGetMyOrdersQuery(
+    {
+      search: debouncedSearch || undefined,
+      status:
+        statusFilter === "all" ? undefined : (statusFilter as OrderStatus),
+      page,
+      limit,
+    },
+    {
+      refetchOnMountOrArgChange: true,
+    },
+  );
+
+  const orders: IOrder[] = paginatedOrders?.items || [];
+  const pagination = paginatedOrders?.pagination;
+
+  return (
+    <FormProvider {...methods}>
+      <section className="min-h-screen bg-emerald-50/30 py-8 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-5xl mx-auto space-y-8">
+          {/* HEADER & FILTERS */}
+          <div className="bg-white p-4 sm:p-6 rounded-2xl border shadow-sm space-y-6">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
+                  My Orders
+                </h1>
+                <p className="text-gray-500 text-sm mt-1">
+                  Manage your recent purchases and track shipments
+                </p>
+              </div>
+
+              <Button
+                asChild
+                size="sm"
+                className="bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm"
+              >
+                <Link to="/products">Continue Shopping</Link>
+              </Button>
             </div>
 
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-full sm:w-40 bg-white">
-                <SelectValue placeholder="Filter status" />
-              </SelectTrigger>
-              <SelectContent>
-                {["All", "Pending", "Shipped", "Delivered", "Cancelled"].map(
-                  (s) => (
-                    <SelectItem key={s} value={s}>
-                      {s}
-                    </SelectItem>
-                  )
-                )}
-              </SelectContent>
-            </Select>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-3.5 h-4 w-4 text-gray-400 z-10" />
+                <FormInput
+                  name="search"
+                  placeholder="Search by Order ID or Reference..."
+                  className="pl-9 bg-gray-50 border-gray-200 focus:bg-white transition-colors"
+                />
+              </div>
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="w-full sm:w-[180px] bg-gray-50 border-gray-200">
+                  <SelectValue placeholder="Filter Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Orders</SelectItem>
+                  <SelectItem value="pending">Pending</SelectItem>
+                  <SelectItem value="paid">Paid</SelectItem>
+                  <SelectItem value="processing">Processing</SelectItem>
+                  <SelectItem value="shipped">Shipped</SelectItem>
+                  <SelectItem value="delivered">Delivered</SelectItem>
+                  <SelectItem value="canceled">Cancelled</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
-        </div>
 
-        {/* 📦 Orders Grid */}
-        <div className="grid gap-5 mt-6">
-          {filteredOrders.length > 0 ? (
-            filteredOrders.map((order) => (
-              <Card
-                key={order.id}
-                className="flex flex-col sm:flex-row justify-between items-center sm:items-stretch hover:shadow-md transition-all bg-white rounded-xl border"
-              >
-                {/* Image */}
-                <div className="w-full sm:w-48 h-40 bg-gray-100 rounded-t-xl sm:rounded-l-xl sm:rounded-tr-none overflow-hidden">
-                  <img
-                    src={order.image}
-                    alt={order.product}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-
-                {/* Details */}
-                <CardContent className="flex flex-col justify-between flex-1 py-4 px-5">
-                  <div className="flex justify-between flex-col sm:flex-row gap-2">
-                    <div>
-                      <CardTitle className="text-base font-semibold">
-                        {order.product}
-                      </CardTitle>
-                      <CardDescription className="text-sm text-gray-500">
-                        Order ID: {order.id}
-                      </CardDescription>
-                    </div>
-
-                    <div className="flex items-center gap-2 text-gray-600 text-sm">
-                      <Calendar className="h-4 w-4" />
-                      {new Date(order.date).toLocaleDateString()}
-                    </div>
-                  </div>
-
-                  <div className="mt-3 flex flex-wrap items-center justify-between">
-                    <div className="flex items-center gap-2 text-gray-700 text-sm">
-                      <span>Qty:</span>
-                      <span className="font-medium">{order.quantity}</span>
-                    </div>
-
-                    <div className="text-gray-800 font-semibold">
-                      ₦{order.price.toLocaleString()}
-                    </div>
-
-                    <Badge
-                      variant="outline"
-                      className={cn(
-                        "flex items-center gap-1 px-2.5 py-1 rounded-full capitalize",
-                        order.status === "Delivered" &&
-                          "bg-green-100 text-green-700 border-green-300",
-                        order.status === "Pending" &&
-                          "bg-yellow-100 text-yellow-700 border-yellow-300",
-                        order.status === "Cancelled" &&
-                          "bg-red-100 text-red-700 border-red-300",
-                        order.status === "Shipped" &&
-                          "bg-blue-100 text-blue-700 border-blue-300"
-                      )}
-                    >
-                      {order.status === "Delivered" && (
-                        <CheckCircle className="h-4 w-4" />
-                      )}
-                      {order.status === "Pending" && (
-                        <Package className="h-4 w-4" />
-                      )}
-                      {order.status === "Shipped" && (
-                        <Truck className="h-4 w-4" />
-                      )}
-                      {order.status === "Cancelled" && (
-                        <XCircle className="h-4 w-4" />
-                      )}
-                      {order.status}
-                    </Badge>
-                  </div>
-
-                  <div className="mt-4 flex justify-end">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="rounded-full"
-                      onClick={() => navigate("/orders/1")}
-                    >
-                      View Details
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))
+          {/* ERROR STATE */}
+          {error ? (
+            <div className="text-center py-20 bg-white rounded-2xl border border-red-100">
+              <div className="bg-red-50 h-16 w-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Package className="h-8 w-8 text-red-500" />
+              </div>
+              <h3 className="text-lg font-medium text-gray-900">
+                Unable to load orders
+              </h3>
+              <p className="text-gray-500 mt-1 max-w-sm mx-auto">
+                There was a problem fetching your orders. Please try again
+                later.
+              </p>
+            </div>
+          ) : isLoading ? (
+            <OrdersSkeleton />
           ) : (
-            <div className="text-center py-16 text-gray-500">
-              <Package className="h-8 w-8 mx-auto mb-2 opacity-50" />
-              <p>No orders found.</p>
+            /* ORDERS LIST */
+            <div className="space-y-4 relative">
+              {/* Subtle Overlay during refetching */}
+              {isFetching && orders.length > 0 && (
+                <div className="absolute inset-x-0 -top-2 flex justify-center z-10">
+                  <div className="bg-emerald-50/90 backdrop-blur-sm px-4 py-1.5 rounded-full border border-emerald-100 shadow-sm flex items-center gap-2 text-[11px] font-bold text-emerald-600 animate-in fade-in slide-in-from-top-2 duration-300 uppercase tracking-wider">
+                    <Loader2 className="h-3 w-3 animate-spin" />
+                    Refreshing Results
+                  </div>
+                </div>
+              )}
+
+              {orders.length > 0 ? (
+                <>
+                  {orders.map((order: IOrder) => (
+                    <OrderCard key={order.id} order={order} />
+                  ))}
+
+                  {/* PAGINATION */}
+                  {pagination && pagination.pages > 1 && (
+                    <div className="flex justify-center mt-8">
+                      <Pagination
+                        page={pagination.page}
+                        pages={pagination.pages}
+                        hasNext={pagination.hasNext}
+                        hasPrev={pagination.hasPrev}
+                        onPageChange={setPage}
+                      />
+                    </div>
+                  )}
+                </>
+              ) : isFetching ? (
+                <OrdersSkeleton />
+              ) : (
+                <div className="text-center py-20 bg-white rounded-2xl border border-dashed">
+                  <div className="bg-emerald-100/50 h-16 w-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Package className="h-8 w-8 text-emerald-600" />
+                  </div>
+                  <h3 className="text-lg font-medium text-gray-900">
+                    No orders found
+                  </h3>
+                  <p className="text-gray-500 mt-1 max-w-sm mx-auto">
+                    {search || statusFilter !== "all"
+                      ? "Try adjusting your filters to find what you're looking for."
+                      : "You haven't placed any orders yet."}
+                  </p>
+                  {(search || statusFilter !== "all") && (
+                    <Button
+                      variant="link"
+                      onClick={() => {
+                        methods.setValue("search", "");
+                        setStatusFilter("all");
+                      }}
+                      className="mt-2 text-emerald-600"
+                    >
+                      Clear filters
+                    </Button>
+                  )}
+                </div>
+              )}
             </div>
           )}
         </div>
-      </div>
-    </section>
+      </section>
+    </FormProvider>
   );
 }

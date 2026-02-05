@@ -84,18 +84,12 @@ export interface IStoreDetails {
   rating_average: string;
   rating_count: number;
   total_products: number;
-  address: string | null;
+  address_street: string | null;
+  address_city: string | null;
+  address_state: string | null;
+  address_country: string | null;
+  address_postal_code: string | null;
   created_at: string;
-}
-
-export interface IStoreProduct {
-  id: string;
-  name: string;
-  slug: string;
-  price: number;
-  image: string;
-  rating_average: number;
-  stock: number;
 }
 
 export interface IStoreCategory {
@@ -137,9 +131,16 @@ export interface IStoreProduct {
   name: string;
   slug: string;
   price: number;
+  discount_price?: number | null;
   image: string;
   rating_average: number;
   stock: number;
+  is_in_wishlist?: boolean;
+  colors?: { id: string; name: string; hex: string }[];
+  sizes?: string[];
+  category?: string;
+  store_name?: string;
+  created_at?: string;
 }
 
 /* ───────── GET STORE PRODUCTS ARGS ───────── */
@@ -175,15 +176,8 @@ export interface GetStoreCategoryProductsArgs {
   limit?: number;
 }
 
-export interface IStoreCategoryProduct {
-  id: string;
-  name: string;
-  slug: string;
-  price: number;
-  image: string;
-  rating_average: number;
-  stock: number;
-}
+// Reuse IStoreProduct since the shape matches
+export type IStoreCategoryProduct = IStoreProduct;
 
 export interface IGetStoreCategoryProductsResponse {
   status: string;

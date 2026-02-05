@@ -58,6 +58,9 @@ export default function FeaturedProductsSection() {
             stock={product.stock}
             vendor={product.store_name ?? "Seller"}
             isFavorite={product.is_in_wishlist}
+            colors={product.colors}
+            sizes={product.sizes}
+            category={product.category}
           >
             <ProductCard.Image />
             <ProductCard.Info />

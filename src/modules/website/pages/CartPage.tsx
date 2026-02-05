@@ -23,6 +23,18 @@ import {
   useRemoveCartItemMutation,
   useClearCartMutation,
 } from "@/services/cartApi";
+import type { ICartItem } from "@/types/cart/cartTypes";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 import { USER_ROUTES, WEBSITE_ROUTES } from "@/routes/temp";
 import { useNavigate } from "react-router-dom";
@@ -54,7 +66,7 @@ export default function CartPage() {
   useEffect(() => {
     if (!cart) return;
     const initial: Record<string, number> = {};
-    cart.items.forEach((item) => {
+    cart.items.forEach((item: ICartItem) => {
       initial[item.product_id] = item.quantity;
     });
     setLocalQty(initial);
@@ -152,7 +164,7 @@ export default function CartPage() {
             <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-6">
               {/* ITEMS */}
               <div className="space-y-4">
-                {cart.items.map((item) => {
+                {cart.items.map((item: ICartItem) => {
                   const qty = localQty[item.product_id] ?? item.quantity;
 
                   return (
@@ -237,14 +249,39 @@ export default function CartPage() {
                   <CardTitle className="text-base font-semibold">
                     Order Summary
                   </CardTitle>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={handleClearCart}
-                    className="text-red-500"
-                  >
-                    Clear
-                  </Button>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-red-500 hover:text-red-600 hover:bg-red-50"
+                      >
+                        Clear
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent className="rounded-2xl">
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>
+                          Clear Shopping Cart?
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                          This will permanently remove all items from your cart.
+                          This action cannot be undone.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel className="rounded-full">
+                          Cancel
+                        </AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={handleClearCart}
+                          className="bg-red-500 hover:bg-red-600 text-white rounded-full px-6"
+                        >
+                          Clear Everything
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </CardHeader>
 
                 <CardContent className="px-4 pb-4 space-y-2 text-sm">

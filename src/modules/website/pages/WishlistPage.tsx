@@ -1,16 +1,24 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Heart, Search, ShoppingCart } from "lucide-react";
+import { Heart, Search, ShoppingCart, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
-import { useGetMyWishlistQuery } from "@/services/wishlistApi";
+import {
+  useGetMyWishlistQuery,
+  useMoveAllToCartMutation,
+} from "@/services/wishlistApi";
 import { ProductCard } from "@/components/shared/ProductCard";
+import { WishlistSkeleton } from "../components/skeletons/WishlistSkeleton";
 
 export default function WishlistPage() {
+  /* ───────────────── mutations ───────────────── */
+  const [moveAllToCart, { isLoading: isMoving }] = useMoveAllToCartMutation();
+
   /* ───────────────── API ───────────────── */
 
   const { data, isLoading, isError } = useGetMyWishlistQuery();
@@ -20,6 +28,17 @@ export default function WishlistPage() {
   /* ───────────────── UI STATE ───────────────── */
 
   const [searchTerm, setSearchTerm] = useState("");
+
+  /* ───────────────── ACTIONS ───────────────── */
+
+  const handleMoveAllToCart = async () => {
+    try {
+      await moveAllToCart().unwrap();
+      toast.success("All items moved to cart successfully!");
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Failed to move items to cart.");
+    }
+  };
 
   /* ───────────────── FILTERING ───────────────── */
 
@@ -109,9 +128,11 @@ export default function WishlistPage() {
                     price={`₦${Number(item.price).toLocaleString("en-NG")}`}
                     image={item.image || ""}
                     category="Wishlist"
-                    rating={0}
-                    stock={1}
+                    rating={item.product?.rating_average ?? 0}
+                    stock={item.product?.stock ?? 0}
                     isFavorite={true}
+                    colors={item.product?.colors}
+                    sizes={item.product?.sizes}
                   >
                     <ProductCard.Image />
                     <ProductCard.Info />
@@ -131,45 +152,20 @@ export default function WishlistPage() {
               {wishlist.length !== 1 ? "s" : ""} in your wishlist.
             </div>
 
-            <Button className="mt-4 sm:mt-0 bg-primary text-white rounded-full px-6">
-              <ShoppingCart className="h-4 w-4 mr-2" />
-              Move to Cart
+            <Button
+              onClick={handleMoveAllToCart}
+              disabled={isMoving}
+              className="mt-4 sm:mt-0 bg-primary text-white rounded-full px-6 min-w-[160px]"
+            >
+              {isMoving ? (
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              ) : (
+                <ShoppingCart className="h-4 w-4 mr-2" />
+              )}
+              {isMoving ? "Moving..." : "Move to Cart"}
             </Button>
           </Card>
         )}
-      </div>
-    </section>
-  );
-}
-
-import { Skeleton } from "@/components/ui/skeleton";
-
-function WishlistSkeleton() {
-  return (
-    <section className="min-h-screen bg-neutral-50 py-2 px-4 sm:px-8">
-      <div className="max-w-6xl mx-auto space-y-10">
-        {/* Header */}
-        <div className="space-y-2">
-          <Skeleton className="h-8 w-48" />
-          <Skeleton className="h-4 w-32" />
-        </div>
-
-        {/* Search */}
-        <Skeleton className="h-10 w-full sm:w-80 rounded-full" />
-
-        {/* Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="space-y-3">
-              <Skeleton className="h-48 w-full rounded-xl" />
-              <Skeleton className="h-4 w-3/4" />
-              <Skeleton className="h-4 w-1/2" />
-            </div>
-          ))}
-        </div>
-
-        {/* Footer card */}
-        <Skeleton className="h-20 w-full rounded-2xl" />
       </div>
     </section>
   );

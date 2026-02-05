@@ -33,7 +33,10 @@ export default function RelatedProductsGrid({
               rating={Number(product.rating_average ?? 0)}
               vendor={product.store_name ?? ""}
               stock={product.stock ?? 0}
-              category=""
+              category={product.category ?? ""}
+              isFavorite={product.is_in_wishlist}
+              colors={product.colors}
+              sizes={product.sizes}
             >
               <ProductCard.Image />
               <ProductCard.Info />
