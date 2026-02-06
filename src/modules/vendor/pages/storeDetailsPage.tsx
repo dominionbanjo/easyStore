@@ -134,6 +134,7 @@ export default function StoreDetailsPage() {
           phone: store.phone_number ?? undefined,
           website: store.website ?? undefined,
           totalProducts: store.total_products ?? 0,
+          user: store.user,
         }}
       />
 
