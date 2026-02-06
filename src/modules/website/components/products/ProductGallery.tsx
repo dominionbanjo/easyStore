@@ -57,7 +57,7 @@ export default function ProductGallery({ images }: ProductGalleryProps) {
               if (swipe < -50) paginate(1);
               else if (swipe > 50) paginate(-1);
             }}
-            className="w-full h-full flex items-center justify-center p-3 md:p-6"
+            className="w-full h-full"
           >
             {isVideo(active) ? (
               <video
@@ -66,13 +66,13 @@ export default function ProductGallery({ images }: ProductGalleryProps) {
                 muted
                 loop
                 playsInline
-                className="max-w-full max-h-full w-auto h-auto object-contain cursor-grab active:cursor-grabbing rounded-2xl md:rounded-3xl shadow-lg border border-white/20"
+                className="w-full h-full object-cover cursor-grab active:cursor-grabbing rounded-2xl md:rounded-3xl shadow-lg border border-white/20"
               />
             ) : (
               <img
                 src={active}
                 alt="Product View"
-                className="max-w-full max-h-full w-auto h-auto object-contain select-none cursor-grab active:cursor-grabbing transition-transform duration-500 hover:scale-105 rounded-2xl md:rounded-3xl shadow-lg border border-white/20"
+                className="w-full h-full object-cover select-none cursor-grab active:cursor-grabbing transition-transform duration-500 hover:scale-105 rounded-2xl md:rounded-3xl shadow-lg border border-white/20"
               />
             )}
           </motion.div>
@@ -83,17 +83,17 @@ export default function ProductGallery({ images }: ProductGalleryProps) {
           {activeIndex > 0 && (
             <button
               onClick={() => paginate(-1)}
-              className="absolute left-6 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/90 backdrop-blur-md shadow-xl text-foreground hover:bg-white hover:scale-110 transition-all opacity-0 group-hover:opacity-100 border border-border/50"
+              className="absolute left-6 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/90 backdrop-blur-xl shadow-2xl text-zinc-900 hover:bg-white hover:scale-110 active:scale-95 transition-all opacity-0 group-hover:opacity-100 border border-white/50 ring-1 ring-black/5"
             >
-              <ChevronLeft className="w-6 h-6" />
+              <ChevronLeft className="w-5 h-5 stroke-[2.5px]" />
             </button>
           )}
           {activeIndex < images.length - 1 && (
             <button
               onClick={() => paginate(1)}
-              className="absolute right-6 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/90 backdrop-blur-md shadow-xl text-foreground hover:bg-white hover:scale-110 transition-all opacity-0 group-hover:opacity-100 border border-border/50"
+              className="absolute right-6 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/90 backdrop-blur-xl shadow-2xl text-zinc-900 hover:bg-white hover:scale-110 active:scale-95 transition-all opacity-0 group-hover:opacity-100 border border-white/50 ring-1 ring-black/5"
             >
-              <ChevronRight className="w-6 h-6" />
+              <ChevronRight className="w-5 h-5 stroke-[2.5px]" />
             </button>
           )}
         </div>
@@ -102,21 +102,23 @@ export default function ProductGallery({ images }: ProductGalleryProps) {
         <div className="absolute top-6 right-6 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all duration-300 z-10">
           <button
             onClick={() => setIsFullScreen(true)}
-            className="p-3 rounded-2xl bg-white/90 backdrop-blur-md shadow-xl text-foreground hover:bg-white hover:scale-110 transition-all border border-border/50"
+            className="p-3 rounded-2xl bg-white/90 backdrop-blur-xl shadow-2xl text-zinc-900 hover:bg-white hover:scale-110 active:scale-95 transition-all border border-white/50 ring-1 ring-black/5"
           >
-            <Maximize2 className="w-5 h-5" />
+            <Maximize2 className="w-4 h-4 stroke-[2.5px]" />
           </button>
         </div>
 
         {/* Progress Dots (Mobile) */}
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-1.5 p-2 rounded-full bg-black/20 backdrop-blur-md md:hidden">
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-1.5 p-2 rounded-full bg-black/40 backdrop-blur-md md:hidden border border-white/10">
           {images.map((_, i) => (
             <button
               key={i}
               onClick={() => setActiveIndex(i)}
               className={cn(
-                "h-1.5 rounded-full transition-all duration-300",
-                i === activeIndex ? "w-6 bg-white" : "w-1.5 bg-white/40",
+                "h-1.5 rounded-full transition-all duration-300 shadow-sm",
+                i === activeIndex
+                  ? "w-8 bg-white"
+                  : "w-1.5 bg-white/40 hover:bg-white/60",
               )}
             />
           ))}
@@ -124,7 +126,7 @@ export default function ProductGallery({ images }: ProductGalleryProps) {
       </div>
 
       {/* ─── Thumbnails ─── */}
-      <div className="flex gap-3 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-muted-foreground/20 hover:scrollbar-thumb-muted-foreground/40 transition-colors px-1">
+      <div className="flex gap-3 overflow-x-auto pb-4 scrollbar-hide no-scrollbar px-1">
         {images.map((img, i) => (
           <button
             key={i}
@@ -133,7 +135,7 @@ export default function ProductGallery({ images }: ProductGalleryProps) {
               "relative flex-shrink-0 w-20 h-20 md:w-24 md:h-24 rounded-2xl overflow-hidden border-2 transition-all duration-300",
               i === activeIndex
                 ? "border-primary shadow-lg shadow-primary/10 scale-95"
-                : "border-transparent bg-muted/50 hover:border-primary/30",
+                : "border-border/40 bg-muted/50 hover:border-primary/30",
             )}
           >
             {isVideo(img) ? (
@@ -162,39 +164,48 @@ export default function ProductGallery({ images }: ProductGalleryProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[9999] bg-black/95 flex items-center justify-center p-4 md:p-10 h-[100dvh] w-screen overflow-hidden"
+            className="fixed inset-0 z-[9999] bg-black/98 flex items-center justify-center p-0 md:p-10 h-[100dvh] w-screen overflow-hidden touch-none"
           >
             <button
               onClick={() => setIsFullScreen(false)}
-              className="absolute top-6 right-6 p-3 rounded-full bg-white/10 text-white hover:bg-white/20 transition-all z-[110]"
+              className="absolute top-6 right-6 p-4 rounded-full bg-white/10 backdrop-blur-md text-white hover:bg-white/20 active:scale-95 transition-all z-[110] border border-white/10 shadow-2xl"
             >
-              <X className="w-6 h-6" />
+              <X className="w-7 h-7" />
             </button>
 
             <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
+              key={`fullscreen-${activeIndex}`}
+              initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className="max-w-full max-h-full flex items-center justify-center"
+              exit={{ scale: 0.95, opacity: 0 }}
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.4}
+              onDragEnd={(_, info) => {
+                const swipe = info.offset.x;
+                if (swipe < -70) paginate(1);
+                else if (swipe > 70) paginate(-1);
+              }}
+              className="w-full h-full flex items-center justify-center cursor-grab active:cursor-grabbing"
             >
               {isVideo(active) ? (
                 <video
                   src={active}
                   controls
                   autoPlay
-                  className="max-w-full max-h-[90vh] rounded-xl"
+                  className="max-w-full max-h-[90vh] md:rounded-xl shadow-2xl"
                 />
               ) : (
                 <img
                   src={active}
                   alt="Full view"
-                  className="max-w-full max-h-[90vh] object-contain rounded-xl shadow-2xl"
+                  className="max-w-full max-h-screen md:max-h-[85vh] object-contain md:rounded-xl shadow-2xl select-none"
                 />
               )}
             </motion.div>
 
-            {/* Overlay Navigation */}
-            <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between px-6 pointer-events-none">
+            {/* Overlay Navigation (High contrast refined icons) */}
+            <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between px-4 md:px-10 pointer-events-none">
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -202,13 +213,13 @@ export default function ProductGallery({ images }: ProductGalleryProps) {
                 }}
                 disabled={activeIndex === 0}
                 className={cn(
-                  "p-4 rounded-full bg-white/10 text-white transition-all pointer-events-auto",
+                  "p-4 md:p-5 rounded-full bg-white/15 backdrop-blur-xl text-white shadow-2xl transition-all pointer-events-auto border border-white/20 active:scale-90",
                   activeIndex === 0
-                    ? "opacity-30 cursor-not-allowed"
-                    : "hover:bg-white/20",
+                    ? "opacity-0 cursor-not-allowed"
+                    : "hover:bg-white/25 hover:scale-110 shadow-white/5",
                 )}
               >
-                <ChevronLeft className="w-8 h-8" />
+                <ChevronLeft className="w-8 h-8 md:w-9 md:h-9 stroke-[2.2px]" />
               </button>
               <button
                 onClick={(e) => {
@@ -217,13 +228,13 @@ export default function ProductGallery({ images }: ProductGalleryProps) {
                 }}
                 disabled={activeIndex === images.length - 1}
                 className={cn(
-                  "p-4 rounded-full bg-white/10 text-white transition-all pointer-events-auto",
+                  "p-4 md:p-5 rounded-full bg-white/15 backdrop-blur-xl text-white shadow-2xl transition-all pointer-events-auto border border-white/20 active:scale-90",
                   activeIndex === images.length - 1
-                    ? "opacity-30 cursor-not-allowed"
-                    : "hover:bg-white/20",
+                    ? "opacity-0 cursor-not-allowed"
+                    : "hover:bg-white/25 hover:scale-110 shadow-white/5",
                 )}
               >
-                <ChevronRight className="w-8 h-8" />
+                <ChevronRight className="w-8 h-8 md:w-9 md:h-9 stroke-[2.2px]" />
               </button>
             </div>
           </motion.div>

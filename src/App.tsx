@@ -3,10 +3,10 @@ import { Suspense } from "react";
 
 // Utils & Components
 import ScrollToTop from "@/utils/ScrollToTop";
-import AppLoader from "@/components/shared/AppLoader";
 
 // Lazy-loaded Components
 import * as Pages from "@/routes/lazyComponents";
+import LoadingScreen from "./Loading";
 
 /* ───────────────── APP ───────────────── */
 
@@ -16,7 +16,7 @@ export default function App() {
       <ScrollToTop />
 
       {/* Global Suspense Boundary */}
-      <Suspense fallback={<AppLoader />}>
+      <Suspense fallback={<LoadingScreen />}>
         <Routes>
           {/* ─── WEBSITE ─── */}
           <Route path="/" element={<Pages.HomepageLayout />}>
