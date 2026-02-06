@@ -43,9 +43,18 @@ export const cartApi = apiManager.injectEndpoints({
 
     /* ───────── REMOVE ITEM ───────── */
 
-    removeCartItem: builder.mutation<GetCartResponse, string>({
-      query: (productId) => ({
-        url: `cart/items/${productId}`,
+    removeCartItem: builder.mutation<
+      GetCartResponse,
+      { productId: string; size?: string | null; color?: string | null }
+    >({
+      query: ({ productId, size, color }) => ({
+        url: `cart/items/${productId}${
+          size || color
+            ? `?${size ? `size=${encodeURIComponent(size)}` : ""}${
+                size && color ? "&" : ""
+              }${color ? `color=${encodeURIComponent(color)}` : ""}`
+            : ""
+        }`,
         method: "DELETE",
       }),
       invalidatesTags: ["Cart"],

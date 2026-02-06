@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -8,284 +9,253 @@ import {
   PopoverTrigger,
   PopoverContent,
 } from "@/components/ui/popover";
-import { Badge } from "@/components/ui/badge";
-import {
-  Search,
-  Filter,
-  ChevronDown,
-  MoreVertical,
-  Eye,
-  MessageSquare,
-  Truck,
-  CheckCircle2,
-  Clock,
-  XCircle,
-  Download,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
 
-//
-// ─── Mock Orders ─────────────────────────────────────────────────────────────
-//
-const mockOrders = [
-  {
-    id: "ORD-10234",
-    customer: "Jane Doe",
-    email: "jane.doe@example.com",
-    date: "2025-10-14",
-    total: 54000,
-    status: "Processing",
-    items: 3,
-  },
-  {
-    id: "ORD-10221",
-    customer: "Michael Johnson",
-    email: "mikej@example.com",
-    date: "2025-10-12",
-    total: 120000,
-    status: "Delivered",
-    items: 5,
-  },
-  {
-    id: "ORD-10199",
-    customer: "Amaka Okafor",
-    email: "amaka.okafor@example.com",
-    date: "2025-10-09",
-    total: 78000,
-    status: "Shipped",
-    items: 2,
-  },
-  {
-    id: "ORD-10188",
-    customer: "Yusuf Ibrahim",
-    email: "yusuf.ibrahim@example.com",
-    date: "2025-10-03",
-    total: 40000,
-    status: "Cancelled",
-    items: 1,
-  },
-];
+import { Search, Filter, ChevronDown, Download, X } from "lucide-react";
+
+import { DataTable } from "@/components/shared/DataTable";
+import { createOrderColumns } from "../columns/orderColumns";
+import { useGetVendorOrdersQuery } from "@/services/ordersApi";
+import type { IOrder } from "@/services/ordersApi";
+import { OrderDetailsModal } from "../components/OrderDetailsModal";
+
+const PAGE_SIZE = 10;
 
 const statusOptions = [
-  "All",
-  "Processing",
-  "Shipped",
-  "Delivered",
-  "Cancelled",
+  { value: undefined, label: "All" },
+  { value: "pending", label: "Pending" },
+  { value: "paid", label: "Paid" },
+  { value: "processing", label: "Processing" },
+  { value: "assigned", label: "Assigned" },
+  { value: "in_transit", label: "In Transit" },
+  { value: "shipped", label: "Shipped" },
+  { value: "delivered", label: "Delivered" },
+  { value: "completed", label: "Completed" },
+  { value: "failed", label: "Failed" },
+  { value: "returned", label: "Returned" },
+  { value: "canceled", label: "Cancelled" },
 ];
 
-//
-// ─── Orders Page ─────────────────────────────────────────────────────────────
-//
 export default function OrdersPage() {
   const [search, setSearch] = useState("");
-  const [status, setStatus] = useState("All");
+  const [status, setStatus] = useState<string | undefined>(undefined);
+  const [page, setPage] = useState(1);
+  const [selectedOrder, setSelectedOrder] = useState<IOrder | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const filteredOrders = mockOrders.filter((order) => {
-    const matchSearch =
-      order.customer.toLowerCase().includes(search.toLowerCase()) ||
-      order.id.toLowerCase().includes(search.toLowerCase());
-    const matchStatus = status === "All" || order.status === status;
-    return matchSearch && matchStatus;
+  // Fetch orders with query parameters
+  const { data, isLoading, isFetching, isError } = useGetVendorOrdersQuery({
+    search: search || undefined,
+    status: status || undefined,
+    page,
+    limit: PAGE_SIZE,
   });
 
-  const getStatusBadge = (status: string) => {
-    const base =
-      "flex items-center gap-1.5 text-xs font-medium px-2 py-1 rounded-full";
-    switch (status) {
-      case "Processing":
-        return (
-          <Badge
-            variant="outline"
-            className={cn(
-              base,
-              "bg-yellow-50 text-yellow-700 border-yellow-200"
-            )}
-          >
-            <Clock className="h-3.5 w-3.5" /> Processing
-          </Badge>
-        );
-      case "Shipped":
-        return (
-          <Badge
-            variant="outline"
-            className={cn(base, "bg-blue-50 text-blue-700 border-blue-200")}
-          >
-            <Truck className="h-3.5 w-3.5" /> Shipped
-          </Badge>
-        );
-      case "Delivered":
-        return (
-          <Badge
-            variant="outline"
-            className={cn(base, "bg-green-50 text-green-700 border-green-200")}
-          >
-            <CheckCircle2 className="h-3.5 w-3.5" /> Delivered
-          </Badge>
-        );
-      case "Cancelled":
-        return (
-          <Badge
-            variant="outline"
-            className={cn(base, "bg-red-50 text-red-700 border-red-200")}
-          >
-            <XCircle className="h-3.5 w-3.5" /> Cancelled
-          </Badge>
-        );
-    }
+  // Handle view details
+  const handleViewDetails = (order: IOrder) => {
+    setSelectedOrder(order);
+    setIsModalOpen(true);
+  };
+
+  // Create columns with callback
+  const orderColumns = createOrderColumns(handleViewDetails);
+
+  if (isError) {
+    return (
+      <section className="space-y-6 md:space-y-8 pb-10">
+        <div className="flex flex-col gap-4">
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">
+            Orders
+          </h1>
+          <Card className="border-destructive/50">
+            <CardContent className="pt-6">
+              <p className="text-destructive">
+                Failed to load orders. Please try again.
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+    );
+  }
+
+  // Extract data from paginated response
+  const orders: IOrder[] = data?.items || [];
+  const pagination = data?.pagination || {
+    total: 0,
+    page: 1,
+    pages: 1,
+    hasNext: false,
+    hasPrev: false,
+  };
+
+  const isSearching = !!search || !!status;
+
+  const clearFilters = () => {
+    setSearch("");
+    setStatus(undefined);
+    setPage(1);
+  };
+
+  const handleSearchChange = (value: string) => {
+    setSearch(value);
+    setPage(1); // Reset to first page on search
+  };
+
+  const handleStatusChange = (value: string | undefined) => {
+    setStatus(value);
+    setPage(1); // Reset to first page on filter
   };
 
   return (
-    <section className="space-y-8">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Orders</h1>
-          <p className="text-muted-foreground text-sm">
+    <section className="space-y-6 md:space-y-8 pb-10">
+      {/* ─── Header ─── */}
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+        >
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">
+            Orders
+          </h1>
+          <p className="text-muted-foreground text-sm mt-1">
             Manage all orders and their fulfillment statuses.
           </p>
-        </div>
+        </motion.div>
 
-        {/* Search + Filters */}
-        <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto sm:items-center">
-          <div className="relative w-full sm:w-72">
-            <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search orders..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="pl-9"
-            />
-          </div>
-
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button variant="outline" className="gap-2">
-                <Filter className="h-4 w-4" />
-                {status}
-                <ChevronDown className="h-4 w-4" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-44 p-2 text-sm">
-              {statusOptions.map((s) => (
-                <Button
-                  key={s}
-                  variant={status === s ? "secondary" : "ghost"}
-                  size="sm"
-                  className="w-full justify-start"
-                  onClick={() => setStatus(s)}
-                >
-                  {s}
-                </Button>
-              ))}
-            </PopoverContent>
-          </Popover>
-        </div>
-      </div>
-
-      {/* Orders Table */}
-      <Card className="border border-border/30 shadow-sm">
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="text-lg">Order Overview</CardTitle>
-          <Button variant="outline" size="sm" className="gap-2">
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="flex items-center gap-3"
+        >
+          <Button
+            variant="outline"
+            size="sm"
+            className="hidden sm:flex gap-2 border-border/60"
+          >
             <Download className="h-4 w-4" />
             Export
           </Button>
-        </CardHeader>
+        </motion.div>
+      </div>
 
-        <CardContent className="overflow-x-auto">
-          <table className="w-full text-sm border-collapse">
-            <thead>
-              <tr className="border-b border-border/30 text-left">
-                <th className="py-3 px-4 font-medium">Order ID</th>
-                <th className="py-3 px-4 font-medium">Customer</th>
-                <th className="py-3 px-4 font-medium">Date</th>
-                <th className="py-3 px-4 font-medium">Items</th>
-                <th className="py-3 px-4 font-medium">Total</th>
-                <th className="py-3 px-4 font-medium">Status</th>
-                <th className="py-3 px-4 font-medium text-right">Actions</th>
-              </tr>
-            </thead>
+      {/* ─── Toolbar (Search & Filters) ─── */}
+      <div className="flex flex-col gap-4 bg-card/50 backdrop-blur-sm p-2 sm:p-3 md:p-4 rounded-2xl border border-border/40 shadow-sm transition-all duration-300">
+        <div className="flex flex-col sm:flex-row items-center gap-3 w-full">
+          <div className="relative w-full sm:flex-1 group">
+            <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+            <Input
+              placeholder="Search by order ID or reference..."
+              value={search}
+              onChange={(e) => handleSearchChange(e.target.value)}
+              className="pl-9 h-10 bg-background/50 border-border/40 focus:bg-background transition-all rounded-xl"
+            />
+            {search && (
+              <button
+                onClick={() => handleSearchChange("")}
+                className="absolute right-3 top-2.5 text-muted-foreground hover:text-foreground"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
 
-            <tbody>
-              {filteredOrders.map((order, i) => (
-                <motion.tr
-                  key={order.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                  className="border-b border-border/20 hover:bg-muted/30 transition-colors"
+          <div className="flex items-center gap-2 w-full sm:w-auto overflow-x-auto no-scrollbar py-1">
+            {/* Status Filter */}
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant={status !== undefined ? "secondary" : "outline"}
+                  className="gap-2 h-10 border-dashed rounded-xl shrink-0"
                 >
-                  <td className="py-3 px-4 font-medium">{order.id}</td>
+                  <Filter className="h-3.5 w-3.5" />
+                  <span className="text-xs uppercase tracking-wider font-bold">
+                    {status === undefined
+                      ? "Status"
+                      : statusOptions.find((s) => s.value === status)?.label}
+                  </span>
+                  <ChevronDown className="h-3.5 w-3.5 opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent
+                className="w-48 p-1.5 rounded-xl border-border/40"
+                align="end"
+              >
+                <div className="space-y-1">
+                  {statusOptions.map((s) => (
+                    <Button
+                      key={s.label}
+                      variant={status === s.value ? "secondary" : "ghost"}
+                      size="sm"
+                      className="w-full justify-start"
+                      onClick={() => handleStatusChange(s.value)}
+                    >
+                      {s.label}
+                    </Button>
+                  ))}
+                </div>
+              </PopoverContent>
+            </Popover>
 
-                  <td className="py-3 px-4">
-                    <div>
-                      <p className="font-medium">{order.customer}</p>
-                      <p className="text-xs text-muted-foreground">
-                        {order.email}
-                      </p>
-                    </div>
-                  </td>
+            {/* Clear Filters */}
+            {isSearching && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={clearFilters}
+                className="gap-2 h-10 rounded-xl shrink-0"
+              >
+                <X className="h-3.5 w-3.5" />
+                Clear
+              </Button>
+            )}
+          </div>
+        </div>
+      </div>
 
-                  <td className="py-3 px-4 text-muted-foreground">
-                    {new Date(order.date).toLocaleDateString()}
-                  </td>
+      {/* ─── Orders Table ─── */}
+      <div className="-mx-6 md:mx-0">
+        <Card className="border-0 sm:border border-border/30 shadow-none sm:shadow-sm bg-transparent sm:bg-card overflow-hidden">
+          <CardHeader className="hidden sm:flex flex-row items-center justify-between pb-4">
+            <CardTitle className="text-lg font-bold">Order Overview</CardTitle>
+            <p className="text-sm text-muted-foreground">
+              {pagination.total} {pagination.total === 1 ? "order" : "orders"}
+            </p>
+          </CardHeader>
 
-                  <td className="py-3 px-4">{order.items}</td>
+          <CardContent className="px-0">
+            <DataTable<IOrder, unknown>
+              columns={orderColumns}
+              data={orders}
+              isLoading={isLoading || isFetching}
+              className="border-none"
+              emptyMessage={
+                isSearching ? "No orders match your search" : "No orders found"
+              }
+              pagination={
+                pagination.pages > 1
+                  ? {
+                      page: pagination.page,
+                      pages: pagination.pages,
+                      hasNext: pagination.hasNext,
+                      hasPrev: pagination.hasPrev,
+                      onPageChange: setPage,
+                    }
+                  : undefined
+              }
+            />
+          </CardContent>
+        </Card>
+      </div>
 
-                  <td className="py-3 px-4 font-semibold text-foreground">
-                    ₦{order.total.toLocaleString()}
-                  </td>
-
-                  <td className="py-3 px-4">{getStatusBadge(order.status)}</td>
-
-                  <td className="py-3 px-4 text-right">
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                          <MoreVertical className="h-4 w-4" />
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-44 p-1.5">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="w-full justify-start gap-2"
-                        >
-                          <Eye className="h-4 w-4" />
-                          View Details
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="w-full justify-start gap-2"
-                        >
-                          <MessageSquare className="h-4 w-4" />
-                          Message Buyer
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="w-full justify-start gap-2"
-                        >
-                          <Truck className="h-4 w-4" />
-                          Mark as Shipped
-                        </Button>
-                      </PopoverContent>
-                    </Popover>
-                  </td>
-                </motion.tr>
-              ))}
-            </tbody>
-          </table>
-
-          {filteredOrders.length === 0 && (
-            <div className="text-center py-10 text-muted-foreground">
-              No orders found.
-            </div>
-          )}
-        </CardContent>
-      </Card>
+      {/* Order Details Modal */}
+      <OrderDetailsModal
+        order={selectedOrder}
+        open={isModalOpen}
+        onOpenChange={(open) => {
+          setIsModalOpen(open);
+          if (!open) setSelectedOrder(null);
+        }}
+      />
     </section>
   );
 }

@@ -2,6 +2,15 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { motion, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import {
+  FileText,
+  Layers,
+  Truck,
+  RotateCcw,
+  MapPin,
+  Wallet,
+  CheckCircle2,
+} from "lucide-react";
 
 interface ProductDetailsTabsProps {
   product: {
@@ -28,132 +37,259 @@ export default function ProductDetailsTabs({
   const hasShipping =
     product.shipping &&
     Object.values(product.shipping).some(
-      (v) => typeof v === "string" && v.trim().length > 0
+      (v) => typeof v === "string" && v.trim().length > 0,
     );
 
   const tabs = [
-    hasDescription && { value: "description", label: "Description" },
-    hasSpecs && { value: "specs", label: "Specifications" },
-    hasShipping && { value: "shipping", label: "Shipping & Returns" },
-  ].filter(Boolean) as { value: string; label: string }[];
+    hasDescription && {
+      value: "description",
+      label: "Description",
+      icon: FileText,
+    },
+    hasSpecs && {
+      value: "specs",
+      label: "Specifications",
+      icon: Layers,
+    },
+    hasShipping && {
+      value: "shipping",
+      label: "Shipping & Returns",
+      icon: Truck,
+    },
+  ].filter(Boolean) as { value: string; label: string; icon: any }[];
 
   if (tabs.length === 0) return null;
 
   return (
-    <Tabs defaultValue={tabs[0].value} className="w-full space-y-8">
-      {/* ─── Tabs Header ─── */}
-      <div className="w-full overflow-x-auto no-scrollbar">
-        <TabsList
-          className={cn(
-            "flex gap-3 p-2 h-12 bg-muted/30 border border-border rounded-full shadow-sm"
-          )}
-        >
-          {tabs.map((tab) => (
-            <TabsTrigger
-              key={tab.value}
-              value={tab.value}
-              className={cn(
-                "px-6 py-3 rounded-full text-sm font-medium transition-all duration-200 whitespace-nowrap",
-                "text-muted-foreground hover:text-foreground",
-                "data-[state=active]:bg-primary data-[state=active]:text-white shadow-sm"
-              )}
-            >
-              {tab.label}
-            </TabsTrigger>
-          ))}
-        </TabsList>
-      </div>
-
-      {/* ─── Tabs Content ─── */}
-      <Card className="p-6 rounded-2xl border border-border/40 shadow-sm bg-background">
-        <AnimatePresence mode="sync">
-          {/* DESCRIPTION */}
-          {hasDescription && (
-            <TabsContent value="description" asChild>
-              <motion.div
-                key="description"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.25 }}
+    <div className="w-full max-w-5xl mx-auto py-4">
+      <Tabs defaultValue={tabs[0].value} className="w-full">
+        {/* ─── Tabs Header ─── */}
+        <div className="flex justify-center mb-8">
+          <TabsList
+            className={cn(
+              "inline-flex h-14 items-center justify-center rounded-2xl bg-muted/50 p-1.5 text-muted-foreground shadow-inner backdrop-blur-sm border border-border/50",
+            )}
+          >
+            {tabs.map((tab) => (
+              <TabsTrigger
+                key={tab.value}
+                value={tab.value}
+                className={cn(
+                  "relative flex items-center gap-2.5 px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300",
+                  "data-[state=active]:bg-background data-[state=active]:text-primary data-[state=active]:shadow-lg",
+                  "hover:text-foreground/80",
+                )}
               >
-                <p className="text-gray-700 leading-relaxed">
-                  {product.description}
-                </p>
-              </motion.div>
-            </TabsContent>
-          )}
+                <tab.icon className="w-4 h-4 transition-transform group-data-[state=active]:scale-110" />
+                {tab.label}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </div>
 
-          {/* SPECS */}
-          {hasSpecs && (
-            <TabsContent value="specs" asChild>
-              <motion.div
-                key="specs"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.25 }}
-              >
-                <ul className="space-y-2 text-gray-700">
-                  {Object.entries(product.specs!).map(([key, value]) => (
-                    <li
-                      key={key}
-                      className="flex justify-between gap-4 border-b border-border/40 pb-2"
-                    >
-                      <span className="font-medium capitalize">
-                        {key.replace(/_/g, " ")}
-                      </span>
-                      <span className="text-muted-foreground">{value}</span>
-                    </li>
-                  ))}
-                </ul>
-              </motion.div>
-            </TabsContent>
-          )}
+        {/* ─── Tabs Content ─── */}
+        <div className="relative min-h-[300px]">
+          <AnimatePresence mode="wait">
+            {/* DESCRIPTION */}
+            {hasDescription && (
+              <TabsContent value="description" asChild className="mt-0">
+                <motion.div
+                  key="description"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{
+                    duration: 0.4,
+                    ease: [0.23, 1, 0.32, 1],
+                  }}
+                >
+                  <Card className="p-8 md:p-12 rounded-[2.5rem] border-border/40 bg-gradient-to-br from-background via-background to-primary/5 shadow-2xl shadow-primary/5">
+                    <div className="flex flex-col md:flex-row gap-8">
+                      {/* Left Accent Column */}
+                      <div className="flex flex-col items-center gap-4 shrink-0">
+                        <div className="p-4 rounded-2xl bg-primary/10 text-primary shadow-inner">
+                          <FileText className="w-8 h-8" />
+                        </div>
+                        <div className="hidden md:block w-px flex-1 bg-gradient-to-b from-primary/30 to-transparent" />
+                      </div>
 
-          {/* SHIPPING */}
-          {hasShipping && (
-            <TabsContent value="shipping" asChild>
-              <motion.div
-                key="shipping"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.25 }}
-                className="space-y-3 text-gray-700"
-              >
-                {product.shipping?.delivery && (
-                  <p>
-                    <span className="font-medium">Delivery:</span>{" "}
-                    {product.shipping.delivery}
-                  </p>
-                )}
+                      {/* Content Column */}
+                      <div className="space-y-6 flex-1">
+                        <div>
+                          <h3 className="text-3xl font-bold tracking-tight mb-2">
+                            Product Description
+                          </h3>
+                          <div className="h-1 w-12 bg-primary rounded-full" />
+                        </div>
 
-                {product.shipping?.returns && (
-                  <p>
-                    <span className="font-medium">Returns:</span>{" "}
-                    {product.shipping.returns}
-                  </p>
-                )}
+                        <div className="relative">
+                          <p className="text-xl leading-relaxed text-foreground/80 whitespace-pre-line">
+                            {product.description}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </Card>
+                </motion.div>
+              </TabsContent>
+            )}
 
-                {product.shipping?.location && (
-                  <p>
-                    <span className="font-medium">Location:</span>{" "}
-                    {product.shipping.location}
-                  </p>
-                )}
+            {/* SPECS */}
+            {hasSpecs && (
+              <TabsContent value="specs" asChild className="mt-0">
+                <motion.div
+                  key="specs"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{
+                    duration: 0.4,
+                    ease: [0.23, 1, 0.32, 1],
+                  }}
+                >
+                  <Card className="p-8 md:p-10 rounded-[2rem] border-border/40 bg-gradient-to-br from-background via-background to-secondary/5 shadow-xl shadow-primary/5">
+                    <div className="flex items-start gap-4 mb-8">
+                      <div className="p-3 rounded-2xl bg-secondary/10 text-secondary-foreground">
+                        <Layers className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <h3 className="text-2xl font-bold tracking-tight">
+                          Technical Specifications
+                        </h3>
+                        <p className="text-muted-foreground">
+                          Detailed features and capabilities.
+                        </p>
+                      </div>
+                    </div>
 
-                {product.shipping?.shippingCost && (
-                  <p>
-                    <span className="font-medium">Shipping Cost:</span>{" "}
-                    {product.shipping.shippingCost}
-                  </p>
-                )}
-              </motion.div>
-            </TabsContent>
-          )}
-        </AnimatePresence>
-      </Card>
-    </Tabs>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {Object.entries(product.specs!).map(
+                        ([key, value], index) => (
+                          <motion.div
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: index * 0.05 }}
+                            key={key}
+                            className="flex items-center justify-between p-4 rounded-xl bg-muted/30 border border-border/50 hover:bg-muted/50 transition-colors"
+                          >
+                            <div className="flex items-center gap-3">
+                              <CheckCircle2 className="w-4 h-4 text-primary/60" />
+                              <span className="font-semibold text-sm uppercase tracking-wider text-muted-foreground">
+                                {key.replace(/_/g, " ")}
+                              </span>
+                            </div>
+                            <span className="font-medium text-foreground">
+                              {value}
+                            </span>
+                          </motion.div>
+                        ),
+                      )}
+                    </div>
+                  </Card>
+                </motion.div>
+              </TabsContent>
+            )}
+
+            {/* SHIPPING */}
+            {hasShipping && (
+              <TabsContent value="shipping" asChild className="mt-0">
+                <motion.div
+                  key="shipping"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{
+                    duration: 0.4,
+                    ease: [0.23, 1, 0.32, 1],
+                  }}
+                >
+                  <Card className="p-8 md:p-10 rounded-[2rem] border-border/40 bg-gradient-to-br from-background via-background to-accent/5 shadow-xl shadow-primary/5">
+                    <div className="flex items-start gap-4 mb-10">
+                      <div className="p-3 rounded-2xl bg-accent/10 text-accent-foreground">
+                        <Truck className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <h3 className="text-2xl font-bold tracking-tight">
+                          Delivery & Logistics
+                        </h3>
+                        <p className="text-muted-foreground">
+                          How we get your order to your doorstep.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                      {product.shipping?.delivery && (
+                        <div className="flex gap-4 p-5 rounded-2xl bg-background border border-border/50 shadow-sm">
+                          <div className="shrink-0 w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center text-orange-600">
+                            <Truck className="w-6 h-6" />
+                          </div>
+                          <div>
+                            <p className="font-bold text-sm text-muted-foreground uppercase tracking-widest mb-1">
+                              Estimated Delivery
+                            </p>
+                            <p className="text-foreground font-medium">
+                              {product.shipping.delivery}
+                            </p>
+                          </div>
+                        </div>
+                      )}
+
+                      {product.shipping?.returns && (
+                        <div className="flex gap-4 p-5 rounded-2xl bg-background border border-border/50 shadow-sm">
+                          <div className="shrink-0 w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
+                            <RotateCcw className="w-6 h-6" />
+                          </div>
+                          <div>
+                            <p className="font-bold text-sm text-muted-foreground uppercase tracking-widest mb-1">
+                              Return Policy
+                            </p>
+                            <p className="text-foreground font-medium">
+                              {product.shipping.returns}
+                            </p>
+                          </div>
+                        </div>
+                      )}
+
+                      {product.shipping?.location && (
+                        <div className="flex gap-4 p-5 rounded-2xl bg-background border border-border/50 shadow-sm">
+                          <div className="shrink-0 w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center text-green-600">
+                            <MapPin className="w-6 h-6" />
+                          </div>
+                          <div>
+                            <p className="font-bold text-sm text-muted-foreground uppercase tracking-widest mb-1">
+                              Ship From
+                            </p>
+                            <p className="text-foreground font-medium">
+                              {product.shipping.location}
+                            </p>
+                          </div>
+                        </div>
+                      )}
+
+                      {product.shipping?.shippingCost && (
+                        <div className="flex gap-4 p-5 rounded-2xl bg-background border border-border/50 shadow-sm">
+                          <div className="shrink-0 w-12 h-12 rounded-xl bg-purple-50 flex items-center justify-center text-purple-600">
+                            <Wallet className="w-6 h-6" />
+                          </div>
+                          <div>
+                            <p className="font-bold text-sm text-muted-foreground uppercase tracking-widest mb-1">
+                              Shipping Cost (Within State)
+                            </p>
+                            <p className="text-foreground font-medium">
+                              {product.shipping.shippingCost}
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </Card>
+                </motion.div>
+              </TabsContent>
+            )}
+          </AnimatePresence>
+        </div>
+      </Tabs>
+    </div>
   );
 }

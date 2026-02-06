@@ -236,6 +236,7 @@ export const productApi = apiManager.injectEndpoints({
             sizes: item.sizes as string[] | null,
 
             highlights: item.highlights ?? null,
+            is_out_of_stock: item.stock <= 0,
           })),
         },
       }),

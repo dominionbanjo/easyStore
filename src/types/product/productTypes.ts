@@ -30,6 +30,7 @@ export interface IProduct {
 
   /* legacy / list usage */
   store_name?: string;
+  store_slug?: string;
   is_in_wishlist: boolean;
 
   colors?: {
@@ -266,6 +267,7 @@ export interface IStoreProduct {
   total_sold: number;
   featured: boolean;
   on_sale: boolean;
+  is_out_of_stock: boolean;
 
   category_ref: IProductCategoryRef;
   store_name?: string;
@@ -330,6 +332,7 @@ export interface VendorProductSearchParams {
 
   rating?: number;
   inStock?: boolean | string;
+  isOutOfStock?: boolean | string;
   onSale?: boolean | string;
   status?: string;
 

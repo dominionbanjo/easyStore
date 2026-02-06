@@ -123,7 +123,9 @@ function ProductDetailsInner({ id }: { id: string }) {
     id: product.id,
     name: product.name,
     vendor: store.store_name,
+    storeSlug: store.slug,
     price: product.discount_price ?? product.price,
+    originalPrice: product.discount_price ? product.price : null,
     category: product.category_ref?.name ?? "",
     rating: Number(product.rating_average ?? 0),
     stock: product.stock,
@@ -163,7 +165,7 @@ function ProductDetailsInner({ id }: { id: string }) {
   /* ───────── RENDER ───────── */
 
   return (
-    <section className="max-w-[1480px] mx-auto px-1.5 sm:px-4 py-10 space-y-16">
+    <section className="max-w-[1480px] mx-auto px-1.5 sm:px-4 py-10 space-y-12">
       {/* Gallery + Sidebar */}
       <div className="grid md:grid-cols-[1.2fr_1fr] gap-10">
         <ProductGallery images={uiProduct.images} />
@@ -174,8 +176,6 @@ function ProductDetailsInner({ id }: { id: string }) {
 
       {/* Details */}
       <ProductDetailsTabs product={uiProduct} />
-
-      <Separator />
 
       {/* Reviews */}
       <ReviewsSection

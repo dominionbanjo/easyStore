@@ -8,8 +8,17 @@ import type { ICartItem } from "@/types/cart/cartTypes";
 interface CartItemProps {
   item: ICartItem;
   quantity: number;
-  onQuantityChange: (productId: string, quantity: number) => void;
-  onRemove: (productId: string) => void;
+  onQuantityChange: (
+    productId: string,
+    quantity: number,
+    size?: string | null,
+    color?: string | null,
+  ) => void;
+  onRemove: (
+    productId: string,
+    size?: string | null,
+    color?: string | null,
+  ) => void;
 }
 
 export function CartItem({
@@ -20,91 +29,115 @@ export function CartItem({
 }: CartItemProps) {
   return (
     <motion.div layout>
-      <Card className="group flex flex-row gap-4 p-3 sm:p-5 rounded-3xl border-0 sm:border shadow-sm sm:shadow-md bg-white dark:bg-zinc-900 border-zinc-100 dark:border-zinc-800 relative overflow-hidden">
+      <Card className="group flex flex-col sm:flex-row gap-4 p-4 sm:p-5 rounded-3xl border sm:border shadow-sm sm:shadow-md bg-white dark:bg-zinc-900 border-zinc-100 dark:border-zinc-800 relative overflow-hidden transition-all hover:shadow-lg">
         {/* Image */}
-        <div className="relative h-28 w-28 sm:h-32 sm:w-32 shrink-0 rounded-2xl overflow-hidden bg-gray-100 dark:bg-zinc-800">
+        <div className="relative h-48 sm:h-32 w-full sm:w-32 shrink-0 rounded-2xl overflow-hidden bg-gray-100 dark:bg-zinc-800">
           <img
             src={item.image ?? "/placeholder.png"}
             alt={item.name}
-            className="h-full w-full object-cover"
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
           />
         </div>
 
         {/* Content */}
-        <div className="flex flex-1 flex-col justify-between py-1">
-          <div className="space-y-1">
-            <div className="flex justify-between items-start gap-2">
-              <h3 className="text-sm sm:text-base font-bold leading-tight line-clamp-2 text-foreground">
+        <div className="flex-1 flex flex-col min-w-0">
+          <div className="flex justify-between items-start gap-4">
+            <div className="space-y-1 flex-1">
+              <h3 className="text-base sm:text-lg font-black leading-tight text-foreground line-clamp-2">
                 {item.name}
               </h3>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => onRemove(item.product_id)}
-                className="h-8 w-8 -mt-1 -mr-2 text-muted-foreground hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 shrink-0"
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
+
+              <div className="flex flex-wrap gap-2 pt-1">
+                {item.size && (
+                  <Badge
+                    variant="secondary"
+                    className="rounded-lg px-2 py-0 h-6 font-bold text-[10px] uppercase tracking-widest bg-zinc-100 dark:bg-zinc-800 text-zinc-600"
+                  >
+                    Size: {item.size}
+                  </Badge>
+                )}
+                {item.color && (
+                  <Badge
+                    variant="outline"
+                    className="rounded-lg px-2 py-0 h-6 font-bold text-[10px] uppercase tracking-widest border-zinc-200 flex items-center gap-1.5"
+                  >
+                    {item.color_hex && (
+                      <div
+                        className="w-2 h-2 rounded-full border border-black/10"
+                        style={{ backgroundColor: item.color_hex }}
+                      />
+                    )}
+                    {item.color}
+                  </Badge>
+                )}
+              </div>
             </div>
 
-            {/* Badges / Meta */}
-            <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
-              {item.size && (
-                <Badge
-                  variant="secondary"
-                  className="rounded-md px-1.5 py-0 h-5 font-semibold text-[10px] uppercase tracking-wider bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400"
-                >
-                  {item.size}
-                </Badge>
-              )}
-              {item.color && (
-                <Badge
-                  variant="outline"
-                  className="rounded-md px-1.5 py-0 h-5 font-semibold text-[10px] uppercase tracking-wider border-zinc-200 dark:border-zinc-700"
-                >
-                  {item.color}
-                </Badge>
-              )}
-            </div>
-
-            <p className="text-primary font-black text-sm sm:text-base pt-1">
-              ₦{(item.discount_price ?? item.price).toLocaleString()}
-            </p>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => onRemove(item.product_id, item.size, item.color)}
+              className="h-9 w-9 rounded-xl text-muted-foreground hover:text-red-500 hover:bg-red-50 transition-colors"
+            >
+              <Trash2 className="h-5 w-5" />
+            </Button>
           </div>
 
-          {/* Controls Footer */}
-          <div className="flex items-center justify-between mt-auto pt-3">
-            {/* Quantity */}
-            <div className="flex items-center gap-1 bg-gray-50 dark:bg-zinc-800/50 rounded-xl p-1 border border-transparent dark:border-zinc-800">
-              <Button
-                size="icon"
-                variant="ghost"
-                onClick={() => onQuantityChange(item.product_id, quantity - 1)}
-                className="h-7 w-7 rounded-lg hover:bg-white dark:hover:bg-zinc-700 shadow-sm"
-              >
-                <Minus className="h-3 w-3" />
-              </Button>
+          <div className="mt-4 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+            <div className="space-y-2">
+              <p className="text-sm font-bold text-muted-foreground">
+                Unit Price:{" "}
+                <span className="text-primary font-black">
+                  ₦{(item.discount_price ?? item.price).toLocaleString()}
+                </span>
+              </p>
 
-              <div className="w-8 text-center text-sm font-bold">
-                {quantity}
+              {/* Quantity Controls */}
+              <div className="flex items-center gap-1 w-fit bg-gray-50 dark:bg-zinc-800/50 rounded-2xl p-1.5 border border-border/50">
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  onClick={() =>
+                    onQuantityChange(
+                      item.product_id,
+                      quantity - 1,
+                      item.size,
+                      item.color,
+                    )
+                  }
+                  className="h-8 w-8 rounded-xl hover:bg-white dark:hover:bg-zinc-700 shadow-sm transition-all"
+                >
+                  <Minus className="h-4 w-4" />
+                </Button>
+
+                <div className="w-10 text-center text-base font-black">
+                  {quantity}
+                </div>
+
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  onClick={() =>
+                    onQuantityChange(
+                      item.product_id,
+                      quantity + 1,
+                      item.size,
+                      item.color,
+                    )
+                  }
+                  className="h-8 w-8 rounded-xl hover:bg-white dark:hover:bg-zinc-700 shadow-sm transition-all"
+                >
+                  <Plus className="h-4 w-4" />
+                </Button>
               </div>
-
-              <Button
-                size="icon"
-                variant="ghost"
-                onClick={() => onQuantityChange(item.product_id, quantity + 1)}
-                className="h-7 w-7 rounded-lg hover:bg-white dark:hover:bg-zinc-700 shadow-sm"
-              >
-                <Plus className="h-3 w-3" />
-              </Button>
             </div>
 
-            {/* Total */}
-            <div className="text-right">
-              <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
+            {/* Subtotal */}
+            <div className="text-left sm:text-right border-t sm:border-0 pt-3 sm:pt-0">
+              <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-1">
                 Subtotal
               </p>
-              <p className="text-sm sm:text-base font-black text-foreground">
+              <p className="text-2xl sm:text-xl font-black text-foreground tabular-nums tracking-tight">
                 ₦
                 {(
                   (item.discount_price ?? item.price) * quantity

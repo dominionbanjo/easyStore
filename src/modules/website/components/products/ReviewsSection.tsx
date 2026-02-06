@@ -1,31 +1,21 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/store";
-
-import { useForm, FormProvider } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-
-import { motion, AnimatePresence } from "framer-motion";
+import { Star, MessageSquarePlus, Filter } from "lucide-react";
 import { toast } from "sonner";
-import { Star } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
-
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { ReviewCard } from "./ReviewCard";
+import { AddReviewForm } from "./AddReviewForm";
 import type { IProductReview } from "@/types/product/productTypes";
-import { useAddProductReviewMutation } from "@/services/productReviewApi";
-
-/* ───────────────── VALIDATION ───────────────── */
-
-const ReviewSchema = z.object({
-  comment: z.string().min(5, "Please write a short review"),
-});
-
-type ReviewFormValues = z.infer<typeof ReviewSchema>;
-
-/* ───────────────── PROPS ───────────────── */
 
 interface ReviewsSectionProps {
   productId: string;
@@ -34,8 +24,6 @@ interface ReviewsSectionProps {
   reviewCount: number;
 }
 
-/* ───────────────── COMPONENT ───────────────── */
-
 export default function ReviewsSection({
   productId,
   reviews,
@@ -43,225 +31,145 @@ export default function ReviewsSection({
   reviewCount,
 }: ReviewsSectionProps) {
   const { isAuthenticated, currentUser } = useSelector(
-    (state: RootState) => state.user
+    (state: RootState) => state.user,
   );
 
-  const [addReview, { isLoading }] = useAddProductReviewMutation();
+  const [open, setOpen] = useState(false);
 
-  const formRef = useRef<HTMLDivElement | null>(null);
-  const [showForm, setShowForm] = useState(false);
-
-  const [rating, setRating] = useState<number>(0);
-  const [hoverRating, setHoverRating] = useState<number>(0);
-
-  const methods = useForm<ReviewFormValues>({
-    resolver: zodResolver(ReviewSchema),
-    mode: "onTouched",
-  });
-
-  /* ───────────────── ACTIONS ───────────────── */
-
-  const handleWriteReview = () => {
-    if (!isAuthenticated || !currentUser) {
-      toast.error("You must be logged in to leave a review.");
-      setTimeout(() => (window.location.href = "/auth/login"), 800);
+  const handleOpenChange = (newOpen: boolean) => {
+    if (newOpen && (!isAuthenticated || !currentUser)) {
+      toast.error("Please login to share your experience", {
+        description: "Redirecting to login page...",
+      });
+      setTimeout(() => (window.location.href = "/auth/login"), 1500);
       return;
     }
-
-    setShowForm(true);
-    setTimeout(() => {
-      formRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
-    }, 200);
+    setOpen(newOpen);
   };
-
-  const onSubmit = async (data: ReviewFormValues) => {
-    if (!rating) {
-      toast.error("Please select a rating");
-      return;
-    }
-
-    try {
-      await addReview({
-        productId,
-        rating,
-        comment: data.comment,
-      }).unwrap();
-
-      toast.success("Review submitted successfully!");
-      methods.reset();
-      setRating(0);
-      setHoverRating(0);
-      setShowForm(false);
-    } catch (err: any) {
-      const message =
-        err?.data?.message ||
-        err?.error ||
-        err?.message ||
-        "Failed to submit review";
-
-      toast.error(message);
-    }
-  };
-
-  const handleCloseForm = () => {
-    setShowForm(false);
-    setRating(0);
-    setHoverRating(0);
-    methods.reset();
-  };
-
-  /* ───────────────── RENDER ───────────────── */
 
   return (
-    <section className="space-y-10">
-      {/* ─── Header ─── */}
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-semibold">Customer Reviews</h2>
-        <Button
-          variant="outline"
-          size="sm"
-          className="rounded-full shadow-sm"
-          onClick={handleWriteReview}
-        >
-          Write a Review
-        </Button>
-      </div>
-
-      {/* ─── Rating Overview ─── */}
-      <div className="flex flex-wrap items-center gap-3">
-        <div className="flex text-yellow-500">
-          {[...Array(5)].map((_, i) => (
-            <Star
-              key={i}
-              className={`h-5 w-5 ${
-                i < Math.round(ratingAverage)
-                  ? "fill-yellow-500"
-                  : "fill-muted stroke-muted"
-              }`}
-            />
-          ))}
-        </div>
-        <p className="text-gray-600">
-          {ratingAverage.toFixed(1)} out of 5 ({reviewCount} reviews)
-        </p>
-      </div>
-
-      {/* ─── Reviews List ─── */}
-      <div className="space-y-5">
-        {reviews.length === 0 && (
-          <p className="text-muted-foreground">
-            No reviews yet. Be the first to review this product.
-          </p>
-        )}
-
-        {reviews.map((review) => (
-          <Card
-            key={review.id}
-            className="p-5 rounded-xl border border-border/50 hover:shadow-md transition-all"
-          >
-            <div className="flex justify-between items-start">
-              <div>
-                <p className="font-semibold text-gray-900">
-                  {review.user.first_name} {review.user.last_name}
-                </p>
-                <p className="text-gray-500 text-sm mt-0.5">
-                  {new Date(review.created_at).toLocaleDateString()}
-                </p>
-              </div>
-
-              <div className="flex gap-1 text-yellow-500">
-                {[...Array(review.rating)].map((_, i) => (
-                  <Star key={i} className="h-4 w-4 fill-yellow-500" />
-                ))}
-              </div>
-            </div>
-
-            {review.comment && (
-              <p className="mt-3 text-gray-700 leading-relaxed">
-                {review.comment}
-              </p>
-            )}
-          </Card>
-        ))}
-      </div>
-
-      {/* ─── Review Form ─── */}
-      <AnimatePresence>
-        {showForm && (
-          <motion.div
-            ref={formRef}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.3 }}
-          >
-            <Card className="p-6 mt-8 rounded-2xl border border-border/40 shadow-sm bg-muted/20">
-              <h3 className="text-lg font-medium mb-4">
-                Review as {currentUser?.first_name}
-              </h3>
-
-              {/* ⭐ Star Rating Selector */}
-              <div className="flex gap-1 mb-4">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <button
-                    key={star}
-                    type="button"
-                    onClick={() => setRating(star)}
-                    onMouseEnter={() => setHoverRating(star)}
-                    onMouseLeave={() => setHoverRating(0)}
-                  >
+    <section className="py-6 border-t border-border/40">
+      <div className="max-w-6xl mx-auto space-y-10">
+        {/* ─── Header & Stats ─── */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+          <div className="space-y-1">
+            <h2 className="text-3xl font-black tracking-tight text-gray-900">
+              Customer Reviews
+            </h2>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <div className="flex gap-0.5">
+                  {[...Array(5)].map((_, i) => (
                     <Star
-                      className={`h-7 w-7 transition-colors ${
-                        star <= (hoverRating || rating)
-                          ? "fill-yellow-500 stroke-yellow-500"
-                          : "stroke-muted-foreground"
+                      key={i}
+                      className={`h-5 w-5 ${
+                        i < Math.round(ratingAverage)
+                          ? "fill-yellow-400 stroke-yellow-400"
+                          : "fill-muted stroke-muted-foreground/20"
                       }`}
                     />
-                  </button>
-                ))}
+                  ))}
+                </div>
+                <span className="font-bold text-xl">
+                  {ratingAverage.toFixed(1)}
+                </span>
               </div>
+              <div className="h-4 w-px bg-border" />
+              <span className="text-muted-foreground font-medium">
+                {reviewCount} Verified Reviews
+              </span>
+            </div>
+          </div>
 
-              <FormProvider {...methods}>
-                <form
-                  onSubmit={methods.handleSubmit(onSubmit)}
-                  className="space-y-4"
-                >
-                  <Textarea
-                    {...methods.register("comment")}
-                    placeholder="Share your experience..."
-                    className="min-h-[120px]"
-                  />
+          <Dialog open={open} onOpenChange={handleOpenChange}>
+            <DialogTrigger asChild>
+              <Button
+                size="lg"
+                className="rounded-2xl bg-primary text-white hover:bg-primary/90 shadow-xl shadow-primary/10 transition-all font-bold px-8 h-14"
+              >
+                <MessageSquarePlus className="w-5 h-5 mr-3" />
+                Write a Review
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[550px] p-0 border-none bg-transparent">
+              <DialogHeader className="hidden">
+                <DialogTitle>Write a Review</DialogTitle>
+              </DialogHeader>
+              <AddReviewForm
+                productId={productId}
+                userName={currentUser?.first_name || "Customer"}
+                onClose={() => setOpen(false)}
+              />
+            </DialogContent>
+          </Dialog>
+        </div>
 
-                  {methods.formState.errors.comment && (
-                    <p className="text-sm text-destructive">
-                      {methods.formState.errors.comment.message}
-                    </p>
-                  )}
-
-                  <div className="flex justify-end gap-3">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={handleCloseForm}
-                      className="rounded-full px-6"
-                    >
-                      Close
-                    </Button>
-
-                    <Button
-                      type="submit"
-                      disabled={isLoading}
-                      className="bg-primary text-white hover:bg-primary/90 rounded-full px-6"
-                    >
-                      {isLoading ? "Submitting…" : "Submit Review"}
-                    </Button>
-                  </div>
-                </form>
-              </FormProvider>
+        {/* ─── Rating Highlights (Compact) ─── */}
+        {reviews.length > 0 && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <Card className="p-4 rounded-2xl bg-muted/30 border-none flex items-center gap-4">
+              <div className="p-2.5 rounded-xl bg-background shadow-sm text-primary">
+                <Star className="w-5 h-5 fill-current" />
+              </div>
+              <div>
+                <div className="font-bold">
+                  {ratingAverage.toFixed(1)} Rating
+                </div>
+                <p className="text-xs text-muted-foreground text-nowrap">
+                  Global Customer Satisfaction
+                </p>
+              </div>
             </Card>
-          </motion.div>
+
+            <Card className="p-4 rounded-2xl bg-muted/30 border-none flex items-center gap-4">
+              <div className="p-2.5 rounded-xl bg-background shadow-sm text-teal-600">
+                <Filter className="w-5 h-5" />
+              </div>
+              <div>
+                <div className="font-bold">100% Genuine</div>
+                <p className="text-xs text-muted-foreground text-nowrap">
+                  Verified Product Purchase
+                </p>
+              </div>
+            </Card>
+          </div>
         )}
-      </AnimatePresence>
+
+        {/* ─── Reviews List ─── */}
+        <div className="space-y-8">
+          {reviews.length === 0 ? (
+            <div className="text-center py-20 px-6 rounded-[3rem] border-2 border-dashed border-muted flex flex-col items-center">
+              <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center mb-6">
+                <MessageSquarePlus className="w-10 h-10 text-muted-foreground" />
+              </div>
+              <h3 className="text-2xl font-bold text-foreground">
+                Be the first to review!
+              </h3>
+              <p className="text-muted-foreground mt-2 max-w-sm">
+                Share your thoughts with the community and help others make a
+                better choice.
+              </p>
+              <Button
+                variant="link"
+                className="mt-4 text-primary font-bold text-lg"
+                onClick={() => setOpen(true)}
+              >
+                Start your review now
+              </Button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {reviews.map((review, idx) => (
+                <ReviewCard
+                  key={review.id || `review-${idx}`}
+                  review={review}
+                  index={idx}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
     </section>
   );
 }

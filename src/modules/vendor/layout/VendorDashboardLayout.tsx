@@ -14,6 +14,7 @@ import LoadingScreen from "@/Loading";
 export default function VendorDashboardLayout() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   const { isAuthenticated, isLoading, currentUser } = useSelector(
     (state: RootState) => state.user,
@@ -56,18 +57,20 @@ export default function VendorDashboardLayout() {
       <DashboardSidebar
         open={sidebarOpen}
         onToggle={() => setSidebarOpen(!sidebarOpen)}
+        isCollapsed={isCollapsed}
+        onCollapse={() => setIsCollapsed(!isCollapsed)}
       />
 
       {/* Main content */}
       <div
         className={cn(
           "flex flex-col flex-1 min-w-0 transition-all duration-300",
-          "md:ml-[260px]",
+          isCollapsed ? "md:ml-[80px]" : "md:ml-[260px]",
         )}
       >
         <DashboardHeader onMenuToggle={() => setSidebarOpen(!sidebarOpen)} />
 
-        <main className="p-6 md:p-10 w-full max-w-7xl mx-auto">
+        <main className="px-2 py-4 sm:p-4 md:p-6 w-full max-w-[1440px] mx-auto transition-all duration-300">
           <Outlet />
         </main>
       </div>

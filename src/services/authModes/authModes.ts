@@ -35,7 +35,11 @@ export const baseQueryWithAuth: BaseQueryFn<
   const status = error?.status || error?.originalStatus;
   const message = error?.data?.message || "";
 
-  if (status === 401 || message.toLowerCase().includes("invalid")) {
+  if (
+    status === 401 ||
+    message.toLowerCase().includes("invalid token") ||
+    message.toLowerCase().includes("invalid credentials")
+  ) {
     // Only proceed if a token actually exists (to prevent infinite loops on login page)
     if (Cookies.get("token")) {
       toast.error("Session expired. Please log in again.");
@@ -53,12 +57,12 @@ export const baseQueryWithAuth: BaseQueryFn<
       }, 800);
     }
     // Stop retrying on auth errors
-    return retry.fail(result);
+    return retry.fail({ error: result.error });
   }
 
   // Stop retrying on other client errors (4xx)
   if (typeof status === "number" && status >= 400 && status < 500) {
-    return retry.fail(result);
+    return retry.fail({ error: result.error });
   }
 
   return result;

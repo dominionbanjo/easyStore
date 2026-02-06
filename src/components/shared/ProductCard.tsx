@@ -6,6 +6,8 @@ import {
   type ReactNode,
 } from "react";
 import { motion } from "framer-motion";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/store";
 import {
   Heart,
   Star,
@@ -50,6 +52,7 @@ interface ProductCardContextType {
   rating: number;
   stock: number;
   vendor?: string;
+  storeSlug?: string;
   avatar?: string;
   colors?: { id: string; name: string; hex: string }[];
   sizes?: string[];
@@ -71,6 +74,7 @@ interface ProductCardRootProps {
   rating?: number;
   stock?: number;
   vendor?: string;
+  storeSlug?: string;
   avatar?: string;
   colors?: { id: string; name: string; hex: string }[];
   sizes?: string[];
@@ -106,6 +110,7 @@ const Root = ({
   rating = 0,
   stock = 0,
   vendor = "Seller",
+  storeSlug,
   avatar,
   colors = [],
   sizes = [],
@@ -113,6 +118,7 @@ const Root = ({
   children,
   className,
 }: ProductCardRootProps) => {
+  const { isAuthenticated } = useSelector((state: RootState) => state.user);
   const [isFavorited, setIsFavorited] = useState<boolean>(isFavorite);
   const navigate = useNavigate();
 
@@ -154,6 +160,11 @@ const Root = ({
   };
 
   const handleAddToCart = async () => {
+    if (!isAuthenticated) {
+      toast.error("Please login to add items to cart");
+      return;
+    }
+
     // If product has variants, require selection
     const hasVariants =
       (colors && colors.length > 0) || (sizes && sizes.length > 0);
@@ -161,7 +172,7 @@ const Root = ({
     if (hasVariants && !showVariantModal) {
       // Initialize defaults if only 1 option available
       if (sizes?.length === 1) setSelectedSize(sizes[0]);
-      if (colors?.length === 1) setSelectedColor(colors[0].hex);
+      if (colors?.length === 1) setSelectedColor(colors[0].id);
 
       setShowVariantModal(true);
       return;
@@ -212,6 +223,7 @@ const Root = ({
       rating,
       stock,
       vendor,
+      storeSlug,
       avatar,
       colors,
       sizes,
@@ -312,7 +324,7 @@ const Root = ({
                     <Label className="text-zinc-500 font-medium">Color</Label>
                     {selectedColor && (
                       <span className="text-xs font-bold text-zinc-900">
-                        {selectedColor}
+                        {colors.find((c) => c.id === selectedColor)?.name}
                       </span>
                     )}
                   </div>
@@ -320,17 +332,17 @@ const Root = ({
                     {colors.map((c) => (
                       <button
                         key={c.id}
-                        onClick={() => setSelectedColor(c.hex)}
+                        onClick={() => setSelectedColor(c.id)}
                         className={cn(
                           "w-10 h-10 rounded-full border-2 transition-all relative flex items-center justify-center shadow-sm",
-                          selectedColor === c.hex
+                          selectedColor === c.id
                             ? "border-emerald-500 ring-2 ring-emerald-500/20 scale-110"
                             : "border-transparent hover:scale-110 hover:shadow-md",
                         )}
                         style={{ backgroundColor: c.hex }}
                         title={c.name}
                       >
-                        {selectedColor === c.hex && (
+                        {selectedColor === c.id && (
                           <Check className="w-4 h-4 text-white drop-shadow-md" />
                         )}
                       </button>
@@ -532,12 +544,12 @@ const Info = () => {
 /* ───────────────── FOOTER ───────────────── */
 
 const Footer = () => {
-  const { vendor, avatar } = useProductCard();
+  const { vendor, avatar, storeSlug } = useProductCard();
 
   return (
     <div className="mt-2 pt-2 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between gap-3">
       <Link
-        to={`/vendor/${vendor}`}
+        to={storeSlug ? `/stores/${storeSlug}` : `/vendor/${vendor}`}
         className="flex items-center gap-2.5 truncate relative z-10 group/vendor"
         onClick={(e) => e.stopPropagation()}
       >

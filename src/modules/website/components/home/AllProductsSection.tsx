@@ -73,6 +73,7 @@ export default function AllProductsSection() {
               rating={product.rating_average ?? 0}
               stock={product.stock}
               vendor={product.store_name ?? "Seller"}
+              storeSlug={product.store_slug}
               isFavorite={product.is_in_wishlist}
               colors={product.colors}
               sizes={product.sizes}

@@ -21,6 +21,7 @@ interface FormSelectProps {
   options: Option[];
   className?: string;
   disabled?: boolean;
+  icon?: React.ReactNode;
 }
 
 export function FormSelect({
@@ -30,6 +31,7 @@ export function FormSelect({
   options,
   className,
   disabled = false,
+  icon,
 }: FormSelectProps) {
   const {
     control,
@@ -39,9 +41,12 @@ export function FormSelect({
   const error = (errors as any)?.[name]?.message as string | undefined;
 
   return (
-    <div className={cn("flex flex-col gap-1.5", className)}>
+    <div className={cn("flex flex-col gap-1.5 group", className)}>
       {label && (
-        <Label htmlFor={name} className="text-sm font-medium text-foreground">
+        <Label
+          htmlFor={name}
+          className="text-sm font-medium text-foreground group-focus-within:text-primary transition-colors"
+        >
           {label}
         </Label>
       )}
@@ -58,10 +63,16 @@ export function FormSelect({
             <SelectTrigger
               id={name}
               className={cn(
-                "w-full h-11 rounded-md border border-input px-3 py-[10px] text-[15px] shadow-xs transition-colors",
-                error && "border-destructive focus-visible:ring-destructive/20"
+                "w-full h-12 rounded-xl border border-muted-foreground/10 bg-muted/20 px-3 py-[10px] text-[15px] shadow-xs transition-colors focus:bg-background",
+                icon ? "pl-11" : "px-4",
+                error && "border-destructive focus-visible:ring-destructive/20",
               )}
             >
+              {icon && (
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors">
+                  {icon}
+                </div>
+              )}
               <SelectValue placeholder={placeholder} />
             </SelectTrigger>
 

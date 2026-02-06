@@ -24,85 +24,104 @@ export function DeliveryInfo({
   onEditAddress,
 }: DeliveryInfoProps) {
   return (
-    <Card className="rounded-3xl border-0 sm:border shadow-sm bg-white dark:bg-zinc-900 border-zinc-100 dark:border-zinc-800 overflow-hidden">
-      <CardHeader className="px-6 py-5 flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-xl font-black tracking-tight text-foreground flex items-center justify-start gap-3 w-full text-left">
-          <MapPin className="h-6 w-6 text-emerald-500" />
-          Delivery Details
-        </CardTitle>
+    <Card className="rounded-[2rem] border-0 sm:border shadow-xl shadow-primary/5 bg-white dark:bg-zinc-950 border-zinc-100 dark:border-zinc-800 overflow-hidden group">
+      <CardHeader className="px-5 py-6 sm:px-8 sm:py-7 flex flex-row items-center justify-between border-b border-zinc-50 dark:border-zinc-900 bg-zinc-50/50 dark:bg-zinc-900/30">
+        <div className="flex items-center gap-3">
+          <div className="p-2.5 rounded-2xl bg-emerald-500/10 text-emerald-600">
+            <MapPin className="h-5 w-5 sm:h-6 sm:w-6" />
+          </div>
+          <CardTitle className="text-lg sm:text-xl font-black tracking-tight text-foreground">
+            Delivery Details
+          </CardTitle>
+        </div>
         <Button
           size="sm"
           variant="ghost"
           onClick={onEditAddress}
-          className="text-emerald-500 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/20 h-8 px-0 text-sm font-bold tracking-tight shrink-0"
+          className="text-emerald-500 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 h-9 px-4 rounded-xl text-xs font-black tracking-widest transition-all"
         >
-          {hasAddress ? "CHANGE" : "ADD ADDRESS"}
+          {hasAddress ? "EDIT" : "ADD"}
         </Button>
       </CardHeader>
 
-      <CardContent className="px-6 pb-8">
+      <CardContent className="p-6 sm:p-8">
         {!hasAddress ? (
-          <div className="flex flex-col items-start justify-center py-6 text-left space-y-4">
-            <div className="w-16 h-16 bg-emerald-50 dark:bg-emerald-950/20 rounded-full flex items-center justify-center">
-              <MapPin className="h-8 w-8 text-emerald-500" />
+          <div className="flex flex-col items-center justify-center py-10 text-center space-y-5">
+            <div className="w-20 h-20 bg-emerald-50 dark:bg-emerald-950/20 rounded-[2rem] flex items-center justify-center animate-pulse">
+              <MapPin className="h-10 w-10 text-emerald-500" />
             </div>
-            <div className="space-y-1">
-              <p className="font-bold text-lg text-foreground">
-                Missing Address
+            <div className="space-y-2">
+              <p className="font-black text-xl text-foreground">
+                No Address Found
               </p>
-              <p className="text-sm text-muted-foreground max-w-[240px]">
-                Please add your delivery address to proceed with the checkout.
+              <p className="text-sm text-muted-foreground max-w-[280px] leading-relaxed">
+                Add your shipping information to calculate precise delivery
+                times and costs.
               </p>
             </div>
+            <Button
+              onClick={onEditAddress}
+              className="rounded-2xl h-12 px-8 font-black bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg shadow-emerald-500/20"
+            >
+              Add Address
+            </Button>
           </div>
         ) : (
-          <div className="space-y-6 mt-4">
-            {/* Recipient */}
-            <div className="flex items-center gap-5">
-              <div className="w-12 h-12 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 flex items-center justify-center shrink-0">
-                <User className="h-6 w-6 text-zinc-400" />
+          <div className="grid gap-6 sm:gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-10">
+              {/* Recipient */}
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-2xl bg-zinc-50 dark:bg-zinc-900 flex items-center justify-center shrink-0 border border-zinc-100 dark:border-zinc-800 transition-colors group-hover:bg-white dark:group-hover:bg-zinc-800">
+                  <User className="h-5 w-5 text-zinc-400" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.15em] mb-1">
+                    Recipient
+                  </p>
+                  <p className="text-base sm:text-lg font-black text-zinc-900 dark:text-white truncate">
+                    {fullName}
+                  </p>
+                </div>
               </div>
-              <div className="flex flex-col items-start text-left">
-                <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest leading-none mb-1.5">
-                  RECIPIENT
-                </p>
-                <p className="text-lg font-black text-zinc-900 dark:text-white leading-none">
-                  {fullName}
-                </p>
-              </div>
-            </div>
 
-            {/* Contact Number */}
-            <div className="flex items-center gap-5">
-              <div className="w-12 h-12 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 flex items-center justify-center shrink-0">
-                <Phone className="h-6 w-6 text-zinc-400" />
-              </div>
-              <div className="flex flex-col items-start text-left">
-                <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest leading-none mb-1.5">
-                  CONTACT NUMBER
-                </p>
-                <p className="text-lg font-black text-zinc-900 dark:text-white leading-none">
-                  {phone}
-                </p>
+              {/* Contact Number */}
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-2xl bg-zinc-50 dark:bg-zinc-900 flex items-center justify-center shrink-0 border border-zinc-100 dark:border-zinc-800 transition-colors group-hover:bg-white dark:group-hover:bg-zinc-800">
+                  <Phone className="h-5 w-5 text-zinc-400" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.15em] mb-1">
+                    Contact Number
+                  </p>
+                  <p className="text-base sm:text-lg font-black text-zinc-900 dark:text-white">
+                    {phone}
+                  </p>
+                </div>
               </div>
             </div>
 
             {/* Shipping Address */}
-            <div className="flex items-start gap-5">
-              <div className="w-12 h-12 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 flex items-center justify-center shrink-0">
-                <Home className="h-6 w-6 text-zinc-400" />
+            <div className="flex items-start gap-4 pt-6 border-t border-zinc-50 dark:border-zinc-900">
+              <div className="w-12 h-12 rounded-2xl bg-zinc-100/50 dark:bg-zinc-900 flex items-center justify-center shrink-0 border border-zinc-200/50 dark:border-zinc-800">
+                <Home className="h-5 w-5 text-zinc-500" />
               </div>
-              <div className="flex flex-col items-start text-left">
-                <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest leading-none mb-1.5">
-                  SHIPPING ADDRESS
+              <div className="flex-1">
+                <p className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.15em] mb-1.5">
+                  Shipping Destination
                 </p>
-                <div className="space-y-0.5 mt-0.5">
-                  <p className="text-lg font-black text-zinc-900 dark:text-white leading-tight">
+                <div className="space-y-1">
+                  <p className="text-base sm:text-xl font-black text-zinc-900 dark:text-white leading-tight">
                     {street}
-                    {state ? `, ${state}` : ""}
-                    {postalCode ? `, ${postalCode}` : ""}
                   </p>
-                  <p className="text-sm font-bold text-zinc-400 mt-1">{city}</p>
+                  <p className="text-sm sm:text-base font-bold text-zinc-500 flex items-center gap-2">
+                    {city} • {state}{" "}
+                    {postalCode && (
+                      <span className="text-zinc-300 dark:text-zinc-700">
+                        |
+                      </span>
+                    )}{" "}
+                    {postalCode}
+                  </p>
                 </div>
               </div>
             </div>

@@ -39,15 +39,23 @@ import { AUTH_ROUTES, USER_ROUTES, WEBSITE_ROUTES } from "@/routes/temp";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import FancyHoverText from "./FancyTextHover";
+import { CartDrawer } from "@/modules/website/components/cart/CartDrawer";
+import { useGetCartQuery } from "@/services/cartApi";
 
 export default function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
   const location = useLocation();
   const [logoutUser] = useLogoutMutation();
   const [query, setQuery] = useState("");
+
+  const { data: cartData } = useGetCartQuery(undefined, {
+    skip: !useSelector((state: RootState) => state.user.isAuthenticated),
+  });
+  const cartItemsCount = cartData?.data?.cart?.items?.length || 0;
 
   const user = useSelector((state: RootState) => state.user.currentUser);
   const isAuthenticated = useSelector(
@@ -287,8 +295,24 @@ export default function Header() {
             <Search className="h-5 w-5" />
           </Button>
 
-          {/* Profile/Login */}
           <div className="flex items-center gap-2">
+            {isAuthenticated && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="relative p-2 flex-shrink-0"
+                onClick={() => setIsCartOpen(true)}
+              >
+                <ShoppingBag className="h-5 w-5 text-neutral-800" />
+                {cartItemsCount > 0 && (
+                  <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white ring-2 ring-white">
+                    {cartItemsCount}
+                  </span>
+                )}
+              </Button>
+            )}
+
+            {/* Profile/Login */}
             {isAuthenticated && user ? (
               <Popover open={profileOpen} onOpenChange={setProfileOpen}>
                 <PopoverTrigger asChild>
@@ -449,6 +473,8 @@ export default function Header() {
           </form>
         </div>
       )}
+
+      <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </header>
   );
 }

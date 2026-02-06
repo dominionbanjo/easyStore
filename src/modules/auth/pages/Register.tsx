@@ -1,19 +1,19 @@
-import { ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 import { Link, useNavigate } from "react-router-dom";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import clsx from "clsx";
+import {
+  User,
+  Store,
+  Mail,
+  Phone,
+  Lock,
+  UserCircle,
+  FileText,
+  LayoutGrid,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  CardFooter,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -30,6 +30,8 @@ import { FormInput } from "@/components/shared/form/FormInput";
 import { FormSelect } from "@/components/shared/form/FormSelect";
 import { cn } from "@/lib/utils";
 import { AUTH_ROUTES } from "@/routes/temp";
+import { AuthLayout } from "../components/AuthLayout";
+import { PasswordStrengthMeter } from "../components/PasswordStrengthMeter";
 
 export default function SignupPage() {
   const navigate = useNavigate();
@@ -48,6 +50,7 @@ export default function SignupPage() {
   const accountType = watch("account_type");
   const agreeToTerms = watch("agree_to_terms");
   const storeName = watch("store_name");
+  const password = watch("password"); // Added for strength meter
 
   /* ───────── Store name lookup ───────── */
   const [checkStoreName] = useLazyCheckStoreNameQuery();
@@ -101,186 +104,213 @@ export default function SignupPage() {
   };
 
   return (
-    <div
-      className="fixed inset-0 bg-cover bg-center"
-      style={{ backgroundImage: "url('/images/easyshop.jpg')" }}
+    <AuthLayout
+      title="Create your account"
+      subtitle="Join EasyStore and start your journey today."
     >
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" />
+      <div className="relative p-1.5 bg-muted/50 rounded-2xl mb-8 flex items-center border border-border/50">
+        <div
+          className="absolute h-[calc(100%-12px)] top-1.5 transition-all duration-300 ease-in-out bg-white rounded-xl shadow-sm z-0 border border-border/20"
+          style={{
+            width: "calc(50% - 12px)",
+            left: accountType === "user" ? "6px" : "calc(50% + 6px)",
+          }}
+        />
 
-      {/* Back */}
-      <Link
-        to="/"
-        className="absolute top-4 left-4 z-20 inline-flex items-center gap-2 rounded-full bg-white/90 px-3 py-2 text-sm shadow-md hover:bg-white"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        <span className="hidden sm:inline">Back to homepage</span>
-      </Link>
+        <button
+          type="button"
+          onClick={() => setValue("account_type", "user")}
+          className={cn(
+            "flex-1 relative z-10 flex items-center justify-center gap-2.5 py-2.5 rounded-xl text-sm font-semibold transition-colors duration-200",
+            accountType === "user"
+              ? "text-primary"
+              : "text-muted-foreground hover:text-foreground",
+          )}
+        >
+          <User
+            className={cn(
+              "w-4 h-4",
+              accountType === "user" ? "text-primary" : "text-muted-foreground",
+            )}
+          />
+          I want to buy
+        </button>
 
-      <div className="relative z-10 flex items-center justify-center h-full px-4 pt-14 sm:pt-0">
-        <Card className="w-full max-w-md max-h-[90vh] bg-white/95 rounded-2xl shadow-xl flex flex-col overflow-hidden">
-          <CardHeader className="space-y-3 text-center">
-            <CardTitle className="text-2xl font-bold">
-              Create your account
-            </CardTitle>
-            <CardDescription>
-              Join EasyStore and start your journey
-            </CardDescription>
+        <button
+          type="button"
+          onClick={() => setValue("account_type", "vendor")}
+          className={cn(
+            "flex-1 relative z-10 flex items-center justify-center gap-2.5 py-2.5 rounded-xl text-sm font-semibold transition-colors duration-200",
+            accountType === "vendor"
+              ? "text-primary"
+              : "text-muted-foreground hover:text-foreground",
+          )}
+        >
+          <Store
+            className={cn(
+              "w-4 h-4",
+              accountType === "vendor"
+                ? "text-primary"
+                : "text-muted-foreground",
+            )}
+          />
+          I want to sell
+        </button>
+      </div>
 
-            {/* Account Type */}
-            <div className="flex gap-3 mt-4">
-              <button
-                type="button"
-                onClick={() => setValue("account_type", "user")}
-                className={clsx(
-                  "flex-1 rounded-full px-4 py-2 text-sm font-semibold border",
-                  accountType === "user"
-                    ? "bg-[#17c06e] text-black border-[#17c06e]"
-                    : "bg-white border-gray-300",
-                )}
-              >
-                I want to buy
-              </button>
+      <FormProvider {...form}>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+          <div className="space-y-4">
+            <FormInput
+              label="First Name"
+              name="first_name"
+              placeholder="e.g. John"
+              icon={<UserCircle className="w-5 h-5" />}
+            />
+            <FormInput
+              label="Last Name"
+              name="last_name"
+              placeholder="e.g. Doe"
+              icon={<UserCircle className="w-5 h-5" />}
+            />
+          </div>
 
-              <button
-                type="button"
-                onClick={() => setValue("account_type", "vendor")}
-                className={clsx(
-                  "flex-1 rounded-full px-4 py-2 text-sm font-semibold border",
-                  accountType === "vendor"
-                    ? "bg-[#17c06e] text-black border-[#17c06e]"
-                    : "bg-white border-gray-300",
-                )}
-              >
-                I want to sell
-              </button>
-            </div>
-          </CardHeader>
+          <FormInput
+            label="Email"
+            name="email"
+            type="email"
+            placeholder="example@mail.com"
+            icon={<Mail className="w-5 h-5" />}
+          />
+          <FormInput
+            label="Phone Number"
+            name="phone_number"
+            placeholder="080 1234 5678"
+            icon={<Phone className="w-5 h-5" />}
+          />
 
-          <CardContent className="flex-1 overflow-y-auto px-6 pb-6">
-            <FormProvider {...form}>
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-                <div className="grid grid-cols-2 gap-4">
-                  <FormInput
-                    label="First Name"
-                    name="first_name"
-                    placeholder="Enter your first name"
-                  />
-                  <FormInput
-                    label="Last Name"
-                    name="last_name"
-                    placeholder="Enter your first name"
-                  />
-                </div>
+          <div>
+            <FormInput
+              label="Password"
+              name="password"
+              type="password"
+              placeholder="Create a strong password"
+              icon={<Lock className="w-5 h-5" />}
+            />
+            <PasswordStrengthMeter password={password || ""} />
+          </div>
 
+          {accountType === "vendor" && (
+            <div className="space-y-4 rounded-xl border border-border/50 bg-muted/30 p-5 mt-2 animate-in slide-in-from-top-2">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="h-6 w-1 bg-primary rounded-full" />
+                <p className="text-sm font-semibold text-foreground">
+                  Store Details
+                </p>
+              </div>
+
+              {/* Store name with status */}
+              <div className="relative">
                 <FormInput
-                  label="Email"
-                  name="email"
-                  type="email"
-                  placeholder="example@mail.com"
-                />
-                <FormInput
-                  label="Phone Number"
-                  name="phone_number"
-                  placeholder="0808888888 or +23444444444"
-                />
-                <FormInput
-                  label="Password"
-                  name="password"
-                  type="password"
-                  placeholder="**********"
+                  label="Store Name"
+                  name="store_name"
+                  placeholder="Enter your store name"
+                  icon={<Store className="w-5 h-5" />}
                 />
 
-                {accountType === "vendor" && (
-                  <div className="space-y-4 rounded-xl border bg-gray-50 p-4">
-                    <p className="text-sm font-semibold text-gray-700">
-                      Store details
-                    </p>
+                {storeNameStatus !== "idle" && (
+                  <div className="absolute right-3 top-[38px] text-xs">
+                    {storeNameStatus === "checking" && (
+                      <span className="flex items-center gap-1 text-muted-foreground">
+                        <span className="h-3 w-3 animate-spin rounded-full border-2 border-primary/20 border-t-primary" />
+                        Checking...
+                      </span>
+                    )}
 
-                    {/* Store name with status */}
-                    <div className="relative">
-                      <FormInput
-                        label="Store Name"
-                        name="store_name"
-                        placeholder="Enter Your store name"
-                      />
+                    {storeNameStatus === "available" && (
+                      <span className="text-green-600 font-medium flex items-center gap-1">
+                        Available
+                      </span>
+                    )}
 
-                      {storeNameStatus !== "idle" && (
-                        <div className="absolute right-3 top-[38px] text-xs">
-                          {storeNameStatus === "checking" && (
-                            <span className="flex items-center gap-1 text-gray-500">
-                              <span className="h-3 w-3 animate-spin rounded-full border-2 border-gray-300 border-t-[#17c06e]" />
-                              Checking…
-                            </span>
-                          )}
-
-                          {storeNameStatus === "available" && (
-                            <span className="text-green-600 font-medium">
-                              Available
-                            </span>
-                          )}
-
-                          {storeNameStatus === "taken" && (
-                            <span className="text-red-500 font-medium">
-                              Already taken
-                            </span>
-                          )}
-                        </div>
-                      )}
-                    </div>
-
-                    <FormInput
-                      label="About Store"
-                      name="description"
-                      placeholder="What do you sell or provide"
-                    />
-
-                    <FormSelect
-                      name="current_sales_channel"
-                      label="Current Sales Channel"
-                      placeholder="Select channel"
-                      options={[
-                        { label: "WhatsApp", value: "whatsapp" },
-                        { label: "Instagram", value: "instagram" },
-                        { label: "Facebook", value: "facebook" },
-                        { label: "TikTok", value: "tiktok" },
-                        { label: "Other", value: "other" },
-                      ]}
-                    />
+                    {storeNameStatus === "taken" && (
+                      <span className="text-destructive font-medium">
+                        Already taken
+                      </span>
+                    )}
                   </div>
                 )}
+              </div>
 
-                <div className="flex items-center gap-3">
-                  <Checkbox
-                    checked={agreeToTerms}
-                    onCheckedChange={(v) => setValue("agree_to_terms", !!v)}
-                  />
-                  <Label>I agree to the Terms & Conditions</Label>
-                </div>
+              <FormInput
+                label="Store Description"
+                name="description"
+                placeholder="What do you sell?"
+                icon={<FileText className="w-5 h-5" />}
+              />
 
-                <Button
-                  type="submit"
-                  disabled={isLoading || !agreeToTerms || isStoreNameInvalid}
-                  className={cn(
-                    "w-full rounded-full py-2 bg-[#17c06e] text-black",
-                    (isLoading || !agreeToTerms || isStoreNameInvalid) &&
-                      "opacity-70 cursor-not-allowed",
-                  )}
+              <FormSelect
+                name="current_sales_channel"
+                label="Current Channel"
+                placeholder="Where do you sell now?"
+                icon={<LayoutGrid className="w-5 h-5" />}
+                options={[
+                  { label: "WhatsApp", value: "whatsapp" },
+                  { label: "Instagram", value: "instagram" },
+                  { label: "Facebook", value: "facebook" },
+                  { label: "TikTok", value: "tiktok" },
+                  { label: "Other", value: "other" },
+                ]}
+              />
+            </div>
+          )}
+
+          <div className="pt-2">
+            <div className="flex items-start gap-3 mb-6">
+              <Checkbox
+                id="terms"
+                checked={agreeToTerms}
+                onCheckedChange={(v) => setValue("agree_to_terms", !!v)}
+              />
+              <Label
+                htmlFor="terms"
+                className="text-sm font-normal text-muted-foreground leading-normal peer-disabled:cursor-not-allowed peer-disabled:opacity-70 mt-0.5 flex-1 cursor-pointer"
+              >
+                I agree to the{" "}
+                <Link
+                  to="/terms"
+                  className="text-primary hover:underline whitespace-nowrap"
                 >
-                  {isLoading ? "Creating account..." : "Create account"}
-                </Button>
-              </form>
-            </FormProvider>
-          </CardContent>
+                  Terms of Service
+                </Link>
+              </Label>
+            </div>
 
-          <CardFooter className="text-center text-sm text-muted-foreground">
-            Already have an account?
-            <Link to={AUTH_ROUTES.LOGIN} className="ml-1 hover:underline">
-              Log in
-            </Link>
-          </CardFooter>
-        </Card>
+            <Button
+              type="submit"
+              size="lg"
+              disabled={!agreeToTerms || isStoreNameInvalid}
+              isLoading={isLoading}
+              loadingText="Creating account..."
+              className={cn(
+                "w-full h-12 rounded-full text-base font-semibold shadow-lg hover:shadow-primary/25 disabled:opacity-50",
+              )}
+            >
+              Create Account
+            </Button>
+          </div>
+        </form>
+      </FormProvider>
+
+      <div className="mt-8 text-center text-sm text-muted-foreground">
+        Already have an account?{" "}
+        <Link
+          to={AUTH_ROUTES.LOGIN}
+          className="text-primary font-semibold hover:underline"
+        >
+          Log in
+        </Link>
       </div>
-    </div>
+    </AuthLayout>
   );
 }

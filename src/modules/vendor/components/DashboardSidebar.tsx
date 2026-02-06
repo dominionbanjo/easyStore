@@ -8,9 +8,12 @@ import {
   BarChart2,
   HelpCircle,
   Store,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { Button } from "@/components/ui/button";
 
 const menuItems = [
   { label: "Dashboard", icon: LayoutDashboard, to: "/vendor", exact: true },
@@ -25,24 +28,51 @@ const menuItems = [
 interface DashboardSidebarProps {
   open: boolean;
   onToggle: () => void;
+  isCollapsed: boolean;
+  onCollapse: () => void;
 }
 
 export default function DashboardSidebar({
   open,
   onToggle,
+  isCollapsed,
+  onCollapse,
 }: DashboardSidebarProps) {
   return (
     <>
       {/* ─── Desktop Sidebar ─── */}
       <aside
         className={cn(
-          "hidden md:flex flex-col border-r border-border/30 bg-card text-card-foreground",
-          "fixed top-0 left-0 h-screen w-[260px] z-30",
+          "hidden md:flex flex-col border-r border-border/30 bg-card text-card-foreground transition-all duration-300",
+          "fixed top-0 left-0 h-screen z-30",
+          isCollapsed ? "w-[80px]" : "w-[260px]",
         )}
       >
-        <div className="flex items-center gap-2 px-4 py-5 border-b border-border/20">
-          <Store className="h-6 w-6 text-primary" />
-          <span className="font-semibold text-lg">My Store</span>
+        <div className="flex items-center justify-between px-4 py-[18.2px] border-b border-border/20">
+          <div className="flex items-center gap-2 overflow-hidden">
+            <Store className="h-6 w-6 text-primary shrink-0" />
+            {!isCollapsed && (
+              <motion.span
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="font-semibold text-lg truncate"
+              >
+                My Store
+              </motion.span>
+            )}
+          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onCollapse}
+            className="h-8 w-8 hover:bg-muted"
+          >
+            {isCollapsed ? (
+              <ChevronRight className="h-4 w-4" />
+            ) : (
+              <ChevronLeft className="h-4 w-4" />
+            )}
+          </Button>
         </div>
 
         <nav className="flex flex-col gap-1 px-2 mt-4">
@@ -51,16 +81,26 @@ export default function DashboardSidebar({
               key={label}
               to={to}
               end={exact}
+              title={isCollapsed ? label : ""}
               className={({ isActive }) =>
                 cn(
                   "flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors",
                   "text-muted-foreground hover:text-foreground hover:bg-muted/50",
                   isActive && "bg-muted text-foreground font-medium",
+                  isCollapsed && "justify-center px-0",
                 )
               }
             >
               <Icon className="h-5 w-5 shrink-0" />
-              <span>{label}</span>
+              {!isCollapsed && (
+                <motion.span
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  className="truncate"
+                >
+                  {label}
+                </motion.span>
+              )}
             </NavLink>
           ))}
         </nav>
