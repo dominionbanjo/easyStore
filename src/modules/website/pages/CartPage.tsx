@@ -37,11 +37,18 @@ export default function CartPage() {
   /* ───────── LOCAL QUANTITY STATE ───────── */
   const [localQty, setLocalQty] = useState<Record<string, number>>({});
 
+  const getItemKey = (
+    productId: string,
+    size?: string | null,
+    color?: string | null,
+  ) => `${productId}-${size ?? "none"}-${color ?? "none"}`;
+
   useEffect(() => {
     if (!cart) return;
     const initial: Record<string, number> = {};
     cart.items.forEach((item: ICartItem) => {
-      initial[item.product_id] = item.quantity;
+      initial[getItemKey(item.product_id, item.size, item.color)] =
+        item.quantity;
     });
     setLocalQty(initial);
   }, [cart]);
@@ -49,13 +56,20 @@ export default function CartPage() {
   /* ───────── DEBOUNCED API CALL ───────── */
   const debouncedUpdate = useMemo(
     () =>
-      debounce((productId: string, quantity: number) => {
-        updateCartItem({ productId, quantity })
-          .unwrap()
-          .catch(() => {
-            toast.error("Unable to update quantity");
-          });
-      }),
+      debounce(
+        (
+          productId: string,
+          quantity: number,
+          size?: string | null,
+          color?: string | null,
+        ) => {
+          updateCartItem({ productId, quantity, size, color })
+            .unwrap()
+            .catch(() => {
+              toast.error("Unable to update quantity");
+            });
+        },
+      ),
     [updateCartItem],
   );
 
@@ -81,18 +95,28 @@ export default function CartPage() {
   }
 
   /* ───────── HANDLERS ───────── */
-  const handleQuantityChange = (productId: string, quantity: number) => {
+  const handleQuantityChange = (
+    productId: string,
+    quantity: number,
+    size?: string | null,
+    color?: string | null,
+  ) => {
     const safeQty = Math.max(1, quantity);
+    const key = getItemKey(productId, size, color);
     setLocalQty((prev) => ({
       ...prev,
-      [productId]: safeQty,
+      [key]: safeQty,
     }));
-    debouncedUpdate(productId, safeQty);
+    debouncedUpdate(productId, safeQty, size, color);
   };
 
-  const handleRemove = async (productId: string) => {
+  const handleRemove = async (
+    productId: string,
+    size?: string | null,
+    color?: string | null,
+  ) => {
     try {
-      await removeCartItem(productId).unwrap();
+      await removeCartItem({ productId, size, color }).unwrap();
       toast.success("Item removed from cart");
     } catch {
       toast.error("Failed to remove item");
@@ -152,9 +176,13 @@ export default function CartPage() {
             <div className="space-y-4 px-1 sm:px-0">
               {cart.items.map((item: ICartItem) => (
                 <CartItem
-                  key={`${item.product_id}-${item.size}-${item.color}`}
+                  key={getItemKey(item.product_id, item.size, item.color)}
                   item={item}
-                  quantity={localQty[item.product_id] ?? item.quantity}
+                  quantity={
+                    localQty[
+                      getItemKey(item.product_id, item.size, item.color)
+                    ] ?? item.quantity
+                  }
                   onQuantityChange={handleQuantityChange}
                   onRemove={handleRemove}
                 />

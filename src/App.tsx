@@ -1,129 +1,12 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { lazy, Suspense } from "react";
-import ScrollToTop from "./utils/ScrollToTop";
-import AppLoader from "./components/shared/AppLoader";
-import AddProductPage from "./modules/vendor/pages/AddProductsPage";
-import ProductPreviewPage from "./modules/vendor/pages/ProductPreviewPage";
-import CheckoutPage from "./modules/website/pages/CheckoutPage";
-import VerifyPaymentPage from "./modules/website/pages/VerifyPayment";
+import { Suspense } from "react";
 
-/* ───────────────── LAYOUTS ───────────────── */
+// Utils & Components
+import ScrollToTop from "@/utils/ScrollToTop";
+import AppLoader from "@/components/shared/AppLoader";
 
-// Website
-const HomepageLayout = lazy(
-  () => import("./modules/website/layout/HomePageLayout"),
-);
-const AccountsLayout = lazy(
-  () => import("./modules/website/layout/AccountsLayout"),
-);
-
-// Vendor
-const VendorDashboardLayout = lazy(
-  () => import("./modules/vendor/layout/VendorDashboardLayout"),
-);
-
-// Admin
-const SuperAdminDashboardLayout = lazy(
-  () => import("./modules/admin/layout/SuperAdminDashboardLayout"),
-);
-
-/* ───────────────── WEBSITE PAGES ───────────────── */
-
-const LandingPage = lazy(() => import("./modules/website/pages/LandingPage"));
-const AboutPage = lazy(() => import("./modules/website/pages/AboutPage"));
-const StoresPage = lazy(() => import("./modules/website/pages/StoresPage"));
-const StoreDetailsPage = lazy(
-  () => import("./modules/vendor/pages/storeDetailsPage"),
-);
-const CategoriesPage = lazy(() => import("./modules/website/pages/Categories"));
-const CategoryDetailsPage = lazy(
-  () => import("./modules/website/pages/SingleCategoryPage"),
-);
-const ProductDetailPage = lazy(
-  () => import("./modules/website/pages/ProductDetailsPage"),
-);
-const OrdersPage = lazy(() => import("./modules/website/pages/OrdersPage"));
-const OrderDetailsPage = lazy(
-  () => import("./modules/website/pages/OrderDetailsPage"),
-);
-const WishlistPage = lazy(() => import("./modules/website/pages/WishlistPage"));
-const CartPage = lazy(() => import("./modules/website/pages/CartPage"));
-const SettingsPage = lazy(() => import("./modules/website/pages/SettingsPage"));
-const UserProfilePage = lazy(
-  () => import("./modules/website/pages/ProfilePage"),
-);
-const SearchResultsPage = lazy(
-  () => import("./modules/website/pages/SearchResultsPage"),
-);
-const NotFoundPage = lazy(() => import("./modules/website/pages/NotFoundPage"));
-
-/* ───────────────── AUTH PAGES ───────────────── */
-
-const LoginPage = lazy(() => import("./modules/auth/pages/Login"));
-const SignupPage = lazy(() => import("./modules/auth/pages/Register"));
-const VerifyOtpPage = lazy(() => import("./modules/auth/pages/VerifyOtp"));
-const ForgotPasswordPage = lazy(
-  () => import("./modules/auth/pages/ForgotPasswordPage"),
-);
-const ResetPasswordPage = lazy(
-  () => import("./modules/auth/pages/ResetPasswordPage"),
-);
-
-/* ───────────────── VENDOR PAGES ───────────────── */
-
-const VendorDashboardPage = lazy(
-  () => import("./modules/vendor/pages/VendorDashboardPage"),
-);
-const CustomersPage = lazy(
-  () => import("./modules/vendor/pages/CustomersPage"),
-);
-const VendorOrdersPage = lazy(
-  () => import("./modules/vendor/pages/OrdersPage"),
-);
-const ProductsPage = lazy(() => import("./modules/vendor/pages/ProductsPage"));
-const VendorSettingsPage = lazy(
-  () => import("./modules/vendor/pages/SettingsPage"),
-);
-const HelpPage = lazy(() => import("./modules/vendor/pages/HelpPage"));
-const AnalyticsPage = lazy(
-  () => import("./modules/vendor/pages/AnalyticsPage"),
-);
-
-/* ───────────────── ADMIN PAGES ───────────────── */
-
-const SuperAdminOverviewPage = lazy(
-  () => import("./modules/admin/pages/SuperAdminOverviewPage"),
-);
-const SuperAdminVendorsPage = lazy(
-  () => import("./modules/admin/pages/SuperAdminVendorsPage"),
-);
-const SuperAdminUsersPage = lazy(
-  () => import("./modules/admin/pages/SuperAdminUsersPage"),
-);
-const SuperAdminTransactionsPage = lazy(
-  () => import("./modules/admin/pages/SuperAdminTransactionsPage"),
-);
-const SuperAdminReportsPage = lazy(
-  () => import("./modules/admin/pages/SuperAdminReportsPage"),
-);
-const SuperAdminLogsPage = lazy(
-  () => import("./modules/admin/pages/SuperAdminLogsPage"),
-);
-const SuperAdminNotificationsPage = lazy(
-  () => import("./modules/admin/pages/SuperAdminNotificationsPage"),
-);
-const SuperAdminPlatformAnalysisPage = lazy(
-  () => import("./modules/admin/pages/SuperAdminPlatformAnalysisPage"),
-);
-const SuperAdminAccessControlPage = lazy(
-  () => import("./modules/admin/pages/SuperAdminAccessControlPage"),
-);
-const SuperAdminSettingsPage = lazy(
-  () => import("./modules/admin/pages/SuperAdminSettingsPage"),
-);
-const SuperAdminServerConfigPage = lazy(
-  () => import("./modules/admin/pages/SuperAdminServerConfigPage"),
-);
+// Lazy-loaded Components
+import * as Pages from "@/routes/lazyComponents";
 
 /* ───────────────── APP ───────────────── */
 
@@ -136,85 +19,105 @@ export default function App() {
       <Suspense fallback={<AppLoader />}>
         <Routes>
           {/* ─── WEBSITE ─── */}
-          <Route path="/" element={<HomepageLayout />}>
-            <Route index element={<LandingPage />} />
-            <Route path="s" element={<SearchResultsPage />} />
-            <Route path="stores" element={<StoresPage />} />
-            <Route path="stores/:slug" element={<StoreDetailsPage />} />
-            <Route path="categories" element={<CategoriesPage />} />
-            <Route path="categories/:slug" element={<CategoryDetailsPage />} />
-            <Route path="product/:slug" element={<ProductDetailPage />} />
-            <Route path="about" element={<AboutPage />} />
+          <Route path="/" element={<Pages.HomepageLayout />}>
+            <Route index element={<Pages.LandingPage />} />
+            <Route path="s" element={<Pages.SearchResultsPage />} />
+            <Route path="stores" element={<Pages.StoresPage />} />
+            <Route path="stores/:slug" element={<Pages.StoreDetailsPage />} />
+            <Route path="categories" element={<Pages.CategoriesPage />} />
+            <Route
+              path="categories/:slug"
+              element={<Pages.CategoryDetailsPage />}
+            />
+            <Route path="product/:slug" element={<Pages.ProductDetailPage />} />
+            <Route path="about" element={<Pages.AboutPage />} />
           </Route>
 
           {/* ─── ACCOUNT ─── */}
-          <Route path="/account" element={<AccountsLayout />}>
-            <Route path="profile" element={<UserProfilePage />} />
-            <Route path="settings" element={<SettingsPage />} />
-            <Route path="cart" element={<CartPage />} />
-            <Route path="wishlist" element={<WishlistPage />} />
-            <Route path="cart/preview" element={<CheckoutPage />} />
-            <Route path="verify-payment" element={<VerifyPaymentPage />} />
-            <Route path="orders" element={<OrdersPage />} />
-            <Route path="orders/:id" element={<OrderDetailsPage />} />
+          <Route path="/account" element={<Pages.AccountsLayout />}>
+            <Route path="profile" element={<Pages.UserProfilePage />} />
+            <Route path="settings" element={<Pages.SettingsPage />} />
+            <Route path="cart" element={<Pages.CartPage />} />
+            <Route path="wishlist" element={<Pages.WishlistPage />} />
+            <Route path="cart/preview" element={<Pages.CheckoutPage />} />
+            <Route
+              path="verify-payment"
+              element={<Pages.VerifyPaymentPage />}
+            />
+            <Route path="orders" element={<Pages.OrdersPage />} />
+            <Route path="orders/:id" element={<Pages.OrderDetailsPage />} />
           </Route>
 
           {/* ─── AUTH ─── */}
           <Route path="/auth">
-            <Route path="login" element={<LoginPage />} />
-            <Route path="signup" element={<SignupPage />} />
-            <Route path="verify-otp" element={<VerifyOtpPage />} />
-            <Route path="forgot-password" element={<ForgotPasswordPage />} />
-            <Route path="reset-password" element={<ResetPasswordPage />} />
+            <Route path="login" element={<Pages.LoginPage />} />
+            <Route path="signup" element={<Pages.SignupPage />} />
+            <Route path="verify-otp" element={<Pages.VerifyOtpPage />} />
+            <Route
+              path="forgot-password"
+              element={<Pages.ForgotPasswordPage />}
+            />
+            <Route
+              path="reset-password"
+              element={<Pages.ResetPasswordPage />}
+            />
           </Route>
 
           {/* ─── VENDOR ─── */}
-          <Route path="/vendor" element={<VendorDashboardLayout />}>
-            <Route index element={<VendorDashboardPage />} />
-
-            <Route path="customers" element={<CustomersPage />} />
-            <Route path="orders" element={<VendorOrdersPage />} />
+          <Route path="/vendor" element={<Pages.VendorDashboardLayout />}>
+            <Route index element={<Pages.VendorDashboardPage />} />
+            <Route path="customers" element={<Pages.CustomersPage />} />
+            <Route path="orders" element={<Pages.VendorOrdersPage />} />
 
             {/* Products */}
-            <Route path="products" element={<ProductsPage />} />
-            <Route path="products/new" element={<AddProductPage />} />
-            <Route path="products/:slug/edit" element={<AddProductPage />} />
-            <Route path="products/preview" element={<ProductPreviewPage />} />
+            <Route path="products" element={<Pages.ProductsPage />} />
+            <Route path="products/new" element={<Pages.AddProductPage />} />
+            <Route
+              path="products/:slug/edit"
+              element={<Pages.AddProductPage />}
+            />
+            <Route
+              path="products/preview"
+              element={<Pages.ProductPreviewPage />}
+            />
 
-            <Route path="analytics" element={<AnalyticsPage />} />
-            <Route path="settings" element={<VendorSettingsPage />} />
-            <Route path="help" element={<HelpPage />} />
+            <Route path="analytics" element={<Pages.AnalyticsPage />} />
+            <Route path="settings" element={<Pages.VendorSettingsPage />} />
+            <Route path="help" element={<Pages.HelpPage />} />
           </Route>
 
           {/* ─── ADMIN ─── */}
-          <Route path="/admin" element={<SuperAdminDashboardLayout />}>
-            <Route index element={<SuperAdminOverviewPage />} />
-            <Route path="vendors" element={<SuperAdminVendorsPage />} />
-            <Route path="users" element={<SuperAdminUsersPage />} />
+          <Route path="/admin" element={<Pages.SuperAdminDashboardLayout />}>
+            <Route index element={<Pages.SuperAdminOverviewPage />} />
+            <Route path="vendors" element={<Pages.SuperAdminVendorsPage />} />
+            <Route path="users" element={<Pages.SuperAdminUsersPage />} />
             <Route
               path="transactions"
-              element={<SuperAdminTransactionsPage />}
+              element={<Pages.SuperAdminTransactionsPage />}
             />
-            <Route path="reports" element={<SuperAdminReportsPage />} />
-            <Route path="logs" element={<SuperAdminLogsPage />} />
+            <Route path="reports" element={<Pages.SuperAdminReportsPage />} />
+            <Route path="logs" element={<Pages.SuperAdminLogsPage />} />
             <Route
               path="notifications"
-              element={<SuperAdminNotificationsPage />}
+              element={<Pages.SuperAdminNotificationsPage />}
             />
             <Route
               path="analytics"
-              element={<SuperAdminPlatformAnalysisPage />}
+              element={<Pages.SuperAdminPlatformAnalysisPage />}
             />
             <Route
               path="access-control"
-              element={<SuperAdminAccessControlPage />}
+              element={<Pages.SuperAdminAccessControlPage />}
             />
-            <Route path="settings" element={<SuperAdminSettingsPage />} />
-            <Route path="system" element={<SuperAdminServerConfigPage />} />
+            <Route path="settings" element={<Pages.SuperAdminSettingsPage />} />
+            <Route
+              path="system"
+              element={<Pages.SuperAdminServerConfigPage />}
+            />
           </Route>
 
           {/* ─── FALLBACK ─── */}
-          <Route path="*" element={<NotFoundPage />} />
+          <Route path="*" element={<Pages.NotFoundPage />} />
         </Routes>
       </Suspense>
     </Router>

@@ -26,7 +26,7 @@ export default function RelatedProductsGrid({
 
           return (
             <ProductCard.Root
-              key={product.id}
+              key={product.id || product.slug}
               id={product.id}
               slug={product.slug}
               name={product.name}
@@ -34,6 +34,7 @@ export default function RelatedProductsGrid({
               price={`₦${Number(price).toLocaleString()}`}
               rating={Number(product.rating_average ?? 0)}
               vendor={product.store_name ?? ""}
+              storeSlug={product.store_slug}
               stock={product.stock ?? 0}
               category={product.category ?? ""}
               isFavorite={product.is_in_wishlist}

@@ -34,34 +34,40 @@ export const productColumns: ColumnDef<IStoreProduct>[] = [
     header: () => <div className="text-left">Product</div>,
     cell: ({ row }) => {
       const product = row.original;
+      const truncatedName =
+        product.name.length > 18
+          ? product.name.substring(0, 18) + "..."
+          : product.name;
 
       return (
-        <div className="flex items-center gap-3 text-left">
+        <div className="flex items-center gap-3 text-left max-w-[280px]">
           <img
             src={product.image?.url}
             alt={product.name}
             className="w-12 h-12 rounded-md object-cover border shrink-0"
           />
-          <div className="min-w-0">
-            <p className="font-medium line-clamp-1">{product.name}</p>
-            <p className="text-xs text-muted-foreground">
+          <div className="min-w-0 flex-1 overflow-hidden">
+            <p className="font-medium text-sm truncate" title={product.name}>
+              {truncatedName}
+            </p>
+            <p className="text-xs text-muted-foreground truncate">
               ID: #{product.id.slice(0, 8)}
             </p>
           </div>
         </div>
       );
     },
+    size: 280,
   },
 
-  /* ───────────── Category (CENTERED) ───────────── */
+  /* ───────────── Category (LEFT ALIGNED) ───────────── */
   {
     accessorKey: "category_ref.name",
-    header: () => <div className="text-center">Category</div>,
+    header: () => <div className="text-left">Category</div>,
     cell: ({ row }) => (
-      <div className="text-center">
-        {row.original.category_ref?.name ?? "—"}
-      </div>
+      <div className="text-left">{row.original.category_ref?.name ?? "—"}</div>
     ),
+    size: 150,
   },
 
   /* ───────────── Price (CENTERED) ───────────── */
@@ -83,10 +89,12 @@ export const productColumns: ColumnDef<IStoreProduct>[] = [
       <div
         className={cn(
           "text-center font-medium",
-          row.original.stock <= 0 ? "text-red-600" : "text-green-600",
+          row.original.is_out_of_stock ? "text-red-600" : "text-green-600",
         )}
       >
-        {row.original.stock <= 0 ? "Out of Stock" : `${row.original.stock} pcs`}
+        {row.original.is_out_of_stock
+          ? "Out of Stock"
+          : `${row.original.stock} pcs`}
       </div>
     ),
   },

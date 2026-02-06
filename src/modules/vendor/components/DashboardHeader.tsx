@@ -57,7 +57,7 @@ export default function DashboardHeader({
   };
 
   return (
-    <header className="flex items-center justify-between px-6 py-4 border-b border-border/40 bg-background/95 backdrop-blur-sm sticky top-0 z-30">
+    <header className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-border/40 bg-background/95 backdrop-blur-sm sticky top-0 z-30">
       <div className="flex items-center gap-4">
         <Button
           variant="ghost"

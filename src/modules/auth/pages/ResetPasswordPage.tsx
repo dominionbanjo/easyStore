@@ -1,21 +1,15 @@
-import { ArrowLeft } from "lucide-react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useForm, FormProvider } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
+import { Card, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useResetPasswordMutation } from "@/services/authApi";
 import { FormInput } from "@/components/shared/form/FormInput";
-import { cn } from "@/lib/utils";
 import { AUTH_ROUTES } from "@/routes/temp";
+import { AuthLayout } from "../components/AuthLayout";
+import { PasswordStrengthMeter } from "../components/PasswordStrengthMeter";
 
 /* ------------------------- Schema ------------------------- */
 const ResetPasswordSchema = z.object({
@@ -41,7 +35,8 @@ export default function ResetPasswordPage() {
     mode: "onTouched",
   });
 
-  const { handleSubmit } = methods;
+  const { handleSubmit, watch } = methods;
+  const password = watch("password");
 
   const onSubmit = async (data: ResetPasswordValues) => {
     if (!email || !token) {
@@ -66,96 +61,54 @@ export default function ResetPasswordPage() {
   /* ---------------- Invalid / Expired Link ---------------- */
   if (!email || !token) {
     return (
-      <div
-        className="fixed inset-0 bg-cover bg-center"
-        style={{ backgroundImage: "url('/images/easyshop.jpg')" }}
-      >
-        <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" />
+      <div className="fixed inset-0 flex items-center justify-center p-4 bg-background">
+        <Card className="w-full max-w-md bg-white/95 rounded-2xl shadow-xl text-center p-8">
+          <CardTitle className="text-xl font-semibold mb-2 text-destructive">
+            Invalid Reset Link
+          </CardTitle>
+          <CardDescription className="text-muted-foreground">
+            The password reset link is missing or has expired.
+          </CardDescription>
 
-        <div className="relative z-10 flex items-center justify-center h-full px-4">
-          <Card className="w-full max-w-md bg-white/95 rounded-2xl shadow-xl text-center p-6">
-            <CardTitle className="text-xl font-semibold mb-2">
-              Invalid Reset Link
-            </CardTitle>
-            <CardDescription className="text-gray-600">
-              The password reset link is missing or has expired.
-            </CardDescription>
-
-            <Button
-              className="mt-6 rounded-full bg-[#17c06e] text-black hover:bg-[#17c06e]/90"
-              onClick={() => navigate(AUTH_ROUTES.FORGOT_PASSWORD)}
-            >
-              Request a New Link
-            </Button>
-          </Card>
-        </div>
+          <Button
+            className="mt-6 w-full rounded-full"
+            onClick={() => navigate(AUTH_ROUTES.FORGOT_PASSWORD)}
+          >
+            Request a New Link
+          </Button>
+        </Card>
       </div>
     );
   }
 
   /* ---------------- Normal Reset Page ---------------- */
   return (
-    <div
-      className="fixed inset-0 bg-cover bg-center"
-      style={{ backgroundImage: "url('/images/easyshop.jpg')" }}
+    <AuthLayout
+      title="Reset Your Password"
+      subtitle="Enter your new password below to complete the reset process."
     >
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" />
+      <FormProvider {...methods}>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <div>
+            <FormInput
+              label="New Password"
+              name="password"
+              type="password"
+              placeholder="Enter new password"
+            />
+            <PasswordStrengthMeter password={password} />
+          </div>
 
-      {/* Back button */}
-      <button
-        onClick={() => navigate(AUTH_ROUTES.LOGIN)}
-        className="
-          fixed top-4 left-4 z-30
-          inline-flex items-center gap-2
-          rounded-full bg-white/90 backdrop-blur
-          text-black shadow-md
-          px-3 py-2 text-sm
-          hover:bg-white transition
-        "
-        aria-label="Back to login"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        <span className="hidden sm:inline">Back</span>
-      </button>
-
-      {/* Card */}
-      <div className="relative z-10 flex items-center justify-center h-full px-4 pt-16 sm:pt-0">
-        <Card className="w-full max-w-md bg-white/95 rounded-2xl shadow-xl overflow-hidden">
-          <CardHeader className="text-center space-y-2">
-            <CardTitle className="text-2xl font-bold">
-              Reset Your Password
-            </CardTitle>
-            <CardDescription className="text-gray-600">
-              Enter your new password below to complete the reset process.
-            </CardDescription>
-          </CardHeader>
-
-          <CardContent className="px-6">
-            <FormProvider {...methods}>
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                <FormInput
-                  label="New Password"
-                  name="password"
-                  type="password"
-                  placeholder="Enter new password"
-                />
-
-                <Button
-                  type="submit"
-                  disabled={isLoading}
-                  className={cn(
-                    "w-full rounded-full py-2 bg-[#17c06e] text-black hover:bg-[#17c06e]/90",
-                    isLoading && "opacity-70 cursor-not-allowed",
-                  )}
-                >
-                  {isLoading ? "Resetting..." : "Reset Password"}
-                </Button>
-              </form>
-            </FormProvider>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+          <Button
+            type="submit"
+            isLoading={isLoading}
+            loadingText="Resetting..."
+            className="w-full h-11 rounded-full text-base font-semibold shadow-md active:scale-95 transition-all"
+          >
+            Reset Password
+          </Button>
+        </form>
+      </FormProvider>
+    </AuthLayout>
   );
 }

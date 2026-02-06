@@ -1,15 +1,7 @@
-import { ArrowLeft } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Card,
-  CardHeader,
-  CardFooter,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Link, useNavigate, useLocation } from "react-router-dom";
@@ -21,6 +13,8 @@ import {
   type LoginFormValues,
 } from "@/modules/auth/validators/loginValidator";
 import { FormInput } from "@/components/shared/form/FormInput";
+import { extractErrorMessage } from "@/utils/errorHandler";
+import { AuthLayout } from "../components/AuthLayout";
 
 /* -------------------- Google button width helper -------------------- */
 const getGoogleButtonWidth = () => {
@@ -43,6 +37,8 @@ function hasGoogleIdentity(win: Window): win is Window & {
 } {
   return Boolean((win as any).google?.accounts?.id);
 }
+
+import { Mail, Lock } from "lucide-react";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -89,7 +85,7 @@ export default function LoginPage() {
       toast.success("Login successful!");
       navigate(redirectTo, { replace: true });
     } catch (err: any) {
-      toast.error(err?.data?.message || "Something went wrong");
+      toast.error(extractErrorMessage(err, "Login failed"));
     }
   };
 
@@ -139,99 +135,71 @@ export default function LoginPage() {
   }, [googleLogin, navigate, redirectTo]);
 
   return (
-    <div
-      className="fixed inset-0 flex items-center justify-center px-4 bg-cover bg-center"
-      style={{ backgroundImage: "url('/images/easyshop.jpg')" }}
+    <AuthLayout
+      title="Welcome Back"
+      subtitle="Sign in to your account to continue"
     >
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" />
-
-      {/* Back */}
-      <Link
-        to="/"
-        className="
-    absolute top-4 left-4 z-20
-    inline-flex items-center gap-2
-    rounded-full
-    bg-white/90 backdrop-blur
-    text-black shadow-md
-    transition hover:bg-white
-    px-2.5 py-2 text-sm
-    sm:px-4 sm:py-2
-  "
-        aria-label="Back to homepage"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        <span className="hidden sm:inline">Back to homepage</span>
-      </Link>
-
-      {/* CARD */}
-      <Card className="relative w-full max-w-md max-h-[90vh] bg-white/95 rounded-2xl shadow-xl flex flex-col overflow-hidden mt-12">
-        <CardHeader className="space-y-3 text-center">
-          <CardTitle className="text-2xl font-bold">Welcome Back</CardTitle>
-          <CardDescription>
-            Log in to continue shopping on EasyStore.
-          </CardDescription>
-        </CardHeader>
-
-        {/* Scroll container */}
-        <div className="relative flex-1 overflow-y-auto px-6 pb-8">
-          <FormProvider {...methods}>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-              <FormInput
-                label="Email"
-                name="email"
-                type="email"
-                placeholder="you@example.com"
-              />
-              <FormInput
-                label="Password"
-                name="password"
-                type="password"
-                placeholder="••••••••"
-              />
-
-              <div className="text-right text-sm">
-                <Link
-                  to={AUTH_ROUTES.FORGOT_PASSWORD}
-                  className="text-primary hover:underline font-medium"
-                >
-                  Forgot Password?
-                </Link>
-              </div>
-
-              <Button
-                type="submit"
-                className="w-full rounded-full py-2 mt-2 bg-[#17c06e] text-black hover:bg-[#17c06e]/90"
-                disabled={isLoading}
+      <FormProvider {...methods}>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <FormInput
+            label="Email Address"
+            name="email"
+            type="email"
+            placeholder="you@example.com"
+            icon={<Mail className="w-5 h-5" />}
+          />
+          <div className="space-y-2">
+            <FormInput
+              label="Password"
+              name="password"
+              type="password"
+              placeholder="••••••••"
+              icon={<Lock className="w-5 h-5" />}
+            />
+            <div className="text-right">
+              <Link
+                to={AUTH_ROUTES.FORGOT_PASSWORD}
+                className="text-sm text-primary hover:underline font-semibold"
               >
-                {isLoading ? "Signing In..." : "Log In"}
-              </Button>
-            </form>
-          </FormProvider>
-
-          {/* Divider */}
-          <div className="relative my-6 text-center">
-            <span className="absolute left-0 right-0 top-1/2 border-t border-border" />
-            <span className="relative bg-white px-3 text-sm text-muted-foreground">
-              or continue with
-            </span>
+                Forgot Password?
+              </Link>
+            </div>
           </div>
 
-          {/* Google */}
-          <div ref={googleButtonRef} className="flex justify-center" />
-        </div>
-
-        <CardFooter className="text-center text-sm text-muted-foreground">
-          Don’t have an account?
-          <Link
-            to={AUTH_ROUTES.SIGNUP}
-            className="text-black ml-1 hover:underline"
+          <Button
+            type="submit"
+            size="lg"
+            className="w-full h-12 rounded-xl text-lg font-bold shadow-xl shadow-primary/20 active:scale-95 transition-all"
+            isLoading={isLoading}
+            loadingText="Signing In..."
           >
-            Sign up
-          </Link>
-        </CardFooter>
-      </Card>
-    </div>
+            Sign In
+          </Button>
+        </form>
+      </FormProvider>
+
+      {/* Divider */}
+      <div className="relative my-8 text-center">
+        <span className="absolute left-0 right-0 top-1/2 border-t border-border/50" />
+        <span className="relative bg-background px-3 text-xs uppercase tracking-wider text-muted-foreground font-medium">
+          or continue with
+        </span>
+      </div>
+
+      {/* Google */}
+      <div className="flex justify-center">
+        <div ref={googleButtonRef} />
+      </div>
+
+      <div className="mt-8 text-center text-sm text-muted-foreground">
+        Don’t have an account?{" "}
+        <Link
+          to={AUTH_ROUTES.SIGNUP}
+          className="text-primary font-semibold hover:underline"
+        >
+          Sign up
+        </Link>
+      </div>
+    </AuthLayout>
   );
 }

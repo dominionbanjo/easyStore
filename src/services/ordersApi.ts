@@ -250,11 +250,42 @@ export const ordersApi = apiManager.injectEndpoints({
       },
     ),
 
-    getVendorOrders: builder.query<IOrder[], void>({
-      query: () => ({
+    getVendorOrders: builder.query<
+      {
+        items: IOrder[];
+        pagination: {
+          total: number;
+          page: number;
+          limit: number;
+          pages: number;
+          hasNext: boolean;
+          hasPrev: boolean;
+        };
+      },
+      { search?: string; status?: string; page?: number; limit?: number } | void
+    >({
+      query: (params) => ({
         url: "orders/vendor/me",
         method: "GET",
+        params: params || {},
       }),
+      transformResponse: (response: any) => {
+        // Handle wrapped response from backend
+        if (response?.data) {
+          return response.data;
+        }
+        return {
+          items: [],
+          pagination: {
+            total: 0,
+            page: 1,
+            limit: 10,
+            pages: 0,
+            hasNext: false,
+            hasPrev: false,
+          },
+        };
+      },
       providesTags: ["Store"],
     }),
 
@@ -298,6 +329,18 @@ export const ordersApi = apiManager.injectEndpoints({
       }),
       invalidatesTags: ["Store"],
     }),
+
+    updateDeliveryStatus: builder.mutation<
+      { success: boolean; message?: string },
+      { deliveryId: string; status: string }
+    >({
+      query: ({ deliveryId, status }) => ({
+        url: `deliveries/${deliveryId}/status`,
+        method: "PATCH",
+        body: { status },
+      }),
+      invalidatesTags: ["Store"],
+    }),
   }),
 });
 
@@ -314,4 +357,5 @@ export const {
   useUpdateOrderStatusMutation,
   useCancelOrderMutation,
   useFulfillOfflineOrderMutation,
+  useUpdateDeliveryStatusMutation,
 } = ordersApi;

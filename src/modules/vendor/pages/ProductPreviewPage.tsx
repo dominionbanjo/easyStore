@@ -41,8 +41,10 @@ export default function ProductPreviewPage() {
     id: "preview",
     name: draft.name || "Untitled product",
     vendor: "Your Store",
+    storeSlug: "preview", // Mock for preview
 
     price: draft.discount_price ?? draft.price ?? 0,
+    originalPrice: draft.discount_price ? draft.price : null,
     category: "",
 
     rating: 0,
