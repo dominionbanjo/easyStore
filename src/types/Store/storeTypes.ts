@@ -89,6 +89,12 @@ export interface IStoreDetails {
   address_state: string | null;
   address_country: string | null;
   address_postal_code: string | null;
+  user?: {
+    first_name: string;
+    last_name: string;
+    username: string;
+    avatar: string | null;
+  };
   created_at: string;
 }
 
