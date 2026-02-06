@@ -36,6 +36,7 @@ export interface IOrder {
 
   subtotal: number;
   shipping_fee?: number;
+  platform_fee?: number;
   tax?: number;
   total: number;
 

@@ -101,14 +101,14 @@ export default function StoreHeaderSection({ store }: StoreHeaderProps) {
               <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 mb-1">
                 <Badge
                   variant="outline"
-                  className="bg-primary/5 text-primary border-primary/20 font-bold py-1"
+                  className="bg-primary/35 backdrop-blur-md text-primary border-primary/30 font-bold py-1 px-4 rounded-full"
                 >
                   Official Store
                 </Badge>
                 {store.totalProducts! > 50 && (
                   <Badge
                     variant="outline"
-                    className="bg-amber-500/5 text-amber-600 border-amber-500/20 font-bold py-1"
+                    className="bg-amber-500/35 backdrop-blur-md text-amber-600 border-amber-500/30 font-bold py-1 px-4 rounded-full"
                   >
                     Top Rated
                   </Badge>
@@ -126,21 +126,21 @@ export default function StoreHeaderSection({ store }: StoreHeaderProps) {
 
             <div className="flex flex-col gap-3">
               <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 text-sm">
-                <div className="flex items-center gap-2 text-muted-foreground bg-muted/50 px-3 py-1.5 rounded-full border border-border/50">
+                <div className="flex items-center gap-2 text-foreground bg-background/80 backdrop-blur-md px-4 py-2 rounded-full border border-border/50 shadow-sm">
                   <MapPin className="w-4 h-4 text-primary" />
-                  <span className="font-medium">
+                  <span className="font-semibold">
                     {store.location || "Online Everywhere"}
                   </span>
                 </div>
 
-                <div className="flex items-center gap-2 text-muted-foreground bg-muted/50 px-3 py-1.5 rounded-full border border-border/50">
+                <div className="flex items-center gap-2 text-foreground bg-background/80 backdrop-blur-md px-4 py-2 rounded-full border border-border/50 shadow-sm">
                   <Store className="w-4 h-4 text-primary" />
-                  <span className="font-medium">
+                  <span className="font-semibold">
                     {store.totalProducts} Products
                   </span>
                 </div>
 
-                <div className="flex items-center gap-2 bg-amber-500/10 text-amber-600 px-3 py-1.5 rounded-full border border-amber-500/20">
+                <div className="flex items-center gap-2 bg-amber-500/10 backdrop-blur-md text-amber-600 px-4 py-2 rounded-full border border-amber-500/30 shadow-sm">
                   <Star className="w-4 h-4 fill-amber-500 text-amber-500" />
                   <span className="font-bold">
                     {store.rating?.toFixed(1) ?? "0.0"} Rating
@@ -150,11 +150,11 @@ export default function StoreHeaderSection({ store }: StoreHeaderProps) {
 
               {/* Description Section (Moved up) */}
               {store.description && (
-                <div className="bg-muted/20 p-4 rounded-[2rem] border border-border/30 relative mt-1 w-full max-w-2xl mx-auto md:mx-0">
-                  <div className="absolute -top-3 left-6 bg-background px-3 py-0.5 rounded-full border border-border/50 text-[9px] uppercase font-black tracking-widest text-muted-foreground">
+                <div className="bg-background/60 backdrop-blur-md p-5 rounded-[2.5rem] border border-border/50 relative mt-2 w-full max-w-2xl mx-auto md:mx-0 shadow-sm transition-all hover:bg-background/80">
+                  <div className="absolute -top-3 left-8 bg-primary text-primary-foreground px-4 py-1 rounded-full text-[10px] uppercase font-black tracking-widest shadow-lg">
                     About Store
                   </div>
-                  <p className="text-foreground/70 leading-snug text-base font-medium italic">
+                  <p className="text-foreground/80 leading-relaxed text-base font-medium italic">
                     "{store.description}"
                   </p>
                 </div>

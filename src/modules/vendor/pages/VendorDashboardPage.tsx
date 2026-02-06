@@ -19,6 +19,21 @@ import { DashboardOverviewHeader } from "../components/dashboard/DashboardOvervi
 
 import { useGetMyStoreAnalyticsQuery } from "@/services/analyticsApi";
 
+const MONTH_NAMES = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
 export default function VendorDashboardPage() {
   const { data, isLoading, isError, refetch } = useGetMyStoreAnalyticsQuery();
 
@@ -46,7 +61,7 @@ export default function VendorDashboardPage() {
   const stats = [
     {
       title: "Total Revenue",
-      value: `₦${Number(summary?.total_sales || 0).toLocaleString()}`,
+      value: `₦${(Number(summary?.total_sales || 0) / 100).toLocaleString()}`,
       icon: BarChart2,
       color: "primary" as const,
       trend: { value: 12, isPositive: true },
@@ -113,7 +128,15 @@ export default function VendorDashboardPage() {
             {isLoading ? (
               <div className="h-[450px] w-full rounded-2xl bg-muted/40 animate-pulse border border-border/40" />
             ) : (
-              <SalesChart data={trends?.monthly ?? []} />
+              <SalesChart
+                data={
+                  trends?.monthly.map((m: any) => ({
+                    ...m,
+                    month: MONTH_NAMES[m.month - 1] || m.month.toString(),
+                    sales: Number(m.revenue || 0) / 100,
+                  })) ?? []
+                }
+              />
             )}
           </div>
 

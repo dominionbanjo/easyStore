@@ -239,11 +239,11 @@ export function OrderDetailsModal({
                   {/* Price */}
                   <div className="w-full sm:w-auto sm:text-right ml-auto">
                     <p className="font-semibold text-base sm:text-lg">
-                      ₦{Number(item.price).toLocaleString()}
+                      ₦{(Number(item.price) / 100).toLocaleString()}
                     </p>
                     {item.discount_price && (
                       <p className="text-xs text-muted-foreground line-through">
-                        ₦{Number(item.discount_price).toLocaleString()}
+                        ₦{(Number(item.discount_price) / 100).toLocaleString()}
                       </p>
                     )}
                   </div>
@@ -260,22 +260,40 @@ export function OrderDetailsModal({
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Subtotal</span>
-                <span>₦{Number(order.subtotal).toLocaleString()}</span>
+                <span>₦{(Number(order.subtotal) / 100).toLocaleString()}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Shipping Fee</span>
-                <span>₦{Number(order.shipping_fee).toLocaleString()}</span>
+                <span>
+                  ₦{(Number(order.shipping_fee) / 100).toLocaleString()}
+                </span>
               </div>
+              {order.platform_fee != null && order.platform_fee > 0 && (
+                <div className="flex justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="text-muted-foreground">Platform Fee</span>
+                    <Badge
+                      variant="outline"
+                      className="text-[10px] py-0 h-4 bg-primary/5 text-primary border-primary/10"
+                    >
+                      2%
+                    </Badge>
+                  </div>
+                  <span>
+                    ₦{(Number(order.platform_fee) / 100).toLocaleString()}
+                  </span>
+                </div>
+              )}
               {order.tax && (
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Tax</span>
-                  <span>₦{Number(order.tax).toLocaleString()}</span>
+                  <span>₦{(Number(order.tax) / 100).toLocaleString()}</span>
                 </div>
               )}
               <Separator />
               <div className="flex justify-between text-lg font-bold">
                 <span>Total</span>
-                <span>₦{Number(order.total).toLocaleString()}</span>
+                <span>₦{(Number(order.total) / 100).toLocaleString()}</span>
               </div>
             </div>
           </div>

@@ -57,7 +57,7 @@ export const createOrderColumns = (
     header: () => <div className="text-center">Total</div>,
     cell: ({ row }) => (
       <div className="text-center font-semibold">
-        ₦{Number(row.original.total).toLocaleString()}
+        ₦{(Number(row.original.total) / 100).toLocaleString()}
       </div>
     ),
   },

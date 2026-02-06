@@ -2,6 +2,7 @@
 
 export interface ICartItem {
   product_id: string;
+  vendor_id: string;
   name: string;
   slug: string;
 
@@ -23,6 +24,7 @@ export interface ICart {
   items: ICartItem[];
   subtotal: number;
   shipping: number;
+  platform_fee: number;
   total: number;
 }
 
