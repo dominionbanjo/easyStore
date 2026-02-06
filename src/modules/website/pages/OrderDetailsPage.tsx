@@ -274,7 +274,9 @@ export default function OrderDetailsPage() {
                             <span className="text-lg font-bold text-emerald-600">
                               ₦
                               {(
-                                (item.discount_price || item.price) *
+                                ((Number(item.discount_price) ||
+                                  Number(item.price)) /
+                                  100) *
                                 item.quantity
                               ).toLocaleString()}
                             </span>
@@ -283,7 +285,8 @@ export default function OrderDetailsPage() {
                                 <span className="text-sm text-gray-400 line-through">
                                   ₦
                                   {(
-                                    item.price * item.quantity
+                                    (item.price / 100) *
+                                    item.quantity
                                   ).toLocaleString()}
                                 </span>
                               )}
@@ -448,24 +451,41 @@ export default function OrderDetailsPage() {
                     <div className="flex justify-between text-gray-700">
                       <span>Subtotal</span>
                       <span className="font-semibold">
-                        ₦{Number(order.subtotal).toLocaleString()}
+                        ₦{(Number(order.subtotal) / 100).toLocaleString()}
                       </span>
                     </div>
 
-                    {order.shipping_fee && Number(order.shipping_fee) > 0 && (
-                      <div className="flex justify-between text-gray-700">
-                        <span>Platform Fee (2%)</span>
-                        <span className="font-semibold">
-                          ₦{Number(order.shipping_fee).toLocaleString()}
-                        </span>
-                      </div>
-                    )}
+                    {order.shipping_fee != null &&
+                      Number(order.shipping_fee) > 0 && (
+                        <div className="flex justify-between text-gray-700">
+                          <span>Shipping Fee</span>
+                          <span className="font-semibold">
+                            ₦
+                            {(
+                              Number(order.shipping_fee) / 100
+                            ).toLocaleString()}
+                          </span>
+                        </div>
+                      )}
 
-                    {order.tax && Number(order.tax) > 0 && (
+                    {order.platform_fee != null &&
+                      Number(order.platform_fee) > 0 && (
+                        <div className="flex justify-between text-gray-700">
+                          <span>Platform Fee (2%)</span>
+                          <span className="font-semibold">
+                            ₦
+                            {(
+                              Number(order.platform_fee) / 100
+                            ).toLocaleString()}
+                          </span>
+                        </div>
+                      )}
+
+                    {order.tax != null && Number(order.tax) > 0 && (
                       <div className="flex justify-between text-gray-700">
                         <span>Tax</span>
                         <span className="font-semibold">
-                          ₦{Number(order.tax).toLocaleString()}
+                          ₦{(Number(order.tax) / 100).toLocaleString()}
                         </span>
                       </div>
                     )}
@@ -473,7 +493,7 @@ export default function OrderDetailsPage() {
                     <div className="flex justify-between text-gray-900 text-lg">
                       <span className="font-black">Total</span>
                       <span className="font-black text-emerald-600">
-                        ₦{Number(order.total).toLocaleString()}
+                        ₦{(Number(order.total) / 100).toLocaleString()}
                       </span>
                     </div>
                     <Separator />

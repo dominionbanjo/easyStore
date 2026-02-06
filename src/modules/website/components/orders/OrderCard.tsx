@@ -179,7 +179,7 @@ export function OrderCard({ order, index = 0 }: OrderCardProps) {
                   TOTAL
                 </div>
                 <div className="text-xl sm:text-2xl font-black text-emerald-600">
-                  ₦{Number(order.total).toLocaleString()}
+                  ₦{(Number(order.total) / 100).toLocaleString()}
                 </div>
               </div>
 

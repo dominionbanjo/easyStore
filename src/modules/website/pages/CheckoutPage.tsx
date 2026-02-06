@@ -166,6 +166,9 @@ export default function CheckoutPage() {
           <div className="sticky top-24 px-1 sm:px-0">
             <CheckoutSummary
               items={cart.items}
+              subtotal={cart.subtotal}
+              shipping={cart.shipping}
+              platformFee={cart.platform_fee}
               total={cart.total}
               isProcessing={isCreatingOrder}
               disabled={!hasAddress}

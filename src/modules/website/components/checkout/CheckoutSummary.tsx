@@ -12,6 +12,9 @@ import type { ICartItem } from "@/types/cart/cartTypes";
 
 interface CheckoutSummaryProps {
   items: ICartItem[];
+  subtotal: number;
+  shipping: number;
+  platformFee: number;
   total: number;
   isProcessing: boolean;
   disabled: boolean;
@@ -20,6 +23,9 @@ interface CheckoutSummaryProps {
 
 export function CheckoutSummary({
   items,
+  subtotal,
+  shipping,
+  platformFee,
   total,
   isProcessing,
   disabled,
@@ -37,7 +43,10 @@ export function CheckoutSummary({
         <div className="space-y-4">
           <div className="max-h-[300px] overflow-y-auto pr-2 space-y-4 custom-scrollbar">
             {items.map((item) => (
-              <div key={item.product_id} className="flex gap-4">
+              <div
+                key={`${item.product_id}-${item.size}-${item.color}`}
+                className="flex gap-4"
+              >
                 <div className="w-12 h-12 rounded-lg overflow-hidden bg-zinc-100 dark:bg-zinc-800 shrink-0">
                   <img
                     src={item.image ?? "/placeholder.png"}
@@ -64,6 +73,40 @@ export function CheckoutSummary({
                 </div>
               </div>
             ))}
+          </div>
+
+          <Separator className="bg-zinc-100 dark:bg-zinc-800" />
+
+          <div className="space-y-2">
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground font-medium">
+                Subtotal
+              </span>
+              <span className="text-foreground font-bold">
+                ₦{subtotal.toLocaleString()}
+              </span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground font-medium">
+                Shipping Cost
+              </span>
+              <span className="text-foreground font-bold">
+                ₦{shipping.toLocaleString()}
+              </span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <div className="flex items-center gap-1">
+                <span className="text-muted-foreground font-medium">
+                  Platform Fee
+                </span>
+                <span className="text-[10px] bg-primary/10 text-primary px-1.5 py-0.5 rounded-full font-bold">
+                  2%
+                </span>
+              </div>
+              <span className="text-foreground font-bold">
+                ₦{platformFee.toLocaleString()}
+              </span>
+            </div>
           </div>
 
           <Separator className="bg-zinc-100 dark:bg-zinc-800" />
