@@ -132,16 +132,16 @@ export default function ProductInfoSidebar({
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.5 }}
-      className="flex flex-col gap-8"
+      className="flex flex-col gap-8 w-full max-w-[550px]"
     >
       {/* ─── Product Header ─── */}
-      <div className="space-y-4">
+      <div className="space-y-4 px-1">
         <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <Badge className="bg-primary/10 text-primary hover:bg-primary/20 border-none px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
+          <div className="flex items-center justify-between gap-4">
+            <Badge className="bg-primary/10 text-primary hover:bg-primary/20 border-none px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider shrink-0">
               {product.category}
             </Badge>
-            <div className="flex items-center gap-1.5 bg-yellow-50 px-2.5 py-1 rounded-full border border-yellow-200">
+            <div className="flex items-center gap-1.5 bg-yellow-50 px-2.5 py-1 rounded-full border border-yellow-200 shrink-0">
               <Star className="h-3.5 w-3.5 fill-yellow-500 text-yellow-500" />
               <span className="text-sm font-black text-yellow-700">
                 {product.rating.toFixed(1)}
@@ -153,7 +153,7 @@ export default function ProductInfoSidebar({
           </h1>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex flex-wrap items-center gap-4">
           <div className="flex items-baseline gap-2">
             <span className="text-4xl font-black text-primary">
               ₦{Number(product.price).toLocaleString()}
@@ -294,12 +294,13 @@ export default function ProductInfoSidebar({
 
       {/* ─── Purchase Section ─── */}
       <div className="space-y-6">
-        <div className="flex items-center gap-4">
-          <div className="bg-muted/50 rounded-2xl flex items-center p-1 border border-border/40">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+          {/* Quantity Selector */}
+          <div className="bg-muted/50 rounded-2xl flex items-center justify-between p-1 border border-border/40 h-14 sm:w-fit">
             <Button
               variant="ghost"
               size="icon"
-              className="rounded-xl h-10 w-10 hover:bg-background shadow-xs text-muted-foreground"
+              className="rounded-xl h-12 w-12 hover:bg-background shadow-xs text-muted-foreground"
               onClick={() => setQuantity((q) => Math.max(1, q - 1))}
             >
               <Minus className="h-4 w-4" />
@@ -310,19 +311,19 @@ export default function ProductInfoSidebar({
             <Button
               variant="ghost"
               size="icon"
-              className="rounded-xl h-10 w-10 hover:bg-background shadow-xs text-muted-foreground"
+              className="rounded-xl h-12 w-12 hover:bg-background shadow-xs text-muted-foreground"
               onClick={() => setQuantity((q) => q + 1)}
             >
               <Plus className="h-4 w-4" />
             </Button>
           </div>
 
-          <div className="flex-1 flex gap-2">
+          <div className="flex flex-1 gap-3">
             <Button
               size="lg"
               disabled={product.stock <= 0 || addingToCart}
               onClick={handleAddToCart}
-              className="flex-1 rounded-[1.25rem] bg-primary text-white hover:bg-primary/90 h-14 text-base font-black shadow-xl shadow-primary/20 group relative overflow-hidden active:scale-95 transition-all"
+              className="flex-1 rounded-[1.25rem] bg-emerald-600 text-white hover:bg-emerald-700 h-14 text-base font-black shadow-xl shadow-emerald-200/20 group relative overflow-hidden active:scale-95 transition-all"
             >
               <AnimatePresence mode="wait">
                 {addingToCart ? (
@@ -334,7 +335,7 @@ export default function ProductInfoSidebar({
                     className="flex items-center gap-2"
                   >
                     <div className="h-5 w-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    Processing...
+                    Adding...
                   </motion.div>
                 ) : (
                   <motion.div
@@ -345,7 +346,7 @@ export default function ProductInfoSidebar({
                     className="flex items-center gap-2"
                   >
                     <ShoppingCart className="h-5 w-5" />
-                    Add to Cart
+                    <span>Add to Cart</span>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -355,14 +356,20 @@ export default function ProductInfoSidebar({
               size="icon"
               variant="outline"
               onClick={toggleWishlist}
+              title={liked ? "Remove from Favorites" : "Add to Favorites"}
               className={cn(
-                "h-14 w-14 rounded-[1.25rem] border-2 transition-all active:scale-90",
+                "h-14 w-14 shrink-0 rounded-[1.25rem] border-2 transition-all active:scale-90",
                 liked
-                  ? "bg-rose-50 border-rose-100 text-rose-500 hover:bg-rose-100"
+                  ? "bg-rose-50 border-rose-100 text-rose-500 hover:bg-rose-100 shadow-lg shadow-rose-200/20"
                   : "hover:border-primary/50 text-muted-foreground",
               )}
             >
-              <Heart className={cn("h-6 w-6", liked && "fill-current")} />
+              <Heart
+                className={cn(
+                  "h-6 w-6 transition-transform duration-300",
+                  liked && "fill-current scale-110",
+                )}
+              />
             </Button>
           </div>
         </div>
