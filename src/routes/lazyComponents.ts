@@ -71,6 +71,12 @@ export const SearchResultsPage = lazy(
 export const NotFoundPage = lazy(
   () => import("@/modules/website/pages/NotFoundPage"),
 );
+export const PrivacyPolicyPage = lazy(
+  () => import("@/modules/vendor/pages/PrivacyPolicyPage"),
+);
+export const TermsOfServicePage = lazy(
+  () => import("@/modules/vendor/pages/TermsOfServicePage"),
+);
 
 /* ───────────────── AUTH PAGES ───────────────── */
 

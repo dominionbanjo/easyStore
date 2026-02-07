@@ -117,7 +117,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  to="#"
+                  to="/privacy-policy"
                   className="hover:text-primary transition-colors flex items-center gap-2 group"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-primary/0 group-hover:bg-primary transition-colors" />
@@ -126,7 +126,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  to="#"
+                  to="/terms-of-service"
                   className="hover:text-primary transition-colors flex items-center gap-2 group"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-primary/0 group-hover:bg-primary transition-colors" />

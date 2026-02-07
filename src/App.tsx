@@ -31,6 +31,14 @@ export default function App() {
             />
             <Route path="product/:slug" element={<Pages.ProductDetailPage />} />
             <Route path="about" element={<Pages.AboutPage />} />
+            <Route
+              path="privacy-policy"
+              element={<Pages.PrivacyPolicyPage />}
+            />
+            <Route
+              path="terms-of-service"
+              element={<Pages.TermsOfServicePage />}
+            />
           </Route>
 
           {/* ─── ACCOUNT ─── */}
