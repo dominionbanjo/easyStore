@@ -53,15 +53,18 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className={cn("space-y-4", className)}>
-      <div className="rounded-none border-x-0 border-y sm:rounded-xl sm:border border-border/40 bg-background overflow-hidden sm:overflow-visible">
+      <div className="rounded-none border-x-0 border-y sm:rounded-xl sm:border border-border/40 bg-background overflow-hidden">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
+                {headerGroup.headers.map((header, index) => (
                   <TableHead
                     key={header.id}
-                    className="px-2 sm:px-4 h-11 text-xs sm:text-sm"
+                    className={cn(
+                      "px-2 sm:px-4 h-11 text-xs sm:text-sm",
+                      index === 0 && "sticky left-0 z-20 bg-background",
+                    )}
                   >
                     {header.isPlaceholder
                       ? null
@@ -80,7 +83,12 @@ export function DataTable<TData, TValue>({
               [...Array(5)].map((_, i) => (
                 <TableRow key={i}>
                   {columns.map((_, j) => (
-                    <TableCell key={j}>
+                    <TableCell
+                      key={j}
+                      className={cn(
+                        j === 0 && "sticky left-0 z-10 bg-background",
+                      )}
+                    >
                       <Skeleton className="h-4 w-full" />
                     </TableCell>
                   ))}
@@ -89,10 +97,13 @@ export function DataTable<TData, TValue>({
             ) : table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
+                  {row.getVisibleCells().map((cell, index) => (
                     <TableCell
                       key={cell.id}
-                      className="px-2 sm:px-4 py-3 sm:py-4"
+                      className={cn(
+                        "px-2 sm:px-4 py-3 sm:py-4",
+                        index === 0 && "sticky left-0 z-10 bg-background",
+                      )}
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
