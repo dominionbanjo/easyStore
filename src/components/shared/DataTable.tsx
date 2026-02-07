@@ -1,3 +1,4 @@
+import { useRef, useEffect } from "react";
 import {
   type ColumnDef,
   flexRender,
@@ -45,14 +46,44 @@ export function DataTable<TData, TValue>({
   className,
   pagination,
 }: DataTableProps<TData, TValue>) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const prevPageRef = useRef<number | undefined>(undefined);
+
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
 
+  // 🖱 Scroll to top on page change (with offset for sticky header)
+  useEffect(() => {
+    const currentPage = pagination?.page;
+    const prevPage = prevPageRef.current;
+
+    // Only scroll if the page actually changed and it's NOT the first time we're seeing a valid page
+    if (
+      currentPage !== undefined &&
+      prevPage !== undefined &&
+      currentPage !== prevPage &&
+      containerRef.current
+    ) {
+      const headerOffset = 70; // Height of the sticky dashboard header
+      const elementPosition = containerRef.current.getBoundingClientRect().top;
+      const offsetPosition =
+        elementPosition + window.pageYOffset - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
+    }
+
+    // Always update the ref with the current page
+    prevPageRef.current = currentPage;
+  }, [pagination?.page]);
+
   return (
-    <div className={cn("space-y-4", className)}>
+    <div ref={containerRef} className={cn("space-y-4", className)}>
       <div className="rounded-none border-x-0 border-y sm:rounded-xl sm:border border-border/40 bg-background overflow-hidden">
         <Table>
           <TableHeader>
