@@ -37,7 +37,7 @@ export function HeroTitle() {
 
 export default function HeroSection() {
   return (
-    <section className="relative isolate overflow-hidden py-12 sm:py-24 px-4 bg-gradient-to-b from-background to-muted/20">
+    <section className="relative isolate overflow-hidden py-12 sm:py-24 bg-gradient-to-b from-background to-muted/20">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-16">
           {/* LEFT SIDE */}

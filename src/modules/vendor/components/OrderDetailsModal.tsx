@@ -23,7 +23,6 @@ import {
 import type { IOrder } from "@/services/ordersApi";
 import { useUpdateDeliveryStatusMutation } from "@/services/ordersApi";
 import { toast } from "sonner";
-import { extractErrorMessage } from "@/utils/errorHandler";
 
 interface OrderDetailsModalProps {
   order: IOrder | null;
@@ -93,11 +92,7 @@ export function OrderDetailsModal({
       // Revert optimistic update on failure
       setOptimisticStatus(null);
 
-      const errorMessage = extractErrorMessage(
-        error,
-        "Failed to update delivery status",
-      );
-      toast.error(errorMessage);
+      toast.error(error.message || "Failed to update delivery status");
     }
   };
 

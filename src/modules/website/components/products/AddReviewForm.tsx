@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { useAddProductReviewMutation } from "@/services/productReviewApi";
-import { extractErrorMessage, logErrorDetails } from "@/utils/errorHandler";
+import { logErrorDetails } from "@/utils/errorHandler";
 
 const ReviewSchema = z.object({
   comment: z
@@ -59,8 +59,7 @@ export function AddReviewForm({
       onClose();
     } catch (err: any) {
       logErrorDetails(err, "Review Submission");
-      const errorMessage = extractErrorMessage(err, "Failed to submit review");
-      toast.error(errorMessage);
+      toast.error(err.message || "Failed to submit review");
     }
   };
 

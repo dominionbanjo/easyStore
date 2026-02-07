@@ -13,7 +13,6 @@ import {
   type LoginFormValues,
 } from "@/modules/auth/validators/loginValidator";
 import { FormInput } from "@/components/shared/form/FormInput";
-import { extractErrorMessage } from "@/utils/errorHandler";
 import { AuthLayout } from "../components/AuthLayout";
 
 /* -------------------- Google button width helper -------------------- */
@@ -85,7 +84,7 @@ export default function LoginPage() {
       toast.success("Login successful!");
       navigate(redirectTo, { replace: true });
     } catch (err: any) {
-      toast.error(extractErrorMessage(err, "Login failed"));
+      toast.error(err.message || "Login failed");
     }
   };
 
@@ -113,7 +112,7 @@ export default function LoginPage() {
             toast.success("Logged in with Google!");
             navigate(redirectTo, { replace: true });
           } catch (err: any) {
-            toast.error(err?.data?.message || "Google login failed");
+            toast.error(err.message || "Google login failed");
           }
         },
       });

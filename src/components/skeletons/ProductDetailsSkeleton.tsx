@@ -12,7 +12,7 @@ export function ProductDetailsSkeleton() {
           <Skeleton className="w-full aspect-square md:aspect-[4/5] rounded-2xl" />
 
           {/* Thumbnails */}
-          <div className="flex gap-3 overflow-x-auto">
+          <div className="flex gap-3 overflow-x-auto no-scrollbar">
             {Array.from({ length: 4 }).map((_, i) => (
               <Skeleton key={i} className="h-20 w-20 shrink-0 rounded-xl" />
             ))}
