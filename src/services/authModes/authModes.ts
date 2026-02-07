@@ -33,7 +33,23 @@ export const baseQueryWithAuth: BaseQueryFn<
 
   const error = result.error as any;
   const status = error?.status || error?.originalStatus;
-  const message = error?.data?.message || "";
+
+  // 🏥 ENSURE ERROR MESSAGE IS EXTRACTED ROBUSTLY (Mirroring errorHandler.ts logic)
+  let message = "";
+  const errorData = error?.data;
+  if (errorData) {
+    if (typeof errorData.message === "string") message = errorData.message;
+    else if (typeof errorData.error === "string") message = errorData.error;
+    else if (Array.isArray(errorData.message))
+      message = errorData.message.join(", ");
+    else if (typeof errorData === "string") message = errorData;
+  }
+  if (!message && error?.message) message = error.message;
+
+  // 🔐 ENRICH ERROR WITH MESSAGE FOR DOWNSTREAM CONSUMPTION
+  if (error && !error.message && message) {
+    error.message = message;
+  }
 
   if (
     status === 401 ||
@@ -56,13 +72,13 @@ export const baseQueryWithAuth: BaseQueryFn<
         window.location.href = redirectUrl;
       }, 800);
     }
-    // Stop retrying on auth errors
-    return retry.fail({ error: result.error });
+    // Stop retrying on auth errors - fix double wrapping
+    return retry.fail(result.error);
   }
 
-  // Stop retrying on other client errors (4xx)
+  // Stop retrying on other client errors (4xx) - fix double wrapping
   if (typeof status === "number" && status >= 400 && status < 500) {
-    return retry.fail({ error: result.error });
+    return retry.fail(result.error);
   }
 
   return result;

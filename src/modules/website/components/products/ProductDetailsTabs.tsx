@@ -64,10 +64,10 @@ export default function ProductDetailsTabs({
     <div className="w-full max-w-5xl mx-auto py-4 px-2 sm:px-4">
       <Tabs defaultValue={tabs[0].value} className="w-full">
         {/* ─── Tabs Header ─── */}
-        <div className="flex justify-start sm:justify-center mb-6 overflow-x-auto scrollbar-hide -mx-2 px-2 sm:mx-0 sm:px-0">
+        <div className="flex justify-center mb-6 md:mb-10 lg:mb-12">
           <TabsList
             className={cn(
-              "inline-flex h-12 sm:h-14 w-full sm:w-fit items-center justify-start sm:justify-center rounded-xl sm:rounded-2xl bg-muted/50 p-1 text-muted-foreground shadow-inner backdrop-blur-sm border border-border/50 whitespace-nowrap",
+              "inline-flex h-12 sm:h-14 w-auto max-w-full items-center justify-start sm:justify-center rounded-xl sm:rounded-2xl bg-muted/50 p-1 text-muted-foreground shadow-inner backdrop-blur-sm border border-border/50 overflow-x-auto no-scrollbar",
             )}
           >
             {tabs.map((tab) => (
@@ -75,7 +75,7 @@ export default function ProductDetailsTabs({
                 key={tab.value}
                 value={tab.value}
                 className={cn(
-                  "relative flex-1 sm:flex-none flex items-center justify-center gap-2 sm:gap-2.5 px-3 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300",
+                  "relative flex-1 sm:flex-none flex items-center justify-center gap-2 sm:gap-2.5 px-4 sm:px-8 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 whitespace-nowrap",
                   "data-[state=active]:bg-background data-[state=active]:text-primary data-[state=active]:shadow-lg",
                   "hover:text-foreground/80",
                 )}
