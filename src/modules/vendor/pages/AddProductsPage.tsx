@@ -18,6 +18,7 @@ import {
   useGetSingleProductQuery,
   useUpdateProductWithCloudinaryMutation,
 } from "@/services/productApi";
+import { useGetColorsQuery } from "@/services/productDetailsApi";
 import { buildSpecsObject } from "../utils/addProduct.helpers";
 import { buildCreateProductPayload } from "@/utils/draftToFormValues";
 import { productToDraft } from "../utils/productToDraft";
@@ -54,6 +55,9 @@ export default function AddProductPage() {
   const { data: productData, isLoading: loadingProduct } =
     useGetSingleProductQuery(slug!, { skip: !isEditMode });
 
+  const { data: colorsData, isLoading: loadingColors } = useGetColorsQuery();
+  const allColors = colorsData?.data ?? [];
+
   const productId = productData?.data?.product?.id;
 
   const [createProduct, { isLoading: creating }] =
@@ -68,6 +72,10 @@ export default function AddProductPage() {
   useEffect(() => {
     if (!isEditMode || !productData?.data?.product) return;
 
+    // Wait for colors to load if product has colors
+    const productHasColors = (productData.data.product.colors?.length ?? 0) > 0;
+    if (productHasColors && loadingColors) return;
+
     // Use draft if available (e.g. returning from preview)
     if (draft && draft.id === productData.data.product.id) {
       return;
@@ -77,7 +85,17 @@ export default function AddProductPage() {
       productData.data.product,
     );
 
-    Object.entries(values).forEach(([key, value]) =>
+    // Map colors to full objects from allColors
+    const colorValues = (values as any).colors || [];
+    const colorIds = colorValues.map((c: any) =>
+      typeof c === "string" ? c : c.id,
+    );
+    const mappedColors = allColors.filter((c: any) => colorIds.includes(c.id));
+
+    // Update values with mapped colors
+    const valuesWithColors = { ...values, colors: mappedColors };
+
+    Object.entries(valuesWithColors).forEach(([key, value]) =>
       setValue(key as any, value),
     );
 
@@ -90,12 +108,21 @@ export default function AddProductPage() {
 
     dispatch(
       setProductDraft({
-        ...values,
+        ...valuesWithColors,
         ...normalizedExtras,
         id: productData.data.product.id,
       }),
     );
-  }, [isEditMode, productData]);
+  }, [
+    isEditMode,
+    productData,
+    allColors,
+    loadingColors,
+    draft,
+    dispatch,
+    setValue,
+    extras,
+  ]);
 
   /* ───────── PREVIEW ───────── */
   const onPreview = (values: any) => {
@@ -152,7 +179,7 @@ export default function AddProductPage() {
   });
 
   /* ───────── LOADING ───────── */
-  if (isEditMode && loadingProduct) {
+  if (isEditMode && (loadingProduct || loadingColors)) {
     return (
       <Card>
         <CardHeader>

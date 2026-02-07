@@ -18,6 +18,7 @@ import { SalesChart } from "../components/dashboard/SalesChart";
 import { DashboardOverviewHeader } from "../components/dashboard/DashboardOverviewHeader";
 
 import { useGetMyStoreAnalyticsQuery } from "@/services/analyticsApi";
+import { formatCompactNumber } from "@/utils/numberUtils";
 
 const MONTH_NAMES = [
   "Jan",
@@ -61,7 +62,7 @@ export default function VendorDashboardPage() {
   const stats = [
     {
       title: "Total Revenue",
-      value: `₦${(Number(summary?.total_sales || 0) / 100).toLocaleString()}`,
+      value: formatCompactNumber(Number(summary?.total_sales || 0) / 100, "₦"),
       icon: BarChart2,
       color: "primary" as const,
       trend: { value: 12, isPositive: true },
@@ -69,7 +70,7 @@ export default function VendorDashboardPage() {
     },
     {
       title: "Total Orders",
-      value: (summary?.orders || 0).toString(),
+      value: formatCompactNumber(summary?.orders || 0),
       icon: ShoppingBag,
       color: "orange" as const,
       trend: { value: 8, isPositive: true },
@@ -77,7 +78,7 @@ export default function VendorDashboardPage() {
     },
     {
       title: "Products",
-      value: (summary?.total_products || 0).toString(),
+      value: formatCompactNumber(summary?.total_products || 0),
       icon: Package,
       color: "emerald" as const,
       trend: { value: 2, isPositive: true },
@@ -85,7 +86,7 @@ export default function VendorDashboardPage() {
     },
     {
       title: "Customers",
-      value: (summary?.customers || 0).toString(),
+      value: formatCompactNumber(summary?.customers || 0),
       icon: Users,
       color: "secondary" as const,
       trend: { value: 5, isPositive: true },
@@ -94,7 +95,7 @@ export default function VendorDashboardPage() {
   ];
 
   return (
-    <div className="max-w-[1600px] mx-auto p-1">
+    <div className="max-w-[1600px] mx-auto p-4 sm:p-6">
       {/* ─── Header Section ─── */}
       <DashboardOverviewHeader />
 

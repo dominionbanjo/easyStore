@@ -125,11 +125,17 @@ export default function WishlistPage() {
                     id={item.product_id}
                     slug={item.product_id}
                     name={item.name}
-                    price={`₦${Number(item.price).toLocaleString("en-NG")}`}
+                    price={`₦${Number(item.product?.price || item.price).toLocaleString("en-NG")}`}
+                    discountPrice={
+                      item.product?.on_sale && item.product?.discount_price
+                        ? `₦${Number(item.product.discount_price).toLocaleString("en-NG")}`
+                        : undefined
+                    }
                     image={item.image || ""}
                     category="Wishlist"
                     rating={item.product?.rating_average ?? 0}
                     stock={item.product?.stock ?? 0}
+                    isOnSale={item.product?.on_sale}
                     isFavorite={true}
                     colors={item.product?.colors}
                     sizes={item.product?.sizes}

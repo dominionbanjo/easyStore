@@ -138,6 +138,12 @@ export default function CategoryDetailsPage() {
                           : (product.image?.url ?? FALLBACK_IMAGE)
                       }
                       price={`₦${product.price.toLocaleString("en-NG")}`}
+                      discountPrice={
+                        product.on_sale && product.discount_price
+                          ? `₦${product.discount_price.toLocaleString("en-NG")}`
+                          : undefined
+                      }
+                      isOnSale={product.on_sale}
                       rating={product.rating_average ?? 0}
                       stock={product.stock}
                       isFavorite={product.is_in_wishlist}

@@ -115,7 +115,7 @@ export default function StoreDetailsPage() {
   /* ───────────────── RENDER ───────────────── */
 
   return (
-    <section className="min-h-screen bg-neutral-50/50 pb-20">
+    <section className="min-h-screen bg-neutral-50/50 pb-20 mt-10">
       {/* ─── HEADER ─── */}
       <StoreHeaderSection
         store={{

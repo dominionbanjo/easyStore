@@ -40,6 +40,7 @@ export interface IProduct {
   }[];
   sizes?: string[];
   category?: string;
+  on_sale?: boolean;
 }
 
 /* ───────────────── FULL PRODUCT (DETAIL PAGE) ───────────────── */
@@ -168,6 +169,14 @@ export interface PaginationArgs {
 
 export interface SearchProductsArgs extends PaginationArgs {
   q: string;
+  sort?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  state?: string;
+  rating?: number;
+  inStock?: boolean;
+  colors?: string[];
+  sizes?: string[];
 }
 
 export interface ProductsByCategoryArgs extends PaginationArgs {

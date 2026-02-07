@@ -7,26 +7,26 @@ export function DashboardStatsLoader() {
       {Array.from({ length: 4 }).map((_, i) => (
         <Card
           key={i}
-          className="border border-border/30 shadow-sm overflow-hidden h-full flex flex-col"
+          className="border border-border/30 shadow-sm overflow-hidden flex flex-col bg-card/40 animate-pulse"
         >
-          <CardContent className="p-6 flex flex-col flex-1 justify-between">
-            {/* Header: Title & Icon placeholder */}
-            <div className="flex items-start justify-between w-full mb-4">
-              <Skeleton className="h-3 w-16" />
-              <Skeleton className="h-8 w-8 rounded-xl" />
+          <CardContent className="p-4 sm:p-5 flex flex-col z-10 relative">
+            <div className="flex items-center justify-between mb-2">
+              <Skeleton className="h-3 w-20 rounded-md" />
+              <Skeleton className="h-6 w-6 rounded-lg" />
             </div>
 
-            {/* Body: Value placeholder */}
-            <div className="flex-1 flex items-center justify-center w-full">
-              <Skeleton className="h-10 w-3/4" />
+            <div className="flex flex-col items-center justify-center py-1">
+              <Skeleton className="h-8 w-28 rounded-lg" />
             </div>
 
-            {/* Footer: Trend placeholder */}
-            <div className="mt-6 flex justify-center">
-              <Skeleton className="h-6 w-32 rounded-full" />
+            <div className="mt-2 flex items-center justify-center gap-2">
+              <Skeleton className="h-4 w-12 rounded-full" />
+              <Skeleton className="h-3 w-16 rounded-md" />
             </div>
           </CardContent>
-          <div className="h-1.5 bg-muted/20 w-full mt-auto" />
+
+          {/* Bottom Decorative Line Placeholder */}
+          <div className="h-1 w-full bg-muted/20 mt-1" />
         </Card>
       ))}
     </div>

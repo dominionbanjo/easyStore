@@ -57,20 +57,22 @@ export default function DashboardHeader({
   };
 
   return (
-    <header className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-border/40 bg-background/95 backdrop-blur-sm sticky top-0 z-30">
-      <div className="flex items-center gap-4">
+    <header className="flex items-center justify-between px-3 sm:px-6 py-4 border-b border-border/40 bg-background/95 backdrop-blur-sm sticky top-0 z-30">
+      <div className="flex items-center gap-2 sm:gap-4">
         <Button
           variant="ghost"
           size="icon"
-          className="md:hidden"
+          className="md:hidden h-9 w-9"
           onClick={onMenuToggle}
         >
           <Menu className="h-5 w-5" />
         </Button>
-        <h2 className="font-semibold text-xl tracking-tight">Dashboard</h2>
+        <h2 className="font-semibold text-lg sm:text-xl tracking-tight truncate max-w-[120px] sm:max-w-none">
+          Dashboard
+        </h2>
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-1.5 sm:gap-3">
         {/* Notifications */}
         <Button
           variant="ghost"

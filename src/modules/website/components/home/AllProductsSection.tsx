@@ -59,9 +59,6 @@ export default function AllProductsSection() {
         }
       >
         {products.map((product) => {
-          const rawPrice = product.discount_price ?? product.price;
-          const price = Number(rawPrice) || 0;
-
           return (
             <ProductCard.Root
               key={product.id}
@@ -69,7 +66,13 @@ export default function AllProductsSection() {
               slug={product.slug}
               name={product.name}
               image={resolveImage(product.image)}
-              price={`₦${price.toLocaleString("en-NG")}`}
+              price={`₦${Number(product.price).toLocaleString("en-NG")}`}
+              discountPrice={
+                product.on_sale && product.discount_price
+                  ? `₦${Number(product.discount_price).toLocaleString("en-NG")}`
+                  : undefined
+              }
+              isOnSale={product.on_sale}
               rating={product.rating_average ?? 0}
               stock={product.stock}
               vendor={product.store_name ?? "Seller"}

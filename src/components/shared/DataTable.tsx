@@ -53,13 +53,16 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className={cn("space-y-4", className)}>
-      <div className="rounded-xl border border-border/40 bg-background overflow-hidden sm:overflow-visible">
+      <div className="rounded-none border-x-0 border-y sm:rounded-xl sm:border border-border/40 bg-background overflow-hidden sm:overflow-visible">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
+                  <TableHead
+                    key={header.id}
+                    className="px-2 sm:px-4 h-11 text-xs sm:text-sm"
+                  >
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -87,7 +90,10 @@ export function DataTable<TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell
+                      key={cell.id}
+                      className="px-2 sm:px-4 py-3 sm:py-4"
+                    >
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),

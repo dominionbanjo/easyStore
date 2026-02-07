@@ -1,122 +1,298 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
-import { useForm, FormProvider, useWatch } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
+import {
+  Filter as FilterIcon,
+  RotateCcw,
+  ChevronDown,
+  Minus,
+  Check,
+} from "lucide-react";
 
-import { Card } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { Input } from "@/components/ui/input";
+import { Slider } from "@/components/ui/slider";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
+
+import { FormInput } from "@/components/shared/form/FormInput";
 import { FormSelect } from "@/components/shared/form/FormSelect";
+import type { IProduct } from "@/types/product/productTypes";
 
 /* ───────────────── CONSTANTS ───────────────── */
 
-const SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
-const COLORS = ["Black", "White", "Red", "Blue", "Green", "Yellow"];
 const RATINGS = [4, 3, 2, 1];
 const DEFAULT_COUNTRY = "NG";
+const MAX_PRICE_RANGE = 500000;
 
 /* ───────────────── TYPES ───────────────── */
 
 type FilterForm = {
-  country?: string;
-  state?: string;
-  city?: string;
+  minPrice: number;
+  maxPrice: number;
+  state: string;
+  colors: string[];
+  sizes: string[];
+  rating?: string;
 };
 
 type Option = { label: string; value: string };
+
+interface SearchFiltersProps {
+  className?: string;
+  products?: IProduct[];
+}
 
 /* ───────────────── UTIL ───────────────── */
 
 const importCSC = () => import("country-state-city");
 
-/* ───────────────── COMPONENT ───────────────── */
+/* ───────────────── COMPONENTS ───────────────── */
 
-export function SearchFiltersSidebar() {
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
+
+// ... existing imports ...
+
+export function SearchFiltersSidebar({
+  className,
+  products = [],
+}: SearchFiltersProps) {
+  return (
+    <div className={cn("hidden lg:block w-full space-y-6", className)}>
+      <div className="bg-card border rounded-xl shadow-sm overflow-hidden sticky top-24">
+        <div className="p-4 bg-muted/30 border-b flex items-center justify-between">
+          <h3 className="font-semibold flex items-center gap-2">
+            <FilterIcon className="h-4 w-4" /> Filters
+          </h3>
+          <ResetButton />
+        </div>
+        <div className="p-3 space-y-0 max-h-[calc(100vh-140px)] overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-muted-foreground/20 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-muted-foreground/40">
+          <FilterContent products={products} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function MobileSearchFilters({
+  products = [],
+}: {
+  products?: IProduct[];
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [params] = useSearchParams();
+
+  // Count active filters
+  const activeCount = useMemo(() => {
+    let count = 0;
+    if (params.get("minPrice") || params.get("maxPrice")) count++;
+    if (params.get("state")) count++;
+    if (params.get("colors")) count++;
+    if (params.get("sizes")) count++;
+    if (params.get("rating")) count++;
+    return count;
+  }, [params]);
+
+  return (
+    <Drawer open={isOpen} onOpenChange={setIsOpen}>
+      <DrawerTrigger asChild>
+        <Button
+          variant="outline"
+          size="sm"
+          className="h-9 gap-2 lg:hidden border-dashed"
+        >
+          <FilterIcon className="h-4 w-4" />
+          Filter
+          {activeCount > 0 && (
+            <Badge
+              variant="secondary"
+              className="px-1.5 h-5 min-w-5 flex items-center justify-center rounded-full text-[10px] ml-1"
+            >
+              {activeCount}
+            </Badge>
+          )}
+        </Button>
+      </DrawerTrigger>
+      <DrawerContent className="max-h-[85vh]">
+        <DrawerHeader className="text-left">
+          <DrawerTitle>Filter Products</DrawerTitle>
+          <DrawerDescription>Refine your search results.</DrawerDescription>
+        </DrawerHeader>
+
+        <div className="py-2 overflow-y-auto custom-scrollbar flex-1">
+          <FilterContent
+            mobile
+            products={products}
+            onClose={() => setIsOpen(false)}
+          />
+        </div>
+
+        <DrawerFooter className="pt-2 pb-8 sm:pb-4 border-t bg-background">
+          <div className="flex gap-3">
+            <ResetButton onReset={() => setIsOpen(false)} className="flex-1" />
+            <DrawerClose asChild>
+              <Button className="flex-1 shadow-lg shadow-primary/20">
+                Show Results
+              </Button>
+            </DrawerClose>
+          </div>
+        </DrawerFooter>
+      </DrawerContent>
+    </Drawer>
+  );
+}
+
+function ResetButton({
+  onReset,
+  className,
+}: {
+  onReset?: () => void;
+  className?: string;
+}) {
   const [params, setParams] = useSearchParams();
 
-  const [countryOptions, setCountryOptions] = useState<Option[]>([]);
+  const handleReset = () => {
+    const next = new URLSearchParams();
+    if (params.get("q")) next.set("q", params.get("q")!);
+    setParams(next);
+    onReset?.();
+  };
+
+  return (
+    <Button
+      variant="ghost"
+      size="sm"
+      onClick={handleReset}
+      className={cn(
+        "h-8 px-2 text-xs text-muted-foreground hover:text-foreground hover:bg-muted",
+        className,
+      )}
+    >
+      <RotateCcw className="h-3 w-3 mr-1.5" />
+      Reset
+    </Button>
+  );
+}
+
+function FilterContent({
+  mobile,
+  products,
+}: {
+  mobile?: boolean;
+  products: IProduct[];
+  onClose?: () => void;
+}) {
+  const [params, setParams] = useSearchParams();
   const [stateOptions, setStateOptions] = useState<Option[]>([]);
-  const [cityOptions, setCityOptions] = useState<Option[]>([]);
+
+  // Calculate dynamic options from products
+  const { availableColors, availableSizes } = useMemo(() => {
+    const colorsMap = new Map<
+      string,
+      { label: string; value: string; hex: string }
+    >();
+    const sizesSet = new Set<string>();
+
+    products.forEach((p) => {
+      // @ts-ignore - Backend sometimes returns varying structures
+      if (Array.isArray(p.colors)) {
+        p.colors.forEach((c: any) => {
+          let name = "";
+          let hex = "";
+
+          if (typeof c === "object" && c.name) {
+            name = c.name;
+            hex = c.hex || "";
+          } else if (typeof c === "string") {
+            name = c;
+          }
+
+          if (name) {
+            const value = hex || name;
+            // Use name as key to ensure uniqueness for display, but value is hex if available
+            colorsMap.set(name, {
+              label: name,
+              value: value,
+              hex: hex || "#000000",
+            });
+          }
+        });
+      }
+      if (Array.isArray(p.sizes)) {
+        p.sizes.forEach((s) => sizesSet.add(s));
+      }
+    });
+
+    return {
+      availableColors: Array.from(colorsMap.values()),
+      availableSizes: Array.from(sizesSet),
+    };
+  }, [products]);
 
   const methods = useForm<FilterForm>({
     defaultValues: {
-      country: params.get("country") ?? DEFAULT_COUNTRY,
-      state: params.get("state") ?? undefined,
-      city: params.get("city") ?? undefined,
+      minPrice: Number(params.get("minPrice")) || 0,
+      maxPrice: Number(params.get("maxPrice")) || MAX_PRICE_RANGE,
+      state: params.get("state") || "all",
+      colors: params.get("colors")?.split(",") || [],
+      sizes: params.get("sizes")?.split(",") || [],
+      rating: params.get("rating") || undefined,
     },
   });
 
-  const { reset, setValue, control } = methods;
+  const { setValue, watch } = methods;
 
-  /* ───────────────── WATCH DEPENDENCIES ───────────────── */
+  // Local state for slider to avoid lag
+  const [priceRange, setPriceRange] = useState([
+    Number(params.get("minPrice")) || 0,
+    Number(params.get("maxPrice")) || MAX_PRICE_RANGE,
+  ]);
 
-  const countryCode = useWatch({ name: "country", control });
-  const stateCode = useWatch({ name: "state", control });
-  const cityValue = useWatch({ name: "city", control });
+  const selectedSizes = watch("sizes");
+  const selectedColors = watch("colors");
+  const watchedMinPrice = watch("minPrice");
+  const watchedMaxPrice = watch("maxPrice");
 
-  /* ───────────────── LOAD COUNTRIES (ONCE) ───────────────── */
+  // Sync internal form state when params change
+  useEffect(() => {
+    const min = Number(params.get("minPrice")) || 0;
+    const max = Number(params.get("maxPrice")) || MAX_PRICE_RANGE;
+    setPriceRange([min, max]);
+    setValue("minPrice", min);
+    setValue("maxPrice", max);
+    setValue("state", params.get("state") || "all");
+    setValue("colors", params.get("colors")?.split(",") || []);
+    setValue("sizes", params.get("sizes")?.split(",") || []);
+    setValue("rating", params.get("rating") || undefined);
+  }, [params, setValue]);
 
+  /* ───────────────── DATA LOADING ───────────────── */
   useEffect(() => {
     (async () => {
-      const { Country } = await importCSC();
-      setCountryOptions(
-        Country.getAllCountries().map((c) => ({
-          label: c.name,
-          value: c.isoCode,
+      const { State } = await importCSC();
+      const states = State.getStatesOfCountry(DEFAULT_COUNTRY);
+      setStateOptions(
+        states.map((s) => ({
+          label: s.name,
+          value: s.name,
         })),
       );
     })();
   }, []);
 
-  /* ───────────────── LOAD STATES ───────────────── */
+  /* ───────────────── URL SYNC ───────────────── */
 
-  useEffect(() => {
-    if (!countryCode) {
-      setStateOptions([]);
-      setCityOptions([]);
-      return;
-    }
-
-    (async () => {
-      const { State } = await importCSC();
-      setStateOptions(
-        State.getStatesOfCountry(countryCode).map((s) => ({
-          label: s.name,
-          value: s.isoCode,
-        })),
-      );
-    })();
-
-    setValue("state", undefined);
-    setValue("city", undefined);
-  }, [countryCode, setValue]);
-
-  /* ───────────────── LOAD CITIES ───────────────── */
-
-  useEffect(() => {
-    if (!countryCode || !stateCode) {
-      setCityOptions([]);
-      return;
-    }
-
-    (async () => {
-      const { City } = await importCSC();
-      setCityOptions(
-        City.getCitiesOfState(countryCode, stateCode).map((c) => ({
-          label: c.name,
-          value: c.name,
-        })),
-      );
-    })();
-
-    setValue("city", undefined);
-  }, [countryCode, stateCode, setValue]);
-
-  /* ───────────────── HELPERS ───────────────── */
-
-  const setParam = (key: string, value?: string) => {
+  const updateParam = (key: string, value: string | undefined | null) => {
     const next = new URLSearchParams(params);
     if (!value) next.delete(key);
     else next.set(key, value);
@@ -124,164 +300,280 @@ export function SearchFiltersSidebar() {
     setParams(next);
   };
 
-  const toggleMulti = (key: string, value: string) => {
-    const current = params.get(key)?.split(",") ?? [];
-    const next = current.includes(value)
-      ? current.filter((v) => v !== value)
-      : [...current, value];
+  const handlePriceCommit = (value: number[]) => {
+    setValue("minPrice", value[0]);
+    setValue("maxPrice", value[1]);
 
-    setParam(key, next.length ? next.join(",") : undefined);
+    const next = new URLSearchParams(params);
+    if (value[0] > 0) next.set("minPrice", value[0].toString());
+    else next.delete("minPrice");
+
+    if (value[1] < MAX_PRICE_RANGE) next.set("maxPrice", value[1].toString());
+    else next.delete("maxPrice");
+
+    next.set("page", "1");
+    setParams(next);
   };
 
-  /* ───────────────── INITIAL COUNTRY PARAM ───────────────── */
+  const toggleArrayItem = (
+    field: "colors" | "sizes",
+    item: string,
+    currentList: string[],
+  ) => {
+    const next = currentList.includes(item)
+      ? currentList.filter((i) => i !== item)
+      : [...currentList, item];
 
-  useEffect(() => {
-    if (!params.get("country")) {
-      setParam("country", DEFAULT_COUNTRY);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  /* ───────────────── FORM → QUERY SYNC ───────────────── */
-
-  useEffect(() => {
-    setParam("country", countryCode);
-  }, [countryCode]);
-
-  useEffect(() => {
-    setParam("state", stateCode);
-  }, [stateCode]);
-
-  useEffect(() => {
-    setParam("city", cityValue);
-  }, [cityValue]);
-
-  /* ───────────────── UI ───────────────── */
+    setValue(field, next);
+    updateParam(field, next.length > 0 ? next.join(",") : undefined);
+  };
 
   return (
     <FormProvider {...methods}>
-      <aside className="space-y-6">
-        <Card className="p-5 rounded-2xl shadow-sm space-y-6">
-          {/* PRICE */}
-          <div>
-            <h4 className="font-semibold mb-3">Price (₦)</h4>
-            <div className="flex gap-2">
-              <Input
-                placeholder="Min"
-                type="number"
-                value={params.get("minPrice") ?? ""}
-                onChange={(e) =>
-                  setParam("minPrice", e.target.value || undefined)
+      <div className={cn("space-y-0", mobile ? "touch-action-pan-y" : "")}>
+        {/* Price Range */}
+        <Section title="Price Range" defaultOpen>
+          <div className="pt-2 pb-2 px-1">
+            <Slider
+              defaultValue={[0, MAX_PRICE_RANGE]}
+              value={priceRange}
+              max={MAX_PRICE_RANGE}
+              step={500}
+              minStepsBetweenThumbs={1}
+              onValueChange={(val) => {
+                setPriceRange(val);
+                setValue("minPrice", val[0]);
+                setValue("maxPrice", val[1]);
+              }}
+              onValueCommit={handlePriceCommit}
+              className="mb-8"
+            />
+            <div className="flex items-center gap-3">
+              <div className="flex-1">
+                <FormInput
+                  name="minPrice"
+                  type="number"
+                  placeholder="Min"
+                  className="h-10"
+                />
+              </div>
+              <Minus className="h-3 w-3 text-muted-foreground" />
+              <div className="flex-1">
+                <FormInput
+                  name="maxPrice"
+                  type="number"
+                  placeholder="Max"
+                  className="h-10"
+                />
+              </div>
+            </div>
+            {/* Apply button for manual input updates */}
+            <div className="mt-3 flex justify-end">
+              <Button
+                size="sm"
+                variant="outline"
+                className="h-7 text-xs"
+                onClick={() =>
+                  handlePriceCommit([watchedMinPrice, watchedMaxPrice])
                 }
-              />
-              <Input
-                placeholder="Max"
-                type="number"
-                value={params.get("maxPrice") ?? ""}
-                onChange={(e) =>
-                  setParam("maxPrice", e.target.value || undefined)
-                }
-              />
+              >
+                Apply Price
+              </Button>
             </div>
           </div>
+        </Section>
 
-          <Separator />
-
-          {/* LOCATION */}
+        {/* Location (State Only) */}
+        <Section title="Location" defaultOpen>
           <div className="space-y-3">
-            <h4 className="font-semibold">Location</h4>
-
-            <FormSelect
-              name="country"
-              placeholder="Select country"
-              options={countryOptions}
-            />
-
             <FormSelect
               name="state"
-              placeholder="Select state"
-              options={stateOptions}
-              disabled={!countryCode}
+              label="State"
+              options={[{ label: "All States", value: "all" }, ...stateOptions]}
+              placeholder="Select State"
             />
-
-            <FormSelect
-              name="city"
-              placeholder="Select city"
-              options={cityOptions}
-              disabled={!stateCode}
+            {/* State listener */}
+            <EffectListener
+              val={methods.watch("state")}
+              onChange={(val) => updateParam("state", val === "all" ? "" : val)}
             />
           </div>
+        </Section>
 
-          <Separator />
-
-          {/* RATING */}
-          <div className="space-y-2">
-            <h4 className="font-semibold">Customer Rating</h4>
+        {/* Ratings */}
+        <Section title="Rating">
+          <div className="space-y-3">
             {RATINGS.map((r) => (
-              <Label key={r} className="flex items-center gap-2 cursor-pointer">
+              <div
+                key={r}
+                className="flex items-center space-x-2 group cursor-pointer"
+                onClick={() => {
+                  const current = params.get("rating");
+                  updateParam(
+                    "rating",
+                    current === String(r) ? undefined : String(r),
+                  );
+                }}
+              >
                 <Checkbox
+                  id={`rating-${r}`}
                   checked={params.get("rating") === String(r)}
-                  onCheckedChange={() =>
-                    setParam(
-                      "rating",
-                      params.get("rating") === String(r)
-                        ? undefined
-                        : String(r),
-                    )
+                  onCheckedChange={() => {}}
+                  className="pointer-events-none"
+                />
+                <Label
+                  htmlFor={`rating-${r}`}
+                  className="text-sm font-normal flex items-center gap-2 cursor-pointer w-full group-hover:bg-muted/50 p-1 rounded-md transition-colors pointer-events-none"
+                >
+                  <div className="flex text-amber-400">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <span
+                        key={i}
+                        className={i < r ? "fill-current" : "text-muted/20"}
+                      >
+                        ★
+                      </span>
+                    ))}
+                  </div>
+                </Label>
+              </div>
+            ))}
+          </div>
+        </Section>
+
+        {/* Sizes */}
+        <Section title="Sizes">
+          {availableSizes.length === 0 && (
+            <p className="text-xs text-muted-foreground italic">
+              No sizes available in results
+            </p>
+          )}
+          <div className="flex flex-wrap gap-2">
+            {availableSizes.map((size) => {
+              const isSelected = selectedSizes.includes(size);
+              return (
+                <div
+                  key={size}
+                  onClick={() => toggleArrayItem("sizes", size, selectedSizes)}
+                  className={cn(
+                    "cursor-pointer text-xs font-medium border rounded-md h-9 min-w-[36px] px-2 flex items-center justify-center transition-all hover:border-primary/50",
+                    isSelected
+                      ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                      : "bg-background text-foreground hover:bg-muted/50",
+                  )}
+                >
+                  {size}
+                </div>
+              );
+            })}
+          </div>
+        </Section>
+
+        {/* Colors */}
+        <Section title="Colors">
+          {availableColors.length === 0 && (
+            <p className="text-xs text-muted-foreground italic">
+              No colors available in results
+            </p>
+          )}
+          <div className="grid grid-cols-5 gap-y-3 gap-x-2">
+            {availableColors.map((color) => {
+              const isSelected = selectedColors.includes(color.value);
+              const isWhite = color.value.toLowerCase() === "white";
+              return (
+                <div
+                  key={color.value}
+                  onClick={() =>
+                    toggleArrayItem("colors", color.value, selectedColors)
                   }
-                />
-                {r}★ & up
-              </Label>
-            ))}
+                  className="flex flex-col items-center gap-1.5 cursor-pointer group"
+                >
+                  <div
+                    className={cn(
+                      "w-8 h-8 rounded-full border shadow-sm flex items-center justify-center transition-all group-hover:scale-110 relative",
+                      isSelected ? "ring-2 ring-primary ring-offset-2" : "",
+                    )}
+                    style={{ backgroundColor: color.hex }}
+                  >
+                    {isSelected && (
+                      <Check
+                        className={cn(
+                          "h-3 w-3",
+                          isWhite ? "text-black" : "text-white",
+                        )}
+                      />
+                    )}
+                  </div>
+                  <span className="text-[10px] text-muted-foreground truncate w-full text-center group-hover:text-foreground transition-colors">
+                    {color.label}
+                  </span>
+                </div>
+              );
+            })}
           </div>
-
-          <Separator />
-
-          {/* SIZES */}
-          <div className="space-y-2">
-            <h4 className="font-semibold">Sizes</h4>
-            {SIZES.map((size) => (
-              <Label key={size} className="flex items-center gap-2">
-                <Checkbox
-                  checked={params.get("sizes")?.split(",").includes(size)}
-                  onCheckedChange={() => toggleMulti("sizes", size)}
-                />
-                {size}
-              </Label>
-            ))}
-          </div>
-
-          <Separator />
-
-          {/* COLORS */}
-          <div className="space-y-2">
-            <h4 className="font-semibold">Colors</h4>
-            {COLORS.map((color) => (
-              <Label key={color} className="flex items-center gap-2">
-                <Checkbox
-                  checked={params.get("colors")?.split(",").includes(color)}
-                  onCheckedChange={() => toggleMulti("colors", color)}
-                />
-                {color}
-              </Label>
-            ))}
-          </div>
-
-          <Separator />
-
-          {/* RESET */}
-          <Button
-            variant="outline"
-            className="w-full"
-            onClick={() => {
-              reset({ country: DEFAULT_COUNTRY });
-              setParams({ q: params.get("q") ?? "", country: DEFAULT_COUNTRY });
-            }}
-          >
-            Clear all filters
-          </Button>
-        </Card>
-      </aside>
+        </Section>
+      </div>
     </FormProvider>
+  );
+}
+
+function EffectListener({
+  val,
+  onChange,
+}: {
+  val: any;
+  onChange: (val: any) => void;
+}) {
+  const [lastVal, setLastVal] = useState(val);
+  useEffect(() => {
+    if (val !== lastVal) {
+      if (val === "" && lastVal === "") return; // Initial mount avoidance if needed
+      if (lastVal === undefined && val === "") return; // Avoid clearing on mount
+      // Actually, we just want to update URL if value changes
+      if (val !== lastVal) {
+        onChange(val);
+        setLastVal(val);
+      }
+    }
+  }, [val, lastVal, onChange]);
+  return null;
+}
+
+function Section({
+  title,
+  children,
+  defaultOpen = false,
+}: {
+  title: string;
+  children: React.ReactNode;
+  defaultOpen?: boolean;
+}) {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
+
+  return (
+    <div className="border-b border-border/60 last:border-0">
+      <div
+        className="flex items-center justify-between py-4 px-4 group cursor-pointer select-none hover:bg-muted/30 transition-colors"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <h4 className="font-semibold text-[13px] uppercase tracking-wider text-muted-foreground group-hover:text-primary transition-colors">
+          {title}
+        </h4>
+        <div
+          className={cn(
+            "p-1 rounded-md text-muted-foreground/50 group-hover:text-primary transition-all",
+            isOpen ? "rotate-180" : "",
+          )}
+        >
+          <ChevronDown className="h-4 w-4" />
+        </div>
+      </div>
+
+      {isOpen && (
+        <div className="px-4 pb-6 animate-in fade-in slide-in-from-top-2 duration-300 ease-out">
+          {children}
+        </div>
+      )}
+    </div>
   );
 }

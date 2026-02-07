@@ -16,18 +16,20 @@ export function ActionsSection({
   disabled,
 }: ActionsSectionProps) {
   return (
-    <div className="flex gap-4">
-      <Button type="submit" variant="outline" className="flex-1">
+    <div className="flex flex-col md:flex-row gap-3 md:gap-4">
+      <Button type="submit" variant="outline" className="w-full md:flex-1">
         Preview Product
       </Button>
 
       <Button
         type="button"
-        className="flex-1"
+        className="w-full md:flex-1"
         onClick={onCreate}
-        disabled={disabled || creating}
+        disabled={disabled}
+        isLoading={creating}
+        loadingText={loadingLabel}
       >
-        {creating ? loadingLabel : submitLabel}
+        {submitLabel}
       </Button>
     </div>
   );

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -276,156 +276,150 @@ export default function ProductsPage() {
       </div>
 
       {/* ─── Products Table / Grid ─── */}
-      <div className="-mx-6 md:mx-0">
-        <Card className="border-0 sm:border border-border/30 shadow-none sm:shadow-sm bg-transparent sm:bg-card overflow-hidden">
-          <CardHeader className="hidden sm:flex flex-row items-center justify-between pb-4">
-            <CardTitle className="text-lg font-bold">
-              Inventory Overview
-            </CardTitle>
-            <div className="flex items-center gap-2 bg-muted/50 p-1 rounded-lg border border-border/40">
-              <Button
-                variant="ghost"
-                size="icon"
-                className={cn(
-                  "h-8 w-8 rounded-md",
-                  viewMode === "table" && "bg-background shadow-sm",
-                )}
-                onClick={() => setViewMode("table")}
-              >
-                <List className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className={cn(
-                  "h-8 w-8 rounded-md",
-                  viewMode === "grid" && "bg-background shadow-sm",
-                )}
-                onClick={() => setViewMode("grid")}
-              >
-                <LayoutGrid className="h-4 w-4" />
-              </Button>
-            </div>
-          </CardHeader>
+      {/* ─── Products Table / Grid ─── */}
+      <div className="w-full space-y-4">
+        <div className="flex flex-row items-center justify-between px-1">
+          <h3 className="text-lg font-bold">Inventory Overview</h3>
+          <div className="flex items-center gap-2 bg-muted/50 p-1 rounded-lg border border-border/40">
+            <Button
+              variant="ghost"
+              size="icon"
+              className={cn(
+                "h-8 w-8 rounded-md",
+                viewMode === "table" && "bg-background shadow-sm",
+              )}
+              onClick={() => setViewMode("table")}
+            >
+              <List className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className={cn(
+                "h-8 w-8 rounded-md",
+                viewMode === "grid" && "bg-background shadow-sm",
+              )}
+              onClick={() => setViewMode("grid")}
+            >
+              <LayoutGrid className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
 
-          <CardContent className="px-0 sm:px-4">
-            <AnimatePresence mode="wait">
-              {viewMode === "table" ? (
-                <motion.div
-                  key="table"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                >
-                  <DataTable<IStoreProduct, unknown>
-                    columns={productColumns}
-                    data={items}
-                    isLoading={isActuallyLoading}
-                    className="border-none"
-                    emptyMessage={
-                      isSearching
-                        ? "No products match your search"
-                        : "No products found"
-                    }
-                    pagination={
-                      pagination
-                        ? {
-                            page: pagination.page,
-                            pages: pagination.pages,
-                            hasNext: pagination.hasNext,
-                            hasPrev: pagination.hasPrev,
-                            onPageChange: setPage,
-                          }
-                        : undefined
-                    }
-                  />
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="grid"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-6"
-                >
-                  {isActuallyLoading ? (
-                    // Grid Skeleton
-                    [...Array(8)].map((_, i) => (
-                      <Card
-                        key={i}
-                        className="overflow-hidden border-border/40 animate-pulse"
-                      >
-                        <div className="aspect-square bg-muted" />
-                        <CardContent className="p-4 space-y-3">
-                          <Skeleton className="h-4 w-3/4" />
-                          <div className="flex justify-between">
-                            <Skeleton className="h-4 w-1/4" />
-                            <Skeleton className="h-4 w-1/4" />
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))
-                  ) : items.length > 0 ? (
-                    items.map((product) => (
-                      <Card
-                        key={product.id}
-                        className="overflow-hidden border-border/40 hover:border-primary/40 transition-all group"
-                      >
-                        <div className="aspect-square relative overflow-hidden">
-                          <img
-                            src={product.image?.url}
-                            alt={product.name}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                          />
-                          <div className="absolute top-2 right-2 flex flex-col gap-1">
-                            <Badge
-                              variant={
-                                product.status === "active"
-                                  ? "default"
-                                  : "secondary"
-                              }
-                            >
-                              {product.status}
-                            </Badge>
-                          </div>
-                        </div>
-                        <CardContent className="p-4">
-                          <p className="font-bold line-clamp-1">
-                            {product.name}
-                          </p>
-                          <div className="flex items-center justify-between mt-2">
-                            <p className="text-primary font-bold">
-                              ₦{Number(product.price).toLocaleString()}
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                              Stock: {product.stock}
-                            </p>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))
-                  ) : (
-                    <div className="col-span-full h-[400px] flex flex-col items-center justify-center gap-3">
-                      <div className="p-4 rounded-full bg-muted/50 text-muted-foreground/40">
-                        <SearchX className="h-10 w-10" />
+        <AnimatePresence mode="wait">
+          {viewMode === "table" ? (
+            <motion.div
+              key="table"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+            >
+              <DataTable<IStoreProduct, unknown>
+                columns={productColumns}
+                data={items}
+                isLoading={isActuallyLoading}
+                className="border-none"
+                emptyMessage={
+                  isSearching
+                    ? "No products match your search"
+                    : "No products found"
+                }
+                pagination={
+                  pagination
+                    ? {
+                        page: pagination.page,
+                        pages: pagination.pages,
+                        hasNext: pagination.hasNext,
+                        hasPrev: pagination.hasPrev,
+                        onPageChange: setPage,
+                      }
+                    : undefined
+                }
+              />
+            </motion.div>
+          ) : (
+            <motion.div
+              key="grid"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+            >
+              {isActuallyLoading ? (
+                // Grid Skeleton
+                [...Array(8)].map((_, i) => (
+                  <Card
+                    key={i}
+                    className="p-2 rounded-2xl border-border/40 animate-pulse bg-card"
+                  >
+                    <div className="aspect-square bg-muted rounded-xl" />
+                    <CardContent className="p-3 pt-4 space-y-3">
+                      {" "}
+                      <Skeleton className="h-4 w-3/4" />
+                      <div className="flex justify-between">
+                        <Skeleton className="h-4 w-1/4" />
+                        <Skeleton className="h-4 w-1/4" />
                       </div>
-                      <div className="text-center space-y-1">
-                        <p className="text-base font-semibold text-foreground">
-                          No products found
-                        </p>
-                        <p className="text-sm text-muted-foreground max-w-[200px]">
-                          {isSearching
-                            ? "Try adjusting your filters or search terms."
-                            : "You haven't added any products to your store yet."}
-                        </p>
+                    </CardContent>
+                  </Card>
+                ))
+              ) : items.length > 0 ? (
+                items.map((product) => (
+                  <Card
+                    key={product.id}
+                    className="p-2 rounded-2xl border-border/40 hover:border-primary/40 transition-all group bg-card shadow-sm hover:shadow-md"
+                  >
+                    <div className="aspect-square relative overflow-hidden rounded-xl bg-muted/20">
+                      <img
+                        src={product.image?.url}
+                        alt={product.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                      <div className="absolute top-2 right-2 flex flex-col gap-1">
+                        <Badge
+                          variant={
+                            product.status === "active"
+                              ? "default"
+                              : "secondary"
+                          }
+                        >
+                          {product.status}
+                        </Badge>
                       </div>
                     </div>
-                  )}
-                </motion.div>
+                    <CardContent className="p-3 pt-4">
+                      <p className="font-bold line-clamp-1">{product.name}</p>
+                      <div className="flex items-center justify-between mt-2">
+                        <p className="text-primary font-bold">
+                          ₦{Number(product.price).toLocaleString()}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          Stock: {product.stock}
+                        </p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))
+              ) : (
+                <div className="col-span-full h-[400px] flex flex-col items-center justify-center gap-3">
+                  <div className="p-4 rounded-full bg-muted/50 text-muted-foreground/40">
+                    <SearchX className="h-10 w-10" />
+                  </div>
+                  <div className="text-center space-y-1">
+                    <p className="text-base font-semibold text-foreground">
+                      No products found
+                    </p>
+                    <p className="text-sm text-muted-foreground max-w-[200px]">
+                      {isSearching
+                        ? "Try adjusting your filters or search terms."
+                        : "You haven't added any products to your store yet."}
+                    </p>
+                  </div>
+                </div>
               )}
-            </AnimatePresence>
-          </CardContent>
-        </Card>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </section>
   );

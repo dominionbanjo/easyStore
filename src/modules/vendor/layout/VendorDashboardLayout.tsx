@@ -65,12 +65,12 @@ export default function VendorDashboardLayout() {
       <div
         className={cn(
           "flex flex-col flex-1 min-w-0 transition-all duration-300",
-          isCollapsed ? "md:ml-[80px]" : "md:ml-[260px]",
+          isCollapsed ? "md:pl-[80px]" : "md:pl-[260px]",
         )}
       >
         <DashboardHeader onMenuToggle={() => setSidebarOpen(!sidebarOpen)} />
 
-        <main className="px-2 py-4 sm:p-4 md:p-6 w-full max-w-[1440px] mx-auto transition-all duration-300">
+        <main className="px-2 py-2 sm:p-4 md:p-6 w-full max-w-[1440px] mx-auto transition-all duration-300">
           <Outlet />
         </main>
       </div>

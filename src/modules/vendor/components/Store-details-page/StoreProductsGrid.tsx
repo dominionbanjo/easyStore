@@ -142,6 +142,12 @@ export function StoreProductsGrid({
                     image={product.image}
                     name={product.name}
                     price={`₦${Number(product.price).toLocaleString("en-NG")}`}
+                    discountPrice={
+                      product.on_sale && product.discount_price
+                        ? `₦${Number(product.discount_price).toLocaleString("en-NG")}`
+                        : undefined
+                    }
+                    isOnSale={product.on_sale}
                     rating={Number(product.rating_average ?? 0)}
                     stock={product.stock ?? 0}
                     vendor={product.store_name}
