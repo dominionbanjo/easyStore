@@ -22,9 +22,11 @@ export const createOrderColumns = (
       const order = row.original;
 
       return (
-        <div className="text-left">
-          <p className="font-medium">#{order.id.slice(0, 8)}</p>
-          <p className="text-xs text-muted-foreground">
+        <div className="text-left max-w-[100px] sm:max-w-none">
+          <p className="font-semibold text-xs sm:text-sm">
+            #{order.id.slice(0, 8)}
+          </p>
+          <p className="text-[10px] sm:text-xs text-muted-foreground truncate">
             {new Date(order.created_at).toLocaleDateString()}
           </p>
         </div>

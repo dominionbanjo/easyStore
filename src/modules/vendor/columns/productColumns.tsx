@@ -40,24 +40,27 @@ export const productColumns: ColumnDef<IStoreProduct>[] = [
           : product.name;
 
       return (
-        <div className="flex items-center gap-3 text-left max-w-[280px]">
+        <div className="flex items-center gap-2 text-left max-w-[140px] sm:max-w-[280px]">
           <img
             src={product.image?.url}
             alt={product.name}
-            className="w-12 h-12 rounded-md object-cover border shrink-0"
+            className="w-10 h-10 sm:w-12 sm:h-12 rounded-md object-cover border shrink-0"
           />
           <div className="min-w-0 flex-1 overflow-hidden">
-            <p className="font-medium text-sm truncate" title={product.name}>
+            <p
+              className="font-semibold text-xs sm:text-sm truncate"
+              title={product.name}
+            >
               {truncatedName}
             </p>
-            <p className="text-xs text-muted-foreground truncate">
+            <p className="text-[10px] sm:text-xs text-muted-foreground truncate">
               ID: #{product.id.slice(0, 8)}
             </p>
           </div>
         </div>
       );
     },
-    size: 280,
+    size: 140,
   },
 
   /* ───────────── Category (LEFT ALIGNED) ───────────── */
