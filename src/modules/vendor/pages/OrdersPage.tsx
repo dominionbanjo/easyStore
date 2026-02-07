@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -213,38 +213,34 @@ export default function OrdersPage() {
       </div>
 
       {/* ─── Orders Table ─── */}
-      <div className="-mx-6 md:mx-0">
-        <Card className="border-0 sm:border border-border/30 shadow-none sm:shadow-sm bg-transparent sm:bg-card overflow-hidden">
-          <CardHeader className="hidden sm:flex flex-row items-center justify-between pb-4">
-            <CardTitle className="text-lg font-bold">Order Overview</CardTitle>
-            <p className="text-sm text-muted-foreground">
-              {pagination.total} {pagination.total === 1 ? "order" : "orders"}
-            </p>
-          </CardHeader>
+      <div className="w-full space-y-4">
+        <div className="flex flex-row items-center justify-between px-1">
+          <h2 className="text-lg font-bold tracking-tight">Order Overview</h2>
+          <p className="text-sm text-muted-foreground">
+            {pagination.total} {pagination.total === 1 ? "order" : "orders"}
+          </p>
+        </div>
 
-          <CardContent className="px-0">
-            <DataTable<IOrder, unknown>
-              columns={orderColumns}
-              data={orders}
-              isLoading={isLoading || isFetching}
-              className="border-none"
-              emptyMessage={
-                isSearching ? "No orders match your search" : "No orders found"
-              }
-              pagination={
-                pagination.pages > 1
-                  ? {
-                      page: pagination.page,
-                      pages: pagination.pages,
-                      hasNext: pagination.hasNext,
-                      hasPrev: pagination.hasPrev,
-                      onPageChange: setPage,
-                    }
-                  : undefined
-              }
-            />
-          </CardContent>
-        </Card>
+        <DataTable<IOrder, unknown>
+          columns={orderColumns}
+          data={orders}
+          isLoading={isLoading || isFetching}
+          className="border-none"
+          emptyMessage={
+            isSearching ? "No orders match your search" : "No orders found"
+          }
+          pagination={
+            pagination.pages > 1
+              ? {
+                  page: pagination.page,
+                  pages: pagination.pages,
+                  hasNext: pagination.hasNext,
+                  hasPrev: pagination.hasPrev,
+                  onPageChange: setPage,
+                }
+              : undefined
+          }
+        />
       </div>
 
       {/* Order Details Modal */}

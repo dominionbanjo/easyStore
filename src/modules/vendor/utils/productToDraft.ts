@@ -24,6 +24,8 @@ export function productToDraft(product: IProductDetails) {
       shipping_cost: product.shipping_cost ?? undefined,
       shipping_note: product.shipping_note ?? undefined,
       returns_note: product.returns_note ?? undefined,
+
+      colors: product.colors ?? [],
     },
 
     extras: {

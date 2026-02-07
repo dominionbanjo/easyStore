@@ -65,8 +65,12 @@ function ProductDetailsInner({ id }: { id: string }) {
     name: product.name,
     vendor: store.store_name,
     storeSlug: store.slug,
-    price: product.discount_price ?? product.price,
-    originalPrice: product.discount_price ? product.price : null,
+    price:
+      product.on_sale && product.discount_price
+        ? product.discount_price
+        : product.price,
+    originalPrice:
+      product.on_sale && product.discount_price ? product.price : null,
     category: product.category_ref?.name ?? "",
     rating: Number(product.rating_average ?? 0),
     stock: product.stock,

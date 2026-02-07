@@ -22,7 +22,9 @@ export default function RelatedProductsGrid({
               ? product.image
               : (product.image?.url ?? "");
 
-          const price = product.discount_price ?? product.price;
+          const price = product.price;
+          const discountPrice = product.discount_price;
+          const isOnSale = product.on_sale;
 
           return (
             <ProductCard.Root
@@ -32,6 +34,12 @@ export default function RelatedProductsGrid({
               name={product.name}
               image={image}
               price={`₦${Number(price).toLocaleString()}`}
+              discountPrice={
+                isOnSale && discountPrice
+                  ? `₦${Number(discountPrice).toLocaleString()}`
+                  : undefined
+              }
+              isOnSale={isOnSale}
               rating={Number(product.rating_average ?? 0)}
               vendor={product.store_name ?? ""}
               storeSlug={product.store_slug}

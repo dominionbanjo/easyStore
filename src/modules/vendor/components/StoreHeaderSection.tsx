@@ -54,7 +54,7 @@ export default function StoreHeaderSection({ store }: StoreHeaderProps) {
   const displayLogo = store.user?.avatar || store.logo;
 
   return (
-    <div className="w-full bg-background relative overflow-hidden rounded-t-[3.5rem]">
+    <div className="w-full bg-background relative rounded-t-[3.5rem] pb-8 md:pb-12">
       {/* ─── BANNER ─── */}
       <div className="relative h-64 md:h-80 w-full overflow-hidden group rounded-t-[3.5rem]">
         <img
@@ -68,10 +68,10 @@ export default function StoreHeaderSection({ store }: StoreHeaderProps) {
 
       {/* ─── INFO SECTION ─── */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-        <div className="relative -mt-24 sm:-mt-28 flex flex-col md:flex-row gap-4 items-center md:items-end">
-          {/* Logo / Profile Picture Container */}
-          <div className="relative group shrink-0">
-            <div className="w-36 h-36 sm:w-48 sm:h-48 rounded-[2.5rem] border-[6px] border-background bg-background shadow-2xl overflow-hidden flex items-center justify-center transition-transform duration-300 hover:scale-[1.02]">
+        <div className="flex flex-col md:flex-row gap-8 items-center md:items-start">
+          {/* 🖼️ Logo / Profile Picture Container (Overlapping) */}
+          <div className="relative group shrink-0 -mt-20 sm:-mt-24 z-30">
+            <div className="w-32 h-32 sm:w-44 sm:h-44 rounded-3xl sm:rounded-[2.5rem] border-[6px] border-background bg-background shadow-2xl overflow-hidden flex items-center justify-center transition-transform duration-300 hover:scale-[1.02]">
               {displayLogo ? (
                 <img
                   src={displayLogo}
@@ -80,7 +80,7 @@ export default function StoreHeaderSection({ store }: StoreHeaderProps) {
                 />
               ) : (
                 <div className="w-full h-full bg-gradient-to-br from-primary via-primary/80 to-emerald-600 flex items-center justify-center">
-                  <span className="text-5xl font-black text-white tracking-tighter">
+                  <span className="text-4xl sm:text-5xl font-black text-white tracking-tighter">
                     {initials}
                   </span>
                 </div>
@@ -88,38 +88,38 @@ export default function StoreHeaderSection({ store }: StoreHeaderProps) {
             </div>
 
             {/* Verified Badge */}
-            <div className="absolute -bottom-2 -right-2">
-              <div className="bg-emerald-500 text-white p-2 rounded-2xl shadow-lg shadow-emerald-500/30 ring-4 ring-background">
-                <ShieldCheck className="w-5 h-5" />
+            <div className="absolute -bottom-2 -right-2 z-40">
+              <div className="bg-emerald-500 text-white p-2 sm:p-2.5 rounded-2xl shadow-lg shadow-emerald-500/30 ring-4 ring-background">
+                <ShieldCheck className="w-5 h-5 sm:w-6 sm:h-6" />
               </div>
             </div>
           </div>
 
-          {/* Text Info */}
-          <div className="flex-1 pb-2 text-center md:text-left space-y-3">
-            <div className="space-y-1">
-              <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 mb-1">
+          {/* 📝 Text Info (Pushed Below Banner Line) */}
+          <div className="flex-1 pt-4 pb-2 text-center md:text-left space-y-4">
+            <div className="space-y-2">
+              <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 mb-2">
                 <Badge
                   variant="outline"
-                  className="bg-primary/35 backdrop-blur-md text-primary border-primary/30 font-bold py-1 px-4 rounded-full"
+                  className="bg-primary/10 text-primary border-primary/20 font-bold py-1 px-4 rounded-full"
                 >
                   Official Store
                 </Badge>
                 {store.totalProducts! > 50 && (
                   <Badge
                     variant="outline"
-                    className="bg-amber-500/35 backdrop-blur-md text-amber-600 border-amber-500/30 font-bold py-1 px-4 rounded-full"
+                    className="bg-amber-500/10 text-amber-600 border-amber-500/20 font-bold py-1 px-4 rounded-full"
                   >
                     Top Rated
                   </Badge>
                 )}
               </div>
-              <h1 className="text-4xl sm:text-5xl font-black text-foreground tracking-tight drop-shadow-sm">
+              <h1 className="text-4xl sm:text-6xl font-black text-zinc-900 tracking-tight leading-none">
                 {store.name}
               </h1>
               {store.user && (
-                <p className="text-sm font-bold text-muted-foreground/60 tracking-widest uppercase">
-                  Managed by {vendorName}
+                <p className="text-xs sm:text-sm font-bold text-zinc-400 tracking-[0.2em] uppercase">
+                  Managed by <span className="text-primary">{vendorName}</span>
                 </p>
               )}
             </div>

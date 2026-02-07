@@ -14,7 +14,6 @@ import {
   ShoppingCart,
   Eye,
   Package,
-  BadgePercent,
   Check,
   Loader2,
 } from "lucide-react";
@@ -56,6 +55,7 @@ interface ProductCardContextType {
   avatar?: string;
   colors?: { id: string; name: string; hex: string }[];
   sizes?: string[];
+  isOnSale?: boolean;
 
   isFavorited: boolean;
   toggleFavorite: () => void;
@@ -78,6 +78,7 @@ interface ProductCardRootProps {
   avatar?: string;
   colors?: { id: string; name: string; hex: string }[];
   sizes?: string[];
+  isOnSale?: boolean;
 
   /** 🔹 backend-driven */
   isFavorite?: boolean;
@@ -114,6 +115,7 @@ const Root = ({
   avatar,
   colors = [],
   sizes = [],
+  isOnSale = false,
   isFavorite = false,
   children,
   className,
@@ -227,6 +229,7 @@ const Root = ({
       avatar,
       colors,
       sizes,
+      isOnSale,
       isFavorited,
       toggleFavorite,
       addToCart: handleAddToCart,
@@ -247,6 +250,7 @@ const Root = ({
       isFavorited,
       colors,
       sizes,
+      isOnSale,
       isAddingToCart,
       selectedSize,
       selectedColor,
@@ -377,40 +381,60 @@ const Root = ({
 /* ───────────────── IMAGE ───────────────── */
 
 const Image = () => {
-  const { image, isFavorited, toggleFavorite, name, discountPrice, stock } =
-    useProductCard();
+  const {
+    image,
+    isFavorited,
+    toggleFavorite,
+    name,
+    discountPrice,
+    stock,
+    price,
+    isOnSale,
+  } = useProductCard();
   const isOutOfStock = stock <= 0;
+
+  // 📝 Calculate percentage discount
+  const calculateDiscount = () => {
+    if (!price || !discountPrice) return 0;
+    const p = parseFloat(price.replace(/[^0-9.]/g, ""));
+    const d = parseFloat(discountPrice.replace(/[^0-9.]/g, ""));
+    if (isNaN(p) || isNaN(d) || p === 0) return 0;
+    return Math.round(((p - d) / p) * 100);
+  };
+
+  const discountPercentage = calculateDiscount();
 
   return (
     <div className="relative aspect-square w-full rounded-2xl overflow-hidden bg-zinc-50 dark:bg-zinc-800 group-hover:shadow-inner transition-all duration-500">
-      {/* 🏷️ Status Badges */}
-      <div className="absolute top-3 left-3 z-20 flex flex-col gap-2">
+      {/* 🏷️ Status Badges (Now on Right) */}
+      <div className="absolute top-3 right-3 z-20 flex flex-col items-end gap-2">
         {isOutOfStock ? (
           <div className="px-3 py-1 bg-zinc-900/90 backdrop-blur-md text-white text-[10px] font-bold rounded-full uppercase tracking-widest shadow-lg border border-white/10">
             Sold Out
           </div>
         ) : (
-          discountPrice && (
-            <div className="px-3 py-1.5 bg-rose-500 text-white text-[10px] font-bold rounded-full flex items-center gap-1 shadow-lg shadow-rose-500/20 uppercase tracking-widest border border-white/10">
-              <BadgePercent className="w-3 h-3" />
-              Save
+          isOnSale &&
+          discountPrice &&
+          discountPercentage > 0 && (
+            <div className="px-3 py-1.5 bg-emerald-500/90 backdrop-blur-md text-white text-[11px] font-black rounded-xl flex items-center gap-1 shadow-xl shadow-emerald-500/20 uppercase tracking-tighter border border-white/20 scale-110 origin-top-right">
+              {discountPercentage}% OFF
             </div>
           )
         )}
       </div>
 
-      {/* ❤️ Wishlist Trigger (RESTORED STYLE) */}
+      {/* ❤️ Wishlist Trigger (Now on Left) */}
       <button
         onClick={(e) => {
           e.stopPropagation();
           toggleFavorite();
         }}
         aria-label="Toggle wishlist"
-        className="absolute top-3 right-3 z-10 rounded-full bg-white/90 p-2 shadow-sm hover:scale-110 transition active:scale-95"
+        className="absolute top-3 left-3 z-10 rounded-full bg-white/90 p-2 shadow-sm hover:scale-110 transition active:scale-95 backdrop-blur-sm border border-zinc-200/50"
       >
         <Heart
           className={cn(
-            "w-5 h-5 transition-colors",
+            "w-4 h-4 transition-colors",
             isFavorited
               ? "fill-rose-500 stroke-rose-500"
               : "stroke-zinc-600 hover:stroke-rose-500",
@@ -451,6 +475,7 @@ const Info = () => {
     stock,
     addToCart,
     isAddingToCart,
+    isOnSale,
   } = useProductCard();
   const isOutOfStock = stock <= 0;
 
@@ -477,13 +502,13 @@ const Info = () => {
       {/* Price Section */}
       <div className="mt-auto pt-0 flex items-center justify-between">
         <div className="flex flex-col">
-          {discountPrice && (
+          {isOnSale && discountPrice && (
             <span className="text-[10px] text-zinc-400 line-through decoration-rose-500/30">
               {price}
             </span>
           )}
           <span className="text-lg font-extrabold text-zinc-900 dark:text-white tracking-tight">
-            {discountPrice || price}
+            {isOnSale && discountPrice ? discountPrice : price}
           </span>
         </div>
 
