@@ -4,6 +4,8 @@ import HeroSection from "@/modules/website/components/home/HeroSection";
 import TestimonialsCarousel from "@/modules/website/components/home/TestimonialsSection";
 import TrustedBy from "../components/home/TrustedBy";
 import BusinessStorySection from "../components/home/BusinessStorySection";
+import FeaturedStoresSection from "../components/home/FeaturedStoresSection";
+import TopCategoriesSection from "../components/home/TopCategoriesSection";
 
 export default function LandingPage() {
   return (
@@ -12,6 +14,8 @@ export default function LandingPage() {
 
       <BusinessStorySection />
       <div className="space-y-0">
+        <FeaturedStoresSection />
+        <TopCategoriesSection />
         <FeaturedProductsSection />
         <AllProductsSection />
         <TrustedBy />
