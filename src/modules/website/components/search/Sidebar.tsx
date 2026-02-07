@@ -348,7 +348,7 @@ function FilterContent({
               onValueCommit={handlePriceCommit}
               className="mb-8"
             />
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-0">
               <div className="flex-1">
                 <FormInput
                   name="minPrice"
@@ -368,11 +368,11 @@ function FilterContent({
               </div>
             </div>
             {/* Apply button for manual input updates */}
-            <div className="mt-3 flex justify-end">
+            <div className="mt-4 flex justify-end">
               <Button
-                size="sm"
+                size="lg"
                 variant="outline"
-                className="h-7 text-xs"
+                className="h-7 text-xs bg-primary text-white "
                 onClick={() =>
                   handlePriceCommit([watchedMinPrice, watchedMaxPrice])
                 }

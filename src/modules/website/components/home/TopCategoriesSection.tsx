@@ -1,0 +1,132 @@
+import { useRef } from "react";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { ArrowRight, LayoutGrid, Tag } from "lucide-react";
+import { useGetCategoriesQuery } from "@/services/productDetailsApi";
+import { Skeleton } from "@/components/ui/skeleton";
+import { EmptyState } from "@/components/shared/EmptyState";
+import { Card } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
+
+interface TopCategoriesSectionProps {
+  className?: string;
+}
+
+// Predefined colors for categories to make them visually distinct
+const CATEGORY_COLORS = [
+  "bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400",
+  "bg-purple-50 text-purple-600 dark:bg-purple-900/20 dark:text-purple-400",
+  "bg-rose-50 text-rose-600 dark:bg-rose-900/20 dark:text-rose-400",
+  "bg-amber-50 text-amber-600 dark:bg-amber-900/20 dark:text-amber-400",
+  "bg-emerald-50 text-emerald-600 dark:bg-emerald-900/20 dark:text-emerald-400",
+  "bg-indigo-50 text-indigo-600 dark:bg-indigo-900/20 dark:text-indigo-400",
+  "bg-cyan-50 text-cyan-600 dark:bg-cyan-900/20 dark:text-cyan-400",
+  "bg-orange-50 text-orange-600 dark:bg-orange-900/20 dark:text-orange-400",
+];
+
+export default function TopCategoriesSection({
+  className = "",
+}: TopCategoriesSectionProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Fetch categories - limit to reasonable number for homepage
+  const { data, isLoading, isError } = useGetCategoriesQuery({
+    page: 1,
+    limit: 8,
+  });
+
+  const categories = data?.data ?? [];
+  const isEmpty = !isLoading && !isError && categories.length === 0;
+
+  return (
+    <section
+      ref={containerRef}
+      className={`py-12 md:py-20 px-1 sm:px-6 overflow-hidden bg-background ${className}`}
+    >
+      <div className="max-w-7xl mx-auto space-y-10">
+        {/* Header Section */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 px-1">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="space-y-3 text-left"
+          >
+            <h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight flex items-center gap-2">
+              <LayoutGrid className="h-6 w-6 text-primary" />
+              Browse by Category
+            </h2>
+            <p className="text-muted-foreground text-base max-w-xl">
+              Explore our wide range of collections and find exactly what you
+              need.
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+          >
+            <Link
+              to="/categories"
+              className="group flex items-center gap-1 text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
+            >
+              View All Categories
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </motion.div>
+        </div>
+
+        {/* Content Section */}
+        {isLoading ? (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <Skeleton key={i} className="h-24 md:h-32 rounded-2xl w-full" />
+            ))}
+          </div>
+        ) : isError || isEmpty ? (
+          <EmptyState
+            icon={Tag}
+            title="No Categories"
+            description="We haven't set up our product categories yet."
+            className="bg-muted/30 rounded-[2rem] py-12"
+          />
+        ) : (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="grid grid-cols-2 md:grid-cols-4 gap-4"
+          >
+            {categories.map((category, index) => (
+              <Link
+                key={category.id}
+                to={`/s?q=${encodeURIComponent(category.name)}`}
+                className="block group"
+              >
+                <Card
+                  className={cn(
+                    "h-24 md:h-32 border-none shadow-sm hover:shadow-md transition-all duration-300 rounded-2xl flex flex-col items-center justify-center gap-2 p-4 text-center cursor-pointer group-hover:-translate-y-1 relative overflow-hidden",
+                    CATEGORY_COLORS[index % CATEGORY_COLORS.length],
+                  )}
+                >
+                  {/* Background decoration */}
+                  <div className="absolute -right-4 -bottom-4 opacity-10 rotate-12 transform group-hover:scale-110 transition-transform duration-500">
+                    <Tag className="w-20 h-20 fill-current" />
+                  </div>
+
+                  <h3 className="font-bold text-lg md:text-xl relative z-10 line-clamp-1 px-2">
+                    {category.name}
+                  </h3>
+                  <div className="text-xs font-medium opacity-70 relative z-10">
+                    {category.products_count ?? 0} Products
+                  </div>
+                </Card>
+              </Link>
+            ))}
+          </motion.div>
+        )}
+      </div>
+    </section>
+  );
+}

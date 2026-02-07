@@ -3,7 +3,7 @@ import { Star, MapPin, Package, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 interface Address {
   street?: string | null;
@@ -22,6 +22,8 @@ interface StoreCardProps {
   rating: number;
   totalProducts: number;
   address?: string | Address | null;
+  className?: string;
+  coverImage?: string | null;
 }
 
 export default function StoreCard({
@@ -32,90 +34,110 @@ export default function StoreCard({
   rating,
   totalProducts,
   address,
+  className,
+  coverImage,
 }: StoreCardProps) {
   const formattedAddress =
     typeof address === "object" && address !== null
       ? [address.city, address.state].filter(Boolean).join(", ")
       : address;
 
+  const bannerImage = coverImage || "/images/defaultbanner.png";
+
   return (
     <motion.div
-      whileHover={{ y: -5 }}
-      transition={{ duration: 0.2 }}
-      className="h-full"
+      whileHover={{ y: -6 }}
+      transition={{ type: "spring", stiffness: 400, damping: 25 }}
+      className={cn("h-full group", className)}
     >
       <Link to={`/stores/${slug}`} className="block h-full">
-        <Card className="relative h-full overflow-hidden border-none bg-white p-0 shadow-sm hover:shadow-xl transition-all duration-300">
-          {/* ─── BANNER / HEADER ─── */}
-          <div className="h-20 w-full bg-gradient-to-br from-primary/10 via-primary/5 to-transparent" />
+        <Card className="relative h-full overflow-hidden border-border/40 bg-card p-0 shadow-sm hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 rounded-[1.5rem]">
+          {/* ─── BANNER AREA ─── */}
+          <div
+            className="h-24 w-full bg-cover bg-center transition-all duration-500 group-hover:scale-105"
+            style={{ backgroundImage: `url(${bannerImage})` }}
+          />
 
-          {/* ─── LOGO (OVERLAPPING) ─── */}
-          <div className="absolute top-10 left-5">
-            <Avatar className="h-16 w-16 border-4 border-white shadow-md rounded-2xl">
-              <AvatarImage
-                src={logo || ""}
-                alt={name}
-                className="object-cover"
-              />
-              <AvatarFallback className="bg-primary/5 text-primary text-xl font-bold rounded-2xl">
-                {name.charAt(0)}
-              </AvatarFallback>
-            </Avatar>
+          {/* ─── LOGO (FLOATING) ─── */}
+          <div className="absolute top-12 left-5 z-10">
+            <div className="relative">
+              <Avatar className="h-20 w-20 border-4 border-card shadow-lg rounded-2xl ring-1 ring-border/10 transition-transform duration-300 group-hover:scale-105 bg-background">
+                <AvatarImage
+                  src={logo || ""}
+                  alt={name}
+                  className="object-cover"
+                />
+                <AvatarFallback className="bg-primary/5 text-primary text-2xl font-black rounded-2xl">
+                  {name.charAt(0).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              {rating >= 4.5 && (
+                <div
+                  className="absolute -bottom-1 -right-1 bg-yellow-400 text-white p-1 rounded-full shadow-sm border-2 border-card"
+                  title="Top Rated"
+                >
+                  <Star className="w-3 h-3 fill-current" />
+                </div>
+              )}
+            </div>
           </div>
 
           {/* ─── CONTENT ─── */}
-          <div className="px-5 pt-8 pb-5 flex flex-col h-[calc(100%-80px)]">
-            <div className="flex-1">
-              <div className="flex items-center justify-between gap-2">
-                <h3 className="font-bold text-lg text-foreground truncate group-hover:text-primary transition-colors">
-                  {name}
-                </h3>
-                {rating > 4.5 && (
-                  <Badge
-                    variant="secondary"
-                    className="bg-yellow-100 text-yellow-700 border-none px-1.5 py-0"
-                  >
-                    Top
-                  </Badge>
+          <div className="px-5 pt-12 pb-5 flex flex-col h-[calc(100%-96px)]">
+            <div className="flex-1 space-y-3">
+              {/* Name & Badge */}
+              <div className="space-y-1">
+                <div className="flex items-center justify-between gap-2">
+                  <h3 className="font-bold text-lg text-card-foreground line-clamp-1 group-hover:text-primary transition-colors">
+                    {name}
+                  </h3>
+                </div>
+
+                {formattedAddress && (
+                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground/80">
+                    <MapPin className="h-3 w-3 shrink-0 text-primary/60" />
+                    <span className="truncate max-w-[180px]">
+                      {formattedAddress}
+                    </span>
+                  </div>
                 )}
               </div>
 
-              {formattedAddress && (
-                <p className="mt-1 text-xs text-muted-foreground flex items-center gap-1">
-                  <MapPin className="h-3 w-3 shrink-0" />
-                  <span className="truncate">{formattedAddress}</span>
+              {/* Description */}
+              {description ? (
+                <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
+                  {description}
                 </p>
-              )}
-
-              {description && (
-                <p className="mt-4 text-sm text-muted-foreground line-clamp-2 leading-relaxed italic">
-                  "{description}"
+              ) : (
+                <p className="text-sm text-muted-foreground/50 italic">
+                  Explore products from {name}...
                 </p>
               )}
             </div>
 
             {/* ─── FOOTER META ─── */}
-            <div className="mt-6 flex items-center justify-between border-t pt-4">
+            <div className="mt-6 pt-4 border-t border-border/40 flex items-center justify-between">
               <div className="flex gap-4">
-                <div className="flex items-center gap-1.5">
-                  <div className="flex items-center">
-                    <Star className="h-3.5 w-3.5 fill-yellow-400 stroke-yellow-400" />
-                  </div>
-                  <span className="text-xs font-bold text-foreground">
-                    {rating.toFixed(1)}
+                <div className="flex items-center gap-1.5 bg-secondary/30 px-2 py-1 rounded-lg">
+                  <Package className="h-3.5 w-3.5 text-primary" />
+                  <span className="text-xs font-semibold text-foreground/80">
+                    {totalProducts}{" "}
+                    <span className="text-muted-foreground font-normal">
+                      items
+                    </span>
                   </span>
                 </div>
 
-                <div className="flex items-center gap-1.5">
-                  <Package className="h-3.5 w-3.5 text-primary/60" />
-                  <span className="text-xs font-medium text-muted-foreground">
-                    {totalProducts} products
+                <div className="flex items-center gap-1.5 bg-yellow-500/10 px-2 py-1 rounded-lg">
+                  <Star className="h-3.5 w-3.5 fill-yellow-500 text-yellow-500" />
+                  <span className="text-xs font-bold text-yellow-700 dark:text-yellow-500">
+                    {rating.toFixed(1)}
                   </span>
                 </div>
               </div>
 
-              <div className="flex items-center gap-1 text-xs font-semibold text-primary opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all">
-                Visit <ArrowRight className="h-3 w-3" />
+              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0 transition-all duration-300">
+                <ArrowRight className="h-4 w-4" />
               </div>
             </div>
           </div>
