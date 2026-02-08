@@ -5,7 +5,10 @@ export function OrdersSkeleton() {
   return (
     <div className="space-y-4">
       {[...Array(5)].map((_, i) => (
-        <Card key={i} className="border bg-white overflow-hidden shadow-sm">
+        <Card
+          key={i}
+          className="border dark:border-white/5 bg-white dark:bg-neutral-900 overflow-hidden shadow-sm"
+        >
           <CardContent className="p-0">
             <div className="flex flex-col sm:flex-row h-auto sm:h-24">
               {/* Image Skeleton */}

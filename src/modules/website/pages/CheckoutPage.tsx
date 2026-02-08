@@ -93,7 +93,7 @@ export default function CheckoutPage() {
   if (isCartLoading || !cart) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50/50 dark:bg-zinc-950 pb-20">
+    <div className="min-h-screen bg-neutral-50/50 dark:bg-neutral-950 pb-20 transition-colors duration-300">
       {/* ───────── MODALS ───────── */}
       <AddressRequiredModal
         open={requiredModal === "address"}

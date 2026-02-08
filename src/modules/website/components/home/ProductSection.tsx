@@ -37,7 +37,7 @@ export function ProductSection({
 }: ProductSectionProps) {
   return (
     <section
-      className={`py-12 md:py-24 px-1 sm:px-6 overflow-hidden ${className}`}
+      className={`py-12 md:py-24 px-1 sm:px-6 overflow-hidden bg-white dark:bg-neutral-950 transition-colors duration-300 ${className}`}
     >
       <div className="max-w-7xl mx-auto space-y-12">
         {/* Header Section */}
@@ -81,14 +81,14 @@ export function ProductSection({
             icon={emptyIcon}
             title={emptyTitle}
             description={emptyDescription}
-            className="bg-muted/30 rounded-[3rem]"
+            className="bg-muted/30 dark:bg-neutral-900/50 rounded-[3rem]"
           />
         ) : (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="grid gap-2 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+            className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
           >
             {children}
           </motion.div>

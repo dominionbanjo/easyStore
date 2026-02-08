@@ -120,14 +120,15 @@ export function MobileSearchFilters({
         <Button
           variant="outline"
           size="sm"
-          className="h-11 gap-3 lg:hidden rounded-2xl border-primary/10 bg-card hover:bg-primary/5 hover:border-primary/30 transition-all font-bold text-xs shadow-sm active:scale-95"
+          className="w-full h-12 md:h-11 gap-3 lg:hidden rounded-2xl border-zinc-200 dark:border-emerald-500/20 bg-white dark:bg-neutral-900 backdrop-blur-xl hover:bg-zinc-50 dark:hover:bg-neutral-800 transition-all font-black text-xs shadow-sm justify-center group uppercase tracking-[0.15em] active:scale-95 text-zinc-900 dark:text-white relative overflow-hidden"
         >
-          <FilterIcon className="h-4 w-4 text-primary" />
-          Refine Results
+          <div className="absolute inset-0 bg-gradient-to-tr from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+          <FilterIcon className="h-4 w-4 text-emerald-500 dark:text-emerald-400 group-hover:rotate-12 transition-transform relative z-10" />
+          <span className="relative z-10">Filter Products</span>
           {activeCount > 0 && (
             <Badge
               variant="default"
-              className="px-2 h-5 min-w-5 flex items-center justify-center rounded-lg text-[10px] ml-0.5 bg-primary text-white border-none shadow-md shadow-primary/30"
+              className="px-2 h-5 min-w-5 flex items-center justify-center rounded-lg text-[10px] ml-0.5 bg-emerald-500 text-white dark:text-neutral-950 border-none shadow-md shadow-emerald-500/30 dark:shadow-emerald-500/20 relative z-10"
             >
               {activeCount}
             </Badge>

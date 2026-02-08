@@ -39,6 +39,11 @@ export default function App() {
               path="terms-of-service"
               element={<Pages.TermsOfServicePage />}
             />
+            <Route path="careers" element={<Pages.CareersPage />} />
+            <Route path="discovery" element={<Pages.DiscoveryPage />} />
+            <Route path="featured" element={<Pages.FeaturedStoresPage />} />
+            <Route path="trending" element={<Pages.TrendingProductsPage />} />
+            <Route path="new-arrivals" element={<Pages.NewArrivalsPage />} />
           </Route>
 
           {/* ─── ACCOUNT ─── */}

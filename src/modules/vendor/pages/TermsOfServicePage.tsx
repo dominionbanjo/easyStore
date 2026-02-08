@@ -25,27 +25,27 @@ export default function TermsOfServicePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50/30 py-16 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-white dark:bg-neutral-950 py-24 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
+      <div className="max-w-5xl mx-auto">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
-          <div className="inline-flex items-center justify-center p-4 bg-purple-100/50 rounded-2xl mb-6 ring-1 ring-purple-100">
-            <Scale className="w-10 h-10 text-purple-600" />
+          <div className="inline-flex items-center justify-center p-5 bg-primary/10 dark:bg-emerald-500/10 rounded-[2rem] mb-8 ring-8 ring-primary/5 dark:ring-emerald-500/5 transition-all">
+            <Scale className="w-12 h-12 text-primary dark:text-emerald-400" />
           </div>
-          <h1 className="text-4xl font-extrabold text-gray-900 sm:text-5xl mb-6 tracking-tight">
+          <h1 className="text-5xl md:text-7xl font-black text-foreground mb-8 tracking-tighter leading-none italic">
             Terms of Service
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed font-medium">
             Please read these terms carefully before using our platform. They
             contain important information about your legal rights and
             obligations.
           </p>
-          <div className="mt-6 inline-flex items-center justify-center gap-2 text-sm font-medium text-gray-500 bg-white px-4 py-2 rounded-full shadow-sm border border-gray-100 mx-auto">
-            <CheckCircle2 className="w-4 h-4 text-green-500" />
+          <div className="mt-8 inline-flex items-center justify-center gap-3 text-xs font-black uppercase tracking-widest text-muted-foreground bg-white/50 dark:bg-neutral-900/40 backdrop-blur-xl px-6 py-3 rounded-2xl shadow-sm border border-zinc-200 dark:border-white/5 mx-auto">
+            <CheckCircle2 className="w-4 h-4 text-emerald-500" />
             Last updated: February 7, 2026
           </div>
         </motion.div>
@@ -55,12 +55,12 @@ export default function TermsOfServicePage() {
           variants={container}
           initial="hidden"
           animate="show"
-          className="bg-white rounded-[2rem] shadow-xl shadow-purple-900/5 border border-purple-100/50 p-8 sm:p-12 md:p-16 relative overflow-hidden"
+          className="bg-white/50 dark:bg-neutral-900/40 backdrop-blur-3xl rounded-[3rem] shadow-2xl shadow-primary/5 dark:shadow-emerald-500/5 border border-zinc-200 dark:border-white/5 p-8 sm:p-12 md:p-20 relative overflow-hidden"
         >
           {/* Decorative background element */}
-          <div className="absolute top-0 left-0 w-64 h-64 bg-purple-50 rounded-br-[10rem] -z-0 opacity-50" />
+          <div className="absolute top-0 left-0 w-96 h-96 bg-primary/5 dark:bg-emerald-500/10 rounded-full blur-3xl -z-0 -translate-x-1/2 -translate-y-1/2 opacity-50" />
 
-          <div className="relative z-10 space-y-12">
+          <div className="relative z-10 space-y-16">
             <motion.div variants={item}>
               <PolicySection title="1. Acceptance of Terms">
                 <p>
@@ -69,11 +69,11 @@ export default function TermsOfServicePage() {
                   regulations. If you do not agree with any of these terms, you
                   are prohibited from using or accessing this site.
                 </p>
-                <div className="mt-4 p-4 bg-purple-50/50 rounded-xl border border-purple-100 text-sm text-purple-700 flex gap-3">
+                <div className="mt-6 p-6 bg-emerald-500/5 dark:bg-emerald-500/10 rounded-[2rem] border border-emerald-500/10 dark:border-emerald-500/20 text-sm text-emerald-700 dark:text-emerald-400 flex gap-4">
                   <div className="shrink-0 mt-0.5">
-                    <FileCheck className="w-5 h-5" />
+                    <FileCheck className="w-6 h-6" />
                   </div>
-                  <p>
+                  <p className="font-bold leading-relaxed">
                     These terms constitute a legally binding agreement between
                     you and EasyStore regarding your use of the Service.
                   </p>
@@ -90,16 +90,16 @@ export default function TermsOfServicePage() {
                   which may result in immediate termination of your account on
                   our Service.
                 </p>
-                <div className="grid gap-4 mt-6">
-                  <div className="flex gap-4 items-start p-4 hover:bg-gray-50 rounded-xl transition-colors">
-                    <div className="p-2 bg-blue-100/50 text-blue-600 rounded-lg shrink-0">
-                      <AlertCircle className="w-5 h-5" />
+                <div className="grid gap-6 mt-8">
+                  <div className="flex gap-6 items-start p-6 bg-white/50 dark:bg-neutral-950/50 border border-zinc-200 dark:border-white/5 hover:border-emerald-500/30 transition-all rounded-[2rem] group">
+                    <div className="p-3 bg-primary/10 dark:bg-emerald-500/10 text-primary dark:text-emerald-400 rounded-2xl shrink-0 group-hover:scale-110 transition-transform">
+                      <AlertCircle className="w-6 h-6" />
                     </div>
                     <div>
-                      <h4 className="font-semibold text-gray-900">
+                      <h4 className="font-black text-foreground text-lg mb-2">
                         Account Security
                       </h4>
-                      <p className="text-sm text-gray-600 mt-1">
+                      <p className="text-sm text-muted-foreground leading-relaxed font-medium">
                         You are responsible for safeguarding the password that
                         you use to access the Service and for any activities or
                         actions under your password.
@@ -118,16 +118,27 @@ export default function TermsOfServicePage() {
                   buyers and sellers, although we provide the platform that
                   allows such transactions to occur.
                 </p>
-                <ul className="list-disc pl-5 space-y-3 mt-4 marker:text-purple-500">
-                  <li>
-                    <strong>For Buyers:</strong> You agree to pay for items
-                    purchased. You understand that your order may be subject to
-                    shipping fees and taxes.
+                <ul className="list-none space-y-4 mt-6">
+                  <li className="flex gap-4 items-start font-medium text-muted-foreground">
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-2.5 shrink-0" />
+                    <span className="leading-relaxed">
+                      <strong className="text-foreground font-black">
+                        For Buyers:
+                      </strong>{" "}
+                      You agree to pay for items purchased. You understand that
+                      your order may be subject to shipping fees and taxes.
+                    </span>
                   </li>
-                  <li>
-                    <strong>For Sellers:</strong> You agree to ship items
-                    promptly and to accurately describe items listed for sale.
-                    You are responsible for your own tax obligations.
+                  <li className="flex gap-4 items-start font-medium text-muted-foreground">
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-2.5 shrink-0" />
+                    <span className="leading-relaxed">
+                      <strong className="text-foreground font-black">
+                        For Sellers:
+                      </strong>{" "}
+                      You agree to ship items promptly and to accurately
+                      describe items listed for sale. You are responsible for
+                      your own tax obligations.
+                    </span>
                   </li>
                 </ul>
               </PolicySection>
@@ -139,7 +150,7 @@ export default function TermsOfServicePage() {
                   You agree not to engage in any of the following prohibited
                   activities:
                 </p>
-                <div className="mt-6 grid sm:grid-cols-2 gap-4">
+                <div className="mt-8 grid sm:grid-cols-2 gap-4">
                   {[
                     "Violating laws",
                     "Selling illegal goods",
@@ -150,9 +161,9 @@ export default function TermsOfServicePage() {
                   ].map((act, i) => (
                     <div
                       key={i}
-                      className="flex items-center gap-3 p-3 bg-red-50/50 border border-red-100 rounded-lg text-sm text-red-800"
+                      className="flex items-center gap-3 p-4 bg-rose-500/5 dark:bg-rose-500/10 border border-rose-500/10 rounded-2xl text-sm font-bold text-rose-600 dark:text-rose-400"
                     >
-                      <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                      <span className="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span>
                       {act}
                     </div>
                   ))}
@@ -186,23 +197,23 @@ export default function TermsOfServicePage() {
 
             <motion.div variants={item}>
               <PolicySection title="7. Contact & Support">
-                <div className="bg-purple-50 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 border border-purple-100">
-                  <div className="flex gap-4 items-center">
-                    <div className="p-3 bg-white rounded-xl shadow-sm">
-                      <HelpCircle className="w-6 h-6 text-purple-600" />
+                <div className="bg-emerald-500/5 dark:bg-emerald-500/10 rounded-[2.5rem] p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8 border border-emerald-500/10 dark:border-emerald-500/20">
+                  <div className="flex gap-6 items-center">
+                    <div className="p-4 bg-white dark:bg-neutral-900 rounded-2xl shadow-sm border border-zinc-100 dark:border-white/5">
+                      <HelpCircle className="w-8 h-8 text-primary dark:text-emerald-400" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-bold text-gray-900">
+                      <h3 className="text-xl font-black text-foreground">
                         Questions about Terms?
                       </h3>
-                      <p className="text-gray-600 text-sm">
+                      <p className="text-muted-foreground font-medium text-sm mt-1">
                         Contact our legal team for clarification.
                       </p>
                     </div>
                   </div>
                   <a
                     href="mailto:legal@easystore.com"
-                    className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-xl text-white bg-purple-600 hover:bg-purple-700 shadow-sm shadow-purple-200 transition-all active:scale-95 whitespace-nowrap"
+                    className="inline-flex items-center justify-center px-10 py-5 border border-transparent text-sm font-black uppercase tracking-[0.2em] rounded-2xl text-white dark:text-neutral-950 bg-primary dark:bg-emerald-500 hover:scale-105 transition-all active:scale-95 whitespace-nowrap shadow-xl shadow-primary/20 dark:shadow-emerald-500/20"
                   >
                     Contact Legal Team
                   </a>

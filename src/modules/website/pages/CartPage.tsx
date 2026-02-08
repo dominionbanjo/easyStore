@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import {
   useGetCartQuery,
   useUpdateCartItemMutation,
@@ -134,12 +135,12 @@ export default function CartPage() {
 
   /* ───────── UI ───────── */
   return (
-    <section className="min-h-screen bg-gray-50/50 dark:bg-zinc-950 pb-20">
+    <section className="min-h-screen bg-neutral-50/50 dark:bg-neutral-950 py-24 px-4 sm:px-8 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-0 sm:px-4 py-8 sm:py-12 space-y-8 sm:space-y-12">
         {/* Page Header */}
         <div className="px-4 sm:px-0 flex items-end justify-between">
           <div>
-            <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-gray-900 dark:text-white">
+            <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-foreground">
               Shopping Cart
             </h1>
             <p className="text-sm sm:text-base text-muted-foreground mt-2 font-medium">
@@ -151,24 +152,24 @@ export default function CartPage() {
 
         {cart.items.length === 0 ? (
           /* Empty State */
-          <div className="flex flex-col items-center justify-center py-20 px-4 text-center bg-white dark:bg-zinc-900 rounded-3xl sm:border border-dashed border-gray-200 dark:border-zinc-800 mx-4 sm:mx-0">
-            <div className="w-20 h-20 bg-gray-100 dark:bg-zinc-800 rounded-full flex items-center justify-center mb-6">
-              <ShoppingCart className="h-10 w-10 text-gray-400" />
+          <Card className="flex flex-col items-center justify-center py-20 px-4 text-center bg-white dark:bg-neutral-900 rounded-[3rem] border-2 border-dashed border-gray-100 dark:border-white/5 mx-4 sm:mx-0 shadow-none">
+            <div className="w-24 h-24 bg-gray-50 dark:bg-neutral-800 rounded-full flex items-center justify-center mb-8">
+              <ShoppingCart className="h-10 w-10 text-muted-foreground/40" />
             </div>
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-2">
+            <h2 className="text-2xl sm:text-3xl font-black text-foreground mb-3">
               Your cart is empty
             </h2>
-            <p className="text-muted-foreground mb-8 max-w-sm mx-auto">
+            <p className="text-muted-foreground mb-10 max-w-sm mx-auto text-lg font-medium leading-relaxed">
               Looks like you haven’t added any items yet. Explore our
               marketplace to find great products.
             </p>
             <Button
               onClick={() => navigate(WEBSITE_ROUTES.HOME)}
-              className="rounded-full h-12 px-8 text-base font-bold bg-gray-900 text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200"
+              className="rounded-2xl h-14 px-10 text-lg font-bold shadow-xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all"
             >
               Start Shopping
             </Button>
-          </div>
+          </Card>
         ) : (
           /* Cart Grid */
           <div className="grid grid-cols-1 lg:grid-cols-[1.8fr_1fr] gap-8 items-start">

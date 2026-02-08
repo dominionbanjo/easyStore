@@ -267,7 +267,7 @@ const Root = ({
         whileHover={{ y: -8 }}
         onClick={handleCardClick}
         className={cn(
-          "group relative w-full bg-white dark:bg-zinc-900 rounded-3xl p-1 shadow-sm border border-zinc-100 dark:border-zinc-800 transition-all hover:shadow-2xl hover:shadow-emerald-500/10 cursor-pointer overflow-hidden flex flex-col h-full",
+          "group relative w-full bg-white dark:bg-neutral-900 rounded-3xl p-1 shadow-sm border border-zinc-100 dark:border-white/5 transition-all hover:shadow-2xl hover:shadow-emerald-500/10 cursor-pointer overflow-hidden flex flex-col h-full",
           className,
         )}
       >

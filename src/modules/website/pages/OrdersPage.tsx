@@ -78,7 +78,7 @@ export default function OrdersPage() {
   const hasOrders = orders.length > 0;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-emerald-50/30">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-emerald-50/30 dark:from-neutral-950 dark:via-neutral-900 dark:to-emerald-950/20 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         <div className="space-y-8">
           {/* Header */}
@@ -95,7 +95,7 @@ export default function OrdersPage() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.1 }}
-            className="bg-white rounded-3xl border-2 border-gray-100 shadow-sm p-6"
+            className="bg-white dark:bg-neutral-900 rounded-3xl border-2 border-gray-100 dark:border-white/5 shadow-sm p-6"
           >
             <OrdersFilters
               searchValue={search}
@@ -131,7 +131,7 @@ export default function OrdersPage() {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.3 }}
-                className="bg-white rounded-3xl border-2 border-red-100 shadow-sm"
+                className="bg-white dark:bg-neutral-900 rounded-3xl border-2 border-red-100 dark:border-red-950/20 shadow-sm"
               >
                 <OrdersErrorState onRetry={handleRetry} />
               </motion.div>
@@ -153,7 +153,7 @@ export default function OrdersPage() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.2 }}
-                    className="flex justify-center mt-8 pt-8 border-t-2 border-gray-100"
+                    className="flex justify-center mt-8 pt-8 border-t-2 border-gray-100 dark:border-white/5"
                   >
                     <Pagination
                       page={pagination.page}
@@ -171,7 +171,7 @@ export default function OrdersPage() {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.3 }}
-                className="bg-white rounded-3xl border-2 border-gray-100 shadow-sm"
+                className="bg-white dark:bg-neutral-900 rounded-3xl border-2 border-gray-100 dark:border-white/5 shadow-sm"
               >
                 {hasActiveFilters ? (
                   <OrdersNoResults

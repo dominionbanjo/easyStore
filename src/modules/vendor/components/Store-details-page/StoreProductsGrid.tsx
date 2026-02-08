@@ -101,13 +101,15 @@ export function StoreProductsGrid({
             key="empty"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center py-32 bg-white/50 backdrop-blur-sm rounded-[3rem] border border-border/50 px-4 mx-2"
+            className="text-center py-32 bg-white/50 dark:bg-neutral-900/40 backdrop-blur-xl rounded-[3rem] border border-zinc-200 dark:border-white/5 px-4 mx-2 shadow-sm"
           >
-            <PackageOpen className="w-16 h-16 text-primary/20 mx-auto mb-6" />
-            <h3 className="text-2xl font-black text-foreground">
+            <div className="w-20 h-20 bg-primary/10 dark:bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-6 ring-8 ring-primary/5 dark:ring-emerald-500/5">
+              <PackageOpen className="w-10 h-10 text-primary dark:text-emerald-400" />
+            </div>
+            <h3 className="text-2xl md:text-3xl font-black text-foreground tracking-tight">
               No Products Found
             </h3>
-            <p className="text-muted-foreground mt-2 max-w-sm mx-auto">
+            <p className="text-muted-foreground mt-3 max-w-sm mx-auto font-medium text-sm md:text-base leading-relaxed">
               This inventory is currently empty for the selected criteria. Try
               exploring another category!
             </p>
@@ -115,7 +117,7 @@ export function StoreProductsGrid({
               <Button
                 onClick={onBackToCategories}
                 variant="link"
-                className="mt-4 text-primary font-black underline-offset-4"
+                className="mt-6 text-primary dark:text-emerald-400 font-black underline-offset-8 decoration-primary/30 hover:decoration-primary transition-all uppercase tracking-widest text-xs"
               >
                 View categories
               </Button>
@@ -128,7 +130,7 @@ export function StoreProductsGrid({
             animate={{ opacity: 1 }}
             className="space-y-20"
           >
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-8 px-0 sm:px-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-8 px-0 sm:px-2">
               {products.map((product, index) => (
                 <motion.div
                   key={product.id}

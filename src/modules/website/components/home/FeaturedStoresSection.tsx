@@ -29,7 +29,7 @@ export default function FeaturedStoresSection({
   return (
     <section
       ref={containerRef}
-      className={`py-12 md:py-24 px-1 sm:px-6 overflow-hidden bg-slate-50/50 ${className}`}
+      className={`py-12 md:py-24 px-1 sm:px-6 overflow-hidden bg-slate-50/50 dark:bg-neutral-950 transition-colors duration-300 ${className}`}
     >
       <div className="max-w-7xl mx-auto space-y-12">
         {/* Header Section */}

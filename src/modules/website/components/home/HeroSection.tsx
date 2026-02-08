@@ -26,7 +26,7 @@ export function HeroTitle() {
       <span className="relative inline-block mt-2">
         <span className="relative z-10 text-primary">
           Professional{" "}
-          <span className="text-[#17c06e] font-bold underline decoration-dotted underline-offset-8">
+          <span className="text-emerald-500 dark:text-emerald-400 font-bold underline decoration-dotted underline-offset-8">
             Online Storefront
           </span>
         </span>
@@ -37,7 +37,7 @@ export function HeroTitle() {
 
 export default function HeroSection() {
   return (
-    <section className="relative isolate overflow-hidden py-12 sm:py-24 bg-gradient-to-b from-background to-muted/20">
+    <section className="relative isolate overflow-hidden py-12 sm:py-24  dark:from-neutral-950 dark:via-neutral-900 dark:to-neutral-950 transition-colors duration-300">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-16">
           {/* LEFT SIDE */}
@@ -86,10 +86,13 @@ export default function HeroSection() {
             >
               <Button
                 size="lg"
-                className="bg-primary text-primary-foreground rounded-xl h-14 px-10 text-lg font-semibold hover:scale-[1.05] active:scale-95 transition-all shadow-lg hover:shadow-primary/20"
+                className="group relative bg-primary hover:bg-emerald-500 dark:bg-emerald-500 dark:hover:bg-emerald-400 text-white dark:text-neutral-950 rounded-xl h-14 px-10 text-lg font-bold hover:scale-[1.05] active:scale-95 transition-all shadow-xl shadow-emerald-500/20 hover:shadow-emerald-500/40"
               >
-                Start Selling Now
-                <ArrowRight className="ml-2 h-5 w-5" />
+                <div className="absolute inset-0 bg-emerald-400/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity rounded-xl" />
+                <span className="relative flex items-center gap-2">
+                  Start Selling Now
+                  <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+                </span>
               </Button>
 
               <SocialProofBadge
@@ -113,7 +116,7 @@ export default function HeroSection() {
             transition={{ delay: 0.5 }}
             className="flex-1 w-full max-w-2xl"
           >
-            <div className="relative group p-2 bg-white rounded-[2.5rem] shadow-2xl border border-border/50 overflow-hidden transform hover:-rotate-1 transition-transform duration-700">
+            <div className="relative group p-2 bg-white dark:bg-neutral-800 rounded-[2.5rem] shadow-2xl border border-border/50 dark:border-white/5 overflow-hidden transform hover:-rotate-1 transition-transform duration-700">
               <div className="relative aspect-[4/3] rounded-[2rem] overflow-hidden bg-muted">
                 <video
                   className="w-full h-full object-cover"
@@ -125,15 +128,17 @@ export default function HeroSection() {
                 />
 
                 {/* Floating Elements for "Story" feel */}
-                <div className="absolute top-6 right-6 bg-white/90 backdrop-blur px-4 py-2 rounded-2xl shadow-xl flex items-center gap-3 animate-bounce">
-                  <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white text-xs">
-                    ✓
+                <div className="absolute top-6 right-6 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-xl px-4 py-3 rounded-2xl shadow-2xl border border-white/20 dark:border-white/5 flex items-center gap-3 animate-bounce">
+                  <div className="w-10 h-10 bg-emerald-500 dark:bg-emerald-600 rounded-full flex items-center justify-center text-white shadow-lg shadow-emerald-500/20">
+                    <div className="bg-white/20 p-1 rounded-full">
+                      <ArrowRight className="h-4 w-4 rotate-[-45deg]" />
+                    </div>
                   </div>
                   <div>
-                    <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
-                      New Sale
+                    <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.15em]">
+                      Recent Sale
                     </p>
-                    <p className="text-sm font-bold text-foreground">
+                    <p className="text-sm font-black text-foreground">
                       ₦45,000 received
                     </p>
                   </div>

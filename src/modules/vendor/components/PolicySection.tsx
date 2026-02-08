@@ -8,11 +8,11 @@ interface PolicySectionProps {
 export default function PolicySection({ title, children }: PolicySectionProps) {
   return (
     <div className="mb-10 last:mb-0">
-      <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-        <span className="w-1.5 h-6 bg-purple-600 rounded-full block"></span>
+      <h2 className="text-xl sm:text-2xl font-black text-foreground mb-4 flex items-center gap-3">
+        <span className="w-1.5 h-6 bg-primary dark:bg-emerald-500 rounded-full block"></span>
         {title}
       </h2>
-      <div className="text-gray-600 space-y-4 leading-relaxed text-base">
+      <div className="text-muted-foreground dark:text-zinc-400 space-y-4 leading-relaxed text-base font-medium">
         {children}
       </div>
     </div>

@@ -62,7 +62,7 @@ export default function SearchResultsPage() {
   const pagination = data?.data.pagination;
 
   return (
-    <section className=" mx-auto px-4 py-8">
+    <section className="mx-auto px-4 py-8 bg-white dark:bg-neutral-950 transition-colors duration-300 min-h-screen">
       {/* Header */}
       <SearchResultsHeader
         totalResults={pagination?.total}

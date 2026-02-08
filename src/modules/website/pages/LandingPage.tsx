@@ -6,11 +6,14 @@ import TrustedBy from "../components/home/TrustedBy";
 import BusinessStorySection from "../components/home/BusinessStorySection";
 import FeaturedStoresSection from "../components/home/FeaturedStoresSection";
 import TopCategoriesSection from "../components/home/TopCategoriesSection";
+import DiscoveryHero from "../components/home/DiscoveryHero";
 
 export default function LandingPage() {
   return (
     <div className="flex flex-col">
       <HeroSection />
+
+      <DiscoveryHero />
 
       <BusinessStorySection />
       <div className="space-y-0">

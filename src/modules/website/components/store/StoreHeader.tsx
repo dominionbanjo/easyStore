@@ -12,9 +12,9 @@ export default function StoreHeader() {
   const selectedState = watch("state");
 
   return (
-    <section className="relative overflow-hidden bg-white border-b border-border/40">
+    <section className="relative overflow-hidden bg-white dark:bg-neutral-900 border-b border-border/40 dark:border-white/5 transition-colors duration-300">
       {/* Decorative Background Elements */}
-      <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-40 pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#333_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-40 pointer-events-none" />
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2 pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 py-20 relative z-10">
@@ -62,7 +62,7 @@ export default function StoreHeader() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="p-2 bg-white/80 backdrop-blur-xl border border-border/50 rounded-[2rem] shadow-xl shadow-neutral-200/40 max-w-2xl mx-auto"
+            className="p-2 bg-white/80 dark:bg-neutral-800/80 backdrop-blur-xl border border-border/50 dark:border-white/10 rounded-[2rem] shadow-xl shadow-neutral-200/40 dark:shadow-black/20 max-w-2xl mx-auto"
           >
             <div className="flex flex-col md:flex-row gap-2">
               <div className="flex-1 relative group">
@@ -72,7 +72,7 @@ export default function StoreHeader() {
                 <FormInput
                   name="search"
                   placeholder="Search stores by name..."
-                  className="pl-12 !mt-0 border-0 bg-transparent shadow-none focus-visible:ring-0 text-base h-12 rounded-xl hover:bg-neutral-50 focus:bg-white transition-colors"
+                  className="pl-12 !mt-0 border-0 bg-transparent shadow-none focus-visible:ring-0 text-base h-12 rounded-xl hover:bg-neutral-50 dark:hover:bg-neutral-700 focus:bg-white dark:focus:bg-neutral-800 transition-colors"
                 />
               </div>
 
@@ -86,7 +86,7 @@ export default function StoreHeader() {
                   <FormSelect
                     name="state"
                     placeholder="Filter by State"
-                    className="pl-10 !mt-0 border-0 bg-transparent shadow-none focus:ring-0 text-sm h-12 rounded-xl hover:bg-neutral-50 focus:bg-white transition-colors w-full"
+                    className="pl-10 !mt-0 border-0 bg-transparent shadow-none focus:ring-0 text-sm h-12 rounded-xl hover:bg-neutral-50 dark:hover:bg-neutral-700 focus:bg-white dark:focus:bg-neutral-800 transition-colors w-full"
                     options={State.getStatesOfCountry("NG").map((s) => ({
                       label: s.name,
                       value: s.name,

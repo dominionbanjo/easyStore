@@ -117,7 +117,7 @@ export default function UserProfilePage() {
   if (!user) return null;
 
   return (
-    <main className="min-h-screen bg-muted/30 pb-20">
+    <main className="min-h-screen bg-muted/30 dark:bg-neutral-950 pb-20 transition-colors duration-300">
       {/* ================= BANNER SECTION ================= */}
       <div className="relative h-64 md:h-80 bg-gradient-to-br from-primary via-primary/90 to-emerald-600 overflow-hidden">
         <div className="absolute inset-0 opacity-20">
@@ -141,7 +141,7 @@ export default function UserProfilePage() {
           {/* ================= LEFT COLUMN: PERSONAL CARD ================= */}
           <div className="lg:col-span-4 space-y-6">
             <motion.div variants={itemVariants}>
-              <Card className="rounded-[2.5rem] border-none shadow-2xl overflow-hidden bg-card/80 backdrop-blur-xl">
+              <Card className="rounded-[2.5rem] border-none shadow-2xl overflow-hidden bg-card/80 dark:bg-neutral-900/80 backdrop-blur-xl">
                 <CardContent className="p-8 flex flex-col items-center text-center">
                   <div className="relative mb-6">
                     <Avatar className="h-32 w-32 md:h-40 md:w-40 border-4 border-background shadow-xl">
@@ -177,7 +177,7 @@ export default function UserProfilePage() {
                     {user.payout_verified && (
                       <Badge
                         variant="outline"
-                        className="px-3 py-1 rounded-full gap-1 text-blue-600 border-blue-200 bg-blue-50"
+                        className="px-3 py-1 rounded-full gap-1 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-900/30 bg-blue-50 dark:bg-blue-900/10"
                       >
                         <ShieldCheck size={12} />
                         Verified Payout
@@ -210,7 +210,7 @@ export default function UserProfilePage() {
 
             {/* QUICK STATS */}
             <motion.div variants={itemVariants}>
-              <Card className="rounded-3xl border-none shadow-xl bg-card/80 backdrop-blur-xl">
+              <Card className="rounded-3xl border-none shadow-xl bg-card/80 dark:bg-neutral-900/80 backdrop-blur-xl">
                 <CardContent className="p-6">
                   <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4">
                     Member Overview
@@ -443,7 +443,7 @@ function StatCard({
 
 function UserProfileSkeleton() {
   return (
-    <div className="min-h-screen bg-muted/30 pb-20">
+    <div className="min-h-screen bg-neutral-50/50 dark:bg-neutral-950 pb-20 transition-colors duration-300">
       <div className="h-64 md:h-80 bg-muted animate-pulse" />
       <div className="max-w-6xl mx-auto px-4 -mt-32 md:-mt-40 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div className="lg:col-span-4">

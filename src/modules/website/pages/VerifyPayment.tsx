@@ -42,7 +42,7 @@ export default function VerifyPaymentPage() {
           <CardHeader>
             <CardTitle className="flex items-center justify-center gap-2 text-red-600">
               <XCircle className="h-6 w-6" />
-              Missing Payment Reference
+              Missing Reference
             </CardTitle>
           </CardHeader>
 
@@ -68,18 +68,25 @@ export default function VerifyPaymentPage() {
   /* ───────────────── LOADING ───────────────── */
   if (isLoading) {
     return (
-      <section className="min-h-screen flex items-center justify-center px-4">
-        <Card className="w-full max-w-md text-center">
-          <CardContent className="py-12 space-y-4">
-            <Loader2 className="h-10 w-10 animate-spin text-primary mx-auto" />
-            <h2 className="text-lg font-semibold">Verifying your payment</h2>
-            <p className="text-sm text-muted-foreground">
-              Please wait while we confirm your transaction.
-            </p>
+      <section className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-emerald-50/30 dark:from-neutral-950 dark:via-neutral-900 dark:to-emerald-950/10 flex items-center justify-center px-4 transition-colors duration-300">
+        <Card className="w-full max-w-md text-center rounded-[2.5rem] border-2 border-emerald-100 dark:border-emerald-950/20 shadow-xl overflow-hidden bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl">
+          <CardContent className="py-16 space-y-6">
+            <div className="relative">
+              <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full" />
+              <Loader2 className="h-14 w-14 animate-spin text-primary mx-auto relative z-10" />
+            </div>
+            <div className="space-y-2">
+              <h2 className="text-2xl font-black text-foreground">
+                Verifying Payment
+              </h2>
+              <p className="text-muted-foreground font-medium">
+                Please wait while we confirm your transaction.
+              </p>
+            </div>
 
-            <p className="text-xs font-mono text-muted-foreground">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-muted/50 dark:bg-neutral-800 text-xs font-mono font-bold text-muted-foreground">
               Ref: {reference}
-            </p>
+            </div>
           </CardContent>
         </Card>
       </section>
@@ -144,29 +151,34 @@ export default function VerifyPaymentPage() {
   /* ───────────────── SUCCESS ───────────────── */
   if (isSuccess) {
     return (
-      <section className="min-h-screen flex items-center justify-center px-4">
-        <Card className="w-full max-w-md text-center">
-          <CardContent className="py-12 space-y-4">
-            <CheckCircle className="h-14 w-14 text-green-600 mx-auto" />
+      <section className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-emerald-50/30 dark:from-neutral-950 dark:via-neutral-900 dark:to-emerald-950/10 flex items-center justify-center px-4 transition-colors duration-300">
+        <Card className="w-full max-w-md text-center rounded-[3rem] border-2 border-emerald-100 dark:border-emerald-950/20 shadow-2xl overflow-hidden bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl">
+          <CardContent className="py-16 space-y-8">
+            <div className="relative">
+              <div className="absolute inset-0 bg-emerald-500/20 blur-3xl rounded-full" />
+              <div className="w-24 h-24 bg-emerald-50 dark:bg-emerald-950/30 rounded-full flex items-center justify-center mx-auto relative z-10">
+                <CheckCircle className="h-14 w-14 text-emerald-600 dark:text-emerald-500" />
+              </div>
+            </div>
 
-            <h1 className="text-2xl font-bold text-green-600">
-              Payment Successful
-            </h1>
+            <div className="space-y-2">
+              <h1 className="text-3xl font-black text-foreground">
+                Payment Successful
+              </h1>
+              <p className="text-muted-foreground font-medium max-w-xs mx-auto">
+                Your payment has been verified. We're now processing your order.
+              </p>
+            </div>
 
-            <p className="text-sm text-muted-foreground">
-              Your payment has been verified successfully. Your order is now
-              being processed.
-            </p>
-
-            <div className="rounded-md bg-muted p-3 text-xs font-mono">
-              Reference: {reference}
+            <div className="px-4 py-2 rounded-full bg-emerald-50 dark:bg-emerald-950/20 text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400">
+              Ref: {reference}
             </div>
 
             <Button
-              className="w-full"
+              className="w-full h-14 rounded-2xl text-lg font-bold shadow-xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all"
               onClick={() => navigate(ACCOUNT_ROUTES.ORDERS)}
             >
-              <CreditCard className="mr-2 h-4 w-4" />
+              <CreditCard className="mr-2 h-5 w-5" />
               View My Orders
             </Button>
           </CardContent>

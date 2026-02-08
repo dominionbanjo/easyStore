@@ -33,7 +33,7 @@ export function OrdersFilters({
           onChange={(e) => onSearchChange(e.target.value)}
           placeholder="Search by Order ID or Reference..."
           disabled={isLoading}
-          className="pl-11 h-12 rounded-2xl border-gray-200 bg-gray-50 focus:bg-white transition-colors font-medium placeholder:text-gray-400"
+          className="pl-11 h-12 rounded-2xl border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-neutral-800 focus:bg-white dark:focus:bg-neutral-700 transition-colors font-medium placeholder:text-gray-400"
         />
       </div>
 
@@ -45,7 +45,7 @@ export function OrdersFilters({
           onValueChange={onStatusChange}
           disabled={isLoading}
         >
-          <SelectTrigger className="h-12 rounded-2xl border-gray-200 bg-gray-50 pl-11 font-medium">
+          <SelectTrigger className="h-12 rounded-2xl border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-neutral-800 pl-11 font-medium">
             <SelectValue placeholder="Filter Status" />
           </SelectTrigger>
           <SelectContent>

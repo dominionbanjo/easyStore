@@ -11,10 +11,12 @@ import {
   Mail,
   MapPin,
 } from "lucide-react";
+import { useTheme } from "./ThemeContext";
 
 export default function Footer() {
+  const { theme } = useTheme();
   return (
-    <footer className="bg-card text-card-foreground relative overflow-hidden border-t border-border/50 rounded-t-[3rem] mt-12 shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.05)]">
+    <footer className="bg-card text-card-foreground relative overflow-hidden border-t border-border/50 rounded-t-[3rem] mt-12 shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.05)] transition-colors duration-300">
       {/* Background Decor */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2 pointer-events-none" />
 
@@ -24,9 +26,17 @@ export default function Footer() {
           <div className="space-y-6">
             <Link to={WEBSITE_ROUTES.HOME} className="block">
               <img
-                src="/logos/inline-stripe-transparent.png"
+                src={
+                  theme === "dark"
+                    ? "/logos/EasyStore logo with tagline.png"
+                    : "/logos/inline-stripe-transparent.png"
+                }
                 alt="EasyStore logo"
-                className="h-10 w-auto"
+                className={
+                  theme === "dark"
+                    ? "h-14 w-auto scale-110 origin-left"
+                    : "h-10 w-auto"
+                }
                 loading="lazy"
               />
             </Link>
@@ -60,6 +70,24 @@ export default function Footer() {
                   className="hover:text-primary transition-colors flex items-center gap-2 group"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-primary/0 group-hover:bg-primary transition-colors" />
+                  Marketplace
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to={WEBSITE_ROUTES.DISCOVERY}
+                  className="hover:text-primary transition-colors flex items-center gap-2 group"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary/0 group-hover:bg-primary transition-colors" />
+                  Discovery
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to={WEBSITE_ROUTES.FEATURED}
+                  className="hover:text-primary transition-colors flex items-center gap-2 group"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary/0 group-hover:bg-primary transition-colors" />
                   Featured Stores
                 </Link>
               </li>
@@ -74,7 +102,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  to="#"
+                  to={WEBSITE_ROUTES.TRENDING}
                   className="hover:text-primary transition-colors flex items-center gap-2 group"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-primary/0 group-hover:bg-primary transition-colors" />
@@ -83,7 +111,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  to="#"
+                  to={WEBSITE_ROUTES.NEW_ARRIVALS}
                   className="hover:text-primary transition-colors flex items-center gap-2 group"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-primary/0 group-hover:bg-primary transition-colors" />
@@ -108,7 +136,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  to="#"
+                  to={WEBSITE_ROUTES.CAREERS}
                   className="hover:text-primary transition-colors flex items-center gap-2 group"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-primary/0 group-hover:bg-primary transition-colors" />

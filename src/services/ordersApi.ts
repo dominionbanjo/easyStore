@@ -79,6 +79,25 @@ export interface IOrder {
     last_name: string;
     email: string;
     phone_number?: string | null;
+    store?: {
+      id: string;
+      store_name: string;
+      slug: string;
+      logo?: string | null;
+      phone_number?: string | null;
+      address_street?: string | null;
+      address_city?: string | null;
+      address_state?: string | null;
+    } | null;
+  } | null;
+
+  buyer?: {
+    id: string;
+    first_name: string;
+    last_name: string;
+    email: string;
+    phone_number?: string | null;
+    avatar?: string | null;
   } | null;
 
   created_at: string;

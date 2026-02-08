@@ -20,17 +20,17 @@ export function OrdersHeader({
             <Package className="h-6 w-6 text-white" />
           </div>
           <div>
-            <h1 className="text-3xl font-black text-gray-900 tracking-tight">
+            <h1 className="text-3xl font-black text-foreground tracking-tight">
               My Orders
             </h1>
             {!isLoading && (
-              <p className="text-sm text-gray-500 font-medium">
+              <p className="text-sm text-muted-foreground font-medium">
                 {totalOrders} {totalOrders === 1 ? "order" : "orders"} in total
               </p>
             )}
           </div>
         </div>
-        <p className="text-gray-600 text-sm mt-2 max-w-2xl leading-relaxed">
+        <p className="text-muted-foreground text-sm mt-2 max-w-2xl leading-relaxed">
           Track your purchases, manage deliveries, and view order history all in
           one place
         </p>

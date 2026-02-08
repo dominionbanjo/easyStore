@@ -83,8 +83,8 @@
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.21 0.006 285.885);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.92 0.004 286.32);
-  --primary-foreground: oklch(0.21 0.006 285.885);
+  --primary: #10b981;
+  --primary-foreground: #ffffff;
   --secondary: oklch(0.274 0.006 286.033);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.274 0.006 286.033);
@@ -231,4 +231,42 @@
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background-color: hsl(var(--muted-foreground) / 0.5);
+}
+/* Sonner Toast Customization */
+[data-sonner-toast] {
+  @apply rounded-2xl border-zinc-200 shadow-2xl backdrop-blur-xl transition-all duration-300;
+}
+
+/* Ensure dark mode background is applied correctly */
+.dark [data-sonner-toast] {
+  background: #0a0a0a !important;
+  color: #f5f5f5 !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Success Type Override */
+[data-sonner-toast][data-type="success"] {
+  @apply border-emerald-500/50;
+}
+
+.dark [data-sonner-toast][data-type="success"] {
+  border-color: rgba(16, 185, 129, 0.4) !important;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.1) !important;
+}
+
+[data-sonner-toast][data-type="success"] [data-icon] {
+  @apply bg-primary text-white rounded-full p-1 w-6 h-6 flex items-center justify-center shadow-lg shadow-primary/20;
+}
+
+[data-sonner-toast][data-type="success"] [data-icon] svg {
+  @apply w-3.5 h-3.5;
+}
+
+[data-sonner-toast] [data-title] {
+  @apply font-black tracking-tight text-sm;
+}
+
+[data-sonner-toast] [data-description] {
+  @apply font-medium opacity-80 text-xs;
 }
