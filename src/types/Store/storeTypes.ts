@@ -80,7 +80,7 @@ export interface IStoreDetails {
   cover_image: string | null;
   email: string | null;
   phone_number: string | null;
-  website: string | null;
+  social_links: Record<string, string> | null;
   rating_average: string;
   rating_count: number;
   total_products: number;
@@ -89,6 +89,11 @@ export interface IStoreDetails {
   address_state: string | null;
   address_country: string | null;
   address_postal_code: string | null;
+  bank_code: string | null;
+  account_number: string | null;
+  bank_name: string | null;
+  recipient_code: string | null;
+  payout_verified: boolean;
   user?: {
     first_name: string;
     last_name: string;

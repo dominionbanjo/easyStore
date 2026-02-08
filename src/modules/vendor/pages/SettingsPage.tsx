@@ -1,296 +1,276 @@
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
-import { Upload, Save, Palette, Globe, CreditCard } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { useState, useEffect } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { Loader2, Store, Globe, CreditCard } from "lucide-react";
 import { toast } from "sonner";
 
+import {
+  useGetMyStoreQuery,
+  useUpdateStoreMutation,
+  useRegisterStoreBankMutation,
+} from "@/services/storeApi";
+import {
+  useGetNigerianBanksQuery,
+  useVerifyBankAccountMutation,
+} from "@/services/userApi";
+
+// Sub-components
+import { SettingsHeader } from "../components/settings/SettingsHeader";
+import { SettingsSidebar } from "../components/settings/SettingsSidebar";
+import { StoreIdentityStep } from "../components/settings/StoreIdentityStep";
+import { ContactLocationStep } from "../components/settings/ContactLocationStep";
+import { PayoutSetupStep } from "../components/settings/PayoutSetupStep";
+import { AddressModal } from "../components/settings/AddressModal";
+
+const STEPS = [
+  { id: 1, title: "Store Identity", icon: Store },
+  { id: 2, title: "Contact Details", icon: Globe },
+  { id: 3, title: "Payout Setup", icon: CreditCard },
+];
+
 export default function SettingsPage() {
+  const { data: store, isLoading: isLoadingStore } = useGetMyStoreQuery();
+  const [updateStore, { isLoading: isUpdatingStore }] =
+    useUpdateStoreMutation();
+  const [registerBank, { isLoading: isRegisteringBank }] =
+    useRegisterStoreBankMutation();
+  const { data: banksResponse } = useGetNigerianBanksQuery();
+  const [verifyBank, { isLoading: isVerifyingBank }] =
+    useVerifyBankAccountMutation();
+
+  const [activeStep, setActiveStep] = useState(1);
+  const [showAddressModal, setShowAddressModal] = useState(false);
+  const [bannerPreview, setBannerPreview] = useState<string | null>(null);
+  const [bannerFile, setBannerFile] = useState<File | null>(null);
+
+  // Form States
+  const [storeData, setStoreData] = useState({
+    store_name: "",
+    description: "",
+    category: "",
+    email: "",
+    phone_number: "",
+    address_street: "",
+    address_city: "",
+    address_state: "",
+    address_country: "Nigeria",
+    address_postal_code: "",
+    social_links: {} as Record<string, string>,
+  });
+
+  const [bankData, setBankData] = useState({
+    bank_code: "",
+    account_number: "",
+    account_name: "",
+  });
+
+  useEffect(() => {
+    if (store) {
+      setStoreData({
+        store_name: store.store_name || "",
+        description: store.description || "",
+        category: store.category || "",
+        email: store.email || "",
+        phone_number: store.phone_number || "",
+        address_street: store.address_street || "",
+        address_city: store.address_city || "",
+        address_state: store.address_state || "",
+        address_country: store.address_country || "Nigeria",
+        address_postal_code: store.address_postal_code || "",
+        social_links: store.social_links || {},
+      });
+      setBannerPreview(store.cover_image);
+      setBankData({
+        bank_code: store.bank_code || "",
+        account_number: store.account_number || "",
+        account_name: store.bank_name || "",
+      });
+    }
+  }, [store]);
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const { name, value } = e.target;
+    setStoreData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleBannerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setBannerFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => setBannerPreview(reader.result as string);
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleUpdateSocials = (social_links: Record<string, string>) => {
+    setStoreData((prev) => ({ ...prev, social_links }));
+  };
+
+  const saveStoreDetails = async () => {
+    if (!store?.id) return;
+    try {
+      const formData = new FormData();
+      Object.entries(storeData).forEach(([key, value]) => {
+        if (key === "social_links") {
+          formData.append(key, JSON.stringify(value));
+        } else {
+          formData.append(key, value as string);
+        }
+      });
+      if (bannerFile) {
+        formData.append("cover_image", bannerFile);
+      }
+
+      await updateStore({ id: store.id, data: formData }).unwrap();
+      toast.success("Store details updated successfully!");
+    } catch (error: any) {
+      toast.error(error.data?.message || "Failed to update store details");
+    }
+  };
+
+  const handleVerifyBank = async () => {
+    if (bankData.account_number.length !== 10 || !bankData.bank_code) {
+      toast.error(
+        "Please provide a valid 10-digit account number and select a bank",
+      );
+      return;
+    }
+    try {
+      const result = await verifyBank({
+        account_number: bankData.account_number,
+        bank_code: bankData.bank_code,
+      }).unwrap();
+      setBankData((prev) => ({ ...prev, account_name: result.account_name }));
+      toast.success("Bank account verified!");
+    } catch (error: any) {
+      toast.error(error.data?.message || "Verification failed");
+    }
+  };
+
+  const handleRegisterBank = async () => {
+    if (!store?.id || !bankData.bank_code || !bankData.account_number) return;
+    try {
+      await registerBank({
+        id: store.id,
+        bank_code: bankData.bank_code,
+        account_number: bankData.account_number,
+      }).unwrap();
+      toast.success("Bank account registered successfully!");
+    } catch (error: any) {
+      toast.error(error.data?.message || "Failed to register bank account");
+    }
+  };
+
+  if (isLoadingStore) {
+    return (
+      <div className="flex h-[60vh] items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  const calculateProgress = () => {
+    let score = 0;
+    if (store?.store_name) score += 20;
+    if (store?.description) score += 10;
+    if (store?.cover_image) score += 10;
+    if (store?.address_street) score += 20;
+    if (store?.email && store?.phone_number) score += 20;
+    if (store?.payout_verified) score += 20;
+    return score;
+  };
+
+  const progress = calculateProgress();
+  const isValidated = store?.payout_verified && !!store?.recipient_code;
+
   return (
-    <section className="space-y-10">
-      {/* ─── Header ─── */}
-      <div>
-        <h1 className="text-2xl font-bold text-foreground">Store Settings</h1>
-        <p className="text-muted-foreground text-sm">
-          Manage store preferences, customization, and account settings.
-        </p>
+    <div className="max-w-5xl mx-auto space-y-8 pb-20">
+      <SettingsHeader progress={progress} isValidated={isValidated} />
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <SettingsSidebar
+          steps={STEPS}
+          activeStep={activeStep}
+          setActiveStep={setActiveStep}
+        />
+
+        <div className="lg:col-span-8">
+          <AnimatePresence mode="wait">
+            {activeStep === 1 && (
+              <motion.div
+                key="step1"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+              >
+                <StoreIdentityStep
+                  storeData={storeData}
+                  bannerPreview={bannerPreview}
+                  onInputChange={handleInputChange}
+                  onCategoryChange={(val) =>
+                    setStoreData((p) => ({ ...p, category: val }))
+                  }
+                  onBannerChange={handleBannerChange}
+                  onSave={saveStoreDetails}
+                  isSaving={isUpdatingStore}
+                />
+              </motion.div>
+            )}
+
+            {activeStep === 2 && (
+              <motion.div
+                key="step2"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+              >
+                <ContactLocationStep
+                  storeData={storeData}
+                  onInputChange={handleInputChange}
+                  onUpdateSocials={handleUpdateSocials}
+                  onOpenAddressModal={() => setShowAddressModal(true)}
+                  onSave={saveStoreDetails}
+                  isSaving={isUpdatingStore}
+                />
+              </motion.div>
+            )}
+
+            {activeStep === 3 && (
+              <motion.div
+                key="step3"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+              >
+                <PayoutSetupStep
+                  bankData={bankData}
+                  banks={banksResponse?.data || []}
+                  isVerifying={isVerifyingBank}
+                  isRegistering={isRegisteringBank}
+                  isValidated={isValidated}
+                  onBankChange={(val) =>
+                    setBankData((p) => ({ ...p, bank_code: val }))
+                  }
+                  onAccountNumberChange={(val) =>
+                    setBankData((p) => ({ ...p, account_number: val }))
+                  }
+                  onVerify={handleVerifyBank}
+                  onRegister={handleRegisterBank}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
 
-      {/* ─── Settings Tabs ─── */}
-      <Tabs defaultValue="customization" className="w-full">
-        <TabsList className="flex flex-wrap justify-start gap-2 sm:gap-6 bg-transparent py-3 px-1 border-b border-border/20">
-          {[
-            { value: "customization", label: "Store Customization" },
-            { value: "account", label: "Account Settings" },
-            { value: "preferences", label: "Preferences" },
-            { value: "payouts", label: "Payments & Payouts" },
-          ].map((tab) => (
-            <TabsTrigger
-              key={tab.value}
-              value={tab.value}
-              className={cn(
-                "px-4 py-2.5 text-sm font-medium rounded-full transition-all duration-200",
-                "text-muted-foreground hover:text-foreground hover:bg-muted/40",
-                "data-[state=active]:bg-primary/30 data-[state=active]:text-foreground"
-              )}
-            >
-              {tab.label}
-            </TabsTrigger>
-          ))}
-        </TabsList>
-
-        {/* ─────────────────────────────────────────────── */}
-        {/* STORE CUSTOMIZATION TAB */}
-        {/* ─────────────────────────────────────────────── */}
-        <TabsContent value="customization" className="pt-8">
-          <Card className="border border-border/30 shadow-sm">
-            <CardHeader>
-              <CardTitle>Store Customization</CardTitle>
-              <CardDescription>
-                Update your store’s appearance and identity.
-              </CardDescription>
-            </CardHeader>
-
-            <CardContent className="space-y-6">
-              {/* Banner Upload */}
-              <div className="space-y-2">
-                <Label className="text-sm font-medium">Store Banner</Label>
-                <div className="border border-dashed border-border/40 rounded-md p-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-                  <div className="flex items-center gap-3">
-                    <Upload className="h-5 w-5 text-muted-foreground" />
-                    <p className="text-sm text-muted-foreground">
-                      Upload header or banner image (recommended 1200x400px)
-                    </p>
-                  </div>
-                  <Button variant="outline" size="sm" className="gap-2">
-                    <Upload className="h-4 w-4" /> Upload
-                  </Button>
-                </div>
-              </div>
-
-              {/* Store Info */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Store Name</Label>
-                  <Input placeholder="Enter your store name" />
-                </div>
-                <div className="space-y-2">
-                  <Label>Username (handle)</Label>
-                  <Input placeholder="@yourstorename" />
-                </div>
-              </div>
-
-              {/* Store Description */}
-              <div className="space-y-2">
-                <Label>Store Description</Label>
-                <Input placeholder="A short description about your store" />
-              </div>
-
-              <Button
-                className="bg-primary text-white rounded-full mt-4"
-                onClick={() => toast.success("Store customization saved!")}
-              >
-                <Save className="h-4 w-4 mr-2" /> Save Changes
-              </Button>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* ─────────────────────────────────────────────── */}
-        {/* ACCOUNT SETTINGS TAB */}
-        {/* ─────────────────────────────────────────────── */}
-        <TabsContent value="account" className="pt-8">
-          <Card className="border border-border/30 shadow-sm">
-            <CardHeader>
-              <CardTitle>Account Settings</CardTitle>
-              <CardDescription>
-                Update your account information and contact details.
-              </CardDescription>
-            </CardHeader>
-
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Email Address</Label>
-                  <Input placeholder="you@example.com" />
-                </div>
-                <div className="space-y-2">
-                  <Label>Phone Number</Label>
-                  <Input placeholder="+234 801 234 5678" />
-                </div>
-                <div className="space-y-2">
-                  <Label>Password</Label>
-                  <Input type="password" placeholder="********" />
-                </div>
-                <div className="space-y-2">
-                  <Label>Confirm Password</Label>
-                  <Input type="password" placeholder="********" />
-                </div>
-              </div>
-
-              <Button
-                className="bg-primary text-white rounded-full mt-4"
-                onClick={() => toast.success("Account info updated!")}
-              >
-                <Save className="h-4 w-4 mr-2" /> Save Changes
-              </Button>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* ─────────────────────────────────────────────── */}
-        {/* PREFERENCES TAB */}
-        {/* ─────────────────────────────────────────────── */}
-        <TabsContent value="preferences" className="pt-8">
-          <Card className="border border-border/30 shadow-sm">
-            <CardHeader>
-              <CardTitle>Preferences</CardTitle>
-              <CardDescription>
-                Set your theme, language, and currency preferences.
-              </CardDescription>
-            </CardHeader>
-
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {/* Theme */}
-                <div className="space-y-2">
-                  <Label>Theme</Label>
-                  <Select defaultValue="light">
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select theme" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="light">
-                        <Palette className="h-4 w-4 inline mr-2" /> Light
-                      </SelectItem>
-                      <SelectItem value="dark">
-                        <Palette className="h-4 w-4 inline mr-2" /> Dark
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* Language */}
-                <div className="space-y-2">
-                  <Label>Language</Label>
-                  <Select defaultValue="en">
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select language" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="en">
-                        <Globe className="h-4 w-4 inline mr-2" /> English
-                      </SelectItem>
-                      <SelectItem value="fr">
-                        <Globe className="h-4 w-4 inline mr-2" /> French
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* Currency */}
-                <div className="space-y-2">
-                  <Label>Currency</Label>
-                  <Select defaultValue="NGN">
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select currency" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="NGN">₦ - Naira</SelectItem>
-                      <SelectItem value="USD">$ - US Dollar</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* Notifications */}
-                <div className="flex items-center justify-between border rounded-md p-3 mt-3">
-                  <div>
-                    <Label>Email Notifications</Label>
-                    <p className="text-xs text-muted-foreground">
-                      Receive important updates via email
-                    </p>
-                  </div>
-                  <Switch defaultChecked />
-                </div>
-              </div>
-
-              <Button
-                className="bg-primary text-white rounded-full mt-4"
-                onClick={() => toast.success("Preferences updated!")}
-              >
-                <Save className="h-4 w-4 mr-2" /> Save Changes
-              </Button>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* ─────────────────────────────────────────────── */}
-        {/* PAYOUTS TAB */}
-        {/* ─────────────────────────────────────────────── */}
-        <TabsContent value="payouts" className="pt-8">
-          <Card className="border border-border/30 shadow-sm">
-            <CardHeader>
-              <CardTitle>Payments & Payouts</CardTitle>
-              <CardDescription>
-                Configure your bank and payout preferences.
-              </CardDescription>
-            </CardHeader>
-
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Bank Name</Label>
-                  <Input placeholder="e.g. GTBank" />
-                </div>
-                <div className="space-y-2">
-                  <Label>Account Number</Label>
-                  <Input placeholder="1234567890" />
-                </div>
-                <div className="space-y-2">
-                  <Label>Account Holder Name</Label>
-                  <Input placeholder="John Vendor" />
-                </div>
-                <div className="space-y-2">
-                  <Label>Payout Frequency</Label>
-                  <Select defaultValue="weekly">
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select payout frequency" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="daily">Daily</SelectItem>
-                      <SelectItem value="weekly">Weekly</SelectItem>
-                      <SelectItem value="monthly">Monthly</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              <Button
-                className="bg-primary text-white rounded-full mt-4"
-                onClick={() => toast.success("Payout settings saved!")}
-              >
-                <CreditCard className="h-4 w-4 mr-2" /> Save Changes
-              </Button>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
-    </section>
+      <AddressModal
+        open={showAddressModal}
+        onOpenChange={setShowAddressModal}
+        addressData={storeData}
+        onChange={handleInputChange}
+      />
+    </div>
   );
 }

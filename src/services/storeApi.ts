@@ -95,6 +95,62 @@ export const storeApi = apiManager.injectEndpoints({
       transformResponse: (response: any) => response?.data || response,
       providesTags: ["Store"],
     }),
+
+    /* ───────── GET VENDOR'S OWN STORE ───────── */
+    getMyStore: builder.query<any, void>({
+      query: () => ({
+        url: "store/me",
+        method: "GET",
+      }),
+      transformResponse: (response: any) => response?.data || response,
+      providesTags: ["Store"],
+    }),
+
+    /* ───────── UPDATE STORE ───────── */
+    updateStore: builder.mutation<any, { id: string; data: FormData }>({
+      query: ({ id, data }) => ({
+        url: `store/${id}`,
+        method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags: ["Store"],
+    }),
+
+    /* ───────── REGISTER BANK ───────── */
+    registerStoreBank: builder.mutation<
+      any,
+      {
+        id: string;
+        bank_code: string;
+        account_number: string;
+        settlement_email?: string;
+      }
+    >({
+      query: ({ id, ...body }) => ({
+        url: `store/${id}/bank`,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Store"],
+    }),
+
+    /* ───────── UPDATE BANK ───────── */
+    updateStoreBank: builder.mutation<
+      any,
+      {
+        id: string;
+        bank_code?: string;
+        account_number?: string;
+        settlement_email?: string;
+      }
+    >({
+      query: ({ id, ...body }) => ({
+        url: `store/${id}/bank`,
+        method: "PATCH",
+        body,
+      }),
+      invalidatesTags: ["Store"],
+    }),
   }),
 });
 
@@ -120,4 +176,8 @@ export const {
 
   useCreateStoreMutation,
   useGetVendorCustomersQuery,
+  useGetMyStoreQuery,
+  useUpdateStoreMutation,
+  useRegisterStoreBankMutation,
+  useUpdateStoreBankMutation,
 } = storeApi;
