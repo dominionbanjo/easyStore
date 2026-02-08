@@ -3,12 +3,17 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
   CheckCircle,
-  User,
   Mail,
   Phone,
   MapPin,
   Star,
   ShieldCheck,
+  Calendar,
+  Settings,
+  LogOut,
+  ChevronRight,
+  Globe,
+  Briefcase,
 } from "lucide-react";
 import { format } from "date-fns";
 import { useGetUserProfileQuery } from "@/services/userApi";
@@ -18,6 +23,9 @@ import { LogoutConfirmModal } from "../components/home/LogoutModal";
 import { toast } from "sonner";
 import { useLogoutMutation } from "@/services/authApi";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 /* ───────────────── LAZY CSC IMPORT ───────────────── */
 const importCSC = () => import("country-state-city");
@@ -26,10 +34,8 @@ const importCSC = () => import("country-state-city");
 
 export default function UserProfilePage() {
   const { data, isLoading, isError } = useGetUserProfileQuery();
-
   const [editOpen, setEditOpen] = useState(false);
   const [logoutOpen, setLogoutOpen] = useState(false);
-
   const [logoutUser, { isLoading: isLoggingOut }] = useLogoutMutation();
 
   const [countryName, setCountryName] = useState("—");
@@ -46,7 +52,7 @@ export default function UserProfilePage() {
     }
   };
 
-  /* ───────────────── RESOLVE COUNTRY / STATE (ALWAYS CALLED) ───────────────── */
+  /* ───────────────── RESOLVE COUNTRY / STATE ───────────────── */
   useEffect(() => {
     let cancelled = false;
 
@@ -60,176 +66,293 @@ export default function UserProfilePage() {
       const { Country, State } = await importCSC();
       if (cancelled) return;
 
-      setCountryName(
-        Country.getCountryByCode(user.address.country)?.name ??
-          user.address.country,
-      );
+      const c = Country.getCountryByCode(user.address.country);
+      setCountryName(c?.name ?? user.address.country);
 
       if (user.address.state) {
-        setStateName(
-          State.getStateByCodeAndCountry(
-            user.address.state,
-            user.address.country,
-          )?.name ?? user.address.state,
+        const s = State.getStateByCodeAndCountry(
+          user.address.state,
+          user.address.country,
         );
+        setStateName(s?.name ?? user.address.state);
       } else {
         setStateName("—");
       }
     }
 
     resolveLocation();
-
     return () => {
       cancelled = true;
     };
   }, [user?.address?.country, user?.address?.state]);
 
-  /* ───────────────── SAFE EARLY RETURNS ───────────────── */
+  /* ───────────────── ANIMATION VARIANTS ───────────────── */
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
 
-  if (isLoading) {
-    return <UserProfileSkeleton />;
-  }
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+  };
 
+  if (isLoading) return <UserProfileSkeleton />;
   if (isError) {
     return (
-      <section className="py-20 text-center text-destructive">
-        Failed to load profile.
-      </section>
+      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
+        <div className="p-4 rounded-full bg-destructive/10 text-destructive text-3xl">
+          ⚠️
+        </div>
+        <h2 className="text-xl font-semibold">Failed to load profile</h2>
+        <Button onClick={() => window.location.reload()}>Try Again</Button>
+      </div>
     );
   }
-
-  if (!user) {
-    return <UserProfileSkeleton />;
-  }
-
-  /* ───────────────── RENDER ───────────────── */
+  if (!user) return null;
 
   return (
-    <>
-      <section className="py-4 px-4 mt-[30px]">
-        <div className="max-w-5xl mx-auto space-y-10">
-          {/* ================= PROFILE HEADER ================= */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex flex-col sm:flex-row items-center gap-6 bg-card p-6 rounded-xl shadow-sm"
-          >
-            <div className="h-28 w-28 rounded-full overflow-hidden border bg-muted flex items-center justify-center">
-              {user.avatar ? (
-                <img
-                  src={user.avatar}
-                  alt={`${user.first_name ?? ""} ${user.last_name ?? ""}`}
-                  className="h-full w-full object-cover"
-                />
-              ) : (
-                <User className="h-12 w-12 text-muted-foreground" />
-              )}
-            </div>
-
-            <div className="text-center sm:text-left space-y-1">
-              <h1 className="text-2xl font-semibold">
-                {user.first_name ?? "—"} {user.last_name ?? ""}
-              </h1>
-
-              {user.username && (
-                <p className="text-sm text-muted-foreground">
-                  @{user.username}
-                </p>
-              )}
-
-              <div className="flex items-center justify-center sm:justify-start gap-2 text-sm text-muted-foreground">
-                <Mail size={14} />
-                {user.email}
-              </div>
-
-              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 mt-2 text-sm">
-                <span className="capitalize px-3 py-1 rounded-full bg-primary/10 text-primary">
-                  {user.account_type}
-                </span>
-
-                {user.email_verified && (
-                  <span className="flex items-center gap-1 text-green-600">
-                    <CheckCircle size={14} />
-                    Email verified
-                  </span>
-                )}
-
-                {user.payout_verified && (
-                  <span className="flex items-center gap-1 text-blue-600">
-                    <ShieldCheck size={14} />
-                    Payout verified
-                  </span>
-                )}
-              </div>
-            </div>
-          </motion.div>
-
-          {/* ================= ACCOUNT DETAILS ================= */}
-          <div className="bg-card p-6 rounded-xl space-y-4">
-            <h2 className="text-lg font-medium">Account Details</h2>
-            <Separator />
-
-            <div className="grid sm:grid-cols-2 gap-6 text-sm">
-              <Detail
-                icon={<Phone size={14} />}
-                label="Phone"
-                value={user.phone_number || "—"}
-              />
-              <Detail label="Country" value={countryName} />
-              <Detail
-                label="Joined"
-                value={format(new Date(user.created_at), "PPP")}
-              />
-              {user.updated_at && (
-                <Detail
-                  label="Last Updated"
-                  value={format(new Date(user.updated_at), "PPP p")}
-                />
-              )}
-            </div>
-          </div>
-
-          {/* ================= RATINGS ================= */}
-          <div className="bg-card p-6 rounded-xl space-y-4">
-            <h2 className="text-lg font-medium">Ratings & Reviews</h2>
-            <Separator />
-
-            <div className="grid sm:grid-cols-3 gap-6 text-sm">
-              <Detail
-                icon={<Star size={14} />}
-                label="Average Rating"
-                value={String(user.rating_average ?? "0.00")}
-              />
-              <Detail label="Ratings" value={`${user.rating_count ?? 0}`} />
-              <Detail label="Reviews" value={`${user.review_count ?? 0}`} />
-            </div>
-          </div>
-
-          {/* ================= ADDRESS ================= */}
-          {user.address && (
-            <div className="bg-card p-6 rounded-xl space-y-4">
-              <h2 className="text-lg font-medium flex items-center gap-2">
-                <MapPin size={18} />
-                Address
-              </h2>
-              <Separator />
-              <p className="text-sm font-medium">
-                {user.address.city}, {stateName}, {countryName}
-              </p>
-            </div>
-          )}
-
-          {/* ================= ACTIONS ================= */}
-          <div className="flex flex-wrap gap-4">
-            <Button variant="outline" onClick={() => setEditOpen(true)}>
-              Edit Profile
-            </Button>
-            <Button variant="destructive" onClick={() => setLogoutOpen(true)}>
-              Logout
-            </Button>
-          </div>
+    <main className="min-h-screen bg-muted/30 pb-20">
+      {/* ================= BANNER SECTION ================= */}
+      <div className="relative h-64 md:h-80 bg-gradient-to-br from-primary via-primary/90 to-emerald-600 overflow-hidden">
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_20%_20%,_rgba(255,255,255,0.4)_0%,_transparent_50%)]" />
         </div>
-      </section>
+        <motion.div
+          initial={{ scale: 1.2, opacity: 0 }}
+          animate={{ scale: 1, opacity: 0.1 }}
+          transition={{ duration: 1.5 }}
+          className="absolute -right-20 -bottom-20 w-96 h-96 bg-white rounded-full blur-3xl"
+        />
+      </div>
+
+      <div className="max-w-6xl mx-auto px-4 -mt-32 md:-mt-40 relative z-10">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="grid grid-cols-1 lg:grid-cols-12 gap-8"
+        >
+          {/* ================= LEFT COLUMN: PERSONAL CARD ================= */}
+          <div className="lg:col-span-4 space-y-6">
+            <motion.div variants={itemVariants}>
+              <Card className="rounded-[2.5rem] border-none shadow-2xl overflow-hidden bg-card/80 backdrop-blur-xl">
+                <CardContent className="p-8 flex flex-col items-center text-center">
+                  <div className="relative mb-6">
+                    <Avatar className="h-32 w-32 md:h-40 md:w-40 border-4 border-background shadow-xl">
+                      <AvatarImage src={user.avatar || undefined} />
+                      <AvatarFallback className="bg-primary/10 text-primary text-4xl">
+                        {user.first_name?.[0]}
+                        {user.last_name?.[0]}
+                      </AvatarFallback>
+                    </Avatar>
+                    {user.email_verified && (
+                      <div className="absolute bottom-2 right-2 p-1.5 bg-background rounded-full shadow-lg">
+                        <CheckCircle className="h-5 w-5 text-green-500 fill-green-500/10" />
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="space-y-1">
+                    <h1 className="text-2xl font-bold tracking-tight">
+                      {user.first_name} {user.last_name}
+                    </h1>
+                    <p className="text-muted-foreground font-medium">
+                      @{user.username || "user"}
+                    </p>
+                  </div>
+
+                  <div className="flex flex-wrap items-center justify-center gap-2 mt-4">
+                    <Badge
+                      variant="secondary"
+                      className="px-3 py-1 rounded-full capitalize bg-primary/10 text-primary border-none"
+                    >
+                      {user.account_type}
+                    </Badge>
+                    {user.payout_verified && (
+                      <Badge
+                        variant="outline"
+                        className="px-3 py-1 rounded-full gap-1 text-blue-600 border-blue-200 bg-blue-50"
+                      >
+                        <ShieldCheck size={12} />
+                        Verified Payout
+                      </Badge>
+                    )}
+                  </div>
+
+                  <Separator className="my-8 opacity-50" />
+
+                  <div className="w-full space-y-4">
+                    <Button
+                      className="w-full rounded-2xl h-12 font-semibold shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all gap-2"
+                      onClick={() => setEditOpen(true)}
+                    >
+                      <Settings className="h-4 w-4" />
+                      Edit Profile
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="w-full rounded-2xl h-12 font-semibold hover:bg-destructive/5 hover:text-destructive hover:border-destructive/20 transition-all gap-2"
+                      onClick={() => setLogoutOpen(true)}
+                    >
+                      <LogOut className="h-4 w-4" />
+                      Logout
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            {/* QUICK STATS */}
+            <motion.div variants={itemVariants}>
+              <Card className="rounded-3xl border-none shadow-xl bg-card/80 backdrop-blur-xl">
+                <CardContent className="p-6">
+                  <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4">
+                    Member Overview
+                  </h3>
+                  <div className="space-y-4 text-sm">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3 text-muted-foreground">
+                        <Calendar className="h-4 w-4" />
+                        Joined
+                      </div>
+                      <span className="font-semibold">
+                        {format(new Date(user.created_at), "MMM yyyy")}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3 text-muted-foreground">
+                        <Star className="h-4 w-4 text-orange-400" />
+                        Rating
+                      </div>
+                      <span className="font-semibold flex items-center gap-1">
+                        {user.rating_average || "0.0"}
+                        <span className="text-xs text-muted-foreground font-normal">
+                          ({user.rating_count || 0})
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </div>
+
+          {/* ================= RIGHT COLUMN: CONTENT ================= */}
+          <div className="lg:col-span-8 space-y-8">
+            <motion.div variants={itemVariants}>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Contact Information */}
+                <ProfileSection
+                  title="Contact Information"
+                  icon={<Mail className="text-primary" />}
+                >
+                  <DetailItem
+                    label="Email Address"
+                    value={user.email}
+                    icon={<Mail size={14} />}
+                  />
+                  <DetailItem
+                    label="Phone Number"
+                    value={user.phone_number || "—"}
+                    icon={<Phone size={14} />}
+                  />
+                </ProfileSection>
+
+                {/* Location Information */}
+                <ProfileSection
+                  title="Location"
+                  icon={<Globe className="text-primary" />}
+                >
+                  <DetailItem
+                    label="Country"
+                    value={countryName}
+                    icon={<Briefcase size={14} />}
+                  />
+                  <DetailItem
+                    label="City & State"
+                    value={`${user.address?.city || "—"}, ${stateName}`}
+                    icon={<MapPin size={14} />}
+                  />
+                </ProfileSection>
+              </div>
+            </motion.div>
+
+            <motion.div variants={itemVariants}>
+              <Card className="rounded-3xl border-none shadow-lg overflow-hidden">
+                <div className="p-6 border-b bg-muted/30">
+                  <h3 className="text-lg font-bold flex items-center gap-2">
+                    <MapPin className="h-5 w-5 text-primary" />
+                    Office Address
+                  </h3>
+                </div>
+                <CardContent className="p-8">
+                  {user.address ? (
+                    <div className="flex items-start gap-4 text-left">
+                      <div className="p-3 rounded-2xl bg-primary/10 text-primary shrink-0">
+                        <MapPin className="h-6 w-6" />
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-lg font-medium leading-tight">
+                          {user.address.street}
+                        </p>
+                        <p className="text-muted-foreground">
+                          {user.address.city}, {stateName}{" "}
+                          {user.address.postal_code}
+                        </p>
+                        <p className="text-muted-foreground font-medium uppercase text-xs tracking-widest mt-2">
+                          {countryName}
+                        </p>
+                      </div>
+                    </div>
+                  ) : (
+                    <p className="text-muted-foreground italic text-left">
+                      No address provided yet.
+                    </p>
+                  )}
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            {/* PERFORMANCE SECTION */}
+            <motion.div variants={itemVariants}>
+              <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-[2rem] p-8 text-white shadow-2xl relative overflow-hidden group">
+                <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-110 transition-transform duration-500">
+                  <Star size={120} />
+                </div>
+
+                <h3 className="text-xl font-bold mb-8 flex items-center gap-3">
+                  <ShieldCheck className="text-primary h-6 w-6" />
+                  Performance Metrics
+                </h3>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 relative z-10">
+                  <StatCard
+                    label="Average Rating"
+                    value={String(user.rating_average || "0.0")}
+                    subtext="From client reviews"
+                  />
+                  <StatCard
+                    label="Total Reviews"
+                    value={String(user.review_count || "0")}
+                    subtext="Across all products"
+                  />
+                  <StatCard
+                    label="Total Sales"
+                    value="—"
+                    subtext="In the last 30 days"
+                  />
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </motion.div>
+      </div>
 
       <EditProfileModal
         open={editOpen}
@@ -243,47 +366,97 @@ export default function UserProfilePage() {
         onConfirm={handleLogout}
         isLoading={isLoggingOut}
       />
-    </>
+    </main>
   );
 }
 
-/* ================= SHARED DETAIL COMPONENT ================= */
+/* ───────────────── SUB-COMPONENTS ───────────────── */
 
-function Detail({
+function ProfileSection({
+  title,
+  icon,
+  children,
+}: {
+  title: string;
+  icon: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <Card className="rounded-3xl border-none shadow-lg overflow-hidden h-full">
+      <div className="px-6 py-4 border-b bg-muted/30 flex items-center justify-between">
+        <h3 className="font-bold flex items-center gap-2">
+          {icon}
+          {title}
+        </h3>
+        <ChevronRight className="h-4 w-4 text-muted-foreground" />
+      </div>
+      <CardContent className="p-6 space-y-5">{children}</CardContent>
+    </Card>
+  );
+}
+
+function DetailItem({
   label,
   value,
   icon,
 }: {
   label: string;
   value: string;
-  icon?: React.ReactNode;
+  icon: React.ReactNode;
 }) {
   return (
-    <div className="space-y-1">
-      <p className="text-muted-foreground text-xs flex items-center gap-1">
+    <div className="flex items-start gap-3 text-left">
+      <div className="mt-1 p-1.5 rounded-lg bg-muted text-muted-foreground shrink-0">
         {icon}
-        {label}
-      </p>
-      <p className="font-medium">{value}</p>
+      </div>
+      <div className="space-y-0.5">
+        <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">
+          {label}
+        </p>
+        <p className="text-sm font-semibold">{value}</p>
+      </div>
     </div>
   );
 }
 
-/* ================= SKELETON ================= */
+function StatCard({
+  label,
+  value,
+  subtext,
+}: {
+  label: string;
+  value: string;
+  subtext: string;
+}) {
+  return (
+    <div className="space-y-2">
+      <p className="text-slate-400 text-xs uppercase font-bold tracking-widest">
+        {label}
+      </p>
+      <p className="text-4xl font-extrabold text-primary">{value}</p>
+      <p className="text-slate-400 text-[10px] italic">{subtext}</p>
+    </div>
+  );
+}
+
+/* ───────────────── SKELETON ───────────────── */
 
 function UserProfileSkeleton() {
   return (
-    <section className="py-4 px-4">
-      <div className="max-w-5xl mx-auto space-y-10">
-        <div className="flex flex-col sm:flex-row items-center gap-6 bg-card p-6 rounded-xl">
-          <Skeleton className="h-28 w-28 rounded-full" />
-          <div className="flex-1 space-y-2">
-            <Skeleton className="h-6 w-48" />
-            <Skeleton className="h-4 w-32" />
-            <Skeleton className="h-4 w-56" />
+    <div className="min-h-screen bg-muted/30 pb-20">
+      <div className="h-64 md:h-80 bg-muted animate-pulse" />
+      <div className="max-w-6xl mx-auto px-4 -mt-32 md:-mt-40 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div className="lg:col-span-4">
+          <Skeleton className="h-[500px] w-full rounded-[2.5rem]" />
+        </div>
+        <div className="lg:col-span-8 space-y-6">
+          <div className="grid grid-cols-2 gap-6">
+            <Skeleton className="h-48 rounded-3xl" />
+            <Skeleton className="h-48 rounded-3xl" />
           </div>
+          <Skeleton className="h-64 rounded-3xl" />
         </div>
       </div>
-    </section>
+    </div>
   );
 }

@@ -62,14 +62,14 @@ export default function SearchResultsPage() {
   const pagination = data?.data.pagination;
 
   return (
-    <section className="max-w-[1480px] mx-auto px-4 py-8">
+    <section className=" mx-auto px-4 py-8">
       {/* Header */}
       <SearchResultsHeader
         totalResults={pagination?.total}
         products={products}
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-4 mt-4">
+      <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-8 mt-6">
         {/* Sidebar */}
         <SearchFiltersSidebar products={products} />
 

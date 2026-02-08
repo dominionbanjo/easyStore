@@ -5,18 +5,19 @@ import {
   Filter as FilterIcon,
   RotateCcw,
   ChevronDown,
-  Minus,
   Check,
+  X,
+  Star as StarIcon,
 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 import { Slider } from "@/components/ui/slider";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
+
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
-import { FormInput } from "@/components/shared/form/FormInput";
+import { FormPriceInput } from "@/components/shared/form/FormPriceInput";
 import { FormSelect } from "@/components/shared/form/FormSelect";
 import type { IProduct } from "@/types/product/productTypes";
 
@@ -69,17 +70,27 @@ export function SearchFiltersSidebar({
 }: SearchFiltersProps) {
   return (
     <div className={cn("hidden lg:block w-full space-y-6", className)}>
-      <div className="bg-card border rounded-xl shadow-sm overflow-hidden sticky top-24">
-        <div className="p-4 bg-muted/30 border-b flex items-center justify-between">
-          <h3 className="font-semibold flex items-center gap-2">
-            <FilterIcon className="h-4 w-4" /> Filters
-          </h3>
+      <motion.div
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className="bg-card/50 backdrop-blur-md border rounded-[2rem] shadow-2xl shadow-primary/5 overflow-hidden sticky top-24"
+      >
+        <div className="p-6 bg-primary/[0.03] border-b border-primary/5 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-xl bg-primary/10">
+              <FilterIcon className="h-4 w-4 text-primary" />
+            </div>
+            <h3 className="font-extrabold text-base tracking-tight text-foreground">
+              Filters
+            </h3>
+          </div>
           <ResetButton />
         </div>
-        <div className="p-3 space-y-0 max-h-[calc(100vh-140px)] overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-muted-foreground/20 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-muted-foreground/40">
+        <div className="max-h-[calc(100vh-180px)] overflow-y-auto custom-scrollbar">
           <FilterContent products={products} />
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
@@ -109,27 +120,45 @@ export function MobileSearchFilters({
         <Button
           variant="outline"
           size="sm"
-          className="h-9 gap-2 lg:hidden border-dashed"
+          className="h-11 gap-3 lg:hidden rounded-2xl border-primary/10 bg-card hover:bg-primary/5 hover:border-primary/30 transition-all font-bold text-xs shadow-sm active:scale-95"
         >
-          <FilterIcon className="h-4 w-4" />
-          Filter
+          <FilterIcon className="h-4 w-4 text-primary" />
+          Refine Results
           {activeCount > 0 && (
             <Badge
-              variant="secondary"
-              className="px-1.5 h-5 min-w-5 flex items-center justify-center rounded-full text-[10px] ml-1"
+              variant="default"
+              className="px-2 h-5 min-w-5 flex items-center justify-center rounded-lg text-[10px] ml-0.5 bg-primary text-white border-none shadow-md shadow-primary/30"
             >
               {activeCount}
             </Badge>
           )}
         </Button>
       </DrawerTrigger>
-      <DrawerContent className="max-h-[85vh]">
-        <DrawerHeader className="text-left">
-          <DrawerTitle>Filter Products</DrawerTitle>
-          <DrawerDescription>Refine your search results.</DrawerDescription>
+      <DrawerContent className="max-h-[92vh] rounded-t-[3rem] border-t-0 shadow-2xl bg-card/95 backdrop-blur-xl">
+        <div className="mx-auto w-12 h-1.5 rounded-full bg-muted/30 mt-3" />
+        <DrawerHeader className="text-left px-8 pt-6 pb-6 border-b border-primary/5">
+          <div className="flex items-center justify-between w-full">
+            <div>
+              <DrawerTitle className="text-2xl font-black flex items-center gap-3 tracking-tighter">
+                Filters
+              </DrawerTitle>
+              <DrawerDescription className="text-xs font-bold text-muted-foreground/50 uppercase tracking-widest mt-1">
+                Customize your view
+              </DrawerDescription>
+            </div>
+            <DrawerClose asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="rounded-full h-10 w-10 bg-muted/20"
+              >
+                <X size={18} />
+              </Button>
+            </DrawerClose>
+          </div>
         </DrawerHeader>
 
-        <div className="py-2 overflow-y-auto custom-scrollbar flex-1">
+        <div className="overflow-y-auto custom-scrollbar flex-1">
           <FilterContent
             mobile
             products={products}
@@ -137,12 +166,15 @@ export function MobileSearchFilters({
           />
         </div>
 
-        <DrawerFooter className="pt-2 pb-8 sm:pb-4 border-t bg-background">
-          <div className="flex gap-3">
-            <ResetButton onReset={() => setIsOpen(false)} className="flex-1" />
+        <DrawerFooter className="pt-6 pb-12 border-t border-primary/5 bg-background/50 backdrop-blur-md px-8">
+          <div className="flex gap-4">
+            <ResetButton
+              onReset={() => setIsOpen(false)}
+              className="flex-1 h-14 rounded-2xl text-sm font-black border-2 border-muted hover:bg-muted/50 transition-all uppercase tracking-widest"
+            />
             <DrawerClose asChild>
-              <Button className="flex-1 shadow-lg shadow-primary/20">
-                Show Results
+              <Button className="flex-[1.5] h-14 rounded-2xl shadow-2xl shadow-primary/30 font-black tracking-widest uppercase transition-all hover:scale-[1.02] active:scale-[0.98] text-white">
+                Show {products.length} Items
               </Button>
             </DrawerClose>
           </div>
@@ -239,6 +271,23 @@ function FilterContent({
     };
   }, [products]);
 
+  /* ───────────────── ANIMATION VARIANTS ───────────────── */
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 10 },
+    visible: { opacity: 1, y: 0 },
+  };
+
   const methods = useForm<FilterForm>({
     defaultValues: {
       minPrice: Number(params.get("minPrice")) || 0,
@@ -252,12 +301,6 @@ function FilterContent({
 
   const { setValue, watch } = methods;
 
-  // Local state for slider to avoid lag
-  const [priceRange, setPriceRange] = useState([
-    Number(params.get("minPrice")) || 0,
-    Number(params.get("maxPrice")) || MAX_PRICE_RANGE,
-  ]);
-
   const selectedSizes = watch("sizes");
   const selectedColors = watch("colors");
   const watchedMinPrice = watch("minPrice");
@@ -267,7 +310,6 @@ function FilterContent({
   useEffect(() => {
     const min = Number(params.get("minPrice")) || 0;
     const max = Number(params.get("maxPrice")) || MAX_PRICE_RANGE;
-    setPriceRange([min, max]);
     setValue("minPrice", min);
     setValue("maxPrice", max);
     setValue("state", params.get("state") || "all");
@@ -330,189 +372,242 @@ function FilterContent({
 
   return (
     <FormProvider {...methods}>
-      <div className={cn("space-y-0", mobile ? "touch-action-pan-y" : "")}>
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className={cn("space-y-0", mobile ? "touch-action-pan-y" : "")}
+      >
         {/* Price Range */}
-        <Section title="Price Range" defaultOpen>
-          <div className="pt-2 pb-2 px-1">
-            <Slider
-              defaultValue={[0, MAX_PRICE_RANGE]}
-              value={priceRange}
-              max={MAX_PRICE_RANGE}
-              step={500}
-              minStepsBetweenThumbs={1}
-              onValueChange={(val) => {
-                setPriceRange(val);
-                setValue("minPrice", val[0]);
-                setValue("maxPrice", val[1]);
-              }}
-              onValueCommit={handlePriceCommit}
-              className="mb-8"
-            />
-            <div className="flex items-center gap-0">
-              <div className="flex-1">
-                <FormInput
-                  name="minPrice"
-                  type="number"
-                  placeholder="Min"
-                  className="h-10"
+        <motion.div variants={itemVariants}>
+          <Section
+            title="Price Range"
+            defaultOpen
+            isActive={watchedMinPrice > 0 || watchedMaxPrice < MAX_PRICE_RANGE}
+            onClear={() => {
+              setValue("minPrice", 0);
+              setValue("maxPrice", MAX_PRICE_RANGE);
+              handlePriceCommit([0, MAX_PRICE_RANGE]);
+            }}
+          >
+            <div className="space-y-6">
+              <div className="px-1">
+                <Slider
+                  max={MAX_PRICE_RANGE}
+                  step={100}
+                  value={[watchedMinPrice, watchedMaxPrice]}
+                  onValueChange={(val) => {
+                    setValue("minPrice", val[0]);
+                    setValue("maxPrice", val[1]);
+                  }}
+                  onValueCommit={handlePriceCommit}
+                  className="my-4"
                 />
               </div>
-              <Minus className="h-3 w-3 text-muted-foreground" />
-              <div className="flex-1">
-                <FormInput
-                  name="maxPrice"
-                  type="number"
-                  placeholder="Max"
-                  className="h-10"
-                />
+
+              <div className="grid grid-cols-2 gap-2">
+                <div className="relative">
+                  <FormPriceInput
+                    name="minPrice"
+                    placeholder="Min"
+                    className="h-9"
+                    icon={<span className="text-xs font-bold">₦</span>}
+                  />
+                </div>
+                <div className="relative">
+                  <FormPriceInput
+                    name="maxPrice"
+                    placeholder="Max"
+                    className="h-9"
+                    icon={<span className="text-xs font-bold">₦</span>}
+                  />
+                </div>
               </div>
-            </div>
-            {/* Apply button for manual input updates */}
-            <div className="mt-4 flex justify-end">
+
               <Button
-                size="lg"
-                variant="outline"
-                className="h-7 text-xs bg-primary text-white "
+                className="w-full h-10 rounded-xl font-semibold bg-primary text-white shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all text-xs"
                 onClick={() =>
                   handlePriceCommit([watchedMinPrice, watchedMaxPrice])
                 }
               >
-                Apply Price
+                Apply Filter
               </Button>
             </div>
-          </div>
-        </Section>
+          </Section>
+        </motion.div>
 
         {/* Location (State Only) */}
-        <Section title="Location" defaultOpen>
-          <div className="space-y-3">
-            <FormSelect
-              name="state"
-              label="State"
-              options={[{ label: "All States", value: "all" }, ...stateOptions]}
-              placeholder="Select State"
-            />
-            {/* State listener */}
-            <EffectListener
-              val={methods.watch("state")}
-              onChange={(val) => updateParam("state", val === "all" ? "" : val)}
-            />
-          </div>
-        </Section>
+        <motion.div variants={itemVariants}>
+          <Section
+            title="Location"
+            defaultOpen
+            isActive={
+              methods.watch("state") !== "all" && !!methods.watch("state")
+            }
+            onClear={() => {
+              setValue("state", "all");
+              updateParam("state", "");
+            }}
+          >
+            <div className="space-y-3">
+              <FormSelect
+                name="state"
+                label="State"
+                options={[
+                  { label: "All States", value: "all" },
+                  ...stateOptions,
+                ]}
+                placeholder="Select State"
+              />
+              <EffectListener
+                val={methods.watch("state")}
+                onChange={(val) =>
+                  updateParam("state", val === "all" ? "" : val)
+                }
+              />
+            </div>
+          </Section>
+        </motion.div>
 
         {/* Ratings */}
-        <Section title="Rating">
-          <div className="space-y-3">
-            {RATINGS.map((r) => (
-              <div
-                key={r}
-                className="flex items-center space-x-2 group cursor-pointer"
-                onClick={() => {
-                  const current = params.get("rating");
-                  updateParam(
-                    "rating",
-                    current === String(r) ? undefined : String(r),
-                  );
-                }}
-              >
-                <Checkbox
-                  id={`rating-${r}`}
-                  checked={params.get("rating") === String(r)}
-                  onCheckedChange={() => {}}
-                  className="pointer-events-none"
-                />
-                <Label
-                  htmlFor={`rating-${r}`}
-                  className="text-sm font-normal flex items-center gap-2 cursor-pointer w-full group-hover:bg-muted/50 p-1 rounded-md transition-colors pointer-events-none"
-                >
-                  <div className="flex text-amber-400">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <span
-                        key={i}
-                        className={i < r ? "fill-current" : "text-muted/20"}
-                      >
-                        ★
-                      </span>
-                    ))}
-                  </div>
-                </Label>
-              </div>
-            ))}
-          </div>
-        </Section>
+        <motion.div variants={itemVariants}>
+          <Section
+            title="Rating"
+            isActive={!!params.get("rating")}
+            onClear={() => updateParam("rating", undefined)}
+          >
+            <div className="grid grid-cols-2 gap-2">
+              {RATINGS.map((r) => {
+                const isSelected = params.get("rating") === String(r);
+                return (
+                  <button
+                    key={r}
+                    type="button"
+                    onClick={() =>
+                      updateParam("rating", isSelected ? undefined : String(r))
+                    }
+                    className={cn(
+                      "flex items-center justify-center gap-1.5 p-2 rounded-xl border transition-all text-xs font-bold",
+                      isSelected
+                        ? "bg-primary text-white border-primary shadow-lg shadow-primary/20 py-2"
+                        : "bg-white text-muted-foreground border-border/50 hover:bg-muted/30",
+                    )}
+                  >
+                    <StarIcon
+                      size={12}
+                      className={cn(
+                        isSelected
+                          ? "fill-white"
+                          : "fill-amber-400 text-amber-400",
+                      )}
+                    />
+                    {r}+ Stars
+                  </button>
+                );
+              })}
+            </div>
+          </Section>
+        </motion.div>
 
         {/* Sizes */}
-        <Section title="Sizes">
-          {availableSizes.length === 0 && (
-            <p className="text-xs text-muted-foreground italic">
-              No sizes available in results
-            </p>
-          )}
-          <div className="flex flex-wrap gap-2">
-            {availableSizes.map((size) => {
-              const isSelected = selectedSizes.includes(size);
-              return (
-                <div
-                  key={size}
-                  onClick={() => toggleArrayItem("sizes", size, selectedSizes)}
-                  className={cn(
-                    "cursor-pointer text-xs font-medium border rounded-md h-9 min-w-[36px] px-2 flex items-center justify-center transition-all hover:border-primary/50",
-                    isSelected
-                      ? "bg-primary text-primary-foreground border-primary shadow-sm"
-                      : "bg-background text-foreground hover:bg-muted/50",
-                  )}
-                >
-                  {size}
-                </div>
-              );
-            })}
-          </div>
-        </Section>
+        <motion.div variants={itemVariants}>
+          <Section
+            title="Sizes"
+            isActive={selectedSizes.length > 0}
+            onClear={() => {
+              setValue("sizes", []);
+              updateParam("sizes", undefined);
+            }}
+          >
+            {availableSizes.length === 0 && (
+              <p className="text-[10px] text-muted-foreground/50 italic py-2">
+                No sizes available in results
+              </p>
+            )}
+            <div className="flex flex-wrap gap-2">
+              {availableSizes.map((size) => {
+                const isSelected = selectedSizes.includes(size);
+                return (
+                  <div
+                    key={size}
+                    onClick={() =>
+                      toggleArrayItem("sizes", size, selectedSizes)
+                    }
+                    className={cn(
+                      "cursor-pointer text-[10px] font-black uppercase border rounded-xl h-10 min-w-[44px] px-3 flex items-center justify-center transition-all",
+                      isSelected
+                        ? "bg-primary text-white border-primary shadow-lg shadow-primary/20"
+                        : "bg-white text-muted-foreground border-border/50 hover:border-primary/30 hover:bg-primary/[0.02]",
+                    )}
+                  >
+                    {size}
+                  </div>
+                );
+              })}
+            </div>
+          </Section>
+        </motion.div>
 
         {/* Colors */}
-        <Section title="Colors">
-          {availableColors.length === 0 && (
-            <p className="text-xs text-muted-foreground italic">
-              No colors available in results
-            </p>
-          )}
-          <div className="grid grid-cols-5 gap-y-3 gap-x-2">
-            {availableColors.map((color) => {
-              const isSelected = selectedColors.includes(color.value);
-              const isWhite = color.value.toLowerCase() === "white";
-              return (
-                <div
-                  key={color.value}
-                  onClick={() =>
-                    toggleArrayItem("colors", color.value, selectedColors)
-                  }
-                  className="flex flex-col items-center gap-1.5 cursor-pointer group"
-                >
+        <motion.div variants={itemVariants}>
+          <Section
+            title="Colors"
+            isActive={selectedColors.length > 0}
+            onClear={() => {
+              setValue("colors", []);
+              updateParam("colors", undefined);
+            }}
+          >
+            {availableColors.length === 0 && (
+              <p className="text-[10px] text-muted-foreground/50 italic py-2">
+                No colors available in results
+              </p>
+            )}
+            <div className="grid grid-cols-5 gap-y-4 gap-x-2 pt-2">
+              {availableColors.map((color) => {
+                const isSelected = selectedColors.includes(color.value);
+                const isWhite = color.value.toLowerCase() === "white";
+                return (
                   <div
-                    className={cn(
-                      "w-8 h-8 rounded-full border shadow-sm flex items-center justify-center transition-all group-hover:scale-110 relative",
-                      isSelected ? "ring-2 ring-primary ring-offset-2" : "",
-                    )}
-                    style={{ backgroundColor: color.hex }}
+                    key={color.value}
+                    onClick={() =>
+                      toggleArrayItem("colors", color.value, selectedColors)
+                    }
+                    className="flex flex-col items-center gap-2 cursor-pointer group"
                   >
-                    {isSelected && (
-                      <Check
-                        className={cn(
-                          "h-3 w-3",
-                          isWhite ? "text-black" : "text-white",
-                        )}
-                      />
-                    )}
+                    <div
+                      className={cn(
+                        "w-9 h-9 rounded-full border-2 border-transparent shadow-sm flex items-center justify-center transition-all group-hover:scale-110",
+                        isSelected
+                          ? "border-primary scale-110 shadow-lg shadow-primary/20"
+                          : "border-border/50",
+                      )}
+                      style={{ backgroundColor: color.hex }}
+                    >
+                      {isSelected && (
+                        <Check
+                          className={cn(
+                            "h-4 w-4",
+                            isWhite ? "text-black" : "text-white",
+                          )}
+                        />
+                      )}
+                    </div>
+                    <span
+                      className={cn(
+                        "text-[9px] font-bold truncate w-full text-center transition-colors uppercase tracking-tight",
+                        isSelected ? "text-primary" : "text-muted-foreground",
+                      )}
+                    >
+                      {color.label}
+                    </span>
                   </div>
-                  <span className="text-[10px] text-muted-foreground truncate w-full text-center group-hover:text-foreground transition-colors">
-                    {color.label}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-        </Section>
-      </div>
+                );
+              })}
+            </div>
+          </Section>
+        </motion.div>
+      </motion.div>
     </FormProvider>
   );
 }
@@ -543,37 +638,71 @@ function Section({
   title,
   children,
   defaultOpen = false,
+  isActive = false,
+  onClear,
 }: {
   title: string;
   children: React.ReactNode;
   defaultOpen?: boolean;
+  isActive?: boolean;
+  onClear?: () => void;
 }) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
-    <div className="border-b border-border/60 last:border-0">
-      <div
-        className="flex items-center justify-between py-4 px-4 group cursor-pointer select-none hover:bg-muted/30 transition-colors"
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        <h4 className="font-semibold text-[13px] uppercase tracking-wider text-muted-foreground group-hover:text-primary transition-colors">
-          {title}
-        </h4>
+    <div className="border-b border-primary/5 last:border-0 overflow-hidden">
+      <div className="flex items-center justify-between py-6 px-6 cursor-pointer select-none group hover:bg-primary/[0.01] transition-all">
         <div
-          className={cn(
-            "p-1 rounded-md text-muted-foreground/50 group-hover:text-primary transition-all",
-            isOpen ? "rotate-180" : "",
-          )}
+          className="flex-1 flex items-center gap-2"
+          onClick={() => setIsOpen(!isOpen)}
         >
-          <ChevronDown className="h-4 w-4" />
+          <h4 className="font-black text-[10px] uppercase tracking-[0.2em] text-muted-foreground/60 group-hover:text-primary transition-colors">
+            {title}
+          </h4>
+          <div
+            className={cn(
+              "h-1.5 w-1.5 rounded-full bg-primary transition-all duration-500",
+              isActive ? "opacity-100 scale-100" : "opacity-0 scale-0",
+            )}
+          />
+        </div>
+
+        <div className="flex items-center gap-2">
+          {isActive && onClear && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onClear();
+              }}
+              className="text-[9px] font-black uppercase tracking-tighter text-primary hover:text-primary/70 transition-colors bg-primary/10 px-2 py-1 rounded-lg"
+            >
+              Clear
+            </button>
+          )}
+          <div
+            onClick={() => setIsOpen(!isOpen)}
+            className={cn(
+              "p-1.5 rounded-xl text-muted-foreground/30 group-hover:bg-primary/10 group-hover:text-primary transition-all duration-300",
+              isOpen ? "rotate-180" : "",
+            )}
+          >
+            <ChevronDown className="h-4 w-4" />
+          </div>
         </div>
       </div>
 
-      {isOpen && (
-        <div className="px-4 pb-6 animate-in fade-in slide-in-from-top-2 duration-300 ease-out">
-          {children}
-        </div>
-      )}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: "circOut" }}
+          >
+            <div className="px-6 pb-8">{children}</div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

@@ -1,14 +1,18 @@
-import * as Dialog from "@radix-ui/react-dialog";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
-import { User } from "lucide-react";
+import { User, Camera, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FormInput } from "@/components/shared/form/FormInput";
 import { FormSelect } from "@/components/shared/form/FormSelect";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 import { useUpdateUserProfileMutation } from "@/services/userApi";
 import {
@@ -65,12 +69,33 @@ export function EditProfileModal({
     },
   });
 
-  const { handleSubmit, setValue, control } = form;
+  const { handleSubmit, control, reset, setValue } = form;
 
   /* ───────────────── WATCH DEPENDENCIES ───────────────── */
 
   const countryCode = useWatch({ name: "address.country", control });
   const stateCode = useWatch({ name: "address.state", control });
+
+  /* ───────────────── RESET ON OPEN ───────────────── */
+
+  useEffect(() => {
+    if (open && user) {
+      reset({
+        first_name: user.first_name ?? "",
+        last_name: user.last_name ?? "",
+        phone_number: user.phone_number ?? "",
+        username: user.username ?? "",
+        address: {
+          street: user.address?.street ?? "",
+          country: user.address?.country ?? "",
+          state: user.address?.state ?? "",
+          city: user.address?.city ?? "",
+          postal_code: user.address?.postal_code ?? "",
+        },
+      });
+      setAvatarPreview(user.avatar ?? null);
+    }
+  }, [open, user, reset]);
 
   /* ───────────────── LOAD COUNTRIES (ON OPEN) ───────────────── */
 
@@ -88,7 +113,7 @@ export function EditProfileModal({
     })();
   }, [open]);
 
-  /* ───────────────── LOAD STATES ───────────────── */
+  /* ───────────────── LOAD STATES & RESET CITY ───────────────── */
 
   useEffect(() => {
     if (!countryCode) {
@@ -99,19 +124,22 @@ export function EditProfileModal({
 
     (async () => {
       const { State } = await importCSC();
+      const states = State.getStatesOfCountry(countryCode);
       setStateOptions(
-        State.getStatesOfCountry(countryCode).map((s) => ({
+        states.map((s) => ({
           label: s.name,
           value: s.isoCode,
         })),
       );
     })();
 
+    // Only reset if the current value is not in the options or if it's a fresh change
+    // For simplicity, we reset when country changes
     setValue("address.state", "");
     setValue("address.city", "");
   }, [countryCode, setValue]);
 
-  /* ───────────────── LOAD CITIES ───────────────── */
+  /* ───────────────── LOAD CITIES & RESET CITY ───────────────── */
 
   useEffect(() => {
     if (!countryCode || !stateCode) {
@@ -121,8 +149,9 @@ export function EditProfileModal({
 
     (async () => {
       const { City } = await importCSC();
+      const cities = City.getCitiesOfState(countryCode, stateCode);
       setCityOptions(
-        City.getCitiesOfState(countryCode, stateCode).map((c) => ({
+        cities.map((c) => ({
           label: c.name,
           value: c.name,
         })),
@@ -172,112 +201,161 @@ export function EditProfileModal({
   /* ───────────────── UI ───────────────── */
 
   return (
-    <Dialog.Root open={open} onOpenChange={(v) => !v && onClose()}>
-      <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" />
+    <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
+      <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto custom-scrollbar p-0 gap-0">
+        <DialogHeader className="p-6 pb-0 border-b flex-row items-center justify-between space-y-0">
+          <DialogTitle className="text-xl font-semibold">
+            Edit Profile
+          </DialogTitle>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onClose}
+            className="rounded-full h-8 w-8"
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        </DialogHeader>
 
-        <Dialog.Content className="fixed inset-0 z-50 flex items-center justify-center px-4">
-          <Card className="w-full max-w-xl max-h-[90vh] overflow-y-auto rounded-2xl">
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle>Edit Profile</CardTitle>
-              <Dialog.Close asChild>
-                <button className="text-sm text-muted-foreground">✕</button>
-              </Dialog.Close>
-            </CardHeader>
-
-            <CardContent>
-              <FormProvider {...form}>
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-                  <div className="grid grid-cols-2 gap-4">
-                    <FormInput label="First Name" name="first_name" />
-                    <FormInput label="Last Name" name="last_name" />
-                  </div>
-
-                  <FormInput label="Phone Number" name="phone_number" />
-
-                  {/* AVATAR */}
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Profile Photo</label>
-                    <div className="flex items-center gap-4">
-                      <div className="h-20 w-20 rounded-full overflow-hidden border bg-muted flex items-center justify-center">
-                        {avatarPreview ? (
-                          <img
-                            src={avatarPreview}
-                            className="h-full w-full object-cover"
-                          />
-                        ) : (
-                          <User className="h-8 w-8 text-muted-foreground" />
-                        )}
-                      </div>
-
-                      <input
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        id="avatar-upload"
-                        onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          if (!file) return;
-                          setAvatarFile(file);
-                          setAvatarPreview(URL.createObjectURL(file));
-                        }}
+        <div className="p-6">
+          <FormProvider {...form}>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+              {/* Profile Photo Section */}
+              <div className="flex flex-col items-center gap-4 py-2">
+                <div className="relative group">
+                  <div className="h-32 w-32 rounded-full overflow-hidden border-4 border-background ring-2 ring-primary/20 bg-muted flex items-center justify-center transition-all group-hover:ring-primary/40 shadow-lg">
+                    {avatarPreview ? (
+                      <img
+                        src={avatarPreview}
+                        alt="Avatar preview"
+                        className="h-full w-full object-cover"
                       />
-
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={() =>
-                          document.getElementById("avatar-upload")?.click()
-                        }
-                      >
-                        Choose Photo
-                      </Button>
-                    </div>
+                    ) : (
+                      <User className="h-14 w-14 text-muted-foreground" />
+                    )}
                   </div>
-
-                  {/* ADDRESS */}
-                  <div className="space-y-3">
-                    <p className="text-sm font-semibold">Address</p>
-
-                    <FormInput label="Street" name="address.street" />
-
-                    <FormSelect
-                      label="Country"
-                      name="address.country"
-                      options={countryOptions}
+                  <label
+                    htmlFor="avatar-upload"
+                    className="absolute bottom-0 right-0 h-10 w-10 bg-primary text-primary-foreground rounded-full border-4 border-background flex items-center justify-center cursor-pointer hover:bg-primary/90 transition-colors shadow-md"
+                  >
+                    <Camera className="h-5 w-5" />
+                    <input
+                      type="file"
+                      id="avatar-upload"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        setAvatarFile(file);
+                        setAvatarPreview(URL.createObjectURL(file));
+                      }}
                     />
+                  </label>
+                </div>
+                <div className="text-center">
+                  <h3 className="font-medium">Profile Picture</h3>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    JPG, GIF or PNG. Max size 2MB.
+                  </p>
+                </div>
+              </div>
 
-                    <FormSelect
-                      label="State"
-                      name="address.state"
-                      options={stateOptions}
-                      disabled={!countryCode}
-                    />
+              {/* Personal Information */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 text-sm font-semibold text-primary uppercase tracking-wider">
+                  <span className="h-px bg-primary/20 flex-1" />
+                  Personal Information
+                  <span className="h-px bg-primary/20 flex-1" />
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <FormInput
+                    label="First Name"
+                    name="first_name"
+                    placeholder="John"
+                  />
+                  <FormInput
+                    label="Last Name"
+                    name="last_name"
+                    placeholder="Doe"
+                  />
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <FormInput
+                    label="Username"
+                    name="username"
+                    placeholder="johndoe"
+                  />
+                  <FormInput
+                    label="Phone Number"
+                    name="phone_number"
+                    placeholder="+1234567890"
+                  />
+                </div>
+              </div>
 
-                    <FormSelect
-                      label="City"
-                      name="address.city"
-                      options={cityOptions}
-                      disabled={!stateCode}
-                    />
+              {/* Address Section */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 text-sm font-semibold text-primary uppercase tracking-wider">
+                  <span className="h-px bg-primary/20 flex-1" />
+                  Shipping Address
+                  <span className="h-px bg-primary/20 flex-1" />
+                </div>
+                <FormInput
+                  label="Street Address"
+                  name="address.street"
+                  placeholder="123 Main St"
+                />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <FormSelect
+                    label="Country"
+                    name="address.country"
+                    options={countryOptions}
+                  />
+                  <FormSelect
+                    label="State"
+                    name="address.state"
+                    options={stateOptions}
+                    disabled={!countryCode}
+                  />
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <FormSelect
+                    label="City"
+                    name="address.city"
+                    options={cityOptions}
+                    disabled={!stateCode}
+                  />
+                  <FormInput
+                    label="Postal Code"
+                    name="address.postal_code"
+                    placeholder="10001"
+                  />
+                </div>
+              </div>
 
-                    <FormInput label="Postal Code" name="address.postal_code" />
-                  </div>
-
-                  <div className="flex gap-3">
-                    <Button type="button" variant="outline" onClick={onClose}>
-                      Cancel
-                    </Button>
-                    <Button type="submit" disabled={isLoading}>
-                      {isLoading ? "Saving..." : "Save Changes"}
-                    </Button>
-                  </div>
-                </form>
-              </FormProvider>
-            </CardContent>
-          </Card>
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+              <div className="flex items-center justify-end gap-3 pt-4 border-t">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={onClose}
+                  className="rounded-xl px-6"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  isLoading={isLoading}
+                  loadingText="Saving Changes..."
+                  className="rounded-xl px-8 bg-primary hover:bg-primary/90"
+                >
+                  Save Changes
+                </Button>
+              </div>
+            </form>
+          </FormProvider>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
