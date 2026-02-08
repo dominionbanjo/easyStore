@@ -1,5 +1,5 @@
 import { toast } from "sonner";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -36,6 +36,8 @@ import { PasswordStrengthMeter } from "../components/PasswordStrengthMeter";
 export default function SignupPage() {
   const navigate = useNavigate();
   const [registerUser, { isLoading }] = useRegisterMutation();
+  const [searchParams] = useSearchParams();
+  const role = searchParams.get("role");
 
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(SignupSchema),
@@ -46,6 +48,13 @@ export default function SignupPage() {
   });
 
   const { handleSubmit, watch, setValue } = form;
+
+  // Set role from query param
+  useEffect(() => {
+    if (role === "vendor") {
+      setValue("account_type", "vendor");
+    }
+  }, [role, setValue]);
 
   const accountType = watch("account_type");
   const agreeToTerms = watch("agree_to_terms");
