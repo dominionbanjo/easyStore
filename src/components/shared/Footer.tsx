@@ -70,6 +70,24 @@ export default function Footer() {
                   className="hover:text-primary transition-colors flex items-center gap-2 group"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-primary/0 group-hover:bg-primary transition-colors" />
+                  Marketplace
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to={WEBSITE_ROUTES.DISCOVERY}
+                  className="hover:text-primary transition-colors flex items-center gap-2 group"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary/0 group-hover:bg-primary transition-colors" />
+                  Discovery
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to={WEBSITE_ROUTES.FEATURED}
+                  className="hover:text-primary transition-colors flex items-center gap-2 group"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary/0 group-hover:bg-primary transition-colors" />
                   Featured Stores
                 </Link>
               </li>
@@ -84,7 +102,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  to="#"
+                  to={WEBSITE_ROUTES.TRENDING}
                   className="hover:text-primary transition-colors flex items-center gap-2 group"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-primary/0 group-hover:bg-primary transition-colors" />
@@ -93,7 +111,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  to="#"
+                  to={WEBSITE_ROUTES.NEW_ARRIVALS}
                   className="hover:text-primary transition-colors flex items-center gap-2 group"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-primary/0 group-hover:bg-primary transition-colors" />
@@ -118,7 +136,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  to="#"
+                  to={WEBSITE_ROUTES.CAREERS}
                   className="hover:text-primary transition-colors flex items-center gap-2 group"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-primary/0 group-hover:bg-primary transition-colors" />

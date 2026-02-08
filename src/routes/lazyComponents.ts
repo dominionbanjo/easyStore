@@ -77,6 +77,21 @@ export const PrivacyPolicyPage = lazy(
 export const TermsOfServicePage = lazy(
   () => import("@/modules/vendor/pages/TermsOfServicePage"),
 );
+export const CareersPage = lazy(
+  () => import("@/modules/website/pages/CareersPage"),
+);
+export const DiscoveryPage = lazy(
+  () => import("@/modules/website/pages/DiscoveryPage"),
+);
+export const FeaturedStoresPage = lazy(
+  () => import("@/modules/website/pages/FeaturedStoresPage"),
+);
+export const TrendingProductsPage = lazy(
+  () => import("@/modules/website/pages/TrendingProductsPage"),
+);
+export const NewArrivalsPage = lazy(
+  () => import("@/modules/website/pages/NewArrivalsPage"),
+);
 
 /* ───────────────── AUTH PAGES ───────────────── */
 

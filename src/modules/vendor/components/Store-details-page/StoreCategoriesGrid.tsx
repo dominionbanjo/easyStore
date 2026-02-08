@@ -58,13 +58,13 @@ export function StoreCategoriesGrid({
           whileHover={{ y: -5, scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           onClick={() => onSelect(cat)}
-          className="group relative h-32 flex flex-col items-center justify-center p-6 bg-white border border-border/50 rounded-[2.5rem] shadow-sm hover:shadow-xl hover:border-primary/20 transition-all duration-300"
+          className="group relative h-32 flex flex-col items-center justify-center p-6 bg-white dark:bg-neutral-900 border border-border/50 dark:border-white/5 rounded-[2.5rem] shadow-sm hover:shadow-xl hover:border-primary/20 transition-all duration-300"
         >
           <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-[2.5rem]" />
-          <div className="w-12 h-12 bg-primary/5 rounded-2xl flex items-center justify-center mb-3 group-hover:bg-primary/10 transition-colors">
-            <Layers className="w-6 h-6 text-primary" />
+          <div className="w-12 h-12 bg-primary/5 dark:bg-emerald-500/10 rounded-2xl flex items-center justify-center mb-3 group-hover:bg-primary/10 transition-colors">
+            <Layers className="w-6 h-6 text-primary dark:text-emerald-400" />
           </div>
-          <p className="font-bold text-foreground group-hover:text-primary transition-colors text-sm text-center line-clamp-1">
+          <p className="font-bold text-foreground group-hover:text-primary dark:group-hover:text-emerald-400 transition-colors text-sm text-center line-clamp-1">
             {cat.name}
           </p>
         </motion.button>

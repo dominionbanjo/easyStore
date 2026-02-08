@@ -13,6 +13,11 @@ export const WEBSITE_ROUTES = {
   CATEGORY_DETAILS: "/categories/:slug",
   PRODUCT_DETAILS: "/product/:slug",
   SEARCH: "/s",
+  CAREERS: "/careers",
+  DISCOVERY: "/discovery",
+  FEATURED: "/featured",
+  TRENDING: "/trending",
+  NEW_ARRIVALS: "/new-arrivals",
   NOT_FOUND: "*",
 } as const;
 
