@@ -234,7 +234,7 @@
 }
 /* Sonner Toast Customization */
 [data-sonner-toast] {
-  @apply rounded-2xl border-zinc-200 shadow-2xl backdrop-blur-xl transition-all duration-300 !important;
+  @apply rounded-2xl border-zinc-200 shadow-2xl backdrop-blur-xl transition-all duration-300;
 }
 
 /* Ensure dark mode background is applied correctly */
@@ -247,7 +247,7 @@
 
 /* Success Type Override */
 [data-sonner-toast][data-type="success"] {
-  @apply border-emerald-500/50 !important;
+  @apply border-emerald-500/50;
 }
 
 .dark [data-sonner-toast][data-type="success"] {
@@ -256,17 +256,17 @@
 }
 
 [data-sonner-toast][data-type="success"] [data-icon] {
-  @apply bg-primary text-white rounded-full p-1 w-6 h-6 flex items-center justify-center shadow-lg shadow-primary/20 !important;
+  @apply bg-primary text-white rounded-full p-1 w-6 h-6 flex items-center justify-center shadow-lg shadow-primary/20;
 }
 
 [data-sonner-toast][data-type="success"] [data-icon] svg {
-  @apply w-3.5 h-3.5 !important;
+  @apply w-3.5 h-3.5;
 }
 
 [data-sonner-toast] [data-title] {
-  @apply font-black tracking-tight text-sm !important;
+  @apply font-black tracking-tight text-sm;
 }
 
 [data-sonner-toast] [data-description] {
-  @apply font-medium opacity-80 text-xs !important;
+  @apply font-medium opacity-80 text-xs;
 }
