@@ -72,10 +72,10 @@ export const NotFoundPage = lazy(
   () => import("@/modules/website/pages/NotFoundPage"),
 );
 export const PrivacyPolicyPage = lazy(
-  () => import("@/modules/vendor/pages/PrivacyPolicyPage"),
+  () => import("@/modules/website/pages/PrivacyPolicyPage"),
 );
 export const TermsOfServicePage = lazy(
-  () => import("@/modules/vendor/pages/TermsOfServicePage"),
+  () => import("@/modules/website/pages/TermsOfServicePage"),
 );
 export const CareersPage = lazy(
   () => import("@/modules/website/pages/CareersPage"),

@@ -84,6 +84,17 @@ export const storeApi = apiManager.injectEndpoints({
       }),
       invalidatesTags: ["Store"],
     }),
+
+    /* ───────── GET VENDOR CUSTOMERS ───────── */
+    getVendorCustomers: builder.query<any, any>({
+      query: (params) => ({
+        url: "store-customers",
+        method: "GET",
+        params,
+      }),
+      transformResponse: (response: any) => response?.data || response,
+      providesTags: ["Store"],
+    }),
   }),
 });
 
@@ -108,4 +119,5 @@ export const {
   useLazyGetStoreCategoryProductsQuery,
 
   useCreateStoreMutation,
+  useGetVendorCustomersQuery,
 } = storeApi;
