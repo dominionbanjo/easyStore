@@ -51,6 +51,8 @@ export default function RelatedProductsGrid({
             >
               <ProductCard.Image />
               <ProductCard.Info />
+              <ProductCard.Footer />
+
               {/* <ProductCard.Actions /> */}
             </ProductCard.Root>
           );

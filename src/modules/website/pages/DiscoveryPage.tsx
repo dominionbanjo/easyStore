@@ -160,6 +160,7 @@ export default function DiscoveryPage() {
           </Link>
         </div>
         <motion.div
+          key={isFeaturedLoading ? "loading" : "loaded"}
           variants={container}
           initial="hidden"
           whileInView="show"
@@ -176,7 +177,7 @@ export default function DiscoveryPage() {
                   </div>
                 </div>
               ))
-            : featuredProducts?.data?.map((product) => (
+            : featuredProducts?.data?.items?.map((product) => (
                 <motion.div key={product.id} variants={item}>
                   <ProductGridCard data={product} />
                 </motion.div>
@@ -198,6 +199,7 @@ export default function DiscoveryPage() {
           </Link>
         </div>
         <motion.div
+          key={isTrendingLoading ? "loading" : "loaded"}
           variants={container}
           initial="hidden"
           whileInView="show"
@@ -236,6 +238,7 @@ export default function DiscoveryPage() {
           </Link>
         </div>
         <motion.div
+          key={isNewArrivalsLoading ? "loading" : "loaded"}
           variants={container}
           initial="hidden"
           whileInView="show"

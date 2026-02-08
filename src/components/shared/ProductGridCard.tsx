@@ -18,9 +18,11 @@ export default function ProductGridCard({
         typeof data.image === "string" ? data.image : data.image?.url || ""
       }
       name={data.name}
-      price={`$${data.price}`}
+      price={`₦${Number(data.price).toLocaleString("en-NG")}`}
       discountPrice={
-        data.discount_price ? `$${data.discount_price}` : undefined
+        data.on_sale && data.discount_price
+          ? `₦${Number(data.discount_price).toLocaleString("en-NG")}`
+          : undefined
       }
       category={data.category || "General"}
       rating={data.rating_average || 0}

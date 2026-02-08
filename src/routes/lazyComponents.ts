@@ -86,6 +86,9 @@ export const DiscoveryPage = lazy(
 export const FeaturedStoresPage = lazy(
   () => import("@/modules/website/pages/FeaturedStoresPage"),
 );
+export const FeaturedProductsPage = lazy(
+  () => import("@/modules/website/pages/FeaturedProductsPage"),
+);
 export const TrendingProductsPage = lazy(
   () => import("@/modules/website/pages/TrendingProductsPage"),
 );

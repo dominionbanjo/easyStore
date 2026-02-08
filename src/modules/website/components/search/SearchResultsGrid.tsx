@@ -101,9 +101,12 @@ export function SearchResultsGrid({
             isFavorite={product.is_in_wishlist}
             colors={product.colors}
             sizes={product.sizes}
+            vendor={product.store_name}
+            storeSlug={product.store_slug}
           >
             <ProductCard.Image />
             <ProductCard.Info />
+            <ProductCard.Footer />
           </ProductCard.Root>
         ))}
       </div>

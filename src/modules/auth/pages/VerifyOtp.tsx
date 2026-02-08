@@ -131,27 +131,17 @@ export default function VerifyOtpPage() {
           value={otp}
           onChange={setOtp}
           numInputs={6}
-          renderSeparator={<span className="w-3" />}
           renderInput={(props) => (
             <input
               {...props}
               className={cn(
+                "w-12 h-12 sm:w-14 sm:h-14 rounded-xl border border-border bg-background text-foreground text-xl font-semibold text-center focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all shadow-sm",
                 props.className,
-                "focus:outline-none focus:ring-2 focus:ring-primary/50",
               )}
+              style={{}} // Override default styles if any
             />
           )}
-          containerStyle="flex justify-center"
-          inputStyle={{
-            width: 44,
-            height: 44,
-            borderRadius: 12,
-            border: "1px solid hsl(var(--border))",
-            backgroundColor: "hsl(var(--muted))",
-            color: "hsl(var(--foreground))",
-            fontSize: 18,
-            fontWeight: 600,
-          }}
+          containerStyle="flex justify-center gap-2 sm:gap-3"
         />
 
         <Button
