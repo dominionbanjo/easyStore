@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 import {
   Dialog,
   DialogContent,
@@ -19,6 +20,12 @@ import {
   XCircle,
   Clock,
   User,
+  Mail,
+  MapPin,
+  Phone,
+  Loader2,
+  Copy,
+  Check,
 } from "lucide-react";
 import type { IOrder } from "@/services/ordersApi";
 import { useUpdateDeliveryStatusMutation } from "@/services/ordersApi";
@@ -31,12 +38,12 @@ interface OrderDetailsModalProps {
 }
 
 const deliveryStatuses = [
-  { value: "pending", label: "Pending", icon: Clock },
-  { value: "assigned", label: "Assigned", icon: User },
-  { value: "in_transit", label: "In Transit", icon: Truck },
-  { value: "delivered", label: "Delivered", icon: Package },
-  { value: "failed", label: "Failed", icon: XCircle },
-  { value: "returned", label: "Returned", icon: XCircle },
+  { value: "pending", label: "Pending", icon: Clock, rank: 0 },
+  { value: "assigned", label: "Assigned", icon: User, rank: 1 },
+  { value: "in_transit", label: "In Transit", icon: Truck, rank: 2 },
+  { value: "delivered", label: "Delivered", icon: Package, rank: 3 },
+  { value: "failed", label: "Failed", icon: XCircle, rank: 3 },
+  { value: "returned", label: "Returned", icon: XCircle, rank: 3 },
 ] as const;
 
 const getStatusColor = (status: string) => {
@@ -64,13 +71,27 @@ export function OrderDetailsModal({
   const [updateDeliveryStatus, { isLoading: isUpdating }] =
     useUpdateDeliveryStatusMutation();
   const [optimisticStatus, setOptimisticStatus] = useState<string | null>(null);
+  const [updatingStatus, setUpdatingStatus] = useState<string | null>(null);
+  const [isCopied, setIsCopied] = useState(false);
 
   // Reset optimistic status when order changes
   useEffect(() => {
     setOptimisticStatus(null);
+    setUpdatingStatus(null);
+    setIsCopied(false);
   }, [order?.id]);
 
   if (!order) return null;
+
+  const reference = order.payment_reference || order.id;
+  const displayRef = reference.slice(0, 8).toUpperCase();
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(reference);
+    toast.success("Reference copied to clipboard");
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), 2000);
+  };
 
   const handleStatusUpdate = async (newStatus: string) => {
     if (!order.delivery?.id) {
@@ -78,7 +99,8 @@ export function OrderDetailsModal({
       return;
     }
 
-    // Optimistic update
+    // Set side-effect status for loading and UI
+    setUpdatingStatus(newStatus);
     setOptimisticStatus(newStatus);
 
     try {
@@ -93,6 +115,8 @@ export function OrderDetailsModal({
       setOptimisticStatus(null);
 
       toast.error(error.message || "Failed to update delivery status");
+    } finally {
+      setUpdatingStatus(null);
     }
   };
 
@@ -107,8 +131,19 @@ export function OrderDetailsModal({
             <Package className="h-6 w-6 text-primary" />
             Order Details
           </DialogTitle>
-          <DialogDescription>
-            Order ID: #{order.id.slice(0, 8)}
+          <DialogDescription className="flex items-center gap-2">
+            Reference: #{displayRef}
+            <button
+              onClick={handleCopy}
+              className="p-1 hover:bg-accent rounded-md transition-colors text-muted-foreground"
+              title="Copy Full Reference"
+            >
+              {isCopied ? (
+                <Check className="h-3 w-3 text-emerald-600" />
+              ) : (
+                <Copy className="h-3 w-3" />
+              )}
+            </button>
           </DialogDescription>
         </DialogHeader>
 
@@ -178,9 +213,67 @@ export function OrderDetailsModal({
                   </Badge>
                 </div>
               </div>
-              <div className="absolute -right-6 -bottom-6 h-24 w-24 rounded-full bg-purple-500/5 blur-2xl transition-all group-hover:bg-purple-500/10" />
+              <div className="absolute -right-6 -bottom-6 h-24 w-24 rounded-full bg-purple-50/50 blur-2xl transition-all group-hover:bg-purple-500/10" />
             </div>
           </div>
+
+          {/* Buyer Information Section */}
+          {order.buyer && (
+            <div className="rounded-xl border bg-card p-5">
+              <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
+                <User className="h-5 w-5 text-primary" />
+                Customer Information
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-full overflow-hidden border bg-muted flex-shrink-0">
+                    {order.buyer.avatar ? (
+                      <img
+                        src={order.buyer.avatar}
+                        alt={order.buyer.first_name}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                        <User className="h-6 w-6" />
+                      </div>
+                    )}
+                  </div>
+                  <div>
+                    <p className="font-bold text-foreground">
+                      {order.buyer.first_name} {order.buyer.last_name}
+                    </p>
+                    <p className="text-xs text-muted-foreground uppercase tracking-wider font-medium">
+                      Customer Profile
+                    </p>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 text-sm">
+                    <Mail className="h-4 w-4 text-muted-foreground" />
+                    <a
+                      href={`mailto:${order.buyer.email}`}
+                      className="text-primary hover:underline font-medium"
+                    >
+                      {order.buyer.email}
+                    </a>
+                  </div>
+                  {order.buyer.phone_number && (
+                    <div className="flex items-center gap-2 text-sm">
+                      <Phone className="h-4 w-4 text-muted-foreground" />
+                      <a
+                        href={`tel:${order.buyer.phone_number}`}
+                        className="text-foreground font-medium"
+                      >
+                        {order.buyer.phone_number}
+                      </a>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Order Items */}
           <div>
@@ -342,6 +435,41 @@ export function OrderDetailsModal({
                 )}
               </div>
 
+              {/* Delivery Address Section */}
+              <div className="mt-6 p-4 rounded-xl bg-blue-50/30 border border-blue-100/50">
+                <div className="flex items-center gap-2 text-blue-700 mb-3">
+                  <MapPin className="h-4 w-4" />
+                  <h4 className="font-bold text-sm uppercase tracking-wider">
+                    Shipping Address
+                  </h4>
+                </div>
+                {order.delivery.address ? (
+                  <div className="ml-6 space-y-1">
+                    <p className="text-sm font-semibold text-gray-900 leading-relaxed">
+                      {order.delivery.address}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      {[
+                        order.delivery.city,
+                        order.delivery.state,
+                        order.delivery.postal_code,
+                      ]
+                        .filter(Boolean)
+                        .join(", ")}
+                    </p>
+                    {order.delivery.country && (
+                      <p className="text-sm text-gray-500 font-medium">
+                        {order.delivery.country}
+                      </p>
+                    )}
+                  </div>
+                ) : (
+                  <p className="ml-6 text-sm text-muted-foreground italic">
+                    No shipping address provided for this order.
+                  </p>
+                )}
+              </div>
+
               {/* Delivery Status Controls */}
               <div className="mt-6">
                 <h4 className="font-medium text-sm mb-3">
@@ -351,7 +479,19 @@ export function OrderDetailsModal({
                   {deliveryStatuses.map((status) => {
                     const Icon = status.icon;
                     const isCurrent = currentDeliveryStatus === status.value;
-                    const isDisabled = isUpdating;
+                    const isUpdatingThis =
+                      updatingStatus === status.value && isUpdating;
+
+                    // Get ranks for logic
+                    const currentRank =
+                      deliveryStatuses.find(
+                        (s) => s.value === currentDeliveryStatus,
+                      )?.rank ?? 0;
+                    const targetRank = status.rank;
+
+                    // Backward movement is disabled, and current status is disabled
+                    const isDisabled =
+                      isUpdating || isCurrent || targetRank < currentRank;
 
                     return (
                       <Button
@@ -360,12 +500,35 @@ export function OrderDetailsModal({
                         size="sm"
                         disabled={isDisabled}
                         onClick={() => handleStatusUpdate(status.value)}
-                        className="justify-start gap-2"
+                        className={cn(
+                          "justify-start gap-2 relative transition-all active:scale-95 overflow-hidden disabled:pointer-events-none",
+                          // When updating this specific button, avoid opacity reduction but dim it slightly
+                          isUpdatingThis &&
+                            "disabled:opacity-100 brightness-[0.92] saturate-[0.8]",
+                          // For other disabled buttons (backward or while updating), keep them slightly faded but recognizable
+                          !isUpdatingThis &&
+                            isDisabled &&
+                            "disabled:opacity-60 grayscale-[0.3]",
+                        )}
                       >
-                        <Icon className="h-4 w-4" />
-                        {status.label}
-                        {isCurrent && (
-                          <CheckCircle2 className="h-3 w-3 ml-auto" />
+                        {isUpdatingThis ? (
+                          <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                        ) : (
+                          <Icon className="h-4 w-4" />
+                        )}
+                        <span className="truncate">{status.label}</span>
+                        {isCurrent && !isUpdatingThis && (
+                          <CheckCircle2 className="h-3 w-3 ml-auto shrink-0" />
+                        )}
+                        {/* Progressive Background Indicator for Active Updating */}
+                        {isUpdatingThis && (
+                          <motion.div
+                            layoutId="loading-bar"
+                            className="absolute bottom-0 left-0 h-0.5 bg-white"
+                            initial={{ width: 0 }}
+                            animate={{ width: "100%" }}
+                            transition={{ duration: 1.5, repeat: Infinity }}
+                          />
                         )}
                       </Button>
                     );
@@ -389,11 +552,24 @@ export function OrderDetailsModal({
                 <span className="capitalize">{order.payment_method}</span>
               </div>
               {order.payment_reference && (
-                <div className="flex justify-between">
+                <div className="flex justify-between items-center group/ref">
                   <span className="text-muted-foreground">Reference</span>
-                  <span className="font-mono text-xs">
-                    {order.payment_reference}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-xs">
+                      {order.payment_reference}
+                    </span>
+                    <button
+                      onClick={handleCopy}
+                      className="p-1 hover:bg-accent rounded-md transition-colors text-muted-foreground"
+                      title="Copy Full Reference"
+                    >
+                      {isCopied ? (
+                        <Check className="h-3 w-3 text-emerald-600" />
+                      ) : (
+                        <Copy className="h-3 w-3" />
+                      )}
+                    </button>
+                  </div>
                 </div>
               )}
               <div className="flex justify-between">

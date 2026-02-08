@@ -46,20 +46,28 @@ export default function CategoriesPage() {
     return (
       <div className="min-h-screen bg-neutral-50/50">
         <div className="bg-white border-b border-border/50">
-          <div className="max-w-4xl mx-auto px-4 py-20 text-center space-y-8">
-            <Skeleton className="h-4 w-32 mx-auto" />
-            <Skeleton className="h-12 w-96 mx-auto" />
-            <Skeleton className="h-6 w-[500px] mx-auto" />
-            <Skeleton className="h-16 w-full max-w-xl mx-auto rounded-[2rem]" />
+          <div className="max-w-4xl mx-auto px-4 py-20 text-center space-y-10">
+            <Skeleton className="h-4 w-32 mx-auto rounded-full" />
+            <div className="space-y-4">
+              <Skeleton className="h-12 sm:h-16 w-full max-w-lg mx-auto rounded-xl" />
+              <Skeleton className="h-6 w-full max-w-md mx-auto rounded-lg" />
+            </div>
+            <Skeleton className="h-16 w-full max-w-xl mx-auto rounded-3xl" />
           </div>
         </div>
-        <div className="max-w-7xl mx-auto px-4 py-16 space-y-24">
+        <div className="max-w-7xl mx-auto px-4 py-12 md:py-20 space-y-20">
           {Array.from({ length: 3 }).map((_, i) => (
             <div key={i} className="space-y-8">
-              <Skeleton className="h-12 w-64" />
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 border-b-2 border-primary/5 pb-4">
+                <Skeleton className="h-10 w-48 rounded-lg" />
+                <Skeleton className="h-8 w-32 rounded-full" />
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
                 {Array.from({ length: 4 }).map((_, j) => (
-                  <Skeleton key={j} className="h-32 rounded-[2rem]" />
+                  <Skeleton
+                    key={j}
+                    className="h-32 rounded-[2rem] border border-border/50"
+                  />
                 ))}
               </div>
             </div>
@@ -88,17 +96,19 @@ export default function CategoriesPage() {
   }
 
   return (
-    <section className="min-h-screen bg-neutral-50/50">
+    <section className="min-h-screen bg-neutral-50/50 mt-10">
       <CategoryHeader search={search} onSearchChange={setSearch} />
 
-      <div className="max-w-7xl mx-auto px-4 py-24 md:py-32 space-y-24">
+      <div className="max-w-7xl mx-auto px-4 py-16 md:py-28 space-y-16 md:space-y-24">
         {filteredCategories.length === 0 ? (
-          <div className="text-center py-32 bg-white/50 backdrop-blur-sm rounded-[3rem] border-2 border-dashed border-border/50">
-            <Search className="h-16 w-16 mx-auto mb-6 text-primary/20" />
-            <h3 className="text-2xl font-black text-foreground tracking-tight">
+          <div className="text-center py-20 md:py-32 bg-white rounded-[2.5rem] border-2 border-dashed border-border/60 shadow-inner">
+            <div className="w-20 h-20 bg-primary/5 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Search className="h-10 w-10 text-primary/40" />
+            </div>
+            <h3 className="text-xl md:text-2xl font-black text-foreground tracking-tight px-4">
               No collections match your search
             </h3>
-            <p className="text-muted-foreground mt-2 font-medium">
+            <p className="text-muted-foreground mt-2 font-medium text-sm md:text-base px-6">
               Try searching for a different keyword or category name.
             </p>
           </div>

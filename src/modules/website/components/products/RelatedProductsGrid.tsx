@@ -15,7 +15,7 @@ export default function RelatedProductsGrid({
       <h2 className="text-2xl font-bold text-gray-900 px-3 sm:px-0">
         Related Products
       </h2>
-      <div className="grid gap-2 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mx-auto">
+      <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mx-auto">
         {products.slice(0, 4).map((product) => {
           const image =
             typeof product.image === "string"

@@ -128,7 +128,7 @@ export function StoreProductsGrid({
             animate={{ opacity: 1 }}
             className="space-y-20"
           >
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-8 px-0 sm:px-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-8 px-0 sm:px-2">
               {products.map((product, index) => (
                 <motion.div
                   key={product.id}

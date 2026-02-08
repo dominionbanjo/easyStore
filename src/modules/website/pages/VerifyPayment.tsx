@@ -42,7 +42,7 @@ export default function VerifyPaymentPage() {
           <CardHeader>
             <CardTitle className="flex items-center justify-center gap-2 text-red-600">
               <XCircle className="h-6 w-6" />
-              Missing Payment Reference
+              Missing Reference
             </CardTitle>
           </CardHeader>
 

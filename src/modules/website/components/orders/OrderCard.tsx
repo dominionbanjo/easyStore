@@ -9,10 +9,14 @@ import {
   Clock,
   XCircle,
   Truck,
+  Copy,
+  Check,
 } from "lucide-react";
 import { type IOrder } from "@/services/ordersApi";
 import { buildRoute } from "@/routes";
 import { motion } from "framer-motion";
+import { toast } from "sonner";
+import { useState } from "react";
 
 interface OrderCardProps {
   order: IOrder;
@@ -70,6 +74,19 @@ export function OrderCard({ order, index = 0 }: OrderCardProps) {
     year: "numeric",
   });
 
+  const [isCopied, setIsCopied] = useState(false);
+
+  const reference = order.payment_reference || order.id;
+  const displayRef = reference.slice(0, 8).toUpperCase();
+
+  const handleCopy = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigator.clipboard.writeText(reference);
+    toast.success("Reference copied to clipboard");
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), 2000);
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -86,20 +103,39 @@ export function OrderCard({ order, index = 0 }: OrderCardProps) {
             <div className="flex-1 min-w-0">
               {/* Order Reference */}
               <div className="flex items-center gap-2 mb-2">
-                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-100">
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-100 group/ref relative">
                   <ShoppingBag className="h-4 w-4 text-gray-600 flex-shrink-0" />
                   <span className="text-sm font-semibold text-gray-700">
-                    Order #
-                    {order.payment_reference?.slice(0, 8).toUpperCase() ||
-                      order.id.slice(0, 8).toUpperCase()}
+                    Order #{displayRef}
                   </span>
+                  <button
+                    onClick={handleCopy}
+                    className="ml-1 p-1 hover:bg-gray-200 rounded-md transition-colors text-gray-400 hover:text-gray-600"
+                    title="Copy Full Reference"
+                  >
+                    {isCopied ? (
+                      <Check className="h-3 w-3 text-emerald-600" />
+                    ) : (
+                      <Copy className="h-3 w-3" />
+                    )}
+                  </button>
                 </div>
               </div>
 
-              {/* Date */}
-              <div className="flex items-center gap-2 text-gray-500">
-                <Calendar className="h-4 w-4 flex-shrink-0" />
-                <span className="text-sm font-medium">{formattedDate}</span>
+              {/* Store & Date */}
+              <div className="flex flex-wrap items-center gap-3">
+                {order.vendor?.store && (
+                  <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-50 border border-purple-100">
+                    <ShoppingBag className="h-3.5 w-3.5 text-purple-600 flex-shrink-0" />
+                    <span className="text-xs font-bold text-purple-700 truncate max-w-[120px]">
+                      {order.vendor.store.store_name}
+                    </span>
+                  </div>
+                )}
+                <div className="flex items-center gap-2 text-gray-500">
+                  <Calendar className="h-4 w-4 flex-shrink-0" />
+                  <span className="text-sm font-medium">{formattedDate}</span>
+                </div>
               </div>
             </div>
 
