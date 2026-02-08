@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
 import Header from "@/components/shared/Header";
 import Footer from "@/components/shared/Footer";
+import ScrollToTop from "@/components/shared/ScrollToTop";
 
 export default function HomepageLayout() {
   return (
@@ -16,6 +17,7 @@ export default function HomepageLayout() {
       </main>
       {/* ⚓ Footer */}
       <Footer />
+      <ScrollToTop />
     </div>
   );
 }

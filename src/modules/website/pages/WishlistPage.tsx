@@ -142,7 +142,7 @@ export default function WishlistPage() {
                   >
                     <ProductCard.Image />
                     <ProductCard.Info />
-                    {/* <ProductCard.Footer /> */}
+                    <ProductCard.Footer />
                   </ProductCard.Root>
                 </motion.div>
               ))}

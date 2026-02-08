@@ -150,7 +150,10 @@ export interface GetSingleProductResponse {
 export interface IFeaturedProductsResponse {
   status: string;
   message: string;
-  data: IProduct[];
+  data: {
+    items: IProduct[];
+    pagination: IPagination;
+  };
 }
 
 /* 🔹 PRODUCTS GROUPED BY CATEGORY */

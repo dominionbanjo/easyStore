@@ -84,6 +84,7 @@ export default function AllProductsSection() {
             >
               <ProductCard.Image />
               <ProductCard.Info />
+              <ProductCard.Footer />
             </ProductCard.Root>
           );
         })}

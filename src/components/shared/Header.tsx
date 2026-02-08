@@ -12,7 +12,6 @@ import {
   Home,
   Store,
   Layers,
-  Info,
   LogOut,
   ShoppingBag,
   Heart,
@@ -20,6 +19,7 @@ import {
   X,
   Sun,
   Moon,
+  Compass,
 } from "lucide-react";
 import { useTheme } from "./ThemeContext";
 import {
@@ -167,6 +167,11 @@ export default function Header() {
                     {[
                       { name: "Home", path: WEBSITE_ROUTES.HOME, icon: Home },
                       {
+                        name: "Discover",
+                        path: WEBSITE_ROUTES.DISCOVERY,
+                        icon: Compass,
+                      },
+                      {
                         name: "Stores",
                         path: WEBSITE_ROUTES.STORES,
                         icon: Store,
@@ -176,7 +181,6 @@ export default function Header() {
                         path: WEBSITE_ROUTES.CATEGORIES,
                         icon: Layers,
                       },
-                      { name: "About", path: WEBSITE_ROUTES.ABOUT, icon: Info },
                     ].map((item) => {
                       const Icon = item.icon;
                       return (
@@ -267,9 +271,9 @@ export default function Header() {
           <nav className="hidden lg:flex items-center gap-5 xl:gap-6 text-sm font-medium whitespace-nowrap">
             {[
               { name: "Home", path: WEBSITE_ROUTES.HOME },
+              { name: "Discover", path: WEBSITE_ROUTES.DISCOVERY },
               { name: "Stores", path: WEBSITE_ROUTES.STORES },
               { name: "Categories", path: WEBSITE_ROUTES.CATEGORIES },
-              { name: "About", path: WEBSITE_ROUTES.ABOUT },
             ].map((item) => (
               <Link
                 key={item.path}

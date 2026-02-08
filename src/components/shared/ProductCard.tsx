@@ -8,15 +8,7 @@ import {
 import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/store";
-import {
-  Heart,
-  Star,
-  ShoppingCart,
-  Eye,
-  Package,
-  Check,
-  Loader2,
-} from "lucide-react";
+import { Heart, Star, ShoppingCart, Eye, Check, Loader2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -572,7 +564,7 @@ const Footer = () => {
   const { vendor, avatar, storeSlug } = useProductCard();
 
   return (
-    <div className="mt-2 pt-2 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between gap-3">
+    <div className="mt-2 pt-2 px-1 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between gap-3">
       <Link
         to={storeSlug ? `/stores/${storeSlug}` : `/vendor/${vendor}`}
         className="flex items-center gap-2.5 truncate relative z-10 group/vendor"
@@ -596,13 +588,6 @@ const Footer = () => {
           </span>
         </div>
       </Link>
-
-      <div className="px-2 py-1 bg-zinc-50 dark:bg-zinc-800 rounded-lg flex items-center gap-1.5 border border-zinc-100 dark:border-zinc-700/50">
-        <Package className="w-3 h-3 text-zinc-400" />
-        <span className="text-[10px] font-bold text-zinc-600 dark:text-zinc-400">
-          Brand
-        </span>
-      </div>
     </div>
   );
 };

@@ -13,7 +13,7 @@ export default function FeaturedProductsSection() {
     limit: 8,
   });
 
-  const products = data?.data ?? [];
+  const products = data?.data?.items ?? [];
 
   return (
     <ProductSection
@@ -68,6 +68,7 @@ export default function FeaturedProductsSection() {
           >
             <ProductCard.Image />
             <ProductCard.Info />
+            <ProductCard.Footer />
           </ProductCard.Root>
         );
       })}

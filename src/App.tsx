@@ -7,6 +7,7 @@ import ScrollToTop from "@/utils/ScrollToTop";
 // Lazy-loaded Components
 import * as Pages from "@/routes/lazyComponents";
 import LoadingScreen from "./Loading";
+import { OnboardingModal } from "@/modules/auth/components/OnboardingModal";
 
 /* ───────────────── APP ───────────────── */
 
@@ -41,7 +42,7 @@ export default function App() {
             />
             <Route path="careers" element={<Pages.CareersPage />} />
             <Route path="discovery" element={<Pages.DiscoveryPage />} />
-            <Route path="featured" element={<Pages.FeaturedStoresPage />} />
+            <Route path="featured" element={<Pages.FeaturedProductsPage />} />
             <Route path="trending" element={<Pages.TrendingProductsPage />} />
             <Route path="new-arrivals" element={<Pages.NewArrivalsPage />} />
           </Route>
@@ -133,6 +134,7 @@ export default function App() {
           <Route path="*" element={<Pages.NotFoundPage />} />
         </Routes>
       </Suspense>
+      <OnboardingModal />
     </Router>
   );
 }

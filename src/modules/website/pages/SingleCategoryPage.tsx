@@ -148,12 +148,14 @@ export default function CategoryDetailsPage() {
                       stock={product.stock}
                       isFavorite={product.is_in_wishlist}
                       vendor={product.store_name}
+                      storeSlug={product.store_slug}
                       colors={product.colors}
                       sizes={product.sizes}
                       category={product.category ?? slug}
                     >
                       <ProductCard.Image />
                       <ProductCard.Info />
+                      <ProductCard.Footer />
                     </ProductCard.Root>
                   </motion.div>
                 ))}

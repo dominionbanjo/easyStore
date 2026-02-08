@@ -75,6 +75,15 @@ export const storeApi = apiManager.injectEndpoints({
         params,
       }),
     }),
+    /* ───────── CREATE STORE ───────── */
+    createStore: builder.mutation<any, Partial<any>>({
+      query: (body) => ({
+        url: "store",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Store"],
+    }),
   }),
 });
 
@@ -97,4 +106,6 @@ export const {
 
   useGetStoreCategoryProductsQuery,
   useLazyGetStoreCategoryProductsQuery,
+
+  useCreateStoreMutation,
 } = storeApi;
