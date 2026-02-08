@@ -32,12 +32,14 @@ export function StoreCategoriesGrid({
   /* ─── EMPTY STATE ─── */
   if (!categories.length) {
     return (
-      <div className="text-center py-24 bg-white/50 backdrop-blur-sm rounded-[3rem] border border-border/50 max-w-7xl mx-auto px-4">
-        <Layers className="w-12 h-12 text-primary/20 mx-auto mb-4" />
-        <h3 className="text-xl font-bold text-foreground">
+      <div className="text-center py-24 bg-white/50 dark:bg-neutral-900/40 backdrop-blur-xl rounded-[3rem] border border-zinc-200 dark:border-white/5 max-w-7xl mx-auto px-4 shadow-sm">
+        <div className="w-20 h-20 bg-primary/10 dark:bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-6 ring-8 ring-primary/5 dark:ring-emerald-500/5">
+          <Layers className="w-10 h-10 text-primary dark:text-emerald-400" />
+        </div>
+        <h3 className="text-2xl font-black text-foreground tracking-tight">
           No Categories Found
         </h3>
-        <p className="text-muted-foreground mt-2">
+        <p className="text-muted-foreground mt-3 max-w-sm mx-auto font-medium text-sm md:text-base leading-relaxed">
           This store hasn't organized their products into categories yet.
         </p>
       </div>

@@ -8,19 +8,19 @@ type Props = {
 export function StoreTabs({ activeTab, onChange }: Props) {
   return (
     <div className="flex justify-center mt-12">
-      <div className="inline-flex p-1.5 bg-white/50 backdrop-blur-md border border-border/50 rounded-full shadow-sm">
+      <div className="inline-flex p-1.5 bg-white/80 dark:bg-neutral-900/50 backdrop-blur-xl border border-zinc-200 dark:border-white/10 rounded-full shadow-sm transition-colors duration-300">
         <button
           onClick={() => onChange("products")}
           className={`relative px-8 py-2.5 rounded-full text-sm font-bold transition-all duration-300 ${
             activeTab === "products"
-              ? "text-white"
-              : "text-muted-foreground hover:text-foreground"
+              ? "text-white dark:text-neutral-900"
+              : "text-muted-foreground hover:text-foreground hover:bg-zinc-100 dark:hover:bg-white/5"
           }`}
         >
           {activeTab === "products" && (
             <motion.div
               layoutId="store-tab"
-              className="absolute inset-0 bg-primary rounded-full shadow-md shadow-primary/20"
+              className="absolute inset-0 bg-primary dark:bg-emerald-400 rounded-full shadow-lg shadow-primary/20 dark:shadow-emerald-500/20"
               transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
             />
           )}
@@ -31,14 +31,14 @@ export function StoreTabs({ activeTab, onChange }: Props) {
           onClick={() => onChange("categories")}
           className={`relative px-8 py-2.5 rounded-full text-sm font-bold transition-all duration-300 ${
             activeTab === "categories"
-              ? "text-white"
-              : "text-muted-foreground hover:text-foreground"
+              ? "text-white dark:text-neutral-900"
+              : "text-muted-foreground hover:text-foreground hover:bg-zinc-100 dark:hover:bg-white/5"
           }`}
         >
           {activeTab === "categories" && (
             <motion.div
               layoutId="store-tab"
-              className="absolute inset-0 bg-primary rounded-full shadow-md shadow-primary/20"
+              className="absolute inset-0 bg-primary dark:bg-emerald-400 rounded-full shadow-lg shadow-primary/20 dark:shadow-emerald-500/20"
               transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
             />
           )}

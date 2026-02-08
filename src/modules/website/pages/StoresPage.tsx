@@ -133,7 +133,7 @@ export default function StoresPage() {
   };
 
   return (
-    <section className="min-h-screen bg-neutral-50/50 selection:bg-primary/20">
+    <section className="min-h-screen bg-neutral-50/50 dark:bg-neutral-950 selection:bg-primary/20 transition-colors duration-300">
       {/* ─── HEADER ─── */}
       <FormProvider {...methods}>
         <StoreHeader />
@@ -229,26 +229,26 @@ export default function StoresPage() {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="flex flex-col items-center justify-center py-32 text-center max-w-md mx-auto"
+            className="flex flex-col items-center justify-center py-32 text-center max-w-2xl mx-auto bg-white/50 dark:bg-neutral-900/40 backdrop-blur-xl rounded-[3rem] border border-zinc-200 dark:border-white/5 shadow-sm px-8"
           >
-            <div className="w-24 h-24 bg-neutral-100 rounded-full flex items-center justify-center mb-6">
-              <SearchX className="h-10 w-10 text-muted-foreground/50" />
+            <div className="w-24 h-24 bg-primary/10 dark:bg-emerald-500/10 rounded-full flex items-center justify-center mb-8 ring-8 ring-primary/5 dark:ring-emerald-500/5">
+              <SearchX className="h-12 w-12 text-primary dark:text-emerald-400" />
             </div>
-            <h3 className="text-xl font-bold text-foreground mb-2">
+            <h3 className="text-3xl font-black text-foreground mb-3 tracking-tight">
               No stores found
             </h3>
-            <p className="text-muted-foreground leading-relaxed mb-8">
+            <p className="text-muted-foreground font-medium leading-relaxed max-w-sm mb-10">
               We couldn't find any stores matching your criteria. Try adjusting
-              your search or filters.
+              your search or filters!
             </p>
             <button
               onClick={() => {
                 methods.setValue("search", "");
                 methods.setValue("state", "");
               }}
-              className="px-6 py-2.5 bg-primary text-primary-foreground font-medium rounded-full shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all active:scale-95"
+              className="px-8 py-3 bg-primary dark:bg-emerald-500 text-white dark:text-neutral-950 font-black rounded-full shadow-xl shadow-primary/20 dark:shadow-emerald-500/20 hover:scale-105 transition-all active:scale-95 uppercase tracking-widest text-xs"
             >
-              Clear Filters
+              Clear all filters
             </button>
           </motion.div>
         )}

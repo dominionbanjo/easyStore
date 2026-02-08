@@ -141,9 +141,9 @@ export default function ProductInfoSidebar({
             <Badge className="bg-primary/10 text-primary hover:bg-primary/20 border-none px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider shrink-0">
               {product.category}
             </Badge>
-            <div className="flex items-center gap-1.5 bg-yellow-50 px-2.5 py-1 rounded-full border border-yellow-200 shrink-0">
+            <div className="flex items-center gap-1.5 bg-yellow-50 dark:bg-yellow-950/30 px-2.5 py-1 rounded-full border border-yellow-200 dark:border-yellow-900/50 shrink-0">
               <Star className="h-3.5 w-3.5 fill-yellow-500 text-yellow-500" />
-              <span className="text-sm font-black text-yellow-700">
+              <span className="text-sm font-black text-yellow-700 dark:text-yellow-400">
                 {product.rating.toFixed(1)}
               </span>
             </div>
@@ -165,12 +165,12 @@ export default function ProductInfoSidebar({
             )}
           </div>
           {product.stock > 0 ? (
-            <div className="flex items-center gap-1.5 text-emerald-600 font-bold text-sm bg-emerald-50 px-3 py-1 rounded-full border border-emerald-100">
+            <div className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-bold text-sm bg-emerald-50 dark:bg-emerald-950/30 px-3 py-1 rounded-full border border-emerald-100 dark:border-emerald-900/50">
               <PackageCheck className="w-4 h-4" />
               In Stock
             </div>
           ) : (
-            <div className="flex items-center gap-1.5 text-rose-600 font-bold text-sm bg-rose-50 px-3 py-1 rounded-full border border-rose-100">
+            <div className="flex items-center gap-1.5 text-rose-600 dark:text-rose-400 font-bold text-sm bg-rose-50 dark:bg-rose-950/30 px-3 py-1 rounded-full border border-rose-100 dark:border-rose-900/50">
               Out of Stock
             </div>
           )}
@@ -197,7 +197,7 @@ export default function ProductInfoSidebar({
         )}
       </div>
 
-      <div className="h-px bg-border/50" />
+      <div className="h-px bg-border/50 dark:bg-white/10" />
 
       {/* ─── Varients Section ─── */}
       <div className="space-y-6">
@@ -296,11 +296,11 @@ export default function ProductInfoSidebar({
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
           {/* Quantity Selector */}
-          <div className="bg-muted/50 rounded-2xl flex items-center justify-between p-1 border border-border/40 h-14 sm:w-fit">
+          <div className="bg-muted/50 dark:bg-neutral-800 rounded-2xl flex items-center justify-between p-1 border border-border/40 dark:border-white/10 h-14 sm:w-fit">
             <Button
               variant="ghost"
               size="icon"
-              className="rounded-xl h-12 w-12 hover:bg-background shadow-xs text-muted-foreground"
+              className="rounded-xl h-12 w-12 hover:bg-background dark:hover:bg-neutral-700 shadow-xs text-muted-foreground"
               onClick={() => setQuantity((q) => Math.max(1, q - 1))}
             >
               <Minus className="h-4 w-4" />
@@ -311,7 +311,7 @@ export default function ProductInfoSidebar({
             <Button
               variant="ghost"
               size="icon"
-              className="rounded-xl h-12 w-12 hover:bg-background shadow-xs text-muted-foreground"
+              className="rounded-xl h-12 w-12 hover:bg-background dark:hover:bg-neutral-700 shadow-xs text-muted-foreground"
               onClick={() => setQuantity((q) => q + 1)}
             >
               <Plus className="h-4 w-4" />
@@ -360,7 +360,7 @@ export default function ProductInfoSidebar({
               className={cn(
                 "h-14 w-14 shrink-0 rounded-[1.25rem] border-2 transition-all active:scale-90",
                 liked
-                  ? "bg-rose-50 border-rose-100 text-rose-500 hover:bg-rose-100 shadow-lg shadow-rose-200/20"
+                  ? "bg-rose-50 dark:bg-rose-950/30 border-rose-100 dark:border-rose-900/50 text-rose-500 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-950/50 shadow-lg shadow-rose-200/20 dark:shadow-rose-900/20"
                   : "hover:border-primary/50 text-muted-foreground",
               )}
             >
@@ -377,7 +377,7 @@ export default function ProductInfoSidebar({
         {/* ─── Trust Factors ─── */}
         <div className="grid grid-cols-2 gap-4 pt-4 border-t border-border/40">
           <div className="flex items-start gap-2.5">
-            <div className="p-2 rounded-xl bg-orange-50 text-orange-600">
+            <div className="p-2 rounded-xl bg-orange-50 dark:bg-orange-950/30 text-orange-600 dark:text-orange-400">
               <Store className="w-5 h-5" />
             </div>
             <div>
@@ -393,7 +393,7 @@ export default function ProductInfoSidebar({
             </div>
           </div>
           <div className="flex items-start gap-2.5">
-            <div className="p-2 rounded-xl bg-blue-50 text-blue-600">
+            <div className="p-2 rounded-xl bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400">
               <ShieldCheck className="w-5 h-5" />
             </div>
             <div>
@@ -407,7 +407,7 @@ export default function ProductInfoSidebar({
           </div>
         </div>
 
-        <div className="flex items-center justify-between px-4 py-3 rounded-2xl bg-muted/30 border border-border/40">
+        <div className="flex items-center justify-between px-4 py-3 rounded-2xl bg-muted/30 dark:bg-neutral-800/50 border border-border/40 dark:border-white/10">
           <div className="flex items-center gap-2 text-xs font-bold text-muted-foreground">
             <Truck className="w-4 h-4 text-primary" />
             Standard Shipping Available

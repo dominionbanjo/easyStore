@@ -44,8 +44,8 @@ export default function CategoriesPage() {
   /* ───────────────── LOADING STATE ───────────────── */
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-neutral-50/50">
-        <div className="bg-white border-b border-border/50">
+      <div className="min-h-screen bg-white dark:bg-neutral-950 transition-colors duration-300">
+        <div className="bg-white dark:bg-neutral-900 border-b border-border/50">
           <div className="max-w-4xl mx-auto px-4 py-20 text-center space-y-10">
             <Skeleton className="h-4 w-32 mx-auto rounded-full" />
             <div className="space-y-4">
@@ -80,8 +80,8 @@ export default function CategoriesPage() {
   /* ───────────────── ERROR STATE ───────────────── */
   if (isError) {
     return (
-      <section className="min-h-[60vh] flex flex-col items-center justify-center text-center p-4">
-        <div className="w-20 h-20 bg-destructive/5 rounded-full flex items-center justify-center mb-6">
+      <section className="min-h-[60vh] flex flex-col items-center justify-center text-center p-4 bg-white dark:bg-neutral-950 transition-colors duration-300">
+        <div className="w-20 h-20 bg-destructive/5 dark:bg-destructive/10 rounded-full flex items-center justify-center mb-6">
           <FolderTreeIcon className="h-10 w-10 text-destructive" />
         </div>
         <h2 className="text-2xl font-black text-foreground">
@@ -96,12 +96,12 @@ export default function CategoriesPage() {
   }
 
   return (
-    <section className="min-h-screen bg-neutral-50/50 mt-10">
+    <section className="min-h-screen bg-neutral-50/50 dark:bg-neutral-950 mt-10 transition-colors duration-300">
       <CategoryHeader search={search} onSearchChange={setSearch} />
 
       <div className="max-w-7xl mx-auto px-4 py-16 md:py-28 space-y-16 md:space-y-24">
         {filteredCategories.length === 0 ? (
-          <div className="text-center py-20 md:py-32 bg-white rounded-[2.5rem] border-2 border-dashed border-border/60 shadow-inner">
+          <div className="text-center py-20 md:py-32 bg-white dark:bg-neutral-900 rounded-[2.5rem] border-2 border-dashed border-border/60 dark:border-white/10 shadow-inner">
             <div className="w-20 h-20 bg-primary/5 rounded-full flex items-center justify-center mx-auto mb-6">
               <Search className="h-10 w-10 text-primary/40" />
             </div>

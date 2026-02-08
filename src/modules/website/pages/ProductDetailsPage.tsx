@@ -110,7 +110,7 @@ function ProductDetailsInner({ id }: { id: string }) {
   /* ───────── RENDER ───────── */
 
   return (
-    <section className="max-w-[1440px] mx-auto px-4 md:px-6 lg:px-8 py-8 md:py-12 space-y-12 md:space-y-16">
+    <section className="max-w-[1440px] mx-auto px-4 md:px-6 lg:px-8 py-8 md:py-12 space-y-12 md:space-y-16 bg-white dark:bg-neutral-950 transition-colors duration-300">
       {/* Gallery + Sidebar Container */}
       <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 xl:gap-24 justify-center items-start">
         {/* Left Column: Gallery */}

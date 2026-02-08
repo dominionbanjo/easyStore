@@ -19,10 +19,10 @@ export function OrdersErrorState({ onRetry }: OrdersErrorStateProps) {
       </div>
 
       {/* Error Message */}
-      <h2 className="text-2xl font-black text-gray-900 mb-2">
+      <h2 className="text-2xl font-black text-foreground mb-2">
         Oops! Something went wrong
       </h2>
-      <p className="text-gray-600 mb-8 max-w-md">
+      <p className="text-muted-foreground mb-8 max-w-md">
         We couldn't load your orders. This might be a temporary issue. Please
         try again.
       </p>

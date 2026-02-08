@@ -11,7 +11,7 @@ const brands = [
 
 export default function FeaturedBrands() {
   return (
-    <section className="py-16 bg-muted/30 border-y border-border/50">
+    <section className="py-16 bg-muted/30 dark:bg-neutral-900/50 border-y border-border/50 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center space-y-4 mb-12">
           <h3 className="text-xl md:text-2xl font-bold text-foreground">
@@ -31,7 +31,7 @@ export default function FeaturedBrands() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
               viewport={{ once: true }}
-              className="flex items-center gap-3 px-6 py-3 bg-card border border-border/60 rounded-2xl shadow-sm hover:shadow-md hover:border-primary/30 transition-all group"
+              className="flex items-center gap-3 px-6 py-3 bg-card dark:bg-neutral-900 border border-border/60 dark:border-white/5 rounded-2xl shadow-sm hover:shadow-md hover:border-primary/30 transition-all group"
             >
               <span className="text-2xl group-hover:scale-125 transition-transform">
                 {brand.icon}

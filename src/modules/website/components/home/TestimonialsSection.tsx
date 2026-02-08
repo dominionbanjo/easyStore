@@ -22,7 +22,7 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
   return (
     <motion.div
       whileHover={{ y: -5 }}
-      className="w-[380px] flex-shrink-0 bg-white border border-border/50 rounded-[2.5rem] p-8 shadow-sm hover:shadow-xl hover:border-primary/20 transition-all duration-300 flex flex-col justify-between group"
+      className="w-[380px] flex-shrink-0 bg-white dark:bg-neutral-900 border border-border/50 dark:border-white/5 rounded-[2.5rem] p-8 shadow-sm hover:shadow-xl hover:border-primary/20 transition-all duration-300 flex flex-col justify-between group"
     >
       <div className="space-y-6">
         <div className="flex items-center justify-between">
@@ -116,7 +116,7 @@ export default function TestimonialsCarousel() {
   const items = [...testimonials, ...testimonials];
 
   return (
-    <section className="py-24 bg-background overflow-hidden">
+    <section className="py-24 bg-background dark:bg-neutral-950 overflow-hidden transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 mb-16">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-4">

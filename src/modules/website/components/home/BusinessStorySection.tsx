@@ -34,7 +34,7 @@ const steps = [
 
 export default function BusinessStorySection() {
   return (
-    <section className="py-24 px-4 bg-background overflow-hidden">
+    <section className="py-24 px-4 bg-background dark:bg-neutral-950 overflow-hidden transition-colors duration-300">
       <div className="max-w-7xl mx-auto">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Left: Text & Story */}
@@ -70,7 +70,7 @@ export default function BusinessStorySection() {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
                   viewport={{ once: true }}
-                  className="p-6 rounded-2xl bg-muted/30 border border-border/50 hover:border-primary/20 transition-colors group"
+                  className="p-6 rounded-2xl bg-muted/30 dark:bg-neutral-900/50 border border-border/50 dark:border-white/5 hover:border-primary/20 transition-colors group"
                 >
                   <div
                     className={`w-12 h-12 rounded-xl ${step.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}
@@ -103,27 +103,32 @@ export default function BusinessStorySection() {
               />
 
               {/* Overlay Badges */}
-              <div className="absolute bottom-12 -left-4 bg-white p-4 rounded-2xl shadow-2xl border border-border flex items-center gap-4 animate-float">
-                <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary">
+              <div className="absolute bottom-12 -left-6 sm:-left-8 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl p-5 rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.15)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.3)] border border-white/20 dark:border-white/5 flex items-center gap-5 animate-float group/badge">
+                <div className="w-14 h-14 bg-gradient-to-br from-primary/20 to-primary/5 dark:from-primary/30 dark:to-primary/10 rounded-2xl flex items-center justify-center text-2xl shadow-inner transform group-hover/badge:scale-110 transition-all duration-500">
                   📦
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-muted-foreground">
+                  <p className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-1">
                     Orders Today
                   </p>
-                  <p className="text-xl font-black text-foreground">128+</p>
+                  <p className="text-2xl font-black text-foreground tabular-nums tracking-tight">
+                    128+
+                  </p>
                 </div>
+                <div className="absolute -top-2 -right-2 bg-emerald-500 w-5 h-5 rounded-full border-4 border-white dark:border-neutral-900 animate-pulse" />
               </div>
 
-              <div className="absolute top-12 -right-4 bg-white p-4 rounded-2xl shadow-2xl border border-border flex items-center gap-4 animate-float-delayed">
-                <div className="w-10 h-10 bg-emerald-500/10 rounded-full flex items-center justify-center text-emerald-500">
+              <div className="absolute top-12 -right-6 sm:-right-8 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl p-5 rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.15)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.3)] border border-white/20 dark:border-white/5 flex items-center gap-5 animate-float-delayed group/badge2">
+                <div className="w-14 h-14 bg-gradient-to-br from-emerald-500/20 to-emerald-500/5 dark:from-emerald-500/30 dark:to-emerald-500/10 rounded-2xl flex items-center justify-center text-2xl shadow-inner transform group-hover/badge2:scale-110 transition-all duration-500">
                   💰
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-muted-foreground">
-                    Earnings
+                  <p className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-1">
+                    Total Earnings
                   </p>
-                  <p className="text-xl font-black text-foreground">₦1.2M</p>
+                  <p className="text-2xl font-black text-foreground tabular-nums tracking-tight">
+                    ₦1.2M
+                  </p>
                 </div>
               </div>
             </div>

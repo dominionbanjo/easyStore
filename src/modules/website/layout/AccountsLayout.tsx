@@ -30,9 +30,9 @@ export default function AccountsLayout() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-white dark:bg-neutral-950 text-foreground transition-colors duration-300">
       {/* 🌐 Header */}
-      <div className="mb-5">
+      <div className="mb-20">
         <Header />
       </div>
 

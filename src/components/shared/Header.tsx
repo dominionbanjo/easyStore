@@ -18,7 +18,10 @@ import {
   Heart,
   User as UserIcon,
   X,
+  Sun,
+  Moon,
 } from "lucide-react";
+import { useTheme } from "./ThemeContext";
 import {
   Popover,
   PopoverTrigger,
@@ -51,6 +54,7 @@ export default function Header() {
   const location = useLocation();
   const [logoutUser] = useLogoutMutation();
   const [query, setQuery] = useState("");
+  const { theme, toggleTheme } = useTheme();
 
   const { data: cartData } = useGetCartQuery(undefined, {
     skip: !useSelector((state: RootState) => state.user.isAuthenticated),
@@ -116,8 +120,8 @@ export default function Header() {
           "fixed top-0 left-1/2 -translate-x-1/2",
           "will-change-[transform,background-color,border-color,box-shadow]",
           isScrolled
-            ? "max-w-[100%] sm:max-w-[95%] bg-white/80 rounded-none sm:rounded-xl shadow-md sm:top-3 border border-border/20"
-            : "max-w-[100%] bg-white/30 sm:top-3 border border-transparent",
+            ? "max-w-[100%] sm:max-w-[95%] bg-white/80 dark:bg-neutral-900/80 rounded-none sm:rounded-xl shadow-md sm:top-3 border border-border/20"
+            : "max-w-[100%] bg-white/30 dark:bg-neutral-900/30 sm:top-3 border border-transparent",
         )}
       >
         {/* ---------- LEFT: Logo + Desktop Nav ---------- */}
@@ -128,17 +132,35 @@ export default function Header() {
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className="p-2">
                   <motion.div whileTap={{ scale: 0.9 }}>
-                    <Menu className="h-6 w-6 text-neutral-800" />
+                    <Menu className="h-6 w-6 text-foreground" />
                   </motion.div>
                 </Button>
               </SheetTrigger>
 
-              <SheetContent side="left" className="w-64 p-0 bg-white">
-                <SheetHeader className="p-6 border-b">
-                  <SheetTitle>Navigation Menu</SheetTitle>
-                  <SheetDescription className="sr-only">
-                    Access secondary navigation links and user account options.
-                  </SheetDescription>
+              <SheetContent
+                side="left"
+                className="w-64 p-0 bg-white dark:bg-neutral-950 border-r dark:border-white/10"
+              >
+                <SheetHeader className="p-6 border-b dark:border-white/10 flex flex-row items-center justify-between">
+                  <div>
+                    <SheetTitle>Navigation Menu</SheetTitle>
+                    <SheetDescription className="sr-only">
+                      Access secondary navigation links and user account
+                      options.
+                    </SheetDescription>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={toggleTheme}
+                    className="p-2"
+                  >
+                    {theme === "dark" ? (
+                      <Sun className="h-5 w-5 text-neutral-200" />
+                    ) : (
+                      <Moon className="h-5 w-5 text-neutral-800" />
+                    )}
+                  </Button>
                 </SheetHeader>
                 <div className="p-6">
                   <nav className="space-y-4 text-base font-medium">
@@ -166,7 +188,7 @@ export default function Header() {
                             "flex items-center gap-3 transition-all duration-200",
                             location.pathname === item.path
                               ? "text-primary font-semibold"
-                              : "text-neutral-800 hover:text-primary",
+                              : "text-foreground hover:text-primary",
                           )}
                         >
                           <Icon className="h-4 w-4" />
@@ -197,7 +219,7 @@ export default function Header() {
                         <Link
                           to={AUTH_ROUTES.LOGIN}
                           onClick={() => setMenuOpen(false)}
-                          className="flex items-center gap-3 py-2 text-neutral-800 hover:text-primary"
+                          className="flex items-center gap-3 py-2 text-foreground hover:text-primary"
                         >
                           <UserIcon className="h-4 w-4" />
                           Sign In
@@ -206,7 +228,7 @@ export default function Header() {
                         <Link
                           to={AUTH_ROUTES.SIGNUP}
                           onClick={() => setMenuOpen(false)}
-                          className="flex items-center gap-3 py-2 text-neutral-800 hover:text-primary"
+                          className="flex items-center gap-3 py-2 text-foreground hover:text-primary"
                         >
                           <Store className="h-4 w-4" />
                           Create Account
@@ -222,12 +244,21 @@ export default function Header() {
           {/* Logo */}
           <Link
             to={WEBSITE_ROUTES.HOME}
-            className="flex items-center gap-2 flex-shrink-0"
+            className="flex items-center flex-shrink-0"
           >
             <img
-              src="/logos/inline-stripe-transparent.png"
+              src={
+                theme === "dark"
+                  ? "/logos/EasyStore logo with tagline.png"
+                  : "/logos/inline-stripe-transparent.png"
+              }
               alt="EasyStore logo"
-              className="h-9 w-auto sm:h-10 lg:h-11"
+              className={cn(
+                "w-auto transition-all duration-300 object-contain",
+                theme === "dark"
+                  ? "h-10 sm:h-11 lg:h-12"
+                  : "h-9 sm:h-10 lg:h-11",
+              )}
               loading="lazy"
             />
           </Link>
@@ -247,7 +278,7 @@ export default function Header() {
                   "transition-colors duration-200 relative inline-block group",
                   location.pathname === item.path
                     ? "text-primary font-semibold"
-                    : "text-neutral-800 hover:text-primary",
+                    : "text-foreground hover:text-primary",
                 )}
               >
                 <FancyHoverText text={item.name} />
@@ -260,7 +291,7 @@ export default function Header() {
         <div className="hidden md:flex flex-1 justify-center px-4 lg:px-6 max-w-[600px] mx-auto">
           <form
             onSubmit={handleSearch}
-            className="flex w-full items-center rounded-full bg-white border border-border/50 shadow-sm focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all duration-300"
+            className="flex w-full items-center rounded-full bg-white dark:bg-neutral-900 border border-border/50 dark:border-white/10 shadow-sm focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all duration-300"
           >
             <div className="pl-5 flex-shrink-0">
               <Search className="h-5 w-5 text-muted-foreground" />
@@ -303,35 +334,48 @@ export default function Header() {
                 className="relative p-2 flex-shrink-0"
                 onClick={() => setIsCartOpen(true)}
               >
-                <ShoppingBag className="h-5 w-5 text-neutral-800" />
+                <ShoppingBag className="h-5 w-5 text-foreground" />
                 {cartItemsCount > 0 && (
-                  <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white ring-2 ring-white">
+                  <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-black text-white ring-2 ring-white dark:ring-neutral-900 shadow-sm tabular-nums transition-transform animate-in zoom-in-50 duration-300">
                     {cartItemsCount}
                   </span>
                 )}
               </Button>
             )}
 
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleTheme}
+              className="hidden sm:flex p-2 flex-shrink-0"
+            >
+              {theme === "dark" ? (
+                <Sun className="h-5 w-5 text-neutral-200" />
+              ) : (
+                <Moon className="h-5 w-5 text-neutral-800" />
+              )}
+            </Button>
+
             {/* Profile/Login */}
             {isAuthenticated && user ? (
               <Popover open={profileOpen} onOpenChange={setProfileOpen}>
                 <PopoverTrigger asChild>
-                  <button className="flex items-center justify-center rounded-full border border-border hover:shadow-sm transition p-1 flex-shrink-0">
+                  <button className="flex items-center justify-center rounded-full border border-zinc-200 dark:border-white/10 hover:bg-zinc-50 dark:hover:bg-white/5 transition-all p-1 flex-shrink-0 group">
                     {user.avatar ? (
                       <img
                         src={user.avatar}
                         alt={user.first_name || "User"}
-                        className="h-8 w-8 sm:h-9 sm:w-9 rounded-full object-cover"
+                        className="h-8 w-8 sm:h-9 sm:w-9 rounded-full object-cover group-hover:scale-105 transition-transform"
                       />
                     ) : (
-                      <User className="h-6 w-6 text-neutral-700" />
+                      <User className="h-6 w-6 text-neutral-700 dark:text-neutral-400 group-hover:text-emerald-400 transition-colors" />
                     )}
                   </button>
                 </PopoverTrigger>
 
                 <PopoverContent
                   align="end"
-                  className="w-56 p-3 bg-white shadow-md rounded-lg border border-border fade-in"
+                  className="w-56 p-3 bg-white dark:bg-neutral-950 shadow-md rounded-lg border border-border dark:border-white/10 fade-in"
                 >
                   <div className="space-y-2">
                     <div className="border-b pb-2">
@@ -351,7 +395,7 @@ export default function Header() {
                           user.account_type === "vendor" ? "/vendor" : "/admin"
                         }
                         onClick={() => setProfileOpen(false)}
-                        className="flex items-center gap-3 px-2 py-1.5 text-sm hover:bg-gray-100 rounded"
+                        className="flex items-center gap-3 px-2 py-1.5 text-sm hover:bg-gray-100 dark:hover:bg-neutral-800 rounded transition-colors"
                       >
                         <Layers className="h-4 w-4" />
                         Go to Dashboard
@@ -361,7 +405,7 @@ export default function Header() {
                     <Link
                       to={USER_ROUTES.PROFILE}
                       onClick={() => setProfileOpen(false)}
-                      className="flex items-center gap-3 px-2 py-1.5 text-sm hover:bg-gray-100 rounded"
+                      className="flex items-center gap-3 px-2 py-1.5 text-sm hover:bg-gray-100 dark:hover:bg-neutral-800 rounded transition-colors"
                     >
                       <UserIcon className="h-4 w-4" />
                       Profile
@@ -370,7 +414,7 @@ export default function Header() {
                     <Link
                       to={USER_ROUTES.ORDERS}
                       onClick={() => setProfileOpen(false)}
-                      className="flex items-center gap-3 px-2 py-1.5 text-sm hover:bg-gray-100 rounded"
+                      className="flex items-center gap-3 px-2 py-1.5 text-sm hover:bg-gray-100 dark:hover:bg-neutral-800 rounded transition-colors"
                     >
                       <ShoppingBag className="h-4 w-4" />
                       Orders
@@ -379,7 +423,7 @@ export default function Header() {
                     <Link
                       to={USER_ROUTES.CART}
                       onClick={() => setProfileOpen(false)}
-                      className="flex items-center gap-3 px-2 py-1.5 text-sm hover:bg-gray-100 rounded"
+                      className="flex items-center gap-3 px-2 py-1.5 text-sm hover:bg-gray-100 dark:hover:bg-neutral-800 rounded transition-colors"
                     >
                       <ShoppingBag className="h-4 w-4" />
                       Cart
@@ -388,7 +432,7 @@ export default function Header() {
                     <Link
                       to={USER_ROUTES.WISHLIST}
                       onClick={() => setProfileOpen(false)}
-                      className="flex items-center gap-3 px-2 py-1.5 text-sm hover:bg-gray-100 rounded"
+                      className="flex items-center gap-3 px-2 py-1.5 text-sm hover:bg-gray-100 dark:hover:bg-neutral-800 rounded transition-colors"
                     >
                       <Heart className="h-4 w-4" />
                       Wishlist
@@ -399,7 +443,7 @@ export default function Header() {
                         handleLogout();
                         setProfileOpen(false);
                       }}
-                      className="flex items-center gap-3 w-full text-left px-2 py-1.5 text-sm text-red-600 hover:bg-red-50 rounded"
+                      className="flex items-center gap-3 w-full text-left px-2 py-1.5 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 rounded transition-colors"
                     >
                       <LogOut className="h-4 w-4" />
                       Logout
@@ -429,9 +473,9 @@ export default function Header() {
                 {/* Mobile/Medium Profile Icon (Login Link) */}
                 <Link
                   to={AUTH_ROUTES.LOGIN}
-                  className="lg:hidden flex items-center justify-center rounded-full border border-border hover:shadow-sm transition p-1 flex-shrink-0"
+                  className="lg:hidden flex items-center justify-center rounded-full border border-zinc-200 dark:border-white/10 hover:bg-zinc-50 dark:hover:bg-white/5 transition-all p-1 flex-shrink-0 group"
                 >
-                  <User className="h-6 w-6 text-neutral-700" />
+                  <User className="h-6 w-6 text-foreground group-hover:text-emerald-400 transition-colors" />
                 </Link>
               </>
             )}
@@ -441,7 +485,7 @@ export default function Header() {
 
       {/* Mobile Expand Search */}
       {searchOpen && (
-        <div className="fixed top-[64px] left-0 w-full z-40 md:hidden bg-white border-b shadow-md px-4 py-4 fade-slide-down">
+        <div className="fixed top-[64px] left-0 w-full z-40 md:hidden bg-white dark:bg-neutral-900 border-b dark:border-white/10 shadow-md px-4 py-4 fade-slide-down">
           <form onSubmit={handleSearch} className="flex items-center gap-3">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />

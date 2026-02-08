@@ -43,8 +43,8 @@ export default function CategoryDetailsPage() {
   /* ───────────────── LOADING STATE ───────────────── */
   if (isLoading && !products.length) {
     return (
-      <div className="min-h-screen bg-neutral-50/50">
-        <div className="bg-white border-b border-border/50">
+      <div className="min-h-screen bg-neutral-50/50 dark:bg-neutral-950">
+        <div className="bg-white dark:bg-neutral-900/50 border-b border-border/50 backdrop-blur-xl">
           <div className="max-w-7xl mx-auto px-1.5 sm:px-4 py-24 space-y-12">
             <Skeleton className="h-6 w-32" />
             <div className="flex justify-between items-end gap-8">
@@ -71,14 +71,14 @@ export default function CategoryDetailsPage() {
   /* ───────────────── ERROR STATE ───────────────── */
   if (isError) {
     return (
-      <section className="min-h-[70vh] flex flex-col items-center justify-center text-center p-4">
-        <div className="w-20 h-20 bg-destructive/5 rounded-full flex items-center justify-center mb-6">
-          <PackageOpen className="h-10 w-10 text-destructive" />
+      <section className="min-h-[70vh] flex flex-col items-center justify-center text-center p-4 bg-white dark:bg-neutral-950">
+        <div className="w-24 h-24 bg-rose-500/10 dark:bg-rose-500/10 rounded-full flex items-center justify-center mb-8 ring-8 ring-rose-500/5">
+          <PackageOpen className="h-12 w-12 text-rose-500" />
         </div>
-        <h2 className="text-2xl font-black text-foreground tracking-tight">
-          Failed to load marketplace
+        <h2 className="text-3xl font-black text-foreground tracking-tight">
+          Oops! Something went wrong
         </h2>
-        <p className="text-muted-foreground mt-2 max-w-sm">
+        <p className="text-muted-foreground mt-3 max-w-sm font-medium leading-relaxed">
           We encountered an error while fetching products for this category.
           Please refresh and try again.
         </p>
@@ -87,7 +87,7 @@ export default function CategoryDetailsPage() {
   }
 
   return (
-    <section className="min-h-screen bg-neutral-50/50 pb-24">
+    <section className="min-h-screen bg-neutral-50/50 dark:bg-neutral-950 pb-24 transition-colors duration-300">
       <div ref={sectionRef} />
 
       <CategoryDetailsHeader name={slug || ""} count={pagination?.total || 0} />
@@ -161,7 +161,7 @@ export default function CategoryDetailsPage() {
 
               {/* ─── PAGINATION ─── */}
               {pagination && pagination.pages > 1 && (
-                <div className="flex justify-center border-t border-border/50 pt-16">
+                <div className="flex justify-center border-t border-border/50 dark:border-white/10 pt-16">
                   <Pagination
                     page={pagination.page}
                     pages={pagination.pages}
@@ -177,13 +177,15 @@ export default function CategoryDetailsPage() {
               key="empty"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-center py-32 bg-white/50 backdrop-blur-md rounded-[3rem] border border-border/50 px-4"
+              className="text-center py-32 bg-white/50 dark:bg-neutral-900/40 backdrop-blur-xl rounded-[3rem] border border-zinc-200 dark:border-white/5 shadow-sm px-4"
             >
-              <Search className="h-16 w-16 mx-auto mb-6 text-primary/20" />
-              <h3 className="text-2xl font-black text-foreground">
+              <div className="w-24 h-24 bg-primary/10 dark:bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-8 ring-8 ring-primary/5 dark:ring-emerald-500/5">
+                <Search className="h-12 w-12 text-primary dark:text-emerald-400" />
+              </div>
+              <h3 className="text-3xl font-black text-foreground tracking-tight">
                 No Products Found
               </h3>
-              <p className="text-muted-foreground mt-2 max-w-sm mx-auto font-medium">
+              <p className="text-muted-foreground mt-3 max-w-sm mx-auto font-medium leading-relaxed italic">
                 We couldn't find any items in this collection. Browse other
                 categories or come back later!
               </p>

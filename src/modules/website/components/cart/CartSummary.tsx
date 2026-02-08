@@ -37,7 +37,7 @@ export function CartSummary({
   onContinueShopping,
 }: CartSummaryProps) {
   return (
-    <Card className="h-fit rounded-2xl sm:rounded-3xl border shadow-lg bg-white border-zinc-100 dark:bg-zinc-900 dark:border-zinc-800">
+    <Card className="h-fit rounded-2xl sm:rounded-3xl border shadow-lg bg-white border-zinc-100 dark:bg-zinc-900 dark:border-white/5">
       <CardHeader className="px-5 py-4 flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-lg font-black tracking-tight text-foreground">
           Order Summary
@@ -110,7 +110,7 @@ export function CartSummary({
 
         <Button
           variant="outline"
-          className="w-full rounded-2xl h-12 text-base font-bold border-zinc-200 dark:border-zinc-800"
+          className="w-full rounded-2xl h-12 text-base font-bold border-zinc-200 dark:border-white/10"
           onClick={onContinueShopping}
         >
           <Package className="mr-2 h-4 w-4" />

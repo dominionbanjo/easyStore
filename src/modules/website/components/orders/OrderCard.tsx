@@ -94,7 +94,7 @@ export function OrderCard({ order, index = 0 }: OrderCardProps) {
       transition={{ duration: 0.3, delay: index * 0.05 }}
     >
       <Card
-        className="group relative bg-white border border-gray-200 hover:shadow-lg transition-all duration-300 overflow-hidden cursor-pointer rounded-2xl"
+        className="group relative bg-white dark:bg-neutral-900 border border-gray-200 dark:border-white/5 hover:shadow-lg dark:hover:shadow-emerald-950/20 transition-all duration-300 overflow-hidden cursor-pointer rounded-2xl"
         onClick={() => navigate(buildRoute.orderDetails(order.id))}
       >
         <div className="p-5 sm:p-6">
@@ -103,14 +103,14 @@ export function OrderCard({ order, index = 0 }: OrderCardProps) {
             <div className="flex-1 min-w-0">
               {/* Order Reference */}
               <div className="flex items-center gap-2 mb-2">
-                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-100 group/ref relative">
-                  <ShoppingBag className="h-4 w-4 text-gray-600 flex-shrink-0" />
-                  <span className="text-sm font-semibold text-gray-700">
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-100 dark:bg-neutral-800 group/ref relative">
+                  <ShoppingBag className="h-4 w-4 text-gray-600 dark:text-neutral-400 flex-shrink-0" />
+                  <span className="text-sm font-semibold text-gray-700 dark:text-neutral-200">
                     Order #{displayRef}
                   </span>
                   <button
                     onClick={handleCopy}
-                    className="ml-1 p-1 hover:bg-gray-200 rounded-md transition-colors text-gray-400 hover:text-gray-600"
+                    className="ml-1 p-1 hover:bg-gray-200 dark:hover:bg-neutral-700 rounded-md transition-colors text-gray-400 hover:text-gray-600 dark:hover:text-neutral-300"
                     title="Copy Full Reference"
                   >
                     {isCopied ? (
@@ -125,14 +125,14 @@ export function OrderCard({ order, index = 0 }: OrderCardProps) {
               {/* Store & Date */}
               <div className="flex flex-wrap items-center gap-3">
                 {order.vendor?.store && (
-                  <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-50 border border-purple-100">
-                    <ShoppingBag className="h-3.5 w-3.5 text-purple-600 flex-shrink-0" />
-                    <span className="text-xs font-bold text-purple-700 truncate max-w-[120px]">
+                  <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-50 dark:bg-purple-950/30 border border-purple-100 dark:border-purple-900/30">
+                    <ShoppingBag className="h-3.5 w-3.5 text-purple-600 dark:text-purple-400 flex-shrink-0" />
+                    <span className="text-xs font-bold text-purple-700 dark:text-purple-300 truncate max-w-[120px]">
                       {order.vendor.store.store_name}
                     </span>
                   </div>
                 )}
-                <div className="flex items-center gap-2 text-gray-500">
+                <div className="flex items-center gap-2 text-muted-foreground">
                   <Calendar className="h-4 w-4 flex-shrink-0" />
                   <span className="text-sm font-medium">{formattedDate}</span>
                 </div>
@@ -148,9 +148,9 @@ export function OrderCard({ order, index = 0 }: OrderCardProps) {
           </div>
 
           {/* Product Section */}
-          <div className="flex gap-4 mb-5 pb-5 border-b border-gray-200">
+          <div className="flex gap-4 mb-5 pb-5 border-b border-gray-100 dark:border-white/5">
             {/* Product Image */}
-            <div className="w-24 h-24 sm:w-28 sm:h-28 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl overflow-hidden flex-shrink-0 relative">
+            <div className="w-24 h-24 sm:w-28 sm:h-28 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-neutral-800 dark:to-neutral-900 rounded-xl overflow-hidden flex-shrink-0 relative">
               {firstItem?.image ? (
                 <img
                   src={firstItem.image}
@@ -158,7 +158,7 @@ export function OrderCard({ order, index = 0 }: OrderCardProps) {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="flex items-center justify-center h-full text-gray-300 bg-white">
+                <div className="flex items-center justify-center h-full text-gray-300 dark:text-neutral-600 bg-white dark:bg-neutral-800">
                   <Package className="h-10 w-10" />
                 </div>
               )}
@@ -167,10 +167,10 @@ export function OrderCard({ order, index = 0 }: OrderCardProps) {
             {/* Product Info */}
             <div className="flex-1 min-w-0 flex flex-col justify-center">
               {/* Product Name */}
-              <h3 className="font-bold text-gray-900 text-base sm:text-lg mb-2 line-clamp-2">
+              <h3 className="font-bold text-foreground text-base sm:text-lg mb-2 line-clamp-2">
                 {firstItem?.name || "Order Items"}
                 {itemCount > 1 && (
-                  <span className="text-gray-500 font-normal ml-1">
+                  <span className="text-muted-foreground font-normal ml-1">
                     +{itemCount - 1} more
                   </span>
                 )}
@@ -178,7 +178,7 @@ export function OrderCard({ order, index = 0 }: OrderCardProps) {
 
               {/* Item Count & Delivery Status */}
               <div className="space-y-1">
-                <div className="flex items-center gap-2 text-gray-600">
+                <div className="flex items-center gap-2 text-muted-foreground">
                   <Package className="h-4 w-4 flex-shrink-0" />
                   <span className="text-sm font-medium">
                     {itemCount} {itemCount === 1 ? "Item" : "Items"}
@@ -188,8 +188,8 @@ export function OrderCard({ order, index = 0 }: OrderCardProps) {
                 {/* Delivery Status */}
                 {order.delivery && (
                   <div className="flex items-center gap-2">
-                    <Truck className="h-4 w-4 flex-shrink-0 text-gray-500" />
-                    <span className="text-xs font-semibold text-gray-600 capitalize">
+                    <Truck className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
+                    <span className="text-xs font-semibold text-muted-foreground capitalize">
                       {order.delivery.delivery_status.replace("_", " ")}
                     </span>
                   </div>
@@ -211,7 +211,7 @@ export function OrderCard({ order, index = 0 }: OrderCardProps) {
             {/* Total & Arrow */}
             <div className="flex items-center gap-4">
               <div className="text-right">
-                <div className="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-0.5">
+                <div className="text-xs uppercase tracking-wider text-muted-foreground font-semibold mb-0.5">
                   TOTAL
                 </div>
                 <div className="text-xl sm:text-2xl font-black text-emerald-600">

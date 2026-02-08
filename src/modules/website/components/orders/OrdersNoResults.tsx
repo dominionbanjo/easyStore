@@ -21,15 +21,15 @@ export function OrdersNoResults({
       className="flex flex-col items-center justify-center py-16 px-6 text-center"
     >
       {/* No Results Icon */}
-      <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-6">
-        <SearchX className="h-10 w-10 text-gray-400" />
+      <div className="w-20 h-20 bg-gray-100 dark:bg-neutral-800 rounded-full flex items-center justify-center mb-6">
+        <SearchX className="h-10 w-10 text-gray-400 dark:text-neutral-500" />
       </div>
 
       {/* No Results Message */}
-      <h2 className="text-2xl font-black text-gray-900 mb-2">
+      <h2 className="text-2xl font-black text-foreground mb-2">
         No orders found
       </h2>
-      <p className="text-gray-600 mb-6 max-w-md">
+      <p className="text-muted-foreground mb-6 max-w-md">
         We couldn't find any orders matching your search criteria.
       </p>
 
@@ -38,7 +38,7 @@ export function OrdersNoResults({
         {searchTerm && (
           <Badge
             variant="secondary"
-            className="px-3 py-1.5 text-sm font-semibold rounded-full bg-gray-100 text-gray-700"
+            className="px-3 py-1.5 text-sm font-semibold rounded-full bg-gray-100 dark:bg-neutral-800 text-gray-700 dark:text-neutral-300"
           >
             Search: "{searchTerm}"
           </Badge>
@@ -46,7 +46,7 @@ export function OrdersNoResults({
         {statusFilter !== "all" && (
           <Badge
             variant="secondary"
-            className="px-3 py-1.5 text-sm font-semibold rounded-full bg-gray-100 text-gray-700 capitalize"
+            className="px-3 py-1.5 text-sm font-semibold rounded-full bg-gray-100 dark:bg-neutral-800 text-gray-700 dark:text-neutral-300 capitalize"
           >
             Status: {statusFilter}
           </Badge>

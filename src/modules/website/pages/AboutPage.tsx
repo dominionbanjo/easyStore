@@ -15,10 +15,10 @@ import { Card } from "@/components/ui/card";
 
 export default function AboutPage() {
   return (
-    <main className="min-h-screen bg-neutral-50/50 text-foreground selection:bg-primary/20">
+    <main className="min-h-screen bg-neutral-50/50 dark:bg-neutral-950 text-foreground selection:bg-primary/20 transition-colors duration-300">
       {/* ──────────────── HERO ──────────────── */}
-      <section className="relative overflow-hidden border-b border-border/50 bg-white">
-        <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-30 pointer-events-none" />
+      <section className="relative overflow-hidden border-b border-border/50 dark:border-white/10 bg-white dark:bg-neutral-900">
+        <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#333_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-30 pointer-events-none" />
 
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-16 md:py-32 relative z-10 text-center">
           <motion.div
@@ -73,7 +73,7 @@ export default function AboutPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              className="bg-white rounded-[2rem] p-6 sm:p-8 shadow-sm border border-border/50 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+              className="bg-white dark:bg-neutral-900 rounded-[2rem] p-6 sm:p-8 shadow-sm border border-border/50 dark:border-white/10 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
             >
               <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-primary/5 flex items-center justify-center text-primary mb-5 md:mb-6">
                 {item.icon}
@@ -90,7 +90,7 @@ export default function AboutPage() {
       </section>
 
       {/* ──────────────── LEADERSHIP ──────────────── */}
-      <section className="bg-white border-y border-border/50">
+      <section className="bg-white dark:bg-neutral-900 border-y border-border/50 dark:border-white/10">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-16 md:py-24">
           <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
             <motion.div
@@ -158,7 +158,7 @@ export default function AboutPage() {
                 <div className="flex flex-col sm:flex-row flex-wrap gap-4">
                   <Button
                     variant="outline"
-                    className="rounded-full h-10 sm:h-12 px-4 sm:px-6 gap-2 border-border/50 hover:bg-neutral-50 hover:text-primary transition-colors text-xs sm:text-sm overflow-hidden"
+                    className="rounded-full h-10 sm:h-12 px-4 sm:px-6 gap-2 border-border/50 dark:border-white/10 hover:bg-neutral-50 dark:hover:bg-neutral-800 hover:text-primary transition-colors text-xs sm:text-sm overflow-hidden"
                   >
                     <Mail className="w-4 h-4 shrink-0" />
                     <a
@@ -170,7 +170,7 @@ export default function AboutPage() {
                   </Button>
                   <Button
                     variant="outline"
-                    className="rounded-full h-10 sm:h-12 px-4 sm:px-6 gap-2 border-border/50 hover:bg-neutral-50 hover:text-primary transition-colors text-xs sm:text-sm"
+                    className="rounded-full h-10 sm:h-12 px-4 sm:px-6 gap-2 border-border/50 dark:border-white/10 hover:bg-neutral-50 dark:hover:bg-neutral-800 hover:text-primary transition-colors text-xs sm:text-sm"
                   >
                     <Phone className="w-4 h-4 shrink-0" />
                     <a href="tel:+2347063442580">+234 706 344 2580</a>

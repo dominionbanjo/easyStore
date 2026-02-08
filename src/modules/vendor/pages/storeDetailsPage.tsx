@@ -94,7 +94,7 @@ export default function StoreDetailsPage() {
 
   if (storeLoading || !store) {
     return (
-      <div className="min-h-screen bg-neutral-50/50 py-20 px-1.5 sm:px-4">
+      <div className="min-h-screen py-20 px-1.5 sm:px-4">
         <div className="max-w-7xl mx-auto space-y-8">
           <Skeleton className="h-[400px] rounded-[3rem]" />
           <div className="flex justify-center">
@@ -115,7 +115,7 @@ export default function StoreDetailsPage() {
   /* ───────────────── RENDER ───────────────── */
 
   return (
-    <section className="min-h-screen bg-neutral-50/50 pb-20 mt-10">
+    <section className="min-h-screen pb-20 mt-10">
       {/* ─── HEADER ─── */}
       <StoreHeaderSection
         store={{

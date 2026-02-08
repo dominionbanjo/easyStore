@@ -11,6 +11,7 @@ import {
   DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
 import { MobileSearchFilters } from "./Sidebar";
+import { cn } from "@/lib/utils";
 
 interface SearchResultsHeaderProps {
   totalResults?: number;
@@ -47,37 +48,40 @@ export function SearchResultsHeader({
   )?.label;
 
   return (
-    <div className="flex flex-col gap-4 md:flex-row md:items-end justify-between border-b pb-4">
-      <div className="space-y-1">
-        <h1 className="text-2xl font-bold tracking-tight text-foreground">
+    <div className="flex flex-col gap-6 md:flex-row md:items-end justify-between border-b border-zinc-200 dark:border-white/10 pb-8 transition-colors duration-300">
+      <div className="space-y-2">
+        <h1 className="text-3xl md:text-5xl font-black tracking-tighter text-foreground">
           {categoryName ? (
             categoryName
           ) : query ? (
             <>
-              Results for <span className="text-primary italic">"{query}"</span>
+              Results for{" "}
+              <span className="text-primary dark:text-emerald-400 italic">
+                "{query}"
+              </span>
             </>
           ) : (
             "All Products"
           )}
         </h1>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm md:text-base font-medium text-muted-foreground/60">
           {typeof totalResults === "number" ? (
             <>
-              Showing{" "}
-              <span className="font-medium text-foreground">
-                {totalResults}
-              </span>{" "}
-              results
+              Discovered{" "}
+              <span className="text-foreground font-black">{totalResults}</span>{" "}
+              products
             </>
           ) : (
-            "Loading results..."
+            "Scanning marketplace..."
           )}
         </p>
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-3 w-full md:w-auto mt-4 md:mt-0">
         {/* Mobile Filters Trigger */}
-        <MobileSearchFilters products={products} />
+        <div className="flex-1 md:flex-initial">
+          <MobileSearchFilters products={products} />
+        </div>
 
         {/* Sort Dropdown */}
         <DropdownMenu>
@@ -85,32 +89,45 @@ export function SearchResultsHeader({
             <Button
               variant="outline"
               size="sm"
-              className="h-9 gap-2 min-w-[140px] justify-between"
+              className="flex-1 md:flex-none h-12 md:h-11 px-6 rounded-2xl border-zinc-200 dark:border-emerald-500/20 bg-white dark:bg-neutral-900 backdrop-blur-xl hover:bg-zinc-50 dark:hover:bg-neutral-800 transition-all font-black text-xs shadow-sm justify-between gap-4 min-w-[160px] text-zinc-900 dark:text-white relative group overflow-hidden"
             >
-              <span className="flex items-center gap-2 truncate">
-                <ArrowUpDown className="h-3.5 w-3.5 text-muted-foreground" />
-                <span className="truncate">{activeSortLabel}</span>
+              <div className="absolute inset-0 bg-gradient-to-tr from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <span className="flex items-center gap-2.5 truncate relative z-10">
+                <ArrowUpDown className="h-4 w-4 text-emerald-500 dark:text-emerald-400" />
+                <span className="truncate uppercase tracking-[0.15em]">
+                  {activeSortLabel}
+                </span>
               </span>
-              <ChevronDown className="h-3 w-3 opacity-50" />
+              <ChevronDown className="h-4 w-4 opacity-40 group-hover:opacity-100 transition-opacity" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-[180px]">
-            <DropdownMenuLabel className="text-xs text-muted-foreground">
-              Sort by
+          <DropdownMenuContent
+            align="end"
+            className="w-[220px] rounded-2xl shadow-2xl border-zinc-200 dark:border-emerald-500/10 p-2 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-xl"
+          >
+            <DropdownMenuLabel className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/50 px-3 py-3">
+              Order by
             </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            {SORT_OPTIONS.map((option) => (
-              <DropdownMenuItem
-                key={option.value}
-                onClick={() => handleSort(option.value)}
-                className="justify-between"
-              >
-                {option.label}
-                {currentSort === option.value && (
-                  <div className="h-1.5 w-1.5 rounded-full bg-primary" />
-                )}
-              </DropdownMenuItem>
-            ))}
+            <DropdownMenuSeparator className="bg-zinc-100 dark:bg-white/5 mx-1" />
+            <div className="space-y-1 mt-1">
+              {SORT_OPTIONS.map((option) => (
+                <DropdownMenuItem
+                  key={option.value}
+                  onClick={() => handleSort(option.value)}
+                  className={cn(
+                    "flex items-center justify-between rounded-xl px-3 py-3 text-xs font-bold transition-all cursor-pointer",
+                    currentSort === option.value
+                      ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                      : "text-muted-foreground hover:bg-zinc-100 dark:hover:bg-white/5 hover:text-foreground",
+                  )}
+                >
+                  {option.label}
+                  {currentSort === option.value && (
+                    <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]" />
+                  )}
+                </DropdownMenuItem>
+              ))}
+            </div>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
