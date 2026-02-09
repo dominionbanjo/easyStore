@@ -5,7 +5,6 @@ import { toast } from "sonner";
 import { setUser } from "@/features/userSlice";
 import { useGetUserProfileQuery } from "@/services/userApi";
 import { useGoogleLoginMutation } from "@/services/authApi";
-import LoadingScreen from "@/Loading";
 import type { RootState } from "@/store";
 
 export default function AuthProvider({
@@ -19,7 +18,7 @@ export default function AuthProvider({
   const initializedRef = useRef(false);
 
   // 🔹 Normal user profile check (if token exists but not authenticated in Redux)
-  const { data, isLoading } = useGetUserProfileQuery(undefined, {
+  const { data } = useGetUserProfileQuery(undefined, {
     skip: !token || isAuthenticated,
   });
 
@@ -80,10 +79,6 @@ export default function AuthProvider({
 
     return () => clearInterval(timerId);
   }, [googleLogin, token]);
-
-  if (token && isLoading) {
-    return <LoadingScreen />;
-  }
 
   return <>{children}</>;
 }
