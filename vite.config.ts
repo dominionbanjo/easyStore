@@ -28,35 +28,35 @@ export default defineConfig({
     reportCompressedSize: false,
     rollupOptions: {
       output: {
-        manualChunks(id) {
-          if (id.includes("node_modules")) {
-            // Core Framework
-            if (
-              id.includes("react") ||
-              id.includes("react-dom") ||
-              id.includes("react-router-dom") ||
-              id.includes("@reduxjs") ||
-              id.includes("react-redux")
-            ) {
-              return "vendor-core";
-            }
-            // Major UI
-            if (
-              id.includes("@radix-ui") ||
-              id.includes("framer-motion") ||
-              id.includes("motion") ||
-              id.includes("lucide-react") ||
-              id.includes("react-icons")
-            ) {
-              return "vendor-ui";
-            }
-            // Data Vis
-            if (id.includes("recharts") || id.includes("d3")) {
-              return "vendor-charts";
-            }
-            return "vendor";
-          }
-        },
+        // manualChunks(id) {
+        //   if (id.includes("node_modules")) {
+        //     // Core Framework
+        //     if (
+        //       id.includes("react") ||
+        //       id.includes("react-dom") ||
+        //       id.includes("react-router-dom") ||
+        //       id.includes("@reduxjs") ||
+        //       id.includes("react-redux")
+        //     ) {
+        //       return "vendor-core";
+        //     }
+        //     // Major UI
+        //     if (
+        //       id.includes("@radix-ui") ||
+        //       id.includes("framer-motion") ||
+        //       id.includes("motion") ||
+        //       id.includes("lucide-react") ||
+        //       id.includes("react-icons")
+        //     ) {
+        //       return "vendor-ui";
+        //     }
+        //     // Data Vis
+        //     if (id.includes("recharts") || id.includes("d3")) {
+        //       return "vendor-charts";
+        //     }
+        //     return "vendor";
+        //   }
+        // },
       },
     },
   },
