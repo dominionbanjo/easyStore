@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
@@ -17,7 +17,7 @@ export default function SuperAdminDashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const { isAuthenticated, isLoading, currentUser } = useSelector(
-    (state: RootState) => state.user
+    (state: RootState) => state.user,
   );
 
   const token = Cookies.get("token");
@@ -63,7 +63,7 @@ export default function SuperAdminDashboardLayout() {
       <div
         className={cn(
           "flex flex-col flex-1 min-w-0 transition-all duration-300",
-          "md:ml-[260px]"
+          "md:ml-[260px]",
         )}
       >
         <SuperAdminHeader onMenuToggle={() => setSidebarOpen(!sidebarOpen)} />
@@ -72,7 +72,9 @@ export default function SuperAdminDashboardLayout() {
           layout
           className="p-6 md:p-10 w-full max-w-7xl mx-auto space-y-10"
         >
-          <Outlet />
+          <Suspense fallback={<LoadingScreen fullPage={false} />}>
+            <Outlet />
+          </Suspense>
         </motion.main>
       </div>
     </section>

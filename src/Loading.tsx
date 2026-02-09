@@ -1,6 +1,10 @@
 import { motion, type Variants } from "framer-motion";
 
-export default function LoadingScreen() {
+export default function LoadingScreen({
+  fullPage = true,
+}: {
+  fullPage?: boolean;
+}) {
   const brandName = "EasyStore";
 
   // Animation variants
@@ -38,7 +42,9 @@ export default function LoadingScreen() {
   };
 
   return (
-    <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-background overflow-hidden">
+    <div
+      className={`${fullPage ? "fixed inset-0 z-[9999]" : "relative h-[70vh] w-full rounded-[3rem] mt-10"} flex flex-col items-center justify-center bg-background overflow-hidden`}
+    >
       {/* ─── Premium Background Ambient Glow ─── */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/10 rounded-full blur-[120px] pointer-events-none animate-pulse" />
       <div className="absolute -top-20 -left-20 w-[400px] h-[400px] bg-primary/5 rounded-full blur-[100px] pointer-events-none" />

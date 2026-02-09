@@ -3,22 +3,17 @@ import { lazy } from "react";
 /* ───────────────── LAYOUTS ───────────────── */
 
 // Website Layouts
-export const HomepageLayout = lazy(
-  () => import("@/modules/website/layout/HomePageLayout"),
-);
-export const AccountsLayout = lazy(
-  () => import("@/modules/website/layout/AccountsLayout"),
-);
+import HomepageLayout from "@/modules/website/layout/HomePageLayout";
+import AccountsLayout from "@/modules/website/layout/AccountsLayout";
+import VendorDashboardLayout from "@/modules/vendor/layout/VendorDashboardLayout";
+import SuperAdminDashboardLayout from "@/modules/admin/layout/SuperAdminDashboardLayout";
 
-// Vendor Layout
-export const VendorDashboardLayout = lazy(
-  () => import("@/modules/vendor/layout/VendorDashboardLayout"),
-);
-
-// Admin Layout
-export const SuperAdminDashboardLayout = lazy(
-  () => import("@/modules/admin/layout/SuperAdminDashboardLayout"),
-);
+export {
+  HomepageLayout,
+  AccountsLayout,
+  VendorDashboardLayout,
+  SuperAdminDashboardLayout,
+};
 
 /* ───────────────── WEBSITE PAGES ───────────────── */
 

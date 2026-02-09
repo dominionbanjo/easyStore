@@ -49,12 +49,14 @@ export default function StoreHeaderSection({ store }: StoreHeaderProps) {
     ? `${store.user.first_name} ${store.user.last_name}`
     : store.name;
 
-  const initials = vendorName
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase()
-    .slice(0, 2);
+  const initials =
+    vendorName
+      .split(" ")
+      .filter(Boolean)
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2) || "ST";
 
   const displayLogo = store.user?.avatar || store.logo;
 
