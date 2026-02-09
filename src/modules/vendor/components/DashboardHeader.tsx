@@ -17,6 +17,7 @@ import { useLogoutMutation } from "@/services/authApi";
 import type { RootState } from "@/store";
 import { toast } from "sonner";
 import { WEBSITE_ROUTES } from "@/routes/temp";
+import NavigationProgressBar from "@/components/shared/NavigationProgressBar";
 
 interface DashboardHeaderProps {
   onMenuToggle: () => void;
@@ -149,6 +150,7 @@ export default function DashboardHeader({
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+      <NavigationProgressBar />
     </header>
   );
 }

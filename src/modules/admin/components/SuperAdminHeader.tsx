@@ -6,6 +6,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import NavigationProgressBar from "@/components/shared/NavigationProgressBar";
 
 interface SuperAdminHeaderProps {
   onMenuToggle: () => void;
@@ -84,6 +85,7 @@ export default function SuperAdminHeader({
           </PopoverContent>
         </Popover>
       </div>
+      <NavigationProgressBar />
     </header>
   );
 }

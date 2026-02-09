@@ -46,6 +46,7 @@ import FancyHoverText from "./FancyTextHover";
 import { CartDrawer } from "@/modules/website/components/cart/CartDrawer";
 import { useGetCartQuery } from "@/services/cartApi";
 import * as Pages from "@/routes/lazyPages";
+import NavigationProgressBar from "./NavigationProgressBar";
 
 export default function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
@@ -500,6 +501,7 @@ export default function Header() {
             )}
           </div>
         </div>
+        <NavigationProgressBar />
       </nav>
 
       {/* Mobile Expand Search */}

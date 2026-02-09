@@ -16,7 +16,6 @@ import {
   VendorDashboardLayout,
   SuperAdminDashboardLayout,
 } from "@/routes/lazyPages";
-import NavigationProgressBar from "@/components/shared/NavigationProgressBar";
 import LoadingScreen from "@/Loading";
 
 /* ───────────────── APP ───────────────── */
@@ -25,7 +24,6 @@ export default function App() {
   return (
     <Router>
       <ScrollToTop />
-      <NavigationProgressBar />
 
       {/* ─── GLOBAL SUSPENSE ─── */}
       <Suspense fallback={<LoadingScreen />}>
