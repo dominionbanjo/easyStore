@@ -2,7 +2,6 @@ import { Suspense } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import Header from "@/components/shared/Header";
 import Footer from "@/components/shared/Footer";
-import ScrollToTop from "@/components/shared/ScrollToTop";
 import LoadingScreen from "@/Loading";
 export default function HomepageLayout() {
   const location = useLocation();
@@ -21,9 +20,7 @@ export default function HomepageLayout() {
           </div>
         </Suspense>
       </main>
-      {/* ⚓ Footer */}
       <Footer />
-      <ScrollToTop />
     </div>
   );
 }

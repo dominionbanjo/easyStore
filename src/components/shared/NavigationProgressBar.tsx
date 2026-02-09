@@ -15,23 +15,23 @@ export default function NavigationProgressBar() {
 
   // Trigger progress bar on location change
   useEffect(() => {
+    // Reset and start immediately
     setIsNavigating(true);
-    setProgress(30);
+    setProgress(40); // Higher initial jump for instant feel
 
     // Smoothly progress towards 90%
     const interval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 90) return 90;
-        return prev + Math.random() * 5;
+        return prev + Math.random() * 8; // Faster random increments
       });
-    }, 250);
+    }, 150); // Faster interval
 
-    // Give it a bit more time to show the premium feel,
-    // and wait for actual chunk loading (which usually takes ~300-800ms)
+    // Minimum display time for premium feel, but faster resolution
     const timeout = setTimeout(() => {
       setProgress(100);
-      setTimeout(() => setIsNavigating(false), 500); // Wait for fade out
-    }, 800); // Longer baseline for premium feel
+      setTimeout(() => setIsNavigating(false), 300); // Faster fade out
+    }, 500); // Shorter baseline
 
     return () => {
       clearInterval(interval);

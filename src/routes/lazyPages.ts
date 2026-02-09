@@ -1,19 +1,17 @@
 import { lazy } from "react";
 
-/* ───────────────── LAYOUTS ───────────────── */
+/* ───────────────── LAYOUTS (Direct Imports for snappier Shell) ───────────────── */
+import HomepageLayout from "@/modules/website/layout/HomePageLayout";
+import AccountsLayout from "@/modules/website/layout/AccountsLayout";
+import VendorDashboardLayout from "@/modules/vendor/layout/VendorDashboardLayout";
+import SuperAdminDashboardLayout from "@/modules/admin/layout/SuperAdminDashboardLayout";
 
-export const HomepageLayout = lazy(
-  () => import("@/modules/website/layout/HomePageLayout"),
-);
-export const AccountsLayout = lazy(
-  () => import("@/modules/website/layout/AccountsLayout"),
-);
-export const VendorDashboardLayout = lazy(
-  () => import("@/modules/vendor/layout/VendorDashboardLayout"),
-);
-export const SuperAdminDashboardLayout = lazy(
-  () => import("@/modules/admin/layout/SuperAdminDashboardLayout"),
-);
+export {
+  HomepageLayout,
+  AccountsLayout,
+  VendorDashboardLayout,
+  SuperAdminDashboardLayout,
+};
 
 /* ───────────────── WEBSITE PAGES ───────────────── */
 
