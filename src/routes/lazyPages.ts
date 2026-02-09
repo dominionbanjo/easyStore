@@ -5,18 +5,18 @@ import HomepageLayout from "@/modules/website/layout/HomePageLayout";
 import AccountsLayout from "@/modules/website/layout/AccountsLayout";
 import VendorDashboardLayout from "@/modules/vendor/layout/VendorDashboardLayout";
 import SuperAdminDashboardLayout from "@/modules/admin/layout/SuperAdminDashboardLayout";
+import LandingPage from "@/modules/website/pages/LandingPage";
 
 export {
   HomepageLayout,
   AccountsLayout,
   VendorDashboardLayout,
   SuperAdminDashboardLayout,
+  LandingPage,
 };
 
 /* ───────────────── WEBSITE PAGES ───────────────── */
-const LandingPageImport = () => import("@/modules/website/pages/LandingPage");
-export const LandingPage = lazy(LandingPageImport);
-export const preloadLandingPage = LandingPageImport;
+export const preloadLandingPage = () => Promise.resolve();
 
 const AboutPageImport = () => import("@/modules/website/pages/AboutPage");
 export const AboutPage = lazy(AboutPageImport);

@@ -12,15 +12,14 @@ import SmartLink from "@/components/shared/SmartLink";
 
 // Hero main fade-in animation
 const transitionVariants: Variants = {
-  hidden: { opacity: 0, y: 30, filter: "blur(10px)" },
+  hidden: { opacity: 0, y: 20 },
   visible: {
     opacity: 1,
     y: 0,
-    filter: "blur(0px)",
     transition: {
       type: "spring",
-      bounce: 0.3,
-      duration: 1.4,
+      bounce: 0.2,
+      duration: 0.8,
     },
   },
 };
@@ -79,7 +78,7 @@ export default function HeroSection() {
               variants={transitionVariants}
               initial="hidden"
               animate="visible"
-              transition={{ delay: 0.2 }}
+              transition={{ delay: 0.1 }}
               className="mt-6 max-w-xl mx-auto lg:mx-0 text-lg sm:text-xl leading-relaxed text-muted-foreground"
             >
               EasyStore gives you everything you need to sell online. Create
@@ -92,7 +91,7 @@ export default function HeroSection() {
               variants={transitionVariants}
               initial="hidden"
               animate="visible"
-              transition={{ delay: 0.4 }}
+              transition={{ delay: 0.2 }}
               className="mt-10 flex flex-col sm:flex-row items-center lg:items-start gap-6"
             >
               {!user || user.account_type === "vendor" ? (
