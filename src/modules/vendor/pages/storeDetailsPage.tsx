@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 import StoreHeaderSection from "@/modules/vendor/components/StoreHeaderSection";
@@ -13,6 +13,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { StoreCategoriesGrid } from "../components/Store-details-page/StoreCategoriesGrid";
 import { StoreProductsGrid } from "../components/Store-details-page/StoreProductsGrid";
 import { StoreTabs } from "../components/Store-details-page/StoreTabs";
+import { Search, X, Loader2 } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 /* ───────────────── COMPONENT ───────────────── */
 
@@ -23,10 +25,28 @@ export default function StoreDetailsPage() {
     "products",
   );
   const [page, setPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
+
   const [selectedCategory, setSelectedCategory] = useState<{
     id: string;
     name: string;
   } | null>(null);
+
+  // Debounce search
+  useEffect(() => {
+    if (searchQuery !== debouncedSearch) {
+      setIsSearching(true);
+    }
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+      setPage(1); // Reset page on search
+      setIsSearching(false);
+    }, 500);
+
+    return () => clearTimeout(handler);
+  }, [searchQuery, debouncedSearch]);
 
   /* ─── STORE DETAILS ─── */
 
@@ -42,7 +62,7 @@ export default function StoreDetailsPage() {
     isLoading: productsLoading,
     isFetching: productsFetching,
   } = useGetStoreProductsQuery(
-    { slug: slug ?? "", page, limit: 20 },
+    { slug: slug ?? "", page, limit: 20, q: debouncedSearch },
     { skip: activeTab !== "products" },
   );
 
@@ -81,7 +101,9 @@ export default function StoreDetailsPage() {
     activeTab === "products" ? productsLoading : categoryLoading;
 
   const isProductsFetching =
-    activeTab === "products" ? productsFetching : categoryFetching;
+    activeTab === "products"
+      ? productsFetching || isSearching
+      : categoryFetching;
 
   const productsKey =
     activeTab === "products"
@@ -132,7 +154,7 @@ export default function StoreDetailsPage() {
               .join(", ") || "Location not specified",
           email: store.email ?? undefined,
           phone: store.phone_number ?? undefined,
-          website: store.website ?? undefined,
+          social_links: store.social_links ?? undefined,
           totalProducts: store.total_products ?? 0,
           user: store.user,
         }}
@@ -146,8 +168,40 @@ export default function StoreDetailsPage() {
             setActiveTab(tab);
             setSelectedCategory(null);
             setPage(1);
+            setSearchQuery(""); // Clear search when changing tabs
           }}
         />
+
+        {/* ─── SEARCH BAR ─── */}
+        {activeTab === "products" && (
+          <div className="max-w-md mx-auto mt-8 px-4">
+            <div className="relative group">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <Search className="h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
+              </div>
+              <Input
+                type="text"
+                placeholder="Search in this store..."
+                className="pl-11 pr-11 py-6 bg-white/50 dark:bg-neutral-900/50 backdrop-blur-xl border-zinc-200 dark:border-white/10 rounded-2xl shadow-sm focus-visible:ring-primary/20 focus-visible:border-primary transition-all text-base"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <div className="absolute inset-y-0 right-0 pr-4 flex items-center gap-2">
+                {isSearching && (
+                  <Loader2 className="h-5 w-5 animate-spin text-primary" />
+                )}
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery("")}
+                    className="text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* ─── CONTENT ─── */}
         <div className="mt-16">

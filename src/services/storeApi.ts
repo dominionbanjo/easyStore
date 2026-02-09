@@ -151,6 +151,16 @@ export const storeApi = apiManager.injectEndpoints({
       }),
       invalidatesTags: ["Store"],
     }),
+
+    /* ───────── GET STORE ANALYTICS ───────── */
+    getMyStoreAnalytics: builder.query<any, void>({
+      query: () => ({
+        url: "store-analytics/me",
+        method: "GET",
+      }),
+      transformResponse: (response: any) => response?.data || response,
+      providesTags: ["Store"],
+    }),
   }),
 });
 
@@ -177,6 +187,7 @@ export const {
   useCreateStoreMutation,
   useGetVendorCustomersQuery,
   useGetMyStoreQuery,
+  useGetMyStoreAnalyticsQuery,
   useUpdateStoreMutation,
   useRegisterStoreBankMutation,
   useUpdateStoreBankMutation,

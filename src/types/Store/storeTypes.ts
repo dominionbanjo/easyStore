@@ -160,6 +160,7 @@ export interface GetStoreProductsArgs {
   slug: string;
   page?: number;
   limit?: number;
+  q?: string;
 }
 
 /* ───────── GET STORE PRODUCTS RESPONSE ───────── */

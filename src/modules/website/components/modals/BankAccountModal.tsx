@@ -4,9 +4,20 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-import { CheckCircle, Loader2, XCircle } from "lucide-react";
+import {
+  CheckCircle,
+  Loader2,
+  XCircle,
+  Landmark,
+  CreditCard,
+  ShieldCheck,
+  Mail,
+  ArrowRight,
+  X,
+  Sparkles,
+} from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { FormInput } from "@/components/shared/form/FormInput";
 import { FormSelect } from "@/components/shared/form/FormSelect";
@@ -103,13 +114,12 @@ export function BankAccountModal({
     return () => clearTimeout(timeout);
   }, [bankCode, accountNumber, verifyBank]);
 
-  /* ───────── SUBMIT ───────── */
-
   const onSubmit = async (values: BankFormValues) => {
     if (!verifiedData || isVerifying) return;
 
     try {
       await registerBank(values).unwrap();
+
       toast.success("Bank account saved successfully");
       onClose();
     } catch (e: any) {
@@ -117,89 +127,170 @@ export function BankAccountModal({
     }
   };
 
-  /* ───────── UI ───────── */
-
   return (
     <Dialog.Root open={open} onOpenChange={(v) => !v && onClose()}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-50 bg-black/50" />
+        {/* Adjusted Z-Index to 40/50 to fix SelectDropdown visibility issues */}
+        <Dialog.Overlay className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm transition-all" />
 
-        <Dialog.Content className="fixed inset-0 z-50 flex items-center justify-center px-4">
-          <Card className="w-full max-w-md rounded-xl">
-            <CardHeader>
-              <CardTitle>Add Bank Account</CardTitle>
-            </CardHeader>
+        <Dialog.Content className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[95vw] max-w-4xl max-h-[90vh] z-50 overflow-y-auto md:overflow-hidden rounded-[2.5rem] border-none shadow-2xl bg-background outline-none flex flex-col md:flex-row custom-scrollbar">
+          {/* Left Panel - Visual */}
+          <div className="w-full md:w-1/3 bg-gradient-to-br from-indigo-600 to-violet-700 p-8 text-white relative flex flex-col justify-between overflow-hidden shrink-0 min-h-[300px] md:min-h-0">
+            <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
+              <Landmark className="w-48 h-48 rotate-12 translate-x-12 translate-y-12" />
+            </div>
 
-            <CardContent>
-              <FormProvider {...form}>
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <div className="relative z-10">
+              <div className="h-16 w-16 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center mb-8 shadow-xl">
+                <CreditCard className="h-8 w-8 text-white" />
+              </div>
+              <h2 className="text-3xl font-black tracking-tight leading-none mb-4 uppercase">
+                Secure <br /> Payouts
+              </h2>
+              <p className="text-indigo-50/80 font-medium text-sm leading-relaxed">
+                Connect your bank account to receive direct settlements
+                securely.
+              </p>
+            </div>
+
+            <div className="relative z-10">
+              <div className="p-4 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/10 space-y-3">
+                <div className="flex items-center gap-3">
+                  <ShieldCheck className="h-5 w-5 text-indigo-300" />
+                  <p className="text-[10px] font-black uppercase tracking-widest text-white">
+                    Encrypted Storage
+                  </p>
+                </div>
+                <p className="text-[10px] text-indigo-50/60 font-medium italic">
+                  "We never store your full details. Everything is processed
+                  through Paystack."
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Panel - Form */}
+          <div className="w-full md:w-2/3 p-8 md:p-12 md:overflow-y-auto custom-scrollbar flex flex-col">
+            <div className="flex justify-between items-start mb-10">
+              <div>
+                <h3 className="text-2xl font-black uppercase tracking-tight text-foreground">
+                  Bank Account Details
+                </h3>
+                <p className="text-sm text-muted-foreground font-medium mt-1">
+                  Please provide valid Nigerian bank information.
+                </p>
+              </div>
+              <Dialog.Close asChild>
+                <button className="h-10 w-10 rounded-xl bg-muted/50 hover:bg-muted transition-colors flex items-center justify-center text-muted-foreground">
+                  <X className="h-5 w-5" />
+                </button>
+              </Dialog.Close>
+            </div>
+
+            <FormProvider {...form}>
+              <form
+                onSubmit={handleSubmit(onSubmit)}
+                className="space-y-8 min-h-0"
+              >
+                <div className="space-y-6">
                   <FormSelect
-                    label="Bank"
+                    label="Select Your Bank"
                     name="bank_code"
                     options={bankOptions}
                     disabled={banksLoading}
+                    icon={<Landmark className="h-4 w-4" />}
                     placeholder={
-                      banksLoading ? "Loading banks…" : "Select bank"
+                      banksLoading
+                        ? "Scanning banks…"
+                        : "Choose your institution"
                     }
                   />
 
-                  <div className="space-y-1">
+                  <div className="space-y-2">
                     <FormInput
                       label="Account Number"
                       name="account_number"
-                      placeholder="0123456789"
+                      placeholder="10 Digits (e.g. 0123456789)"
+                      icon={<CreditCard className="h-4 w-4" />}
                     />
 
-                    {isVerifying && (
-                      <p className="flex items-center gap-1 text-xs text-muted-foreground">
-                        <Loader2 className="h-3 w-3 animate-spin" />
-                        Verifying bank details…
-                      </p>
-                    )}
+                    <AnimatePresence mode="wait">
+                      {isVerifying && (
+                        <motion.p
+                          initial={{ opacity: 0, y: -5 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 5 }}
+                          className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-indigo-500"
+                        >
+                          <Loader2 className="h-3 w-3 animate-spin" />
+                          Verifying Account...
+                        </motion.p>
+                      )}
 
-                    {verifiedData && !isVerifying && (
-                      <p className="flex items-center gap-1 text-xs text-green-600">
-                        <CheckCircle className="h-3 w-3" />
-                        {verifiedData.account_name} — {verifiedData.bank_name}
-                      </p>
-                    )}
+                      {verifiedData && !isVerifying && (
+                        <motion.div
+                          initial={{ opacity: 0, y: -5 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20"
+                        >
+                          <div className="flex items-center gap-2 text-emerald-600 mb-1">
+                            <CheckCircle className="h-4 w-4" />
+                            <p className="text-xs font-black uppercase tracking-wide">
+                              Account Verified
+                            </p>
+                          </div>
+                          <p className="text-xs font-bold text-emerald-700 ml-6">
+                            {verifiedData.account_name}
+                          </p>
+                        </motion.div>
+                      )}
 
-                    {verifyError && !isVerifying && (
-                      <p className="flex items-center gap-1 text-xs text-red-500">
-                        <XCircle className="h-3 w-3" />
-                        {verifyError}
-                      </p>
-                    )}
+                      {verifyError && !isVerifying && (
+                        <motion.div
+                          initial={{ opacity: 0, y: -5 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-red-500"
+                        >
+                          <XCircle className="h-3 w-3" />
+                          {verifyError}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
 
                   <FormInput
-                    label="Settlement Email (optional)"
+                    label="Notification Email"
                     name="settlement_email"
-                    placeholder="email@example.com"
+                    placeholder="Where should we send settlement alerts?"
+                    icon={<Mail className="h-4 w-4" />}
                   />
-
-                  <div className="flex gap-3">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={onClose}
-                      className="flex-1"
+                </div>
+                <Button
+                  type="submit"
+                  className="h-14 w-full rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-black uppercase tracking-[0.2em] text-xs shadow-xl shadow-indigo-600/20 transition-all hover:scale-[1.01] active:scale-[0.99]"
+                  disabled={isLoading || isVerifying || !verifiedData}
+                >
+                  {isLoading ? (
+                    <motion.div
+                      animate={{ rotate: 360 }}
+                      transition={{
+                        repeat: Infinity,
+                        duration: 1,
+                        ease: "linear",
+                      }}
                     >
-                      Cancel
-                    </Button>
-
-                    <Button
-                      type="submit"
-                      className="flex-1"
-                      disabled={isLoading || isVerifying || !verifiedData}
-                    >
-                      {isLoading ? "Saving..." : "Save Bank"}
-                    </Button>
-                  </div>
-                </form>
-              </FormProvider>
-            </CardContent>
-          </Card>
+                      <Sparkles className="h-5 w-5" />
+                    </motion.div>
+                  ) : (
+                    <>
+                      Register Bank Account
+                      <ArrowRight className="h-4 w-4 ml-2" />
+                    </>
+                  )}
+                </Button>
+              </form>
+            </FormProvider>
+          </div>
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>

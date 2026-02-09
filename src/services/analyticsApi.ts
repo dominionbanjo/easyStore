@@ -8,6 +8,8 @@ export interface StoreAnalyticsSummary {
   customers: number;
   conversion_rate: string;
   total_products: number;
+  out_of_stock_count: number;
+  pending_orders_count: number;
 }
 
 export interface StoreAnalyticsTrend {

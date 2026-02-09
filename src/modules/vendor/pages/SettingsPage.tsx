@@ -20,6 +20,7 @@ import { StoreIdentityStep } from "../components/settings/StoreIdentityStep";
 import { ContactLocationStep } from "../components/settings/ContactLocationStep";
 import { PayoutSetupStep } from "../components/settings/PayoutSetupStep";
 import { AddressModal } from "../components/settings/AddressModal";
+import { useStoreSetup } from "../hooks/useStoreSetup";
 
 const STEPS = [
   { id: 1, title: "Store Identity", icon: Store },
@@ -171,19 +172,7 @@ export default function SettingsPage() {
     );
   }
 
-  const calculateProgress = () => {
-    let score = 0;
-    if (store?.store_name) score += 20;
-    if (store?.description) score += 10;
-    if (store?.cover_image) score += 10;
-    if (store?.address_street) score += 20;
-    if (store?.email && store?.phone_number) score += 20;
-    if (store?.payout_verified) score += 20;
-    return score;
-  };
-
-  const progress = calculateProgress();
-  const isValidated = store?.payout_verified && !!store?.recipient_code;
+  const { progress, isValidated } = useStoreSetup();
 
   return (
     <div className="max-w-5xl mx-auto space-y-8 pb-20">

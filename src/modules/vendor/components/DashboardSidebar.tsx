@@ -14,6 +14,7 @@ import {
 import { NavLink } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { StoreSetupTracker } from "./shared/StoreSetupTracker";
 
 const menuItems = [
   { label: "Dashboard", icon: LayoutDashboard, to: "/vendor", exact: true },
@@ -104,6 +105,12 @@ export default function DashboardSidebar({
             </NavLink>
           ))}
         </nav>
+
+        {!isCollapsed && (
+          <div className="mt-auto p-4 border-t border-border/20">
+            <StoreSetupTracker variant="minimal" />
+          </div>
+        )}
       </aside>
 
       {/* ─── Mobile Sidebar ─── */}
@@ -156,6 +163,10 @@ export default function DashboardSidebar({
                   </NavLink>
                 ))}
               </nav>
+
+              <div className="mt-auto p-4 border-t border-border/20">
+                <StoreSetupTracker variant="minimal" />
+              </div>
             </motion.aside>
           </>
         )}

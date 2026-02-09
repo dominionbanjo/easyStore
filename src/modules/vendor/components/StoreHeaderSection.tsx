@@ -10,6 +10,10 @@ import {
   Store,
   Share2,
   ShieldCheck,
+  Instagram,
+  Facebook,
+  Twitter,
+  MessageCircle,
 } from "lucide-react";
 
 type StoreHeaderProps = {
@@ -24,6 +28,7 @@ type StoreHeaderProps = {
     email?: string;
     phone?: string;
     website?: string;
+    social_links?: Record<string, string>;
     totalProducts?: number;
     user?: {
       first_name: string;
@@ -185,7 +190,49 @@ export default function StoreHeaderSection({ store }: StoreHeaderProps) {
                       <Phone className="w-5 h-5" />
                     </Button>
                   )}
-                  {store.website && (
+
+                  {/* Dynamic Social Links */}
+                  {store.social_links &&
+                    Object.entries(store.social_links).map(
+                      ([platform, url]) => {
+                        if (!url) return null;
+
+                        const getIcon = () => {
+                          switch (platform.toLowerCase()) {
+                            case "instagram":
+                              return <Instagram className="w-5 h-5" />;
+                            case "facebook":
+                              return <Facebook className="w-5 h-5" />;
+                            case "twitter":
+                            case "x":
+                              return <Twitter className="w-5 h-5" />;
+                            case "whatsapp":
+                              return <MessageCircle className="w-5 h-5" />;
+                            case "website":
+                            case "globe":
+                              return <Globe className="w-5 h-5" />;
+                            default:
+                              return <Globe className="w-5 h-5" />;
+                          }
+                        };
+
+                        return (
+                          <Button
+                            key={platform}
+                            size="icon"
+                            variant="ghost"
+                            className="rounded-2xl hover:bg-primary/10 hover:text-primary transition-colors h-11 w-11"
+                            title={platform}
+                            onClick={() => window.open(url, "_blank")}
+                          >
+                            {getIcon()}
+                          </Button>
+                        );
+                      },
+                    )}
+
+                  {/* Legacy website field if still present */}
+                  {store.website && !store.social_links?.website && (
                     <Button
                       size="icon"
                       variant="ghost"
@@ -196,6 +243,7 @@ export default function StoreHeaderSection({ store }: StoreHeaderProps) {
                       <Globe className="w-5 h-5" />
                     </Button>
                   )}
+
                   <div className="w-px h-8 bg-border/50 self-center mx-1" />
                   <Button
                     size="icon"

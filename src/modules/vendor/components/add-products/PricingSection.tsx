@@ -1,21 +1,23 @@
 import { FormInput } from "@/components/shared/form/FormInput";
+import { FormPriceInput } from "@/components/shared/form/FormPriceInput";
+import { Tag, Percent, Box } from "lucide-react";
 
 export function PricingSection() {
   return (
-    <>
-      <div className="grid grid-cols-2 gap-4">
-        <FormInput
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <FormPriceInput
           name="price"
-          label="Price"
-          type="number"
-          placeholder="e.g. 40000 (regular price)"
+          label="Regular Price"
+          placeholder="40,000"
+          icon={<Tag className="h-4 w-4" />}
         />
 
-        <FormInput
+        <FormPriceInput
           name="discount_price"
-          label="Discount Price"
-          type="number"
-          placeholder="e.g. 30000 (optional sale price)"
+          label="Sale Price (Optional)"
+          placeholder="30,000"
+          icon={<Percent className="h-4 w-4" />}
         />
       </div>
 
@@ -23,8 +25,9 @@ export function PricingSection() {
         name="stock"
         label="Stock Quantity"
         type="number"
-        placeholder="e.g. 50 units available"
+        placeholder="e.g. 50"
+        icon={<Box className="h-4 w-4" />}
       />
-    </>
+    </div>
   );
 }

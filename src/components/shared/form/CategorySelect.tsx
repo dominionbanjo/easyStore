@@ -24,12 +24,14 @@ interface CategorySelectProps {
   name: string;
   label?: string;
   className?: string;
+  icon?: React.ReactNode;
 }
 
 export function CategorySelect({
   name,
   label = "Category",
   className,
+  icon,
 }: CategorySelectProps) {
   const { control, setValue } = useFormContext();
 
@@ -107,8 +109,8 @@ export function CategorySelect({
   }
 
   return (
-    <div className={cn("space-y-2 relative", className)}>
-      <Label>{label}</Label>
+    <div className={cn("space-y-1.5 relative", className)}>
+      <Label className="font-medium text-[15px]">{label}</Label>
 
       <Controller
         name={name}
@@ -116,17 +118,27 @@ export function CategorySelect({
         render={({ field }) => (
           <>
             {/* Trigger */}
-            <button
-              type="button"
-              onClick={() => setOpen((o) => !o)}
-              className={cn(
-                "w-full h-11 rounded-md border px-3 flex items-center justify-between text-left",
-                !field.value && "text-muted-foreground",
+            <div className="relative group">
+              {icon && (
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors">
+                  {icon}
+                </div>
               )}
-            >
-              <span className="truncate">{getSelectedLabel(field.value)}</span>
-              <ChevronDown className="h-4 w-4 opacity-60" />
-            </button>
+              <button
+                type="button"
+                onClick={() => setOpen((o) => !o)}
+                className={cn(
+                  "w-full h-10 rounded-xl border px-3 flex items-center justify-between text-left text-sm transition-all duration-200 bg-muted/20 border-muted-foreground/10 focus:bg-background",
+                  icon ? "pl-11" : "px-4",
+                  !field.value && "text-muted-foreground",
+                )}
+              >
+                <span className="truncate">
+                  {getSelectedLabel(field.value)}
+                </span>
+                <ChevronDown className="h-4 w-4 opacity-60" />
+              </button>
+            </div>
 
             {/* Dropdown */}
             {open && (

@@ -1,14 +1,25 @@
-"use client";
-
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { FormProvider } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "@/store";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
-import { ArrowLeft } from "lucide-react";
+import {
+  Package,
+  Image as ImageIcon,
+  Tag,
+  Settings,
+  Truck,
+  Layers,
+  Sparkles,
+  ChevronLeft,
+} from "lucide-react";
+import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+
 import {
   setProductDraft,
   clearProductDraft,
@@ -25,6 +36,8 @@ import { productToDraft } from "../utils/productToDraft";
 import { specsObjectToItems } from "../utils/specsObjectToItems";
 import { useProductExtras } from "../components/add-products/useProductExtras";
 import { useAddProductForm } from "../components/add-products/useAddProductForm";
+import { useStoreSetup } from "../hooks/useStoreSetup";
+import { SetupEnforcementModal } from "../components/modals/SetupEnforcementModal";
 import { BasicInfoSection } from "../components/add-products/BasicInfoSection";
 import { ActionsSection } from "../components/add-products/ActionsSection";
 import { ChipsSection } from "../components/add-products/ChipsSection";
@@ -32,11 +45,21 @@ import { ImageSection } from "../components/add-products/ImageSection";
 import { PricingSection } from "../components/add-products/PricingSection";
 import { ShippingSection } from "../components/add-products/ShippingSection";
 import { SpecsSection } from "../components/add-products/SpecsSection";
+import { cn } from "@/lib/utils";
 
 export default function AddProductPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { slug } = useParams<{ slug?: string }>();
+
+  const { isReady, isLoading: checkingSetup } = useStoreSetup();
+  const [showSetupModal, setShowSetupModal] = useState(false);
+
+  useEffect(() => {
+    if (!checkingSetup && !isReady && !slug) {
+      setShowSetupModal(true);
+    }
+  }, [checkingSetup, isReady, slug]);
 
   const isEditMode = Boolean(slug);
 
@@ -72,11 +95,9 @@ export default function AddProductPage() {
   useEffect(() => {
     if (!isEditMode || !productData?.data?.product) return;
 
-    // Wait for colors to load if product has colors
     const productHasColors = (productData.data.product.colors?.length ?? 0) > 0;
     if (productHasColors && loadingColors) return;
 
-    // Use draft if available (e.g. returning from preview)
     if (draft && draft.id === productData.data.product.id) {
       return;
     }
@@ -85,14 +106,12 @@ export default function AddProductPage() {
       productData.data.product,
     );
 
-    // Map colors to full objects from allColors
     const colorValues = (values as any).colors || [];
     const colorIds = colorValues.map((c: any) =>
       typeof c === "string" ? c : c.id,
     );
     const mappedColors = allColors.filter((c: any) => colorIds.includes(c.id));
 
-    // Update values with mapped colors
     const valuesWithColors = { ...values, colors: mappedColors };
 
     Object.entries(valuesWithColors).forEach(([key, value]) =>
@@ -144,9 +163,7 @@ export default function AddProductPage() {
 
   /* ───────── SUBMIT ───────── */
   const onSubmit = handleSubmit(async (rawValues) => {
-    const values = rawValues as any; // safe after validation
-
-    // assertCreateProductValues(values); // Removed: Zod handles validation
+    const values = rawValues as any;
 
     if (!image) return toast.error("Upload a main product image");
     if (!gallery || gallery.length < 2)
@@ -181,16 +198,16 @@ export default function AddProductPage() {
   /* ───────── LOADING ───────── */
   if (isEditMode && (loadingProduct || loadingColors)) {
     return (
-      <Card>
-        <CardHeader>
-          <Skeleton className="h-6 w-48" />
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <Skeleton className="h-10 w-full" />
-          <Skeleton className="h-40 w-full" />
-          <Skeleton className="h-24 w-full" />
-        </CardContent>
-      </Card>
+      <div className="max-w-5xl mx-auto space-y-8 animate-pulse">
+        <Skeleton className="h-12 w-64 rounded-xl" />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2 space-y-8">
+            <Skeleton className="h-[400px] rounded-3xl" />
+            <Skeleton className="h-[200px] rounded-3xl" />
+          </div>
+          <Skeleton className="h-[600px] rounded-3xl" />
+        </div>
+      </div>
     );
   }
 
@@ -199,39 +216,203 @@ export default function AddProductPage() {
   /* ───────── UI ───────── */
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(onPreview)}>
-        <Card>
-          <Link
-            to="/vendor/products"
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to products
-          </Link>
+      <form
+        onSubmit={handleSubmit(onPreview)}
+        className="max-w-6xl mx-auto space-y-8 pb-20 pt-4"
+      >
+        {/* Header Section */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 px-2">
+          <div className="space-y-3">
+            <Link
+              to="/vendor/products"
+              className="inline-flex items-center gap-2 text-sm font-bold text-muted-foreground hover:text-primary transition-colors group"
+            >
+              <div className="p-1.5 rounded-lg bg-muted group-hover:bg-primary/10 transition-colors">
+                <ChevronLeft className="h-4 w-4" />
+              </div>
+              Back to Catalog
+            </Link>
+            <div className="flex items-center gap-4">
+              <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center">
+                <Package className="h-6 w-6 text-primary" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-black tracking-tight text-foreground">
+                  {isEditMode ? "Edit Product" : "New Product"}
+                </h1>
+                <p className="text-muted-foreground font-medium">
+                  {isEditMode
+                    ? "Update your existing product information"
+                    : "List a new masterpiece in your store"}
+                </p>
+              </div>
+            </div>
+          </div>
 
-          <CardHeader>
-            <CardTitle>
-              {isEditMode ? "Edit Product" : "Add Product to Store"}
-            </CardTitle>
-          </CardHeader>
+          <div className="flex items-center gap-3">
+            <Badge
+              variant="outline"
+              className={cn(
+                "h-8 px-4 rounded-full font-bold uppercase tracking-wider text-[10px]",
+                canSubmit
+                  ? "border-emerald-500/30 text-emerald-500 bg-emerald-500/5"
+                  : "border-orange-500/30 text-orange-500 bg-orange-500/5",
+              )}
+            >
+              <Sparkles className="h-3 w-3 mr-1.5" />
+              {canSubmit ? "Ready to publish" : "Incomplete"}
+            </Badge>
+          </div>
+        </div>
 
-          <CardContent className="space-y-8">
-            <BasicInfoSection />
-            <ImageSection {...extras} />
-            <PricingSection />
-            <SpecsSection {...extras} />
-            <ChipsSection {...extras} />
-            <ShippingSection />
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Main Content */}
+          <div className="lg:col-span-8 space-y-8">
+            {/* Identity Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              <Card className="border-border/40 shadow-sm overflow-hidden rounded-[2.5rem]">
+                <CardHeader className="bg-muted/30 pb-4 border-b border-border/40">
+                  <div className="flex items-center gap-4">
+                    <div className="h-9 w-9 rounded-xl bg-background flex items-center justify-center shadow-sm">
+                      <Settings className="h-5 w-5 text-primary" />
+                    </div>
+                    <CardTitle className="text-lg font-black uppercase tracking-tight">
+                      Store Identity
+                    </CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent className="p-8 space-y-8">
+                  <BasicInfoSection />
+                </CardContent>
+              </Card>
+            </motion.div>
 
-            <ActionsSection
-              creating={creating || updating}
-              onCreate={onSubmit}
-              submitLabel={isEditMode ? "Update Product" : "Create Product"}
-              disabled={!canSubmit}
-            />
-          </CardContent>
-        </Card>
+            {/* Visuals Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+            >
+              <Card className="border-border/40 shadow-sm overflow-hidden rounded-[2.5rem]">
+                <CardHeader className="bg-muted/30 pb-4 border-b border-border/40">
+                  <div className="flex items-center gap-4">
+                    <div className="h-9 w-9 rounded-xl bg-background flex items-center justify-center shadow-sm">
+                      <ImageIcon className="h-5 w-5 text-primary" />
+                    </div>
+                    <CardTitle className="text-lg font-black uppercase tracking-tight">
+                      Product Visuals
+                    </CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent className="p-8">
+                  <ImageSection {...extras} />
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            {/* Specs & Attributes */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              <Card className="border-border/40 shadow-sm overflow-hidden rounded-[2.5rem]">
+                <CardHeader className="bg-muted/30 pb-4 border-b border-border/40">
+                  <div className="flex items-center gap-4">
+                    <div className="h-9 w-9 rounded-xl bg-background flex items-center justify-center shadow-sm">
+                      <Layers className="h-5 w-5 text-primary" />
+                    </div>
+                    <CardTitle className="text-lg font-black uppercase tracking-tight">
+                      Specifications
+                    </CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent className="p-8 space-y-10">
+                  <SpecsSection {...extras} />
+                  <Separator className="bg-border/40" />
+                  <ChipsSection {...extras} />
+                </CardContent>
+              </Card>
+            </motion.div>
+          </div>
+
+          {/* Sidebar Content */}
+          <div className="lg:col-span-4 space-y-8">
+            {/* Pricing Card */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              <Card className="border-border/40 shadow-sm overflow-hidden rounded-[2.5rem]">
+                <CardHeader className="bg-muted/30 pb-4 border-b border-border/40">
+                  <div className="flex items-center gap-4">
+                    <div className="h-9 w-9 rounded-xl bg-background flex items-center justify-center shadow-sm">
+                      <Tag className="h-5 w-5 text-primary" />
+                    </div>
+                    <CardTitle className="text-lg font-black uppercase tracking-tight">
+                      Pricing & Stock
+                    </CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <PricingSection />
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            {/* Logistics Card */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.4 }}
+            >
+              <Card className="border-border/40 shadow-sm overflow-hidden rounded-[2.5rem]">
+                <CardHeader className="bg-muted/30 pb-4 border-b border-border/40">
+                  <div className="flex items-center gap-4">
+                    <div className="h-9 w-9 rounded-xl bg-background flex items-center justify-center shadow-sm">
+                      <Truck className="h-5 w-5 text-primary" />
+                    </div>
+                    <CardTitle className="text-lg font-black uppercase tracking-tight">
+                      Logistics
+                    </CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <ShippingSection />
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            {/* Sticky Actions */}
+            <div className="sticky top-24 pt-4">
+              <ActionsSection
+                creating={creating || updating}
+                onCreate={onSubmit}
+                submitLabel={isEditMode ? "Update Product" : "Publish Product"}
+                disabled={!canSubmit}
+              />
+              {!canSubmit && (
+                <p className="text-[10px] text-center mt-4 font-bold text-muted-foreground uppercase tracking-widest px-4">
+                  Please complete and upload at least 2 gallery images to
+                  publish.
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
       </form>
+
+      <SetupEnforcementModal
+        open={showSetupModal}
+        onOpenChange={(open) => {
+          setShowSetupModal(open);
+          if (!open) navigate("/vendor/products");
+        }}
+      />
     </FormProvider>
   );
 }

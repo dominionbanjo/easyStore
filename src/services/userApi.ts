@@ -124,6 +124,7 @@ export const userApi = apiManager.injectEndpoints({
 
 export const {
   useGetUserProfileQuery,
+  useLazyGetUserProfileQuery,
   useGetAllUsersQuery,
   useGetUserByIdQuery,
   useUpdateUserProfileMutation,

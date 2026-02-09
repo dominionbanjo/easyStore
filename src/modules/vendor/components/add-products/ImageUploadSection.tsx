@@ -1,6 +1,18 @@
-import { Plus, X, Image as ImageIcon, Upload } from "lucide-react";
+import {
+  Plus,
+  X,
+  Image as ImageIcon,
+  Upload,
+  CheckCircle2,
+  Loader2,
+  ImagePlus,
+} from "lucide-react";
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Label } from "@/components/ui/label";
+import { Progress } from "@/components/ui/progress";
+import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 import { uploadToCloudinary } from "@/utils/uploadToCloudinary";
 import {
@@ -17,7 +29,6 @@ export type UploadedImage = {
 interface ImageUploadSectionProps {
   image: UploadedImage | null;
   gallery: UploadedImage[];
-
   onMainUploaded: (image: UploadedImage | null) => void;
   onGalleryUploaded: (images: UploadedImage[]) => void;
   onRemoveGallery: (index: number) => void;
@@ -40,127 +51,235 @@ export default function ImageUploadSection({
   const [deleteImage, { isLoading: deleting }] =
     useDeleteCloudinaryImageMutation();
 
-  const [uploadingMain, setUploadingMain] = useState(false);
-  const [uploadingGallery, setUploadingGallery] = useState(false);
+  const [mainProgress, setMainProgress] = useState<number | null>(null);
+  const [galleryUploads, setGalleryUploads] = useState<
+    { id: string; progress: number }[]
+  >([]);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const canUpload = Boolean(signature?.signature) && !signing && !isError;
 
-  /* ───────── UPLOAD ───────── */
-
+  /* ───────── UPLOAD MAIN ───────── */
   const uploadMain = async (file: File, input?: HTMLInputElement) => {
     if (!canUpload) return;
-
-    // 🔐 Always ensure fresh signature
-    const fresh = await refetch().unwrap();
-
-    setUploadingMain(true);
     try {
+      const fresh = await refetch().unwrap();
+      setMainProgress(0);
       const uploaded = await uploadToCloudinary(
         file,
         fresh as CloudinaryConfig,
+        {
+          onProgress: (p) => setMainProgress(p),
+        },
       );
       onMainUploaded(uploaded);
+      toast.success("Main image uploaded");
+    } catch (err) {
+      toast.error("Main upload failed");
     } finally {
-      setUploadingMain(false);
+      setMainProgress(null);
       if (input) input.value = "";
     }
   };
 
+  /* ───────── UPLOAD GALLERY ───────── */
   const uploadGallery = async (files: FileList, input?: HTMLInputElement) => {
     if (!canUpload) return;
-
     const fresh = await refetch().unwrap();
 
-    setUploadingGallery(true);
+    // Create placeholders for each file
+    const fileArray = Array.from(files);
+    const newUploads = fileArray.map((_, _i) => ({
+      id: Math.random().toString(36).substr(2, 9),
+      progress: 0,
+    }));
+
+    setGalleryUploads((prev) => [...prev, ...newUploads]);
+
     try {
-      const uploads = await Promise.all(
-        Array.from(files).map((file) =>
-          uploadToCloudinary(file, fresh as CloudinaryConfig),
+      const results = await Promise.all(
+        fileArray.map((file, index) =>
+          uploadToCloudinary(file, fresh as CloudinaryConfig, {
+            onProgress: (p) => {
+              setGalleryUploads((prev) =>
+                prev.map((u) =>
+                  u.id === newUploads[index].id ? { ...u, progress: p } : u,
+                ),
+              );
+            },
+          }),
         ),
       );
-      onGalleryUploaded(uploads);
+      onGalleryUploaded(results);
+      toast.success(`${results.length} images added to gallery`);
+    } catch (err) {
+      toast.error("Some images failed to upload");
     } finally {
-      setUploadingGallery(false);
+      setGalleryUploads((prev) =>
+        prev.filter((u) => !newUploads.some((n) => n.id === u.id)),
+      );
       if (input) input.value = "";
     }
   };
 
   /* ───────── DELETE ───────── */
-
-  const removeMainImage = async () => {
+  const removeMainImage = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     if (!image || deleting) return;
 
+    setDeletingId(image.public_id);
     try {
       await deleteImage({ public_id: image.public_id }).unwrap();
       onMainUploaded(null);
+      toast.success("Cover image removed");
     } catch (err) {
-      console.error("Failed to delete image", err);
+      toast.error("Failed to remove cover image");
+    } finally {
+      setDeletingId(null);
     }
   };
 
-  const removeGalleryImage = async (index: number) => {
+  const removeGalleryImage = async (index: number, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     const img = gallery[index];
     if (!img || deleting) return;
 
+    setDeletingId(img.public_id);
     try {
       await deleteImage({ public_id: img.public_id }).unwrap();
       onRemoveGallery(index);
+      toast.success("Gallery image removed");
     } catch (err) {
-      console.error("Failed to delete image", err);
+      toast.error("Failed to remove gallery image");
+    } finally {
+      setDeletingId(null);
     }
   };
 
-  /* ───────────────── RENDER ───────────────── */
-
   return (
-    <div className="space-y-6">
+    <div className="space-y-10">
       {/* ─── MAIN IMAGE ─── */}
-      <div className="space-y-2">
-        <Label>Main Image</Label>
+      <div className="space-y-4">
+        <div className="flex items-center gap-2">
+          <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+            <ImageIcon className="h-4 w-4 text-primary" />
+          </div>
+          <Label className="text-sm font-black uppercase tracking-widest text-muted-foreground/80">
+            Cover Image
+          </Label>
+        </div>
 
-        <label className="group relative flex flex-col items-center justify-center gap-3 rounded-lg border border-dashed p-6 cursor-pointer hover:bg-muted/40">
-          {image ? (
-            <div className="relative">
-              <img
-                src={image.url}
-                alt="Main product"
-                className="w-44 h-44 object-cover rounded-md"
-              />
-
-              <button
-                type="button"
-                onClick={removeMainImage}
-                disabled={deleting}
-                className="absolute -top-2 -right-2 bg-background rounded-full p-1 shadow"
-              >
-                <X className="h-4 w-4" />
-              </button>
-
-              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 rounded-md flex items-center justify-center">
-                <Upload className="h-6 w-6 text-white" />
-              </div>
-            </div>
-          ) : (
-            <>
-              <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center">
-                <ImageIcon className="h-7 w-7 text-muted-foreground" />
-              </div>
-
-              <p className="text-sm text-muted-foreground text-center">
-                {signing
-                  ? "Preparing upload…"
-                  : uploadingMain
-                    ? "Uploading image…"
-                    : "Upload main product image"}
-              </p>
-            </>
+        <label
+          className={cn(
+            "group relative flex flex-col items-center justify-center overflow-hidden transition-all duration-500 cursor-pointer rounded-[2.5rem] border-2 border-dashed",
+            image
+              ? "h-80 border-transparent bg-muted/20"
+              : "h-64 border-muted-foreground/20 hover:border-primary/40 hover:bg-primary/5",
+            (mainProgress !== null || deletingId === image?.public_id) &&
+              "pointer-events-none",
           )}
+        >
+          <AnimatePresence mode="wait">
+            {mainProgress !== null ? (
+              <motion.div
+                key="uploading"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="flex flex-col items-center gap-6 w-full max-w-xs px-6"
+              >
+                <div className="relative h-20 w-20 flex items-center justify-center">
+                  <Loader2 className="h-10 w-10 text-primary animate-spin absolute" />
+                  <span className="text-xs font-black text-primary">
+                    {mainProgress}%
+                  </span>
+                </div>
+                <div className="w-full space-y-2">
+                  <Progress value={mainProgress} className="h-2 rounded-full" />
+                  <p className="text-[10px] text-center uppercase tracking-widest font-black text-primary">
+                    Uploading Cover...
+                  </p>
+                </div>
+              </motion.div>
+            ) : image ? (
+              <motion.div
+                key="content"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="relative w-full h-full group"
+              >
+                <img
+                  src={image.url}
+                  alt="Main"
+                  className={cn(
+                    "w-full h-full object-cover transition-all duration-700",
+                    deletingId === image.public_id
+                      ? "scale-95 blur-md grayscale"
+                      : "group-hover:scale-105",
+                  )}
+                />
+
+                {/* Deleting Overlay */}
+                {deletingId === image.public_id && (
+                  <div className="absolute inset-0 bg-background/40 backdrop-blur-md flex flex-col items-center justify-center gap-3">
+                    <Loader2 className="h-10 w-10 text-destructive animate-spin" />
+                    <p className="text-[10px] font-black uppercase tracking-widest text-destructive">
+                      Removing Image...
+                    </p>
+                  </div>
+                )}
+
+                <div
+                  className={cn(
+                    "absolute inset-0 bg-black/40 opacity-0 transition-all duration-300 flex items-center justify-center backdrop-blur-sm",
+                    deletingId !== image.public_id && "group-hover:opacity-100",
+                  )}
+                >
+                  <div className="flex items-center gap-3">
+                    <button
+                      type="button"
+                      onClick={removeMainImage}
+                      disabled={deletingId !== null}
+                      className="h-12 w-12 rounded-2xl bg-white/20 hover:bg-destructive text-white flex items-center justify-center transition-all duration-300 border border-white/20 hover:border-destructive shadow-xl backdrop-blur-md"
+                    >
+                      <X className="h-6 w-6" />
+                    </button>
+                    <div className="h-12 px-6 rounded-2xl bg-white text-black flex items-center gap-2 font-black uppercase tracking-widest text-[10px] shadow-xl">
+                      <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                      Cover Uploaded
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="empty"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex flex-col items-center gap-4 py-8"
+              >
+                <div className="h-20 w-20 rounded-[2rem] bg-background flex items-center justify-center shadow-2xl border border-muted-foreground/10 group-hover:scale-110 group-hover:bg-primary transition-all duration-500">
+                  <Upload className="h-8 w-8 text-primary group-hover:text-white transition-colors" />
+                </div>
+                <div className="text-center space-y-1">
+                  <p className="text-sm font-black text-foreground">
+                    Select Main Product Image
+                  </p>
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">
+                    PNG, JPG or WEBP (Max 5MB)
+                  </p>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           <input
             hidden
             type="file"
             accept="image/*"
-            disabled={!canUpload || uploadingMain}
+            disabled={!canUpload || mainProgress !== null}
             onChange={(e) =>
               e.target.files && uploadMain(e.target.files[0], e.target)
             }
@@ -169,47 +288,118 @@ export default function ImageUploadSection({
       </div>
 
       {/* ─── GALLERY ─── */}
-      <div className="space-y-2">
-        <Label>Gallery</Label>
-
-        <div className="flex gap-3 flex-wrap">
-          {gallery.map((g, i) => (
-            <div key={g.public_id} className="relative group">
-              <img
-                src={g.url}
-                alt={`Gallery ${i + 1}`}
-                className="w-24 h-24 object-cover rounded-md"
-              />
-
-              <button
-                type="button"
-                onClick={() => removeGalleryImage(i)}
-                disabled={deleting}
-                className="absolute -top-2 -right-2 bg-background rounded-full p-1 shadow"
-              >
-                <X className="h-4 w-4" />
-              </button>
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+              <ImagePlus className="h-4 w-4 text-primary" />
             </div>
-          ))}
-
-          <label className="w-24 h-24 border border-dashed rounded-md flex flex-col items-center justify-center cursor-pointer hover:bg-muted/40">
-            <Plus className="h-5 w-5" />
-            <span className="text-[11px] text-muted-foreground mt-1">
-              {uploadingGallery ? "Uploading…" : "Add images"}
-            </span>
-
-            <input
-              hidden
-              type="file"
-              accept="image/*"
-              multiple
-              disabled={!canUpload || uploadingGallery}
-              onChange={(e) =>
-                e.target.files && uploadGallery(e.target.files, e.target)
-              }
-            />
-          </label>
+            <Label className="text-sm font-black uppercase tracking-widest text-muted-foreground/80">
+              Gallery Images
+            </Label>
+          </div>
+          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
+            {gallery.length} Images Uploaded
+          </p>
         </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+          <AnimatePresence mode="popLayout">
+            {gallery.map((g, i) => (
+              <motion.div
+                key={g.public_id}
+                layout
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                className="relative aspect-square group rounded-3xl overflow-hidden border border-muted-foreground/10 bg-muted/20"
+              >
+                <img
+                  src={g.url}
+                  alt={`Gallery ${i}`}
+                  className={cn(
+                    "w-full h-full object-cover transition-all duration-500",
+                    deletingId === g.public_id
+                      ? "scale-90 blur-sm grayscale"
+                      : "group-hover:scale-110",
+                  )}
+                />
+
+                {/* Deleting Overlay */}
+                {deletingId === g.public_id && (
+                  <div className="absolute inset-0 bg-background/20 backdrop-blur-sm flex items-center justify-center">
+                    <Loader2 className="h-6 w-6 text-destructive animate-spin" />
+                  </div>
+                )}
+
+                <div
+                  className={cn(
+                    "absolute inset-0 bg-black/60 opacity-0 transition-all duration-300 flex items-center justify-center backdrop-blur-[2px]",
+                    deletingId !== g.public_id && "group-hover:opacity-100",
+                  )}
+                >
+                  <button
+                    type="button"
+                    onClick={(e) => removeGalleryImage(i, e)}
+                    disabled={deletingId !== null}
+                    className="h-10 w-10 rounded-xl bg-white/20 hover:bg-destructive text-white flex items-center justify-center transition-all duration-300 border border-white/20 hover:border-destructive shadow-xl backdrop-blur-md"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
+              </motion.div>
+            ))}
+
+            {galleryUploads.map((u) => (
+              <motion.div
+                key={u.id}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="relative aspect-square rounded-3xl overflow-hidden border-2 border-primary/20 bg-primary/5 flex flex-col items-center justify-center p-4 gap-3"
+              >
+                <Loader2 className="h-6 w-6 text-primary animate-spin" />
+                <div className="w-full space-y-1">
+                  <Progress value={u.progress} className="h-1.5" />
+                  <p className="text-[9px] text-center font-black text-primary uppercase tracking-tighter">
+                    {u.progress}%
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+
+            <motion.label
+              layout
+              className={cn(
+                "aspect-square rounded-3xl border-2 border-dashed border-muted-foreground/20 hover:border-primary/40 hover:bg-primary/5 flex flex-col items-center justify-center cursor-pointer transition-all duration-300 gap-3 group",
+                signing && "opacity-50 cursor-not-allowed",
+              )}
+            >
+              <div className="h-12 w-12 rounded-2xl bg-background flex items-center justify-center shadow-lg border border-border group-hover:scale-110 group-hover:bg-primary transition-all duration-500">
+                <Plus className="h-6 w-6 text-primary group-hover:text-white transition-colors" />
+              </div>
+              <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground group-hover:text-primary">
+                Add Images
+              </span>
+
+              <input
+                hidden
+                type="file"
+                accept="image/*"
+                multiple
+                disabled={!canUpload}
+                onChange={(e) =>
+                  e.target.files && uploadGallery(e.target.files, e.target)
+                }
+              />
+            </motion.label>
+          </AnimatePresence>
+        </div>
+
+        {gallery.length < 2 && !galleryUploads.length && (
+          <p className="text-[10px] text-orange-500 font-bold uppercase tracking-widest text-center">
+            At least 2 gallery images are required
+          </p>
+        )}
       </div>
     </div>
   );

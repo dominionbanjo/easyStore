@@ -32,7 +32,6 @@ export function StoreProductsGrid({
 }: Props) {
   const sectionRef = useRef<HTMLDivElement | null>(null);
   const [isPaging, setIsPaging] = useState(false);
-  const hasData = products.length > 0;
 
   useEffect(() => {
     if (isPaging && !isFetching) {
@@ -53,7 +52,7 @@ export function StoreProductsGrid({
     });
   };
 
-  const showSkeleton = isLoading || isPaging || (isFetching && !hasData);
+  const showSkeleton = isLoading || isPaging || isFetching;
 
   return (
     <div ref={sectionRef} className="max-w-7xl mx-auto space-y-12 pb-24">
