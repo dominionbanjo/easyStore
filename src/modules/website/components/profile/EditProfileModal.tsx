@@ -19,6 +19,7 @@ import {
   EditProfileSchema,
   type EditProfileFormValues,
 } from "../../validators/updateProfileValidator";
+import { NigeriaData } from "@/utils/nigeria-data";
 
 /* ───────────────── TYPES ───────────────── */
 
@@ -29,10 +30,6 @@ interface EditProfileModalProps {
 }
 
 type Option = { label: string; value: string };
-
-/* ───────────────── UTIL ───────────────── */
-
-const importCSC = () => import("country-state-city");
 
 /* ───────────────── COMPONENT ───────────────── */
 
@@ -101,16 +98,12 @@ export function EditProfileModal({
 
   useEffect(() => {
     if (!open) return;
-
-    (async () => {
-      const { Country } = await importCSC();
-      setCountryOptions(
-        Country.getAllCountries().map((c) => ({
-          label: c.name,
-          value: c.isoCode,
-        })),
-      );
-    })();
+    setCountryOptions(
+      NigeriaData.getCountries().map((c) => ({
+        label: c.name,
+        value: c.isoCode,
+      })),
+    );
   }, [open]);
 
   /* ───────────────── LOAD STATES & RESET CITY ───────────────── */
@@ -122,16 +115,12 @@ export function EditProfileModal({
       return;
     }
 
-    (async () => {
-      const { State } = await importCSC();
-      const states = State.getStatesOfCountry(countryCode);
-      setStateOptions(
-        states.map((s) => ({
-          label: s.name,
-          value: s.isoCode,
-        })),
-      );
-    })();
+    setStateOptions(
+      NigeriaData.getStates().map((s) => ({
+        label: s.name,
+        value: s.isoCode,
+      })),
+    );
 
     // Only reset if the current value is not in the options or if it's a fresh change
     // For simplicity, we reset when country changes
@@ -147,16 +136,12 @@ export function EditProfileModal({
       return;
     }
 
-    (async () => {
-      const { City } = await importCSC();
-      const cities = City.getCitiesOfState(countryCode, stateCode);
-      setCityOptions(
-        cities.map((c) => ({
-          label: c.name,
-          value: c.name,
-        })),
-      );
-    })();
+    setCityOptions(
+      NigeriaData.getCities(stateCode).map((c) => ({
+        label: c,
+        value: c,
+      })),
+    );
 
     setValue("address.city", "");
   }, [countryCode, stateCode, setValue]);

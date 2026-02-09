@@ -4,21 +4,18 @@ export type LocalImage = {
   file: File;
   preview: string;
 };
-/* ───────────────── COUNTRY / STATE ───────────────── */
-
-export const importCSC = () => import("country-state-city");
+import { NigeriaData } from "@/utils/nigeria-data";
 
 export async function loadCountries() {
-  const { Country } = await importCSC();
-  return Country.getAllCountries().map((c) => ({
+  return NigeriaData.getCountries().map((c) => ({
     label: c.name,
     value: c.isoCode,
   }));
 }
 
 export async function loadStates(countryCode: string) {
-  const { State } = await importCSC();
-  return State.getStatesOfCountry(countryCode).map((s) => ({
+  if (countryCode !== "NG") return [];
+  return NigeriaData.getStates().map((s) => ({
     label: s.name,
     value: s.isoCode,
   }));

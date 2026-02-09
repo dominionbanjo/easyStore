@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/store";
@@ -44,7 +44,7 @@ import { motion } from "framer-motion";
 import FancyHoverText from "./FancyTextHover";
 import { CartDrawer } from "@/modules/website/components/cart/CartDrawer";
 import { useGetCartQuery } from "@/services/cartApi";
-import * as Pages from "@/routes/pages";
+import * as Pages from "@/routes/lazyPages";
 
 export default function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
@@ -61,6 +61,41 @@ export default function Header() {
     skip: !useSelector((state: RootState) => state.user.isAuthenticated),
   });
   const cartItemsCount = cartData?.data?.cart?.items?.length || 0;
+
+  const navItems: {
+    name: string;
+    path: string;
+    icon: React.ElementType;
+    component: React.ComponentType;
+  }[] = useMemo(
+    () => [
+      {
+        name: "Home",
+        path: WEBSITE_ROUTES.HOME,
+        icon: Home,
+        component: Pages.LandingPage,
+      },
+      {
+        name: "Discover",
+        path: WEBSITE_ROUTES.DISCOVERY,
+        icon: Compass,
+        component: Pages.DiscoveryPage,
+      },
+      {
+        name: "Stores",
+        path: WEBSITE_ROUTES.STORES,
+        icon: Store,
+        component: Pages.StoresPage,
+      },
+      {
+        name: "Categories",
+        path: WEBSITE_ROUTES.CATEGORIES,
+        icon: Layers,
+        component: Pages.CategoriesPage,
+      },
+    ],
+    [],
+  );
 
   const user = useSelector((state: RootState) => state.user.currentUser);
   const isAuthenticated = useSelector(
@@ -165,32 +200,7 @@ export default function Header() {
                 </SheetHeader>
                 <div className="p-6">
                   <nav className="space-y-4 text-base font-medium">
-                    {[
-                      {
-                        name: "Home",
-                        path: WEBSITE_ROUTES.HOME,
-                        icon: Home,
-                        component: Pages.LandingPage,
-                      },
-                      {
-                        name: "Discover",
-                        path: WEBSITE_ROUTES.DISCOVERY,
-                        icon: Compass,
-                        component: Pages.DiscoveryPage,
-                      },
-                      {
-                        name: "Stores",
-                        path: WEBSITE_ROUTES.STORES,
-                        icon: Store,
-                        component: Pages.StoresPage,
-                      },
-                      {
-                        name: "Categories",
-                        path: WEBSITE_ROUTES.CATEGORIES,
-                        icon: Layers,
-                        component: Pages.CategoriesPage,
-                      },
-                    ].map((item) => {
+                    {navItems.map((item) => {
                       const Icon = item.icon;
                       return (
                         <Link
@@ -278,28 +288,7 @@ export default function Header() {
 
           {/* Desktop Nav */}
           <nav className="hidden lg:flex items-center gap-5 xl:gap-6 text-sm font-medium whitespace-nowrap">
-            {[
-              {
-                name: "Home",
-                path: WEBSITE_ROUTES.HOME,
-                component: Pages.LandingPage,
-              },
-              {
-                name: "Discover",
-                path: WEBSITE_ROUTES.DISCOVERY,
-                component: Pages.DiscoveryPage,
-              },
-              {
-                name: "Stores",
-                path: WEBSITE_ROUTES.STORES,
-                component: Pages.StoresPage,
-              },
-              {
-                name: "Categories",
-                path: WEBSITE_ROUTES.CATEGORIES,
-                component: Pages.CategoriesPage,
-              },
-            ].map((item) => (
+            {navItems.slice(0, 4).map((item) => (
               <Link
                 key={item.path}
                 to={item.path}

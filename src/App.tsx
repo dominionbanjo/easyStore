@@ -8,8 +8,8 @@ import { Suspense } from "react";
 // Utils & Components
 import ScrollToTop from "@/utils/ScrollToTop";
 
-// Pages & Layouts
-import * as Pages from "@/routes/pages";
+// Lazy-loaded Components
+import * as Pages from "@/routes/lazyPages";
 import LoadingScreen from "./Loading";
 import NavigationProgressBar from "@/components/shared/NavigationProgressBar";
 
@@ -69,14 +69,7 @@ export default function App() {
           </Route>
 
           {/* ─── AUTH ─── */}
-          <Route
-            path="/auth"
-            element={
-              <Suspense fallback={<LoadingScreen fullPage={false} />}>
-                <Outlet />
-              </Suspense>
-            }
-          >
+          <Route path="/auth" element={<Outlet />}>
             <Route path="login" element={<Pages.LoginPage />} />
             <Route path="signup" element={<Pages.SignupPage />} />
             <Route path="verify-otp" element={<Pages.VerifyOtpPage />} />
@@ -144,14 +137,7 @@ export default function App() {
           </Route>
 
           {/* ─── FALLBACK ─── */}
-          <Route
-            path="*"
-            element={
-              <Suspense fallback={<LoadingScreen fullPage={false} />}>
-                <Pages.NotFoundPage />
-              </Suspense>
-            }
-          />
+          <Route path="*" element={<Pages.NotFoundPage />} />
         </Routes>
         <Pages.OnboardingModal />
       </Suspense>

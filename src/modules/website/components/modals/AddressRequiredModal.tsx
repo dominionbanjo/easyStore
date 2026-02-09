@@ -23,6 +23,7 @@ import {
   useUpdateUserProfileMutation,
   useGetUserProfileQuery,
 } from "@/services/userApi";
+import { NigeriaData } from "@/utils/nigeria-data";
 import {
   EditProfileSchema,
   type EditProfileFormValues,
@@ -56,7 +57,7 @@ export function AddressRequiredModal({
     defaultValues: {
       address: {
         street: "",
-        country: "",
+        country: "NG",
         state: "",
         city: "",
         postal_code: "",
@@ -93,16 +94,12 @@ export function AddressRequiredModal({
   /* LOAD COUNTRIES */
   useEffect(() => {
     if (!open) return;
-    const loadCountries = async () => {
-      const { Country } = await import("country-state-city");
-      setCountryOptions(
-        Country.getAllCountries().map((c) => ({
-          label: c.name,
-          value: c.isoCode,
-        })),
-      );
-    };
-    loadCountries();
+    setCountryOptions(
+      NigeriaData.getCountries().map((c) => ({
+        label: c.name,
+        value: c.isoCode,
+      })),
+    );
   }, [open]);
 
   /* LOAD STATES */
@@ -112,16 +109,12 @@ export function AddressRequiredModal({
       return;
     }
 
-    const loadStates = async () => {
-      const { State } = await import("country-state-city");
-      setStateOptions(
-        State.getStatesOfCountry(countryCode).map((s) => ({
-          label: s.name,
-          value: s.isoCode,
-        })),
-      );
-    };
-    loadStates();
+    setStateOptions(
+      NigeriaData.getStates().map((s) => ({
+        label: s.name,
+        value: s.isoCode,
+      })),
+    );
 
     // Reset dependent fields ONLY if the user changed the country manually
     if (dirtyFields.address?.country) {
@@ -137,16 +130,12 @@ export function AddressRequiredModal({
       return;
     }
 
-    const loadCities = async () => {
-      const { City } = await import("country-state-city");
-      setCityOptions(
-        City.getCitiesOfState(countryCode, stateCode).map((c) => ({
-          label: c.name,
-          value: c.name,
-        })),
-      );
-    };
-    loadCities();
+    setCityOptions(
+      NigeriaData.getCities(stateCode).map((c) => ({
+        label: c,
+        value: c,
+      })),
+    );
 
     // Reset dependent fields ONLY if the user changed the state manually
     if (dirtyFields.address?.state) {

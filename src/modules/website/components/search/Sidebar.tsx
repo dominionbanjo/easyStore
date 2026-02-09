@@ -20,11 +20,11 @@ import { cn } from "@/lib/utils";
 import { FormPriceInput } from "@/components/shared/form/FormPriceInput";
 import { FormSelect } from "@/components/shared/form/FormSelect";
 import type { IProduct } from "@/types/product/productTypes";
+import { NigeriaData } from "@/utils/nigeria-data";
 
 /* ───────────────── CONSTANTS ───────────────── */
 
 const RATINGS = [4, 3, 2, 1];
-const DEFAULT_COUNTRY = "NG";
 const MAX_PRICE_RANGE = 500000;
 
 /* ───────────────── TYPES ───────────────── */
@@ -44,10 +44,6 @@ interface SearchFiltersProps {
   className?: string;
   products?: IProduct[];
 }
-
-/* ───────────────── UTIL ───────────────── */
-
-const importCSC = () => import("country-state-city");
 
 /* ───────────────── COMPONENTS ───────────────── */
 
@@ -321,16 +317,12 @@ function FilterContent({
 
   /* ───────────────── DATA LOADING ───────────────── */
   useEffect(() => {
-    (async () => {
-      const { State } = await importCSC();
-      const states = State.getStatesOfCountry(DEFAULT_COUNTRY);
-      setStateOptions(
-        states.map((s) => ({
-          label: s.name,
-          value: s.name,
-        })),
-      );
-    })();
+    setStateOptions(
+      NigeriaData.getStates().map((s) => ({
+        label: s.name,
+        value: s.name,
+      })),
+    );
   }, []);
 
   /* ───────────────── URL SYNC ───────────────── */

@@ -1,4 +1,4 @@
-import { Country, State } from "country-state-city";
+import { NigeriaData } from "./nigeria-data";
 
 export function formatLocation({
   city,
@@ -11,11 +11,11 @@ export function formatLocation({
   country?: string | null;
   postalCode?: string | null;
 }) {
-  const countryObj = country ? Country.getCountryByCode(country) : null;
-  const countryName = countryObj ? countryObj.name : country;
+  const countryObj = country ? NigeriaData.getCountryByCode(country) : null;
+  const countryName = countryObj ? countryObj.name : country || "Nigeria";
 
   const stateObj =
-    country && state ? State.getStateByCodeAndCountry(state, country) : null;
+    country === "NG" && state ? NigeriaData.getStateByCode(state) : null;
   const stateName = stateObj ? stateObj.name : state;
 
   // Deduplicate if city and state are the same

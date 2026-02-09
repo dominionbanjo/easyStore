@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { Country, State } from "country-state-city";
+import { NigeriaData } from "@/utils/nigeria-data";
 
 /* ───────────────── TYPES ───────────────── */
 
@@ -16,15 +16,13 @@ export type DeliveryRate = {
 /* ───────────────── HELPERS ───────────────── */
 
 function getCountryName(code: string) {
-  return Country.getCountryByCode(code)?.name ?? code;
+  return NigeriaData.getCountryByCode(code)?.name ?? code;
 }
 
 function getStateName(countryCode: string, stateCode?: string | null) {
-  if (!stateCode) return null;
+  if (!stateCode || countryCode !== "NG") return null;
 
-  return (
-    State.getStateByCodeAndCountry(stateCode, countryCode)?.name ?? stateCode
-  );
+  return NigeriaData.getStateByCode(stateCode)?.name ?? stateCode;
 }
 
 /* ───────────────── COMPONENT ───────────────── */

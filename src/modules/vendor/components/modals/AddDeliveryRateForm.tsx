@@ -1,7 +1,7 @@
 "use client";
 
 import { useForm, FormProvider, useWatch } from "react-hook-form";
-import { Country, State, City } from "country-state-city";
+import { NigeriaData } from "@/utils/nigeria-data";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -47,7 +47,7 @@ export function AddDeliveryRateForm(props: Props) {
       props.mode === "edit"
         ? props.defaultValues
         : {
-            country: "",
+            country: "NG",
             state: "",
             city: "",
             price: 0,
@@ -69,23 +69,23 @@ export function AddDeliveryRateForm(props: Props) {
 
   /* ───────────────── OPTIONS ───────────────── */
 
-  const countryOptions = Country.getAllCountries().map((c) => ({
+  const countryOptions = NigeriaData.getCountries().map((c) => ({
     label: c.name,
     value: c.isoCode,
   }));
 
   const stateOptions = countryCode
-    ? State.getStatesOfCountry(countryCode).map((s) => ({
+    ? NigeriaData.getStates().map((s) => ({
         label: s.name,
         value: s.isoCode,
       }))
     : [];
 
   const cityOptions =
-    countryCode && stateCode
-      ? City.getCitiesOfState(countryCode, stateCode).map((c) => ({
-          label: c.name,
-          value: c.name,
+    countryCode === "NG" && stateCode
+      ? NigeriaData.getCities(stateCode).map((c) => ({
+          label: c,
+          value: c,
         }))
       : [];
 

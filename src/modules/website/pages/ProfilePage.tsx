@@ -26,9 +26,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
-/* ───────────────── LAZY CSC IMPORT ───────────────── */
-const importCSC = () => import("country-state-city");
+import { NigeriaData } from "@/utils/nigeria-data";
 
 /* ───────────────── COMPONENT ───────────────── */
 
@@ -54,8 +52,6 @@ export default function UserProfilePage() {
 
   /* ───────────────── RESOLVE COUNTRY / STATE ───────────────── */
   useEffect(() => {
-    let cancelled = false;
-
     async function resolveLocation() {
       if (!user?.address?.country) {
         setCountryName("—");
@@ -63,17 +59,14 @@ export default function UserProfilePage() {
         return;
       }
 
-      const { Country, State } = await importCSC();
-      if (cancelled) return;
-
-      const c = Country.getCountryByCode(user.address.country);
-      setCountryName(c?.name ?? user.address.country);
+      if (user.address.country === "NG") {
+        setCountryName("Nigeria");
+      } else {
+        setCountryName(user.address.country);
+      }
 
       if (user.address.state) {
-        const s = State.getStateByCodeAndCountry(
-          user.address.state,
-          user.address.country,
-        );
+        const s = NigeriaData.getStateByCode(user.address.state);
         setStateName(s?.name ?? user.address.state);
       } else {
         setStateName("—");
@@ -81,9 +74,6 @@ export default function UserProfilePage() {
     }
 
     resolveLocation();
-    return () => {
-      cancelled = true;
-    };
   }, [user?.address?.country, user?.address?.state]);
 
   /* ───────────────── ANIMATION VARIANTS ───────────────── */

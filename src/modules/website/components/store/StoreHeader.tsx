@@ -1,7 +1,7 @@
 import { useFormContext } from "react-hook-form";
 import { motion } from "framer-motion";
 import { Search, MapPin, X, Store } from "lucide-react";
-import { State } from "country-state-city";
+import { NigeriaData } from "@/utils/nigeria-data";
 import { Button } from "@/components/ui/button";
 import { FormInput } from "@/components/shared/form/FormInput";
 import { FormSelect } from "@/components/shared/form/FormSelect";
@@ -86,8 +86,7 @@ export default function StoreHeader() {
                   <FormSelect
                     name="state"
                     placeholder="Filter by State"
-                    className="pl-10 !mt-0 border-0 bg-transparent shadow-none focus:ring-0 text-sm h-12 rounded-xl hover:bg-neutral-50 dark:hover:bg-neutral-700 focus:bg-white dark:focus:bg-neutral-800 transition-colors w-full"
-                    options={State.getStatesOfCountry("NG").map((s) => ({
+                    options={NigeriaData.getStates().map((s) => ({
                       label: s.name,
                       value: s.name,
                     }))}
