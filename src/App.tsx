@@ -8,8 +8,8 @@ import { Suspense } from "react";
 // Utils & Components
 import ScrollToTop from "@/utils/ScrollToTop";
 
-// Lazy-loaded Components
-import * as Pages from "@/routes/lazyComponents";
+// Pages & Layouts
+import * as Pages from "@/routes/pages";
 import LoadingScreen from "./Loading";
 import NavigationProgressBar from "@/components/shared/NavigationProgressBar";
 

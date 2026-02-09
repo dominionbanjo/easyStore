@@ -11,14 +11,10 @@ import LoadingScreen from "@/Loading";
 
 import SuperAdminHeader from "../components/SuperAdminHeader";
 import SuperAdminSidebar from "../components/SuperAdminSidebar";
-import { preloadAdminPages } from "@/routes/lazyComponents";
 
 export default function SuperAdminDashboardLayout() {
   const navigate = useNavigate();
 
-  useEffect(() => {
-    preloadAdminPages();
-  }, []);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const { isAuthenticated, isLoading, currentUser } = useSelector(
