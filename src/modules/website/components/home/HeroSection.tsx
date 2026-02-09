@@ -1,6 +1,5 @@
 import { motion, type Variants } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import SocialProofBadge from "./SocialProofBadge";
 import { useAppDispatch, useAppSelector } from "@/hooks";
@@ -9,6 +8,7 @@ import {
   setShowOnboardingModal,
 } from "@/features/userSlice";
 import { AUTH_ROUTES, VENDOR_ROUTES } from "@/routes/index";
+import SmartLink from "@/components/shared/SmartLink";
 
 // Hero main fade-in animation
 const transitionVariants: Variants = {
@@ -43,26 +43,9 @@ export function HeroTitle() {
 }
 
 export default function HeroSection() {
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectCurrentUser);
 
-  const handleStartSelling = () => {
-    if (!user) {
-      // 1. Not logged in -> go to signup with role=sell
-      navigate(`${AUTH_ROUTES.SIGNUP}?role=vendor`);
-      return;
-    }
-
-    if (user.account_type === "vendor") {
-      // 2. Already detailed as vendor -> go to dashboard
-      navigate(VENDOR_ROUTES.DASHBOARD || "/vendor");
-      return;
-    }
-
-    // 3. Logged in as user -> open onboarding modal
-    dispatch(setShowOnboardingModal(true));
-  };
   return (
     <section className="relative isolate  py-12 sm:py-24  dark:from-neutral-950 dark:via-neutral-900 dark:to-neutral-950 transition-colors duration-300">
       <div className="max-w-7xl mx-auto">
@@ -112,17 +95,39 @@ export default function HeroSection() {
               transition={{ delay: 0.4 }}
               className="mt-10 flex flex-col sm:flex-row items-center lg:items-start gap-6"
             >
-              <Button
-                size="lg"
-                onClick={handleStartSelling}
-                className="group relative bg-primary hover:bg-emerald-500 dark:bg-emerald-500 dark:hover:bg-emerald-400 text-white dark:text-neutral-950 rounded-xl h-14 px-10 text-lg font-bold hover:scale-[1.05] active:scale-95 transition-all shadow-xl shadow-emerald-500/20 hover:shadow-emerald-500/40"
-              >
-                <div className="absolute inset-0 bg-emerald-400/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity rounded-xl" />
-                <span className="relative flex items-center gap-2">
-                  Start Selling Now
-                  <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
-                </span>
-              </Button>
+              {!user || user.account_type === "vendor" ? (
+                <SmartLink
+                  to={
+                    !user
+                      ? `${AUTH_ROUTES.SIGNUP}?role=vendor`
+                      : VENDOR_ROUTES.DASHBOARD || "/vendor"
+                  }
+                  className="w-full sm:w-auto"
+                >
+                  <Button
+                    size="lg"
+                    className="group relative bg-primary hover:bg-emerald-500 dark:bg-emerald-500 dark:hover:bg-emerald-400 text-white dark:text-neutral-950 rounded-xl h-14 px-10 text-lg font-bold hover:scale-[1.05] active:scale-95 transition-all shadow-xl shadow-emerald-500/20 hover:shadow-emerald-500/40 w-full"
+                  >
+                    <div className="absolute inset-0 bg-emerald-400/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity rounded-xl" />
+                    <span className="relative flex items-center gap-2">
+                      Start Selling Now
+                      <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+                    </span>
+                  </Button>
+                </SmartLink>
+              ) : (
+                <Button
+                  size="lg"
+                  onClick={() => dispatch(setShowOnboardingModal(true))}
+                  className="group relative bg-primary hover:bg-emerald-500 dark:bg-emerald-500 dark:hover:bg-emerald-400 text-white dark:text-neutral-950 rounded-xl h-14 px-10 text-lg font-bold hover:scale-[1.05] active:scale-95 transition-all shadow-xl shadow-emerald-500/20 hover:shadow-emerald-500/40"
+                >
+                  <div className="absolute inset-0 bg-emerald-400/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity rounded-xl" />
+                  <span className="relative flex items-center gap-2">
+                    Start Selling Now
+                    <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+                  </span>
+                </Button>
+              )}
 
               <SocialProofBadge
                 users={[

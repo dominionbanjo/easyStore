@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Sparkles, TrendingUp, Zap, ArrowRight, Search } from "lucide-react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import SmartLink from "@/components/shared/SmartLink";
 import { WEBSITE_ROUTES } from "@/routes";
 import {
   useGetFeaturedProductsQuery,
@@ -130,7 +131,7 @@ export default function DiscoveryPage() {
               color: "bg-emerald-500",
             },
           ].map((link) => (
-            <Link
+            <SmartLink
               to={link.href}
               key={link.title}
               className="group relative overflow-hidden h-32 rounded-3xl bg-zinc-50 dark:bg-neutral-900 border border-zinc-200 dark:border-white/5 flex flex-col items-center justify-center gap-3 hover:bg-white dark:hover:bg-neutral-800 transition-colors shadow-sm hover:shadow-md"
@@ -141,7 +142,7 @@ export default function DiscoveryPage() {
                 <link.icon className="w-6 h-6" />
               </div>
               <span className="font-bold text-foreground">{link.title}</span>
-            </Link>
+            </SmartLink>
           ))}
         </div>
       </div>
@@ -153,11 +154,11 @@ export default function DiscoveryPage() {
             <Sparkles className="w-6 h-6 text-primary" />
             Featured
           </h2>
-          <Link to={WEBSITE_ROUTES.FEATURED}>
+          <SmartLink to={WEBSITE_ROUTES.FEATURED}>
             <Button variant="ghost" className="gap-2">
               View All <ArrowRight className="w-4 h-4" />
             </Button>
-          </Link>
+          </SmartLink>
         </div>
         <motion.div
           key={isFeaturedLoading ? "loading" : "loaded"}
@@ -192,11 +193,11 @@ export default function DiscoveryPage() {
             <TrendingUp className="w-6 h-6 text-orange-500" />
             Trending Now
           </h2>
-          <Link to={WEBSITE_ROUTES.TRENDING}>
+          <SmartLink to={WEBSITE_ROUTES.TRENDING}>
             <Button variant="ghost" className="gap-2">
               View All <ArrowRight className="w-4 h-4" />
             </Button>
-          </Link>
+          </SmartLink>
         </div>
         <motion.div
           key={isTrendingLoading ? "loading" : "loaded"}
@@ -231,11 +232,11 @@ export default function DiscoveryPage() {
             <Zap className="w-6 h-6 text-blue-500" />
             New Arrivals
           </h2>
-          <Link to={WEBSITE_ROUTES.NEW_ARRIVALS}>
+          <SmartLink to={WEBSITE_ROUTES.NEW_ARRIVALS}>
             <Button variant="ghost" className="gap-2">
               View All <ArrowRight className="w-4 h-4" />
             </Button>
-          </Link>
+          </SmartLink>
         </div>
         <motion.div
           key={isNewArrivalsLoading ? "loading" : "loaded"}

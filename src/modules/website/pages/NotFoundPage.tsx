@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import SmartLink from "@/components/shared/SmartLink";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { Home, ArrowLeft } from "lucide-react";
@@ -38,7 +38,7 @@ export default function NotFoundPage() {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-8">
-            <Link to="/">
+            <SmartLink to="/">
               <Button
                 size="lg"
                 className="h-14 px-10 rounded-full bg-primary dark:bg-emerald-500 text-white dark:text-neutral-950 font-black shadow-xl shadow-primary/20 dark:shadow-emerald-500/20 hover:scale-105 transition-all group"
@@ -46,7 +46,7 @@ export default function NotFoundPage() {
                 <Home className="w-5 h-5 mr-3 group-hover:-translate-y-0.5 transition-transform" />
                 Go Home
               </Button>
-            </Link>
+            </SmartLink>
             <Button
               variant="outline"
               size="lg"

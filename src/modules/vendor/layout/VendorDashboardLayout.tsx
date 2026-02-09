@@ -1,5 +1,5 @@
-import { useEffect, useState, Suspense } from "react";
-import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import { toast } from "sonner";
@@ -13,7 +13,6 @@ import LoadingScreen from "@/Loading";
 
 export default function VendorDashboardLayout() {
   const navigate = useNavigate();
-  const location = useLocation();
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -73,11 +72,7 @@ export default function VendorDashboardLayout() {
         <DashboardHeader onMenuToggle={() => setSidebarOpen(!sidebarOpen)} />
 
         <main className="px-2 py-2 sm:p-4 md:p-6 w-full max-w-[1440px] mx-auto transition-all duration-300">
-          <Suspense fallback={<LoadingScreen />}>
-            <div key={location.pathname}>
-              <Outlet />
-            </div>
-          </Suspense>
+          <Outlet />
         </main>
       </div>
     </section>

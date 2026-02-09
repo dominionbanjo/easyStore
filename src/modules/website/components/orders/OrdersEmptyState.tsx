@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ShoppingBag, ArrowRight } from "lucide-react";
-import { Link } from "react-router-dom";
+import SmartLink from "@/components/shared/SmartLink";
 import { WEBSITE_ROUTES } from "@/routes";
 
 export function OrdersEmptyState() {
@@ -23,16 +23,15 @@ export function OrdersEmptyState() {
         order to see it here.
       </p>
 
-      <Button
-        asChild
-        size="lg"
-        className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20 rounded-2xl h-12 px-8 font-bold"
-      >
-        <Link to={WEBSITE_ROUTES.HOME} className="flex items-center gap-2">
+      <SmartLink to={WEBSITE_ROUTES.HOME}>
+        <Button
+          size="lg"
+          className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20 rounded-2xl h-12 px-8 font-bold flex items-center gap-2"
+        >
           Start Shopping
           <ArrowRight className="h-4 w-4" />
-        </Link>
-      </Button>
+        </Button>
+      </SmartLink>
     </div>
   );
 }

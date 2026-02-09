@@ -9,7 +9,7 @@ import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/store";
 import { Heart, Star, ShoppingCart, Eye, Check, Loader2 } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import SmartLink from "./SmartLink";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -114,7 +114,6 @@ const Root = ({
 }: ProductCardRootProps) => {
   const { isAuthenticated } = useSelector((state: RootState) => state.user);
   const [isFavorited, setIsFavorited] = useState<boolean>(isFavorite);
-  const navigate = useNavigate();
 
   /* ── API ── */
   const [addToWishlist] = useAddToWishlistMutation();
@@ -201,10 +200,6 @@ const Root = ({
     }
   };
 
-  const handleCardClick = () => {
-    navigate(`/product/${encodeURIComponent(slug)}`);
-  };
-
   const value = useMemo(
     () => ({
       id,
@@ -257,7 +252,6 @@ const Root = ({
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         whileHover={{ y: -8 }}
-        onClick={handleCardClick}
         className={cn(
           "group relative w-full bg-white dark:bg-neutral-900 rounded-3xl p-1 shadow-sm border border-zinc-100 dark:border-white/5 transition-all hover:shadow-2xl hover:shadow-emerald-500/10 cursor-pointer overflow-hidden flex flex-col h-full",
           className,
@@ -382,6 +376,7 @@ const Image = () => {
     stock,
     price,
     isOnSale,
+    slug,
   } = useProductCard();
   const isOutOfStock = stock <= 0;
 
@@ -398,6 +393,13 @@ const Image = () => {
 
   return (
     <div className="relative aspect-square w-full rounded-2xl overflow-hidden bg-zinc-50 dark:bg-zinc-800 group-hover:shadow-inner transition-all duration-500">
+      {/* 🔗 Whole Card Link (Stretched) */}
+      <SmartLink
+        to={`/product/${slug}`}
+        className="absolute inset-0 z-[1]"
+        aria-label={`View ${name}`}
+      />
+
       {/* 🏷️ Status Badges (Now on Right) */}
       <div className="absolute top-3 right-3 z-20 flex flex-col items-end gap-2">
         {isOutOfStock ? (
@@ -512,7 +514,7 @@ const Info = () => {
           }}
           disabled={isOutOfStock || isAddingToCart}
           className={cn(
-            "p-2 rounded-2xl transition-all shadow-md group/btn relative overflow-hidden",
+            "p-2 rounded-2xl transition-all shadow-md group/btn relative z-10 overflow-hidden",
             isOutOfStock
               ? "bg-zinc-100 text-zinc-400 cursor-not-allowed"
               : "bg-zinc-900 text-white hover:bg-emerald-500 hover:shadow-emerald-500/40 active:scale-95",
@@ -565,7 +567,7 @@ const Footer = () => {
 
   return (
     <div className="mt-2 pt-2 px-1 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between gap-3">
-      <Link
+      <SmartLink
         to={storeSlug ? `/stores/${storeSlug}` : `/vendor/${vendor}`}
         className="flex items-center gap-2.5 truncate relative z-10 group/vendor"
         onClick={(e) => e.stopPropagation()}
@@ -587,7 +589,7 @@ const Footer = () => {
             {vendor}
           </span>
         </div>
-      </Link>
+      </SmartLink>
     </div>
   );
 };

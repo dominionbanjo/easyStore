@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { Link } from "react-router-dom";
+import SmartLink from "@/components/shared/SmartLink";
 import { motion } from "framer-motion";
 import { ArrowRight, Store as StoreIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -54,7 +54,7 @@ export default function FeaturedStoresSection({
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
           >
-            <Link to="/stores">
+            <SmartLink to="/stores">
               <Button
                 variant="ghost"
                 className="group text-primary hover:text-primary hover:bg-primary/5"
@@ -62,7 +62,7 @@ export default function FeaturedStoresSection({
                 View All Stores
                 <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Button>
-            </Link>
+            </SmartLink>
           </motion.div>
         </div>
 

@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { FolderTree, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { useNavigate } from "react-router-dom";
+import SmartLink from "@/components/shared/SmartLink";
 import { WEBSITE_ROUTES } from "@/routes";
 
 interface SubCategory {
@@ -23,8 +23,6 @@ interface CategoryGroupProps {
 }
 
 export function CategoryGroup({ category, index }: CategoryGroupProps) {
-  const navigate = useNavigate();
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -59,34 +57,34 @@ export function CategoryGroup({ category, index }: CategoryGroupProps) {
               whileTap={{ scale: 0.98 }}
               className="h-full"
             >
-              <Card
-                onClick={() =>
-                  navigate(`${WEBSITE_ROUTES.CATEGORIES}/${child.slug}`)
-                }
-                className="group h-full cursor-pointer rounded-3xl border border-neutral-200/60 dark:border-white/10 bg-white dark:bg-neutral-900 p-6 md:p-8 hover:shadow-[0_20px_50px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)] hover:border-primary/30 transition-all duration-500 relative overflow-hidden"
+              <SmartLink
+                to={`${WEBSITE_ROUTES.CATEGORIES}/${child.slug}`}
+                className="block h-full no-underline"
               >
-                {/* Hover decorative element */}
-                <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-[3] transition-transform duration-700 blur-2xl" />
+                <Card className="group h-full cursor-pointer rounded-3xl border border-neutral-200/60 dark:border-white/10 bg-white dark:bg-neutral-900 p-6 md:p-8 hover:shadow-[0_20px_50px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)] hover:border-primary/30 transition-all duration-500 relative overflow-hidden">
+                  {/* Hover decorative element */}
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-[3] transition-transform duration-700 blur-2xl" />
 
-                <div className="flex flex-col h-full justify-between relative z-10">
-                  <div className="space-y-4">
-                    <div className="w-10 h-10 rounded-xl bg-neutral-50 dark:bg-neutral-800 border border-neutral-100 dark:border-white/5 flex items-center justify-center group-hover:bg-primary group-hover:border-primary transition-all duration-300">
-                      <ChevronRight className="h-5 w-5 text-neutral-400 dark:text-neutral-500 group-hover:text-white group-hover:translate-x-0.5 transition-all" />
+                  <div className="flex flex-col h-full justify-between relative z-10">
+                    <div className="space-y-4">
+                      <div className="w-10 h-10 rounded-xl bg-neutral-50 dark:bg-neutral-800 border border-neutral-100 dark:border-white/5 flex items-center justify-center group-hover:bg-primary group-hover:border-primary transition-all duration-300">
+                        <ChevronRight className="h-5 w-5 text-neutral-400 dark:text-neutral-500 group-hover:text-white group-hover:translate-x-0.5 transition-all" />
+                      </div>
+
+                      <h3 className="text-lg md:text-xl font-black text-foreground group-hover:text-primary transition-colors leading-tight">
+                        {child.name}
+                      </h3>
                     </div>
 
-                    <h3 className="text-lg md:text-xl font-black text-foreground group-hover:text-primary transition-colors leading-tight">
-                      {child.name}
-                    </h3>
+                    <div className="mt-6 pt-4 border-t border-neutral-100 dark:border-white/5 flex items-center justify-between">
+                      <p className="text-[10px] md:text-xs text-neutral-400 dark:text-neutral-500 font-black uppercase tracking-widest">
+                        {child.products_count} Products
+                      </p>
+                      <span className="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
+                    </div>
                   </div>
-
-                  <div className="mt-6 pt-4 border-t border-neutral-100 dark:border-white/5 flex items-center justify-between">
-                    <p className="text-[10px] md:text-xs text-neutral-400 dark:text-neutral-500 font-black uppercase tracking-widest">
-                      {child.products_count} Products
-                    </p>
-                    <span className="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
-                  </div>
-                </div>
-              </Card>
+                </Card>
+              </SmartLink>
             </motion.div>
           ))}
         </div>

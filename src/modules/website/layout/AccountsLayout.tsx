@@ -1,5 +1,5 @@
-import { useEffect, Suspense } from "react";
-import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
 
@@ -10,7 +10,6 @@ import LoadingScreen from "@/Loading";
 
 export default function AccountsLayout() {
   const navigate = useNavigate();
-  const location = useLocation();
 
   const { isAuthenticated, isLoading } = useSelector(
     (state: RootState) => state.user,
@@ -39,11 +38,7 @@ export default function AccountsLayout() {
 
       {/* 🧭 Protected Content */}
       <main className="flex-1 fade-in-up mt-4 md:mt-6 px-1 md:px-14 xl:px-16 max-w-[1780px] mx-auto w-full">
-        <Suspense fallback={<LoadingScreen />}>
-          <div key={location.pathname}>
-            <Outlet />
-          </div>
-        </Suspense>
+        <Outlet />
       </main>
 
       {/* ⚓ Footer */}

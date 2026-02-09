@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import SmartLink from "@/components/shared/SmartLink";
 import type { RootState } from "@/store";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -384,12 +384,12 @@ export default function ProductInfoSidebar({
               <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
                 Sold by
               </p>
-              <Link
+              <SmartLink
                 to={`/stores/${product.storeSlug}`}
                 className="text-sm font-black text-foreground truncate max-w-[120px] hover:text-primary transition-colors cursor-pointer block"
               >
                 {product.vendor}
-              </Link>
+              </SmartLink>
             </div>
           </div>
           <div className="flex items-start gap-2.5">

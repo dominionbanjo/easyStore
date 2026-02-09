@@ -1,5 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import SmartLink from "./SmartLink";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/store";
 import { useLogoutMutation } from "@/services/authApi";
@@ -203,7 +204,7 @@ export default function Header() {
                     {navItems.map((item) => {
                       const Icon = item.icon;
                       return (
-                        <Link
+                        <SmartLink
                           key={item.path}
                           to={item.path}
                           onClick={() => setMenuOpen(false)}
@@ -216,7 +217,7 @@ export default function Header() {
                         >
                           <Icon className="h-4 w-4" />
                           {item.name}
-                        </Link>
+                        </SmartLink>
                       );
                     })}
 
@@ -239,23 +240,23 @@ export default function Header() {
                     ) : (
                       /* ===== LOGGED OUT ===== */
                       <div className="space-y-2">
-                        <Link
+                        <SmartLink
                           to={AUTH_ROUTES.LOGIN}
                           onClick={() => setMenuOpen(false)}
                           className="flex items-center gap-3 py-2 text-foreground hover:text-primary"
                         >
                           <UserIcon className="h-4 w-4" />
                           Sign In
-                        </Link>
+                        </SmartLink>
 
-                        <Link
+                        <SmartLink
                           to={AUTH_ROUTES.SIGNUP}
                           onClick={() => setMenuOpen(false)}
                           className="flex items-center gap-3 py-2 text-foreground hover:text-primary"
                         >
                           <Store className="h-4 w-4" />
                           Create Account
-                        </Link>
+                        </SmartLink>
                       </div>
                     )}
                   </nav>
@@ -265,7 +266,7 @@ export default function Header() {
           </div>
 
           {/* Logo */}
-          <Link
+          <SmartLink
             to={WEBSITE_ROUTES.HOME}
             className="flex items-center flex-shrink-0"
           >
@@ -284,12 +285,12 @@ export default function Header() {
               )}
               loading="lazy"
             />
-          </Link>
+          </SmartLink>
 
           {/* Desktop Nav */}
           <nav className="hidden lg:flex items-center gap-5 xl:gap-6 text-sm font-medium whitespace-nowrap">
             {navItems.slice(0, 4).map((item) => (
-              <Link
+              <SmartLink
                 key={item.path}
                 to={item.path}
                 className={cn(
@@ -300,7 +301,7 @@ export default function Header() {
                 )}
               >
                 <FancyHoverText text={item.name} />
-              </Link>
+              </SmartLink>
             ))}
           </nav>
         </div>
@@ -408,7 +409,7 @@ export default function Header() {
                     {/* 🔹 CONDITIONAL DASHBOARD LINK */}
                     {(user.account_type === "vendor" ||
                       user.account_type === "admin") && (
-                      <Link
+                      <SmartLink
                         to={
                           user.account_type === "vendor" ? "/vendor" : "/admin"
                         }
@@ -417,44 +418,44 @@ export default function Header() {
                       >
                         <Layers className="h-4 w-4" />
                         Go to Dashboard
-                      </Link>
+                      </SmartLink>
                     )}
 
-                    <Link
+                    <SmartLink
                       to={USER_ROUTES.PROFILE}
                       onClick={() => setProfileOpen(false)}
                       className="flex items-center gap-3 px-2 py-1.5 text-sm hover:bg-gray-100 dark:hover:bg-neutral-800 rounded transition-colors"
                     >
                       <UserIcon className="h-4 w-4" />
                       Profile
-                    </Link>
+                    </SmartLink>
 
-                    <Link
+                    <SmartLink
                       to={USER_ROUTES.ORDERS}
                       onClick={() => setProfileOpen(false)}
                       className="flex items-center gap-3 px-2 py-1.5 text-sm hover:bg-gray-100 dark:hover:bg-neutral-800 rounded transition-colors"
                     >
                       <ShoppingBag className="h-4 w-4" />
                       Orders
-                    </Link>
+                    </SmartLink>
 
-                    <Link
+                    <SmartLink
                       to={USER_ROUTES.CART}
                       onClick={() => setProfileOpen(false)}
                       className="flex items-center gap-3 px-2 py-1.5 text-sm hover:bg-gray-100 dark:hover:bg-neutral-800 rounded transition-colors"
                     >
                       <ShoppingBag className="h-4 w-4" />
                       Cart
-                    </Link>
+                    </SmartLink>
 
-                    <Link
+                    <SmartLink
                       to={USER_ROUTES.WISHLIST}
                       onClick={() => setProfileOpen(false)}
                       className="flex items-center gap-3 px-2 py-1.5 text-sm hover:bg-gray-100 dark:hover:bg-neutral-800 rounded transition-colors"
                     >
                       <Heart className="h-4 w-4" />
                       Wishlist
-                    </Link>
+                    </SmartLink>
 
                     <button
                       onClick={() => {
@@ -473,28 +474,28 @@ export default function Header() {
               <>
                 {/* Desktop Buttons */}
                 <div className="hidden lg:flex items-center gap-2">
-                  <Link to={AUTH_ROUTES.LOGIN}>
+                  <SmartLink to={AUTH_ROUTES.LOGIN}>
                     <Button
                       variant="outline"
                       className="rounded-full px-4 text-sm h-9"
                     >
                       Sign In
                     </Button>
-                  </Link>
-                  <Link to={AUTH_ROUTES.SIGNUP}>
+                  </SmartLink>
+                  <SmartLink to={AUTH_ROUTES.SIGNUP}>
                     <Button className="rounded-full px-4 text-sm h-9 text-white">
                       Sign Up
                     </Button>
-                  </Link>
+                  </SmartLink>
                 </div>
 
                 {/* Mobile/Medium Profile Icon (Login Link) */}
-                <Link
+                <SmartLink
                   to={AUTH_ROUTES.LOGIN}
                   className="lg:hidden flex items-center justify-center rounded-full border border-zinc-200 dark:border-white/10 hover:bg-zinc-50 dark:hover:bg-white/5 transition-all p-1 flex-shrink-0 group"
                 >
                   <User className="h-6 w-6 text-foreground group-hover:text-emerald-400 transition-colors" />
-                </Link>
+                </SmartLink>
               </>
             )}
           </div>

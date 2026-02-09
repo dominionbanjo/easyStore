@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Sparkles, TrendingUp, Zap, Search } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import SmartLink from "@/components/shared/SmartLink";
 import { WEBSITE_ROUTES } from "@/routes";
 
 export default function DiscoveryHero() {
@@ -93,7 +94,7 @@ export default function DiscoveryHero() {
               color: "bg-emerald-500",
             },
           ].map((link) => (
-            <Link
+            <SmartLink
               to={link.href}
               key={link.title}
               className="group relative overflow-hidden h-32 rounded-3xl bg-zinc-50 dark:bg-neutral-900 border border-zinc-200 dark:border-white/5 flex flex-col items-center justify-center gap-3 hover:bg-white dark:hover:bg-neutral-800 transition-colors shadow-sm hover:shadow-md"
@@ -104,7 +105,7 @@ export default function DiscoveryHero() {
                 <link.icon className="w-6 h-6" />
               </div>
               <span className="font-bold text-foreground">{link.title}</span>
-            </Link>
+            </SmartLink>
           ))}
         </div>
       </div>

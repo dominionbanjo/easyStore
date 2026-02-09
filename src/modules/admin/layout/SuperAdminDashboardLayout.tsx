@@ -1,5 +1,5 @@
-import { useEffect, useState, Suspense } from "react";
-import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import { toast } from "sonner";
@@ -14,7 +14,6 @@ import SuperAdminSidebar from "../components/SuperAdminSidebar";
 
 export default function SuperAdminDashboardLayout() {
   const navigate = useNavigate();
-  const location = useLocation();
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -74,11 +73,7 @@ export default function SuperAdminDashboardLayout() {
           layout
           className="p-6 md:p-10 w-full max-w-7xl mx-auto space-y-10"
         >
-          <Suspense fallback={<LoadingScreen />}>
-            <div key={location.pathname}>
-              <Outlet />
-            </div>
-          </Suspense>
+          <Outlet />
         </motion.main>
       </div>
     </section>

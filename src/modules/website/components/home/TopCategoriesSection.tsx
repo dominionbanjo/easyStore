@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { Link } from "react-router-dom";
+import SmartLink from "@/components/shared/SmartLink";
 import { motion } from "framer-motion";
 import { ArrowRight, LayoutGrid, Tag } from "lucide-react";
 import { useGetCategoriesQuery } from "@/services/productDetailsApi";
@@ -67,13 +67,13 @@ export default function TopCategoriesSection({
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
           >
-            <Link
+            <SmartLink
               to="/categories"
               className="group flex items-center gap-1 text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
             >
               View All Categories
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </Link>
+            </SmartLink>
           </motion.div>
         </div>
 
@@ -99,7 +99,7 @@ export default function TopCategoriesSection({
             className="grid grid-cols-2 md:grid-cols-4 gap-4"
           >
             {categories.map((category, index) => (
-              <Link
+              <SmartLink
                 key={category.id}
                 to={`/s?q=${encodeURIComponent(category.name)}`}
                 className="block group"
@@ -122,7 +122,7 @@ export default function TopCategoriesSection({
                     {category.products_count ?? 0} Products
                   </div>
                 </Card>
-              </Link>
+              </SmartLink>
             ))}
           </motion.div>
         )}

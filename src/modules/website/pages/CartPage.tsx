@@ -11,7 +11,7 @@ import {
 import type { ICartItem } from "@/types/cart/cartTypes";
 import { toast } from "sonner";
 import { USER_ROUTES, WEBSITE_ROUTES } from "@/routes/temp";
-import { useNavigate } from "react-router-dom";
+import SmartLink from "@/components/shared/SmartLink";
 import { CartSkeleton } from "../components/skeletons/CartSkeleton";
 import { CartItem } from "../components/cart/CartItem";
 import { CartSummary } from "../components/cart/CartSummary";
@@ -26,8 +26,6 @@ function debounce<T extends (...args: any[]) => void>(fn: T, delay = 500) {
 }
 
 export default function CartPage() {
-  const navigate = useNavigate();
-
   const { data, isLoading, isFetching, isError, refetch } = useGetCartQuery();
   const [updateCartItem] = useUpdateCartItemMutation();
   const [removeCartItem] = useRemoveCartItemMutation();
@@ -163,12 +161,11 @@ export default function CartPage() {
               Looks like you haven’t added any items yet. Explore our
               marketplace to find great products.
             </p>
-            <Button
-              onClick={() => navigate(WEBSITE_ROUTES.HOME)}
-              className="rounded-2xl h-14 px-10 text-lg font-bold shadow-xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all"
-            >
-              Start Shopping
-            </Button>
+            <SmartLink to={WEBSITE_ROUTES.HOME}>
+              <Button className="rounded-2xl h-14 px-10 text-lg font-bold shadow-xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all">
+                Start Shopping
+              </Button>
+            </SmartLink>
           </Card>
         ) : (
           /* Cart Grid */
@@ -197,8 +194,8 @@ export default function CartPage() {
                 shipping={cart.shipping}
                 total={cart.total}
                 onClear={handleClearCart}
-                onPreview={() => navigate(USER_ROUTES.CHECKOUT)}
-                onContinueShopping={() => navigate(WEBSITE_ROUTES.HOME)}
+                previewHref={USER_ROUTES.CHECKOUT}
+                continueShoppingHref={WEBSITE_ROUTES.HOME}
               />
             </div>
           </div>

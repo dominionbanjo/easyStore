@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ShoppingCart,
@@ -23,6 +22,7 @@ import {
 import type { ICartItem } from "@/types/cart/cartTypes";
 import { USER_ROUTES } from "@/routes/temp";
 import { toast } from "sonner";
+import SmartLink from "@/components/shared/SmartLink";
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -30,7 +30,6 @@ interface CartDrawerProps {
 }
 
 export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
-  const navigate = useNavigate();
   const { data, isLoading } = useGetCartQuery();
   const [updateCartItem] = useUpdateCartItemMutation();
   const [removeCartItem] = useRemoveCartItemMutation();
@@ -218,26 +217,24 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
             </div>
 
             <div className="grid grid-cols-2 gap-3">
-              <Button
-                variant="outline"
-                className="rounded-2xl h-12 font-bold"
-                onClick={() => {
-                  onClose();
-                  navigate(USER_ROUTES.CART);
-                }}
-              >
-                View Cart
-              </Button>
-              <Button
-                className="rounded-2xl h-12 font-black shadow-lg shadow-primary/20"
-                onClick={() => {
-                  onClose();
-                  navigate(USER_ROUTES.CHECKOUT);
-                }}
-              >
-                Checkout
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
+              <SmartLink to={USER_ROUTES.CART} className="w-full">
+                <Button
+                  variant="outline"
+                  className="rounded-2xl h-12 font-bold w-full"
+                  onClick={onClose}
+                >
+                  View Cart
+                </Button>
+              </SmartLink>
+              <SmartLink to={USER_ROUTES.CHECKOUT} className="w-full">
+                <Button
+                  className="rounded-2xl h-12 font-black shadow-lg shadow-primary/20 w-full"
+                  onClick={onClose}
+                >
+                  Checkout
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </SmartLink>
             </div>
           </div>
         )}

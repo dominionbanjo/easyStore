@@ -5,6 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import SmartLink from "@/components/shared/SmartLink";
 import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
@@ -24,8 +25,8 @@ interface CartSummaryProps {
   shipping: number;
   total: number;
   onClear: () => void;
-  onPreview: () => void;
-  onContinueShopping: () => void;
+  previewHref: string;
+  continueShoppingHref: string;
 }
 
 export function CartSummary({
@@ -33,8 +34,8 @@ export function CartSummary({
   shipping,
   total,
   onClear,
-  onPreview,
-  onContinueShopping,
+  previewHref,
+  continueShoppingHref,
 }: CartSummaryProps) {
   return (
     <Card className="h-fit rounded-2xl sm:rounded-3xl border shadow-lg bg-white border-zinc-100 dark:bg-zinc-900 dark:border-white/5">
@@ -100,22 +101,22 @@ export function CartSummary({
       </CardContent>
 
       <CardFooter className="px-5 pb-5 flex flex-col gap-3">
-        <Button
-          className="w-full rounded-2xl h-12 text-base font-bold shadow-lg shadow-primary/20"
-          onClick={onPreview}
-        >
-          Preview Orders
-          <ArrowRight className="ml-2 h-4 w-4" />
-        </Button>
+        <SmartLink to={previewHref} className="w-full">
+          <Button className="w-full rounded-2xl h-12 text-base font-bold shadow-lg shadow-primary/20">
+            Preview Orders
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+        </SmartLink>
 
-        <Button
-          variant="outline"
-          className="w-full rounded-2xl h-12 text-base font-bold border-zinc-200 dark:border-white/10"
-          onClick={onContinueShopping}
-        >
-          <Package className="mr-2 h-4 w-4" />
-          Continue Shopping
-        </Button>
+        <SmartLink to={continueShoppingHref} className="w-full">
+          <Button
+            variant="outline"
+            className="w-full rounded-2xl h-12 text-base font-bold border-zinc-200 dark:border-white/10"
+          >
+            <Package className="mr-2 h-4 w-4" />
+            Continue Shopping
+          </Button>
+        </SmartLink>
       </CardFooter>
     </Card>
   );

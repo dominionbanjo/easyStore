@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -14,10 +14,10 @@ import {
 } from "lucide-react";
 import { useVerifyPaymentMutation } from "@/services/ordersApi";
 import { ACCOUNT_ROUTES } from "@/routes";
+import SmartLink from "@/components/shared/SmartLink";
 
 export default function VerifyPaymentPage() {
   const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
 
   const reference = searchParams.get("reference");
 
@@ -51,14 +51,12 @@ export default function VerifyPaymentPage() {
               We couldn’t find a payment reference in the URL.
             </p>
 
-            <Button
-              variant="outline"
-              className="w-full"
-              onClick={() => navigate("/products")}
-            >
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Store
-            </Button>
+            <SmartLink to="/products" className="w-full block">
+              <Button variant="outline" className="w-full">
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Back to Store
+              </Button>
+            </SmartLink>
           </CardContent>
         </Card>
       </section>
@@ -126,13 +124,11 @@ export default function VerifyPaymentPage() {
                 Retry Verification
               </Button>
 
-              <Button
-                variant="outline"
-                className="w-full"
-                onClick={() => navigate("/products")}
-              >
-                Back to Store
-              </Button>
+              <SmartLink to="/products" className="w-full block">
+                <Button variant="outline" className="w-full">
+                  Back to Store
+                </Button>
+              </SmartLink>
             </div>
           </CardContent>
         </Card>
@@ -174,13 +170,12 @@ export default function VerifyPaymentPage() {
               Ref: {reference}
             </div>
 
-            <Button
-              className="w-full h-14 rounded-2xl text-lg font-bold shadow-xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all"
-              onClick={() => navigate(ACCOUNT_ROUTES.ORDERS)}
-            >
-              <CreditCard className="mr-2 h-5 w-5" />
-              View My Orders
-            </Button>
+            <SmartLink to={ACCOUNT_ROUTES.ORDERS} className="w-full block">
+              <Button className="w-full h-14 rounded-2xl text-lg font-bold shadow-xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all">
+                <CreditCard className="mr-2 h-5 w-5" />
+                View My Orders
+              </Button>
+            </SmartLink>
           </CardContent>
         </Card>
       </section>
@@ -212,13 +207,11 @@ export default function VerifyPaymentPage() {
               Retry Verification
             </Button>
 
-            <Button
-              variant="outline"
-              className="w-full"
-              onClick={() => navigate(ACCOUNT_ROUTES.ORDERS)}
-            >
-              Go to Orders
-            </Button>
+            <SmartLink to={ACCOUNT_ROUTES.ORDERS} className="w-full block">
+              <Button variant="outline" className="w-full">
+                Go to Orders
+              </Button>
+            </SmartLink>
           </div>
         </CardContent>
       </Card>

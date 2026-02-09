@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { ArrowLeft, Tag } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import SmartLink from "@/components/shared/SmartLink";
 import { WEBSITE_ROUTES } from "@/routes";
 
 interface CategoryDetailsHeaderProps {
@@ -12,8 +12,6 @@ export function CategoryDetailsHeader({
   name,
   count,
 }: CategoryDetailsHeaderProps) {
-  const navigate = useNavigate();
-
   return (
     <div className="relative overflow-hidden bg-white dark:bg-neutral-950 border-b border-zinc-200 dark:border-white/10 transition-colors duration-300">
       {/* Decorative background elements */}
@@ -21,15 +19,16 @@ export function CategoryDetailsHeader({
       <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/4 w-72 h-72 bg-primary/5 dark:bg-emerald-500/10 rounded-full blur-3xl opacity-60" />
 
       <div className="max-w-7xl mx-auto px-4 py-16 md:py-24 relative z-10">
-        <motion.button
-          initial={{ opacity: 0, x: -10 }}
-          animate={{ opacity: 1, x: 0 }}
-          onClick={() => navigate(WEBSITE_ROUTES.CATEGORIES)}
-          className="group flex items-center gap-2 text-sm font-black uppercase tracking-widest text-muted-foreground hover:text-primary dark:hover:text-emerald-400 transition-colors mb-12"
-        >
-          <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-          Back to Collections
-        </motion.button>
+        <SmartLink to={WEBSITE_ROUTES.CATEGORIES} className="block mb-12">
+          <motion.div
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="group flex items-center gap-2 text-sm font-black uppercase tracking-widest text-muted-foreground hover:text-primary dark:hover:text-emerald-400 transition-colors"
+          >
+            <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
+            Back to Collections
+          </motion.div>
+        </SmartLink>
 
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
           <motion.div

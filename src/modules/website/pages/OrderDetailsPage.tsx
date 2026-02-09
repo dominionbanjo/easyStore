@@ -1,4 +1,5 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import SmartLink from "@/components/shared/SmartLink";
 import { motion } from "framer-motion";
 import {
   ArrowLeft,
@@ -30,7 +31,6 @@ import { toast } from "sonner";
 
 export default function OrderDetailsPage() {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
   const { data: order, isLoading, error } = useGetOrderByIdQuery(id || "");
   const [isCopied, setIsCopied] = useState(false);
 
@@ -160,13 +160,12 @@ export default function OrderDetailsPage() {
           <p className="text-gray-600 dark:text-zinc-400 mb-6">
             We couldn't find the order you're looking for.
           </p>
-          <Button
-            onClick={() => navigate(ACCOUNT_ROUTES.ORDERS)}
-            className="rounded-full bg-emerald-600 hover:bg-emerald-700"
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Orders
-          </Button>
+          <SmartLink to={ACCOUNT_ROUTES.ORDERS}>
+            <Button className="rounded-full bg-emerald-600 hover:bg-emerald-700">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Orders
+            </Button>
+          </SmartLink>
         </Card>
       </div>
     );
@@ -203,14 +202,15 @@ export default function OrderDetailsPage() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <Button
-              variant="ghost"
-              onClick={() => navigate(ACCOUNT_ROUTES.ORDERS)}
-              className="group flex items-center gap-2 text-gray-700 hover:text-gray-900 -ml-2 dark:text-zinc-300 dark:hover:text-white"
-            >
-              <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-              Back to Orders
-            </Button>
+            <SmartLink to={ACCOUNT_ROUTES.ORDERS}>
+              <Button
+                variant="ghost"
+                className="group flex items-center gap-2 text-gray-700 hover:text-gray-900 -ml-2 dark:text-zinc-300 dark:hover:text-white"
+              >
+                <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
+                Back to Orders
+              </Button>
+            </SmartLink>
           </motion.div>
 
           {/* Header */}
@@ -609,14 +609,12 @@ export default function OrderDetailsPage() {
                             <h3 className="font-bold text-foreground leading-tight">
                               {order.vendor.store.store_name}
                             </h3>
-                            <button
-                              onClick={() =>
-                                navigate(`/stores/${order.vendor?.store?.slug}`)
-                              }
+                            <SmartLink
+                              to={`/stores/${order.vendor?.store?.slug}`}
                               className="text-xs font-bold text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 uppercase tracking-wider"
                             >
                               View Store Profile
-                            </button>
+                            </SmartLink>
                           </div>
                         </div>
                       ) : (

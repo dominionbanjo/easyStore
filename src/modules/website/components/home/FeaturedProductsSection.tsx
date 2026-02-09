@@ -2,7 +2,7 @@ import { ProductCard } from "@/components/shared/ProductCard";
 import { useGetFeaturedProductsQuery } from "@/services/productApi";
 import { Sparkles, ArrowRight } from "lucide-react";
 import { ProductSection } from "./ProductSection";
-import { Link } from "react-router-dom";
+import SmartLink from "@/components/shared/SmartLink";
 import { Button } from "@/components/ui/button";
 
 const FALLBACK_IMAGE =
@@ -27,7 +27,7 @@ export default function FeaturedProductsSection() {
       emptyDescription="We're currently scouting for the best products to feature here. Keep an eye out!"
       className="bg-muted/10"
       headerAction={
-        <Link to="/stores">
+        <SmartLink to="/stores">
           <Button
             variant="ghost"
             className="group text-primary hover:text-primary hover:bg-primary/5"
@@ -35,7 +35,7 @@ export default function FeaturedProductsSection() {
             Discover Stores
             <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Button>
-        </Link>
+        </SmartLink>
       }
     >
       {products.map((product) => {

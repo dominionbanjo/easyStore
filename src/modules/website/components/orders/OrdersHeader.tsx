@@ -1,6 +1,6 @@
 import { Package, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import SmartLink from "@/components/shared/SmartLink";
 import { WEBSITE_ROUTES } from "@/routes";
 
 interface OrdersHeaderProps {
@@ -36,16 +36,15 @@ export function OrdersHeader({
         </p>
       </div>
 
-      <Button
-        asChild
-        size="lg"
-        className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20 rounded-2xl h-12 px-6 font-bold shrink-0"
-      >
-        <Link to={WEBSITE_ROUTES.HOME} className="flex items-center gap-2">
+      <SmartLink to={WEBSITE_ROUTES.HOME}>
+        <Button
+          size="lg"
+          className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20 rounded-2xl h-12 px-6 font-bold shrink-0 flex items-center gap-2"
+        >
           <ShoppingBag className="h-4 w-4" />
           Continue Shopping
-        </Link>
-      </Button>
+        </Button>
+      </SmartLink>
     </div>
   );
 }
