@@ -7,6 +7,7 @@ import {
   ArrowUpRight,
   Calendar,
   AlertCircle,
+  CheckCircle2,
 } from "lucide-react";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -16,8 +17,9 @@ import { DashboardStatsLoader } from "../components/dashboard/DashboardStatsLoad
 import { StatCard } from "../components/dashboard/StatCard";
 import { SalesChart } from "../components/dashboard/SalesChart";
 import { DashboardOverviewHeader } from "../components/dashboard/DashboardOverviewHeader";
+import { StoreSetupTracker } from "../components/shared/StoreSetupTracker";
 
-import { useGetMyStoreAnalyticsQuery } from "@/services/analyticsApi";
+import { useGetMyStoreAnalyticsQuery } from "@/services/storeApi";
 import { formatCompactNumber } from "@/utils/numberUtils";
 
 const MONTH_NAMES = [
@@ -56,8 +58,8 @@ export default function VendorDashboardPage() {
     );
   }
 
-  const summary = data?.data.summary;
-  const trends = data?.data.trends;
+  const summary = data?.summary;
+  const trends = data?.trends;
 
   const stats = [
     {
@@ -99,6 +101,11 @@ export default function VendorDashboardPage() {
       {/* ─── Header Section ─── */}
       <DashboardOverviewHeader />
 
+      {/* ─── Setup Progress Call to Action ─── */}
+      <div className="mb-8 mt-4">
+        <StoreSetupTracker />
+      </div>
+
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -131,7 +138,7 @@ export default function VendorDashboardPage() {
             ) : (
               <SalesChart
                 data={
-                  trends?.monthly.map((m: any) => ({
+                  trends?.monthly?.map((m: any) => ({
                     ...m,
                     month: MONTH_NAMES[m.month - 1] || m.month.toString(),
                     sales: Number(m.revenue || 0) / 100,
@@ -171,29 +178,48 @@ export default function VendorDashboardPage() {
 
             {/* Quick Tips / Info Cards */}
             <div className="grid gap-4">
-              <div className="p-4 rounded-xl border border-border/40 bg-card hover:bg-muted/30 transition-colors flex items-center gap-4 group cursor-pointer">
-                <div className="h-10 w-10 rounded-lg bg-orange-100 dark:bg-orange-500/10 text-orange-600 flex items-center justify-center">
-                  <Package className="h-5 w-5" />
+              {Number(summary?.out_of_stock_count) > 0 && (
+                <div className="p-4 rounded-xl border border-border/40 bg-card hover:bg-muted/30 transition-colors flex items-center gap-4 group cursor-pointer">
+                  <div className="h-10 w-10 rounded-lg bg-orange-100 dark:bg-orange-500/10 text-orange-600 flex items-center justify-center">
+                    <Package className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold">Out of Stock</p>
+                    <p className="text-xs text-muted-foreground">
+                      {summary?.out_of_stock_count} products need attention
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-sm font-bold">Out of Stock</p>
-                  <p className="text-xs text-muted-foreground">
-                    3 products need attention
-                  </p>
-                </div>
-              </div>
+              )}
 
-              <div className="p-4 rounded-xl border border-border/40 bg-card hover:bg-muted/30 transition-colors flex items-center gap-4 group cursor-pointer">
-                <div className="h-10 w-10 rounded-lg bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 flex items-center justify-center">
-                  <ShoppingBag className="h-5 w-5" />
+              {Number(summary?.pending_orders_count) > 0 && (
+                <div className="p-4 rounded-xl border border-border/40 bg-card hover:bg-muted/30 transition-colors flex items-center gap-4 group cursor-pointer">
+                  <div className="h-10 w-10 rounded-lg bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 flex items-center justify-center">
+                    <ShoppingBag className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold">Pending Orders</p>
+                    <p className="text-xs text-muted-foreground">
+                      {summary?.pending_orders_count} orders waiting for
+                      dispatch
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-sm font-bold">Pending Orders</p>
-                  <p className="text-xs text-muted-foreground">
-                    5 orders waiting for dispatch
-                  </p>
-                </div>
-              </div>
+              )}
+
+              {(!summary?.out_of_stock_count ||
+                summary.out_of_stock_count === 0) &&
+                (!summary?.pending_orders_count ||
+                  summary.pending_orders_count === 0) && (
+                  <div className="p-6 rounded-xl border border-dashed border-border/60 bg-muted/20 text-center space-y-2">
+                    <div className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/10 text-emerald-500">
+                      <CheckCircle2 className="w-4 h-4" />
+                    </div>
+                    <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
+                      All Caught Up
+                    </p>
+                  </div>
+                )}
             </div>
           </div>
         </div>

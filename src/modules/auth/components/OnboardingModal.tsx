@@ -15,8 +15,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { FormInput } from "@/components/shared/form/FormInput";
 import { FormSelect } from "@/components/shared/form/FormSelect";
-import { useAppSelector } from "@/hooks";
-import { selectCurrentUser } from "@/features/userSlice";
+import { useAppSelector, useAppDispatch } from "@/hooks";
+import {
+  selectCurrentUser,
+  setShowOnboardingModal,
+  selectShowOnboardingModal,
+} from "@/features/userSlice";
 import {
   useCreateStoreMutation,
   useLazyCheckStoreNameQuery,
@@ -34,6 +38,9 @@ type CreateStoreValues = z.infer<typeof CreateStoreSchema>;
 
 export function OnboardingModal() {
   const user = useAppSelector(selectCurrentUser);
+  const dispatch = useAppDispatch();
+  const showViaRedux = useAppSelector(selectShowOnboardingModal);
+
   const [isOpen, setIsOpen] = useState(false);
   const [step, setStep] = useState<"role-selection" | "store-form">(
     "role-selection",
@@ -73,6 +80,13 @@ export function OnboardingModal() {
     }
   }, [user]);
 
+  // Sync with Redux trigger
+  useEffect(() => {
+    if (showViaRedux) {
+      setIsOpen(true);
+    }
+  }, [showViaRedux]);
+
   /* ───────── STORE NAME CHECK ───────── */
   useEffect(() => {
     if (step !== "store-form" || !storeName || storeName.trim().length < 3) {
@@ -97,6 +111,7 @@ export function OnboardingModal() {
   const markAsSeen = () => {
     localStorage.setItem("easyStore_onboarding_seen", "true");
     setIsOpen(false);
+    dispatch(setShowOnboardingModal(false));
   };
 
   const handleRoleSelection = (role: "buy" | "sell") => {

@@ -5,12 +5,14 @@ export interface UserState {
   currentUser: IUser | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  showOnboardingModal: boolean;
 }
 
 const initialState: UserState = {
   currentUser: null,
   isAuthenticated: false,
   isLoading: false,
+  showOnboardingModal: false,
 };
 
 const userSlice = createSlice({
@@ -34,12 +36,25 @@ const userSlice = createSlice({
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;
     },
+
+    setShowOnboardingModal: (state, action: PayloadAction<boolean>) => {
+      state.showOnboardingModal = action.payload;
+    },
   },
 });
 
-export const { setUser, clearUser, updateUser, setLoading } = userSlice.actions;
+export const {
+  setUser,
+  clearUser,
+  updateUser,
+  setLoading,
+  setShowOnboardingModal,
+} = userSlice.actions;
 
 export const selectCurrentUser = (state: { user: UserState }) =>
   state.user.currentUser;
+
+export const selectShowOnboardingModal = (state: { user: UserState }) =>
+  state.user.showOnboardingModal;
 
 export default userSlice.reducer;

@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
+import { useStoreSetup } from "../hooks/useStoreSetup";
+import { SetupEnforcementModal } from "../components/modals/SetupEnforcementModal";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -41,6 +43,8 @@ const SEARCH_DEBOUNCE_MS = 400;
 /* ───────────────── PAGE ───────────────── */
 export default function ProductsPage() {
   const navigate = useNavigate();
+  const { isReady, isLoading: checkingSetup } = useStoreSetup();
+  const [showSetupModal, setShowSetupModal] = useState(false);
 
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState(search);
@@ -146,7 +150,14 @@ export default function ProductsPage() {
           </Button>
           <Button
             className="bg-primary text-primary-foreground gap-2 rounded-xl shadow-lg shadow-primary/20"
-            onClick={() => navigate("/vendor/products/new")}
+            disabled={checkingSetup}
+            onClick={() => {
+              if (!isReady) {
+                setShowSetupModal(true);
+              } else {
+                navigate("/vendor/products/new");
+              }
+            }}
           >
             <Plus className="h-4 w-4" />
             Add Product
@@ -421,6 +432,11 @@ export default function ProductsPage() {
           )}
         </AnimatePresence>
       </div>
+
+      <SetupEnforcementModal
+        open={showSetupModal}
+        onOpenChange={setShowSetupModal}
+      />
     </section>
   );
 }

@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Shield, Lock, FileText, CheckCircle2 } from "lucide-react";
-import PolicySection from "../components/PolicySection";
+import PolicySection from "../../vendor/components/PolicySection";
 
 export default function PrivacyPolicyPage() {
   const container = {

@@ -9,6 +9,7 @@ interface FormTextareaProps {
   placeholder?: string;
   rows?: number;
   className?: string;
+  icon?: React.ReactNode;
 }
 
 export function FormTextarea({
@@ -17,6 +18,7 @@ export function FormTextarea({
   placeholder,
   rows = 4,
   className,
+  icon,
 }: FormTextareaProps) {
   const {
     register,
@@ -40,18 +42,26 @@ export function FormTextarea({
         </Label>
       )}
 
-      <Textarea
-        id={name}
-        rows={rows}
-        placeholder={placeholder}
-        aria-invalid={!!shouldShowError}
-        {...register(name)}
-        className={cn(
-          "rounded-md text-[15px] px-3 py-2 resize-none",
-          shouldShowError &&
-            "border-destructive ring-0 focus-visible:ring-destructive/30",
+      <div className="relative group">
+        {icon && (
+          <div className="absolute left-3 top-3 text-muted-foreground group-focus-within:text-primary transition-colors">
+            {icon}
+          </div>
         )}
-      />
+        <Textarea
+          id={name}
+          rows={rows}
+          placeholder={placeholder}
+          aria-invalid={!!shouldShowError}
+          {...register(name)}
+          className={cn(
+            "rounded-xl text-sm transition-all duration-200 bg-muted/20 border-muted-foreground/10 focus:bg-background resize-none",
+            icon ? "pl-11" : "px-4",
+            shouldShowError &&
+              "border-destructive ring-0 focus-visible:ring-destructive/30",
+          )}
+        />
+      </div>
 
       {shouldShowError && (
         <p className="text-sm text-destructive mt-0.5 text-left">{error}</p>

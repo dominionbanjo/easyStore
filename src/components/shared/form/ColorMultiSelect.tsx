@@ -1,12 +1,22 @@
 import { useMemo, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
-import { Check, ChevronDown, Search, X } from "lucide-react";
+import { Check, Search, X, Palette, Plus } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose,
+} from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
+import { motion } from "framer-motion";
 
 import { useGetColorsQuery } from "@/services/productDetailsApi";
 import type { DraftColor } from "@/features/productDraftSlice";
@@ -23,6 +33,7 @@ interface ColorMultiSelectProps {
   name: string;
   label?: string;
   className?: string;
+  icon?: React.ReactNode;
 }
 
 /* ───────────────── COMPONENT ───────────────── */
@@ -31,6 +42,7 @@ export function ColorMultiSelect({
   name,
   label = "Colors",
   className,
+  icon,
 }: ColorMultiSelectProps) {
   const { control } = useFormContext();
 
@@ -65,8 +77,8 @@ export function ColorMultiSelect({
   /* ───────────────── RENDER ───────────────── */
 
   return (
-    <div className={cn("space-y-2 relative", className)}>
-      <Label>{label}</Label>
+    <div className={cn("space-y-1.5 relative", className)}>
+      <Label className="font-medium text-[15px]">{label}</Label>
 
       <Controller
         name={name}
@@ -76,21 +88,21 @@ export function ColorMultiSelect({
           const selected = field.value as DraftColor[];
 
           return (
-            <>
-              {/* ─── Selected preview ─── */}
-              {selected.length > 0 && (
-                <div className="flex flex-wrap gap-2 mb-2">
-                  {selected.map((c) => (
-                    <div
+            <Dialog open={open} onOpenChange={setOpen}>
+              {/* Selected List as Main UI */}
+              <div className="flex flex-wrap gap-2 mb-3 min-h-[44px]">
+                {selected.length > 0 ? (
+                  selected.map((c) => (
+                    <Badge
                       key={c.id}
-                      className="flex items-center gap-2 rounded-full border px-3 py-1 text-sm bg-muted/40"
+                      variant="secondary"
+                      className="pl-1.5 pr-1 py-1 gap-2 rounded-xl group bg-muted/30 border-muted-foreground/10 hover:bg-muted/50 transition-all"
                     >
                       <span
-                        className="h-3 w-3 rounded-full border"
+                        className="h-5 w-5 rounded-lg border border-black/10 shadow-sm"
                         style={{ backgroundColor: c.hex }}
                       />
-                      <span>{c.name}</span>
-
+                      <span className="text-xs font-bold">{c.name}</span>
                       <button
                         type="button"
                         onClick={() =>
@@ -98,58 +110,90 @@ export function ColorMultiSelect({
                             selected.filter((x: DraftColor) => x.id !== c.id),
                           )
                         }
+                        className="p-1 hover:bg-destructive/10 hover:text-destructive rounded-md transition-colors"
                       >
-                        <X className="h-3 w-3 opacity-60 hover:opacity-100" />
+                        <X className="h-3 w-3" />
                       </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {/* ─── Trigger ─── */}
-              <button
-                type="button"
-                onClick={() => setOpen((o) => !o)}
-                className={cn(
-                  "w-full h-11 rounded-md border px-3 flex items-center justify-between text-left",
-                  selected.length === 0 && "text-muted-foreground",
-                )}
-              >
-                <span className="truncate">
-                  {selected.length
-                    ? `${selected.length} color(s) selected`
-                    : "Select colors"}
-                </span>
-                <ChevronDown className="h-4 w-4 opacity-60" />
-              </button>
-
-              {/* ─── Dropdown ─── */}
-              {open && (
-                <div className="absolute z-50 mt-2 w-full rounded-lg border bg-background shadow-lg">
-                  {/* Search */}
-                  <div className="p-2 border-b">
-                    <div className="relative">
-                      <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        placeholder="Search colors..."
-                        className="pl-8 h-9"
-                      />
-                    </div>
+                    </Badge>
+                  ))
+                ) : (
+                  <div className="w-full py-2 bg-muted/10 rounded-2xl border border-dashed border-muted-foreground/20 flex items-center justify-center">
+                    <p className="text-[10px] uppercase tracking-widest font-black text-muted-foreground/60">
+                      No colors selected
+                    </p>
                   </div>
+                )}
+              </div>
 
-                  {/* List */}
-                  <div className="max-h-72 overflow-y-auto">
-                    {isLoading && (
-                      <div className="p-4 space-y-2">
-                        <Skeleton className="h-4 w-1/2" />
-                        <Skeleton className="h-4 w-2/3" />
-                      </div>
-                    )}
+              {/* Trigger Button */}
+              <DialogTrigger asChild>
+                <button
+                  type="button"
+                  className={cn(
+                    "w-full h-10 rounded-xl border px-3 flex items-center gap-3 text-left text-sm transition-all duration-200 bg-muted/20 border-muted-foreground/10 hover:border-primary/30 group",
+                    selected.length === 0 && "text-muted-foreground",
+                  )}
+                >
+                  <div className="h-6 w-6 rounded-lg bg-background flex items-center justify-center shadow-sm text-muted-foreground group-hover:text-primary transition-colors">
+                    {icon || <Palette className="h-3.5 w-3.5" />}
+                  </div>
+                  <span className="flex-1 font-bold">
+                    {selected.length > 0
+                      ? `Modify Colors (${selected.length})`
+                      : "Add Product Colors"}
+                  </span>
+                  <Plus className="h-4 w-4 opacity-40" />
+                </button>
+              </DialogTrigger>
 
-                    {!isLoading &&
-                      filtered.map((c) => {
+              <DialogContent
+                showCloseButton={false}
+                className="max-w-xl p-0 overflow-hidden rounded-[2.5rem] border-none shadow-2xl max-h-[85vh] flex flex-col"
+              >
+                <DialogHeader className="p-8 pb-4 shrink-0 flex flex-row items-center justify-between space-y-0">
+                  <DialogTitle className="text-2xl font-black uppercase tracking-tight flex items-center gap-3">
+                    <div className="h-10 w-10 rounded-2xl bg-primary/10 flex items-center justify-center">
+                      <Palette className="h-5 w-5 text-primary" />
+                    </div>
+                    Select Colors
+                  </DialogTitle>
+
+                  <DialogClose asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="rounded-xl h-9 px-4 font-black uppercase tracking-widest text-[10px] bg-muted/30 hover:bg-muted/50 border border-muted-foreground/10 flex items-center gap-2 group transition-all"
+                    >
+                      <X className="h-3 w-3 text-muted-foreground group-hover:text-foreground transition-colors" />
+                      Close
+                    </Button>
+                  </DialogClose>
+                </DialogHeader>
+
+                <div className="px-8 pb-3 shrink-0">
+                  {/* Search bar inside modal */}
+                  <div className="relative group">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                    <Input
+                      value={search}
+                      onChange={(e) => setSearch(e.target.value)}
+                      placeholder="Search available colors..."
+                      className="pl-11 h-12 rounded-2xl bg-muted/20 border-muted-foreground/10 focus-visible:ring-primary/20 transition-all font-medium"
+                    />
+                  </div>
+                </div>
+
+                <div className="px-8 flex-1 overflow-y-auto custom-scrollbar min-h-0">
+                  {/* Colors Grid */}
+                  {isLoading ? (
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                      {Array.from({ length: 9 }).map((_, i) => (
+                        <Skeleton key={i} className="h-14 w-full rounded-2xl" />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                      {filtered.map((c) => {
                         const isSelected = selected.some((x) => x.id === c.id);
 
                         return (
@@ -160,37 +204,62 @@ export function ColorMultiSelect({
                               toggleColor(c, selected, field.onChange)
                             }
                             className={cn(
-                              "w-full flex items-center gap-3 px-4 py-2 text-sm hover:bg-muted",
-                              isSelected && "bg-primary/10 text-primary",
+                              "flex items-center gap-3 p-3 rounded-2xl border transition-all duration-300 text-left relative overflow-hidden group",
+                              isSelected
+                                ? "bg-primary/5 border-primary shadow-sm"
+                                : "bg-muted/5 border-muted-foreground/10 hover:border-primary/30",
                             )}
                           >
                             <span
-                              className="h-4 w-4 rounded-full border"
+                              className="h-7 w-7 rounded-xl border border-black/10 shadow-inner shrink-0"
                               style={{ backgroundColor: c.hex }}
                             />
-                            <span>{c.name}</span>
+                            <div className="flex flex-col min-w-0">
+                              <span
+                                className={cn(
+                                  "text-xs font-black truncate uppercase tracking-tight",
+                                  isSelected
+                                    ? "text-primary"
+                                    : "text-foreground",
+                                )}
+                              >
+                                {c.name}
+                              </span>
+                              <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-widest">
+                                {c.hex}
+                              </span>
+                            </div>
+
                             {isSelected && (
-                              <Check className="ml-auto h-4 w-4" />
+                              <motion.div
+                                layoutId="check-indicator"
+                                className="absolute top-2 right-2 h-4 w-4 bg-primary text-white rounded-full flex items-center justify-center"
+                              >
+                                <Check className="h-2.5 w-2.5 stroke-[4]" />
+                              </motion.div>
                             )}
                           </button>
                         );
                       })}
-                  </div>
-
-                  {/* Footer */}
-                  <div className="p-2 border-t flex justify-end">
-                    <Button
-                      type="button"
-                      size="sm"
-                      variant="secondary"
-                      onClick={() => setOpen(false)}
-                    >
-                      Done
-                    </Button>
-                  </div>
+                    </div>
+                  )}
                 </div>
-              )}
-            </>
+
+                {/* Footer */}
+                <div className="flex items-center justify-between px-8 pb-8 pt-6 border-t border-border/40 shrink-0">
+                  <p className="text-[10px] uppercase tracking-widest font-black text-muted-foreground">
+                    {selected.length} Selected
+                  </p>
+                  <Button
+                    type="button"
+                    className="rounded-xl px-8 font-black uppercase tracking-widest text-xs h-11"
+                    onClick={() => setOpen(false)}
+                  >
+                    Done
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
           );
         }}
       />

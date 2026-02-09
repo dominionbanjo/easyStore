@@ -84,6 +84,83 @@ export const storeApi = apiManager.injectEndpoints({
       }),
       invalidatesTags: ["Store"],
     }),
+
+    /* ───────── GET VENDOR CUSTOMERS ───────── */
+    getVendorCustomers: builder.query<any, any>({
+      query: (params) => ({
+        url: "store-customers",
+        method: "GET",
+        params,
+      }),
+      transformResponse: (response: any) => response?.data || response,
+      providesTags: ["Store"],
+    }),
+
+    /* ───────── GET VENDOR'S OWN STORE ───────── */
+    getMyStore: builder.query<any, void>({
+      query: () => ({
+        url: "store/me",
+        method: "GET",
+      }),
+      transformResponse: (response: any) => response?.data || response,
+      providesTags: ["Store"],
+    }),
+
+    /* ───────── UPDATE STORE ───────── */
+    updateStore: builder.mutation<any, { id: string; data: FormData }>({
+      query: ({ id, data }) => ({
+        url: `store/${id}`,
+        method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags: ["Store"],
+    }),
+
+    /* ───────── REGISTER BANK ───────── */
+    registerStoreBank: builder.mutation<
+      any,
+      {
+        id: string;
+        bank_code: string;
+        account_number: string;
+        settlement_email?: string;
+      }
+    >({
+      query: ({ id, ...body }) => ({
+        url: `store/${id}/bank`,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Store"],
+    }),
+
+    /* ───────── UPDATE BANK ───────── */
+    updateStoreBank: builder.mutation<
+      any,
+      {
+        id: string;
+        bank_code?: string;
+        account_number?: string;
+        settlement_email?: string;
+      }
+    >({
+      query: ({ id, ...body }) => ({
+        url: `store/${id}/bank`,
+        method: "PATCH",
+        body,
+      }),
+      invalidatesTags: ["Store"],
+    }),
+
+    /* ───────── GET STORE ANALYTICS ───────── */
+    getMyStoreAnalytics: builder.query<any, void>({
+      query: () => ({
+        url: "store-analytics/me",
+        method: "GET",
+      }),
+      transformResponse: (response: any) => response?.data || response,
+      providesTags: ["Store"],
+    }),
   }),
 });
 
@@ -108,4 +185,10 @@ export const {
   useLazyGetStoreCategoryProductsQuery,
 
   useCreateStoreMutation,
+  useGetVendorCustomersQuery,
+  useGetMyStoreQuery,
+  useGetMyStoreAnalyticsQuery,
+  useUpdateStoreMutation,
+  useRegisterStoreBankMutation,
+  useUpdateStoreBankMutation,
 } = storeApi;

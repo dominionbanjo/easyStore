@@ -1,8 +1,8 @@
 import { useState, useRef } from "react";
-import { X, Plus } from "lucide-react";
+import { X, Plus, Hash, Sparkles, Ruler } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
@@ -13,6 +13,12 @@ interface ChipSectionProps {
   onRemove: (value: string) => void;
 }
 
+const ICONS: Record<string, any> = {
+  Tags: Hash,
+  Highlights: Sparkles,
+  Sizes: Ruler,
+};
+
 export default function ChipSection({
   label,
   values,
@@ -21,6 +27,7 @@ export default function ChipSection({
 }: ChipSectionProps) {
   const [input, setInput] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const Icon = ICONS[label] || Hash;
 
   function handleAdd() {
     const v = input.trim();
@@ -34,19 +41,24 @@ export default function ChipSection({
   }
 
   return (
-    <div className="space-y-3">
-      <Label>{label}</Label>
+    <div className="space-y-4">
+      <div className="flex items-center gap-2">
+        <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+          <Icon className="h-4 w-4 text-primary" />
+        </div>
+        <Label className="text-sm font-black uppercase tracking-widest text-muted-foreground/80">
+          {label}
+        </Label>
+      </div>
 
       {/* Input row */}
-      <div className="flex items-center gap-2">
+      <div className="relative group">
         <input
           ref={inputRef}
           className={cn(
-            "border rounded-md flex-1 min-w-0",
-            "h-9 px-3 text-sm",
-            "sm:h-10 sm:text-base",
+            "w-full h-12 bg-muted/20 border-muted-foreground/10 rounded-[1.25rem] pl-4 pr-14 text-sm font-medium focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-muted-foreground/40",
           )}
-          placeholder={`Add ${label.toLowerCase()}`}
+          placeholder={`Add new ${label.toLowerCase()}...`}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => {
@@ -57,41 +69,52 @@ export default function ChipSection({
           }}
         />
 
-        <Button
+        <button
           type="button"
-          size="icon"
-          variant="outline"
-          className="h-9 w-9 shrink-0 sm:h-10 sm:w-10"
           onClick={handleAdd}
-          aria-label={`Add ${label}`}
+          className="absolute right-1.5 top-1/2 -translate-y-1/2 h-9 w-9 rounded-xl bg-primary text-white flex items-center justify-center shadow-lg transition-transform hover:scale-105 active:scale-95"
         >
-          <Plus className="h-4 w-4" />
-        </Button>
+          <Plus className="h-5 w-5" />
+        </button>
       </div>
 
       {/* Chips */}
-      {values.length > 0 && (
-        <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2 min-h-[32px]">
+        <AnimatePresence mode="popLayout">
           {values.map((v) => (
-            <Badge
+            <motion.div
               key={v}
-              variant="secondary"
-              className="flex items-center gap-1.5 px-3 py-1 text-sm"
+              layout
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
             >
-              <span className="truncate max-w-[140px] sm:max-w-none">{v}</span>
-
-              <button
-                type="button"
-                onClick={() => onRemove(v)}
-                className="rounded-full hover:bg-muted p-0.5"
-                aria-label={`Remove ${v}`}
+              <Badge
+                variant="secondary"
+                className="pl-3 pr-1 py-1.5 gap-2 rounded-xl group bg-muted/30 border-muted-foreground/10 hover:bg-muted/50 transition-all"
               >
-                <X className="h-3.5 w-3.5" />
-              </button>
-            </Badge>
+                <span className="text-xs font-bold">{v}</span>
+                <button
+                  type="button"
+                  onClick={() => onRemove(v)}
+                  className="p-1 hover:bg-destructive/10 hover:text-destructive rounded-md transition-colors"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </Badge>
+            </motion.div>
           ))}
-        </div>
-      )}
+          {values.length === 0 && (
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-[10px] text-muted-foreground/40 uppercase font-black tracking-widest py-2"
+            >
+              No {label.toLowerCase()} added yet
+            </motion.p>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   );
 }

@@ -6,7 +6,7 @@ import {
   HelpCircle,
   CheckCircle2,
 } from "lucide-react";
-import PolicySection from "../components/PolicySection";
+import PolicySection from "../../vendor/components/PolicySection";
 
 export default function TermsOfServicePage() {
   const container = {

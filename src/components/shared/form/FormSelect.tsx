@@ -63,7 +63,7 @@ export function FormSelect({
             <SelectTrigger
               id={name}
               className={cn(
-                "w-full h-12 rounded-xl border border-muted-foreground/10 bg-muted/20 px-3 py-[10px] text-[15px] shadow-xs transition-colors focus:bg-background",
+                "w-full h-12 rounded-xl border border-muted-foreground/10 bg-muted/20 px-3 py-[10px] text-[15px] shadow-xs transition-colors focus:bg-background relative text-left",
                 icon ? "pl-11" : "px-4",
                 error && "border-destructive focus-visible:ring-destructive/20",
               )}

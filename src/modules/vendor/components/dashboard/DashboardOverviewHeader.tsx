@@ -6,13 +6,16 @@ import { useSelector } from "react-redux";
 import type { RootState } from "@/store";
 import { toast } from "sonner";
 
+import { useGetMyStoreQuery } from "@/services/storeApi";
+
 export function DashboardOverviewHeader() {
   const { currentUser } = useSelector((state: RootState) => state.user);
+  const { data: store } = useGetMyStoreQuery();
 
   const handleShareStore = () => {
-    // Ideally we'd use store slug here. Fallback to ID for now.
     const baseUrl = window.location.origin;
-    const storeUrl = `${baseUrl}/stores/${currentUser?.id}`;
+    const identifier = store?.slug || currentUser?.id;
+    const storeUrl = `${baseUrl}/stores/${identifier}`;
 
     navigator.clipboard.writeText(storeUrl);
     toast.success("Store link copied to clipboard! 🚀");
@@ -58,16 +61,17 @@ export function DashboardOverviewHeader() {
         <Button
           variant="outline"
           size="sm"
-          className="hidden sm:flex gap-2 border-border/60"
+          className="flex gap-2 border-border/60"
           onClick={handleShareStore}
         >
           <Share2 className="h-4 w-4" />
-          Share Store
+          <span className="hidden sm:inline">Share Store</span>
         </Button>
         <Link to="/vendor/products/new">
           <Button size="sm" className="gap-2 shadow-lg shadow-primary/20">
             <Plus className="h-4 w-4" />
-            Add Product
+            <span className="hidden xs:inline">Add Product</span>
+            <span className="xs:hidden">Add</span>
           </Button>
         </Link>
       </motion.div>
