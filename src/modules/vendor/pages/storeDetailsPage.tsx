@@ -50,7 +50,11 @@ export default function StoreDetailsPage() {
 
   /* ─── STORE DETAILS ─── */
 
-  const { data: storeData, isLoading: storeLoading } = useGetStoreDetailsQuery(
+  const {
+    data: storeData,
+    isLoading: storeLoading,
+    isError: storeError,
+  } = useGetStoreDetailsQuery(
     { slug: slug ?? "", includeCategories: true },
     { skip: !slug },
   );
@@ -114,7 +118,7 @@ export default function StoreDetailsPage() {
 
   /* ─── STORE LOADING STATE ─── */
 
-  if (storeLoading || !store) {
+  if (storeLoading) {
     return (
       <div className="min-h-screen py-20 px-1.5 sm:px-4">
         <div className="max-w-7xl mx-auto space-y-8">
@@ -127,6 +131,27 @@ export default function StoreDetailsPage() {
               <Skeleton key={i} className="h-[400px] rounded-[2.5rem]" />
             ))}
           </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (storeError || !store) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center p-4 text-center">
+        <div className="bg-primary/5 p-8 rounded-[3rem] border border-primary/10 max-w-md">
+          <h1 className="text-4xl font-black text-zinc-900 mb-4 tracking-tighter">
+            Store Not Found
+          </h1>
+          <p className="text-zinc-500 mb-8">
+            The store you're looking for might have been moved or deleted.
+          </p>
+          <button
+            onClick={() => window.history.back()}
+            className="bg-primary text-white font-bold py-4 px-8 rounded-2xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/20"
+          >
+            Go Back
+          </button>
         </div>
       </div>
     );

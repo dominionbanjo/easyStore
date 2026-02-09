@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import { toast } from "sonner";
@@ -16,6 +16,7 @@ export default function AuthProvider({
   const dispatch = useDispatch();
   const { isAuthenticated } = useSelector((state: RootState) => state.user);
   const token = Cookies.get("token");
+  const initializedRef = useRef(false);
 
   // 🔹 Normal user profile check (if token exists but not authenticated in Redux)
   const { data, isLoading } = useGetUserProfileQuery(undefined, {
@@ -32,41 +33,52 @@ export default function AuthProvider({
   }, [data, dispatch]);
 
   useEffect(() => {
-    if (token || !window.google) return;
+    // If already logged in (token exists) or already initialized, skip.
+    if (token || initializedRef.current) return;
 
-    (window.google.accounts.id.initialize as any)({
-      client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID!,
-      callback: async (response: { credential: string }) => {
-        try {
-          await googleLogin({ token: response.credential }).unwrap();
-        } catch (err) {
-          console.error("❌ One Tap login failed:", err);
-          toast.error("Google login failed");
-        }
-      },
-      auto_select: true,
-      cancel_on_tap_outside: false,
-      context: "signin",
-    });
+    const timerId = setInterval(() => {
+      if (window.google?.accounts?.id) {
+        // Clear timer and mark as initialized
+        clearInterval(timerId);
+        initializedRef.current = true;
 
-    (window.google.accounts.id.prompt as any)(
-      (notification: {
-        isNotDisplayed: () => boolean;
-        getNotDisplayedReason: () => string;
-        isSkippedMoment: () => boolean;
-        getSkippedReason: () => string;
-      }) => {
-        if (notification.isNotDisplayed()) {
-          console.warn(
-            "One Tap not displayed:",
-            notification.getNotDisplayedReason(),
-          );
-        }
-        if (notification.isSkippedMoment()) {
-          console.warn("One Tap skipped:", notification.getSkippedReason());
-        }
-      },
-    );
+        (window.google.accounts.id.initialize as any)({
+          client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID!,
+          callback: async (response: { credential: string }) => {
+            try {
+              await googleLogin({ token: response.credential }).unwrap();
+            } catch (err) {
+              console.error("❌ One Tap login failed:", err);
+              toast.error("Google login failed");
+            }
+          },
+          auto_select: false, // 👈 KEY FIX: prevents mobile loops/crashes
+          cancel_on_tap_outside: false,
+          context: "signin",
+        });
+
+        (window.google.accounts.id.prompt as any)(
+          (notification: {
+            isNotDisplayed: () => boolean;
+            getNotDisplayedReason: () => string;
+            isSkippedMoment: () => boolean;
+            getSkippedReason: () => string;
+          }) => {
+            if (notification.isNotDisplayed()) {
+              console.warn(
+                "One Tap not displayed:",
+                notification.getNotDisplayedReason(),
+              );
+            }
+            if (notification.isSkippedMoment()) {
+              console.warn("One Tap skipped:", notification.getSkippedReason());
+            }
+          },
+        );
+      }
+    }, 300);
+
+    return () => clearInterval(timerId);
   }, [googleLogin, token]);
 
   if (token && isLoading) {

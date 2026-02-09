@@ -147,6 +147,7 @@ export interface IStoreProduct {
   rating_average: number;
   stock: number;
   is_in_wishlist?: boolean;
+  store_slug?: string;
   colors?: { id: string; name: string; hex: string }[];
   sizes?: string[];
   category?: string;

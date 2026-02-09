@@ -152,6 +152,7 @@ export function StoreProductsGrid({
                     rating={Number(product.rating_average ?? 0)}
                     stock={product.stock ?? 0}
                     vendor={product.store_name}
+                    storeSlug={product.store_slug}
                     isFavorite={product.is_in_wishlist}
                     colors={product.colors}
                     sizes={product.sizes}

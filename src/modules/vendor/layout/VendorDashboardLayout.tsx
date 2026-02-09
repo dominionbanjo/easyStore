@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
@@ -71,7 +71,9 @@ export default function VendorDashboardLayout() {
         <DashboardHeader onMenuToggle={() => setSidebarOpen(!sidebarOpen)} />
 
         <main className="px-2 py-2 sm:p-4 md:p-6 w-full max-w-[1440px] mx-auto transition-all duration-300">
-          <Outlet />
+          <Suspense fallback={<LoadingScreen fullPage={false} />}>
+            <Outlet />
+          </Suspense>
         </main>
       </div>
     </section>
