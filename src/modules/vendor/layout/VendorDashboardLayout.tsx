@@ -10,9 +10,14 @@ import type { RootState } from "@/store";
 import DashboardSidebar from "../components/DashboardSidebar";
 import DashboardHeader from "../components/DashboardHeader";
 import LoadingScreen from "@/Loading";
+import { preloadVendorPages } from "@/routes/lazyComponents";
 
 export default function VendorDashboardLayout() {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    preloadVendorPages();
+  }, []);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
 

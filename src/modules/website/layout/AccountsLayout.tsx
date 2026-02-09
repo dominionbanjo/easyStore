@@ -7,9 +7,14 @@ import Header from "@/components/shared/Header";
 import Footer from "@/components/shared/Footer";
 import type { RootState } from "@/store";
 import LoadingScreen from "@/Loading";
+import { preloadAccountPages } from "@/routes/lazyComponents";
 
 export default function AccountsLayout() {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    preloadAccountPages();
+  }, []);
 
   const { isAuthenticated, isLoading } = useSelector(
     (state: RootState) => state.user,
