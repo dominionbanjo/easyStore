@@ -1,4 +1,16 @@
-import { lazy } from "react";
+import { type ComponentType, lazy } from "react";
+
+/**
+ * 🚀 High-Performance Lazy Loader with Preload support
+ * Allows pre-fetching chunks before navigation (e.g. on link hover)
+ */
+function lazyWithPreload<T extends ComponentType<any>>(
+  factory: () => Promise<{ default: T }>,
+) {
+  const Component = lazy(factory) as any;
+  Component.preload = factory;
+  return Component as T & { preload: () => Promise<{ default: T }> };
+}
 
 /* ───────────────── LAYOUTS ───────────────── */
 
@@ -17,154 +29,227 @@ export {
 
 /* ───────────────── WEBSITE PAGES ───────────────── */
 
-export const LandingPage = lazy(
+export const LandingPage = lazyWithPreload(
   () => import("@/modules/website/pages/LandingPage"),
 );
-export const AboutPage = lazy(
+export const AboutPage = lazyWithPreload(
   () => import("@/modules/website/pages/AboutPage"),
 );
-export const StoresPage = lazy(
+export const StoresPage = lazyWithPreload(
   () => import("@/modules/website/pages/StoresPage"),
 );
-export const StoreDetailsPage = lazy(
+export const StoreDetailsPage = lazyWithPreload(
   () => import("@/modules/vendor/pages/storeDetailsPage"),
 );
-export const CategoriesPage = lazy(
+export const CategoriesPage = lazyWithPreload(
   () => import("@/modules/website/pages/Categories"),
 );
-export const CategoryDetailsPage = lazy(
+export const CategoryDetailsPage = lazyWithPreload(
   () => import("@/modules/website/pages/SingleCategoryPage"),
 );
-export const ProductDetailPage = lazy(
+export const ProductDetailPage = lazyWithPreload(
   () => import("@/modules/website/pages/ProductDetailsPage"),
 );
-export const OrdersPage = lazy(
+export const OrdersPage = lazyWithPreload(
   () => import("@/modules/website/pages/OrdersPage"),
 );
-export const OrderDetailsPage = lazy(
+export const OrderDetailsPage = lazyWithPreload(
   () => import("@/modules/website/pages/OrderDetailsPage"),
 );
-export const WishlistPage = lazy(
+export const WishlistPage = lazyWithPreload(
   () => import("@/modules/website/pages/WishlistPage"),
 );
-export const CartPage = lazy(() => import("@/modules/website/pages/CartPage"));
-export const CheckoutPage = lazy(
+export const CartPage = lazyWithPreload(
+  () => import("@/modules/website/pages/CartPage"),
+);
+export const CheckoutPage = lazyWithPreload(
   () => import("@/modules/website/pages/CheckoutPage"),
 );
-export const VerifyPaymentPage = lazy(
+export const VerifyPaymentPage = lazyWithPreload(
   () => import("@/modules/website/pages/VerifyPayment"),
 );
-export const SettingsPage = lazy(
+export const SettingsPage = lazyWithPreload(
   () => import("@/modules/website/pages/SettingsPage"),
 );
-export const UserProfilePage = lazy(
+export const UserProfilePage = lazyWithPreload(
   () => import("@/modules/website/pages/ProfilePage"),
 );
-export const SearchResultsPage = lazy(
+export const SearchResultsPage = lazyWithPreload(
   () => import("@/modules/website/pages/SearchResultsPage"),
 );
-export const NotFoundPage = lazy(
+export const NotFoundPage = lazyWithPreload(
   () => import("@/modules/website/pages/NotFoundPage"),
 );
-export const PrivacyPolicyPage = lazy(
+export const PrivacyPolicyPage = lazyWithPreload(
   () => import("@/modules/website/pages/PrivacyPolicyPage"),
 );
-export const TermsOfServicePage = lazy(
+export const TermsOfServicePage = lazyWithPreload(
   () => import("@/modules/website/pages/TermsOfServicePage"),
 );
-export const CareersPage = lazy(
+export const CareersPage = lazyWithPreload(
   () => import("@/modules/website/pages/CareersPage"),
 );
-export const DiscoveryPage = lazy(
+export const DiscoveryPage = lazyWithPreload(
   () => import("@/modules/website/pages/DiscoveryPage"),
 );
-export const FeaturedStoresPage = lazy(
+export const FeaturedStoresPage = lazyWithPreload(
   () => import("@/modules/website/pages/FeaturedStoresPage"),
 );
-export const FeaturedProductsPage = lazy(
+export const FeaturedProductsPage = lazyWithPreload(
   () => import("@/modules/website/pages/FeaturedProductsPage"),
 );
-export const TrendingProductsPage = lazy(
+export const TrendingProductsPage = lazyWithPreload(
   () => import("@/modules/website/pages/TrendingProductsPage"),
 );
-export const NewArrivalsPage = lazy(
+export const NewArrivalsPage = lazyWithPreload(
   () => import("@/modules/website/pages/NewArrivalsPage"),
 );
 
 /* ───────────────── AUTH PAGES ───────────────── */
 
-export const LoginPage = lazy(() => import("@/modules/auth/pages/Login"));
-export const SignupPage = lazy(() => import("@/modules/auth/pages/Register"));
-export const VerifyOtpPage = lazy(
+export const LoginPage = lazyWithPreload(
+  () => import("@/modules/auth/pages/Login"),
+);
+export const SignupPage = lazyWithPreload(
+  () => import("@/modules/auth/pages/Register"),
+);
+export const VerifyOtpPage = lazyWithPreload(
   () => import("@/modules/auth/pages/VerifyOtp"),
 );
-export const ForgotPasswordPage = lazy(
+export const ForgotPasswordPage = lazyWithPreload(
   () => import("@/modules/auth/pages/ForgotPasswordPage"),
 );
-export const ResetPasswordPage = lazy(
+export const ResetPasswordPage = lazyWithPreload(
   () => import("@/modules/auth/pages/ResetPasswordPage"),
 );
 
 /* ───────────────── VENDOR PAGES ───────────────── */
 
-export const VendorDashboardPage = lazy(
+export const VendorDashboardPage = lazyWithPreload(
   () => import("@/modules/vendor/pages/VendorDashboardPage"),
 );
-export const CustomersPage = lazy(
+export const CustomersPage = lazyWithPreload(
   () => import("@/modules/vendor/pages/CustomersPage"),
 );
-export const VendorOrdersPage = lazy(
+export const VendorOrdersPage = lazyWithPreload(
   () => import("@/modules/vendor/pages/OrdersPage"),
 );
-export const ProductsPage = lazy(
+export const ProductsPage = lazyWithPreload(
   () => import("@/modules/vendor/pages/ProductsPage"),
 );
-export const AddProductPage = lazy(
+export const AddProductPage = lazyWithPreload(
   () => import("@/modules/vendor/pages/AddProductsPage"),
 );
-export const ProductPreviewPage = lazy(
+export const ProductPreviewPage = lazyWithPreload(
   () => import("@/modules/vendor/pages/ProductPreviewPage"),
 );
-export const VendorSettingsPage = lazy(
+export const VendorSettingsPage = lazyWithPreload(
   () => import("@/modules/vendor/pages/SettingsPage"),
 );
-export const HelpPage = lazy(() => import("@/modules/vendor/pages/HelpPage"));
-export const AnalyticsPage = lazy(
+export const HelpPage = lazyWithPreload(
+  () => import("@/modules/vendor/pages/HelpPage"),
+);
+export const AnalyticsPage = lazyWithPreload(
   () => import("@/modules/vendor/pages/AnalyticsPage"),
 );
 
 /* ───────────────── ADMIN PAGES ───────────────── */
 
-export const SuperAdminOverviewPage = lazy(
+export const SuperAdminOverviewPage = lazyWithPreload(
   () => import("@/modules/admin/pages/SuperAdminOverviewPage"),
 );
-export const SuperAdminVendorsPage = lazy(
+export const SuperAdminVendorsPage = lazyWithPreload(
   () => import("@/modules/admin/pages/SuperAdminVendorsPage"),
 );
-export const SuperAdminUsersPage = lazy(
+export const SuperAdminUsersPage = lazyWithPreload(
   () => import("@/modules/admin/pages/SuperAdminUsersPage"),
 );
-export const SuperAdminTransactionsPage = lazy(
+export const SuperAdminTransactionsPage = lazyWithPreload(
   () => import("@/modules/admin/pages/SuperAdminTransactionsPage"),
 );
-export const SuperAdminReportsPage = lazy(
+export const SuperAdminReportsPage = lazyWithPreload(
   () => import("@/modules/admin/pages/SuperAdminReportsPage"),
 );
-export const SuperAdminLogsPage = lazy(
+export const SuperAdminLogsPage = lazyWithPreload(
   () => import("@/modules/admin/pages/SuperAdminLogsPage"),
 );
-export const SuperAdminNotificationsPage = lazy(
+export const SuperAdminNotificationsPage = lazyWithPreload(
   () => import("@/modules/admin/pages/SuperAdminNotificationsPage"),
 );
-export const SuperAdminPlatformAnalysisPage = lazy(
+export const SuperAdminPlatformAnalysisPage = lazyWithPreload(
   () => import("@/modules/admin/pages/SuperAdminPlatformAnalysisPage"),
 );
-export const SuperAdminAccessControlPage = lazy(
+export const SuperAdminAccessControlPage = lazyWithPreload(
   () => import("@/modules/admin/pages/SuperAdminAccessControlPage"),
 );
-export const SuperAdminSettingsPage = lazy(
+export const SuperAdminSettingsPage = lazyWithPreload(
   () => import("@/modules/admin/pages/SuperAdminSettingsPage"),
 );
-export const SuperAdminServerConfigPage = lazy(
+export const SuperAdminServerConfigPage = lazyWithPreload(
   () => import("@/modules/admin/pages/SuperAdminServerConfigPage"),
 );
+
+/* ───────────────── BATCH PRELOADERS ───────────────── */
+
+/**
+ * 🚀 Aggressive Background Preloading
+ * Use these sparingly to prime entire sections of the app.
+ */
+
+export const preloadWebsitePages = () => {
+  const pages = [
+    LandingPage,
+    DiscoveryPage,
+    StoresPage,
+    CategoriesPage,
+    ProductDetailPage,
+    SearchResultsPage,
+    FeaturedProductsPage,
+    TrendingProductsPage,
+    NewArrivalsPage,
+  ];
+  pages.forEach((p, i) => setTimeout(() => p.preload(), i * 200));
+};
+
+export const preloadAuthPages = () => {
+  const pages = [LoginPage, SignupPage, VerifyOtpPage];
+  pages.forEach((p, i) => setTimeout(() => p.preload(), i * 200));
+};
+
+export const preloadAccountPages = () => {
+  const pages = [
+    UserProfilePage,
+    OrdersPage,
+    OrderDetailsPage,
+    CartPage,
+    WishlistPage,
+    CheckoutPage,
+    SettingsPage,
+  ];
+  pages.forEach((p, i) => setTimeout(() => p.preload(), i * 200));
+};
+
+export const preloadVendorPages = () => {
+  const pages = [
+    VendorDashboardPage,
+    ProductsPage,
+    VendorOrdersPage,
+    CustomersPage,
+    AnalyticsPage,
+    VendorSettingsPage,
+    AddProductPage,
+  ];
+  pages.forEach((p, i) => setTimeout(() => p.preload(), i * 200));
+};
+
+export const preloadAdminPages = () => {
+  const pages = [
+    SuperAdminOverviewPage,
+    SuperAdminVendorsPage,
+    SuperAdminUsersPage,
+    SuperAdminTransactionsPage,
+    SuperAdminReportsPage,
+    SuperAdminSettingsPage,
+  ];
+  pages.forEach((p, i) => setTimeout(() => p.preload(), i * 200));
+};

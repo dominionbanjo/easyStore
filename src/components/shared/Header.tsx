@@ -44,6 +44,7 @@ import { motion } from "framer-motion";
 import FancyHoverText from "./FancyTextHover";
 import { CartDrawer } from "@/modules/website/components/cart/CartDrawer";
 import { useGetCartQuery } from "@/services/cartApi";
+import * as Pages from "@/routes/lazyComponents";
 
 export default function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
@@ -165,21 +166,29 @@ export default function Header() {
                 <div className="p-6">
                   <nav className="space-y-4 text-base font-medium">
                     {[
-                      { name: "Home", path: WEBSITE_ROUTES.HOME, icon: Home },
+                      {
+                        name: "Home",
+                        path: WEBSITE_ROUTES.HOME,
+                        icon: Home,
+                        component: Pages.LandingPage,
+                      },
                       {
                         name: "Discover",
                         path: WEBSITE_ROUTES.DISCOVERY,
                         icon: Compass,
+                        component: Pages.DiscoveryPage,
                       },
                       {
                         name: "Stores",
                         path: WEBSITE_ROUTES.STORES,
                         icon: Store,
+                        component: Pages.StoresPage,
                       },
                       {
                         name: "Categories",
                         path: WEBSITE_ROUTES.CATEGORIES,
                         icon: Layers,
+                        component: Pages.CategoriesPage,
                       },
                     ].map((item) => {
                       const Icon = item.icon;
@@ -188,6 +197,7 @@ export default function Header() {
                           key={item.path}
                           to={item.path}
                           onClick={() => setMenuOpen(false)}
+                          onMouseEnter={() => item.component?.preload?.()}
                           className={cn(
                             "flex items-center gap-3 transition-all duration-200",
                             location.pathname === item.path
@@ -270,14 +280,31 @@ export default function Header() {
           {/* Desktop Nav */}
           <nav className="hidden lg:flex items-center gap-5 xl:gap-6 text-sm font-medium whitespace-nowrap">
             {[
-              { name: "Home", path: WEBSITE_ROUTES.HOME },
-              { name: "Discover", path: WEBSITE_ROUTES.DISCOVERY },
-              { name: "Stores", path: WEBSITE_ROUTES.STORES },
-              { name: "Categories", path: WEBSITE_ROUTES.CATEGORIES },
+              {
+                name: "Home",
+                path: WEBSITE_ROUTES.HOME,
+                component: Pages.LandingPage,
+              },
+              {
+                name: "Discover",
+                path: WEBSITE_ROUTES.DISCOVERY,
+                component: Pages.DiscoveryPage,
+              },
+              {
+                name: "Stores",
+                path: WEBSITE_ROUTES.STORES,
+                component: Pages.StoresPage,
+              },
+              {
+                name: "Categories",
+                path: WEBSITE_ROUTES.CATEGORIES,
+                component: Pages.CategoriesPage,
+              },
             ].map((item) => (
               <Link
                 key={item.path}
                 to={item.path}
+                onMouseEnter={() => item.component?.preload?.()}
                 className={cn(
                   "transition-colors duration-200 relative inline-block group",
                   location.pathname === item.path
@@ -399,6 +426,11 @@ export default function Header() {
                           user.account_type === "vendor" ? "/vendor" : "/admin"
                         }
                         onClick={() => setProfileOpen(false)}
+                        onMouseEnter={() =>
+                          user.account_type === "vendor"
+                            ? Pages.VendorDashboardPage.preload?.()
+                            : Pages.SuperAdminOverviewPage.preload?.()
+                        }
                         className="flex items-center gap-3 px-2 py-1.5 text-sm hover:bg-gray-100 dark:hover:bg-neutral-800 rounded transition-colors"
                       >
                         <Layers className="h-4 w-4" />
@@ -409,6 +441,7 @@ export default function Header() {
                     <Link
                       to={USER_ROUTES.PROFILE}
                       onClick={() => setProfileOpen(false)}
+                      onMouseEnter={() => Pages.UserProfilePage.preload?.()}
                       className="flex items-center gap-3 px-2 py-1.5 text-sm hover:bg-gray-100 dark:hover:bg-neutral-800 rounded transition-colors"
                     >
                       <UserIcon className="h-4 w-4" />
@@ -418,6 +451,7 @@ export default function Header() {
                     <Link
                       to={USER_ROUTES.ORDERS}
                       onClick={() => setProfileOpen(false)}
+                      onMouseEnter={() => Pages.OrdersPage.preload?.()}
                       className="flex items-center gap-3 px-2 py-1.5 text-sm hover:bg-gray-100 dark:hover:bg-neutral-800 rounded transition-colors"
                     >
                       <ShoppingBag className="h-4 w-4" />
@@ -427,6 +461,7 @@ export default function Header() {
                     <Link
                       to={USER_ROUTES.CART}
                       onClick={() => setProfileOpen(false)}
+                      onMouseEnter={() => Pages.CartPage.preload?.()}
                       className="flex items-center gap-3 px-2 py-1.5 text-sm hover:bg-gray-100 dark:hover:bg-neutral-800 rounded transition-colors"
                     >
                       <ShoppingBag className="h-4 w-4" />
@@ -436,6 +471,7 @@ export default function Header() {
                     <Link
                       to={USER_ROUTES.WISHLIST}
                       onClick={() => setProfileOpen(false)}
+                      onMouseEnter={() => Pages.WishlistPage.preload?.()}
                       className="flex items-center gap-3 px-2 py-1.5 text-sm hover:bg-gray-100 dark:hover:bg-neutral-800 rounded transition-colors"
                     >
                       <Heart className="h-4 w-4" />
