@@ -14,18 +14,18 @@ function lazyWithPreload<T extends ComponentType<any>>(
 
 /* ───────────────── LAYOUTS ───────────────── */
 
-// Website Layouts
-import HomepageLayout from "@/modules/website/layout/HomePageLayout";
-import AccountsLayout from "@/modules/website/layout/AccountsLayout";
-import VendorDashboardLayout from "@/modules/vendor/layout/VendorDashboardLayout";
-import SuperAdminDashboardLayout from "@/modules/admin/layout/SuperAdminDashboardLayout";
-
-export {
-  HomepageLayout,
-  AccountsLayout,
-  VendorDashboardLayout,
-  SuperAdminDashboardLayout,
-};
+export const HomepageLayout = lazyWithPreload(
+  () => import("@/modules/website/layout/HomePageLayout"),
+);
+export const AccountsLayout = lazyWithPreload(
+  () => import("@/modules/website/layout/AccountsLayout"),
+);
+export const VendorDashboardLayout = lazyWithPreload(
+  () => import("@/modules/vendor/layout/VendorDashboardLayout"),
+);
+export const SuperAdminDashboardLayout = lazyWithPreload(
+  () => import("@/modules/admin/layout/SuperAdminDashboardLayout"),
+);
 
 /* ───────────────── WEBSITE PAGES ───────────────── */
 
@@ -207,6 +207,7 @@ export const preloadWebsitePages = () => {
     FeaturedProductsPage,
     TrendingProductsPage,
     NewArrivalsPage,
+    StoreDetailsPage,
   ];
   pages.forEach((p, i) => setTimeout(() => p.preload(), i * 200));
 };
@@ -253,3 +254,10 @@ export const preloadAdminPages = () => {
   ];
   pages.forEach((p, i) => setTimeout(() => p.preload(), i * 200));
 };
+/* ───────────────── OTHER COMPONENTS ───────────────── */
+
+export const OnboardingModal = lazyWithPreload(() =>
+  import("@/modules/auth/components/OnboardingModal").then((m) => ({
+    default: m.OnboardingModal,
+  })),
+);
