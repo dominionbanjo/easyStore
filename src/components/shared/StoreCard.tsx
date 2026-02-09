@@ -50,7 +50,16 @@ export default function StoreCard({
       transition={{ type: "spring", stiffness: 400, damping: 25 }}
       className={cn("h-full group", className)}
     >
-      <Link to={`/stores/${slug}`} className="block h-full">
+      <Link
+        to={`/stores/${slug}`}
+        className="block h-full"
+        onMouseEnter={() => {
+          // 🚀 Preload the store details page chunk
+          import("@/modules/vendor/pages/storeDetailsPage").then(
+            (m) => m.default,
+          );
+        }}
+      >
         <Card className="relative h-full overflow-hidden border-border/40 bg-card p-0 shadow-sm hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 rounded-[1.5rem]">
           {/* ─── BANNER AREA ─── */}
           <div

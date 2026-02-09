@@ -12,7 +12,6 @@ import ScrollToTop from "@/utils/ScrollToTop";
 import * as Pages from "@/routes/lazyComponents";
 import LoadingScreen from "./Loading";
 import NavigationProgressBar from "@/components/shared/NavigationProgressBar";
-import { OnboardingModal } from "@/modules/auth/components/OnboardingModal";
 
 /* ───────────────── APP ───────────────── */
 
@@ -154,8 +153,8 @@ export default function App() {
             }
           />
         </Routes>
+        <Pages.OnboardingModal />
       </Suspense>
-      <OnboardingModal />
     </Router>
   );
 }

@@ -16,28 +16,22 @@ export default function NavigationProgressBar() {
   // Trigger progress bar on location change
   useEffect(() => {
     setIsNavigating(true);
-    setProgress(30); // Immediate jump to 30%
+    setProgress(30);
 
     // Smoothly progress towards 90%
     const interval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 90) return 90;
-        return prev + Math.random() * 10;
+        return prev + Math.random() * 5;
       });
-    }, 200);
+    }, 250);
 
-    // Navigation "finishes" when the new component actually renders
-    // and this effect cleanup or next trigger happens.
-    // In React Router + Lazy, the trigger is actually the URL change.
-    // The "finish" is once the component mounts.
-    // Since this is a global component, we'll manually timeout or
-    // use a more direct approach if we were using a data router.
-    // For now, a short delay mimics the chunk loading.
-
+    // Give it a bit more time to show the premium feel,
+    // and wait for actual chunk loading (which usually takes ~300-800ms)
     const timeout = setTimeout(() => {
       setProgress(100);
-      setTimeout(() => setIsNavigating(false), 300);
-    }, 400); // Mimic average chunk load
+      setTimeout(() => setIsNavigating(false), 500); // Wait for fade out
+    }, 800); // Longer baseline for premium feel
 
     return () => {
       clearInterval(interval);
