@@ -178,10 +178,26 @@ export default function CareersPage() {
 
               <div className="grid grid-cols-2 gap-8">
                 {[
-                  { title: "Remote First", icon: Globe },
-                  { title: "Top Gear", icon: Cpu },
-                  { title: "Impact", icon: Rocket },
-                  { title: "Learning", icon: Briefcase },
+                  {
+                    title: "Remote First",
+                    icon: Globe,
+                    desc: "Work from anywhere in the world, on your own schedule.",
+                  },
+                  {
+                    title: "Top Gear",
+                    icon: Cpu,
+                    desc: "Get the latest MacBook Pro and any tools you need to succeed.",
+                  },
+                  {
+                    title: "High Impact",
+                    icon: Rocket,
+                    desc: "Build products that empower thousands of businesses globally.",
+                  },
+                  {
+                    title: "Growth",
+                    icon: Briefcase,
+                    desc: "Annual budget for courses, books, and conferences.",
+                  },
                 ].map((perk) => (
                   <div key={perk.title} className="flex gap-4 items-start">
                     <div className="p-2 rounded-lg bg-primary/10 dark:bg-emerald-500/10 text-primary dark:text-emerald-400">
@@ -190,7 +206,7 @@ export default function CareersPage() {
                     <div>
                       <h4 className="font-bold text-lg mb-1">{perk.title}</h4>
                       <p className="text-sm text-muted-foreground">
-                        Lorem ipsum dolor sit amet.
+                        {perk.desc}
                       </p>
                     </div>
                   </div>
