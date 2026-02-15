@@ -82,15 +82,15 @@ export function CartSummary({
         <div className="space-y-2 text-sm">
           <div className="flex justify-between text-muted-foreground">
             <span>Subtotal</span>
-            <span>₦{subtotal.toLocaleString()}</span>
+            <span>₦{(subtotal ?? 0).toLocaleString()}</span>
           </div>
           <div className="flex justify-between text-muted-foreground">
             <span>Shipping</span>
-            <span>₦{shipping.toLocaleString()}</span>
+            <span>₦{(shipping ?? 0).toLocaleString()}</span>
           </div>
           <div className="flex justify-between text-muted-foreground">
             <span>Service Charge</span>
-            <span>₦{serviceCharge.toLocaleString()}</span>
+            <span>₦{(serviceCharge ?? 0).toLocaleString()}</span>
           </div>
         </div>
 
@@ -101,7 +101,7 @@ export function CartSummary({
             Total
           </span>
           <span className="text-2xl font-black text-foreground tracking-tight">
-            ₦{total.toLocaleString()}
+            ₦{(total ?? 0).toLocaleString()}
           </span>
         </div>
       </CardContent>

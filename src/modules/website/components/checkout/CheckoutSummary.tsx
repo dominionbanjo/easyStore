@@ -121,7 +121,7 @@ export function CheckoutSummary({
                 Original Basket Value
               </span>
               <span className="text-foreground font-black">
-                ₦{subtotal.toLocaleString()}
+                ₦{(subtotal ?? 0).toLocaleString()}
               </span>
             </div>
             <div className="flex justify-between items-center text-xs sm:text-sm font-medium text-emerald-600">
@@ -131,7 +131,9 @@ export function CheckoutSummary({
                   Standard
                 </span>
               </div>
-              <span className="font-black">₦{shipping.toLocaleString()}</span>
+              <span className="font-black">
+                ₦{(shipping ?? 0).toLocaleString()}
+              </span>
             </div>
             <div className="flex justify-between items-center text-xs sm:text-sm font-medium">
               <div className="flex items-center gap-2">
@@ -144,7 +146,7 @@ export function CheckoutSummary({
                 </div>
               </div>
               <span className="text-foreground font-black">
-                ₦{serviceCharge.toLocaleString()}
+                ₦{(serviceCharge ?? 0).toLocaleString()}
               </span>
             </div>
           </div>
@@ -161,7 +163,7 @@ export function CheckoutSummary({
                 </p>
               </div>
               <span className="text-2xl sm:text-4xl font-black text-foreground tracking-tighter">
-                ₦{total.toLocaleString()}
+                ₦{(total ?? 0).toLocaleString()}
               </span>
             </div>
           </div>

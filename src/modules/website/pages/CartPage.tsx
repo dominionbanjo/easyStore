@@ -193,10 +193,10 @@ export default function CartPage() {
             {/* Sticky Summary */}
             <div className="px-0 sm:px-0 sticky top-24">
               <CartSummary
-                subtotal={cart.subtotal}
-                shipping={cart.shipping}
-                serviceCharge={cart.service_charge}
-                total={cart.total}
+                subtotal={cart?.subtotal ?? 0}
+                shipping={cart?.shipping ?? 0}
+                serviceCharge={cart?.platform_fee ?? 0}
+                total={cart?.total ?? 0}
                 onClear={handleClearCart}
                 previewHref={USER_ROUTES.CHECKOUT}
                 continueShoppingHref={WEBSITE_ROUTES.HOME}

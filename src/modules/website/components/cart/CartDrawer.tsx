@@ -207,21 +207,21 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
             <div className="space-y-1.5">
               <div className="flex justify-between text-sm text-muted-foreground font-medium">
                 <span>Subtotal</span>
-                <span>₦{cart.subtotal.toLocaleString()}</span>
+                <span>₦{(cart?.subtotal ?? 0).toLocaleString()}</span>
               </div>
               <div className="flex justify-between text-sm text-muted-foreground font-medium">
                 <span>Shipping</span>
-                <span>₦{cart.shipping.toLocaleString()}</span>
+                <span>₦{(cart?.shipping ?? 0).toLocaleString()}</span>
               </div>
               <div className="flex justify-between text-sm text-muted-foreground font-medium">
                 <span>Service Charge</span>
-                <span>₦{cart.service_charge.toLocaleString()}</span>
+                <span>₦{(cart?.platform_fee ?? 0).toLocaleString()}</span>
               </div>
               <div className="border-t border-dashed border-zinc-200 dark:border-zinc-800 my-1"></div>
               <div className="flex justify-between text-lg font-black tracking-tight">
                 <span>Total</span>
                 <span className="text-primary">
-                  ₦{cart.total.toLocaleString()}
+                  ₦{(cart?.total ?? 0).toLocaleString()}
                 </span>
               </div>
             </div>

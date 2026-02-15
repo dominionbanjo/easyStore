@@ -177,7 +177,7 @@ export default function CheckoutPage() {
                   Basket Value
                 </p>
                 <p className="text-xl sm:text-2xl font-black text-primary">
-                  ₦{cart.total.toLocaleString()}
+                  ₦{(cart?.total ?? 0).toLocaleString()}
                 </p>
               </div>
             </div>
@@ -271,10 +271,10 @@ export default function CheckoutPage() {
             >
               <CheckoutSummary
                 items={cart.items}
-                subtotal={cart.subtotal}
-                shipping={cart.shipping}
-                serviceCharge={cart.service_charge}
-                total={cart.total}
+                subtotal={cart?.subtotal ?? 0}
+                shipping={cart?.shipping ?? 0}
+                serviceCharge={cart?.platform_fee ?? 0}
+                total={cart?.total ?? 0}
                 isProcessing={isCreatingOrder}
                 disabled={!hasAddress || !isBankVerified}
                 missingAddress={!hasAddress}
