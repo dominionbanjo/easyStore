@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "generate-sitemap": "npx -y tsx scripts/generate-sitemap.ts",
+    "prebuild": "npm run generate-sitemap"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -57,7 +59,7 @@
   "devDependencies": {
     "@eslint/js": "^9.36.0",
     "@types/js-cookie": "^3.0.6",
-    "@types/node": "^24.8.1",
+    "@types/node": "^24.10.13",
     "@types/react": "^19.1.16",
     "@types/react-dom": "^19.1.9",
     "@vitejs/plugin-react": "^5.0.4",
