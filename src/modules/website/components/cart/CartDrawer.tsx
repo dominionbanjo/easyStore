@@ -23,6 +23,7 @@ import type { ICartItem } from "@/types/cart/cartTypes";
 import { USER_ROUTES } from "@/routes/temp";
 import { toast } from "sonner";
 import SmartLink from "@/components/shared/SmartLink";
+import { extractErrorMessage } from "@/utils/errorHandler";
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -45,8 +46,8 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
     if (quantity < 1) return;
     try {
       await updateCartItem({ productId, quantity, size, color }).unwrap();
-    } catch {
-      toast.error("Failed to update quantity");
+    } catch (err: any) {
+      toast.error(extractErrorMessage(err, "Failed to update quantity"));
     }
   };
 
@@ -58,8 +59,8 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
     try {
       await removeCartItem({ productId, size, color }).unwrap();
       toast.success("Item removed");
-    } catch {
-      toast.error("Failed to remove item");
+    } catch (err: any) {
+      toast.error(extractErrorMessage(err, "Failed to remove item"));
     }
   };
 

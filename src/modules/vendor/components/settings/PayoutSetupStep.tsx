@@ -54,9 +54,9 @@ export function PayoutSetupStep({
           Setup your bank account to receive payments from sales.
         </CardDescription>
       </CardHeader>
-      <CardContent className="p-6 md:p-8 space-y-8 -mt-4">
-        <div className="flex items-center gap-4 p-4 rounded-2xl bg-emerald-500/5 text-emerald-600 dark:text-emerald-400 border border-emerald-500/10">
-          <CreditCard className="w-10 h-10" />
+      <CardContent className="p-3 sm:p-8 space-y-6 sm:space-y-8 -mt-4">
+        <div className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-2xl bg-emerald-500/5 text-emerald-600 dark:text-emerald-400 border border-emerald-500/10">
+          <CreditCard className="w-8 h-8 sm:w-10 sm:h-10 shrink-0" />
           <div className="text-sm">
             <p className="font-bold">Automated Daily Payouts</p>
             <p className="opacity-80 font-medium">
@@ -66,7 +66,7 @@ export function PayoutSetupStep({
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           <div className="space-y-2 md:col-span-2">
             <Label>Select Bank</Label>
             <Select value={bankData.bank_code} onValueChange={onBankChange}>
@@ -84,7 +84,7 @@ export function PayoutSetupStep({
           </div>
           <div className="space-y-2">
             <Label>Account Number</Label>
-            <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-2">
               <Input
                 value={bankData.account_number}
                 onChange={(e) => onAccountNumberChange(e.target.value)}
@@ -94,7 +94,7 @@ export function PayoutSetupStep({
               />
               <Button
                 variant="secondary"
-                className="h-11 rounded-xl px-6"
+                className="h-11 rounded-xl w-full sm:w-auto px-6"
                 onClick={onVerify}
                 disabled={isVerifying}
               >
@@ -128,7 +128,7 @@ export function PayoutSetupStep({
           <Button
             onClick={onRegister}
             disabled={isRegistering || !bankData.account_name}
-            className="rounded-full px-12 h-12 shadow-lg shadow-primary/20 bg-emerald-600 hover:bg-emerald-700"
+            className="w-full sm:w-auto rounded-full px-12 h-12 shadow-lg shadow-primary/20 bg-emerald-600 hover:bg-emerald-700"
           >
             {isRegistering ? (
               <Loader2 className="w-4 h-4 animate-spin mr-2" />

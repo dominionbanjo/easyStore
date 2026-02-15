@@ -110,7 +110,7 @@ export default function CheckoutPage() {
   if (isCartLoading || !cart) return null;
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#020617] pb-32 transition-colors duration-500 relative overflow-hidden">
+    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#020617] pb-20 sm:pb-32 transition-colors duration-500 relative overflow-hidden">
       {/* Background Decorative Elements */}
       <div className="absolute top-0 left-0 w-full h-[600px] bg-gradient-to-b from-primary/5 to-transparent pointer-events-none" />
       <div className="absolute -top-[10%] -right-[5%] w-[40%] h-[40%] bg-primary/5 blur-[120px] rounded-full pointer-events-none" />
@@ -129,31 +129,31 @@ export default function CheckoutPage() {
       />
 
       {/* ───────── PAGE CONTENT ───────── */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-20 relative z-10">
+      <div className="max-w-7xl mx-auto px-2 sm:px-6 py-8 sm:py-20 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          className="space-y-16"
+          className="space-y-10 sm:space-y-16"
         >
           {/* Header Section */}
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+          <div className="flex px-3 flex-col md:flex-row md:items-end justify-between gap-6 sm:gap-8">
             <div className="space-y-6">
               <Button
                 variant="ghost"
                 onClick={() => navigate(-1)}
-                className="group rounded-2xl h-11 px-6 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-md border border-border/40 hover:bg-white dark:hover:bg-zinc-800 transition-all font-black text-[10px] tracking-widest uppercase"
+                className="group rounded-2xl h-10 px-5 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-md border border-border/40 hover:bg-white dark:hover:bg-zinc-800 transition-all font-black text-[10px] tracking-widest uppercase"
               >
                 <ArrowLeft className="h-4 w-4 mr-2 transition-transform group-hover:-translate-x-1" />
                 Return to Shopping
               </Button>
               <div className="space-y-2">
                 <div className="flex items-center gap-3">
-                  <div className="h-2 w-12 bg-primary rounded-full" />
+                  <div className="h-1.5 w-10 bg-primary rounded-full" />
                   <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">
                     Final Stage
                   </p>
                 </div>
-                <h1 className="text-5xl sm:text-7xl font-black tracking-tighter text-foreground leading-[0.9]">
+                <h1 className="text-4xl sm:text-7xl font-black tracking-tighter text-foreground leading-[1] sm:leading-[0.9]">
                   Checkout <br />
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/60">
                     Succession
@@ -162,30 +162,30 @@ export default function CheckoutPage() {
               </div>
             </div>
 
-            <div className="hidden lg:flex items-center gap-8 pb-2">
-              <div className="text-right">
+            <div className="flex lg:flex items-center gap-6 sm:gap-8 pb-2">
+              <div className="text-left md:text-right">
                 <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">
                   Items In Cart
                 </p>
-                <p className="text-2xl font-black text-foreground">
+                <p className="text-xl sm:text-2xl font-black text-foreground">
                   {cart.items.length}
                 </p>
               </div>
-              <div className="h-12 w-px bg-border/40" />
-              <div className="text-right">
+              <div className="h-10 w-px bg-border/40" />
+              <div className="text-left md:text-right">
                 <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">
                   Basket Value
                 </p>
-                <p className="text-2xl font-black text-primary">
+                <p className="text-xl sm:text-2xl font-black text-primary">
                   ₦{cart.total.toLocaleString()}
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-[1.8fr_1fr] gap-12 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.8fr_1fr] gap-4 sm:gap-12 items-start">
             {/* Left Column: Information */}
-            <div className="space-y-10">
+            <div className="space-y-8 sm:space-y-10">
               {/* Delivery Info Component with entrance animation */}
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
@@ -209,17 +209,17 @@ export default function CheckoutPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
-                className="p-8 rounded-[2.5rem] bg-background border border-border/40 shadow-xl overflow-hidden relative group"
+                className="p-6 sm:p-8 rounded-[1.5rem] sm:rounded-[2.5rem] bg-background border border-border/40 shadow-xl overflow-hidden relative group"
               >
                 <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:scale-110 transition-transform duration-700">
                   <ShieldCheck className="h-32 w-32 rotate-12" />
                 </div>
-                <div className="flex flex-col sm:flex-row gap-8 relative z-10">
-                  <div className="w-16 h-16 bg-primary/10 rounded-[1.5rem] flex items-center justify-center shrink-0 shadow-inner">
-                    <ShieldCheck className="h-8 w-8 text-primary" />
+                <div className="flex flex-col sm:flex-row gap-6 sm:gap-8 relative z-10">
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 bg-primary/10 rounded-2xl sm:rounded-[1.5rem] flex items-center justify-center shrink-0 shadow-inner">
+                    <ShieldCheck className="h-7 w-7 sm:h-8 sm:w-8 text-primary" />
                   </div>
                   <div className="space-y-3">
-                    <h3 className="text-xl font-black uppercase tracking-tight text-foreground">
+                    <h3 className="text-lg sm:text-xl font-black uppercase tracking-tight text-foreground">
                       Security First Checkout
                     </h3>
                     <p className="text-sm text-muted-foreground font-medium leading-relaxed max-w-xl">
@@ -229,7 +229,7 @@ export default function CheckoutPage() {
                       Direct escrow and crypto integrations are undergoing audit
                       and will be active shortly.
                     </p>
-                    <div className="flex items-center gap-2 pt-2">
+                    <div className="flex items-center gap-2 pt-1">
                       <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
                       <span className="text-[10px] font-black uppercase tracking-widest text-emerald-600">
                         Encrypted Tunnel Active
@@ -240,21 +240,21 @@ export default function CheckoutPage() {
               </motion.div>
 
               {/* Footer Trust Segment */}
-              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-8 opacity-40 grayscale group-hover:grayscale-0 transition-all duration-700">
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-6 sm:gap-8 opacity-40 grayscale group-hover:grayscale-0 transition-all duration-700">
                 <div className="flex items-center gap-2">
-                  <Heart className="h-4 w-4" />
+                  <Heart className="h-3.5 w-3.5" />
                   <span className="text-[10px] font-black uppercase tracking-widest">
                     Global Shipping
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Sparkles className="h-4 w-4" />
+                  <Sparkles className="h-3.5 w-3.5" />
                   <span className="text-[10px] font-black uppercase tracking-widest">
                     Premium Quality
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Navigation className="h-4 w-4" />
+                  <Navigation className="h-3.5 w-3.5" />
                   <span className="text-[10px] font-black uppercase tracking-widest">
                     Real-time Tracking
                   </span>
@@ -267,7 +267,7 @@ export default function CheckoutPage() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.4 }}
-              className="sticky top-12"
+              className="lg:sticky lg:top-12 mt-4 lg:mt-0"
             >
               <CheckoutSummary
                 items={cart.items}
