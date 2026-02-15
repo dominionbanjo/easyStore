@@ -24,7 +24,7 @@ export interface ICart {
   items: ICartItem[];
   subtotal: number;
   shipping: number;
-  platform_fee: number;
+  service_charge: number;
   total: number;
 }
 

@@ -209,6 +209,15 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                 <span>Subtotal</span>
                 <span>₦{cart.subtotal.toLocaleString()}</span>
               </div>
+              <div className="flex justify-between text-sm text-muted-foreground font-medium">
+                <span>Shipping</span>
+                <span>₦{cart.shipping.toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between text-sm text-muted-foreground font-medium">
+                <span>Service Charge</span>
+                <span>₦{cart.service_charge.toLocaleString()}</span>
+              </div>
+              <div className="border-t border-dashed border-zinc-200 dark:border-zinc-800 my-1"></div>
               <div className="flex justify-between text-lg font-black tracking-tight">
                 <span>Total</span>
                 <span className="text-primary">

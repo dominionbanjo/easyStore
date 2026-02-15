@@ -359,13 +359,9 @@ export function OrderDetailsModal({
               {order.platform_fee != null && order.platform_fee > 0 && (
                 <div className="flex justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="text-muted-foreground">Platform Fee</span>
-                    <Badge
-                      variant="outline"
-                      className="text-[10px] py-0 h-4 bg-primary/5 text-primary border-primary/10"
-                    >
-                      2%
-                    </Badge>
+                    <span className="text-muted-foreground">
+                      Service Charge
+                    </span>
                   </div>
                   <span>
                     ₦{(Number(order.platform_fee) / 100).toLocaleString()}
