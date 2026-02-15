@@ -23,6 +23,7 @@ import { ArrowRight, Package } from "lucide-react";
 interface CartSummaryProps {
   subtotal: number;
   shipping: number;
+  serviceCharge: number;
   total: number;
   onClear: () => void;
   previewHref: string;
@@ -32,6 +33,7 @@ interface CartSummaryProps {
 export function CartSummary({
   subtotal,
   shipping,
+  serviceCharge,
   total,
   onClear,
   previewHref,
@@ -85,6 +87,10 @@ export function CartSummary({
           <div className="flex justify-between text-muted-foreground">
             <span>Shipping</span>
             <span>₦{shipping.toLocaleString()}</span>
+          </div>
+          <div className="flex justify-between text-muted-foreground">
+            <span>Service Charge</span>
+            <span>₦{serviceCharge.toLocaleString()}</span>
           </div>
         </div>
 

@@ -195,6 +195,7 @@ export default function CartPage() {
               <CartSummary
                 subtotal={cart.subtotal}
                 shipping={cart.shipping}
+                serviceCharge={cart.service_charge}
                 total={cart.total}
                 onClear={handleClearCart}
                 previewHref={USER_ROUTES.CHECKOUT}

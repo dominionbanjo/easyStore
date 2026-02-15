@@ -273,7 +273,7 @@ export default function CheckoutPage() {
                 items={cart.items}
                 subtotal={cart.subtotal}
                 shipping={cart.shipping}
-                platformFee={cart.platform_fee}
+                serviceCharge={cart.service_charge}
                 total={cart.total}
                 isProcessing={isCreatingOrder}
                 disabled={!hasAddress || !isBankVerified}

@@ -21,10 +21,10 @@ interface CheckoutSummaryProps {
   items: ICartItem[];
   subtotal: number;
   shipping: number;
-  platformFee: number;
+  serviceCharge: number;
   total: number;
   isProcessing: boolean;
-  disabled: boolean; // Retain this for generic disabled state if needed, or derive it
+  disabled: boolean;
   missingAddress?: boolean;
   missingBankVerification?: boolean;
   onCheckout: () => void;
@@ -36,7 +36,7 @@ export function CheckoutSummary({
   items,
   subtotal,
   shipping,
-  platformFee,
+  serviceCharge,
   total,
   isProcessing,
   disabled,
@@ -139,12 +139,12 @@ export function CheckoutSummary({
                 <div className="flex items-center gap-1 bg-primary/10 text-primary px-1.5 py-0.5 rounded-md">
                   <Tag className="h-2.5 w-2.5" />
                   <span className="text-[9px] sm:text-[10px] font-black">
-                    2%
+                    Incl. Fees
                   </span>
                 </div>
               </div>
               <span className="text-foreground font-black">
-                ₦{platformFee.toLocaleString()}
+                ₦{serviceCharge.toLocaleString()}
               </span>
             </div>
           </div>
