@@ -688,59 +688,6 @@ export default function OrderDetailsPage() {
                   </Card>
                 </motion.div>
               )}
-
-              {/* Additional Notes */}
-              {order.notes &&
-                (() => {
-                  try {
-                    const parsedNotes = JSON.parse(order.notes);
-                    // Only show notes if it's not just the platform fee metadata
-                    if (
-                      typeof parsedNotes === "object" &&
-                      !parsedNotes.platform_fee
-                    ) {
-                      return (
-                        <motion.div
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.4, delay: 0.3 }}
-                        >
-                          <Card className="overflow-hidden rounded-2xl border-2 border-gray-100 dark:border-white/5 bg-white dark:bg-neutral-900/50">
-                            <div className="p-6">
-                              <h3 className="text-sm font-bold text-muted-foreground mb-2">
-                                Order Notes
-                              </h3>
-                              <pre className="text-sm text-foreground whitespace-pre-wrap font-sans">
-                                {JSON.stringify(parsedNotes, null, 2)}
-                              </pre>
-                            </div>
-                          </Card>
-                        </motion.div>
-                      );
-                    }
-                    return null;
-                  } catch {
-                    // If notes is not JSON, display as plain text
-                    return (
-                      <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.4, delay: 0.3 }}
-                      >
-                        <Card className="overflow-hidden rounded-2xl border-2 border-gray-100 dark:border-white/5 bg-white dark:bg-neutral-900/50">
-                          <div className="p-6">
-                            <h3 className="text-sm font-bold text-muted-foreground mb-2">
-                              Order Notes
-                            </h3>
-                            <p className="text-sm text-foreground">
-                              {order.notes}
-                            </p>
-                          </div>
-                        </Card>
-                      </motion.div>
-                    );
-                  }
-                })()}
             </div>
           </div>
         </div>
