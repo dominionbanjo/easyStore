@@ -186,7 +186,7 @@ export default function CareersPage() {
                   {
                     title: "Top Gear",
                     icon: Cpu,
-                    desc: "Get the latest MacBook Pro and any tools you need to succeed.",
+                    desc: "Get the latest tools you need to succeed.",
                   },
                   {
                     title: "High Impact",
