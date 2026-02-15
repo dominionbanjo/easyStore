@@ -14,7 +14,13 @@ import {
   Facebook,
   Twitter,
   MessageCircle,
+  Info,
 } from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 type StoreHeaderProps = {
   store: {
@@ -121,14 +127,85 @@ export default function StoreHeaderSection({ store }: StoreHeaderProps) {
                   </Badge>
                 )}
               </div>
-              <h1 className="text-4xl sm:text-6xl font-black text-zinc-900 tracking-tight leading-none">
-                {store.name}
-              </h1>
-              {store.user && (
-                <p className="text-xs sm:text-sm font-bold text-zinc-400 tracking-[0.2em] uppercase">
-                  Managed by <span className="text-primary">{vendorName}</span>
-                </p>
-              )}
+              <div className="flex items-center justify-center md:justify-start gap-3">
+                <h1 className="text-4xl sm:text-6xl font-black text-zinc-900 dark:text-zinc-50 tracking-tight leading-none">
+                  {store.name}
+                </h1>
+                {store.user && (
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="rounded-full hover:bg-primary/10 h-10 w-10 shrink-0"
+                      >
+                        <Info className="w-6 h-6 text-muted-foreground" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-80 p-6 rounded-[2.5rem] border-border/50 shadow-2xl backdrop-blur-xl bg-background/95">
+                      <div className="space-y-5">
+                        <div className="flex items-center gap-4 border-b border-border/50 pb-4">
+                          <div className="w-14 h-14 rounded-2xl overflow-hidden bg-primary/10 flex items-center justify-center shrink-0 shadow-inner">
+                            {store.user?.avatar ? (
+                              <img
+                                src={store.user.avatar}
+                                className="w-full h-full object-cover"
+                                alt={vendorName}
+                              />
+                            ) : (
+                              <span className="text-xl font-bold text-primary">
+                                {initials}
+                              </span>
+                            )}
+                          </div>
+                          <div>
+                            <p className="text-[10px] uppercase tracking-widest font-black text-muted-foreground mb-0.5">
+                              Verified Vendor
+                            </p>
+                            <h4 className="font-bold text-lg leading-tight text-foreground">
+                              {vendorName}
+                            </h4>
+                          </div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <p className="text-[10px] uppercase tracking-widest font-black text-muted-foreground px-1">
+                            Contact Details
+                          </p>
+                          <div className="space-y-1">
+                            {store.phone && (
+                              <button
+                                onClick={() =>
+                                  window.open(`tel:${store.phone}`)
+                                }
+                                className="w-full flex items-center gap-3 p-3 rounded-2xl hover:bg-primary/5 transition-colors text-sm font-bold group text-foreground"
+                              >
+                                <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors">
+                                  <Phone className="w-4 h-4" />
+                                </div>
+                                {store.phone}
+                              </button>
+                            )}
+                            {store.email && (
+                              <button
+                                onClick={() =>
+                                  window.open(`mailto:${store.email}`)
+                                }
+                                className="w-full flex items-center gap-3 p-3 rounded-2xl hover:bg-primary/5 transition-colors text-sm font-bold group text-foreground"
+                              >
+                                <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors">
+                                  <Mail className="w-4 h-4" />
+                                </div>
+                                {store.email}
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+                )}
+              </div>
             </div>
 
             <div className="flex flex-col gap-3">
@@ -170,29 +247,6 @@ export default function StoreHeaderSection({ store }: StoreHeaderProps) {
               {/* Actions (Integrated into flow) */}
               <div className="flex gap-3 justify-center md:justify-start">
                 <div className="flex bg-muted/30 p-1.5 rounded-3xl border border-border/50 backdrop-blur-sm gap-2">
-                  {store.email && (
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      className="rounded-2xl hover:bg-primary/10 hover:text-primary transition-colors h-11 w-11"
-                      title="Email"
-                      onClick={() => window.open(`mailto:${store.email}`)}
-                    >
-                      <Mail className="w-5 h-5" />
-                    </Button>
-                  )}
-                  {store.phone && (
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      className="rounded-2xl hover:bg-primary/10 hover:text-primary transition-colors h-11 w-11"
-                      title="Call"
-                      onClick={() => window.open(`tel:${store.phone}`)}
-                    >
-                      <Phone className="w-5 h-5" />
-                    </Button>
-                  )}
-
                   {/* Dynamic Social Links */}
                   {store.social_links &&
                     Object.entries(store.social_links).map(
