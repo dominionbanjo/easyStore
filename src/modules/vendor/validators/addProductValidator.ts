@@ -27,18 +27,15 @@ export const addProductSchema = z.object({
     .int("Stock must be a whole number")
     .positive("Stock must be greater than 0"),
 
-  // /* ───────── SHIPPING (REQUIRED) ───────── */
-  // shipping_cost: z
-  //   .number()
-  //   .refine((v) => v >= 0, "Shipping cost cannot be negative"),
+  /* ───────── SHIPPING (REQUIRED) ───────── */
+  shipping_cost: z.coerce
+    .number()
+    .nonnegative("Shipping cost cannot be negative")
+    .optional(),
 
-  // shipping_note: z
-  //   .string()
-  //   .min(3, "Shipping note must be at least 3 characters long"),
+  shipping_note: z.string().optional(),
 
-  // returns_note: z
-  //   .string()
-  //   .min(5, "Returns policy must be at least 5 characters long"),
+  returns_note: z.string().optional(),
 
   /* ───────── COLORS (OPTIONAL) ───────── */
   colors: z

@@ -25,17 +25,17 @@ export function DeliveryInfo({
   onEditAddress,
 }: DeliveryInfoProps) {
   return (
-    <Card className="rounded-[2.5rem] border-border/40 shadow-2xl shadow-black/5 bg-background overflow-hidden border group transition-all duration-500 hover:shadow-primary/5">
-      <CardHeader className="p-8 sm:p-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 bg-muted/30 border-b border-border/40">
+    <Card className="rounded-[1.5rem] sm:rounded-[2.5rem] border-border/40 shadow-2xl shadow-black/5 bg-background overflow-hidden border group transition-all duration-500 hover:shadow-primary/5">
+      <CardHeader className="p-1 sm:p-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6  border-b border-border/40">
         <div className="flex items-center gap-4">
-          <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shadow-inner">
-            <MapPin className="h-7 w-7" />
+          <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-xl sm:rounded-2xl bg-primary/10 flex items-center justify-center text-primary shadow-inner">
+            <MapPin className="h-6 w-6 sm:h-7 sm:w-7" />
           </div>
           <div>
-            <CardTitle className="text-2xl font-black uppercase tracking-tight text-foreground">
+            <CardTitle className="text-xl sm:text-2xl font-black uppercase tracking-tight text-foreground">
               Shipping Hub
             </CardTitle>
-            <p className="text-xs text-muted-foreground font-black uppercase tracking-[0.2em] mt-1 opacity-60">
+            <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.2em] mt-1 opacity-60">
               Final Destination Details
             </p>
           </div>
@@ -44,7 +44,7 @@ export function DeliveryInfo({
           size="sm"
           variant="outline"
           onClick={onEditAddress}
-          className="rounded-xl border-primary/20 hover:bg-primary/5 hover:text-primary transition-all font-black text-[10px] tracking-widest px-6 h-10 uppercase"
+          className="rounded-xl border-primary/20 hover:bg-primary/5 hover:text-primary transition-all font-black text-[10px] tracking-widest px-6 h-10 uppercase w-full sm:w-auto"
         >
           {hasAddress ? (
             <>
@@ -57,19 +57,19 @@ export function DeliveryInfo({
         </Button>
       </CardHeader>
 
-      <CardContent className="p-8 sm:p-10">
+      <CardContent className="p-1 sm:p-10">
         {!hasAddress ? (
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="flex flex-col items-center justify-center py-16 text-center space-y-6"
+            className="flex flex-col items-center justify-center py-10 sm:py-16 text-center space-y-6"
           >
-            <div className="w-24 h-24 bg-primary/5 rounded-[2.5rem] flex items-center justify-center relative overflow-hidden group">
+            <div className="w-20 h-20 sm:w-24 sm:h-24 bg-primary/5 rounded-[2rem] sm:rounded-[2.5rem] flex items-center justify-center relative overflow-hidden group">
               <div className="absolute inset-0 bg-primary/10 animate-pulse" />
-              <Globe className="h-10 w-10 text-primary relative z-10" />
+              <Globe className="h-8 w-8 sm:h-10 sm:w-10 text-primary relative z-10" />
             </div>
             <div className="space-y-2">
-              <p className="font-black text-2xl text-foreground uppercase tracking-tight">
+              <p className="font-black text-xl sm:text-2xl text-foreground uppercase tracking-tight">
                 Where should we ship?
               </p>
               <p className="text-sm text-muted-foreground max-w-[320px] leading-relaxed font-medium">
@@ -79,38 +79,38 @@ export function DeliveryInfo({
             </div>
             <Button
               onClick={onEditAddress}
-              className="rounded-2xl h-14 px-10 font-black bg-primary text-primary-foreground shadow-2xl shadow-primary/30 uppercase tracking-widest text-xs transition-transform hover:scale-105 active:scale-95"
+              className="rounded-2xl h-12 sm:h-14 px-8 sm:px-10 font-black bg-primary text-primary-foreground shadow-2xl shadow-primary/30 uppercase tracking-widest text-[10px] sm:text-xs transition-transform hover:scale-105 active:scale-95"
             >
               Add New Address
             </Button>
           </motion.div>
         ) : (
-          <div className="space-y-10">
+          <div className="space-y-8 sm:space-y-10">
             {/* Top Row: People & Contact */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-              <div className="flex gap-5">
-                <div className="h-12 w-12 rounded-2xl bg-muted/50 flex items-center justify-center shrink-0 border border-border/40">
-                  <User className="h-5 w-5 text-muted-foreground" />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-12">
+              <div className="flex gap-4 sm:gap-5">
+                <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl sm:rounded-2xl bg-muted/50 flex items-center justify-center shrink-0 border border-border/40">
+                  <User className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
                 </div>
                 <div>
-                  <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-1.5 px-1">
+                  <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-1 px-1">
                     Recipient
                   </p>
-                  <p className="text-xl font-black text-foreground line-clamp-1">
+                  <p className="text-lg sm:text-xl font-black text-foreground line-clamp-1">
                     {fullName || "Unnamed Recipient"}
                   </p>
                 </div>
               </div>
 
-              <div className="flex gap-5">
-                <div className="h-12 w-12 rounded-2xl bg-muted/50 flex items-center justify-center shrink-0 border border-border/40">
-                  <Phone className="h-5 w-5 text-muted-foreground" />
+              <div className="flex gap-4 sm:gap-5">
+                <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl sm:rounded-2xl bg-muted/50 flex items-center justify-center shrink-0 border border-border/40">
+                  <Phone className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
                 </div>
                 <div>
-                  <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-1.5 px-1">
+                  <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-1 px-1">
                     Contact Line
                   </p>
-                  <p className="text-xl font-black text-foreground">
+                  <p className="text-lg sm:text-xl font-black text-foreground">
                     {phone || "Not Provided"}
                   </p>
                 </div>
@@ -118,40 +118,45 @@ export function DeliveryInfo({
             </div>
 
             {/* Bottom Row: Detailed Geography */}
-            <div className="p-8 rounded-[2rem] bg-muted/20 border border-border/40 relative overflow-hidden">
+            <div className="px-2 py-6 sm:p-10 rounded-[1.5rem] sm:rounded-[2.5rem] bg-muted/10 border border-border/40 relative overflow-hidden">
               <div className="absolute top-0 right-0 p-6 opacity-5">
                 <Home className="h-24 w-24 -rotate-12" />
               </div>
 
-              <div className="flex gap-6 relative z-10">
-                <div className="h-14 w-14 rounded-2xl bg-background flex items-center justify-center shrink-0 border border-border/40 shadow-sm">
-                  <Navigation className="h-6 w-6 text-primary" />
+              <div className="flex flex-col sm:flex-row gap-5 sm:gap-8 relative z-10">
+                <div className="hidden sm:flex h-16 w-16 rounded-[1.5rem] bg-background items-center justify-center shrink-0 border border-border/40 shadow-sm">
+                  <Navigation className="h-8 w-8 text-primary" />
                 </div>
-                <div className="flex-1">
-                  <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-3 px-1">
-                    Shipping Destination
-                  </p>
-                  <div className="space-y-2">
-                    <p className="text-2xl md:text-3xl font-black text-foreground leading-[1.1]">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-3 mb-3 sm:mb-4">
+                    <div className="sm:hidden h-9 w-9 rounded-xl bg-background flex items-center justify-center shrink-0 border border-border/40 shadow-sm">
+                      <Navigation className="h-4 w-4 text-primary" />
+                    </div>
+                    <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em]">
+                      Shipping Destination
+                    </p>
+                  </div>
+                  <div className="space-y-4">
+                    <p className="text-xl sm:text-2xl md:text-4xl font-black text-foreground leading-[1.1] break-words">
                       {street}
                     </p>
-                    <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-                      <div className="flex items-center gap-1.5 px-3 py-1 bg-background rounded-lg border border-border/40 shadow-sm">
+                    <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                      <div className="flex items-center gap-1.5 px-3 py-1.5 bg-background rounded-lg border border-border/40 shadow-sm">
                         <Globe className="h-3 w-3 text-muted-foreground" />
-                        <span className="text-[11px] font-black uppercase text-foreground">
+                        <span className="text-[10px] sm:text-[11px] font-black uppercase text-foreground">
                           {city}
                         </span>
                       </div>
-                      <div className="flex items-center gap-1.5 px-3 py-1 bg-background rounded-lg border border-border/40 shadow-sm">
+                      <div className="flex items-center gap-1.5 px-3 py-1.5 bg-background rounded-lg border border-border/40 shadow-sm">
                         <MapPin className="h-3 w-3 text-muted-foreground" />
-                        <span className="text-[11px] font-black uppercase text-foreground">
+                        <span className="text-[10px] sm:text-[11px] font-black uppercase text-foreground">
                           {state}
                         </span>
                       </div>
                       {postalCode && (
-                        <div className="flex items-center gap-1.5 px-3 py-1 bg-primary/10 rounded-lg border border-primary/20">
+                        <div className="flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 rounded-lg border border-primary/20">
                           <Hash className="h-3 w-3 text-primary" />
-                          <span className="text-[11px] font-black uppercase text-primary">
+                          <span className="text-[10px] sm:text-[11px] font-black uppercase text-primary">
                             {postalCode}
                           </span>
                         </div>

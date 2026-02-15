@@ -59,7 +59,7 @@ export function StoreSetupTracker({
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       className={cn(
-        "relative overflow-hidden rounded-[2rem] border-none shadow-2xl bg-gradient-to-br from-orange-500 to-orange-600 text-white p-8",
+        "relative overflow-hidden rounded-[1.5rem] sm:rounded-[2rem] border-none shadow-2xl bg-gradient-to-br from-orange-500 to-orange-600 text-white p-6 sm:p-8",
         className,
       )}
     >

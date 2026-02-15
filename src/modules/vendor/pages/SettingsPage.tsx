@@ -13,6 +13,13 @@ import {
   useVerifyBankAccountMutation,
 } from "@/services/userApi";
 
+import {
+  useGetCloudinarySignatureQuery,
+  useDeleteCloudinaryImageMutation,
+  type CloudinaryConfig,
+} from "@/services/cloudinaryApi";
+import { uploadToCloudinary } from "@/utils/uploadToCloudinary";
+
 // Sub-components
 import { SettingsHeader } from "../components/settings/SettingsHeader";
 import { SettingsSidebar } from "../components/settings/SettingsSidebar";
@@ -38,10 +45,28 @@ export default function SettingsPage() {
   const [verifyBank, { isLoading: isVerifyingBank }] =
     useVerifyBankAccountMutation();
 
+  /* ───────── CLOUDINARY ───────── */
+  const {
+    data: signature,
+    isLoading: signing,
+    isError: signatureError,
+    refetch: refetchSignature,
+  } = useGetCloudinarySignatureQuery();
+
+  const [deleteCloudinaryImage, { isLoading: isDeletingBanner }] =
+    useDeleteCloudinaryImageMutation();
+
   const [activeStep, setActiveStep] = useState(1);
   const [showAddressModal, setShowAddressModal] = useState(false);
   const [bannerPreview, setBannerPreview] = useState<string | null>(null);
-  const [bannerFile, setBannerFile] = useState<File | null>(null);
+
+  // Banner Upload State
+  const [bannerUploadProgress, setBannerUploadProgress] = useState<
+    number | null
+  >(null);
+  const [bannerPublicId, setBannerPublicId] = useState<string | null>(null);
+  const canUpload =
+    Boolean(signature?.signature) && !signing && !signatureError;
 
   // Form States
   const [storeData, setStoreData] = useState({
@@ -80,6 +105,7 @@ export default function SettingsPage() {
         social_links: store.social_links || {},
       });
       setBannerPreview(store.cover_image);
+      setBannerPublicId(store.cover_image_public_id);
       setBankData({
         bank_code: store.bank_code || "",
         account_number: store.account_number || "",
@@ -95,13 +121,60 @@ export default function SettingsPage() {
     setStoreData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleBannerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleBannerUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setBannerFile(file);
-      const reader = new FileReader();
-      reader.onloadend = () => setBannerPreview(reader.result as string);
-      reader.readAsDataURL(file);
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("File size cannot exceed 5MB");
+      return;
+    }
+
+    if (!canUpload) {
+      toast.error("Upload service unavailable");
+      return;
+    }
+
+    try {
+      const freshConfig = await refetchSignature().unwrap();
+      setBannerUploadProgress(0);
+
+      const uploaded = await uploadToCloudinary(
+        file,
+        freshConfig as CloudinaryConfig,
+        {
+          onProgress: (p) => setBannerUploadProgress(p),
+        },
+      );
+
+      setBannerPreview(uploaded.url);
+      setBannerPublicId(uploaded.public_id);
+      toast.success("Header image uploaded");
+    } catch (err) {
+      toast.error("Failed to upload header image");
+      console.error(err);
+    } finally {
+      setBannerUploadProgress(null);
+      e.target.value = ""; // Reset input
+    }
+  };
+
+  const handleRemoveBanner = async () => {
+    if (!bannerPublicId) return;
+
+    try {
+      await deleteCloudinaryImage({ public_id: bannerPublicId }).unwrap();
+      setBannerPreview(null);
+      setBannerPublicId(null);
+      toast.success("Header image removed");
+    } catch (error) {
+      console.error("Failed to delete image:", error);
+      // Still clear local state if it fails? Maybe user wants to remove it from UI anyway.
+      // But better to warn.
+      // For now, let's force clear UI for UX, even if cloudinary fail (orphaned image is better than broken UI)
+      setBannerPreview(null);
+      setBannerPublicId(null);
+      toast.error("Image removed from view");
     }
   };
 
@@ -120,8 +193,18 @@ export default function SettingsPage() {
           formData.append(key, value as string);
         }
       });
-      if (bannerFile) {
-        formData.append("cover_image", bannerFile);
+      /* 
+         Attach Banner Data:
+         - If we have a preview & id, send them to update.
+         - If we DON'T have them (User deleted), but store HAD them, send empty strings (or null) to clear on backend.
+      */
+      if (bannerPreview && bannerPublicId) {
+        formData.append("cover_image", bannerPreview);
+        formData.append("cover_image_public_id", bannerPublicId);
+      } else if (store.cover_image && !bannerPreview) {
+        // Explicitly clear
+        formData.append("cover_image", "");
+        formData.append("cover_image_public_id", "");
       }
 
       await updateStore({ id: store.id, data: formData }).unwrap();
@@ -175,7 +258,7 @@ export default function SettingsPage() {
   const { progress, isValidated } = useStoreSetup();
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8 pb-20">
+    <div className="max-w-7xl mx-auto space-y-8 pb-20">
       <SettingsHeader progress={progress} isValidated={isValidated} />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -201,7 +284,10 @@ export default function SettingsPage() {
                   onCategoryChange={(val) =>
                     setStoreData((p) => ({ ...p, category: val }))
                   }
-                  onBannerChange={handleBannerChange}
+                  onBannerChange={handleBannerUpload}
+                  onBannerRemove={handleRemoveBanner}
+                  uploadProgress={bannerUploadProgress}
+                  isDeletingBanner={isDeletingBanner}
                   onSave={saveStoreDetails}
                   isSaving={isUpdatingStore}
                 />

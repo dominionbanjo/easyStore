@@ -12,6 +12,7 @@ import type { ICartItem } from "@/types/cart/cartTypes";
 import { toast } from "sonner";
 import { USER_ROUTES, WEBSITE_ROUTES } from "@/routes/temp";
 import SmartLink from "@/components/shared/SmartLink";
+import { extractErrorMessage } from "@/utils/errorHandler";
 import { CartSkeleton } from "../components/skeletons/CartSkeleton";
 import { CartItem } from "../components/cart/CartItem";
 import { CartSummary } from "../components/cart/CartSummary";
@@ -64,8 +65,10 @@ export default function CartPage() {
         ) => {
           updateCartItem({ productId, quantity, size, color })
             .unwrap()
-            .catch(() => {
-              toast.error("Unable to update quantity");
+            .catch((err: any) => {
+              toast.error(
+                extractErrorMessage(err, "Unable to update quantity"),
+              );
             });
         },
       ),
@@ -117,8 +120,8 @@ export default function CartPage() {
     try {
       await removeCartItem({ productId, size, color }).unwrap();
       toast.success("Item removed from cart");
-    } catch {
-      toast.error("Failed to remove item");
+    } catch (err: any) {
+      toast.error(extractErrorMessage(err, "Failed to remove item"));
     }
   };
 
@@ -126,8 +129,8 @@ export default function CartPage() {
     try {
       await clearCart().unwrap();
       toast.success("Cart cleared");
-    } catch {
-      toast.error("Failed to clear cart");
+    } catch (err: any) {
+      toast.error(extractErrorMessage(err, "Failed to clear cart"));
     }
   };
 

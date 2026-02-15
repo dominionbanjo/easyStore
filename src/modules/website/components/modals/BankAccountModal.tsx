@@ -133,35 +133,35 @@ export function BankAccountModal({
         {/* Adjusted Z-Index to 40/50 to fix SelectDropdown visibility issues */}
         <Dialog.Overlay className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm transition-all" />
 
-        <Dialog.Content className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[95vw] max-w-4xl max-h-[90vh] z-50 overflow-y-auto md:overflow-hidden rounded-[2.5rem] border-none shadow-2xl bg-background outline-none flex flex-col md:flex-row custom-scrollbar">
+        <Dialog.Content className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[95vw] max-w-4xl max-h-[90vh] z-50 overflow-y-auto md:overflow-hidden rounded-[1.5rem] sm:rounded-[2.5rem] border-none shadow-2xl bg-background outline-none flex flex-col md:flex-row custom-scrollbar">
           {/* Left Panel - Visual */}
-          <div className="w-full md:w-1/3 bg-gradient-to-br from-indigo-600 to-violet-700 p-8 text-white relative flex flex-col justify-between overflow-hidden shrink-0 min-h-[300px] md:min-h-0">
+          <div className="w-full md:w-1/3 bg-gradient-to-br from-indigo-600 to-violet-700 p-6 sm:p-8 text-white relative flex flex-col justify-between overflow-hidden shrink-0 min-h-[260px] md:min-h-0">
             <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
               <Landmark className="w-48 h-48 rotate-12 translate-x-12 translate-y-12" />
             </div>
 
             <div className="relative z-10">
-              <div className="h-16 w-16 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center mb-8 shadow-xl">
-                <CreditCard className="h-8 w-8 text-white" />
+              <div className="h-12 w-12 sm:h-16 sm:w-16 rounded-xl sm:rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center mb-6 sm:mb-8 shadow-xl">
+                <CreditCard className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
               </div>
-              <h2 className="text-3xl font-black tracking-tight leading-none mb-4 uppercase">
+              <h2 className="text-2xl sm:text-3xl font-black tracking-tight leading-none mb-3 sm:mb-4 uppercase">
                 Secure <br /> Payouts
               </h2>
-              <p className="text-indigo-50/80 font-medium text-sm leading-relaxed">
+              <p className="text-indigo-50/80 font-medium text-xs sm:text-sm leading-relaxed max-w-[280px]">
                 Connect your bank account to receive direct settlements
                 securely.
               </p>
             </div>
 
-            <div className="relative z-10">
-              <div className="p-4 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/10 space-y-3">
+            <div className="relative z-10 pt-6 md:pt-0">
+              <div className="p-4 rounded-xl sm:rounded-2xl bg-white/10 backdrop-blur-sm border border-white/10 space-y-3">
                 <div className="flex items-center gap-3">
-                  <ShieldCheck className="h-5 w-5 text-indigo-300" />
-                  <p className="text-[10px] font-black uppercase tracking-widest text-white">
+                  <ShieldCheck className="h-4 w-4 sm:h-5 sm:w-5 text-indigo-300" />
+                  <p className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-white">
                     Encrypted Storage
                   </p>
                 </div>
-                <p className="text-[10px] text-indigo-50/60 font-medium italic">
+                <p className="text-[9px] sm:text-[10px] text-indigo-50/60 font-medium italic">
                   "We never store your full details. Everything is processed
                   through Paystack."
                 </p>
@@ -170,7 +170,7 @@ export function BankAccountModal({
           </div>
 
           {/* Right Panel - Form */}
-          <div className="w-full md:w-2/3 p-8 md:p-12 md:overflow-y-auto custom-scrollbar flex flex-col">
+          <div className="w-full md:w-2/3 p-6 sm:p-12 md:overflow-y-auto custom-scrollbar flex flex-col">
             <div className="flex justify-between items-start mb-10">
               <div>
                 <h3 className="text-2xl font-black uppercase tracking-tight text-foreground">

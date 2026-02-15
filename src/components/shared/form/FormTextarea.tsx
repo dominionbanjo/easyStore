@@ -44,7 +44,7 @@ export function FormTextarea({
 
       <div className="relative group">
         {icon && (
-          <div className="absolute left-3 top-3 text-muted-foreground group-focus-within:text-primary transition-colors">
+          <div className="absolute left-3.5 top-3.5 text-muted-foreground group-focus-within:text-primary transition-colors duration-300">
             {icon}
           </div>
         )}
@@ -55,12 +55,13 @@ export function FormTextarea({
           aria-invalid={!!shouldShowError}
           {...register(name)}
           className={cn(
-            "rounded-xl text-sm transition-all duration-200 bg-muted/20 border-muted-foreground/10 focus:bg-background resize-none",
+            "rounded-2xl text-sm transition-all duration-300 bg-muted/30 border-muted-foreground/10 focus:bg-background/80 focus:border-primary/30 focus:ring-4 focus:ring-primary/5 resize-none shadow-sm group-hover:bg-muted/40",
             icon ? "pl-11" : "px-4",
             shouldShowError &&
-              "border-destructive ring-0 focus-visible:ring-destructive/30",
+              "border-destructive/50 ring-4 ring-destructive/10 focus-visible:ring-destructive/20",
           )}
         />
+        <div className="absolute inset-0 rounded-2xl border border-primary/0 pointer-events-none group-focus-within:border-primary/10 transition-colors duration-500" />
       </div>
 
       {shouldShowError && (

@@ -38,7 +38,36 @@ export const cartApi = apiManager.injectEndpoints({
         method: "PATCH",
         body,
       }),
-      invalidatesTags: ["Cart"],
+      onQueryStarted: async (
+        { productId, quantity, size, color },
+        { dispatch, queryFulfilled },
+      ) => {
+        const patchResult = dispatch(
+          cartApi.util.updateQueryData("getCart", undefined, (draft) => {
+            const cart = draft.data.cart;
+            const itemIndex = cart.items.findIndex(
+              (item) =>
+                item.product_id === productId &&
+                (size ? item.size === size : true) &&
+                (color ? item.color === color : true),
+            );
+
+            if (itemIndex !== -1) {
+              if (quantity !== undefined) {
+                cart.items[itemIndex].quantity = quantity;
+              }
+              // Recalculate subtotal/total roughly (frontend optimistic)
+              // Note: Accurate calculation requires backend logic for discounts/shipping
+              // This acts as a visual feedback until revalidation
+            }
+          }),
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
+      },
     }),
 
     /* ───────── REMOVE ITEM ───────── */
@@ -58,6 +87,29 @@ export const cartApi = apiManager.injectEndpoints({
         method: "DELETE",
       }),
       invalidatesTags: ["Cart"],
+      onQueryStarted: async (
+        { productId, size, color },
+        { dispatch, queryFulfilled },
+      ) => {
+        const patchResult = dispatch(
+          cartApi.util.updateQueryData("getCart", undefined, (draft) => {
+            const cart = draft.data.cart;
+            cart.items = cart.items.filter(
+              (item) =>
+                !(
+                  item.product_id === productId &&
+                  (size ? item.size === size : true) &&
+                  (color ? item.color === color : true)
+                ),
+            );
+          }),
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
+      },
     }),
 
     /* ───────── CLEAR CART ───────── */

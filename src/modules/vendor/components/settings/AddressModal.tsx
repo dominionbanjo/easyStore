@@ -32,8 +32,8 @@ export function AddressModal({
 }: AddressModalProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px] rounded-3xl p-0 overflow-hidden">
-        <DialogHeader className="p-8 bg-muted/30">
+      <DialogContent className="w-[95vw] sm:max-w-[500px] rounded-[1.5rem] sm:rounded-3xl p-0 overflow-hidden">
+        <DialogHeader className="p-6 sm:p-8 bg-muted/30">
           <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
             <Building className="text-primary w-6 h-6" />
           </div>

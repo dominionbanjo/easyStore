@@ -18,9 +18,9 @@ export function SetupEnforcementModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl w-[95vw] h-[auto] max-h-[90vh] p-0 overflow-hidden rounded-[2.5rem] border-none shadow-2xl flex flex-col md:flex-row">
+      <DialogContent className="max-w-3xl w-[95vw] h-auto max-h-[95vh] p-0 overflow-y-auto md:overflow-hidden rounded-[1.5rem] sm:rounded-[2.5rem] border-none shadow-2xl flex flex-col md:flex-row custom-scrollbar">
         {/* Left Side - Visual */}
-        <div className="w-full md:w-[38%] bg-gradient-to-br from-orange-500 to-red-600 p-8 text-white relative flex flex-col justify-between overflow-hidden shrink-0">
+        <div className="w-full md:w-[38%] bg-gradient-to-br from-orange-500 to-red-600 p-5 sm:p-8 text-white relative flex flex-col justify-between overflow-hidden shrink-0 min-h-[180px] md:min-h-[220px]">
           <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
             <Rocket className="w-48 h-48 rotate-12 translate-x-12 translate-y-12" />
           </div>
@@ -29,7 +29,7 @@ export function SetupEnforcementModal({
             <div className="h-14 w-14 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center mb-6">
               <ShieldAlert className="h-8 w-8 text-white" />
             </div>
-            <h2 className="text-3xl font-black uppercase tracking-tight leading-none mb-4">
+            <h2 className="text-2xl sm:text-3xl font-black uppercase tracking-tight leading-none mb-3 sm:mb-4">
               Almost There!
             </h2>
             <p className="text-orange-100 font-medium text-sm">
@@ -56,7 +56,7 @@ export function SetupEnforcementModal({
         </div>
 
         {/* Right Side - Tasks */}
-        <div className="w-full md:w-[62%] p-8 bg-background flex flex-col min-h-0">
+        <div className="w-full md:w-[62%] p-5 sm:p-8 bg-background flex flex-col min-h-0 overflow-hidden">
           <div className="flex justify-between items-start mb-6 shrink-0">
             <div>
               <h3 className="text-xl font-black uppercase tracking-tight text-foreground">

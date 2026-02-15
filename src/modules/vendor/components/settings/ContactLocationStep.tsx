@@ -44,8 +44,8 @@ export function ContactLocationStep({
           Setup your business contact information and physical address.
         </CardDescription>
       </CardHeader>
-      <CardContent className="p-6 md:p-8 space-y-8 -mt-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <CardContent className="p-3 sm:p-6 md:p-8 space-y-6 sm:space-y-8 -mt-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           <div className="space-y-2">
             <Label className="flex items-center gap-2">
               <Mail className="w-3.5 h-3.5" /> Support Email

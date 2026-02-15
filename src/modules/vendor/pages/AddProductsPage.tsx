@@ -284,7 +284,7 @@ export default function AddProductPage() {
                     </CardTitle>
                   </div>
                 </CardHeader>
-                <CardContent className="p-8 space-y-8">
+                <CardContent className="p-5 sm:p-8 space-y-8">
                   <BasicInfoSection />
                 </CardContent>
               </Card>
@@ -307,7 +307,7 @@ export default function AddProductPage() {
                     </CardTitle>
                   </div>
                 </CardHeader>
-                <CardContent className="p-8">
+                <CardContent className="p-5 sm:p-8">
                   <ImageSection {...extras} />
                 </CardContent>
               </Card>
@@ -330,7 +330,7 @@ export default function AddProductPage() {
                     </CardTitle>
                   </div>
                 </CardHeader>
-                <CardContent className="p-8 space-y-10">
+                <CardContent className="p-5 sm:p-8 space-y-10">
                   <SpecsSection {...extras} />
                   <Separator className="bg-border/40" />
                   <ChipsSection {...extras} />
@@ -358,7 +358,7 @@ export default function AddProductPage() {
                     </CardTitle>
                   </div>
                 </CardHeader>
-                <CardContent className="p-6">
+                <CardContent className="p-4 sm:p-6">
                   <PricingSection />
                 </CardContent>
               </Card>
@@ -381,7 +381,7 @@ export default function AddProductPage() {
                     </CardTitle>
                   </div>
                 </CardHeader>
-                <CardContent className="p-6">
+                <CardContent className="p-4 sm:p-6">
                   <ShippingSection />
                 </CardContent>
               </Card>
