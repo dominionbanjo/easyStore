@@ -9,6 +9,7 @@ interface FormPriceInputProps {
   name: string;
   placeholder?: string;
   className?: string;
+  inputClassName?: string;
   icon?: React.ReactNode;
 }
 
@@ -25,6 +26,7 @@ export function FormPriceInput({
   name,
   placeholder,
   className,
+  inputClassName,
   icon,
 }: FormPriceInputProps) {
   const {
@@ -61,8 +63,17 @@ export function FormPriceInput({
     field.onChange(numericValue);
   };
 
-  const error = errors[name]?.message as string | undefined;
-  const shouldShowError = !!error && (touchedFields[name] || submitCount > 0);
+  const getNestedError = (obj: any, path: string) => {
+    return path
+      .split(/[.[\]]/)
+      .filter(Boolean)
+      .reduce((acc, part) => acc?.[part], obj);
+  };
+
+  const errorObj = getNestedError(errors, name);
+  const error = errorObj?.message as string | undefined;
+  const shouldShowError =
+    !!error && (getNestedError(touchedFields, name) || submitCount > 0);
 
   return (
     <div className={cn("space-y-1.5", className)}>
@@ -92,10 +103,11 @@ export function FormPriceInput({
           placeholder={placeholder}
           aria-invalid={shouldShowError}
           className={cn(
-            "h-9 rounded-xl text-xs transition-all duration-200 bg-muted/20 border-muted-foreground/10 focus:bg-background",
+            "h-12 rounded-xl text-[15px] transition-all duration-200 bg-muted/20 border-muted-foreground/10 focus:bg-background",
             icon ? "pl-11" : "px-4",
             shouldShowError &&
               "border-destructive ring-0 focus-visible:ring-destructive/30",
+            inputClassName,
           )}
         />
       </div>

@@ -41,6 +41,12 @@ interface ProductInfoSidebarProps {
     stock: number;
     highlights: string[];
     sizes?: string[];
+    variants?: {
+      size: string;
+      price: number;
+      stock: number;
+      discount_price?: number;
+    }[];
     colors?: {
       id: string;
       name: string;
@@ -82,6 +88,20 @@ export default function ProductInfoSidebar({
 
     if (product.colors?.length && !selectedColor) {
       toast.error("Please select a color");
+      return;
+    }
+
+    // Check stock for variant
+    if (activeVariant && quantity > activeVariant.stock) {
+      toast.error(
+        `Only ${activeVariant.stock} items left in stock for this size`,
+      );
+      return;
+    }
+
+    // Check main stock if no variant?
+    if (!activeVariant && quantity > product.stock) {
+      toast.error(`Only ${product.stock} items left in stock`);
       return;
     }
 
@@ -127,6 +147,28 @@ export default function ProductInfoSidebar({
     }
   };
 
+  const getActiveVariant = () => {
+    if (!product.variants?.length || !selectedSize) return null;
+    return product.variants.find((v) => v.size === selectedSize);
+  };
+
+  const activeVariant = getActiveVariant();
+  // Actually, if variant has discount_price, currentPrice should be discount_price.
+  // My backend logic: price = min(price), discount_price = ...
+  // Let's refine:
+  // Entity: variants: { price, discount_price }
+  // If variant has discount_price, that's the sale price.
+
+  const displayPrice = activeVariant
+    ? activeVariant.discount_price || activeVariant.price
+    : product.price;
+
+  const displayOriginalPrice = activeVariant?.discount_price
+    ? activeVariant.price
+    : product.originalPrice;
+
+  const currentStock = activeVariant ? activeVariant.stock : product.stock;
+
   return (
     <motion.div
       initial={{ opacity: 0, x: 20 }}
@@ -156,18 +198,18 @@ export default function ProductInfoSidebar({
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex items-baseline gap-2">
             <span className="text-4xl font-black text-primary">
-              ₦{Number(product.price).toLocaleString()}
+              ₦{Number(displayPrice).toLocaleString()}
             </span>
-            {product.originalPrice && (
+            {displayOriginalPrice && (
               <span className="text-xl font-medium text-muted-foreground line-through decoration-rose-500/30">
-                ₦{Number(product.originalPrice).toLocaleString()}
+                ₦{Number(displayOriginalPrice).toLocaleString()}
               </span>
             )}
           </div>
-          {product.stock > 0 ? (
+          {currentStock > 0 ? (
             <div className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-bold text-sm bg-emerald-50 dark:bg-emerald-950/30 px-3 py-1 rounded-full border border-emerald-100 dark:border-emerald-900/50">
               <PackageCheck className="w-4 h-4" />
-              In Stock
+              In Stock {activeVariant && `(${currentStock})`}
             </div>
           ) : (
             <div className="flex items-center gap-1.5 text-rose-600 dark:text-rose-400 font-bold text-sm bg-rose-50 dark:bg-rose-950/30 px-3 py-1 rounded-full border border-rose-100 dark:border-rose-900/50">
@@ -321,7 +363,7 @@ export default function ProductInfoSidebar({
           <div className="flex flex-1 gap-3">
             <Button
               size="lg"
-              disabled={product.stock <= 0 || addingToCart}
+              disabled={currentStock <= 0 || addingToCart}
               onClick={handleAddToCart}
               className="flex-1 rounded-[1.25rem] bg-emerald-600 text-white hover:bg-emerald-700 h-14 text-base font-black shadow-xl shadow-emerald-200/20 group relative overflow-hidden active:scale-95 transition-all"
             >

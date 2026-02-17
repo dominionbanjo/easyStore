@@ -42,9 +42,9 @@ import { BasicInfoSection } from "../components/add-products/BasicInfoSection";
 import { ActionsSection } from "../components/add-products/ActionsSection";
 import { ChipsSection } from "../components/add-products/ChipsSection";
 import { ImageSection } from "../components/add-products/ImageSection";
-import { PricingSection } from "../components/add-products/PricingSection";
 import { ShippingSection } from "../components/add-products/ShippingSection";
 import { SpecsSection } from "../components/add-products/SpecsSection";
+import { Wrapper as PricingSectionWrapper } from "@/modules/vendor/components/add-products/PricingSectionWrapper";
 import { cn } from "@/lib/utils";
 
 export default function AddProductPage() {
@@ -118,6 +118,10 @@ export default function AddProductPage() {
       setValue(key as any, value),
     );
 
+    if (normalizedExtras.variants && normalizedExtras.variants.length > 0) {
+      setValue("variants", [...normalizedExtras.variants]);
+    }
+
     extras.setImage(normalizedExtras.image);
     extras.setGallery(normalizedExtras.gallery);
     extras.setTags(normalizedExtras.tags);
@@ -177,6 +181,7 @@ export default function AddProductPage() {
       highlights,
       sizes,
       specItems,
+      variants: values.variants || [],
     });
 
     try {
@@ -265,143 +270,149 @@ export default function AddProductPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Main Content */}
-          <div className="lg:col-span-8 space-y-8">
-            {/* Identity Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-            >
-              <Card className="border-border/40 shadow-sm overflow-hidden rounded-[2.5rem]">
-                <CardHeader className="bg-muted/30 pb-4 border-b border-border/40">
-                  <div className="flex items-center gap-4">
-                    <div className="h-9 w-9 rounded-xl bg-background flex items-center justify-center shadow-sm">
-                      <Settings className="h-5 w-5 text-primary" />
-                    </div>
-                    <CardTitle className="text-lg font-black uppercase tracking-tight">
-                      Store Identity
-                    </CardTitle>
+        <div className="flex flex-col gap-8 max-w-4xl mx-auto">
+          {/* Identity Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <Card className="border-border/40 shadow-sm overflow-hidden rounded-[2.5rem]">
+              <CardHeader className="bg-muted/30 pb-4 border-b border-border/40">
+                <div className="flex items-center gap-4">
+                  <div className="h-9 w-9 rounded-xl bg-background flex items-center justify-center shadow-sm">
+                    <Settings className="h-5 w-5 text-primary" />
                   </div>
-                </CardHeader>
-                <CardContent className="p-5 sm:p-8 space-y-8">
-                  <BasicInfoSection />
-                </CardContent>
-              </Card>
-            </motion.div>
+                  <CardTitle className="text-lg font-black uppercase tracking-tight">
+                    Store Identity
+                  </CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent className="p-5 sm:p-8 space-y-8">
+                <BasicInfoSection
+                  sizes={extras.sizes}
+                  setSizes={extras.setSizes}
+                />
+              </CardContent>
+            </Card>
+          </motion.div>
 
-            {/* Visuals Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-            >
-              <Card className="border-border/40 shadow-sm overflow-hidden rounded-[2.5rem]">
-                <CardHeader className="bg-muted/30 pb-4 border-b border-border/40">
-                  <div className="flex items-center gap-4">
-                    <div className="h-9 w-9 rounded-xl bg-background flex items-center justify-center shadow-sm">
-                      <ImageIcon className="h-5 w-5 text-primary" />
-                    </div>
-                    <CardTitle className="text-lg font-black uppercase tracking-tight">
-                      Product Visuals
-                    </CardTitle>
+          {/* Visuals Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+          >
+            <Card className="border-border/40 shadow-sm overflow-hidden rounded-[2.5rem]">
+              <CardHeader className="bg-muted/30 pb-4 border-b border-border/40">
+                <div className="flex items-center gap-4">
+                  <div className="h-9 w-9 rounded-xl bg-background flex items-center justify-center shadow-sm">
+                    <ImageIcon className="h-5 w-5 text-primary" />
                   </div>
-                </CardHeader>
-                <CardContent className="p-5 sm:p-8">
-                  <ImageSection {...extras} />
-                </CardContent>
-              </Card>
-            </motion.div>
+                  <CardTitle className="text-lg font-black uppercase tracking-tight">
+                    Product Visuals
+                  </CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent className="p-5 sm:p-8">
+                <ImageSection {...extras} />
+              </CardContent>
+            </Card>
+          </motion.div>
 
-            {/* Specs & Attributes */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-            >
-              <Card className="border-border/40 shadow-sm overflow-hidden rounded-[2.5rem]">
-                <CardHeader className="bg-muted/30 pb-4 border-b border-border/40">
-                  <div className="flex items-center gap-4">
-                    <div className="h-9 w-9 rounded-xl bg-background flex items-center justify-center shadow-sm">
-                      <Layers className="h-5 w-5 text-primary" />
-                    </div>
+          {/* Pricing Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <Card className="border-border/40 shadow-sm overflow-hidden rounded-[2.5rem]">
+              <CardHeader className="bg-muted/30 pb-4 border-b border-border/40">
+                <div className="flex items-center gap-4">
+                  <div className="h-9 w-9 rounded-xl bg-background flex items-center justify-center shadow-sm">
+                    <Tag className="h-5 w-5 text-primary" />
+                  </div>
+                  <CardTitle className="text-lg font-black uppercase tracking-tight">
+                    Pricing & Stock
+                  </CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent className="p-5 sm:p-8">
+                <PricingSectionWrapper {...extras} />
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* Specifications Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            <Card className="border-border/40 shadow-sm overflow-hidden rounded-[2.5rem]">
+              <CardHeader className="bg-muted/30 pb-4 border-b border-border/40">
+                <div className="flex items-center gap-4">
+                  <div className="h-9 w-9 rounded-xl bg-background flex items-center justify-center shadow-sm">
+                    <Layers className="h-5 w-5 text-primary" />
+                  </div>
+                  <div className="flex items-center gap-2">
                     <CardTitle className="text-lg font-black uppercase tracking-tight">
                       Specifications
                     </CardTitle>
+                    <span className="text-xs font-medium text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
+                      Optional
+                    </span>
                   </div>
-                </CardHeader>
-                <CardContent className="p-5 sm:p-8 space-y-10">
-                  <SpecsSection {...extras} />
-                  <Separator className="bg-border/40" />
-                  <ChipsSection {...extras} />
-                </CardContent>
-              </Card>
-            </motion.div>
-          </div>
+                </div>
+              </CardHeader>
+              <CardContent className="p-5 sm:p-8 space-y-10">
+                <SpecsSection {...extras} />
+                <Separator className="bg-border/40" />
+                <ChipsSection {...extras} />
+              </CardContent>
+            </Card>
+          </motion.div>
 
-          {/* Sidebar Content */}
-          <div className="lg:col-span-4 space-y-8">
-            {/* Pricing Card */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3 }}
-            >
-              <Card className="border-border/40 shadow-sm overflow-hidden rounded-[2.5rem]">
-                <CardHeader className="bg-muted/30 pb-4 border-b border-border/40">
-                  <div className="flex items-center gap-4">
-                    <div className="h-9 w-9 rounded-xl bg-background flex items-center justify-center shadow-sm">
-                      <Tag className="h-5 w-5 text-primary" />
-                    </div>
-                    <CardTitle className="text-lg font-black uppercase tracking-tight">
-                      Pricing & Stock
-                    </CardTitle>
+          {/* Logistics Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+          >
+            <Card className="border-border/40 shadow-sm overflow-hidden rounded-[2.5rem]">
+              <CardHeader className="bg-muted/30 pb-4 border-b border-border/40">
+                <div className="flex items-center gap-4">
+                  <div className="h-9 w-9 rounded-xl bg-background flex items-center justify-center shadow-sm">
+                    <Truck className="h-5 w-5 text-primary" />
                   </div>
-                </CardHeader>
-                <CardContent className="p-4 sm:p-6">
-                  <PricingSection />
-                </CardContent>
-              </Card>
-            </motion.div>
-
-            {/* Logistics Card */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.4 }}
-            >
-              <Card className="border-border/40 shadow-sm overflow-hidden rounded-[2.5rem]">
-                <CardHeader className="bg-muted/30 pb-4 border-b border-border/40">
-                  <div className="flex items-center gap-4">
-                    <div className="h-9 w-9 rounded-xl bg-background flex items-center justify-center shadow-sm">
-                      <Truck className="h-5 w-5 text-primary" />
-                    </div>
+                  <div className="flex items-center gap-2">
                     <CardTitle className="text-lg font-black uppercase tracking-tight">
                       Logistics
                     </CardTitle>
+                    <span className="text-xs font-medium text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
+                      Optional
+                    </span>
                   </div>
-                </CardHeader>
-                <CardContent className="p-4 sm:p-6">
-                  <ShippingSection />
-                </CardContent>
-              </Card>
-            </motion.div>
+                </div>
+              </CardHeader>
+              <CardContent className="p-5 sm:p-8">
+                <ShippingSection />
+              </CardContent>
+            </Card>
+          </motion.div>
 
-            {/* Sticky Actions */}
-            <div className="sticky top-24 pt-4">
-              <ActionsSection
-                creating={creating || updating}
-                onCreate={onSubmit}
-                submitLabel={isEditMode ? "Update Product" : "Publish Product"}
-                disabled={!canSubmit}
-              />
-              {!canSubmit && (
-                <p className="text-[10px] text-center mt-4 font-bold text-muted-foreground uppercase tracking-widest px-4">
-                  Please complete and upload at least 2 gallery images to
-                  publish.
-                </p>
-              )}
-            </div>
+          {/* Bottom Actions */}
+          <div className="pt-8 border-t border-border/40">
+            <ActionsSection
+              creating={creating || updating}
+              onCreate={onSubmit}
+              submitLabel={isEditMode ? "Update Product" : "Publish Product"}
+              disabled={!canSubmit}
+            />
+            {!canSubmit && (
+              <p className="text-[10px] text-center mt-4 font-bold text-muted-foreground uppercase tracking-widest px-4">
+                Please complete and upload at least 2 gallery images to publish.
+              </p>
+            )}
           </div>
         </div>
       </form>
