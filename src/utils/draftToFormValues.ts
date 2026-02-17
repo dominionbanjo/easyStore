@@ -26,6 +26,12 @@ export type BuildCreatePayloadArgs = {
   tags: string[];
   highlights: string[];
   sizes: string[];
+  variants: {
+    size: string;
+    price: number;
+    stock: number;
+    discount_price?: number;
+  }[];
   specItems: SpecItem[];
 };
 
@@ -39,14 +45,15 @@ export function buildCreateProductPayload(
     name: values.name,
     description: values.description,
 
-    price: values.price!,
-    stock: values.stock!,
-    discount_price: values.discount_price,
+    price: args.variants?.length ? undefined : (values.price ?? undefined),
+    stock: args.variants?.length ? undefined : (values.stock ?? undefined),
+    discount_price: args.variants?.length ? undefined : values.discount_price,
 
     tags,
     highlights,
     sizes,
-    colors: values.colors?.map((c) => c.id),
+    variants: args.variants,
+    colors: values.colors?.map((c: any) => c.id),
 
     specs: buildSpecsObject(specItems),
 

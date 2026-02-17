@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,6 +12,8 @@ import { draftToSpecs } from "../../utils/addProduct.helpers";
 
 export function useAddProductForm(extras: any) {
   const draft = useSelector((s: RootState) => s.productDraft.data);
+  const dispatch = useDispatch();
+  const hasHydrated = useRef(false);
 
   const methods = useForm<AddProductFormInput>({
     resolver: zodResolver(addProductSchema),
@@ -22,33 +24,48 @@ export function useAddProductForm(extras: any) {
     },
   });
 
-  const { reset, watch } = methods;
+  const { reset, watch, getValues } = methods;
+  const watchedValues = watch();
 
   // Auto-save form values to Redux draft (debounced)
-  const watchedValues = watch();
-  const dispatch = useDispatch();
-
   useEffect(() => {
     const timer = setTimeout(() => {
-      // We only sync the main form fields here.
-      // Extras (images, gallery, etc.) are handled by their own setters in the Page component.
+      // Avoid saving during initial hydration
+      if (!hasHydrated.current) return;
       dispatch(updateProductDraft(watchedValues as any));
     }, 1000);
 
     return () => clearTimeout(timer);
   }, [watchedValues, dispatch]);
 
+  // Sync / Hydrate from Draft
   useEffect(() => {
     if (!draft) return;
 
-    // reset() handles all standard form fields (including shipping_cost, notes etc)
-    // We only reset if the draft ID matches (to avoid cross-product contamination) or if no ID
+    // IMPORTANT: Only reset if the draft represents a different product
+    // or if we haven't hydrated at all yet.
+    // This prevents focus loss caused by reset() during auto-saves.
+    const currentId = getValues("id" as any);
+
+    // Check if product is the same (handles both having same ID or both being undefined/new)
+    if (hasHydrated.current && currentId === draft.id) {
+      return;
+    }
+
     reset({
       ...draft,
-      colors: draft.colors ?? [],
-    });
+      colors: draft.colors ? [...draft.colors] : [],
+      variants: draft.variants
+        ? draft.variants.map((v: any) => ({ ...v }))
+        : [],
+      tags: draft.tags ? [...draft.tags] : [],
+      highlights: draft.highlights ? [...draft.highlights] : [],
+      sizes: draft.sizes ? [...draft.sizes] : [],
+    } as any);
 
-    // Handle extras (complex states not directly in useForm)
+    hasHydrated.current = true;
+
+    // Handle extras (complex states managed by parent)
     if (draft.image) extras.setImage(draft.image);
     if (draft.gallery) extras.setGallery(draft.gallery);
     if (draft.specs) extras.setSpecs(draftToSpecs(draft.specs));
@@ -64,6 +81,7 @@ export function useAddProductForm(extras: any) {
     extras.setTags,
     extras.setHighlights,
     extras.setSizes,
+    getValues,
   ]);
 
   return methods;

@@ -39,6 +39,12 @@ export interface IProduct {
     hex: string;
   }[];
   sizes?: string[];
+  variants?: {
+    size: string;
+    price: number;
+    stock: number;
+    discount_price?: number;
+  }[];
   category?: string;
   on_sale?: boolean;
 }
@@ -265,6 +271,9 @@ export interface IStoreProduct {
 
   colors: string[] | null;
   sizes: string[] | null;
+  variants:
+    | { size: string; price: number; stock: number; discount_price?: number }[]
+    | null;
 
   shipping_note: string | null;
   returns_note: string | null;
@@ -309,8 +318,8 @@ export type CreateProductCloudinaryArgs = {
   /* ───────── REQUIRED CORE ───────── */
   category_id: string;
   name: string;
-  price: number;
-  stock: number;
+  price?: number;
+  stock?: number;
 
   /* ───────── OPTIONAL DETAILS ───────── */
   description?: string;
@@ -320,6 +329,12 @@ export type CreateProductCloudinaryArgs = {
   tags?: string[];
   highlights?: string[];
   sizes?: string[];
+  variants?: {
+    size: string;
+    price: number;
+    stock: number;
+    discount_price?: number;
+  }[];
   colors?: string[]; // color IDs only
 
   /* ───────── SPECIFICATIONS ───────── */
@@ -404,6 +419,9 @@ export interface VendorProductSearchItem {
   specs: Record<string, any> | null;
   colors: unknown | null;
   sizes: unknown | null;
+  variants:
+    | { size: string; price: number; stock: number; discount_price?: number }[]
+    | null;
 
   shipping_note: string | null;
   returns_note: string | null;

@@ -128,7 +128,7 @@ export function CategorySelect({
                 type="button"
                 onClick={() => setOpen((o) => !o)}
                 className={cn(
-                  "w-full h-10 rounded-xl border px-3 flex items-center justify-between text-left text-sm transition-all duration-200 bg-muted/20 border-muted-foreground/10 focus:bg-background",
+                  "w-full h-12 rounded-xl border px-3 flex items-center justify-between text-left text-[15px] transition-all duration-200 bg-muted/20 border-muted-foreground/10 focus:bg-background",
                   icon ? "pl-11" : "px-4",
                   !field.value && "text-muted-foreground",
                 )}
@@ -142,7 +142,7 @@ export function CategorySelect({
 
             {/* Dropdown */}
             {open && (
-              <div className="absolute z-50 mt-2 w-full rounded-lg border bg-background shadow-lg">
+              <div className="absolute z-50 mt-2 w-full rounded-lg border bg-background shadow-lg overflow-hidden">
                 {/* Search */}
                 <div className="p-2 border-b space-y-2">
                   <div className="relative">
@@ -172,7 +172,7 @@ export function CategorySelect({
                 </div>
 
                 {/* Content */}
-                <div className="max-h-72 overflow-y-auto">
+                <div className="max-h-72 overflow-y-auto custom-scrollbar">
                   {isLoading && (
                     <div className="p-4 space-y-2">
                       <Skeleton className="h-4 w-1/2" />

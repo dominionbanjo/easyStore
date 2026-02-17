@@ -10,7 +10,8 @@ interface FormFieldProps {
   name: string;
   type?: string;
   placeholder?: string;
-  className?: string;
+  className?: string; // Wrapper className
+  inputClassName?: string; // Input className
   icon?: React.ReactNode;
 }
 
@@ -20,6 +21,7 @@ export function FormInput({
   type = "text",
   placeholder,
   className,
+  inputClassName,
   icon,
 }: FormFieldProps) {
   const {
@@ -31,8 +33,17 @@ export function FormInput({
   const isPassword = type === "password";
   const inputType = isPassword ? (showPassword ? "text" : "password") : type;
 
-  const error = errors[name]?.message as string | undefined;
-  const shouldShowError = !!error && (touchedFields[name] || submitCount > 0);
+  const getNestedError = (obj: any, path: string) => {
+    return path
+      .split(/[.[\]]/)
+      .filter(Boolean)
+      .reduce((acc, part) => acc?.[part], obj);
+  };
+
+  const errorObj = getNestedError(errors, name);
+  const error = errorObj?.message as string | undefined;
+  const shouldShowError =
+    !!error && (getNestedError(touchedFields, name) || submitCount > 0);
 
   return (
     <div className={cn("space-y-1.5", className)}>
@@ -76,6 +87,7 @@ export function FormInput({
             isPassword && "pr-10",
             shouldShowError &&
               "border-destructive ring-0 focus-visible:ring-destructive/30",
+            inputClassName,
           )}
         />
         {isPassword && (

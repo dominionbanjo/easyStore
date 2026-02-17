@@ -40,7 +40,7 @@ interface ColorMultiSelectProps {
 
 export function ColorMultiSelect({
   name,
-  label = "Colors",
+  label = "Colors (Optional)",
   className,
   icon,
 }: ColorMultiSelectProps) {

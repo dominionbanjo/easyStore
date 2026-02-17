@@ -25,6 +25,12 @@ export interface ProductDraftData {
   tags?: string[];
   highlights?: string[];
   sizes?: string[];
+  variants?: {
+    size: string;
+    price: number;
+    stock: number;
+    discount_price?: number;
+  }[];
   colors?: DraftColor[];
 
   specs?: Record<string, string>;

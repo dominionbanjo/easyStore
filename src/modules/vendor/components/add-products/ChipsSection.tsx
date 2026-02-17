@@ -4,10 +4,8 @@ import ChipSection from "./ChipSection";
 export function ChipsSection({
   tags,
   highlights,
-  sizes,
   setTags,
   setHighlights,
-  setSizes,
 }: any) {
   return (
     <>
@@ -23,13 +21,6 @@ export function ChipsSection({
         values={highlights}
         onAdd={(v) => addChip(v, setHighlights)}
         onRemove={(v) => removeChip(v, setHighlights)}
-      />
-
-      <ChipSection
-        label="Sizes"
-        values={sizes}
-        onAdd={(v) => addChip(v, setSizes)}
-        onRemove={(v) => removeChip(v, setSizes)}
       />
     </>
   );

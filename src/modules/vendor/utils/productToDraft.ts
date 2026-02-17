@@ -2,7 +2,6 @@ import type {
   IProductDetails,
   IProductImage,
 } from "@/types/product/productTypes";
-import type { UploadedImage } from "@/modules/vendor/components/add-products/ImageUploadSection";
 
 function isProductImage(
   image: string | IProductImage | null | undefined,
@@ -25,20 +24,21 @@ export function productToDraft(product: IProductDetails) {
       shipping_note: product.shipping_note ?? undefined,
       returns_note: product.returns_note ?? undefined,
 
-      colors: product.colors ?? [],
+      colors: [...(product.colors ?? [])],
     },
 
     extras: {
-      tags: product.tags ?? [],
-      highlights: product.highlights ?? [],
-      sizes: product.sizes ?? [],
-      specs: product.specs ?? {},
+      tags: [...(product.tags ?? [])],
+      highlights: [...(product.highlights ?? [])],
+      sizes: [...(product.sizes ?? [])],
+      variants: product.variants ? product.variants.map((v) => ({ ...v })) : [],
+      specs: product.specs ? { ...product.specs } : {},
 
       image: isProductImage(product.image)
-        ? ({
+        ? {
             url: product.image.url,
             public_id: product.image.public_id,
-          } satisfies UploadedImage)
+          }
         : null,
 
       gallery:
