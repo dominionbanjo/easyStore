@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import SmartLink from "@/components/shared/SmartLink";
 import type { RootState } from "@/store";
 import { motion, AnimatePresence } from "framer-motion";
+import { buildRoute } from "@/routes/index";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -26,6 +27,7 @@ import {
   useAddToWishlistMutation,
   useRemoveFromWishlistMutation,
 } from "@/services/wishlistApi";
+import { addToLocalCart } from "@/features/cartSlice";
 
 interface ProductInfoSidebarProps {
   product: {
@@ -61,6 +63,7 @@ export default function ProductInfoSidebar({
   product,
 }: ProductInfoSidebarProps) {
   const { isAuthenticated } = useSelector((state: RootState) => state.user);
+  const dispatch = useDispatch();
 
   const [quantity, setQuantity] = useState(1);
   const [liked, setLiked] = useState<boolean>(Boolean(product.is_in_wishlist));
@@ -76,11 +79,6 @@ export default function ProductInfoSidebar({
   const [removeFromWishlist] = useRemoveFromWishlistMutation();
 
   const handleAddToCart = async () => {
-    if (!isAuthenticated) {
-      toast.error("Please login to add items to cart");
-      return;
-    }
-
     if (product.sizes?.length && !selectedSize) {
       toast.error("Please select a size");
       return;
@@ -102,6 +100,36 @@ export default function ProductInfoSidebar({
     // Check main stock if no variant?
     if (!activeVariant && quantity > product.stock) {
       toast.error(`Only ${product.stock} items left in stock`);
+      return;
+    }
+
+    // Check main stock if no variant?
+    if (!activeVariant && quantity > product.stock) {
+      toast.error(`Only ${product.stock} items left in stock`);
+      return;
+    }
+
+    if (!isAuthenticated) {
+      dispatch(
+        addToLocalCart({
+          product_id: product.id,
+          vendor_id: "local",
+          name: product.name,
+          slug: product.name.toLowerCase().replace(/\s+/g, "-"),
+          price: activeVariant ? activeVariant.price : product.price,
+          discount_price: activeVariant
+            ? activeVariant.discount_price
+            : product.originalPrice
+              ? product.price
+              : null,
+          quantity,
+          size: selectedSize,
+          color: selectedColor?.name,
+          color_hex: selectedColor?.hex,
+          image: product.image,
+        }),
+      );
+      toast.success(`${product.name} added to cart`);
       return;
     }
 
@@ -153,11 +181,6 @@ export default function ProductInfoSidebar({
   };
 
   const activeVariant = getActiveVariant();
-  // Actually, if variant has discount_price, currentPrice should be discount_price.
-  // My backend logic: price = min(price), discount_price = ...
-  // Let's refine:
-  // Entity: variants: { price, discount_price }
-  // If variant has discount_price, that's the sale price.
 
   const displayPrice = activeVariant
     ? activeVariant.discount_price || activeVariant.price
@@ -427,7 +450,7 @@ export default function ProductInfoSidebar({
                 Sold by
               </p>
               <SmartLink
-                to={`/stores/${product.storeSlug}`}
+                to={buildRoute.storeDetails(product.storeSlug)}
                 className="text-sm font-black text-foreground truncate max-w-[120px] hover:text-primary transition-colors cursor-pointer block"
               >
                 {product.vendor}

@@ -89,6 +89,8 @@ export interface IStoreDetails {
   address_state: string | null;
   address_country: string | null;
   address_postal_code: string | null;
+  setup_stage: number;
+  last_bank_update: string | null;
   bank_code: string | null;
   account_number: string | null;
   bank_name: string | null;

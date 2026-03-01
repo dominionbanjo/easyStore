@@ -21,14 +21,7 @@ export function useStoreSetup() {
         title: "Store Name",
         description: "Your store needs a name to be identified by customers.",
         isCompleted: !!store.store_name,
-        impact: 20,
-      },
-      {
-        id: "category",
-        title: "Store Category",
-        description: "Help customers find you by selecting a category.",
-        isCompleted: !!store.category,
-        impact: 10,
+        impact: 30,
       },
       {
         id: "description",

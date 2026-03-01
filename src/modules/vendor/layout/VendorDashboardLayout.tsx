@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import { toast } from "sonner";
@@ -10,9 +10,11 @@ import type { RootState } from "@/store";
 import DashboardSidebar from "../components/DashboardSidebar";
 import DashboardHeader from "../components/DashboardHeader";
 import LoadingScreen from "@/Loading";
+import { AUTH_ROUTES } from "@/routes/temp";
 
 export default function VendorDashboardLayout() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -27,7 +29,12 @@ export default function VendorDashboardLayout() {
     // ⛔ Not authenticated
     if (!token && !isAuthenticated && !isLoading) {
       toast.error("You must be logged in to access this page");
-      navigate("/", { replace: true });
+      const redirectPath = encodeURIComponent(
+        location.pathname + location.search,
+      );
+      navigate(`${AUTH_ROUTES.LOGIN}?redirect=${redirectPath}`, {
+        replace: true,
+      });
       return;
     }
 

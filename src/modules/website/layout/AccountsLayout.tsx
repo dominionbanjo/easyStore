@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
 
@@ -7,9 +7,11 @@ import Header from "@/components/shared/Header";
 import Footer from "@/components/shared/Footer";
 import type { RootState } from "@/store";
 import LoadingScreen from "@/Loading";
+import { AUTH_ROUTES } from "@/routes/temp";
 
 export default function AccountsLayout() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { isAuthenticated, isLoading } = useSelector(
     (state: RootState) => state.user,
@@ -18,11 +20,16 @@ export default function AccountsLayout() {
   const token = Cookies.get("token");
 
   useEffect(() => {
-    // 🚫 No token + not authenticated → redirect to landing
+    // 🚫 No token + not authenticated → redirect to login
     if (!token && !isAuthenticated && !isLoading) {
-      navigate("/", { replace: true });
+      const redirectPath = encodeURIComponent(
+        location.pathname + location.search,
+      );
+      navigate(`${AUTH_ROUTES.LOGIN}?redirect=${redirectPath}`, {
+        replace: true,
+      });
     }
-  }, [token, isAuthenticated, isLoading, navigate]);
+  }, [token, isAuthenticated, isLoading, navigate, location]);
 
   // ⏳ While auth is resolving, block UI
   if (isLoading || (token && !isAuthenticated)) {

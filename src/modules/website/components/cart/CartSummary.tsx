@@ -109,7 +109,7 @@ export function CartSummary({
       <CardFooter className="px-5 pb-5 flex flex-col gap-3">
         <SmartLink to={previewHref} className="w-full">
           <Button className="w-full rounded-2xl h-12 text-base font-bold shadow-lg shadow-primary/20">
-            Preview Orders
+            Checkout
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </SmartLink>

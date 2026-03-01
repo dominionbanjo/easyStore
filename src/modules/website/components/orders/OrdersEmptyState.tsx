@@ -23,7 +23,7 @@ export function OrdersEmptyState() {
         order to see it here.
       </p>
 
-      <SmartLink to={WEBSITE_ROUTES.HOME}>
+      <SmartLink to={WEBSITE_ROUTES.DISCOVERY}>
         <Button
           size="lg"
           className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20 rounded-2xl h-12 px-8 font-bold flex items-center gap-2"

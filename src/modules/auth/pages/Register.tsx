@@ -38,6 +38,7 @@ export default function SignupPage() {
   const [registerUser, { isLoading }] = useRegisterMutation();
   const [searchParams] = useSearchParams();
   const role = searchParams.get("role");
+  const redirectTo = searchParams.get("redirect") || "/";
 
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(SignupSchema),
@@ -105,7 +106,7 @@ export default function SignupPage() {
       navigate(
         `${AUTH_ROUTES.VERIFY_OTP}?email=${encodeURIComponent(
           res.data.user.email,
-        )}`,
+        )}&redirect=${encodeURIComponent(redirectTo)}`,
       );
     } catch (error: any) {
       toast.error(error?.data?.message || "Signup failed. Please try again.");
@@ -314,7 +315,7 @@ export default function SignupPage() {
       <div className="mt-8 text-center text-sm text-muted-foreground">
         Already have an account?{" "}
         <Link
-          to={AUTH_ROUTES.LOGIN}
+          to={`${AUTH_ROUTES.LOGIN}?redirect=${encodeURIComponent(redirectTo)}`}
           className="text-primary font-semibold hover:underline"
         >
           Log in

@@ -54,15 +54,15 @@ export default function App() {
             <Route path="featured" element={<Pages.FeaturedProductsPage />} />
             <Route path="trending" element={<Pages.TrendingProductsPage />} />
             <Route path="new-arrivals" element={<Pages.NewArrivalsPage />} />
+            <Route path="cart" element={<Pages.CartPage />} />
+            <Route path="cart/preview" element={<Pages.CheckoutPage />} />
           </Route>
 
           {/* ─── ACCOUNT ─── */}
           <Route path="/account" element={<AccountsLayout />}>
             <Route path="profile" element={<Pages.UserProfilePage />} />
             <Route path="settings" element={<Pages.SettingsPage />} />
-            <Route path="cart" element={<Pages.CartPage />} />
             <Route path="wishlist" element={<Pages.WishlistPage />} />
-            <Route path="cart/preview" element={<Pages.CheckoutPage />} />
             <Route
               path="verify-payment"
               element={<Pages.VerifyPaymentPage />}

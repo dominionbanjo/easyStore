@@ -46,44 +46,40 @@ export function StatCard({
           className,
         )}
       >
-        <CardContent className="p-4 sm:p-5 flex flex-col z-10 relative">
-          {/* Header: Title & Secondary Icon */}
-          <div className="flex items-center justify-between w-full mb-2">
-            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.15em]">
-              {title}
-            </p>
+        <CardContent className="p-4 sm:p-5 flex flex-col justify-center z-10 relative gap-3">
+          {/* Header & Value */}
+          <div className="flex items-start justify-between w-full">
+            <div className="flex flex-col space-y-1.5 min-w-0 pr-4">
+              <p className="text-[10px] sm:text-xs font-bold text-muted-foreground uppercase tracking-[0.1em] truncate">
+                {title}
+              </p>
+              <h3
+                className={cn(
+                  "font-extrabold tracking-normal text-foreground w-full transition-all duration-300",
+                  value.length > 12
+                    ? "text-base sm:text-lg"
+                    : "text-xl sm:text-2xl",
+                )}
+              >
+                {value}
+              </h3>
+            </div>
             <div
               className={cn(
-                "p-1.5 rounded-lg border transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 shadow-xs",
+                "p-2 shrink-0 rounded-xl border transition-all duration-300 group-hover:scale-110 shadow-sm",
                 colorMap[color],
               )}
             >
-              <Icon className="h-3.5 w-3.5" />
+              <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
             </div>
-          </div>
-
-          {/* Body: Primary Value */}
-          <div className="flex flex-col items-center justify-center w-full py-0.5">
-            <h3
-              className={cn(
-                "font-extrabold tracking-tight text-foreground truncate w-full text-center transition-all duration-300",
-                value.length > 12
-                  ? "text-xl sm:text-2xl"
-                  : value.length > 8
-                    ? "text-2xl sm:text-3xl"
-                    : "text-3xl sm:text-4xl",
-              )}
-            >
-              {value}
-            </h3>
           </div>
 
           {/* Footer: Trend */}
           {trend && (
-            <div className="mt-2 flex items-center justify-center gap-2">
+            <div className="flex items-center gap-2 mt-1">
               <div
                 className={cn(
-                  "flex items-center gap-0.5 text-[10px] font-bold px-2 py-0.5 rounded-full",
+                  "flex items-center gap-0.5 text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded-full",
                   trend.isPositive
                     ? "bg-emerald-500/10 text-emerald-600"
                     : "bg-red-500/10 text-red-600",
@@ -92,7 +88,7 @@ export function StatCard({
                 <span>{trend.isPositive ? "+" : "-"}</span>
                 <span>{trend.value}%</span>
               </div>
-              <span className="text-[10px] font-medium text-muted-foreground">
+              <span className="text-[10px] sm:text-xs font-medium text-muted-foreground">
                 vs last month
               </span>
             </div>

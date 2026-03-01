@@ -169,7 +169,7 @@ export const ProductPreviewPage = lazy(ProductPreviewPageImport);
 export const preloadProductPreviewPage = ProductPreviewPageImport;
 
 const VendorSettingsPageImport = () =>
-  import("@/modules/vendor/pages/SettingsPage");
+  import("@/modules/vendor/pages/StoreSettingsPage");
 export const VendorSettingsPage = lazy(VendorSettingsPageImport);
 export const preloadVendorSettingsPage = VendorSettingsPageImport;
 

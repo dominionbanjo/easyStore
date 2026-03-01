@@ -12,27 +12,11 @@ export function formatCompactNumber(
 ): string {
   if (value === 0) return `${prefix}0`;
 
-  const absValue = Math.abs(value);
+  const formatter = new Intl.NumberFormat("en-US", {
+    notation: "compact",
+    compactDisplay: "short",
+    maximumFractionDigits: 2,
+  });
 
-  if (absValue < 1000) {
-    return `${prefix}${value.toLocaleString(undefined, { maximumFractionDigits: 2 })}`;
-  }
-
-  if (absValue >= 1000 && absValue < 1000000) {
-    const kValue = value / 1000;
-    return `${prefix}${kValue.toLocaleString(undefined, {
-      maximumFractionDigits: 2,
-      minimumFractionDigits: kValue % 1 === 0 ? 0 : 2,
-    })}K`;
-  }
-
-  if (absValue >= 1000000) {
-    const mValue = value / 1000000;
-    return `${prefix}${mValue.toLocaleString(undefined, {
-      maximumFractionDigits: 2,
-      minimumFractionDigits: mValue % 1 === 0 ? 0 : 2,
-    })}M`;
-  }
-
-  return `${prefix}${value.toLocaleString()}`;
+  return `${prefix}${formatter.format(value)}`;
 }

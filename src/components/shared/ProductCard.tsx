@@ -3,15 +3,18 @@ import {
   useContext,
   useState,
   useMemo,
+  useEffect,
   type ReactNode,
 } from "react";
 import { motion } from "framer-motion";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "@/store";
 import { Heart, Star, ShoppingCart, Eye, Check, Loader2 } from "lucide-react";
 import SmartLink from "./SmartLink";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { addToLocalCart } from "@/features/cartSlice";
+import { buildRoute } from "@/routes/index";
 
 import {
   useAddToWishlistMutation,
@@ -113,6 +116,7 @@ const Root = ({
   className,
 }: ProductCardRootProps) => {
   const { isAuthenticated } = useSelector((state: RootState) => state.user);
+  const dispatch = useDispatch();
   const [isFavorited, setIsFavorited] = useState<boolean>(isFavorite);
 
   /* ── API ── */
@@ -126,8 +130,17 @@ const Root = ({
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
 
+  useEffect(() => {
+    setIsFavorited(isFavorite);
+  }, [isFavorite]);
+
   /* ── HANDLERS ── */
   const toggleFavorite = async () => {
+    if (!isAuthenticated) {
+      toast.error("Please login to manage wishlist");
+      return;
+    }
+
     const prev = isFavorited;
     setIsFavorited(!prev);
 
@@ -153,11 +166,6 @@ const Root = ({
   };
 
   const handleAddToCart = async () => {
-    if (!isAuthenticated) {
-      toast.error("Please login to add items to cart");
-      return;
-    }
-
     // If product has variants, require selection
     const hasVariants =
       (colors && colors.length > 0) || (sizes && sizes.length > 0);
@@ -183,6 +191,32 @@ const Root = ({
       }
     }
 
+    if (!isAuthenticated) {
+      // Local cart logic
+      dispatch(
+        addToLocalCart({
+          product_id: id,
+          vendor_id: "local",
+          name,
+          slug,
+          price: parseFloat(price.replace(/[^0-9.]/g, "")),
+          discount_price: discountPrice
+            ? parseFloat(discountPrice.replace(/[^0-9.]/g, ""))
+            : null,
+          quantity: 1,
+          size: selectedSize,
+          color: colors?.find((c) => c.id === selectedColor)?.name,
+          color_hex: colors?.find((c) => c.id === selectedColor)?.hex,
+          image,
+        }),
+      );
+      toast.success(`${name} added to cart`);
+      setShowVariantModal(false);
+      setSelectedSize(null);
+      setSelectedColor(null);
+      return;
+    }
+
     try {
       await addItemToCart({
         product_id: id,
@@ -191,7 +225,7 @@ const Root = ({
         color: selectedColor,
       }).unwrap();
 
-      toast.success("Added to cart! 🛒");
+      toast.success(`${name} added to cart`);
       setShowVariantModal(false);
       setSelectedSize(null);
       setSelectedColor(null);
@@ -257,6 +291,11 @@ const Root = ({
           className,
         )}
       >
+        <SmartLink
+          to={buildRoute.productDetails(slug)}
+          className="absolute inset-0 z-[1]"
+          aria-label={`View ${name}`}
+        />
         {children}
 
         {/* ─── VARIANT SELECTION DIALOG ─── */}
@@ -376,7 +415,6 @@ const Image = () => {
     stock,
     price,
     isOnSale,
-    slug,
   } = useProductCard();
   const isOutOfStock = stock <= 0;
 
@@ -393,13 +431,6 @@ const Image = () => {
 
   return (
     <div className="relative aspect-square w-full rounded-2xl overflow-hidden bg-zinc-50 dark:bg-zinc-800 group-hover:shadow-inner transition-all duration-500">
-      {/* 🔗 Whole Card Link (Stretched) */}
-      <SmartLink
-        to={`/product/${slug}`}
-        className="absolute inset-0 z-[1]"
-        aria-label={`View ${name}`}
-      />
-
       {/* 🏷️ Status Badges (Now on Right) */}
       <div className="absolute top-3 right-3 z-20 flex flex-col items-end gap-2">
         {isOutOfStock ? (
@@ -420,19 +451,21 @@ const Image = () => {
       {/* ❤️ Wishlist Trigger (Now on Left) */}
       <button
         onClick={(e) => {
+          e.preventDefault();
           e.stopPropagation();
           toggleFavorite();
         }}
         aria-label="Toggle wishlist"
-        className="absolute top-3 left-3 z-10 rounded-full bg-white/90 p-2 shadow-sm hover:scale-110 transition active:scale-95 backdrop-blur-sm border border-zinc-200/50"
+        className="absolute top-3 left-3 z-30 p-2 hover:scale-110 transition-transform active:scale-95 drop-shadow-sm"
       >
         <Heart
           className={cn(
-            "w-4 h-4 transition-colors",
+            "w-[22px] h-[22px] transition-colors duration-300",
             isFavorited
               ? "fill-rose-500 stroke-rose-500"
-              : "stroke-zinc-600 hover:stroke-rose-500",
+              : "fill-transparent stroke-zinc-600 dark:stroke-zinc-300 hover:stroke-rose-500",
           )}
+          strokeWidth={2}
         />
       </button>
 
@@ -445,9 +478,9 @@ const Image = () => {
       />
 
       {/* 👁️ Quick Action Overlay */}
-      <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none sm:pointer-events-auto">
-        <div className="flex gap-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] items-center">
-          <div className="p-3 bg-white/95 text-zinc-900 rounded-2xl shadow-2xl backdrop-blur-md flex items-center gap-2 font-medium text-xs hover:bg-emerald-500 hover:text-white transition-colors">
+      <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none z-20">
+        <div className="flex gap-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] items-center pointer-events-auto">
+          <div className="p-3 bg-white/95 text-zinc-900 rounded-2xl shadow-2xl backdrop-blur-md flex items-center gap-2 font-medium text-xs hover:bg-emerald-500 hover:text-white transition-colors cursor-pointer">
             <Eye className="w-4 h-4" />
             <span>Quick View</span>
           </div>
@@ -568,7 +601,9 @@ const Footer = () => {
   return (
     <div className="mt-2 pt-2 px-1 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between gap-3">
       <SmartLink
-        to={storeSlug ? `/stores/${storeSlug}` : `/vendor/${vendor}`}
+        to={
+          storeSlug ? buildRoute.storeDetails(storeSlug) : `/vendor/${vendor}`
+        }
         className="flex items-center gap-2.5 truncate relative z-10 group/vendor"
         onClick={(e) => e.stopPropagation()}
       >

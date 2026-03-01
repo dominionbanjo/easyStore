@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import type { RootState } from "@/store";
 import { Star, MessageSquarePlus, Filter } from "lucide-react";
 import { toast } from "sonner";
+import { useLocation } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -35,13 +36,20 @@ export default function ReviewsSection({
   );
 
   const [open, setOpen] = useState(false);
+  const location = useLocation();
 
   const handleOpenChange = (newOpen: boolean) => {
     if (newOpen && (!isAuthenticated || !currentUser)) {
       toast.error("Please login to share your experience", {
         description: "Redirecting to login page...",
       });
-      setTimeout(() => (window.location.href = "/auth/login"), 1500);
+      const redirectUrl = encodeURIComponent(
+        location.pathname + location.search,
+      );
+      setTimeout(
+        () => (window.location.href = `/auth/login?redirect=${redirectUrl}`),
+        1500,
+      );
       return;
     }
     setOpen(newOpen);
@@ -53,7 +61,7 @@ export default function ReviewsSection({
         {/* ─── Header & Stats ─── */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div className="space-y-1">
-            <h2 className="text-3xl font-black tracking-tight text-gray-900">
+            <h2 className="text-3xl font-black tracking-tight text-foreground">
               Customer Reviews
             </h2>
             <div className="flex items-center gap-4">
