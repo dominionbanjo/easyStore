@@ -13,6 +13,8 @@ import {
   Layers,
   Sparkles,
   ChevronLeft,
+  CheckCircle2,
+  RefreshCw,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -29,7 +31,6 @@ import {
   useGetSingleProductQuery,
   useUpdateProductWithCloudinaryMutation,
 } from "@/services/productApi";
-import { useGetColorsQuery } from "@/services/productDetailsApi";
 import { buildSpecsObject } from "../utils/addProduct.helpers";
 import { buildCreateProductPayload } from "@/utils/draftToFormValues";
 import { productToDraft } from "../utils/productToDraft";
@@ -72,14 +73,15 @@ export default function AddProductPage() {
     formState: { isValid },
   } = methods;
 
-  const draft = useSelector((s: RootState) => s.productDraft.data);
+  const {
+    data: draft,
+    isSyncing,
+    lastSynced,
+  } = useSelector((s: RootState) => s.productDraft);
 
   /* ───────── API ───────── */
   const { data: productData, isLoading: loadingProduct } =
     useGetSingleProductQuery(slug!, { skip: !isEditMode });
-
-  const { data: colorsData, isLoading: loadingColors } = useGetColorsQuery();
-  const allColors = colorsData?.data ?? [];
 
   const productId = productData?.data?.product?.id;
 
@@ -89,14 +91,11 @@ export default function AddProductPage() {
   const [updateProduct, { isLoading: updating }] =
     useUpdateProductWithCloudinaryMutation();
 
-  const { image, gallery, specs: specItems, tags, highlights, sizes } = extras;
+  const { image, gallery, specs: specItems, tags, highlights } = extras;
 
   /* ───────── HYDRATE EDIT MODE ───────── */
   useEffect(() => {
     if (!isEditMode || !productData?.data?.product) return;
-
-    const productHasColors = (productData.data.product.colors?.length ?? 0) > 0;
-    if (productHasColors && loadingColors) return;
 
     if (draft && draft.id === productData.data.product.id) {
       return;
@@ -106,46 +105,31 @@ export default function AddProductPage() {
       productData.data.product,
     );
 
-    const colorValues = (values as any).colors || [];
-    const colorIds = colorValues.map((c: any) =>
-      typeof c === "string" ? c : c.id,
-    );
-    const mappedColors = allColors.filter((c: any) => colorIds.includes(c.id));
-
-    const valuesWithColors = { ...values, colors: mappedColors };
-
-    Object.entries(valuesWithColors).forEach(([key, value]) =>
+    Object.entries(values).forEach(([key, value]) =>
       setValue(key as any, value),
     );
 
+    if (normalizedExtras.options && normalizedExtras.options.length > 0) {
+      setValue("options", [...normalizedExtras.options]);
+    }
     if (normalizedExtras.variants && normalizedExtras.variants.length > 0) {
-      setValue("variants", [...normalizedExtras.variants]);
+      setValue("variants", [...normalizedExtras.variants] as any);
     }
 
     extras.setImage(normalizedExtras.image);
     extras.setGallery(normalizedExtras.gallery);
     extras.setTags(normalizedExtras.tags);
     extras.setHighlights(normalizedExtras.highlights);
-    extras.setSizes(normalizedExtras.sizes);
     extras.setSpecs(specsObjectToItems(normalizedExtras.specs));
 
     dispatch(
       setProductDraft({
-        ...valuesWithColors,
+        ...values,
         ...normalizedExtras,
         id: productData.data.product.id,
       }),
     );
-  }, [
-    isEditMode,
-    productData,
-    allColors,
-    loadingColors,
-    draft,
-    dispatch,
-    setValue,
-    extras,
-  ]);
+  }, [isEditMode, productData, draft, dispatch, setValue, extras]);
 
   /* ───────── PREVIEW ───────── */
   const onPreview = (values: any) => {
@@ -156,7 +140,6 @@ export default function AddProductPage() {
         gallery,
         tags,
         highlights,
-        sizes,
         specs: buildSpecsObject(specItems),
         id: productId,
       }),
@@ -179,8 +162,8 @@ export default function AddProductPage() {
       gallery,
       tags,
       highlights,
-      sizes,
       specItems,
+      options: values.options || [],
       variants: values.variants || [],
     });
 
@@ -201,7 +184,7 @@ export default function AddProductPage() {
   });
 
   /* ───────── LOADING ───────── */
-  if (isEditMode && (loadingProduct || loadingColors)) {
+  if (isEditMode && loadingProduct) {
     return (
       <div className="max-w-5xl mx-auto space-y-8 animate-pulse">
         <Skeleton className="h-12 w-64 rounded-xl" />
@@ -242,14 +225,40 @@ export default function AddProductPage() {
                 <Package className="h-6 w-6 text-primary" />
               </div>
               <div>
-                <h1 className="text-3xl font-black tracking-tight text-foreground">
+                <h1 className="text-3xl font-black tracking-tight text-foreground flex items-center gap-3">
                   {isEditMode ? "Edit Product" : "New Product"}
                 </h1>
-                <p className="text-muted-foreground font-medium">
-                  {isEditMode
-                    ? "Update your existing product information"
-                    : "List a new masterpiece in your store"}
-                </p>
+
+                {/* Auto-save Status Indicator */}
+                <div className="flex items-center gap-3 mt-1">
+                  <div
+                    className={cn(
+                      "flex items-center gap-1.5 transition-all duration-500 px-3 py-0.5 rounded-full border shadow-sm",
+                      isSyncing
+                        ? "bg-amber-500/5 border-amber-500/20 text-amber-600 animate-pulse"
+                        : "bg-emerald-500/5 border-emerald-500/20 text-emerald-600",
+                    )}
+                  >
+                    {isSyncing ? (
+                      <RefreshCw className="h-2.5 w-2.5 animate-spin" />
+                    ) : (
+                      <CheckCircle2 className="h-2.5 w-2.5" />
+                    )}
+                    <span className="text-[9px] font-black uppercase tracking-widest leading-none">
+                      {isSyncing ? "Saving..." : "Draft Saved"}
+                    </span>
+                  </div>
+
+                  {lastSynced && !isSyncing && (
+                    <span className="text-[10px] font-bold text-muted-foreground/30 italic">
+                      at{" "}
+                      {new Date(lastSynced).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -277,21 +286,18 @@ export default function AddProductPage() {
             animate={{ opacity: 1, y: 0 }}
           >
             <Card className="border-border/40 shadow-sm overflow-hidden rounded-[2.5rem]">
-              <CardHeader className="bg-muted/30 pb-4 border-b border-border/40">
+              <CardHeader className="bg-muted/30 p-6 md:p-8 border-b border-border/40">
                 <div className="flex items-center gap-4">
                   <div className="h-9 w-9 rounded-xl bg-background flex items-center justify-center shadow-sm">
                     <Settings className="h-5 w-5 text-primary" />
                   </div>
                   <CardTitle className="text-lg font-black uppercase tracking-tight">
-                    Store Identity
+                    Product Identity
                   </CardTitle>
                 </div>
               </CardHeader>
               <CardContent className="p-5 sm:p-8 space-y-8">
-                <BasicInfoSection
-                  sizes={extras.sizes}
-                  setSizes={extras.setSizes}
-                />
+                <BasicInfoSection />
               </CardContent>
             </Card>
           </motion.div>
@@ -303,7 +309,7 @@ export default function AddProductPage() {
             transition={{ delay: 0.1 }}
           >
             <Card className="border-border/40 shadow-sm overflow-hidden rounded-[2.5rem]">
-              <CardHeader className="bg-muted/30 pb-4 border-b border-border/40">
+              <CardHeader className="bg-muted/30 p-6 md:p-8 border-b border-border/40">
                 <div className="flex items-center gap-4">
                   <div className="h-9 w-9 rounded-xl bg-background flex items-center justify-center shadow-sm">
                     <ImageIcon className="h-5 w-5 text-primary" />
@@ -326,7 +332,7 @@ export default function AddProductPage() {
             transition={{ delay: 0.2 }}
           >
             <Card className="border-border/40 shadow-sm overflow-hidden rounded-[2.5rem]">
-              <CardHeader className="bg-muted/30 pb-4 border-b border-border/40">
+              <CardHeader className="bg-muted/30 p-6 md:p-8 border-b border-border/40">
                 <div className="flex items-center gap-4">
                   <div className="h-9 w-9 rounded-xl bg-background flex items-center justify-center shadow-sm">
                     <Tag className="h-5 w-5 text-primary" />
@@ -337,7 +343,7 @@ export default function AddProductPage() {
                 </div>
               </CardHeader>
               <CardContent className="p-5 sm:p-8">
-                <PricingSectionWrapper {...extras} />
+                <PricingSectionWrapper />
               </CardContent>
             </Card>
           </motion.div>
@@ -349,7 +355,7 @@ export default function AddProductPage() {
             transition={{ delay: 0.3 }}
           >
             <Card className="border-border/40 shadow-sm overflow-hidden rounded-[2.5rem]">
-              <CardHeader className="bg-muted/30 pb-4 border-b border-border/40">
+              <CardHeader className="bg-muted/30 p-6 md:p-8 border-b border-border/40">
                 <div className="flex items-center gap-4">
                   <div className="h-9 w-9 rounded-xl bg-background flex items-center justify-center shadow-sm">
                     <Layers className="h-5 w-5 text-primary" />
@@ -379,7 +385,7 @@ export default function AddProductPage() {
             transition={{ delay: 0.4 }}
           >
             <Card className="border-border/40 shadow-sm overflow-hidden rounded-[2.5rem]">
-              <CardHeader className="bg-muted/30 pb-4 border-b border-border/40">
+              <CardHeader className="bg-muted/30 p-6 md:p-8 border-b border-border/40">
                 <div className="flex items-center gap-4">
                   <div className="h-9 w-9 rounded-xl bg-background flex items-center justify-center shadow-sm">
                     <Truck className="h-5 w-5 text-primary" />

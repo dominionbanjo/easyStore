@@ -8,7 +8,6 @@ export function useProductExtras() {
   const [specs, setSpecs] = useState<SpecItem[]>([]);
   const [tags, setTags] = useState<string[]>([]);
   const [highlights, setHighlights] = useState<string[]>([]);
-  const [sizes, setSizes] = useState<string[]>([]);
 
   return {
     image,
@@ -16,12 +15,10 @@ export function useProductExtras() {
     specs,
     tags,
     highlights,
-    sizes,
     setImage,
     setGallery,
     setSpecs,
     setTags,
     setHighlights,
-    setSizes,
   };
 }

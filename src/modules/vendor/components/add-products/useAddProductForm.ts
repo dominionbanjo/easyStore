@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch, useSelector } from "react-redux";
-import { updateProductDraft } from "@/features/productDraftSlice";
+import { updateProductDraft, setSyncing } from "@/features/productDraftSlice";
 import type { RootState } from "@/store";
 import {
   addProductSchema,
@@ -20,7 +20,6 @@ export function useAddProductForm(extras: any) {
     mode: "onTouched",
     defaultValues: {
       stock: 0,
-      colors: [],
     },
   });
 
@@ -29,10 +28,12 @@ export function useAddProductForm(extras: any) {
 
   // Auto-save form values to Redux draft (debounced)
   useEffect(() => {
+    if (!hasHydrated.current) return;
+
+    dispatch(setSyncing(true));
     const timer = setTimeout(() => {
-      // Avoid saving during initial hydration
-      if (!hasHydrated.current) return;
       dispatch(updateProductDraft(watchedValues as any));
+      dispatch(setSyncing(false));
     }, 1000);
 
     return () => clearTimeout(timer);
@@ -71,7 +72,6 @@ export function useAddProductForm(extras: any) {
     if (draft.specs) extras.setSpecs(draftToSpecs(draft.specs));
     if (draft.tags) extras.setTags(draft.tags);
     if (draft.highlights) extras.setHighlights(draft.highlights);
-    if (draft.sizes) extras.setSizes(draft.sizes);
   }, [
     draft,
     reset,
@@ -80,7 +80,6 @@ export function useAddProductForm(extras: any) {
     extras.setSpecs,
     extras.setTags,
     extras.setHighlights,
-    extras.setSizes,
     getValues,
   ]);
 

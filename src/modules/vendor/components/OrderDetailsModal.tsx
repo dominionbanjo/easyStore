@@ -303,19 +303,33 @@ export function OrderDetailsModal({
                       {item.name}
                     </p>
                     <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs sm:text-sm text-muted-foreground">
-                      {item.size != null && (
-                        <span className="flex items-center gap-1">
-                          <span className="font-medium">Size:</span> {item.size}
-                        </span>
-                      )}
-                      {item.color && (
-                        <span className="flex items-center gap-1">
-                          <span className="font-medium">Color:</span>
-                          <span
-                            className="w-4 h-4 rounded-full border inline-block"
-                            style={{ backgroundColor: item.color }}
-                          />
-                        </span>
+                      {item.variant_options ? (
+                        Object.entries(item.variant_options).map(
+                          ([key, value]) => (
+                            <span key={key} className="flex items-center gap-1">
+                              <span className="font-medium">{key}:</span>{" "}
+                              {value}
+                            </span>
+                          ),
+                        )
+                      ) : (
+                        <>
+                          {item.size != null && (
+                            <span className="flex items-center gap-1">
+                              <span className="font-medium">Size:</span>{" "}
+                              {item.size}
+                            </span>
+                          )}
+                          {item.color && (
+                            <span className="flex items-center gap-1">
+                              <span className="font-medium">Color:</span>
+                              <span
+                                className="w-4 h-4 rounded-full border inline-block"
+                                style={{ backgroundColor: item.color }}
+                              />
+                            </span>
+                          )}
+                        </>
                       )}
                       <span className="flex items-center gap-1">
                         <span className="font-medium">Qty:</span>{" "}

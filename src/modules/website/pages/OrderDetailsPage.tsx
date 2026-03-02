@@ -307,8 +307,20 @@ export default function OrderDetailsPage() {
                           </h3>
                           <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground mb-2">
                             <span>Qty: {item.quantity}</span>
-                            {item.size && <span>Size: {item.size}</span>}
-                            {item.color && <span>Color: {item.color}</span>}
+                            {item.variant_options ? (
+                              Object.entries(item.variant_options).map(
+                                ([key, value]) => (
+                                  <span key={key}>
+                                    {key}: {value}
+                                  </span>
+                                ),
+                              )
+                            ) : (
+                              <>
+                                {item.size && <span>Size: {item.size}</span>}
+                                {item.color && <span>Color: {item.color}</span>}
+                              </>
+                            )}
                           </div>
                           <div className="flex items-center gap-2">
                             <span className="text-lg font-bold text-emerald-600 dark:text-emerald-400">
@@ -690,57 +702,93 @@ export default function OrderDetailsPage() {
               )}
 
               {/* Additional Notes */}
-              {order.notes &&
-                (() => {
-                  try {
-                    const parsedNotes = JSON.parse(order.notes);
-                    // Only show notes if it's not just the platform fee metadata
-                    if (
-                      typeof parsedNotes === "object" &&
-                      !parsedNotes.platform_fee
-                    ) {
-                      return (
-                        <motion.div
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.4, delay: 0.3 }}
-                        >
-                          <Card className="overflow-hidden rounded-2xl border-2 border-gray-100 dark:border-white/5 bg-white dark:bg-neutral-900/50">
-                            <div className="p-6">
-                              <h3 className="text-sm font-bold text-muted-foreground mb-2">
-                                Order Notes
-                              </h3>
-                              <pre className="text-sm text-foreground whitespace-pre-wrap font-sans">
-                                {JSON.stringify(parsedNotes, null, 2)}
+              {order.notes && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: 0.3 }}
+                >
+                  <Card className="overflow-hidden rounded-2xl border-2 border-gray-100 dark:border-white/5 bg-white dark:bg-neutral-900/50">
+                    <div className="p-6">
+                      <h3 className="text-sm font-bold text-muted-foreground mb-4 uppercase tracking-wider">
+                        Order Notes & Metadata
+                      </h3>
+                      {(() => {
+                        try {
+                          const parsed = JSON.parse(order.notes);
+                          if (typeof parsed === "object" && parsed !== null) {
+                            // If it's the platform fee breakdown, show it nicely
+                            if (
+                              parsed.subtotal_kobo ||
+                              parsed.platform_fee_kobo
+                            ) {
+                              return (
+                                <div className="space-y-3 bg-gray-50/50 dark:bg-neutral-800/50 p-4 rounded-xl border border-gray-100 dark:border-white/5">
+                                  <div className="grid grid-cols-2 gap-2 text-sm">
+                                    <span className="text-muted-foreground font-medium">
+                                      Fee Percentage
+                                    </span>
+                                    <span className="text-right font-bold text-foreground">
+                                      {parsed.fee_percentage || 2}%
+                                    </span>
+
+                                    <span className="text-muted-foreground font-medium">
+                                      Subtotal (Kobo)
+                                    </span>
+                                    <span className="text-right font-mono text-foreground">
+                                      {Number(
+                                        parsed.subtotal_kobo,
+                                      ).toLocaleString()}
+                                    </span>
+
+                                    <span className="text-muted-foreground font-medium">
+                                      Platform Fee
+                                    </span>
+                                    <span className="text-right font-bold text-emerald-600 dark:text-emerald-400">
+                                      ₦
+                                      {(
+                                        Number(parsed.platform_fee_kobo) / 100
+                                      ).toLocaleString()}
+                                    </span>
+
+                                    <div className="col-span-2 border-t border-dashed my-1" />
+
+                                    <span className="text-foreground font-bold">
+                                      Total Kobo
+                                    </span>
+                                    <span className="text-right font-mono font-black text-foreground">
+                                      {Number(
+                                        parsed.total_kobo,
+                                      ).toLocaleString()}
+                                    </span>
+                                  </div>
+                                </div>
+                              );
+                            }
+                            // Otherwise show as formatted JSON
+                            return (
+                              <pre className="text-xs bg-gray-50 dark:bg-neutral-800 p-4 rounded-xl overflow-x-auto text-foreground font-mono border border-gray-100 dark:border-white/5">
+                                {JSON.stringify(parsed, null, 2)}
                               </pre>
-                            </div>
-                          </Card>
-                        </motion.div>
-                      );
-                    }
-                    return null;
-                  } catch {
-                    // If notes is not JSON, display as plain text
-                    return (
-                      <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.4, delay: 0.3 }}
-                      >
-                        <Card className="overflow-hidden rounded-2xl border-2 border-gray-100 dark:border-white/5 bg-white dark:bg-neutral-900/50">
-                          <div className="p-6">
-                            <h3 className="text-sm font-bold text-muted-foreground mb-2">
-                              Order Notes
-                            </h3>
-                            <p className="text-sm text-foreground">
+                            );
+                          }
+                          return (
+                            <p className="text-sm text-foreground leading-relaxed">
                               {order.notes}
                             </p>
-                          </div>
-                        </Card>
-                      </motion.div>
-                    );
-                  }
-                })()}
+                          );
+                        } catch {
+                          return (
+                            <p className="text-sm text-foreground leading-relaxed">
+                              {order.notes}
+                            </p>
+                          );
+                        }
+                      })()}
+                    </div>
+                  </Card>
+                </motion.div>
+              )}
             </div>
           </div>
         </div>

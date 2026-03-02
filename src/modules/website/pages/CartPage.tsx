@@ -65,15 +65,34 @@ export default function CartPage() {
 
   const getItemKey = (
     productId: string,
+    variant_id?: string | null,
+    variant_options?: Record<string, string> | null,
     size?: string | null,
     color?: string | null,
-  ) => `${productId}-${size ?? "none"}-${color ?? "none"}`;
+  ) => {
+    if (variant_id) return `${productId}-${variant_id}`;
+    if (variant_options) {
+      const optionsStr = Object.entries(variant_options)
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([k, v]) => `${k}:${v}`)
+        .join("|");
+      return `${productId}-${optionsStr}`;
+    }
+    return `${productId}-${size ?? "none"}-${color ?? "none"}`;
+  };
 
   useEffect(() => {
     const initial: Record<string, number> = {};
     cartItems.forEach((item: ICartItem) => {
-      initial[getItemKey(item.product_id, item.size, item.color)] =
-        item.quantity;
+      initial[
+        getItemKey(
+          item.product_id,
+          item.variant_id,
+          item.variant_options,
+          item.size,
+          item.color,
+        )
+      ] = item.quantity;
     });
     setLocalQty(initial);
   }, [cartItems]);
@@ -87,8 +106,9 @@ export default function CartPage() {
           quantity: number,
           size?: string | null,
           color?: string | null,
+          variant_id?: string | null,
         ) => {
-          updateCartItem({ productId, quantity, size, color })
+          updateCartItem({ productId, quantity, size, color, variant_id })
             .unwrap()
             .catch((err: any) => {
               toast.error(
@@ -125,11 +145,13 @@ export default function CartPage() {
   const handleQuantityChange = (
     productId: string,
     quantity: number,
+    variant_id?: string | null,
+    variant_options?: Record<string, string> | null,
     size?: string | null,
     color?: string | null,
   ) => {
     const safeQty = Math.max(1, quantity);
-    const key = getItemKey(productId, size, color);
+    const key = getItemKey(productId, variant_id, variant_options, size, color);
     setLocalQty((prev) => ({
       ...prev,
       [key]: safeQty,
@@ -141,25 +163,40 @@ export default function CartPage() {
           quantity: safeQty,
           size,
           color,
-        }),
+          variant_id,
+        } as any),
       );
       return;
     }
-    debouncedUpdate(productId, safeQty, size, color);
+    debouncedUpdate(productId, safeQty, size, color, variant_id);
   };
 
   const handleRemove = async (
     productId: string,
+    variant_id?: string | null,
+    _variant_options?: Record<string, string> | null,
     size?: string | null,
     color?: string | null,
   ) => {
     if (!isAuthenticated) {
-      dispatch(removeLocalCartItem({ product_id: productId, size, color }));
+      dispatch(
+        removeLocalCartItem({
+          product_id: productId,
+          size,
+          color,
+          variant_id,
+        } as any),
+      );
       toast.success("Item removed from cart");
       return;
     }
     try {
-      await removeCartItem({ productId, size, color }).unwrap();
+      await removeCartItem({
+        productId,
+        size,
+        color,
+        variant_id,
+      } as any).unwrap();
       toast.success("Item removed from cart");
     } catch (err: any) {
       toast.error(extractErrorMessage(err, "Failed to remove item"));
@@ -223,11 +260,23 @@ export default function CartPage() {
             <div className="space-y-4 px-1 sm:px-0">
               {cartItems.map((item: ICartItem) => (
                 <CartItem
-                  key={getItemKey(item.product_id, item.size, item.color)}
+                  key={getItemKey(
+                    item.product_id,
+                    item.variant_id,
+                    item.variant_options,
+                    item.size,
+                    item.color,
+                  )}
                   item={item}
                   quantity={
                     localQty[
-                      getItemKey(item.product_id, item.size, item.color)
+                      getItemKey(
+                        item.product_id,
+                        item.variant_id,
+                        item.variant_options,
+                        item.size,
+                        item.color,
+                      )
                     ] ?? item.quantity
                   }
                   onQuantityChange={handleQuantityChange}
@@ -249,7 +298,7 @@ export default function CartPage() {
                     ? WEBSITE_ROUTES.CHECKOUT
                     : `${AUTH_ROUTES.LOGIN}?redirect=${encodeURIComponent(WEBSITE_ROUTES.CHECKOUT)}`
                 }
-                continueShoppingHref={WEBSITE_ROUTES.HOME}
+                continueShoppingHref={WEBSITE_ROUTES.DISCOVERY}
               />
             </div>
           </div>

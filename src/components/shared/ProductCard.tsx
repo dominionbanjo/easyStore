@@ -52,6 +52,18 @@ interface ProductCardContextType {
   sizes?: string[];
   isOnSale?: boolean;
 
+  options?: { name: string; values: string[] }[] | null;
+  variants?:
+    | {
+        id: string;
+        combinations?: Record<string, string>;
+        price: number;
+        stock: number;
+        discount_price?: number;
+        image_url?: string | null;
+      }[]
+    | null;
+
   isFavorited: boolean;
   toggleFavorite: () => void;
   addToCart: () => void;
@@ -73,6 +85,17 @@ interface ProductCardRootProps {
   avatar?: string;
   colors?: { id: string; name: string; hex: string }[];
   sizes?: string[];
+  options?: { name: string; values: string[] }[] | null;
+  variants?:
+    | {
+        id: string;
+        combinations?: Record<string, string>;
+        price: number;
+        stock: number;
+        discount_price?: number;
+        image_url?: string | null;
+      }[]
+    | null;
   isOnSale?: boolean;
 
   /** 🔹 backend-driven */
@@ -110,6 +133,8 @@ const Root = ({
   avatar,
   colors = [],
   sizes = [],
+  options = null,
+  variants = null,
   isOnSale = false,
   isFavorite = false,
   children,
@@ -129,10 +154,29 @@ const Root = ({
   const [showVariantModal, setShowVariantModal] = useState(false);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
+  const [selectedOptions, setSelectedOptions] = useState<
+    Record<string, string>
+  >({});
 
   useEffect(() => {
     setIsFavorited(isFavorite);
   }, [isFavorite]);
+
+  const derivedOptions = useMemo(() => {
+    if (options && options.length > 0) return options;
+    if (!variants || variants.length === 0) return [];
+    const optionKeys = new Set<string>();
+    variants.forEach((v) =>
+      Object.keys(v.combinations || {}).forEach((k) => optionKeys.add(k)),
+    );
+    return Array.from(optionKeys).map((name) => {
+      const values = new Set<string>();
+      variants.forEach((v) => {
+        if (v.combinations?.[name]) values.add(v.combinations[name]);
+      });
+      return { name, values: Array.from(values) };
+    });
+  }, [options, variants]);
 
   /* ── HANDLERS ── */
   const toggleFavorite = async () => {
@@ -167,27 +211,78 @@ const Root = ({
 
   const handleAddToCart = async () => {
     // If product has variants, require selection
-    const hasVariants =
-      (colors && colors.length > 0) || (sizes && sizes.length > 0);
+    const hasLegacyVariants =
+      (!variants || variants.length === 0) &&
+      ((colors && colors.length > 0) || (sizes && sizes.length > 0));
+    const hasNewVariants = derivedOptions.length > 0;
+    const hasVariants = hasLegacyVariants || hasNewVariants;
 
     if (hasVariants && !showVariantModal) {
-      // Initialize defaults if only 1 option available
-      if (sizes?.length === 1) setSelectedSize(sizes[0]);
-      if (colors?.length === 1) setSelectedColor(colors[0].id);
-
+      if (!hasNewVariants) {
+        // Initialize defaults if only 1 option available (legacy)
+        if (sizes?.length === 1) setSelectedSize(sizes[0]);
+        if (colors?.length === 1) setSelectedColor(colors[0].id);
+      } else if (hasNewVariants) {
+        const initialSelections: Record<string, string> = {};
+        derivedOptions.forEach((opt) => {
+          if (opt.values.length === 1)
+            initialSelections[opt.name] = opt.values[0];
+        });
+        setSelectedOptions(initialSelections);
+      }
       setShowVariantModal(true);
       return;
     }
 
     // Validate selection if modal is open
     if (showVariantModal) {
-      if (sizes?.length && !selectedSize) {
-        toast.error("Please select a size");
+      if (hasNewVariants) {
+        const missingOptions = derivedOptions.filter(
+          (o) => !selectedOptions[o.name],
+        );
+        if (missingOptions.length > 0) {
+          toast.error(`Please select a ${missingOptions[0].name}`);
+          return;
+        }
+      } else {
+        if (sizes?.length && !selectedSize) {
+          toast.error("Please select a size");
+          return;
+        }
+        if (colors?.length && !selectedColor) {
+          toast.error("Please select a color");
+          return;
+        }
+      }
+    }
+
+    let variantId = undefined;
+    let finalPrice = parseFloat(price.replace(/[^0-9.]/g, ""));
+    let finalDiscountPrice = discountPrice
+      ? parseFloat(discountPrice.replace(/[^0-9.]/g, ""))
+      : null;
+
+    if (hasNewVariants && variants) {
+      const matchedVariant = variants.find((v) => {
+        if (!v.combinations) return false;
+        return Object.entries(selectedOptions).every(
+          ([k, val]) => v.combinations![k] === val,
+        );
+      });
+      if (!matchedVariant) {
+        toast.error("Selected combination is unavailable");
         return;
       }
-      if (colors?.length && !selectedColor) {
-        toast.error("Please select a color");
+      if (matchedVariant.stock <= 0) {
+        toast.error("Selected combination is out of stock");
         return;
+      }
+      variantId = matchedVariant.id;
+      if (matchedVariant.price !== undefined && matchedVariant.price !== null) {
+        finalPrice = Number(matchedVariant.price);
+        finalDiscountPrice = matchedVariant.discount_price
+          ? Number(matchedVariant.discount_price)
+          : null;
       }
     }
 
@@ -199,14 +294,14 @@ const Root = ({
           vendor_id: "local",
           name,
           slug,
-          price: parseFloat(price.replace(/[^0-9.]/g, "")),
-          discount_price: discountPrice
-            ? parseFloat(discountPrice.replace(/[^0-9.]/g, ""))
-            : null,
+          price: finalPrice,
+          discount_price: finalDiscountPrice,
           quantity: 1,
           size: selectedSize,
           color: colors?.find((c) => c.id === selectedColor)?.name,
           color_hex: colors?.find((c) => c.id === selectedColor)?.hex,
+          variant_id: variantId,
+          variant_options: selectedOptions,
           image,
         }),
       );
@@ -214,6 +309,7 @@ const Root = ({
       setShowVariantModal(false);
       setSelectedSize(null);
       setSelectedColor(null);
+      setSelectedOptions({});
       return;
     }
 
@@ -223,12 +319,14 @@ const Root = ({
         quantity: 1,
         size: selectedSize,
         color: selectedColor,
+        variant_id: variantId,
       }).unwrap();
 
       toast.success(`${name} added to cart`);
       setShowVariantModal(false);
       setSelectedSize(null);
       setSelectedColor(null);
+      setSelectedOptions({});
     } catch (error: any) {
       toast.error(error?.data?.message || "Failed to add to cart");
     }
@@ -250,6 +348,8 @@ const Root = ({
       avatar,
       colors,
       sizes,
+      options,
+      variants,
       isOnSale,
       isFavorited,
       toggleFavorite,
@@ -271,6 +371,8 @@ const Root = ({
       isFavorited,
       colors,
       sizes,
+      options,
+      variants,
       isOnSale,
       isAddingToCart,
       selectedSize,
@@ -301,26 +403,134 @@ const Root = ({
         {/* ─── VARIANT SELECTION DIALOG ─── */}
         <Dialog open={showVariantModal} onOpenChange={setShowVariantModal}>
           <DialogContent
-            className="rounded-3xl sm:max-w-[400px]"
+            className="rounded-3xl sm:max-w-[440px]"
             onClick={(e) => e.stopPropagation()}
           >
             <DialogHeader>
               <DialogTitle>Select Options</DialogTitle>
-              <DialogDescription className="flex items-center gap-2">
+              <DialogDescription className="flex items-center gap-3 mt-1">
                 <img
                   src={image}
-                  className="w-10 h-10 rounded-md object-cover border"
+                  className="w-12 h-12 rounded-lg object-cover border"
                 />
-                <span className="font-medium text-zinc-900">{name}</span>
+                <div className="flex flex-col flex-1">
+                  <span className="font-semibold text-zinc-900 dark:text-zinc-100 text-sm leading-tight line-clamp-1">
+                    {name}
+                  </span>
+                  {(() => {
+                    let displayPrice = "";
+                    let displayDiscount = "";
+
+                    if (derivedOptions.length > 0 && variants) {
+                      const matched = variants.find((v) => {
+                        if (!v.combinations) return false;
+                        return Object.entries(selectedOptions).every(
+                          ([k, val]) => v.combinations![k] === val,
+                        );
+                      });
+                      if (
+                        matched &&
+                        matched.price !== undefined &&
+                        matched.price !== null
+                      ) {
+                        displayPrice = `₦${Number(matched.price).toLocaleString("en-NG")}`;
+                        if (matched.discount_price) {
+                          displayDiscount = `₦${Number(matched.discount_price).toLocaleString("en-NG")}`;
+                        }
+                      }
+                    }
+
+                    if (!displayPrice) {
+                      displayPrice = price;
+                      displayDiscount = discountPrice || "";
+                    }
+
+                    return (
+                      <div className="flex items-center gap-2 mt-0.5">
+                        {displayDiscount && (
+                          <span className="text-xs text-zinc-400 line-through decoration-rose-500/30">
+                            {displayPrice}
+                          </span>
+                        )}
+                        <span className="text-sm font-bold text-emerald-600 dark:text-emerald-400">
+                          {displayDiscount || displayPrice}
+                        </span>
+                      </div>
+                    );
+                  })()}
+                </div>
               </DialogDescription>
             </DialogHeader>
 
-            <div className="py-4 space-y-6">
-              {/* Sizes */}
-              {sizes && sizes.length > 0 && (
-                <div className="space-y-3">
+            <div className="py-4 space-y-5 max-h-[60vh] overflow-y-auto pr-1">
+              {/* NEW: Options-based variants (Color, Size, etc.) */}
+              {derivedOptions.length > 0
+                ? derivedOptions.map((opt) => (
+                    <div key={opt.name} className="space-y-2.5">
+                      <div className="flex justify-between items-center">
+                        <Label className="text-zinc-500 font-semibold text-xs uppercase tracking-wider">
+                          {opt.name}
+                        </Label>
+                        {selectedOptions[opt.name] && (
+                          <span className="text-xs font-bold text-emerald-600">
+                            {selectedOptions[opt.name]}
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {opt.values.map((val) => {
+                          const hasStock =
+                            variants?.some((v) => {
+                              if (v.combinations?.[opt.name] !== val)
+                                return false;
+                              return Object.entries(selectedOptions).every(
+                                ([k, sel]) =>
+                                  k === opt.name
+                                    ? true
+                                    : v.combinations?.[k] === sel,
+                              );
+                            }) ?? true;
+
+                          const isSelected = selectedOptions[opt.name] === val;
+                          return (
+                            <button
+                              key={val}
+                              onClick={() =>
+                                hasStock &&
+                                setSelectedOptions((prev) => ({
+                                  ...prev,
+                                  [opt.name]: val,
+                                }))
+                              }
+                              disabled={!hasStock}
+                              className={cn(
+                                "px-4 py-2 rounded-xl text-sm font-medium transition-all border relative",
+                                isSelected
+                                  ? "bg-zinc-900 text-white border-zinc-900 shadow-md scale-105"
+                                  : hasStock
+                                    ? "bg-white text-zinc-600 border-zinc-200 hover:border-zinc-400 dark:bg-zinc-800 dark:text-zinc-200 dark:border-zinc-700"
+                                    : "bg-zinc-50 text-zinc-300 border-zinc-200 cursor-not-allowed opacity-50 line-through dark:bg-zinc-900 dark:text-zinc-600",
+                              )}
+                            >
+                              {val}
+                              {isSelected && (
+                                <Check className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 bg-emerald-600 text-white rounded-full p-0.5" />
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))
+                : null}
+
+              {/* LEGACY: Sizes */}
+              {derivedOptions.length === 0 && sizes && sizes.length > 0 && (
+                <div className="space-y-2.5">
                   <div className="flex justify-between items-center">
-                    <Label className="text-zinc-500 font-medium">Size</Label>
+                    <Label className="text-zinc-500 font-semibold text-xs uppercase tracking-wider">
+                      Size
+                    </Label>
                     {selectedSize && (
                       <span className="text-xs font-bold text-emerald-600">
                         {selectedSize}
@@ -336,7 +546,7 @@ const Root = ({
                           "px-4 py-2 rounded-xl text-sm font-medium transition-all border",
                           selectedSize === s
                             ? "bg-zinc-900 text-white border-zinc-900 shadow-md scale-105"
-                            : "bg-white text-zinc-600 border-zinc-200 hover:border-zinc-400",
+                            : "bg-white text-zinc-600 border-zinc-200 hover:border-zinc-400 dark:bg-zinc-800 dark:text-zinc-200 dark:border-zinc-700",
                         )}
                       >
                         {s}
@@ -346,13 +556,15 @@ const Root = ({
                 </div>
               )}
 
-              {/* Colors */}
-              {colors && colors.length > 0 && (
-                <div className="space-y-3">
+              {/* LEGACY: Colors */}
+              {derivedOptions.length === 0 && colors && colors.length > 0 && (
+                <div className="space-y-2.5">
                   <div className="flex justify-between items-center">
-                    <Label className="text-zinc-500 font-medium">Color</Label>
+                    <Label className="text-zinc-500 font-semibold text-xs uppercase tracking-wider">
+                      Color
+                    </Label>
                     {selectedColor && (
-                      <span className="text-xs font-bold text-zinc-900">
+                      <span className="text-xs font-bold text-zinc-900 dark:text-zinc-100">
                         {colors.find((c) => c.id === selectedColor)?.name}
                       </span>
                     )}

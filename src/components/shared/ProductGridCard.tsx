@@ -31,6 +31,11 @@ export default function ProductGridCard({
       storeSlug={data.store_slug}
       colors={data.colors}
       sizes={data.sizes}
+      options={data.options}
+      variants={data.variants?.map((v) => ({
+        ...v,
+        image_url: v.image_url ?? undefined,
+      }))}
       isOnSale={data.on_sale}
       isFavorite={data.is_in_wishlist}
       className={className}

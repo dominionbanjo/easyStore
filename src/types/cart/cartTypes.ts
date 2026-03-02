@@ -15,6 +15,8 @@ export interface ICartItem {
   size?: string | null;
   color?: string | null;
   color_hex?: string | null;
+  variant_id?: string | null;
+  variant_options?: Record<string, string> | null;
 
   shipping_cost?: number | null;
 }
@@ -43,6 +45,7 @@ export interface AddToCartArgs {
   quantity: number;
   size?: string | null;
   color?: string | null;
+  variant_id?: string | null;
 }
 
 export interface UpdateCartItemArgs {
@@ -50,4 +53,5 @@ export interface UpdateCartItemArgs {
   quantity?: number;
   size?: string | null;
   color?: string | null;
+  variant_id?: string | null;
 }

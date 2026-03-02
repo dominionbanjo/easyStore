@@ -11,11 +11,15 @@ interface CartItemProps {
   onQuantityChange: (
     productId: string,
     quantity: number,
+    variant_id?: string | null,
+    variant_options?: Record<string, string> | null,
     size?: string | null,
     color?: string | null,
   ) => void;
   onRemove: (
     productId: string,
+    variant_id?: string | null,
+    variant_options?: Record<string, string> | null,
     size?: string | null,
     color?: string | null,
   ) => void;
@@ -48,27 +52,47 @@ export function CartItem({
               </h3>
 
               <div className="flex flex-wrap gap-2 pt-1">
-                {item.size && (
-                  <Badge
-                    variant="secondary"
-                    className="rounded-lg px-2 py-0 h-6 font-bold text-[10px] uppercase tracking-widest bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400"
-                  >
-                    Size: {item.size}
-                  </Badge>
-                )}
-                {item.color && (
-                  <Badge
-                    variant="outline"
-                    className="rounded-lg px-2 py-0 h-6 font-bold text-[10px] uppercase tracking-widest border-zinc-200 dark:border-white/10 flex items-center gap-1.5"
-                  >
-                    {item.color_hex && (
-                      <div
-                        className="w-2 h-2 rounded-full border border-black/10"
-                        style={{ backgroundColor: item.color_hex }}
-                      />
+                {item.variant_options ? (
+                  Object.entries(item.variant_options).map(([key, value]) => (
+                    <Badge
+                      key={key}
+                      variant="secondary"
+                      className="rounded-lg px-2 py-0 h-6 font-bold text-[10px] uppercase tracking-widest bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 border border-zinc-200/50 dark:border-white/5 flex items-center gap-1.5"
+                    >
+                      {key.toLowerCase() === "color" && item.color_hex && (
+                        <div
+                          className="w-2 h-2 rounded-full border border-black/10"
+                          style={{ backgroundColor: item.color_hex }}
+                        />
+                      )}
+                      <span className="opacity-50 mr-1">{key}:</span> {value}
+                    </Badge>
+                  ))
+                ) : (
+                  <>
+                    {item.size && (
+                      <Badge
+                        variant="secondary"
+                        className="rounded-lg px-2 py-0 h-6 font-bold text-[10px] uppercase tracking-widest bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400"
+                      >
+                        Size: {item.size}
+                      </Badge>
                     )}
-                    {item.color}
-                  </Badge>
+                    {item.color && (
+                      <Badge
+                        variant="outline"
+                        className="rounded-lg px-2 py-0 h-6 font-bold text-[10px] uppercase tracking-widest border-zinc-200 dark:border-white/10 flex items-center gap-1.5"
+                      >
+                        {item.color_hex && (
+                          <div
+                            className="w-2 h-2 rounded-full border border-black/10"
+                            style={{ backgroundColor: item.color_hex }}
+                          />
+                        )}
+                        {item.color}
+                      </Badge>
+                    )}
+                  </>
                 )}
               </div>
             </div>
@@ -76,7 +100,15 @@ export function CartItem({
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => onRemove(item.product_id, item.size, item.color)}
+              onClick={() =>
+                onRemove(
+                  item.product_id,
+                  item.variant_id,
+                  item.variant_options,
+                  item.size,
+                  item.color,
+                )
+              }
               className="h-9 w-9 rounded-xl text-muted-foreground hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors"
             >
               <Trash2 className="h-5 w-5" />
@@ -101,6 +133,8 @@ export function CartItem({
                     onQuantityChange(
                       item.product_id,
                       quantity - 1,
+                      item.variant_id,
+                      item.variant_options,
                       item.size,
                       item.color,
                     )
@@ -121,6 +155,8 @@ export function CartItem({
                     onQuantityChange(
                       item.product_id,
                       quantity + 1,
+                      item.variant_id,
+                      item.variant_options,
                       item.size,
                       item.color,
                     )

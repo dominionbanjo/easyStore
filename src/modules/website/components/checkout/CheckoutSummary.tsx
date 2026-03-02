@@ -68,7 +68,7 @@ export function CheckoutSummary({
           <div className="max-h-[280px] sm:max-h-[320px] overflow-y-auto pr-2 sm:pr-3 space-y-4 sm:space-y-6 custom-scrollbar">
             {items.map((item, idx) => (
               <motion.div
-                key={`${item.product_id}-${item.size}-${item.color}`}
+                key={`${item.product_id}-${item.variant_id ?? ""}-${item.variant_options ? JSON.stringify(item.variant_options) : `${item.size ?? "none"}-${item.color ?? "none"}`}`}
                 initial={{ opacity: 0, x: 10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: idx * 0.05 }}
@@ -88,16 +88,44 @@ export function CheckoutSummary({
                   <p className="text-xs sm:text-sm font-black text-foreground truncate group-hover:text-primary transition-colors">
                     {item.name}
                   </p>
-                  <div className="flex items-center gap-2 mt-1">
-                    {item.size && (
-                      <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 border border-border/40 px-1.5 py-0.5 rounded-md">
-                        Size {item.size}
-                      </span>
-                    )}
-                    {item.color && (
-                      <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 border border-border/40 px-1.5 py-0.5 rounded-md">
-                        {item.color}
-                      </span>
+                  <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
+                    {item.variant_options ? (
+                      Object.entries(item.variant_options).map(
+                        ([key, value]) => (
+                          <div
+                            key={key}
+                            className="flex items-center gap-1 text-[8px] sm:text-[9px] font-black uppercase tracking-wider text-muted-foreground/70 bg-muted/50 border border-border/40 px-1.5 py-0.5 rounded-md"
+                          >
+                            {key.toLowerCase() === "color" &&
+                              item.color_hex && (
+                                <div
+                                  className="w-1.5 h-1.5 rounded-full border border-black/10"
+                                  style={{ backgroundColor: item.color_hex }}
+                                />
+                              )}
+                            <span className="opacity-50">{key}:</span> {value}
+                          </div>
+                        ),
+                      )
+                    ) : (
+                      <>
+                        {item.size && (
+                          <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 border border-border/40 px-1.5 py-0.5 rounded-md bg-muted/30">
+                            Size {item.size}
+                          </span>
+                        )}
+                        {item.color && (
+                          <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 border border-border/40 px-1.5 py-0.5 rounded-md bg-muted/30 flex items-center gap-1.5">
+                            {item.color_hex && (
+                              <div
+                                className="w-1.5 h-1.5 rounded-full border border-black/10"
+                                style={{ backgroundColor: item.color_hex }}
+                              />
+                            )}
+                            {item.color}
+                          </span>
+                        )}
+                      </>
                     )}
                   </div>
                 </div>
@@ -236,7 +264,7 @@ export function CheckoutSummary({
             </>
           ) : (
             <>
-              Initialize Payment
+              Proceed to Payment
               <CreditCard className="ml-3 h-4 w-4 sm:h-5 sm:w-5 transition-transform group-hover:translate-x-1" />
             </>
           )}

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import SmartLink from "@/components/shared/SmartLink";
 import type { RootState } from "@/store";
@@ -29,6 +29,18 @@ import {
 } from "@/services/wishlistApi";
 import { addToLocalCart } from "@/features/cartSlice";
 
+/* ── Types ── */
+
+interface ProductVariant {
+  id: string;
+  combinations?: Record<string, string>;
+  price: number;
+  stock: number;
+  discount_price?: number;
+  image_url?: string;
+  size?: string;
+}
+
 interface ProductInfoSidebarProps {
   product: {
     id: string;
@@ -42,18 +54,12 @@ interface ProductInfoSidebarProps {
     rating: number;
     stock: number;
     highlights: string[];
+    /* New variant options system */
+    options?: { name: string; values: string[] }[] | null;
+    variants?: ProductVariant[] | null;
+    /* Legacy */
     sizes?: string[];
-    variants?: {
-      size: string;
-      price: number;
-      stock: number;
-      discount_price?: number;
-    }[];
-    colors?: {
-      id: string;
-      name: string;
-      hex: string;
-    }[];
+    colors?: { id: string; name: string; hex: string }[];
     image?: string | null;
     is_in_wishlist?: boolean;
   };
@@ -67,6 +73,13 @@ export default function ProductInfoSidebar({
 
   const [quantity, setQuantity] = useState(1);
   const [liked, setLiked] = useState<boolean>(Boolean(product.is_in_wishlist));
+
+  /* New option selection state – e.g. { Color: "Red", Size: "L" } */
+  const [selectedOptions, setSelectedOptions] = useState<
+    Record<string, string>
+  >({});
+
+  /* Legacy */
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [selectedColor, setSelectedColor] = useState<{
     id: string;
@@ -78,35 +91,96 @@ export default function ProductInfoSidebar({
   const [addToWishlist] = useAddToWishlistMutation();
   const [removeFromWishlist] = useRemoveFromWishlistMutation();
 
+  /* ── Determine mode ── */
+  const hasNewOptions = (product.options?.length ?? 0) > 0;
+
+  /* ── Matched variant from combinations ── */
+  const matchedVariant = useMemo<ProductVariant | null>(() => {
+    if (!hasNewOptions || !product.variants?.length) return null;
+    const optionKeys = product.options?.map((o) => o.name) ?? [];
+    if (!optionKeys.every((k) => selectedOptions[k])) return null;
+
+    return (
+      product.variants.find((v) => {
+        if (!v.combinations) return false;
+        return optionKeys.every(
+          (k) => v.combinations![k] === selectedOptions[k],
+        );
+      }) ?? null
+    );
+  }, [selectedOptions, product.variants, product.options, hasNewOptions]);
+
+  /* ── Legacy variant (by size) ── */
+  const legacyVariant = useMemo(() => {
+    if (hasNewOptions || !product.variants?.length || !selectedSize)
+      return null;
+    return product.variants.find((v) => v.size === selectedSize) ?? null;
+  }, [selectedSize, product.variants, hasNewOptions]);
+
+  const activeVariant = hasNewOptions ? matchedVariant : legacyVariant;
+
+  /* ── Derived display values ── */
+  const displayPrice = activeVariant
+    ? (activeVariant.discount_price ?? activeVariant.price)
+    : product.price;
+
+  const displayOriginalPrice = activeVariant?.discount_price
+    ? activeVariant.price
+    : product.originalPrice;
+
+  const currentStock = activeVariant ? activeVariant.stock : product.stock;
+
+  /* ─── Check if all required options are selected ─── */
+  const allOptionsSelected = hasNewOptions
+    ? (product.options ?? []).every((o) => selectedOptions[o.name])
+    : true;
+
+  /* ─── Handlers ─── */
+
+  const selectOption = (optionName: string, value: string) => {
+    setSelectedOptions((prev) => ({ ...prev, [optionName]: value }));
+  };
+
   const handleAddToCart = async () => {
-    if (product.sizes?.length && !selectedSize) {
-      toast.error("Please select a size");
-      return;
-    }
-
-    if (product.colors?.length && !selectedColor) {
-      toast.error("Please select a color");
-      return;
-    }
-
-    // Check stock for variant
-    if (activeVariant && quantity > activeVariant.stock) {
-      toast.error(
-        `Only ${activeVariant.stock} items left in stock for this size`,
-      );
-      return;
-    }
-
-    // Check main stock if no variant?
-    if (!activeVariant && quantity > product.stock) {
-      toast.error(`Only ${product.stock} items left in stock`);
-      return;
-    }
-
-    // Check main stock if no variant?
-    if (!activeVariant && quantity > product.stock) {
-      toast.error(`Only ${product.stock} items left in stock`);
-      return;
+    if (hasNewOptions) {
+      if (!allOptionsSelected) {
+        const missing = (product.options ?? []).find(
+          (o) => !selectedOptions[o.name],
+        );
+        toast.error(`Please select a ${missing?.name ?? "option"}`);
+        return;
+      }
+      if (!matchedVariant) {
+        toast.error("Selected combination is not available");
+        return;
+      }
+      if (matchedVariant.stock <= 0) {
+        toast.error("This combination is out of stock");
+        return;
+      }
+      if (quantity > matchedVariant.stock) {
+        toast.error(
+          `Only ${matchedVariant.stock} items left for this combination`,
+        );
+        return;
+      }
+    } else {
+      if (product.sizes?.length && !selectedSize) {
+        toast.error("Please select a size");
+        return;
+      }
+      if (product.colors?.length && !selectedColor) {
+        toast.error("Please select a color");
+        return;
+      }
+      if (activeVariant && quantity > activeVariant.stock) {
+        toast.error(`Only ${activeVariant.stock} items left for this size`);
+        return;
+      }
+      if (!activeVariant && quantity > product.stock) {
+        toast.error(`Only ${product.stock} items left in stock`);
+        return;
+      }
     }
 
     if (!isAuthenticated) {
@@ -116,17 +190,18 @@ export default function ProductInfoSidebar({
           vendor_id: "local",
           name: product.name,
           slug: product.name.toLowerCase().replace(/\s+/g, "-"),
-          price: activeVariant ? activeVariant.price : product.price,
-          discount_price: activeVariant
-            ? activeVariant.discount_price
-            : product.originalPrice
-              ? product.price
-              : null,
+          price: displayPrice,
+          discount_price: displayOriginalPrice ? displayPrice : null,
           quantity,
           size: selectedSize,
           color: selectedColor?.name,
           color_hex: selectedColor?.hex,
-          image: product.image,
+          variant_id: activeVariant?.id,
+          variant_options:
+            hasNewOptions && Object.keys(selectedOptions).length > 0
+              ? selectedOptions
+              : undefined,
+          image: activeVariant?.image_url ?? product.image,
         }),
       );
       toast.success(`${product.name} added to cart`);
@@ -139,6 +214,7 @@ export default function ProductInfoSidebar({
         quantity,
         size: selectedSize,
         color: selectedColor?.id,
+        variant_id: activeVariant?.id,
       }).unwrap();
 
       toast.success(`${product.name} added to cart`);
@@ -174,23 +250,6 @@ export default function ProductInfoSidebar({
       );
     }
   };
-
-  const getActiveVariant = () => {
-    if (!product.variants?.length || !selectedSize) return null;
-    return product.variants.find((v) => v.size === selectedSize);
-  };
-
-  const activeVariant = getActiveVariant();
-
-  const displayPrice = activeVariant
-    ? activeVariant.discount_price || activeVariant.price
-    : product.price;
-
-  const displayOriginalPrice = activeVariant?.discount_price
-    ? activeVariant.price
-    : product.originalPrice;
-
-  const currentStock = activeVariant ? activeVariant.stock : product.stock;
 
   return (
     <motion.div
@@ -232,7 +291,7 @@ export default function ProductInfoSidebar({
           {currentStock > 0 ? (
             <div className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-bold text-sm bg-emerald-50 dark:bg-emerald-950/30 px-3 py-1 rounded-full border border-emerald-100 dark:border-emerald-900/50">
               <PackageCheck className="w-4 h-4" />
-              In Stock {activeVariant && `(${currentStock})`}
+              In Stock {activeVariant && `(${currentStock} left)`}
             </div>
           ) : (
             <div className="flex items-center gap-1.5 text-rose-600 dark:text-rose-400 font-bold text-sm bg-rose-50 dark:bg-rose-950/30 px-3 py-1 rounded-full border border-rose-100 dark:border-rose-900/50">
@@ -247,7 +306,7 @@ export default function ProductInfoSidebar({
         <p className="text-muted-foreground text-sm leading-relaxed">
           {product.description}
         </p>
-        {product.highlights?.length > 0 && (
+        {(product.highlights?.length ?? 0) > 0 && (
           <div className="grid grid-cols-1 gap-2">
             {product.highlights.slice(0, 3).map((h, i) => (
               <div
@@ -264,10 +323,94 @@ export default function ProductInfoSidebar({
 
       <div className="h-px bg-border/50 dark:bg-white/10" />
 
-      {/* ─── Varients Section ─── */}
+      {/* ─── Variants Section ─── */}
       <div className="space-y-6">
-        {/* Colors */}
-        {product.colors?.length ? (
+        {/* NEW: Options-based variants (combinations) */}
+        {hasNewOptions &&
+          product.options?.map((option) => (
+            <div key={option.name} className="space-y-3">
+              <div className="flex justify-between items-center text-sm">
+                <span className="font-bold uppercase tracking-widest text-muted-foreground/80 text-[10px]">
+                  {option.name}:{" "}
+                  <span className="text-foreground">
+                    {selectedOptions[option.name] || `Select ${option.name}`}
+                  </span>
+                </span>
+              </div>
+              <div className="flex gap-2.5 flex-wrap">
+                {option.values.map((value) => {
+                  /* Check if any variant matching this value (and current other selections) has stock */
+                  const hasStock =
+                    product.variants?.some((v) => {
+                      if (v.combinations?.[option.name] !== value) return false;
+                      return Object.entries(selectedOptions).every(
+                        ([k, val]) =>
+                          k === option.name
+                            ? true
+                            : v.combinations?.[k] === val,
+                      );
+                    }) ?? true;
+
+                  const isSelected = selectedOptions[option.name] === value;
+                  return (
+                    <button
+                      key={value}
+                      onClick={() =>
+                        hasStock && selectOption(option.name, value)
+                      }
+                      disabled={!hasStock}
+                      className={cn(
+                        "min-w-[50px] h-11 px-4 rounded-xl text-sm font-bold transition-all duration-200 border-2 relative",
+                        isSelected
+                          ? "bg-primary text-white border-primary shadow-lg shadow-primary/20 scale-105"
+                          : hasStock
+                            ? "bg-background text-foreground border-border hover:border-primary/50"
+                            : "bg-muted text-muted-foreground border-border cursor-not-allowed opacity-40 line-through",
+                      )}
+                    >
+                      {value}
+                      {isSelected && (
+                        <Check className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 bg-primary text-white rounded-full p-0.5" />
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+              {/* Stock warnings for matched variant */}
+              <AnimatePresence>
+                {allOptionsSelected &&
+                  matchedVariant &&
+                  matchedVariant.stock <= 5 &&
+                  matchedVariant.stock > 0 && (
+                    <motion.p
+                      key="low-stock"
+                      initial={{ opacity: 0, y: -4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -4 }}
+                      className="text-amber-600 text-xs font-bold"
+                    >
+                      ⚠ Only {matchedVariant.stock} left in stock!
+                    </motion.p>
+                  )}
+                {allOptionsSelected &&
+                  matchedVariant &&
+                  matchedVariant.stock <= 0 && (
+                    <motion.p
+                      key="out-of-stock"
+                      initial={{ opacity: 0, y: -4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -4 }}
+                      className="text-rose-500 text-xs font-bold"
+                    >
+                      This combination is out of stock
+                    </motion.p>
+                  )}
+              </AnimatePresence>
+            </div>
+          ))}
+
+        {/* LEGACY: Colors */}
+        {!hasNewOptions && (product.colors?.length ?? 0) > 0 && (
           <div className="space-y-3">
             <div className="flex justify-between items-center text-sm">
               <span className="font-bold uppercase tracking-widest text-muted-foreground/80 text-[10px]">
@@ -278,7 +421,7 @@ export default function ProductInfoSidebar({
               </span>
             </div>
             <div className="flex gap-3 flex-wrap">
-              {product.colors.map((color) => {
+              {product.colors!.map((color) => {
                 const isSelected = selectedColor?.id === color.id;
                 return (
                   <button
@@ -318,10 +461,10 @@ export default function ProductInfoSidebar({
               })}
             </div>
           </div>
-        ) : null}
+        )}
 
-        {/* Sizes */}
-        {product.sizes?.length ? (
+        {/* LEGACY: Sizes */}
+        {!hasNewOptions && (product.sizes?.length ?? 0) > 0 && (
           <div className="space-y-3">
             <div className="flex justify-between items-center text-sm">
               <span className="font-bold uppercase tracking-widest text-muted-foreground/80 text-[10px]">
@@ -335,17 +478,24 @@ export default function ProductInfoSidebar({
               </button>
             </div>
             <div className="flex gap-2.5 flex-wrap">
-              {product.sizes.map((size) => {
+              {product.sizes!.map((size) => {
                 const isSelected = selectedSize === size;
+                const sizeVariant = product.variants?.find(
+                  (v) => v.size === size,
+                );
+                const outOfStock = sizeVariant ? sizeVariant.stock <= 0 : false;
                 return (
                   <button
                     key={size}
-                    onClick={() => setSelectedSize(size)}
+                    onClick={() => !outOfStock && setSelectedSize(size)}
+                    disabled={outOfStock}
                     className={cn(
                       "min-w-[50px] h-11 px-4 rounded-xl text-sm font-bold transition-all duration-200 border-2",
                       isSelected
                         ? "bg-primary text-white border-primary shadow-lg shadow-primary/20 scale-105"
-                        : "bg-background text-foreground border-border hover:border-primary/50",
+                        : outOfStock
+                          ? "bg-muted text-muted-foreground border-border cursor-not-allowed opacity-40 line-through"
+                          : "bg-background text-foreground border-border hover:border-primary/50",
                     )}
                   >
                     {size}
@@ -354,7 +504,7 @@ export default function ProductInfoSidebar({
               })}
             </div>
           </div>
-        ) : null}
+        )}
       </div>
 
       {/* ─── Purchase Section ─── */}
@@ -377,7 +527,9 @@ export default function ProductInfoSidebar({
               variant="ghost"
               size="icon"
               className="rounded-xl h-12 w-12 hover:bg-background dark:hover:bg-neutral-700 shadow-xs text-muted-foreground"
-              onClick={() => setQuantity((q) => q + 1)}
+              onClick={() =>
+                setQuantity((q) => Math.min(q + 1, currentStock || 999))
+              }
             >
               <Plus className="h-4 w-4" />
             </Button>
@@ -386,7 +538,12 @@ export default function ProductInfoSidebar({
           <div className="flex flex-1 gap-3">
             <Button
               size="lg"
-              disabled={currentStock <= 0 || addingToCart}
+              disabled={
+                currentStock <= 0 ||
+                addingToCart ||
+                (hasNewOptions &&
+                  (!allOptionsSelected || (matchedVariant?.stock ?? 0) <= 0))
+              }
               onClick={handleAddToCart}
               className="flex-1 rounded-[1.25rem] bg-emerald-600 text-white hover:bg-emerald-700 h-14 text-base font-black shadow-xl shadow-emerald-200/20 group relative overflow-hidden active:scale-95 transition-all"
             >
@@ -411,7 +568,11 @@ export default function ProductInfoSidebar({
                     className="flex items-center gap-2"
                   >
                     <ShoppingCart className="h-5 w-5" />
-                    <span>Add to Cart</span>
+                    <span>
+                      {hasNewOptions && !allOptionsSelected
+                        ? "Select Options First"
+                        : "Add to Cart"}
+                    </span>
                   </motion.div>
                 )}
               </AnimatePresence>

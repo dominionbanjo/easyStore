@@ -1,14 +1,17 @@
 import { motion } from "framer-motion";
 import { Plus, Download, Filter, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "@/store";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
+import { clearProductDraft } from "@/features/productDraftSlice";
 
 import { useGetMyStoreQuery } from "@/services/storeApi";
 
 export function DashboardOverviewHeader() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { currentUser } = useSelector((state: RootState) => state.user);
   const { data: store } = useGetMyStoreQuery();
 
@@ -67,13 +70,18 @@ export function DashboardOverviewHeader() {
           <Share2 className="h-4 w-4" />
           <span className="hidden sm:inline">Share Store</span>
         </Button>
-        <Link to="/vendor/products/new">
-          <Button size="sm" className="gap-2 shadow-lg shadow-primary/20">
-            <Plus className="h-4 w-4" />
-            <span className="hidden xs:inline">Add Product</span>
-            <span className="xs:hidden">Add</span>
-          </Button>
-        </Link>
+        <Button
+          size="sm"
+          className="gap-2 shadow-lg shadow-primary/20"
+          onClick={() => {
+            dispatch(clearProductDraft());
+            navigate("/vendor/products/new");
+          }}
+        >
+          <Plus className="h-4 w-4" />
+          <span className="hidden xs:inline">Add Product</span>
+          <span className="xs:hidden">Add</span>
+        </Button>
       </motion.div>
     </div>
   );

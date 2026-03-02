@@ -56,7 +56,8 @@ const cartSlice = createSlice({
         (item) =>
           item.product_id === itemInfo.product_id &&
           item.size === itemInfo.size &&
-          item.color === itemInfo.color,
+          item.color === itemInfo.color &&
+          item.variant_id === itemInfo.variant_id,
       );
 
       if (existingItem) {
@@ -73,15 +74,30 @@ const cartSlice = createSlice({
         quantity: number;
         size?: string | null;
         color?: string | null;
+        variant_id?: string | null;
+        variant_options?: Record<string, string> | null;
       }>,
     ) => {
-      const { product_id, quantity, size, color } = action.payload;
-      const existingItem = state.localItems.find(
-        (item) =>
-          item.product_id === product_id &&
+      const { product_id, quantity, size, color, variant_id, variant_options } =
+        action.payload;
+      const existingItem = state.localItems.find((item) => {
+        const isBaseMatch = item.product_id === product_id;
+        const isVariantIdMatch = item.variant_id === variant_id;
+
+        if (variant_id && item.variant_id) {
+          return isBaseMatch && isVariantIdMatch;
+        }
+
+        // Fallback to options/size/color if variant_id is missing
+        return (
+          isBaseMatch &&
           item.size === size &&
-          item.color === color,
-      );
+          item.color === color &&
+          JSON.stringify(item.variant_options) ===
+            JSON.stringify(variant_options)
+        );
+      });
+
       if (existingItem && quantity >= 1) {
         existingItem.quantity = quantity;
       }
@@ -93,17 +109,28 @@ const cartSlice = createSlice({
         product_id: string;
         size?: string | null;
         color?: string | null;
+        variant_id?: string | null;
+        variant_options?: Record<string, string> | null;
       }>,
     ) => {
-      const { product_id, size, color } = action.payload;
-      state.localItems = state.localItems.filter(
-        (item) =>
-          !(
-            item.product_id === product_id &&
-            item.size === size &&
-            item.color === color
-          ),
-      );
+      const { product_id, size, color, variant_id, variant_options } =
+        action.payload;
+      state.localItems = state.localItems.filter((item) => {
+        const isBaseMatch = item.product_id === product_id;
+        const isVariantIdMatch = item.variant_id === variant_id;
+
+        if (variant_id && item.variant_id) {
+          return !(isBaseMatch && isVariantIdMatch);
+        }
+
+        return !(
+          isBaseMatch &&
+          item.size === size &&
+          item.color === color &&
+          JSON.stringify(item.variant_options) ===
+            JSON.stringify(variant_options)
+        );
+      });
       calculateLocalTotals(state);
     },
     clearLocalCart: (state) => {

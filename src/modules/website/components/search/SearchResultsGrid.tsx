@@ -101,6 +101,11 @@ export function SearchResultsGrid({
             isFavorite={product.is_in_wishlist}
             colors={product.colors}
             sizes={product.sizes}
+            options={product.options}
+            variants={product.variants?.map((v) => ({
+              ...v,
+              image_url: v.image_url ?? undefined,
+            }))}
             vendor={product.store_name}
             storeSlug={product.store_slug}
           >

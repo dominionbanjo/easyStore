@@ -39,25 +39,25 @@ export const addProductSchema = z
 
     returns_note: z.string().optional(),
 
-    /* ───────── COLORS (OPTIONAL) ───────── */
-    colors: z
+    /* ───────── OPTIONS & VARIANTS (CONDITIONAL) ───────── */
+    options: z
       .array(
         z.object({
-          id: z.string(),
-          name: z.string(),
-          hex: z.string(),
+          name: z.string().min(1, "Option name is required"),
+          values: z.array(z.string()).min(1, "At least one value is required"),
         }),
       )
-      .optional(),
+      .optional()
+      .nullable(),
 
-    /* ───────── VARIANTS (CONDITIONAL) ───────── */
     variants: z
       .array(
         z.object({
-          size: z.string(),
+          sku: z.string().optional(),
+          combinations: z.record(z.string(), z.string()),
           price: z.coerce
             .number()
-            .positive("Variant price must be greater than 0"),
+            .nonnegative("Variant price cannot be negative"),
           stock: z.coerce
             .number()
             .int()

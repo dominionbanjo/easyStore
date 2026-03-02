@@ -65,6 +65,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
   const handleUpdateQty = async (
     productId: string,
     quantity: number,
+    variant_id?: string | null,
     size?: string | null,
     color?: string | null,
   ) => {
@@ -76,12 +77,19 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
           quantity,
           size,
           color,
-        }),
+          variant_id,
+        } as any),
       );
       return;
     }
     try {
-      await updateCartItem({ productId, quantity, size, color }).unwrap();
+      await updateCartItem({
+        productId,
+        quantity,
+        size,
+        color,
+        variant_id,
+      } as any).unwrap();
     } catch (err: any) {
       toast.error(extractErrorMessage(err, "Failed to update quantity"));
     }
@@ -89,16 +97,29 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 
   const handleRemove = async (
     productId: string,
+    variant_id?: string | null,
     size?: string | null,
     color?: string | null,
   ) => {
     if (!isAuthenticated) {
-      dispatch(removeLocalCartItem({ product_id: productId, size, color }));
+      dispatch(
+        removeLocalCartItem({
+          product_id: productId,
+          size,
+          color,
+          variant_id,
+        } as any),
+      );
       toast.success("Item removed");
       return;
     }
     try {
-      await removeCartItem({ productId, size, color }).unwrap();
+      await removeCartItem({
+        productId,
+        size,
+        color,
+        variant_id,
+      } as any).unwrap();
       toast.success("Item removed");
     } catch (err: any) {
       toast.error(extractErrorMessage(err, "Failed to remove item"));
@@ -151,7 +172,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
               <AnimatePresence>
                 {cartItems.map((item: ICartItem) => (
                   <motion.div
-                    key={`${item.product_id}-${item.size}-${item.color}`}
+                    key={`${item.product_id}-${item.variant_id ?? ""}-${item.variant_options ? JSON.stringify(item.variant_options) : `${item.size ?? "none"}-${item.color ?? "none"}`}`}
                     layout
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -172,29 +193,65 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                         </h4>
                         <button
                           onClick={() =>
-                            handleRemove(item.product_id, item.size, item.color)
+                            handleRemove(
+                              item.product_id,
+                              item.variant_id,
+                              item.size,
+                              item.color,
+                            )
                           }
                           className="text-muted-foreground hover:text-red-500 transition-colors"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
-                      <div className="flex items-center gap-1.5 pt-0.5">
-                        {item.size && (
-                          <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded">
-                            {item.size}
-                          </span>
-                        )}
-                        {item.color && (
-                          <div className="flex items-center gap-1 ml-1 text-[10px] text-muted-foreground font-bold uppercase tracking-widest">
-                            {item.color_hex && (
+                      <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+                        {item.variant_options ? (
+                          Object.entries(item.variant_options).map(
+                            ([key, value]) => (
                               <div
-                                className="w-2 h-2 rounded-full border border-black/10"
-                                style={{ backgroundColor: item.color_hex }}
-                              />
+                                key={key}
+                                className="flex items-center gap-1 text-[10px] text-muted-foreground font-bold uppercase tracking-widest bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded border border-zinc-200/50 dark:border-white/5"
+                              >
+                                {key.toLowerCase() === "color" &&
+                                  item.color_hex && (
+                                    <div
+                                      className="w-1.5 h-1.5 rounded-full border border-black/10"
+                                      style={{
+                                        backgroundColor: item.color_hex,
+                                      }}
+                                    />
+                                  )}
+                                <span className="opacity-50">{key}:</span>{" "}
+                                {value}
+                              </div>
+                            ),
+                          )
+                        ) : (
+                          <>
+                            {item.size && (
+                              <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded border border-zinc-200/50 dark:border-white/5">
+                                {item.size}
+                                <span className="ml-1 opacity-50 underline decoration-primary/30 font-black">
+                                  Size
+                                </span>
+                              </span>
                             )}
-                            {item.color}
-                          </div>
+                            {item.color && (
+                              <div className="flex items-center gap-1 text-[10px] text-muted-foreground font-bold uppercase tracking-widest bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded border border-zinc-200/50 dark:border-white/5">
+                                {item.color_hex && (
+                                  <div
+                                    className="w-1.5 h-1.5 rounded-full border border-black/10"
+                                    style={{ backgroundColor: item.color_hex }}
+                                  />
+                                )}
+                                {item.color}
+                                <span className="ml-1 opacity-50 underline decoration-primary/30 font-black">
+                                  Color
+                                </span>
+                              </div>
+                            )}
+                          </>
                         )}
                       </div>
 
@@ -205,6 +262,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                               handleUpdateQty(
                                 item.product_id,
                                 item.quantity - 1,
+                                item.variant_id,
                                 item.size,
                                 item.color,
                               )
@@ -221,6 +279,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                               handleUpdateQty(
                                 item.product_id,
                                 item.quantity + 1,
+                                item.variant_id,
                                 item.size,
                                 item.color,
                               )
@@ -232,7 +291,9 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                         </div>
                         <p className="text-sm font-black text-primary tabular-nums">
                           ₦
-                          {(item.discount_price ?? item.price).toLocaleString()}
+                          {(
+                            (item.discount_price ?? item.price) * item.quantity
+                          ).toLocaleString()}
                         </p>
                       </div>
                     </div>

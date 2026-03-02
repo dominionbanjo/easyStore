@@ -1,7 +1,10 @@
 # Standard Rules
 User-agent: *
 Allow: /
-
+Disallow: /account/
+Disallow: /vendor/
+Disallow: /admin/
+Disallow: /auth/
 
 # Block Common AI Scrapers & Bots
 User-agent: GPTBot
@@ -16,10 +19,16 @@ Disallow: /
 User-agent: Claude-Web
 Disallow: /
 
+User-agent: Google-Extended
+Disallow: /
 
 User-agent: CCBot
 Disallow: /
 
+User-agent: Omgilibot
+Disallow: /
 
+User-agent: FacebookBot
+Disallow: /
 
 Sitemap: https://eazystore.com.ng/sitemap.xml

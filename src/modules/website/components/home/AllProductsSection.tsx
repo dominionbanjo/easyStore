@@ -80,6 +80,11 @@ export default function AllProductsSection() {
               isFavorite={product.is_in_wishlist}
               colors={product.colors}
               sizes={product.sizes}
+              options={product.options}
+              variants={product.variants?.map((v) => ({
+                ...v,
+                image_url: v.image_url ?? undefined,
+              }))}
               category={product.category}
             >
               <ProductCard.Image />

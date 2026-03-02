@@ -33,18 +33,28 @@ export interface IProduct {
   store_slug?: string;
   is_in_wishlist: boolean;
 
+  options?: { name: string; values: string[] }[] | null;
+  variants?:
+    | {
+        id: string;
+        sku?: string;
+        combinations?: Record<string, string>;
+        size?: string;
+        price: number;
+        stock: number;
+        discount_price?: number;
+        image_url?: string | null;
+      }[]
+    | null;
+
+  /* legacy */
   colors?: {
     id: string;
     name: string;
     hex: string;
   }[];
   sizes?: string[];
-  variants?: {
-    size: string;
-    price: number;
-    stock: number;
-    discount_price?: number;
-  }[];
+
   category?: string;
   on_sale?: boolean;
 }
@@ -66,6 +76,9 @@ export interface IProductDetails extends IProduct {
   highlights?: string[] | null;
   specs?: Record<string, string> | null;
 
+  options?: { name: string; values: string[] }[] | null;
+
+  /* legacy */
   colors?: {
     id: string;
     name: string;
@@ -269,11 +282,21 @@ export interface IStoreProduct {
   highlights: string[] | null;
   specs: Record<string, any> | null;
 
-  colors: string[] | null;
-  sizes: string[] | null;
+  options: { name: string; values: string[] }[] | null;
   variants:
-    | { size: string; price: number; stock: number; discount_price?: number }[]
+    | {
+        sku?: string;
+        combinations?: Record<string, string>;
+        size?: string;
+        price: number;
+        stock: number;
+        discount_price?: number;
+      }[]
     | null;
+
+  /* legacy */
+  colors?: string[] | null;
+  sizes?: string[] | null;
 
   shipping_note: string | null;
   returns_note: string | null;
@@ -328,14 +351,19 @@ export type CreateProductCloudinaryArgs = {
   /* ───────── PRODUCT META ───────── */
   tags?: string[];
   highlights?: string[];
-  sizes?: string[];
+  options?: { name: string; values: string[] }[];
   variants?: {
+    sku?: string;
+    combinations?: Record<string, string>;
     size: string;
     price: number;
     stock: number;
     discount_price?: number;
   }[];
-  colors?: string[]; // color IDs only
+
+  /* legacy */
+  sizes?: string[];
+  colors?: string[];
 
   /* ───────── SPECIFICATIONS ───────── */
   specs?: Record<string, string>;
@@ -417,11 +445,21 @@ export interface VendorProductSearchItem {
 
   highlights: string[];
   specs: Record<string, any> | null;
-  colors: unknown | null;
-  sizes: unknown | null;
+  options: { name: string; values: string[] }[] | null;
   variants:
-    | { size: string; price: number; stock: number; discount_price?: number }[]
+    | {
+        sku?: string;
+        combinations?: Record<string, string>;
+        size?: string;
+        price: number;
+        stock: number;
+        discount_price?: number;
+      }[]
     | null;
+
+  /* legacy */
+  colors?: unknown | null;
+  sizes?: unknown | null;
 
   shipping_note: string | null;
   returns_note: string | null;

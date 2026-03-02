@@ -16,21 +16,27 @@ export function productToDraft(product: IProductDetails) {
       category_id: product.category_id,
       description: product.description,
 
-      price: product.price,
-      discount_price: product.discount_price ?? undefined,
-      stock: product.stock,
+      price: product.price > 0 ? product.price / 100 : undefined,
+      discount_price:
+        product.discount_price && product.discount_price > 0
+          ? product.discount_price / 100
+          : undefined,
+      stock: product.stock > 0 ? product.stock : undefined,
 
-      shipping_cost: product.shipping_cost ?? undefined,
+      shipping_cost:
+        product.shipping_cost && product.shipping_cost > 0
+          ? product.shipping_cost / 100
+          : undefined,
       shipping_note: product.shipping_note ?? undefined,
       returns_note: product.returns_note ?? undefined,
-
-      colors: [...(product.colors ?? [])],
     },
 
     extras: {
       tags: [...(product.tags ?? [])],
       highlights: [...(product.highlights ?? [])],
-      sizes: [...(product.sizes ?? [])],
+      options: product.options
+        ? product.options.map((o: any) => ({ ...o }))
+        : [],
       variants: product.variants ? product.variants.map((v) => ({ ...v })) : [],
       specs: product.specs ? { ...product.specs } : {},
 

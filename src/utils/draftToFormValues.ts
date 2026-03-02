@@ -1,4 +1,3 @@
-import type { DraftColor } from "@/features/productDraftSlice";
 import type { UploadedImage } from "@/modules/vendor/components/add-products/ImageUploadSection";
 import type { SpecItem } from "@/modules/vendor/components/add-products/SpecificationsSection";
 import { buildSpecsObject } from "@/modules/vendor/utils/addProduct.helpers";
@@ -17,20 +16,20 @@ export type BuildCreatePayloadArgs = {
     shipping_cost?: number;
     shipping_note?: string;
     returns_note?: string;
-
-    colors?: DraftColor[];
   };
 
+  options?: { name: string; values: string[] }[];
   image: UploadedImage | null;
   gallery: UploadedImage[];
   tags: string[];
   highlights: string[];
-  sizes: string[];
   variants: {
+    combinations?: Record<string, string>;
     size: string;
     price: number;
     stock: number;
     discount_price?: number;
+    sku?: string;
   }[];
   specItems: SpecItem[];
 };
@@ -38,7 +37,7 @@ export type BuildCreatePayloadArgs = {
 export function buildCreateProductPayload(
   args: BuildCreatePayloadArgs,
 ): CreateProductCloudinaryArgs {
-  const { values, image, gallery, tags, highlights, sizes, specItems } = args;
+  const { values, image, gallery, tags, highlights, specItems } = args;
 
   return {
     category_id: values.category_id,
@@ -51,9 +50,8 @@ export function buildCreateProductPayload(
 
     tags,
     highlights,
-    sizes,
+    options: args.options,
     variants: args.variants,
-    colors: values.colors?.map((c: any) => c.id),
 
     specs: buildSpecsObject(specItems),
 

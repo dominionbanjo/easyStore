@@ -143,6 +143,11 @@ export default function WishlistPage() {
                     isFavorite={true}
                     colors={item.product?.colors}
                     sizes={item.product?.sizes}
+                    options={item.product?.options}
+                    variants={item.product?.variants?.map((v) => ({
+                      ...v,
+                      image_url: v.image_url ?? undefined,
+                    }))}
                   >
                     <ProductCard.Image />
                     <ProductCard.Info />
