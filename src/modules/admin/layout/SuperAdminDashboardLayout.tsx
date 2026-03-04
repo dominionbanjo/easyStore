@@ -24,9 +24,11 @@ export default function SuperAdminDashboardLayout() {
   const token = Cookies.get("token");
 
   useEffect(() => {
-    // ⛔ Not authenticated
+    // 🚫 No token + not authenticated → redirect to landing page
     if (!token && !isAuthenticated && !isLoading) {
-      toast.error("You must be logged in to access this page");
+      toast.error("Unauthorized access", {
+        description: "Please login to access the admin dashboard",
+      });
       navigate("/", { replace: true });
       return;
     }

@@ -21,6 +21,7 @@ export default function VerifyOtpPage() {
 
   const email = searchParams.get("email");
   const isResetFlow = searchParams.get("reset") === "true";
+  const redirectTo = searchParams.get("redirect") || WEBSITE_ROUTES.HOME;
 
   const [otp, setOtp] = useState("");
   const [timer, setTimer] = useState(300);
@@ -65,7 +66,7 @@ export default function VerifyOtpPage() {
     try {
       const res = await verifyOtp({ email: email!, otp }).unwrap();
       toast.success(res.message || "Verification successful!");
-      navigate(WEBSITE_ROUTES.HOME);
+      navigate(redirectTo, { replace: true });
     } catch (error: any) {
       toast.error(error?.data?.message || "OTP verification failed");
     }
@@ -100,7 +101,13 @@ export default function VerifyOtpPage() {
           <CardContent className="px-6 pb-8 space-y-4">
             <Button
               className="w-full rounded-full py-2"
-              onClick={() => navigate(AUTH_ROUTES.LOGIN)}
+              onClick={() =>
+                navigate(
+                  `${AUTH_ROUTES.LOGIN}?redirect=${encodeURIComponent(
+                    redirectTo,
+                  )}`,
+                )
+              }
             >
               Back to Login
             </Button>

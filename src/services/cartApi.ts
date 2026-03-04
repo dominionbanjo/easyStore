@@ -5,6 +5,19 @@ import type {
 } from "@/types/cart/cartTypes";
 import { apiManager } from "./apiManager";
 
+/* ───────────────── CONTROLLERS ───────────────── */
+// Track active requests to allow cancellation of previous ones
+const cartMutationControllers = new Map<string, AbortController>();
+
+const getAbortSignal = (key: string) => {
+  if (cartMutationControllers.has(key)) {
+    cartMutationControllers.get(key)?.abort();
+  }
+  const controller = new AbortController();
+  cartMutationControllers.set(key, controller);
+  return controller.signal;
+};
+
 /* ───────────────── API ───────────────── */
 
 export const cartApi = apiManager.injectEndpoints({
@@ -22,24 +35,33 @@ export const cartApi = apiManager.injectEndpoints({
     /* ───────── ADD ITEM ───────── */
 
     addItemToCart: builder.mutation<GetCartResponse, AddToCartArgs>({
-      query: (body) => ({
-        url: "cart/items",
-        method: "POST",
-        body,
-      }),
+      query: (body) => {
+        const key = `add-${body.product_id}-${body.variant_id || "none"}`;
+        return {
+          url: "cart/items",
+          method: "POST",
+          body,
+          signal: getAbortSignal(key),
+        };
+      },
       invalidatesTags: ["Cart"],
     }),
 
     /* ───────── UPDATE ITEM ───────── */
 
     updateCartItem: builder.mutation<GetCartResponse, UpdateCartItemArgs>({
-      query: ({ productId, ...body }) => ({
-        url: `cart/items/${productId}`,
-        method: "PATCH",
-        body,
-      }),
+      query: ({ productId, ...body }) => {
+        const key = `update-${productId}-${body.variant_id || "none"}`;
+        return {
+          url: `cart/items/${productId}`,
+          method: "PATCH",
+          body,
+          signal: getAbortSignal(key),
+        };
+      },
+      invalidatesTags: ["Cart"],
       onQueryStarted: async (
-        { productId, quantity, size, color },
+        { productId, quantity, size, color, variant_id },
         { dispatch, queryFulfilled },
       ) => {
         const patchResult = dispatch(
@@ -48,17 +70,24 @@ export const cartApi = apiManager.injectEndpoints({
             const itemIndex = cart.items.findIndex(
               (item) =>
                 item.product_id === productId &&
-                (size ? item.size === size : true) &&
-                (color ? item.color === color : true),
+                (item.variant_id || null) === (variant_id || null) &&
+                (item.size || null) === (size || null) &&
+                (item.color || null) === (color || null),
             );
 
-            if (itemIndex !== -1) {
-              if (quantity !== undefined) {
-                cart.items[itemIndex].quantity = quantity;
-              }
-              // Recalculate subtotal/total roughly (frontend optimistic)
-              // Note: Accurate calculation requires backend logic for discounts/shipping
-              // This acts as a visual feedback until revalidation
+            if (itemIndex !== -1 && quantity !== undefined) {
+              cart.items[itemIndex].quantity = quantity;
+
+              // Recalculate subtotal/total roughly for visual feedback
+              let newSubtotal = 0;
+              cart.items.forEach((item) => {
+                const itemPrice = item.discount_price ?? item.price;
+                newSubtotal += itemPrice * item.quantity;
+              });
+
+              cart.subtotal = newSubtotal;
+              cart.total =
+                newSubtotal + (cart.shipping || 0) + (cart.platform_fee || 0);
             }
           }),
         );
@@ -74,21 +103,28 @@ export const cartApi = apiManager.injectEndpoints({
 
     removeCartItem: builder.mutation<
       GetCartResponse,
-      { productId: string; size?: string | null; color?: string | null }
+      {
+        productId: string;
+        size?: string | null;
+        color?: string | null;
+        variant_id?: string | null;
+      }
     >({
-      query: ({ productId, size, color }) => ({
+      query: ({ productId, size, color, variant_id }) => ({
         url: `cart/items/${productId}${
-          size || color
+          size || color || variant_id
             ? `?${size ? `size=${encodeURIComponent(size)}` : ""}${
-                size && color ? "&" : ""
-              }${color ? `color=${encodeURIComponent(color)}` : ""}`
+                size && (color || variant_id) ? "&" : ""
+              }${color ? `color=${encodeURIComponent(color)}` : ""}${
+                color && variant_id ? "&" : ""
+              }${variant_id ? `variant_id=${encodeURIComponent(variant_id)}` : ""}`
             : ""
         }`,
         method: "DELETE",
       }),
       invalidatesTags: ["Cart"],
       onQueryStarted: async (
-        { productId, size, color },
+        { productId, size, color, variant_id },
         { dispatch, queryFulfilled },
       ) => {
         const patchResult = dispatch(
@@ -98,10 +134,21 @@ export const cartApi = apiManager.injectEndpoints({
               (item) =>
                 !(
                   item.product_id === productId &&
-                  (size ? item.size === size : true) &&
-                  (color ? item.color === color : true)
+                  (item.variant_id || null) === (variant_id || null) &&
+                  (item.size || null) === (size || null) &&
+                  (item.color || null) === (color || null)
                 ),
             );
+
+            // Recalculate totals
+            let newSubtotal = 0;
+            cart.items.forEach((item) => {
+              const itemPrice = item.discount_price ?? item.price;
+              newSubtotal += itemPrice * item.quantity;
+            });
+            cart.subtotal = newSubtotal;
+            cart.total =
+              newSubtotal + (cart.shipping || 0) + (cart.platform_fee || 0);
           }),
         );
         try {

@@ -24,13 +24,19 @@ export interface ProductDraftData {
 
   tags?: string[];
   highlights?: string[];
-  sizes?: string[];
+  options?: { name: string; values: string[] }[];
   variants?: {
-    size: string;
+    id?: string;
+    sku?: string;
+    combinations?: Record<string, string>;
+    size?: string;
     price: number;
     stock: number;
     discount_price?: number;
   }[];
+
+  /* legacy */
+  sizes?: string[];
   colors?: DraftColor[];
 
   specs?: Record<string, string>;
@@ -41,12 +47,16 @@ export interface ProductDraftData {
 
 export interface ProductDraftState {
   data: ProductDraftData | null;
+  isSyncing: boolean;
+  lastSynced: string | null;
 }
 
 /* ───────────────── STATE ───────────────── */
 
 const initialState: ProductDraftState = {
   data: null,
+  isSyncing: false,
+  lastSynced: null,
 };
 
 /* ───────────────── SLICE ───────────────── */
@@ -74,10 +84,21 @@ const productDraftSlice = createSlice({
     clearProductDraft: (state) => {
       state.data = null;
     },
+
+    setSyncing: (state, action: PayloadAction<boolean>) => {
+      state.isSyncing = action.payload;
+      if (!action.payload) {
+        state.lastSynced = new Date().toISOString();
+      }
+    },
   },
 });
 
-export const { setProductDraft, updateProductDraft, clearProductDraft } =
-  productDraftSlice.actions;
+export const {
+  setProductDraft,
+  updateProductDraft,
+  clearProductDraft,
+  setSyncing,
+} = productDraftSlice.actions;
 
 export default productDraftSlice.reducer;

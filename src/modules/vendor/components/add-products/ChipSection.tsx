@@ -11,6 +11,7 @@ interface ChipSectionProps {
   values: string[];
   onAdd: (value: string) => void;
   onRemove: (value: string) => void;
+  placeholder?: string;
 }
 
 const ICONS: Record<string, any> = {
@@ -24,6 +25,7 @@ export default function ChipSection({
   values,
   onAdd,
   onRemove,
+  placeholder,
 }: ChipSectionProps) {
   const [input, setInput] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -58,7 +60,7 @@ export default function ChipSection({
           className={cn(
             "w-full h-12 bg-muted/20 border-muted-foreground/10 rounded-[1.25rem] pl-4 pr-14 text-sm font-medium focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-muted-foreground/40",
           )}
-          placeholder={`Add new ${label.toLowerCase()}...`}
+          placeholder={placeholder || `Add new ${label.toLowerCase()}...`}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => {

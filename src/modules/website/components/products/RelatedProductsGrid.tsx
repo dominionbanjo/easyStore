@@ -12,7 +12,7 @@ export default function RelatedProductsGrid({
 
   return (
     <section className="pt-10 space-y-8 px-0 sm:px-0">
-      <h2 className="text-2xl font-bold text-gray-900 px-3 sm:px-0">
+      <h2 className="text-2xl font-bold text-foreground px-3 sm:px-0">
         Related Products
       </h2>
       <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mx-auto">
@@ -48,6 +48,11 @@ export default function RelatedProductsGrid({
               isFavorite={product.is_in_wishlist}
               colors={product.colors}
               sizes={product.sizes}
+              options={product.options}
+              variants={product.variants?.map((v) => ({
+                ...v,
+                image_url: v.image_url ?? undefined,
+              }))}
             >
               <ProductCard.Image />
               <ProductCard.Info />

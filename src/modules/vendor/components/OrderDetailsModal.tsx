@@ -48,19 +48,30 @@ const deliveryStatuses = [
 
 const getStatusColor = (status: string) => {
   const colors: Record<string, string> = {
-    pending: "bg-yellow-500/10 text-yellow-700 border-yellow-500/20",
-    paid: "bg-emerald-500/10 text-emerald-700 border-emerald-500/20",
-    processing: "bg-blue-500/10 text-blue-700 border-blue-500/20",
-    shipped: "bg-purple-500/10 text-purple-700 border-purple-500/20",
-    delivered: "bg-green-500/10 text-green-700 border-green-500/20",
-    completed: "bg-slate-500/10 text-slate-700 border-slate-500/20",
-    canceled: "bg-red-500/10 text-red-700 border-red-500/20",
-    failed: "bg-red-500/10 text-red-700 border-red-500/20",
-    assigned: "bg-indigo-500/10 text-indigo-700 border-indigo-500/20",
-    in_transit: "bg-blue-500/10 text-blue-700 border-blue-500/20",
-    returned: "bg-orange-500/10 text-orange-700 border-orange-500/20",
+    pending:
+      "bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border-yellow-500/20",
+    paid: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
+    processing:
+      "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20",
+    shipped:
+      "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20",
+    delivered:
+      "bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20",
+    completed:
+      "bg-slate-500/10 text-slate-600 dark:text-slate-400 border-slate-500/20",
+    canceled: "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20",
+    failed: "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20",
+    assigned:
+      "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-500/20",
+    in_transit:
+      "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20",
+    returned:
+      "bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/20",
   };
-  return colors[status] || "bg-gray-500/10 text-gray-700 border-gray-500/20";
+  return (
+    colors[status] ||
+    "bg-gray-500/10 text-gray-600 dark:text-gray-400 border-gray-500/20"
+  );
 };
 
 export function OrderDetailsModal({
@@ -125,7 +136,7 @@ export function OrderDetailsModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto custom-scrollbar">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold flex items-center gap-3">
             <Package className="h-6 w-6 text-primary" />
@@ -151,69 +162,81 @@ export function OrderDetailsModal({
           {/* Order Status Overview */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Payment Status */}
-            <div className="group relative overflow-hidden rounded-xl border bg-gradient-to-br from-card to-card/50 p-5 transition-all hover:shadow-lg hover:border-primary/20">
-              <div className="flex items-start justify-between gap-3">
+            <div className="group relative overflow-hidden rounded-xl border bg-card/40 dark:bg-muted/10 p-5 transition-all hover:shadow-lg hover:border-primary/30">
+              <div className="flex items-start justify-between gap-3 relative z-10">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-3">
-                    <div className="p-2 rounded-lg bg-primary/10 text-primary">
+                    <div className="p-2 rounded-lg bg-primary/15 text-primary">
                       <CreditCard className="h-4 w-4" />
                     </div>
-                    <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/80">
                       Payment
                     </p>
                   </div>
                   <Badge
-                    className={`${getStatusColor(order.payment_status)} font-medium`}
+                    variant="outline"
+                    className={cn(
+                      getStatusColor(order.payment_status),
+                      "px-2 py-0 h-6 border",
+                    )}
                   >
                     {order.payment_status}
                   </Badge>
                 </div>
               </div>
-              <div className="absolute -right-6 -bottom-6 h-24 w-24 rounded-full bg-primary/5 blur-2xl transition-all group-hover:bg-primary/10" />
+              <div className="absolute -right-6 -bottom-6 h-32 w-32 rounded-full bg-primary/5 blur-3xl transition-all group-hover:bg-primary/10" />
             </div>
 
             {/* Order Status */}
-            <div className="group relative overflow-hidden rounded-xl border bg-gradient-to-br from-card to-card/50 p-5 transition-all hover:shadow-lg hover:border-primary/20">
-              <div className="flex items-start justify-between gap-3">
+            <div className="group relative overflow-hidden rounded-xl border bg-card/40 dark:bg-muted/10 p-5 transition-all hover:shadow-lg hover:border-blue-500/30">
+              <div className="flex items-start justify-between gap-3 relative z-10">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-3">
-                    <div className="p-2 rounded-lg bg-blue-500/10 text-blue-600">
+                    <div className="p-2 rounded-lg bg-blue-500/15 text-blue-500">
                       <Package className="h-4 w-4" />
                     </div>
-                    <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/80">
                       Order
                     </p>
                   </div>
                   <Badge
-                    className={`${getStatusColor(order.status)} font-medium`}
+                    variant="outline"
+                    className={cn(
+                      getStatusColor(order.status),
+                      "px-2 py-0 h-6 border",
+                    )}
                   >
                     {order.status}
                   </Badge>
                 </div>
               </div>
-              <div className="absolute -right-6 -bottom-6 h-24 w-24 rounded-full bg-blue-500/5 blur-2xl transition-all group-hover:bg-blue-500/10" />
+              <div className="absolute -right-6 -bottom-6 h-32 w-32 rounded-full bg-blue-500/5 blur-3xl transition-all group-hover:bg-blue-500/10" />
             </div>
 
             {/* Delivery Status */}
-            <div className="group relative overflow-hidden rounded-xl border bg-gradient-to-br from-card to-card/50 p-5 transition-all hover:shadow-lg hover:border-primary/20">
-              <div className="flex items-start justify-between gap-3">
+            <div className="group relative overflow-hidden rounded-xl border bg-card/40 dark:bg-muted/10 p-5 transition-all hover:shadow-lg hover:border-purple-500/30">
+              <div className="flex items-start justify-between gap-3 relative z-10">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-3">
-                    <div className="p-2 rounded-lg bg-purple-500/10 text-purple-600">
+                    <div className="p-2 rounded-lg bg-purple-500/15 text-purple-500">
                       <Truck className="h-4 w-4" />
                     </div>
-                    <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/80">
                       Delivery
                     </p>
                   </div>
                   <Badge
-                    className={`${getStatusColor(currentDeliveryStatus)} font-medium`}
+                    variant="outline"
+                    className={cn(
+                      getStatusColor(currentDeliveryStatus),
+                      "px-2 py-0 h-6 border",
+                    )}
                   >
                     {currentDeliveryStatus.replace("_", " ")}
                   </Badge>
                 </div>
               </div>
-              <div className="absolute -right-6 -bottom-6 h-24 w-24 rounded-full bg-purple-50/50 blur-2xl transition-all group-hover:bg-purple-500/10" />
+              <div className="absolute -right-6 -bottom-6 h-32 w-32 rounded-full bg-purple-500/5 blur-3xl transition-all group-hover:bg-purple-500/10" />
             </div>
           </div>
 
@@ -303,19 +326,33 @@ export function OrderDetailsModal({
                       {item.name}
                     </p>
                     <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs sm:text-sm text-muted-foreground">
-                      {item.size != null && (
-                        <span className="flex items-center gap-1">
-                          <span className="font-medium">Size:</span> {item.size}
-                        </span>
-                      )}
-                      {item.color && (
-                        <span className="flex items-center gap-1">
-                          <span className="font-medium">Color:</span>
-                          <span
-                            className="w-4 h-4 rounded-full border inline-block"
-                            style={{ backgroundColor: item.color }}
-                          />
-                        </span>
+                      {item.variant_options ? (
+                        Object.entries(item.variant_options).map(
+                          ([key, value]) => (
+                            <span key={key} className="flex items-center gap-1">
+                              <span className="font-medium">{key}:</span>{" "}
+                              {value}
+                            </span>
+                          ),
+                        )
+                      ) : (
+                        <>
+                          {item.size != null && (
+                            <span className="flex items-center gap-1">
+                              <span className="font-medium">Size:</span>{" "}
+                              {item.size}
+                            </span>
+                          )}
+                          {item.color && (
+                            <span className="flex items-center gap-1">
+                              <span className="font-medium">Color:</span>
+                              <span
+                                className="w-4 h-4 rounded-full border inline-block"
+                                style={{ backgroundColor: item.color }}
+                              />
+                            </span>
+                          )}
+                        </>
                       )}
                       <span className="flex items-center gap-1">
                         <span className="font-medium">Qty:</span>{" "}
@@ -432,19 +469,19 @@ export function OrderDetailsModal({
               </div>
 
               {/* Delivery Address Section */}
-              <div className="mt-6 p-4 rounded-xl bg-blue-50/30 border border-blue-100/50">
-                <div className="flex items-center gap-2 text-blue-700 mb-3">
+              <div className="mt-6 p-4 rounded-xl bg-blue-500/5 border border-blue-500/15">
+                <div className="flex items-center gap-2 text-blue-500 dark:text-blue-400 mb-3">
                   <MapPin className="h-4 w-4" />
-                  <h4 className="font-bold text-sm uppercase tracking-wider">
+                  <h4 className="font-bold text-xs uppercase tracking-widest">
                     Shipping Address
                   </h4>
                 </div>
                 {order.delivery.address ? (
                   <div className="ml-6 space-y-1">
-                    <p className="text-sm font-semibold text-gray-900 leading-relaxed">
+                    <p className="text-sm font-semibold text-foreground leading-relaxed">
                       {order.delivery.address}
                     </p>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-muted-foreground">
                       {[
                         order.delivery.city,
                         order.delivery.state,
@@ -454,7 +491,7 @@ export function OrderDetailsModal({
                         .join(", ")}
                     </p>
                     {order.delivery.country && (
-                      <p className="text-sm text-gray-500 font-medium">
+                      <p className="text-sm text-muted-foreground/80 font-medium">
                         {order.delivery.country}
                       </p>
                     )}

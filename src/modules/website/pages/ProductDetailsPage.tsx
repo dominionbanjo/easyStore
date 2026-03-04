@@ -96,12 +96,16 @@ function ProductDetailsInner({ id }: { id: string }) {
         : "Calculated at checkout",
     },
 
+    options: product.options ?? null,
     variants:
       product.variants?.map((v) => ({
+        id: v.id,
+        combinations: v.combinations,
         size: v.size,
         price: Number(v.price),
         stock: v.stock,
         discount_price: v.discount_price ? Number(v.discount_price) : undefined,
+        image_url: v.image_url ?? undefined, // null → undefined to satisfy ProductVariant type
       })) ?? [],
 
     sizes: product.sizes ?? [],

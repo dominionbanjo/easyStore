@@ -1,5 +1,17 @@
 import { z } from "zod";
 
+/**
+ * Safe numeric preprocessor — converts any empty / null / NaN input to 0
+ * before Zod validates. This prevents the "expected number, received NaN"
+ * error that occurs when the user clears a number input field.
+ */
+const safeNum = (rules: z.ZodNumber = z.number()) =>
+  z.preprocess((val) => {
+    if (val === "" || val === null || val === undefined) return 0;
+    const n = Number(val);
+    return Number.isNaN(n) ? 0 : n;
+  }, rules);
+
 export const addProductSchema = z
   .object({
     /* ───────── BASIC INFO ───────── */
@@ -10,59 +22,54 @@ export const addProductSchema = z
     description: z.string().optional().nullable(),
 
     /* ───────── PRICING ───────── */
-    price: z.coerce
-      .number()
-      .nonnegative("Price cannot be negative")
+    price: safeNum(z.number().nonnegative("Price cannot be negative"))
       .optional()
       .nullable(),
 
-    discount_price: z.coerce
-      .number()
-      .nonnegative("Discount price cannot be negative")
+    discount_price: safeNum(
+      z.number().nonnegative("Discount price cannot be negative"),
+    )
       .optional()
       .nullable(),
 
-    stock: z.coerce
-      .number()
-      .int("Stock must be a whole number")
-      .nonnegative()
+    stock: safeNum(z.number().int("Stock must be a whole number").nonnegative())
       .optional()
       .nullable(),
 
     /* ───────── SHIPPING (REQUIRED) ───────── */
-    shipping_cost: z.coerce
-      .number()
-      .nonnegative("Shipping cost cannot be negative")
-      .optional(),
+    shipping_cost: safeNum(
+      z.number().nonnegative("Shipping cost cannot be negative"),
+    ).optional(),
 
     shipping_note: z.string().optional(),
 
     returns_note: z.string().optional(),
 
-    /* ───────── COLORS (OPTIONAL) ───────── */
-    colors: z
+    /* ───────── OPTIONS & VARIANTS (CONDITIONAL) ───────── */
+    options: z
       .array(
         z.object({
-          id: z.string(),
-          name: z.string(),
-          hex: z.string(),
+          name: z.string().min(1, "Option name is required"),
+          values: z.array(z.string()).min(1, "At least one value is required"),
         }),
       )
-      .optional(),
+      .optional()
+      .nullable(),
 
-    /* ───────── VARIANTS (CONDITIONAL) ───────── */
     variants: z
       .array(
         z.object({
-          size: z.string(),
-          price: z.coerce
-            .number()
-            .positive("Variant price must be greater than 0"),
-          stock: z.coerce
-            .number()
-            .int()
-            .nonnegative("Stock cannot be negative"),
-          discount_price: z.coerce.number().nonnegative().optional().nullable(),
+          sku: z.string().optional(),
+          combinations: z.record(z.string(), z.string()),
+          price: safeNum(
+            z.number().nonnegative("Variant price cannot be negative"),
+          ),
+          stock: safeNum(
+            z.number().int().nonnegative("Stock cannot be negative"),
+          ),
+          discount_price: safeNum(z.number().nonnegative())
+            .optional()
+            .nullable(),
         }),
       )
       .optional()

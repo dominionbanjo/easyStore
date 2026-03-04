@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
+import { toast } from "sonner"; // Added toast import
 
 import Header from "@/components/shared/Header";
 import Footer from "@/components/shared/Footer";
@@ -18,9 +19,14 @@ export default function AccountsLayout() {
   const token = Cookies.get("token");
 
   useEffect(() => {
-    // 🚫 No token + not authenticated → redirect to landing
+    // 🚫 No token + not authenticated → redirect to landing page
     if (!token && !isAuthenticated && !isLoading) {
+      toast.error("Unauthorized access", {
+        // Added toast notification
+        description: "Please login to access your account", // Adjusted description for AccountsLayout
+      });
       navigate("/", { replace: true });
+      return; // Added return to prevent further execution
     }
   }, [token, isAuthenticated, isLoading, navigate]);
 

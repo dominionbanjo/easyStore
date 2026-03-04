@@ -24,6 +24,8 @@ export interface IOrderItem {
   quantity: number;
   size?: string | null;
   color?: string | null;
+  variant_id?: string | null;
+  variant_options?: Record<string, string> | null;
   shipping_cost?: number | null;
 }
 
@@ -109,6 +111,7 @@ export interface IOrder {
 // DTO for creating order items - matches backend validation
 export interface CreateOrderItemDto {
   product_id: string;
+  variant_id?: string | null;
   quantity: number;
   size?: string | null;
   color?: string | null;

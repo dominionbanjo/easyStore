@@ -4,7 +4,6 @@ import { Loader2, Store, Globe, CreditCard } from "lucide-react";
 import { toast } from "sonner";
 
 import {
-  useGetMyStoreQuery,
   useUpdateStoreMutation,
   useRegisterStoreBankMutation,
 } from "@/services/storeApi";
@@ -28,6 +27,7 @@ import { ContactLocationStep } from "../components/settings/ContactLocationStep"
 import { PayoutSetupStep } from "../components/settings/PayoutSetupStep";
 import { AddressModal } from "../components/settings/AddressModal";
 import { useStoreSetup } from "../hooks/useStoreSetup";
+import { StoreSettingsCompleteView } from "../components/settings/StoreSettingsCompleteView";
 
 const STEPS = [
   { id: 1, title: "Store Identity", icon: Store },
@@ -36,7 +36,13 @@ const STEPS = [
 ];
 
 export default function SettingsPage() {
-  const { data: store, isLoading: isLoadingStore } = useGetMyStoreQuery();
+  const {
+    store,
+    isLoading: isLoadingStore,
+    progress,
+    isValidated,
+  } = useStoreSetup();
+
   const [updateStore, { isLoading: isUpdatingStore }] =
     useUpdateStoreMutation();
   const [registerBank, { isLoading: isRegisteringBank }] =
@@ -72,7 +78,6 @@ export default function SettingsPage() {
   const [storeData, setStoreData] = useState({
     store_name: "",
     description: "",
-    category: "",
     email: "",
     phone_number: "",
     address_street: "",
@@ -94,7 +99,6 @@ export default function SettingsPage() {
       setStoreData({
         store_name: store.store_name || "",
         description: store.description || "",
-        category: store.category || "",
         email: store.email || "",
         phone_number: store.phone_number || "",
         address_street: store.address_street || "",
@@ -113,6 +117,15 @@ export default function SettingsPage() {
       });
     }
   }, [store]);
+
+  const setupStage = store?.setup_stage || 1;
+  const isSetupComplete = setupStage >= 4;
+
+  useEffect(() => {
+    if (!isSetupComplete) {
+      setActiveStep(setupStage);
+    }
+  }, [setupStage, isSetupComplete]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -198,17 +211,25 @@ export default function SettingsPage() {
          - If we have a preview & id, send them to update.
          - If we DON'T have them (User deleted), but store HAD them, send empty strings (or null) to clear on backend.
       */
+      let nextSetupStage = setupStage;
+      if (!isSetupComplete && activeStep < 3) {
+        nextSetupStage = setupStage + 1;
+        formData.append("setup_stage", String(nextSetupStage));
+      }
+
       if (bannerPreview && bannerPublicId) {
         formData.append("cover_image", bannerPreview);
         formData.append("cover_image_public_id", bannerPublicId);
       } else if (store.cover_image && !bannerPreview) {
-        // Explicitly clear
         formData.append("cover_image", "");
         formData.append("cover_image_public_id", "");
       }
 
       await updateStore({ id: store.id, data: formData }).unwrap();
       toast.success("Store details updated successfully!");
+      if (!isSetupComplete && activeStep < 3) {
+        setActiveStep(nextSetupStage);
+      }
     } catch (error: any) {
       toast.error(error.data?.message || "Failed to update store details");
     }
@@ -255,18 +276,19 @@ export default function SettingsPage() {
     );
   }
 
-  const { progress, isValidated } = useStoreSetup();
+  // If setup is complete, show the finalized details view
+  if (isSetupComplete) {
+    return (
+      <StoreSettingsCompleteView store={store} bannerPreview={bannerPreview} />
+    );
+  }
 
   return (
     <div className="max-w-7xl mx-auto space-y-8 pb-20">
       <SettingsHeader progress={progress} isValidated={isValidated} />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        <SettingsSidebar
-          steps={STEPS}
-          activeStep={activeStep}
-          setActiveStep={setActiveStep}
-        />
+        <SettingsSidebar steps={STEPS} activeStep={activeStep} />
 
         <div className="lg:col-span-8">
           <AnimatePresence mode="wait">
@@ -281,9 +303,6 @@ export default function SettingsPage() {
                   storeData={storeData}
                   bannerPreview={bannerPreview}
                   onInputChange={handleInputChange}
-                  onCategoryChange={(val) =>
-                    setStoreData((p) => ({ ...p, category: val }))
-                  }
                   onBannerChange={handleBannerUpload}
                   onBannerRemove={handleRemoveBanner}
                   uploadProgress={bannerUploadProgress}

@@ -42,7 +42,7 @@ export default function AnalyticsPage() {
     );
   }
 
-  if (isError) {
+  if (isError || !analytics) {
     return (
       <div className="flex h-[60vh] items-center justify-center flex-col gap-6 max-w-md mx-auto text-center">
         <div className="h-20 w-20 rounded-3xl bg-destructive/10 flex items-center justify-center text-destructive">
@@ -54,7 +54,7 @@ export default function AnalyticsPage() {
           </h2>
           <p className="text-muted-foreground font-medium">
             We couldn't load your analytics data right now. This might be due to
-            a connection issue.
+            an unauthorized access or connection issue.
           </p>
         </div>
         <Button
@@ -67,6 +67,8 @@ export default function AnalyticsPage() {
     );
   }
 
+  const { data: analyticsData } = analytics;
+
   // Final UI
   return (
     <motion.div
@@ -76,26 +78,26 @@ export default function AnalyticsPage() {
     >
       <AnalyticsHeader storeName={store?.store_name} />
 
-      <StatsCards summary={analytics.summary} />
+      <StatsCards summary={analyticsData?.summary} />
 
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 items-start">
         {/* Main Chart Area */}
         <div className="xl:col-span-8 flex flex-col gap-8">
-          <SalesTrendChart data={analytics.trends.monthly} />
+          <SalesTrendChart data={analyticsData?.trends?.monthly} />
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 xl:hidden">
-            <TopProductsList products={analytics.top_products} />
-            <CustomerInsights customers={analytics.customers} />
+            <TopProductsList products={analyticsData?.top_products} />
+            <CustomerInsights customers={analyticsData?.customers} />
           </div>
         </div>
 
         {/* Sidebar Insights (Desktop) */}
         <div className="xl:col-span-4 hidden xl:flex flex-col gap-8 h-full">
           <div className="h-1/2">
-            <TopProductsList products={analytics.top_products} />
+            <TopProductsList products={analyticsData?.top_products} />
           </div>
           <div className="h-1/2">
-            <CustomerInsights customers={analytics.customers} />
+            <CustomerInsights customers={analyticsData?.customers} />
           </div>
         </div>
       </div>

@@ -71,16 +71,7 @@ export function FormInput({
           placeholder={placeholder}
           aria-invalid={shouldShowError}
           min={type === "number" ? 0 : undefined}
-          {...register(name, {
-            setValueAs:
-              type === "number"
-                ? (v) => {
-                    if (v === "" || v === null) return undefined;
-                    const n = Number(v);
-                    return Number.isNaN(n) ? undefined : Math.max(0, n);
-                  }
-                : undefined,
-          })}
+          {...register(name)}
           className={cn(
             "h-12 rounded-xl text-[15px] transition-all duration-200 bg-muted/20 border-muted-foreground/10 focus:bg-background",
             icon ? "pl-11" : "px-4",

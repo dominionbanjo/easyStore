@@ -1,4 +1,5 @@
 import * as Pages from "./lazyPages";
+import { ROUTES } from "./index";
 
 /**
  * 🗺️ Route Preload Map
@@ -14,28 +15,28 @@ function getRegistry() {
   if (cachedRegistry) return cachedRegistry;
 
   cachedRegistry = {
-    "/": Pages.preloadLandingPage,
-    "/about": Pages.preloadAboutPage,
-    "/stores": Pages.preloadStoresPage,
-    "/categories": Pages.preloadCategoriesPage,
-    "/discovery": Pages.preloadDiscoveryPage,
-    "/featured": Pages.preloadFeaturedProductsPage,
-    "/trending": Pages.preloadTrendingProductsPage,
-    "/new-arrivals": Pages.preloadNewArrivalsPage,
-    "/account/profile": Pages.preloadUserProfilePage,
-    "/account/settings": Pages.preloadSettingsPage,
-    "/account/cart": Pages.preloadCartPage,
-    "/account/cart/preview": Pages.preloadCheckoutPage,
-    "/account/verify-payment": Pages.preloadVerifyPaymentPage,
-    "/account/wishlist": Pages.preloadWishlistPage,
-    "/account/orders": Pages.preloadOrdersPage,
-    "/auth/login": Pages.preloadLoginPage,
-    "/auth/signup": Pages.preloadSignupPage,
-    "/vendor": Pages.preloadVendorDashboardPage,
-    "/vendor/products": Pages.preloadProductsPage,
-    "/vendor/orders": Pages.preloadVendorOrdersPage,
-    "/vendor/customers": Pages.preloadCustomersPage,
-    "/admin": Pages.preloadSuperAdminOverviewPage,
+    [ROUTES.WEBSITE.HOME]: Pages.preloadLandingPage,
+    [ROUTES.WEBSITE.ABOUT]: Pages.preloadAboutPage,
+    [ROUTES.WEBSITE.STORES]: Pages.preloadStoresPage,
+    [ROUTES.WEBSITE.CATEGORIES]: Pages.preloadCategoriesPage,
+    [ROUTES.WEBSITE.DISCOVERY]: Pages.preloadDiscoveryPage,
+    [ROUTES.WEBSITE.FEATURED]: Pages.preloadFeaturedProductsPage,
+    [ROUTES.WEBSITE.TRENDING]: Pages.preloadTrendingProductsPage,
+    [ROUTES.WEBSITE.NEW_ARRIVALS]: Pages.preloadNewArrivalsPage,
+    [ROUTES.ACCOUNT.PROFILE]: Pages.preloadUserProfilePage,
+    [ROUTES.ACCOUNT.SETTINGS]: Pages.preloadSettingsPage,
+    [ROUTES.WEBSITE.CART]: Pages.preloadCartPage,
+    [ROUTES.WEBSITE.CHECKOUT]: Pages.preloadCheckoutPage,
+    [ROUTES.ACCOUNT.VERIFY_PAYMENT]: Pages.preloadVerifyPaymentPage,
+    [ROUTES.ACCOUNT.WISHLIST]: Pages.preloadWishlistPage,
+    [ROUTES.ACCOUNT.ORDERS]: Pages.preloadOrdersPage,
+    [ROUTES.AUTH.LOGIN]: Pages.preloadLoginPage,
+    [ROUTES.AUTH.SIGNUP]: Pages.preloadSignupPage,
+    [ROUTES.VENDOR.DASHBOARD]: Pages.preloadVendorDashboardPage,
+    [ROUTES.VENDOR.PRODUCTS]: Pages.preloadProductsPage,
+    [ROUTES.VENDOR.ORDERS]: Pages.preloadVendorOrdersPage,
+    [ROUTES.VENDOR.CUSTOMERS]: Pages.preloadCustomersPage,
+    [ROUTES.ADMIN.DASHBOARD]: Pages.preloadSuperAdminOverviewPage,
   };
 
   return cachedRegistry;

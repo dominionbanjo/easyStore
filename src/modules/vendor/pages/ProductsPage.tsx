@@ -35,6 +35,8 @@ import { useGetMyStoreProductsQuery } from "@/services/productApi";
 import type { IStoreProduct } from "@/types/product/productTypes";
 import { productColumns } from "../columns/productColumns";
 import { cn } from "@/lib/utils";
+import { useDispatch } from "react-redux";
+import { clearProductDraft } from "@/features/productDraftSlice";
 
 /* ───────────────── CONSTANTS ───────────────── */
 const PAGE_SIZE = 10;
@@ -42,6 +44,7 @@ const SEARCH_DEBOUNCE_MS = 400;
 
 /* ───────────────── PAGE ───────────────── */
 export default function ProductsPage() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { isReady, isLoading: checkingSetup } = useStoreSetup();
   const [showSetupModal, setShowSetupModal] = useState(false);
@@ -155,6 +158,7 @@ export default function ProductsPage() {
               if (!isReady) {
                 setShowSetupModal(true);
               } else {
+                dispatch(clearProductDraft());
                 navigate("/vendor/products/new");
               }
             }}

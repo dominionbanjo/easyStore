@@ -222,7 +222,7 @@ export default function ProductDetailsTabs({
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
                       {product.shipping?.delivery && (
                         <div className="flex gap-4 p-4 sm:p-5 rounded-2xl bg-background border border-border/50 shadow-sm">
-                          <div className="shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-orange-50 flex items-center justify-center text-orange-600">
+                          <div className="shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-orange-50 dark:bg-orange-500/10 flex items-center justify-center text-orange-600 dark:text-orange-400">
                             <Truck className="w-5 h-5 sm:w-6 sm:h-6" />
                           </div>
                           <div>
@@ -238,7 +238,7 @@ export default function ProductDetailsTabs({
 
                       {product.shipping?.returns && (
                         <div className="flex gap-4 p-4 sm:p-5 rounded-2xl bg-background border border-border/50 shadow-sm">
-                          <div className="shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
+                          <div className="shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-blue-50 dark:bg-blue-500/10 flex items-center justify-center text-blue-600 dark:text-blue-400">
                             <RotateCcw className="w-5 h-5 sm:w-6 sm:h-6" />
                           </div>
                           <div>
@@ -254,7 +254,7 @@ export default function ProductDetailsTabs({
 
                       {product.shipping?.location && (
                         <div className="flex gap-4 p-4 sm:p-5 rounded-2xl bg-background border border-border/50 shadow-sm">
-                          <div className="shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-green-50 flex items-center justify-center text-green-600">
+                          <div className="shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-green-50 dark:bg-green-500/10 flex items-center justify-center text-green-600 dark:text-green-400">
                             <MapPin className="w-5 h-5 sm:w-6 sm:h-6" />
                           </div>
                           <div>
@@ -270,7 +270,7 @@ export default function ProductDetailsTabs({
 
                       {product.shipping?.shippingCost && (
                         <div className="flex gap-4 p-4 sm:p-5 rounded-2xl bg-background border border-border/50 shadow-sm">
-                          <div className="shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-purple-50 flex items-center justify-center text-purple-600">
+                          <div className="shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-purple-50 dark:bg-purple-500/10 flex items-center justify-center text-purple-600 dark:text-purple-400">
                             <Wallet className="w-5 h-5 sm:w-6 sm:h-6" />
                           </div>
                           <div>

@@ -20,10 +20,16 @@ import {
   useRemoveCartItemMutation,
 } from "@/services/cartApi";
 import type { ICartItem } from "@/types/cart/cartTypes";
-import { USER_ROUTES } from "@/routes/temp";
+import { AUTH_ROUTES, WEBSITE_ROUTES } from "@/routes/temp";
 import { toast } from "sonner";
 import SmartLink from "@/components/shared/SmartLink";
 import { extractErrorMessage } from "@/utils/errorHandler";
+import { useSelector, useDispatch } from "react-redux";
+import type { RootState } from "@/store";
+import {
+  updateLocalCartQuantity,
+  removeLocalCartItem,
+} from "@/features/cartSlice";
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -31,21 +37,59 @@ interface CartDrawerProps {
 }
 
 export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
-  const { data, isLoading } = useGetCartQuery();
+  const { isAuthenticated } = useSelector((state: RootState) => state.user);
+  const localCart = useSelector((state: RootState) => state.cart);
+  const dispatch = useDispatch();
+
+  const { data, isLoading: isQueryLoading } = useGetCartQuery(undefined, {
+    skip: !isAuthenticated,
+  });
   const [updateCartItem] = useUpdateCartItemMutation();
   const [removeCartItem] = useRemoveCartItemMutation();
 
-  const cart = data?.data.cart;
+  const cartItems = isAuthenticated
+    ? (data?.data.cart?.items ?? [])
+    : localCart.localItems;
+  const subtotal = isAuthenticated
+    ? (data?.data.cart?.subtotal ?? 0)
+    : localCart.localSubtotal;
+  const shipping = isAuthenticated ? (data?.data.cart?.shipping ?? 0) : 0;
+  const platformFee = isAuthenticated
+    ? (data?.data.cart?.platform_fee ?? 0)
+    : 0;
+  const total = isAuthenticated
+    ? (data?.data.cart?.total ?? 0)
+    : localCart.localTotal;
+  const isLoading = isAuthenticated ? isQueryLoading : false;
 
   const handleUpdateQty = async (
     productId: string,
     quantity: number,
+    variant_id?: string | null,
     size?: string | null,
     color?: string | null,
   ) => {
     if (quantity < 1) return;
+    if (!isAuthenticated) {
+      dispatch(
+        updateLocalCartQuantity({
+          product_id: productId,
+          quantity,
+          size,
+          color,
+          variant_id,
+        } as any),
+      );
+      return;
+    }
     try {
-      await updateCartItem({ productId, quantity, size, color }).unwrap();
+      await updateCartItem({
+        productId,
+        quantity,
+        size,
+        color,
+        variant_id,
+      } as any).unwrap();
     } catch (err: any) {
       toast.error(extractErrorMessage(err, "Failed to update quantity"));
     }
@@ -53,11 +97,29 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 
   const handleRemove = async (
     productId: string,
+    variant_id?: string | null,
     size?: string | null,
     color?: string | null,
   ) => {
+    if (!isAuthenticated) {
+      dispatch(
+        removeLocalCartItem({
+          product_id: productId,
+          size,
+          color,
+          variant_id,
+        } as any),
+      );
+      toast.success("Item removed");
+      return;
+    }
     try {
-      await removeCartItem({ productId, size, color }).unwrap();
+      await removeCartItem({
+        productId,
+        size,
+        color,
+        variant_id,
+      } as any).unwrap();
       toast.success("Item removed");
     } catch (err: any) {
       toast.error(extractErrorMessage(err, "Failed to remove item"));
@@ -89,7 +151,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                 </div>
               ))}
             </div>
-          ) : !cart || cart.items.length === 0 ? (
+          ) : cartItems.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-center space-y-4 opacity-60 py-10">
               <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center">
                 <ShoppingCart className="w-8 h-8" />
@@ -108,9 +170,9 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
           ) : (
             <div className="space-y-6">
               <AnimatePresence>
-                {cart.items.map((item: ICartItem) => (
+                {cartItems.map((item: ICartItem) => (
                   <motion.div
-                    key={`${item.product_id}-${item.size}-${item.color}`}
+                    key={`${item.product_id}-${item.variant_id ?? ""}-${item.variant_options ? JSON.stringify(item.variant_options) : `${item.size ?? "none"}-${item.color ?? "none"}`}`}
                     layout
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -131,29 +193,65 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                         </h4>
                         <button
                           onClick={() =>
-                            handleRemove(item.product_id, item.size, item.color)
+                            handleRemove(
+                              item.product_id,
+                              item.variant_id,
+                              item.size,
+                              item.color,
+                            )
                           }
                           className="text-muted-foreground hover:text-red-500 transition-colors"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
-                      <div className="flex items-center gap-1.5 pt-0.5">
-                        {item.size && (
-                          <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded">
-                            {item.size}
-                          </span>
-                        )}
-                        {item.color && (
-                          <div className="flex items-center gap-1 ml-1 text-[10px] text-muted-foreground font-bold uppercase tracking-widest">
-                            {item.color_hex && (
+                      <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+                        {item.variant_options ? (
+                          Object.entries(item.variant_options).map(
+                            ([key, value]) => (
                               <div
-                                className="w-2 h-2 rounded-full border border-black/10"
-                                style={{ backgroundColor: item.color_hex }}
-                              />
+                                key={key}
+                                className="flex items-center gap-1 text-[10px] text-muted-foreground font-bold uppercase tracking-widest bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded border border-zinc-200/50 dark:border-white/5"
+                              >
+                                {key.toLowerCase() === "color" &&
+                                  item.color_hex && (
+                                    <div
+                                      className="w-1.5 h-1.5 rounded-full border border-black/10"
+                                      style={{
+                                        backgroundColor: item.color_hex,
+                                      }}
+                                    />
+                                  )}
+                                <span className="opacity-50">{key}:</span>{" "}
+                                {value}
+                              </div>
+                            ),
+                          )
+                        ) : (
+                          <>
+                            {item.size && (
+                              <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded border border-zinc-200/50 dark:border-white/5">
+                                {item.size}
+                                <span className="ml-1 opacity-50 underline decoration-primary/30 font-black">
+                                  Size
+                                </span>
+                              </span>
                             )}
-                            {item.color}
-                          </div>
+                            {item.color && (
+                              <div className="flex items-center gap-1 text-[10px] text-muted-foreground font-bold uppercase tracking-widest bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded border border-zinc-200/50 dark:border-white/5">
+                                {item.color_hex && (
+                                  <div
+                                    className="w-1.5 h-1.5 rounded-full border border-black/10"
+                                    style={{ backgroundColor: item.color_hex }}
+                                  />
+                                )}
+                                {item.color}
+                                <span className="ml-1 opacity-50 underline decoration-primary/30 font-black">
+                                  Color
+                                </span>
+                              </div>
+                            )}
+                          </>
                         )}
                       </div>
 
@@ -164,6 +262,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                               handleUpdateQty(
                                 item.product_id,
                                 item.quantity - 1,
+                                item.variant_id,
                                 item.size,
                                 item.color,
                               )
@@ -180,6 +279,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                               handleUpdateQty(
                                 item.product_id,
                                 item.quantity + 1,
+                                item.variant_id,
                                 item.size,
                                 item.color,
                               )
@@ -191,7 +291,9 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                         </div>
                         <p className="text-sm font-black text-primary tabular-nums">
                           ₦
-                          {(item.discount_price ?? item.price).toLocaleString()}
+                          {(
+                            (item.discount_price ?? item.price) * item.quantity
+                          ).toLocaleString()}
                         </p>
                       </div>
                     </div>
@@ -202,32 +304,30 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
           )}
         </div>
 
-        {cart && cart.items.length > 0 && (
+        {cartItems.length > 0 && (
           <div className="p-6 border-t border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/30 space-y-4">
             <div className="space-y-1.5">
               <div className="flex justify-between text-sm text-muted-foreground font-medium">
                 <span>Subtotal</span>
-                <span>₦{(cart?.subtotal ?? 0).toLocaleString()}</span>
+                <span>₦{subtotal.toLocaleString()}</span>
               </div>
               <div className="flex justify-between text-sm text-muted-foreground font-medium">
                 <span>Shipping</span>
-                <span>₦{(cart?.shipping ?? 0).toLocaleString()}</span>
+                <span>₦{shipping.toLocaleString()}</span>
               </div>
               <div className="flex justify-between text-sm text-muted-foreground font-medium">
                 <span>Service Charge</span>
-                <span>₦{(cart?.platform_fee ?? 0).toLocaleString()}</span>
+                <span>₦{platformFee.toLocaleString()}</span>
               </div>
               <div className="border-t border-dashed border-zinc-200 dark:border-zinc-800 my-1"></div>
               <div className="flex justify-between text-lg font-black tracking-tight">
                 <span>Total</span>
-                <span className="text-primary">
-                  ₦{(cart?.total ?? 0).toLocaleString()}
-                </span>
+                <span className="text-primary">₦{total.toLocaleString()}</span>
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
-              <SmartLink to={USER_ROUTES.CART} className="w-full">
+              <SmartLink to={WEBSITE_ROUTES.CART} className="w-full">
                 <Button
                   variant="outline"
                   className="rounded-2xl h-12 font-bold w-full"
@@ -236,7 +336,14 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                   View Cart
                 </Button>
               </SmartLink>
-              <SmartLink to={USER_ROUTES.CHECKOUT} className="w-full">
+              <SmartLink
+                to={
+                  isAuthenticated
+                    ? WEBSITE_ROUTES.CHECKOUT
+                    : `${AUTH_ROUTES.LOGIN}?redirect=${encodeURIComponent(WEBSITE_ROUTES.CHECKOUT)}`
+                }
+                className="w-full"
+              >
                 <Button
                   className="rounded-2xl h-12 font-black shadow-lg shadow-primary/20 w-full"
                   onClick={onClose}

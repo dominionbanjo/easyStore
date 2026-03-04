@@ -46,7 +46,7 @@ export function PayoutSetupStep({
 }: PayoutSetupStepProps) {
   return (
     <Card className="border-none shadow-md overflow-hidden">
-      <CardHeader className="bg-gradient-to-r from-emerald-500/10 via-emerald-500/5 to-transparent pb-8">
+      <CardHeader className="bg-gradient-to-r from-emerald-500/10 via-emerald-500/5 to-transparent p-6 md:p-8">
         <CardTitle className="text-xl text-emerald-600 dark:text-emerald-400">
           Payout Setup
         </CardTitle>

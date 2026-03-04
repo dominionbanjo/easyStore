@@ -36,10 +36,10 @@ export function ReviewCard({ review, index = 0 }: ReviewCardProps) {
             </Avatar>
 
             <div className="flex flex-col sm:items-center text-left sm:text-center">
-              <h4 className="font-bold text-gray-900 line-clamp-1">
+              <h4 className="font-bold text-foreground line-clamp-1">
                 {review.user.first_name} {review.user.last_name}
               </h4>
-              <div className="flex items-center gap-1.5 text-xs font-semibold text-green-600 bg-green-50 px-2 py-0.5 rounded-full mt-1">
+              <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-400/10 px-2 py-0.5 rounded-full mt-1">
                 <CheckCircle2 className="w-3 h-3" />
                 Verified
               </div>

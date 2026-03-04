@@ -18,6 +18,8 @@ export const WEBSITE_ROUTES = {
   FEATURED: "/featured",
   TRENDING: "/trending",
   NEW_ARRIVALS: "/new-arrivals",
+  CART: "/cart",
+  CHECKOUT: "/cart/preview",
   NOT_FOUND: "*",
 } as const;
 
@@ -35,9 +37,7 @@ export const ACCOUNT_ROUTES = {
   BASE: "/account",
   PROFILE: "/account/profile",
   SETTINGS: "/account/settings",
-  CART: "/account/cart",
   WISHLIST: "/account/wishlist",
-  CHECKOUT: "/account/cart/preview",
   VERIFY_PAYMENT: "/account/verify-payment",
   ORDERS: "/account/orders",
   ORDER_DETAILS: "/account/orders/:id",

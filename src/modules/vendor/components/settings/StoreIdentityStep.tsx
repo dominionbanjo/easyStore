@@ -7,13 +7,7 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
+
 import { Button } from "@/components/ui/button";
 import { Upload, Save, Loader2, Trash2 } from "lucide-react";
 
@@ -21,7 +15,6 @@ interface StoreIdentityStepProps {
   storeData: {
     store_name: string;
     description: string;
-    category: string;
   };
   bannerPreview: string | null;
   uploadProgress: number | null;
@@ -29,7 +22,6 @@ interface StoreIdentityStepProps {
   onInputChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => void;
-  onCategoryChange: (val: string) => void;
   onBannerChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBannerRemove?: () => void;
   onSave: () => void;
@@ -42,7 +34,6 @@ export function StoreIdentityStep({
   uploadProgress,
   isDeletingBanner,
   onInputChange,
-  onCategoryChange,
   onBannerChange,
   onBannerRemove,
   onSave,
@@ -50,7 +41,7 @@ export function StoreIdentityStep({
 }: StoreIdentityStepProps) {
   return (
     <Card className="border-none shadow-md overflow-hidden">
-      <CardHeader className="bg-gradient-to-r from-emerald-500/10 via-emerald-500/5 to-transparent pb-8">
+      <CardHeader className="bg-gradient-to-r from-emerald-500/10 via-emerald-500/5 to-transparent p-6 md:p-8">
         <CardTitle className="text-xl text-emerald-600 dark:text-emerald-400">
           Store Identity
         </CardTitle>
@@ -144,32 +135,15 @@ export function StoreIdentityStep({
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-2">
-            <Label>Store Name</Label>
-            <Input
-              name="store_name"
-              value={storeData.store_name}
-              onChange={onInputChange}
-              className="rounded-xl h-11"
-              placeholder="e.g. Dominion Gadgets"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label>Store Category</Label>
-            <Select value={storeData.category} onValueChange={onCategoryChange}>
-              <SelectTrigger className="h-11 rounded-xl">
-                <SelectValue placeholder="Select Category" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="electronics">Electronics</SelectItem>
-                <SelectItem value="fashion">Fashion & Apparel</SelectItem>
-                <SelectItem value="health">Health & Beauty</SelectItem>
-                <SelectItem value="home">Home & Kitchen</SelectItem>
-                <SelectItem value="groceries">Groceries</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+        <div className="space-y-2">
+          <Label>Store Name</Label>
+          <Input
+            name="store_name"
+            value={storeData.store_name}
+            onChange={onInputChange}
+            className="rounded-xl h-11"
+            placeholder="e.g. Dominion Gadgets"
+          />
         </div>
 
         <div className="space-y-2">

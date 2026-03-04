@@ -307,8 +307,20 @@ export default function OrderDetailsPage() {
                           </h3>
                           <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground mb-2">
                             <span>Qty: {item.quantity}</span>
-                            {item.size && <span>Size: {item.size}</span>}
-                            {item.color && <span>Color: {item.color}</span>}
+                            {item.variant_options ? (
+                              Object.entries(item.variant_options).map(
+                                ([key, value]) => (
+                                  <span key={key}>
+                                    {key}: {value}
+                                  </span>
+                                ),
+                              )
+                            ) : (
+                              <>
+                                {item.size && <span>Size: {item.size}</span>}
+                                {item.color && <span>Color: {item.color}</span>}
+                              </>
+                            )}
                           </div>
                           <div className="flex items-center gap-2">
                             <span className="text-lg font-bold text-emerald-600 dark:text-emerald-400">

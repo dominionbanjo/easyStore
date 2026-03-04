@@ -151,6 +151,11 @@ export default function CategoryDetailsPage() {
                       storeSlug={product.store_slug}
                       colors={product.colors}
                       sizes={product.sizes}
+                      options={product.options}
+                      variants={product.variants?.map((v) => ({
+                        ...v,
+                        image_url: v.image_url ?? undefined,
+                      }))}
                       category={product.category ?? slug}
                     >
                       <ProductCard.Image />

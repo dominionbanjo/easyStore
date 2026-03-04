@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import type { RootState } from "@/store";
 import { ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -10,7 +12,12 @@ import {
 } from "@/services/cartApi";
 import type { ICartItem } from "@/types/cart/cartTypes";
 import { toast } from "sonner";
-import { USER_ROUTES, WEBSITE_ROUTES } from "@/routes/temp";
+import { WEBSITE_ROUTES, AUTH_ROUTES } from "@/routes/temp";
+import {
+  updateLocalCartQuantity,
+  removeLocalCartItem,
+  clearLocalCart as clearLocalCartAction,
+} from "@/features/cartSlice";
 import SmartLink from "@/components/shared/SmartLink";
 import { extractErrorMessage } from "@/utils/errorHandler";
 import { CartSkeleton } from "../components/skeletons/CartSkeleton";
@@ -27,31 +34,68 @@ function debounce<T extends (...args: any[]) => void>(fn: T, delay = 500) {
 }
 
 export default function CartPage() {
-  const { data, isLoading, isFetching, isError, refetch } = useGetCartQuery();
+  const { isAuthenticated } = useSelector((state: RootState) => state.user);
+  const localCart = useSelector((state: RootState) => state.cart);
+  const dispatch = useDispatch();
+
+  const { data, isLoading, isFetching, isError, refetch } = useGetCartQuery(
+    undefined,
+    { skip: !isAuthenticated },
+  );
   const [updateCartItem] = useUpdateCartItemMutation();
   const [removeCartItem] = useRemoveCartItemMutation();
   const [clearCart] = useClearCartMutation();
 
-  const cart = data?.data.cart;
+  const cartItems = isAuthenticated
+    ? (data?.data.cart?.items ?? [])
+    : localCart.localItems;
+  const subtotal = isAuthenticated
+    ? (data?.data.cart?.subtotal ?? 0)
+    : localCart.localSubtotal;
+  const shipping = isAuthenticated ? (data?.data.cart?.shipping ?? 0) : 0;
+  const platformFee = isAuthenticated
+    ? (data?.data.cart?.platform_fee ?? 0)
+    : 0;
+  const total = isAuthenticated
+    ? (data?.data.cart?.total ?? 0)
+    : localCart.localTotal;
 
   /* ───────── LOCAL QUANTITY STATE ───────── */
   const [localQty, setLocalQty] = useState<Record<string, number>>({});
 
   const getItemKey = (
     productId: string,
+    variant_id?: string | null,
+    variant_options?: Record<string, string> | null,
     size?: string | null,
     color?: string | null,
-  ) => `${productId}-${size ?? "none"}-${color ?? "none"}`;
+  ) => {
+    if (variant_id) return `${productId}-${variant_id}`;
+    if (variant_options) {
+      const optionsStr = Object.entries(variant_options)
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([k, v]) => `${k}:${v}`)
+        .join("|");
+      return `${productId}-${optionsStr}`;
+    }
+    return `${productId}-${size ?? "none"}-${color ?? "none"}`;
+  };
 
   useEffect(() => {
-    if (!cart) return;
     const initial: Record<string, number> = {};
-    cart.items.forEach((item: ICartItem) => {
-      initial[getItemKey(item.product_id, item.size, item.color)] =
-        item.quantity;
+    cartItems.forEach((item: ICartItem) => {
+      initial[
+        getItemKey(
+          item.product_id,
+          item.variant_id,
+          item.variant_options,
+          item.size,
+          item.color,
+        )
+      ] = item.quantity;
     });
     setLocalQty(initial);
-  }, [cart]);
+  }, [cartItems]);
 
   /* ───────── DEBOUNCED API CALL ───────── */
   const debouncedUpdate = useMemo(
@@ -62,8 +106,9 @@ export default function CartPage() {
           quantity: number,
           size?: string | null,
           color?: string | null,
+          variant_id?: string | null,
         ) => {
-          updateCartItem({ productId, quantity, size, color })
+          updateCartItem({ productId, quantity, size, color, variant_id })
             .unwrap()
             .catch((err: any) => {
               toast.error(
@@ -76,11 +121,11 @@ export default function CartPage() {
   );
 
   /* ───────── STATES ───────── */
-  if (isLoading || isFetching || !data) {
+  if ((isAuthenticated && isLoading) || isFetching) {
     return <CartSkeleton />;
   }
 
-  if (isError || !cart) {
+  if (isAuthenticated && isError) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center px-4">
         <ShoppingCart className="h-12 w-12 text-gray-400 mb-2" />
@@ -100,25 +145,58 @@ export default function CartPage() {
   const handleQuantityChange = (
     productId: string,
     quantity: number,
+    variant_id?: string | null,
+    variant_options?: Record<string, string> | null,
     size?: string | null,
     color?: string | null,
   ) => {
     const safeQty = Math.max(1, quantity);
-    const key = getItemKey(productId, size, color);
+    const key = getItemKey(productId, variant_id, variant_options, size, color);
     setLocalQty((prev) => ({
       ...prev,
       [key]: safeQty,
     }));
-    debouncedUpdate(productId, safeQty, size, color);
+    if (!isAuthenticated) {
+      dispatch(
+        updateLocalCartQuantity({
+          product_id: productId,
+          quantity: safeQty,
+          size,
+          color,
+          variant_id,
+        } as any),
+      );
+      return;
+    }
+    debouncedUpdate(productId, safeQty, size, color, variant_id);
   };
 
   const handleRemove = async (
     productId: string,
+    variant_id?: string | null,
+    _variant_options?: Record<string, string> | null,
     size?: string | null,
     color?: string | null,
   ) => {
+    if (!isAuthenticated) {
+      dispatch(
+        removeLocalCartItem({
+          product_id: productId,
+          size,
+          color,
+          variant_id,
+        } as any),
+      );
+      toast.success("Item removed from cart");
+      return;
+    }
     try {
-      await removeCartItem({ productId, size, color }).unwrap();
+      await removeCartItem({
+        productId,
+        size,
+        color,
+        variant_id,
+      } as any).unwrap();
       toast.success("Item removed from cart");
     } catch (err: any) {
       toast.error(extractErrorMessage(err, "Failed to remove item"));
@@ -126,6 +204,11 @@ export default function CartPage() {
   };
 
   const handleClearCart = async () => {
+    if (!isAuthenticated) {
+      dispatch(clearLocalCartAction());
+      toast.success("Cart cleared");
+      return;
+    }
     try {
       await clearCart().unwrap();
       toast.success("Cart cleared");
@@ -145,13 +228,13 @@ export default function CartPage() {
               Shopping Cart
             </h1>
             <p className="text-sm sm:text-base text-muted-foreground mt-2 font-medium">
-              You have {cart.items.length}{" "}
-              {cart.items.length === 1 ? "item" : "items"} in your cart
+              You have {cartItems.length}{" "}
+              {cartItems.length === 1 ? "item" : "items"} in your cart
             </p>
           </div>
         </div>
 
-        {cart.items.length === 0 ? (
+        {cartItems.length === 0 ? (
           /* Empty State */
           <Card className="flex flex-col items-center justify-center py-20 px-4 text-center bg-white dark:bg-neutral-900 rounded-[3rem] border-2 border-dashed border-gray-100 dark:border-white/5 mx-4 sm:mx-0 shadow-none">
             <div className="w-24 h-24 bg-gray-50 dark:bg-neutral-800 rounded-full flex items-center justify-center mb-8">
@@ -175,13 +258,25 @@ export default function CartPage() {
           <div className="grid grid-cols-1 lg:grid-cols-[1.8fr_1fr] gap-8 items-start">
             {/* Items List */}
             <div className="space-y-4 px-1 sm:px-0">
-              {cart.items.map((item: ICartItem) => (
+              {cartItems.map((item: ICartItem) => (
                 <CartItem
-                  key={getItemKey(item.product_id, item.size, item.color)}
+                  key={getItemKey(
+                    item.product_id,
+                    item.variant_id,
+                    item.variant_options,
+                    item.size,
+                    item.color,
+                  )}
                   item={item}
                   quantity={
                     localQty[
-                      getItemKey(item.product_id, item.size, item.color)
+                      getItemKey(
+                        item.product_id,
+                        item.variant_id,
+                        item.variant_options,
+                        item.size,
+                        item.color,
+                      )
                     ] ?? item.quantity
                   }
                   onQuantityChange={handleQuantityChange}
@@ -193,13 +288,17 @@ export default function CartPage() {
             {/* Sticky Summary */}
             <div className="px-0 sm:px-0 sticky top-24">
               <CartSummary
-                subtotal={cart?.subtotal ?? 0}
-                shipping={cart?.shipping ?? 0}
-                serviceCharge={cart?.platform_fee ?? 0}
-                total={cart?.total ?? 0}
+                subtotal={subtotal}
+                shipping={shipping}
+                serviceCharge={platformFee}
+                total={total}
                 onClear={handleClearCart}
-                previewHref={USER_ROUTES.CHECKOUT}
-                continueShoppingHref={WEBSITE_ROUTES.HOME}
+                previewHref={
+                  isAuthenticated
+                    ? WEBSITE_ROUTES.CHECKOUT
+                    : `${AUTH_ROUTES.LOGIN}?redirect=${encodeURIComponent(WEBSITE_ROUTES.CHECKOUT)}`
+                }
+                continueShoppingHref={WEBSITE_ROUTES.DISCOVERY}
               />
             </div>
           </div>

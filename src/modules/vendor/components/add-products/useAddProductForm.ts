@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch, useSelector } from "react-redux";
-import { updateProductDraft } from "@/features/productDraftSlice";
+import { updateProductDraft, setSyncing } from "@/features/productDraftSlice";
 import type { RootState } from "@/store";
 import {
   addProductSchema,
@@ -20,19 +20,24 @@ export function useAddProductForm(extras: any) {
     mode: "onTouched",
     defaultValues: {
       stock: 0,
-      colors: [],
     },
   });
 
-  const { reset, watch, getValues } = methods;
+  const { reset, watch, getValues, trigger } = methods;
   const watchedValues = watch();
 
   // Auto-save form values to Redux draft (debounced)
   useEffect(() => {
+    if (!hasHydrated.current) return;
+
+    dispatch(setSyncing(true));
     const timer = setTimeout(() => {
-      // Avoid saving during initial hydration
-      if (!hasHydrated.current) return;
-      dispatch(updateProductDraft(watchedValues as any));
+      // We deep clone to prevent Redux/Immer from freezing the objects
+      // that React Hook Form is still using internally.
+      // structuredClone is preferred as it handles undefined values better than JSON.parse/stringify.
+      const valuesToSync = structuredClone(watchedValues);
+      dispatch(updateProductDraft(valuesToSync as any));
+      dispatch(setSyncing(false));
     }, 1000);
 
     return () => clearTimeout(timer);
@@ -40,7 +45,17 @@ export function useAddProductForm(extras: any) {
 
   // Sync / Hydrate from Draft
   useEffect(() => {
-    if (!draft) return;
+    // Draft was cleared — reset form to empty and allow fresh hydration
+    if (!draft) {
+      hasHydrated.current = false;
+      reset({ stock: 0 } as any);
+      extras.setImage(null);
+      extras.setGallery([]);
+      extras.setSpecs([]);
+      extras.setTags([]);
+      extras.setHighlights([]);
+      return;
+    }
 
     // IMPORTANT: Only reset if the draft represents a different product
     // or if we haven't hydrated at all yet.
@@ -58,10 +73,16 @@ export function useAddProductForm(extras: any) {
       variants: draft.variants
         ? draft.variants.map((v: any) => ({ ...v }))
         : [],
+      options: draft.options ? draft.options.map((o: any) => ({ ...o })) : [],
       tags: draft.tags ? [...draft.tags] : [],
       highlights: draft.highlights ? [...draft.highlights] : [],
       sizes: draft.sizes ? [...draft.sizes] : [],
     } as any);
+
+    // Trigger validation so isValid reflects the hydrated data immediately.
+    // Without this, mode:"onTouched" keeps isValid=false because no fields
+    // have been interacted with by the user.
+    setTimeout(() => trigger(), 0);
 
     hasHydrated.current = true;
 
@@ -71,16 +92,15 @@ export function useAddProductForm(extras: any) {
     if (draft.specs) extras.setSpecs(draftToSpecs(draft.specs));
     if (draft.tags) extras.setTags(draft.tags);
     if (draft.highlights) extras.setHighlights(draft.highlights);
-    if (draft.sizes) extras.setSizes(draft.sizes);
   }, [
     draft,
     reset,
+    trigger,
     extras.setImage,
     extras.setGallery,
     extras.setSpecs,
     extras.setTags,
     extras.setHighlights,
-    extras.setSizes,
     getValues,
   ]);
 

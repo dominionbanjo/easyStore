@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import { useForm, FormProvider } from "react-hook-form";
 import { z } from "zod";
@@ -18,6 +18,8 @@ type ForgotPasswordValues = z.infer<typeof ForgotPasswordSchema>;
 
 export default function ForgotPasswordPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "/";
   const [forgotPassword, { isLoading }] = useForgotPasswordMutation();
 
   const methods = useForm<ForgotPasswordValues>({
@@ -65,7 +67,11 @@ export default function ForgotPasswordPage() {
       <div className="mt-8 text-center text-sm text-muted-foreground">
         Remembered your password?{" "}
         <button
-          onClick={() => navigate(AUTH_ROUTES.LOGIN)}
+          onClick={() =>
+            navigate(
+              `${AUTH_ROUTES.LOGIN}?redirect=${encodeURIComponent(redirectTo)}`,
+            )
+          }
           className="text-primary font-semibold hover:underline"
         >
           Log in

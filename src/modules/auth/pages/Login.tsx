@@ -42,7 +42,9 @@ import { Mail, Lock } from "lucide-react";
 export default function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { isAuthenticated } = useSelector((state: any) => state.user);
+  const { isAuthenticated, currentUser } = useSelector(
+    (state: any) => state.user,
+  );
   const googleButtonRef = useRef<HTMLDivElement>(null);
 
   const [login, { isLoading }] = useLoginMutation();
@@ -60,10 +62,13 @@ export default function LoginPage() {
   /* Auto redirect if logged in */
   useEffect(() => {
     const token = Cookies.get("token");
-    if (token && isAuthenticated) {
-      navigate(redirectTo, { replace: true });
+    if (token && isAuthenticated && currentUser) {
+      let finalRedirect = redirectTo;
+      if (currentUser?.account_type === "vendor") finalRedirect = "/vendor";
+      else if (currentUser?.account_type === "admin") finalRedirect = "/admin";
+      navigate(finalRedirect, { replace: true });
     }
-  }, [navigate, redirectTo, isAuthenticated]);
+  }, [navigate, redirectTo, isAuthenticated, currentUser]);
 
   /* Normal login */
   const onSubmit = async (data: LoginFormValues) => {
@@ -76,13 +81,16 @@ export default function LoginPage() {
         navigate(
           `${AUTH_ROUTES.VERIFY_OTP}?email=${encodeURIComponent(
             user.email,
-          )}&reset=true`,
+          )}&reset=true&redirect=${encodeURIComponent(redirectTo)}`,
         );
         return;
       }
 
       toast.success("Login successful!");
-      navigate(redirectTo, { replace: true });
+      let finalRedirect = redirectTo;
+      if (user?.account_type === "vendor") finalRedirect = "/vendor";
+      else if (user?.account_type === "admin") finalRedirect = "/admin";
+      navigate(finalRedirect, { replace: true });
     } catch (err: any) {
       toast.error(err.message || "Login failed");
     }
@@ -108,9 +116,13 @@ export default function LoginPage() {
         callback: async (response: any) => {
           try {
             const token = response.credential;
-            await googleLogin({ token }).unwrap();
+            const res: any = await googleLogin({ token }).unwrap();
+            const user = res?.data?.user || res?.user;
             toast.success("Logged in with Google!");
-            navigate(redirectTo, { replace: true });
+            let finalRedirect = redirectTo;
+            if (user?.account_type === "vendor") finalRedirect = "/vendor";
+            else if (user?.account_type === "admin") finalRedirect = "/admin";
+            navigate(finalRedirect, { replace: true });
           } catch (err: any) {
             toast.error(err.message || "Google login failed");
           }

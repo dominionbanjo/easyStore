@@ -14,6 +14,8 @@ import {
 } from "@/services/wishlistApi";
 import { ProductCard } from "@/components/shared/ProductCard";
 import { WishlistSkeleton } from "../components/skeletons/WishlistSkeleton";
+import SmartLink from "@/components/shared/SmartLink";
+import { WEBSITE_ROUTES } from "@/routes/index";
 
 export default function WishlistPage() {
   /* ───────────────── mutations ───────────────── */
@@ -71,27 +73,27 @@ export default function WishlistPage() {
         {/* ─── Header ─── */}
         <div className="flex flex-col sm:flex-row justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-2">
+            <h1 className="text-3xl font-bold text-zinc-900 dark:text-white flex items-center gap-2">
               <Heart className="h-7 w-7 text-primary" />
               My Wishlist
             </h1>
-            <p className="text-gray-600 text-sm mt-1">
+            <p className="text-zinc-500 dark:text-zinc-400 text-sm mt-1">
               {wishlist.length} item{wishlist.length !== 1 ? "s" : ""} saved
             </p>
           </div>
         </div>
 
-        <Separator />
+        <Separator className="bg-zinc-100 dark:bg-white/5" />
 
         {/* ─── Search ─── */}
         <div className="flex items-center gap-3">
           <div className="relative w-full sm:w-80">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-4 w-4" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-zinc-500 h-4 w-4" />
             <Input
               placeholder="Search wishlist…"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-9 rounded-full"
+              className="pl-9 rounded-full bg-zinc-50 dark:bg-neutral-900 border-zinc-200 dark:border-white/10"
             />
           </div>
         </div>
@@ -99,15 +101,17 @@ export default function WishlistPage() {
         {/* ─── Wishlist Items ─── */}
         {filteredWishlist.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24">
-            <Heart className="h-16 w-16 text-gray-300 mb-4" />
-            <h2 className="text-lg font-semibold text-gray-700">
+            <Heart className="h-16 w-16 text-zinc-200 dark:text-neutral-800 mb-4" />
+            <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">
               Your wishlist is empty
             </h2>
-            <p className="text-gray-500 text-sm mb-6">
+            <p className="text-zinc-500 dark:text-zinc-400 text-sm mb-6 text-center">
               Start exploring and save products you love.
             </p>
-            <Button className="rounded-full bg-primary text-white px-6">
-              Browse Products
+            <Button asChild className="rounded-full bg-primary text-white px-6">
+              <SmartLink to={WEBSITE_ROUTES.DISCOVERY}>
+                Discover Products
+              </SmartLink>
             </Button>
           </div>
         ) : (
@@ -139,6 +143,11 @@ export default function WishlistPage() {
                     isFavorite={true}
                     colors={item.product?.colors}
                     sizes={item.product?.sizes}
+                    options={item.product?.options}
+                    variants={item.product?.variants?.map((v) => ({
+                      ...v,
+                      image_url: v.image_url ?? undefined,
+                    }))}
                   >
                     <ProductCard.Image />
                     <ProductCard.Info />
@@ -152,8 +161,8 @@ export default function WishlistPage() {
 
         {/* ─── Summary ─── */}
         {wishlist.length > 0 && (
-          <Card className="p-6 flex flex-col sm:flex-row justify-between items-center mt-10 rounded-2xl">
-            <div className="text-sm text-gray-700">
+          <Card className="p-6 flex flex-col sm:flex-row justify-between items-center mt-10 rounded-2xl bg-zinc-50 dark:bg-neutral-900 border-zinc-100 dark:border-white/5">
+            <div className="text-sm text-zinc-600 dark:text-zinc-400">
               You have <strong>{wishlist.length}</strong> item
               {wishlist.length !== 1 ? "s" : ""} in your wishlist.
             </div>

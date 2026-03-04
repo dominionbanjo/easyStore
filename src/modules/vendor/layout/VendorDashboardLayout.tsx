@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
-import { toast } from "sonner";
+import { toast } from "sonner"; // Keep toast as it's used for vendor-specific error
 
 import { cn } from "@/lib/utils";
 import type { RootState } from "@/store";
@@ -24,11 +24,10 @@ export default function VendorDashboardLayout() {
   const token = Cookies.get("token");
 
   useEffect(() => {
-    // ⛔ Not authenticated
+    // 🚫 No token + not authenticated → redirect to landing page
     if (!token && !isAuthenticated && !isLoading) {
-      toast.error("You must be logged in to access this page");
       navigate("/", { replace: true });
-      return;
+      return; // Add return to prevent further execution if not authenticated
     }
 
     // ⛔ Authenticated but not vendor

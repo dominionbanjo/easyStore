@@ -1,9 +1,10 @@
 import { useEffect, useState, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import SmartLink from "./SmartLink";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "@/store";
 import { useLogoutMutation } from "@/services/authApi";
+import { clearLocalCart } from "@/features/cartSlice";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -37,6 +38,15 @@ import {
   SheetTitle,
   SheetDescription,
 } from "@/components/ui/sheet";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 
 import { AUTH_ROUTES, USER_ROUTES, WEBSITE_ROUTES } from "@/routes/temp";
@@ -44,7 +54,7 @@ import { toast } from "sonner";
 import { motion } from "framer-motion";
 import FancyHoverText from "./FancyTextHover";
 import { CartDrawer } from "@/modules/website/components/cart/CartDrawer";
-import { useGetCartQuery } from "@/services/cartApi";
+import { useGetCartQuery, useAddItemToCartMutation } from "@/services/cartApi";
 import * as Pages from "@/routes/lazyPages";
 import NavigationProgressBar from "./NavigationProgressBar";
 
@@ -54,15 +64,50 @@ export default function Header() {
   const [profileOpen, setProfileOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const location = useLocation();
-  const [logoutUser] = useLogoutMutation();
+  const [logoutUser, { isLoading: isLoggingOut }] = useLogoutMutation();
   const [query, setQuery] = useState("");
   const { theme, toggleTheme } = useTheme();
 
-  const { data: cartData } = useGetCartQuery(undefined, {
-    skip: !useSelector((state: RootState) => state.user.isAuthenticated),
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.user.isAuthenticated,
+  );
+  const localCart = useSelector((state: RootState) => state.cart);
+
+  const { data: cartData, refetch: refetchCart } = useGetCartQuery(undefined, {
+    skip: !isAuthenticated,
   });
-  const cartItemsCount = cartData?.data?.cart?.items?.length || 0;
+  const cartItemsCount = isAuthenticated
+    ? cartData?.data?.cart?.items?.length || 0
+    : localCart.localItems.length;
+
+  const dispatch = useDispatch();
+  const [addItemToCart] = useAddItemToCartMutation();
+
+  // Sync local cart to backend API when user logs in
+  useEffect(() => {
+    const syncCart = async () => {
+      if (isAuthenticated && localCart.localItems.length > 0) {
+        try {
+          for (const item of localCart.localItems) {
+            await addItemToCart({
+              product_id: item.product_id,
+              quantity: item.quantity,
+              size: item.size,
+              color: item.color,
+            }).unwrap();
+          }
+          dispatch(clearLocalCart());
+          refetchCart();
+          toast.success("Offline cart synchronized with your account.");
+        } catch (error) {
+          console.error("Failed to sync local cart", error);
+        }
+      }
+    };
+    syncCart();
+  }, [isAuthenticated, localCart.localItems, addItemToCart, dispatch]);
 
   const navItems: {
     name: string;
@@ -100,9 +145,6 @@ export default function Header() {
   );
 
   const user = useSelector((state: RootState) => state.user.currentUser);
-  const isAuthenticated = useSelector(
-    (state: RootState) => state.user.isAuthenticated,
-  );
 
   useEffect(() => {
     const handleScroll = () => {
@@ -120,6 +162,7 @@ export default function Header() {
     try {
       await logoutUser().unwrap();
       toast.success("Logged out successfully");
+      setIsLogoutModalOpen(false);
     } catch {
       toast.error("Failed to log out");
     }
@@ -242,7 +285,9 @@ export default function Header() {
                       /* ===== LOGGED OUT ===== */
                       <div className="space-y-2">
                         <SmartLink
-                          to={AUTH_ROUTES.LOGIN}
+                          to={`${AUTH_ROUTES.LOGIN}?redirect=${encodeURIComponent(
+                            location.pathname + location.search,
+                          )}`}
                           onClick={() => setMenuOpen(false)}
                           className="flex items-center gap-3 py-2 text-foreground hover:text-primary"
                         >
@@ -347,21 +392,19 @@ export default function Header() {
           </Button>
 
           <div className="flex items-center gap-2">
-            {isAuthenticated && (
-              <Button
-                variant="ghost"
-                size="icon"
-                className="relative p-2 flex-shrink-0"
-                onClick={() => setIsCartOpen(true)}
-              >
-                <ShoppingBag className="h-5 w-5 text-foreground" />
-                {cartItemsCount > 0 && (
-                  <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-black text-white ring-2 ring-white dark:ring-neutral-900 shadow-sm tabular-nums transition-transform animate-in zoom-in-50 duration-300">
-                    {cartItemsCount}
-                  </span>
-                )}
-              </Button>
-            )}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="relative p-2 flex-shrink-0"
+              onClick={() => setIsCartOpen(true)}
+            >
+              <ShoppingBag className="h-5 w-5 text-foreground" />
+              {cartItemsCount > 0 && (
+                <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-black text-white ring-2 ring-white dark:ring-neutral-900 shadow-sm tabular-nums transition-transform animate-in zoom-in-50 duration-300">
+                  {cartItemsCount}
+                </span>
+              )}
+            </Button>
 
             <Button
               variant="ghost"
@@ -441,7 +484,7 @@ export default function Header() {
                     </SmartLink>
 
                     <SmartLink
-                      to={USER_ROUTES.CART}
+                      to={WEBSITE_ROUTES.CART}
                       onClick={() => setProfileOpen(false)}
                       className="flex items-center gap-3 px-2 py-1.5 text-sm hover:bg-gray-100 dark:hover:bg-neutral-800 rounded transition-colors"
                     >
@@ -460,8 +503,8 @@ export default function Header() {
 
                     <button
                       onClick={() => {
-                        handleLogout();
                         setProfileOpen(false);
+                        setIsLogoutModalOpen(true);
                       }}
                       className="flex items-center gap-3 w-full text-left px-2 py-1.5 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 rounded transition-colors"
                     >
@@ -475,7 +518,11 @@ export default function Header() {
               <>
                 {/* Desktop Buttons */}
                 <div className="hidden lg:flex items-center gap-2">
-                  <SmartLink to={AUTH_ROUTES.LOGIN}>
+                  <SmartLink
+                    to={`${AUTH_ROUTES.LOGIN}?redirect=${encodeURIComponent(
+                      location.pathname + location.search,
+                    )}`}
+                  >
                     <Button
                       variant="outline"
                       className="rounded-full px-4 text-sm h-9"
@@ -483,7 +530,11 @@ export default function Header() {
                       Sign In
                     </Button>
                   </SmartLink>
-                  <SmartLink to={AUTH_ROUTES.SIGNUP}>
+                  <SmartLink
+                    to={`${AUTH_ROUTES.SIGNUP}?redirect=${encodeURIComponent(
+                      location.pathname + location.search,
+                    )}`}
+                  >
                     <Button className="rounded-full px-4 text-sm h-9 text-white">
                       Sign Up
                     </Button>
@@ -492,7 +543,9 @@ export default function Header() {
 
                 {/* Mobile/Medium Profile Icon (Login Link) */}
                 <SmartLink
-                  to={AUTH_ROUTES.LOGIN}
+                  to={`${AUTH_ROUTES.LOGIN}?redirect=${encodeURIComponent(
+                    location.pathname + location.search,
+                  )}`}
                   className="lg:hidden flex items-center justify-center rounded-full border border-zinc-200 dark:border-white/10 hover:bg-zinc-50 dark:hover:bg-white/5 transition-all p-1 flex-shrink-0 group"
                 >
                   <User className="h-6 w-6 text-foreground group-hover:text-emerald-400 transition-colors" />
@@ -540,6 +593,33 @@ export default function Header() {
       )}
 
       <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+
+      <Dialog open={isLogoutModalOpen} onOpenChange={setIsLogoutModalOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Confirm Logout</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to log out of your account? You will need to
+              sign back in to access your orders and wishlist.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="mt-6 flex gap-3 sm:justify-end">
+            <DialogClose asChild>
+              <Button variant="outline" disabled={isLoggingOut}>
+                Cancel
+              </Button>
+            </DialogClose>
+            <Button
+              variant="destructive"
+              onClick={handleLogout}
+              isLoading={isLoggingOut}
+              loadingText="Logging out..."
+            >
+              Yes, Log out
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </header>
   );
 }
