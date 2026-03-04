@@ -191,11 +191,11 @@ export function VariantBuilderSection() {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className="p-5 rounded-[2rem] border border-border/40 bg-muted/5 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden"
+                className="p-3 md:p-5 rounded-[2rem] border border-border/40 bg-muted/5 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden"
               >
                 <div className="flex flex-col gap-6">
                   {/* Header */}
-                  <div className="flex items-center justify-between border-b border-border/10 p-6">
+                  <div className="flex items-center justify-between border-b border-border/10 p-3 md:p-6">
                     <div className="flex items-center gap-3">
                       <div className="h-10 w-10 rounded-2xl bg-primary/10 flex items-center justify-center shadow-inner">
                         <span className="text-sm font-black text-primary">
@@ -221,8 +221,8 @@ export function VariantBuilderSection() {
                   </div>
 
                   {/* Body */}
-                  <div className="p-8">
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+                  <div className="p-4 md:p-8">
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 items-start">
                       <div className="md:col-span-4 space-y-4">
                         <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/80 ml-1 flex items-center gap-2">
                           <Settings2 className="h-3 w-3 text-primary" />
@@ -241,7 +241,7 @@ export function VariantBuilderSection() {
                                   <Input
                                     autoFocus
                                     placeholder="Enter custom name..."
-                                    className="h-14 rounded-2xl bg-background border-primary/20 focus:ring-primary/20 transition-all font-bold text-lg pr-12"
+                                    className="h-12 md:h-14 rounded-2xl bg-background border-primary/20 focus:ring-primary/20 transition-all font-bold text-base md:text-lg pr-12"
                                     defaultValue={options[index]?.name || ""}
                                     onKeyDown={(e) => {
                                       if (e.key === "Enter") {
@@ -304,7 +304,7 @@ export function VariantBuilderSection() {
                                   name={`options.${index}.name`}
                                   options={OPTION_NAME_SUGGESTIONS}
                                   placeholder="Select Option (e.g. Size)"
-                                  className="[&_button]:h-14 [&_button]:rounded-2xl"
+                                  className="[&_button]:h-12 md:[&_button]:h-14 [&_button]:rounded-2xl"
                                   onValueChange={(val: string) => {
                                     if (val && val !== "custom") {
                                       const currentValues =
@@ -350,8 +350,8 @@ export function VariantBuilderSection() {
                           </div>
                         ) : (
                           <div className="group relative">
-                            <div className="h-16 rounded-[1.5rem] bg-primary/5 border border-primary/20 flex items-center justify-between px-6 transition-all group-hover:bg-primary/10">
-                              <span className="text-xl font-black text-primary capitalize tracking-tight">
+                            <div className="h-14 md:h-16 rounded-[1.5rem] bg-primary/5 border border-primary/20 flex items-center justify-between px-4 md:px-6 transition-all group-hover:bg-primary/10">
+                              <span className="text-lg md:text-xl font-black text-primary capitalize tracking-tight">
                                 {options[index]?.name}
                               </span>
                               <Button
@@ -409,7 +409,7 @@ export function VariantBuilderSection() {
                                     <Badge
                                       key={v}
                                       variant="secondary"
-                                      className="bg-primary/10 text-primary border-none rounded-2xl h-10 px-4 font-bold flex items-center gap-2 shadow-sm"
+                                      className="bg-primary/10 text-primary border-none rounded-2xl h-8 md:h-10 px-3 md:px-4 text-[10px] md:text-sm font-bold flex items-center gap-2 shadow-sm"
                                     >
                                       {v}
                                       <button
