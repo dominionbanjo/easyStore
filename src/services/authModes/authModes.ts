@@ -54,25 +54,34 @@ export const baseQueryWithAuth: BaseQueryFn<
   if (
     status === 401 ||
     message.toLowerCase().includes("invalid token") ||
-    message.toLowerCase().includes("invalid credentials")
+    message.toLowerCase().includes("invalid credentials") ||
+    message.toLowerCase().includes("unauthorized")
   ) {
-    // Only proceed if a token actually exists (to prevent infinite loops on login page)
-    if (Cookies.get("token")) {
-      toast.error("Session expired. Please log in again.");
+    // Only proceed if a token actually exists or we are in a protected route
+    const currentPath = window.location.pathname;
+    const isProtectedRoute =
+      currentPath.startsWith("/vendor") ||
+      currentPath.startsWith("/admin") ||
+      currentPath.startsWith("/account");
+
+    if (Cookies.get("token") || isProtectedRoute) {
+      toast.error("Unauthorized! Session expired or access denied.", {
+        description: "Redirecting you to the landing page...",
+        duration: 4000,
+      });
+
+      // Clear all auth state
       Cookies.remove("token");
       api.dispatch(clearUser());
 
-      const currentPath = window.location.pathname + window.location.search;
-      const redirectUrl = `/auth/login?redirect=${encodeURIComponent(
-        currentPath,
-      )}`;
-
-      // Use a slight delay to allow the toast to be visible
+      // Redirect to landing page after a small delay to show the toast
       setTimeout(() => {
-        window.location.href = redirectUrl;
-      }, 800);
+        if (window.location.pathname !== "/") {
+          window.location.href = "/";
+        }
+      }, 1500);
     }
-    // Stop retrying on auth errors - fix double wrapping
+    // Stop retrying on auth errors
     return retry.fail(result.error);
   }
 

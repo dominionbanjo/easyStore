@@ -46,6 +46,7 @@ export function VariantBuilderSection() {
     fields: optionFields,
     prepend: prependOption,
     remove: removeOption,
+    update: updateOption,
   } = useFieldArray({
     control,
     name: "options",
@@ -60,12 +61,25 @@ export function VariantBuilderSection() {
 
   // Generate combinations
   useEffect(() => {
-    if (!options || options.length === 0) {
+    // Skip generation if options or some options are missing names
+    const processedOptions = options.filter(
+      (o: any) => o.name && o.name.trim().length > 0,
+    );
+
+    if (processedOptions.length === 0) {
       if ((getValues("variants") || []).length > 0) {
         replaceVariants([]);
       }
       return;
     }
+
+    // If any option has no values yet, skip generation entirely.
+    // This prevents placeholder combinations from overwriting real data
+    // that was loaded from the backend during edit-mode hydration.
+    const anyOptionEmpty = processedOptions.some(
+      (o: any) => !o.values || o.values.length === 0,
+    );
+    if (anyOptionEmpty) return;
 
     const generateCombinations = (
       opts: any[],
@@ -75,9 +89,7 @@ export function VariantBuilderSection() {
       if (index === opts.length) return [current];
       const result: Record<string, string>[] = [];
       const option = opts[index];
-
-      const values =
-        option.values && option.values.length > 0 ? option.values : ["..."];
+      const values = option.values;
 
       for (const val of values) {
         result.push(
@@ -91,24 +103,17 @@ export function VariantBuilderSection() {
       return result;
     };
 
-    const processedOptions = options.filter(
-      (o: any) => o.name && o.name.trim().length > 0,
-    );
-
-    if (processedOptions.length === 0) {
-      if ((getValues("variants") || []).length > 0) replaceVariants([]);
-      return;
-    }
-
     const combinations = generateCombinations(processedOptions);
-    const currentVariants = getValues("variants") || [];
+    const hydratedVariants = getValues("variants") || [];
 
     const nextVariants = combinations.map((combo) => {
-      const existing = currentVariants.find((v: any) => {
+      const existing = hydratedVariants.find((v: any) => {
         if (!v.combinations) return false;
         const keys1 = Object.keys(combo);
         const keys2 = Object.keys(v.combinations);
         if (keys1.length !== keys2.length) return false;
+
+        // Exact match for keys and values
         return keys1.every((k) => combo[k] === v.combinations[k]);
       });
 
@@ -124,7 +129,7 @@ export function VariantBuilderSection() {
     });
 
     const currentSerialized = JSON.stringify(
-      currentVariants.map((v: any) => v.combinations),
+      hydratedVariants.map((v: any) => v.combinations),
     );
     const nextSerialized = JSON.stringify(
       nextVariants.map((v) => v.combinations),
@@ -245,10 +250,13 @@ export function VariantBuilderSection() {
                                           e.target as HTMLInputElement
                                         ).value.trim();
                                         if (val) {
-                                          setValue(
-                                            `options.${index}.name`,
-                                            val,
+                                          const currentOpt = getValues(
+                                            `options.${index}`,
                                           );
+                                          updateOption(index, {
+                                            ...currentOpt,
+                                            name: val,
+                                          });
                                           setEditingNameIndex(null);
                                           setCustomNames((prev) => {
                                             const next = { ...prev };
@@ -261,7 +269,13 @@ export function VariantBuilderSection() {
                                     onBlur={(e) => {
                                       const val = e.target.value.trim();
                                       if (val) {
-                                        setValue(`options.${index}.name`, val);
+                                        const currentOpt = getValues(
+                                          `options.${index}`,
+                                        );
+                                        updateOption(index, {
+                                          ...currentOpt,
+                                          name: val,
+                                        });
                                         setEditingNameIndex(null);
                                       }
                                     }}
@@ -291,6 +305,18 @@ export function VariantBuilderSection() {
                                   options={OPTION_NAME_SUGGESTIONS}
                                   placeholder="Select Option (e.g. Size)"
                                   className="[&_button]:h-14 [&_button]:rounded-2xl"
+                                  onValueChange={(val: string) => {
+                                    if (val && val !== "custom") {
+                                      const currentValues =
+                                        getValues(`options.${index}.values`) ||
+                                        [];
+                                      updateOption(index, {
+                                        name: val,
+                                        values: currentValues,
+                                      });
+                                      setEditingNameIndex(null);
+                                    }
+                                  }}
                                 />
                                 {watch(`options.${index}.name`) ===
                                   "custom" && (
@@ -353,7 +379,8 @@ export function VariantBuilderSection() {
                             : "opacity-100",
                         )}
                       >
-                        {options[index]?.name?.toLowerCase() === "color" ? (
+                        {options[index]?.name?.trim()?.toLowerCase() ===
+                        "color" ? (
                           <div className="space-y-4">
                             <div className="flex items-center gap-2 mb-4">
                               <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -365,9 +392,15 @@ export function VariantBuilderSection() {
                             </div>
                             <ColorSelectModal
                               selectedValues={options[index]?.values || []}
-                              onChange={(vals) =>
-                                setValue(`options.${index}.values`, vals)
-                              }
+                              onChange={(vals) => {
+                                const currentOpt = getValues(
+                                  `options.${index}`,
+                                );
+                                updateOption(index, {
+                                  ...currentOpt,
+                                  values: vals,
+                                });
+                              }}
                             />
                             <div className="flex flex-wrap gap-2 mt-4 p-5 rounded-[2rem] bg-muted/5 border border-border/40 min-h-[120px] border-dashed">
                               {(options[index]?.values || []).length > 0 ? (
@@ -382,14 +415,17 @@ export function VariantBuilderSection() {
                                       <button
                                         type="button"
                                         className="p-1 hover:bg-primary/20 rounded-lg transition-colors"
-                                        onClick={() =>
-                                          setValue(
-                                            `options.${index}.values`,
-                                            options[index].values.filter(
-                                              (x: string) => x !== v,
-                                            ),
-                                          )
-                                        }
+                                        onClick={() => {
+                                          const currentOpt = getValues(
+                                            `options.${index}`,
+                                          );
+                                          updateOption(index, {
+                                            ...currentOpt,
+                                            values: (
+                                              currentOpt.values || []
+                                            ).filter((x: string) => x !== v),
+                                          });
+                                        }}
                                       >
                                         <X className="h-3 w-3" />
                                       </button>
@@ -411,21 +447,23 @@ export function VariantBuilderSection() {
                             label="Values"
                             values={options[index]?.values || []}
                             onAdd={(v) => {
-                              const currentVals = options[index]?.values || [];
+                              const currentOpt = getValues(`options.${index}`);
+                              const currentVals = currentOpt?.values || [];
                               if (!currentVals.includes(v)) {
-                                setValue(`options.${index}.values`, [
-                                  ...currentVals,
-                                  v,
-                                ]);
+                                updateOption(index, {
+                                  ...currentOpt,
+                                  values: [...currentVals, v],
+                                });
                               }
                             }}
                             onRemove={(v) => {
-                              setValue(
-                                `options.${index}.values`,
-                                (options[index]?.values || []).filter(
+                              const currentOpt = getValues(`options.${index}`);
+                              updateOption(index, {
+                                ...currentOpt,
+                                values: (currentOpt.values || []).filter(
                                   (val: string) => val !== v,
                                 ),
-                              );
+                              });
                             }}
                           />
                         )}
@@ -541,8 +579,9 @@ export function VariantBuilderSection() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-4">
-            <div className="hidden md:grid grid-cols-[1fr_100px_100px_100px_100px] gap-3 px-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
+          <div className="w-full">
+            {/* Desktop header */}
+            <div className="hidden md:grid grid-cols-[1fr_110px_110px_110px_110px] gap-3 px-4 mb-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
               <div>Variant</div>
               <div>SKU (Opt)</div>
               <div>Price</div>
@@ -561,7 +600,7 @@ export function VariantBuilderSection() {
                       initial={{ opacity: 0, scale: 0.98 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.95 }}
-                      className="flex flex-col md:grid md:grid-cols-[1fr_100px_100px_100px_100px] gap-3 p-4 rounded-3xl border border-border/40 bg-background/50 hover:bg-white dark:hover:bg-neutral-900 transition-all duration-300 items-center shadow-sm hover:shadow-md group"
+                      className="flex flex-col md:grid md:grid-cols-[1fr_110px_110px_110px_110px] gap-3 p-4 rounded-3xl border border-border/40 bg-background/50 hover:bg-white dark:hover:bg-neutral-900 transition-all duration-300 shadow-sm hover:shadow-md group"
                     >
                       {/* Combination Tags */}
                       <div className="flex items-center flex-wrap gap-2 w-full">
@@ -576,66 +615,69 @@ export function VariantBuilderSection() {
                         ))}
                       </div>
 
-                      {/* SKU */}
-                      <div className="space-y-1 w-full">
-                        <span className="md:hidden text-[9px] font-black text-muted-foreground/60 uppercase ml-1">
-                          SKU
-                        </span>
-                        <FormInput
-                          name={`variants.${index}.sku`}
-                          placeholder="SKU-123"
-                          className="space-y-0"
-                          inputClassName="h-10 text-xs rounded-2xl bg-muted/20 border-transparent focus:border-primary/20 focus:bg-background transition-all"
-                        />
-                      </div>
+                      {/* On mobile: 2-column grid. On md+: each is a grid cell */}
+                      <div className="md:contents grid grid-cols-2 gap-2 w-full">
+                        {/* SKU */}
+                        <div className="space-y-1 w-full">
+                          <span className="md:hidden text-[9px] font-black text-muted-foreground/60 uppercase ml-1">
+                            SKU
+                          </span>
+                          <FormInput
+                            name={`variants.${index}.sku`}
+                            placeholder="SKU-123"
+                            className="space-y-0"
+                            inputClassName="h-10 text-xs rounded-2xl bg-muted/20 border-transparent focus:border-primary/20 focus:bg-background transition-all"
+                          />
+                        </div>
 
-                      {/* Price Field */}
-                      <div className="space-y-1 w-full">
-                        <span className="md:hidden text-[9px] font-black text-muted-foreground/60 uppercase ml-1">
-                          Price
-                        </span>
-                        <FormPriceInput
-                          name={`variants.${index}.price`}
-                          placeholder="0.00"
-                          className="space-y-0"
-                          inputClassName="h-10 text-xs pl-8 rounded-2xl bg-muted/20 border-transparent focus:border-primary/20 focus:bg-background transition-all"
-                          icon={
-                            <Tag className="h-3 w-3 text-muted-foreground/60" />
-                          }
-                        />
-                      </div>
+                        {/* Price Field */}
+                        <div className="space-y-1 w-full">
+                          <span className="md:hidden text-[9px] font-black text-muted-foreground/60 uppercase ml-1">
+                            Price
+                          </span>
+                          <FormPriceInput
+                            name={`variants.${index}.price`}
+                            placeholder="0.00"
+                            className="space-y-0"
+                            inputClassName="h-10 text-xs pl-8 rounded-2xl bg-muted/20 border-transparent focus:border-primary/20 focus:bg-background transition-all"
+                            icon={
+                              <Tag className="h-3 w-3 text-muted-foreground/60" />
+                            }
+                          />
+                        </div>
 
-                      {/* Discount Field */}
-                      <div className="space-y-1 w-full">
-                        <span className="md:hidden text-[9px] font-black text-muted-foreground/60 uppercase ml-1">
-                          Discount
-                        </span>
-                        <FormPriceInput
-                          name={`variants.${index}.discount_price`}
-                          placeholder="Opt"
-                          className="space-y-0"
-                          inputClassName="h-10 text-xs pl-8 rounded-2xl bg-muted/20 border-transparent focus:border-primary/20 focus:bg-background transition-all"
-                          icon={
-                            <Percent className="h-3 w-3 text-muted-foreground/60" />
-                          }
-                        />
-                      </div>
+                        {/* Discount Field */}
+                        <div className="space-y-1 w-full">
+                          <span className="md:hidden text-[9px] font-black text-muted-foreground/60 uppercase ml-1">
+                            Discount
+                          </span>
+                          <FormPriceInput
+                            name={`variants.${index}.discount_price`}
+                            placeholder="Opt"
+                            className="space-y-0"
+                            inputClassName="h-10 text-xs pl-8 rounded-2xl bg-muted/20 border-transparent focus:border-primary/20 focus:bg-background transition-all"
+                            icon={
+                              <Percent className="h-3 w-3 text-muted-foreground/60" />
+                            }
+                          />
+                        </div>
 
-                      {/* Stock Field */}
-                      <div className="space-y-1 w-full">
-                        <span className="md:hidden text-[9px] font-black text-muted-foreground/60 uppercase ml-1">
-                          Stock
-                        </span>
-                        <FormInput
-                          name={`variants.${index}.stock`}
-                          type="number"
-                          placeholder="0"
-                          className="space-y-0"
-                          inputClassName="h-10 text-xs pl-8 rounded-2xl bg-muted/20 border-transparent focus:border-primary/20 focus:bg-background transition-all"
-                          icon={
-                            <Box className="h-3 w-3 text-muted-foreground/60" />
-                          }
-                        />
+                        {/* Stock Field */}
+                        <div className="space-y-1 w-full">
+                          <span className="md:hidden text-[9px] font-black text-muted-foreground/60 uppercase ml-1">
+                            Stock
+                          </span>
+                          <FormInput
+                            name={`variants.${index}.stock`}
+                            type="number"
+                            placeholder="0"
+                            className="space-y-0"
+                            inputClassName="h-10 text-xs pl-8 rounded-2xl bg-muted/20 border-transparent focus:border-primary/20 focus:bg-background transition-all"
+                            icon={
+                              <Box className="h-3 w-3 text-muted-foreground/60" />
+                            }
+                          />
+                        </div>
                       </div>
                     </motion.div>
                   );

@@ -8,14 +8,18 @@ import AuthProvider from "./providers/AuthProvider.tsx";
 import { ThemeProvider } from "./components/shared/ThemeContext.tsx";
 import { Toaster } from "./components/shared/Toaster.tsx";
 
+import { BrowserRouter as Router } from "react-router-dom";
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <Provider store={store}>
       <ThemeProvider>
-        <Toaster />
-        <AuthProvider>
-          <App />
-        </AuthProvider>
+        <Router>
+          <Toaster />
+          <AuthProvider>
+            <App />
+          </AuthProvider>
+        </Router>
       </ThemeProvider>
     </Provider>
   </StrictMode>,

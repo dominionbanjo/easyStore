@@ -1,9 +1,4 @@
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Outlet,
-} from "react-router-dom";
+import { Routes, Route, Outlet } from "react-router-dom";
 import { Suspense } from "react";
 // Utils & Components
 import ScrollToTop from "@/utils/ScrollToTop";
@@ -22,7 +17,7 @@ import LoadingScreen from "@/Loading";
 
 export default function App() {
   return (
-    <Router>
+    <>
       <ScrollToTop />
 
       {/* ─── GLOBAL SUSPENSE ─── */}
@@ -146,6 +141,6 @@ export default function App() {
       <Suspense fallback={null}>
         <Pages.OnboardingModal />
       </Suspense>
-    </Router>
+    </>
   );
 }

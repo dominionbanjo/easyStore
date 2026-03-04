@@ -7,12 +7,15 @@ import { useGetUserProfileQuery } from "@/services/userApi";
 import { useGoogleLoginMutation } from "@/services/authApi";
 import type { RootState } from "@/store";
 
+import { useNavigate } from "react-router-dom";
+
 export default function AuthProvider({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { isAuthenticated } = useSelector((state: RootState) => state.user);
   const token = Cookies.get("token");
   const initializedRef = useRef(false);
@@ -45,7 +48,21 @@ export default function AuthProvider({
           client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID!,
           callback: async (response: { credential: string }) => {
             try {
-              await googleLogin({ token: response.credential }).unwrap();
+              const res: any = await googleLogin({
+                token: response.credential,
+              }).unwrap();
+              const user = res?.data?.user || res?.user;
+
+              const redirectTo =
+                new URLSearchParams(window.location.search).get("redirect") ||
+                "/";
+              let finalRedirect = redirectTo;
+
+              if (user?.account_type === "vendor") finalRedirect = "/vendor";
+              else if (user?.account_type === "admin") finalRedirect = "/admin";
+
+              toast.success("Logged in with Google!");
+              navigate(finalRedirect, { replace: true });
             } catch (err) {
               console.error("❌ One Tap login failed:", err);
               toast.error("Google login failed");

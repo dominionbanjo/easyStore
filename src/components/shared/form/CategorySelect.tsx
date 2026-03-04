@@ -95,12 +95,18 @@ export function CategorySelect({
 
     return categories
       .map((c) => {
+        const parentMatches = c.name.toLowerCase().includes(q);
         const childMatches = c.children.filter((ch) =>
           ch.name.toLowerCase().includes(q),
         );
 
-        if (c.name.toLowerCase().includes(q) || childMatches.length) {
-          return { ...c, children: childMatches };
+        if (parentMatches || childMatches.length) {
+          // If parent matches, show all its children so they can be selected.
+          // If only children match, only show matching children.
+          return {
+            ...c,
+            children: parentMatches ? c.children : childMatches,
+          };
         }
 
         return null;
@@ -221,23 +227,21 @@ export function CategorySelect({
 
                 {!isLoading &&
                   filtered.map((cat) => {
-                    const isOpen = expanded === cat.id;
+                    const isOpen = expanded === cat.id || search.length > 0;
                     const hasChildren = cat.children.length > 0;
-                    const isSelected = field.value === cat.id;
+                    const hasSelectedChild = cat.children.some(
+                      (ch) => ch.id === field.value,
+                    );
 
                     return (
                       <div key={cat.id} className="mb-2">
                         <button
                           type="button"
-                          onClick={() =>
-                            hasChildren
-                              ? setExpanded(isOpen ? null : cat.id)
-                              : selectCategory(cat.id)
-                          }
+                          onClick={() => setExpanded(isOpen ? null : cat.id)}
                           className={cn(
                             "w-full flex items-center justify-between p-4 rounded-2xl border transition-all duration-300",
-                            isSelected
-                              ? "bg-primary/5 border-primary shadow-sm"
+                            hasSelectedChild
+                              ? "bg-primary/5 border-primary/40 shadow-sm"
                               : "bg-muted/5 border-muted-foreground/10 hover:border-primary/30",
                           )}
                         >
@@ -245,13 +249,15 @@ export function CategorySelect({
                             <div
                               className={cn(
                                 "h-8 w-8 rounded-xl flex items-center justify-center transition-colors",
-                                isSelected ? "bg-primary/20" : "bg-muted/20",
+                                hasSelectedChild
+                                  ? "bg-primary/20"
+                                  : "bg-muted/20",
                               )}
                             >
                               <Folder
                                 className={cn(
                                   "h-4 w-4",
-                                  isSelected
+                                  hasSelectedChild
                                     ? "text-primary"
                                     : "text-muted-foreground",
                                 )}
@@ -260,7 +266,7 @@ export function CategorySelect({
                             <span
                               className={cn(
                                 "text-sm font-bold",
-                                isSelected
+                                hasSelectedChild
                                   ? "text-primary uppercase tracking-tight"
                                   : "text-foreground",
                               )}
@@ -270,8 +276,8 @@ export function CategorySelect({
                           </div>
 
                           <div className="flex items-center gap-2">
-                            {isSelected && (
-                              <Check className="h-4 w-4 text-primary stroke-[3]" />
+                            {hasSelectedChild && (
+                              <Check className="h-4 w-4 text-primary opacity-40" />
                             )}
                             {hasChildren && (
                               <ChevronRight

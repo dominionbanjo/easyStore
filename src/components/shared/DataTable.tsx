@@ -85,7 +85,7 @@ export function DataTable<TData, TValue>({
   return (
     <div ref={containerRef} className={cn("space-y-4", className)}>
       <div className="rounded-none border-x-0 border-y sm:rounded-xl sm:border border-border/40 bg-background overflow-hidden">
-        <Table>
+        <Table containerClassName="custom-scrollbar">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>

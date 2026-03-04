@@ -1,17 +1,16 @@
 import { useEffect } from "react";
-import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
+import { toast } from "sonner"; // Added toast import
 
 import Header from "@/components/shared/Header";
 import Footer from "@/components/shared/Footer";
 import type { RootState } from "@/store";
 import LoadingScreen from "@/Loading";
-import { AUTH_ROUTES } from "@/routes/temp";
 
 export default function AccountsLayout() {
   const navigate = useNavigate();
-  const location = useLocation();
 
   const { isAuthenticated, isLoading } = useSelector(
     (state: RootState) => state.user,
@@ -20,16 +19,16 @@ export default function AccountsLayout() {
   const token = Cookies.get("token");
 
   useEffect(() => {
-    // 🚫 No token + not authenticated → redirect to login
+    // 🚫 No token + not authenticated → redirect to landing page
     if (!token && !isAuthenticated && !isLoading) {
-      const redirectPath = encodeURIComponent(
-        location.pathname + location.search,
-      );
-      navigate(`${AUTH_ROUTES.LOGIN}?redirect=${redirectPath}`, {
-        replace: true,
+      toast.error("Unauthorized access", {
+        // Added toast notification
+        description: "Please login to access your account", // Adjusted description for AccountsLayout
       });
+      navigate("/", { replace: true });
+      return; // Added return to prevent further execution
     }
-  }, [token, isAuthenticated, isLoading, navigate, location]);
+  }, [token, isAuthenticated, isLoading, navigate]);
 
   // ⏳ While auth is resolving, block UI
   if (isLoading || (token && !isAuthenticated)) {

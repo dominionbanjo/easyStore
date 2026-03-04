@@ -34,7 +34,6 @@ import {
 import { buildSpecsObject } from "../utils/addProduct.helpers";
 import { buildCreateProductPayload } from "@/utils/draftToFormValues";
 import { productToDraft } from "../utils/productToDraft";
-import { specsObjectToItems } from "../utils/specsObjectToItems";
 import { useProductExtras } from "../components/add-products/useProductExtras";
 import { useAddProductForm } from "../components/add-products/useAddProductForm";
 import { useStoreSetup } from "../hooks/useStoreSetup";
@@ -68,7 +67,6 @@ export default function AddProductPage() {
   const extras = useProductExtras();
   const methods = useAddProductForm(extras);
   const {
-    setValue,
     handleSubmit,
     formState: { isValid },
   } = methods;
@@ -93,6 +91,20 @@ export default function AddProductPage() {
 
   const { image, gallery, specs: specItems, tags, highlights } = extras;
 
+  /* ───────── CLEAR DRAFT WHEN SLUG CHANGES (or on unmount) ───────── */
+  useEffect(() => {
+    // When entering edit mode for a new slug, wipe any stale draft first.
+    // clearProductDraft() is also dispatched from the product table's Edit
+    // button, but this covers direct URL navigation and back-button scenarios.
+    dispatch(clearProductDraft());
+
+    return () => {
+      // Also clear on unmount so leaving the page never leaves stale data
+      // that could pollute the create-new or next-edit flow.
+      dispatch(clearProductDraft());
+    };
+  }, [slug, dispatch]);
+
   /* ───────── HYDRATE EDIT MODE ───────── */
   useEffect(() => {
     if (!isEditMode || !productData?.data?.product) return;
@@ -105,23 +117,7 @@ export default function AddProductPage() {
       productData.data.product,
     );
 
-    Object.entries(values).forEach(([key, value]) =>
-      setValue(key as any, value),
-    );
-
-    if (normalizedExtras.options && normalizedExtras.options.length > 0) {
-      setValue("options", [...normalizedExtras.options]);
-    }
-    if (normalizedExtras.variants && normalizedExtras.variants.length > 0) {
-      setValue("variants", [...normalizedExtras.variants] as any);
-    }
-
-    extras.setImage(normalizedExtras.image);
-    extras.setGallery(normalizedExtras.gallery);
-    extras.setTags(normalizedExtras.tags);
-    extras.setHighlights(normalizedExtras.highlights);
-    extras.setSpecs(specsObjectToItems(normalizedExtras.specs));
-
+    // Consolidated hydration into draft state
     dispatch(
       setProductDraft({
         ...values,
@@ -129,7 +125,7 @@ export default function AddProductPage() {
         id: productData.data.product.id,
       }),
     );
-  }, [isEditMode, productData, draft, dispatch, setValue, extras]);
+  }, [isEditMode, productData, draft, dispatch]);
 
   /* ───────── PREVIEW ───────── */
   const onPreview = (values: any) => {
@@ -297,7 +293,10 @@ export default function AddProductPage() {
                 </div>
               </CardHeader>
               <CardContent className="p-5 sm:p-8 space-y-8">
-                <BasicInfoSection />
+                <BasicInfoSection
+                  highlights={extras.highlights}
+                  setHighlights={extras.setHighlights}
+                />
               </CardContent>
             </Card>
           </motion.div>

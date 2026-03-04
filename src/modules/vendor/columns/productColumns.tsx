@@ -26,6 +26,8 @@ import {
   useUpdateProductOnSaleMutation,
   useUpdateProductStatusMutation,
 } from "@/services/productApi";
+import { useDispatch } from "react-redux";
+import { clearProductDraft } from "@/features/productDraftSlice";
 
 export const productColumns: ColumnDef<IStoreProduct>[] = [
   /* ───────────── Product (LEFT ALIGNED) ───────────── */
@@ -184,6 +186,7 @@ export const productColumns: ColumnDef<IStoreProduct>[] = [
     header: () => <div className="text-center" />,
     cell: ({ row }) => {
       const navigate = useNavigate();
+      const dispatch = useDispatch();
       const product = row.original;
 
       const [open, setOpen] = useState(false);
@@ -250,9 +253,11 @@ export const productColumns: ColumnDef<IStoreProduct>[] = [
                 variant="ghost"
                 size="sm"
                 className="w-full justify-start gap-2"
-                onClick={() =>
-                  navigate(`/vendor/products/${product.slug}/edit`)
-                }
+                onClick={() => {
+                  // Clear any stale draft so the new product loads fresh
+                  dispatch(clearProductDraft());
+                  navigate(`/vendor/products/${product.slug}/edit`);
+                }}
               >
                 <Edit className="h-4 w-4" />
                 Edit

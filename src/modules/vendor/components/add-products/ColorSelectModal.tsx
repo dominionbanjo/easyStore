@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Check, Search, X, Palette } from "lucide-react";
+import { Check, Search, Palette } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -11,7 +11,6 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogClose,
 } from "@/components/ui/dialog";
 import { motion } from "framer-motion";
 
@@ -39,6 +38,15 @@ export function ColorSelectModal({
 
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const [localSelected, setLocalSelected] = useState<string[]>([]);
+
+  // Initialize local state when modal opens
+  const handleOpenChange = (newOpen: boolean) => {
+    if (newOpen) {
+      setLocalSelected([...selectedValues]);
+    }
+    setOpen(newOpen);
+  };
 
   const filtered = useMemo(() => {
     if (!search) return colors;
@@ -47,15 +55,20 @@ export function ColorSelectModal({
   }, [colors, search]);
 
   function toggleColor(colorName: string) {
-    if (selectedValues.includes(colorName)) {
-      onChange(selectedValues.filter((v: string) => v !== colorName));
-    } else {
-      onChange([...selectedValues, colorName]);
-    }
+    setLocalSelected((prev) =>
+      prev.includes(colorName)
+        ? prev.filter((v) => v !== colorName)
+        : [...prev, colorName],
+    );
   }
 
+  const handleApply = () => {
+    onChange(localSelected);
+    setOpen(false);
+  };
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         {trigger || (
           <Button
@@ -70,6 +83,9 @@ export function ColorSelectModal({
 
       <DialogContent
         showCloseButton={false}
+        onPointerDownOutside={(e) => e.preventDefault()}
+        onInteractOutside={(e) => e.preventDefault()}
+        onEscapeKeyDown={(e) => e.preventDefault()}
         className="max-w-4xl p-0 overflow-hidden rounded-3xl border-none shadow-2xl h-[85vh] flex flex-col"
       >
         <DialogHeader className="px-8 py-6 shrink-0 flex flex-row items-center justify-between space-y-0">
@@ -79,17 +95,6 @@ export function ColorSelectModal({
             </div>
             Variant Colors
           </DialogTitle>
-
-          <DialogClose asChild>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="rounded-xl h-10 px-6 font-black uppercase tracking-widest text-xs bg-muted/30 hover:bg-muted/50 border border-muted-foreground/10 flex items-center gap-2 group transition-all"
-            >
-              <X className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors" />
-              Close
-            </Button>
-          </DialogClose>
         </DialogHeader>
 
         <div className="px-8 pb-4 shrink-0">
@@ -114,7 +119,7 @@ export function ColorSelectModal({
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {filtered.map((c: ApiColor) => {
-                const isSelected = selectedValues.includes(c.name);
+                const isSelected = localSelected.includes(c.name);
 
                 return (
                   <button
@@ -167,13 +172,13 @@ export function ColorSelectModal({
               Selection Summary
             </span>
             <span className="text-xl font-black text-primary">
-              {selectedValues.length} Colors Picked
+              {localSelected.length} Colors Picked
             </span>
           </div>
           <Button
             type="button"
             className="rounded-2xl px-12 font-black uppercase tracking-widest text-sm h-14 shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all"
-            onClick={() => setOpen(false)}
+            onClick={handleApply}
           >
             Apply to Variants
           </Button>

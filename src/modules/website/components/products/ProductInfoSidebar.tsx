@@ -376,36 +376,6 @@ export default function ProductInfoSidebar({
                   );
                 })}
               </div>
-              {/* Stock warnings for matched variant */}
-              <AnimatePresence>
-                {allOptionsSelected &&
-                  matchedVariant &&
-                  matchedVariant.stock <= 5 &&
-                  matchedVariant.stock > 0 && (
-                    <motion.p
-                      key="low-stock"
-                      initial={{ opacity: 0, y: -4 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -4 }}
-                      className="text-amber-600 text-xs font-bold"
-                    >
-                      ⚠ Only {matchedVariant.stock} left in stock!
-                    </motion.p>
-                  )}
-                {allOptionsSelected &&
-                  matchedVariant &&
-                  matchedVariant.stock <= 0 && (
-                    <motion.p
-                      key="out-of-stock"
-                      initial={{ opacity: 0, y: -4 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -4 }}
-                      className="text-rose-500 text-xs font-bold"
-                    >
-                      This combination is out of stock
-                    </motion.p>
-                  )}
-              </AnimatePresence>
             </div>
           ))}
 
@@ -506,6 +476,44 @@ export default function ProductInfoSidebar({
           </div>
         )}
       </div>
+
+      {/* ─── Stock Status (Single placement below all selections) ─── */}
+      <AnimatePresence mode="wait">
+        {allOptionsSelected && activeVariant && (
+          <motion.div
+            key={`${activeVariant.id}-stock`}
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            className="px-1 -mt-2"
+          >
+            {activeVariant.stock <= 0 ? (
+              <p className="text-rose-500 text-xs font-black flex items-center gap-1.5 bg-rose-500/5 py-1.5 px-3 rounded-lg border border-rose-500/10 w-fit">
+                <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
+                This combination is out of stock
+              </p>
+            ) : activeVariant.stock <= 5 ? (
+              <div className="flex flex-col gap-1">
+                <p className="text-amber-600 dark:text-amber-400 text-xs font-black flex items-center gap-2 bg-amber-500/5 py-2 px-3 rounded-xl border border-amber-500/20 w-fit shadow-sm">
+                  <motion.span
+                    animate={{ scale: [1, 1.2, 1] }}
+                    transition={{ repeat: Infinity, duration: 2 }}
+                    className="flex items-center justify-center"
+                  >
+                    <PackageCheck className="w-4 h-4" />
+                  </motion.span>
+                  Only {activeVariant.stock} pieces left in stock!
+                </p>
+              </div>
+            ) : (
+              <p className="text-emerald-600 dark:text-emerald-400 text-xs font-black flex items-center gap-2 bg-emerald-500/5 py-2 px-3 rounded-xl border border-emerald-500/10 w-fit">
+                <PackageCheck className="w-4 h-4" />
+                {activeVariant.stock} items available in stock
+              </p>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ─── Purchase Section ─── */}
       <div className="space-y-6">

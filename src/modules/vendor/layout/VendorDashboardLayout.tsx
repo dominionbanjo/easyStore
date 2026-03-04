@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
-import { toast } from "sonner";
+import { toast } from "sonner"; // Keep toast as it's used for vendor-specific error
 
 import { cn } from "@/lib/utils";
 import type { RootState } from "@/store";
@@ -10,11 +10,9 @@ import type { RootState } from "@/store";
 import DashboardSidebar from "../components/DashboardSidebar";
 import DashboardHeader from "../components/DashboardHeader";
 import LoadingScreen from "@/Loading";
-import { AUTH_ROUTES } from "@/routes/temp";
 
 export default function VendorDashboardLayout() {
   const navigate = useNavigate();
-  const location = useLocation();
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -26,16 +24,10 @@ export default function VendorDashboardLayout() {
   const token = Cookies.get("token");
 
   useEffect(() => {
-    // ⛔ Not authenticated
+    // 🚫 No token + not authenticated → redirect to landing page
     if (!token && !isAuthenticated && !isLoading) {
-      toast.error("You must be logged in to access this page");
-      const redirectPath = encodeURIComponent(
-        location.pathname + location.search,
-      );
-      navigate(`${AUTH_ROUTES.LOGIN}?redirect=${redirectPath}`, {
-        replace: true,
-      });
-      return;
+      navigate("/", { replace: true });
+      return; // Add return to prevent further execution if not authenticated
     }
 
     // ⛔ Authenticated but not vendor

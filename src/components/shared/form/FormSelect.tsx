@@ -22,6 +22,7 @@ interface FormSelectProps {
   className?: string;
   disabled?: boolean;
   icon?: React.ReactNode;
+  onValueChange?: (value: string) => void;
 }
 
 export function FormSelect({
@@ -32,6 +33,7 @@ export function FormSelect({
   className,
   disabled = false,
   icon,
+  onValueChange,
 }: FormSelectProps) {
   const {
     control,
@@ -56,8 +58,11 @@ export function FormSelect({
         control={control}
         render={({ field }) => (
           <Select
-            onValueChange={field.onChange}
-            value={field.value}
+            onValueChange={(val) => {
+              field.onChange(val);
+              onValueChange?.(val);
+            }}
+            value={field.value || undefined}
             disabled={disabled}
           >
             <SelectTrigger

@@ -2,21 +2,22 @@ import { useState, useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { PricingSection } from "./PricingSection";
+import { useFormContext, useWatch } from "react-hook-form";
 import { VariantBuilderSection } from "./VariantBuilderSection";
-import { useFormContext } from "react-hook-form";
 
 export function Wrapper() {
   const [enableVariants, setEnableVariants] = useState(false);
   const { setValue, getValues } = useFormContext();
 
+  const variants = useWatch({ name: "variants" });
+  const options = useWatch({ name: "options" });
+
   // Check for existing variants or options to enable variant mode
   useEffect(() => {
-    const currentVariants = getValues("variants") || [];
-    const currentOptions = getValues("options") || [];
-    if (currentVariants.length > 0 || currentOptions.length > 0) {
+    if ((variants && variants.length > 0) || (options && options.length > 0)) {
       setEnableVariants(true);
     }
-  }, [getValues]);
+  }, [variants, options]);
 
   const handleToggle = (checked: boolean) => {
     setEnableVariants(checked);
