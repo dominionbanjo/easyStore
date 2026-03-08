@@ -21,6 +21,8 @@ import { StoreSetupTracker } from "../components/shared/StoreSetupTracker";
 
 import { useGetMyStoreAnalyticsQuery } from "@/services/storeApi";
 import { formatCompactNumber } from "@/utils/numberUtils";
+import { useAppSelector } from "@/hooks";
+import { selectCurrentUser } from "@/features/userSlice";
 
 const MONTH_NAMES = [
   "Jan",
@@ -38,6 +40,7 @@ const MONTH_NAMES = [
 ];
 
 export default function VendorDashboardPage() {
+  const user = useAppSelector(selectCurrentUser);
   const { data, isLoading, isError, refetch } = useGetMyStoreAnalyticsQuery();
 
   if (isError) {
@@ -100,6 +103,54 @@ export default function VendorDashboardPage() {
     <div className="max-w-[1600px] mx-auto p-4 sm:p-6">
       {/* ─── Header Section ─── */}
       <DashboardOverviewHeader />
+
+      {/* ─── Status Banners ─── */}
+      {user?.account_status === "pending" && (
+        <Alert
+          variant="default"
+          className="mt-4 mb-2 bg-yellow-50 dark:bg-yellow-900/10 border-yellow-200 dark:border-yellow-900"
+        >
+          <AlertCircle className="h-4 w-4 text-yellow-600 dark:text-yellow-500" />
+          <AlertTitle className="text-yellow-800 dark:text-yellow-500 font-bold">
+            Store Pending Approval
+          </AlertTitle>
+          <AlertDescription className="text-yellow-700 dark:text-yellow-400">
+            Your store is currently under review by our team. You can continue
+            setting it up and adding products, but your products won't be
+            visible to the public until your store is approved.{" "}
+            <a
+              href="mailto:support@easystore.com"
+              className="font-semibold underline underline-offset-2"
+            >
+              Contact Support
+            </a>
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {user?.account_status === "restricted" && (
+        <Alert
+          variant="destructive"
+          className="mt-4 mb-2 bg-red-50 dark:bg-red-900/10 border-red-200 dark:border-red-900"
+        >
+          <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-500" />
+          <AlertTitle className="text-red-800 dark:text-red-500 font-bold">
+            Account Restricted
+          </AlertTitle>
+          <AlertDescription className="text-red-700 dark:text-red-400">
+            Your account has been restricted. You can still access your
+            dashboard, but you can no longer add new products or receive new
+            orders. If you believe this is an error, please{" "}
+            <a
+              href="mailto:support@easystore.com"
+              className="font-semibold underline underline-offset-2"
+            >
+              Contact Support
+            </a>
+            .
+          </AlertDescription>
+        </Alert>
+      )}
 
       {/* ─── Setup Progress Call to Action ─── */}
       <div className="mb-8 mt-4">

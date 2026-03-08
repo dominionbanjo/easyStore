@@ -88,7 +88,7 @@ const notifications = [
     id: 6,
     title: "New Announcement Published",
     message:
-      "‘StayAfrika October Updates’ announcement is now live on the dashboard.",
+      "‘easystore October Updates’ announcement is now live on the dashboard.",
     type: "announcement",
     date: "2025-10-23 18:10",
     status: "unread",
@@ -212,7 +212,7 @@ export default function SuperAdminNotificationsPage() {
                       <div
                         className={cn(
                           "p-2 rounded-full bg-muted",
-                          n.status === "unread" && "ring-2 ring-primary"
+                          n.status === "unread" && "ring-2 ring-primary",
                         )}
                       >
                         <Icon className="h-5 w-5 text-primary" />
@@ -251,7 +251,7 @@ export default function SuperAdminNotificationsPage() {
                       <Badge
                         className={cn(
                           "text-xs font-medium capitalize",
-                          typeColors[n.type]
+                          typeColors[n.type],
                         )}
                       >
                         {n.type}
@@ -262,7 +262,7 @@ export default function SuperAdminNotificationsPage() {
                           "text-xs font-medium",
                           n.status === "unread"
                             ? "text-primary"
-                            : "text-muted-foreground"
+                            : "text-muted-foreground",
                         )}
                       >
                         {n.status === "unread" ? "Unread" : "Read"}

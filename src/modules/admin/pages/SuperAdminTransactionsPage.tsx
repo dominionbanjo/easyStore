@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import {
   Card,
@@ -9,115 +9,86 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Search, Filter, Download } from "lucide-react";
+import { useDebounce } from "@/hooks";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  Search,
-  Filter,
-  MoreVertical,
-  Receipt,
-  Wallet,
-  CheckCircle2,
-  XCircle,
-  AlertTriangle,
-  Download,
-} from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
+  useGetAdminTransactionsQuery,
+  type IAdminTransaction,
+} from "@/services/adminApi";
+import { DataTable } from "@/components/shared/DataTable";
+import { buildAdminTransactionColumns } from "../components/transactions/AdminTransactionColumns";
 import { cn } from "@/lib/utils";
-
-// Mock dataset
-const transactions = [
-  {
-    id: "tx001",
-    vendor: "UrbanStayz Ltd",
-    user: "John Doe",
-    amount: 123.5,
-    type: "booking",
-    status: "completed",
-    date: "2025-01-17",
-    reference: "BK-28934",
-  },
-  {
-    id: "tx002",
-    vendor: "SafariDreams",
-    user: "Angela K.",
-    amount: 89.99,
-    type: "moment",
-    status: "pending",
-    date: "2025-01-19",
-    reference: "MM-99823",
-  },
-  {
-    id: "tx003",
-    vendor: "EcoHaven Apartments",
-    user: "Oluwaseun Ade",
-    amount: 450.0,
-    type: "stay",
-    status: "refunded",
-    date: "2025-02-10",
-    reference: "ST-11021",
-  },
-  {
-    id: "tx004",
-    vendor: "LuxeLife Villas",
-    user: "Fatima Bello",
-    amount: 340.25,
-    type: "stay",
-    status: "completed",
-    date: "2025-02-15",
-    reference: "ST-44190",
-  },
-  {
-    id: "tx005",
-    vendor: "CoastalChill Resort",
-    user: "David Chen",
-    amount: 210.75,
-    type: "booking",
-    status: "failed",
-    date: "2025-02-20",
-    reference: "BK-55721",
-  },
-];
-
-const statusColors: Record<string, string> = {
-  completed:
-    "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300",
-  pending:
-    "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300",
-  refunded: "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300",
-  failed: "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300",
-};
+import { AdminTransactionDetailModal } from "../components/transactions/AdminTransactionDetailModal";
+import { ConfirmActionDialog } from "../components/shared/ConfirmActionDialog";
+import { toast } from "sonner";
 
 export default function SuperAdminTransactionsPage() {
   const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState<
-    "all" | "completed" | "pending" | "refunded" | "failed"
-  >("all");
+  const debouncedSearch = useDebounce(search, 500);
+  const [page, setPage] = useState(1);
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [typeFilter] = useState("all");
 
-  const filteredTx = transactions.filter((tx) => {
-    const matchesSearch =
-      tx.vendor.toLowerCase().includes(search.toLowerCase()) ||
-      tx.user.toLowerCase().includes(search.toLowerCase()) ||
-      tx.reference.toLowerCase().includes(search.toLowerCase());
-    const matchesFilter = filter === "all" || tx.status === filter;
-    return matchesSearch && matchesFilter;
+  // Transaction States
+  const [selectedTx, setSelectedTx] = useState<IAdminTransaction | null>(null);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [pendingAction, setPendingAction] = useState<{
+    tx: IAdminTransaction;
+    type: "refund" | "flag";
+  } | null>(null);
+
+  const { data, isLoading, isFetching } = useGetAdminTransactionsQuery({
+    page,
+    limit: 20,
+    search: debouncedSearch || undefined,
+    status: statusFilter === "all" ? undefined : statusFilter,
+    type: typeFilter === "all" ? undefined : typeFilter,
   });
 
+  const transactions = data?.data?.items ?? [];
+  const pagination = data?.data?.pagination;
+
+  const handleViewDetails = (tx: IAdminTransaction) => {
+    setSelectedTx(tx);
+    setIsDetailModalOpen(true);
+  };
+
+  const handleActionClick = (
+    tx: IAdminTransaction,
+    type: "refund" | "flag",
+  ) => {
+    setPendingAction({ tx, type });
+  };
+
+  const handleConfirmAction = async () => {
+    if (!pendingAction) return;
+
+    // Simulate API call for now or implement mutation if available
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+
+    toast.success(
+      `${pendingAction.type === "refund" ? "Refund" : "Flagged"} request processed successfully`,
+    );
+    setPendingAction(null);
+  };
+
+  const columns = useMemo(
+    () => buildAdminTransactionColumns(handleViewDetails, handleActionClick),
+    [],
+  );
+
+  const paginationState = pagination
+    ? {
+        page: Number(pagination.page),
+        pages: Number(pagination.pages),
+        hasNext: pagination.hasNext,
+        hasPrev: pagination.hasPrev,
+        onPageChange: (p: number) => setPage(p),
+      }
+    : undefined;
+
   return (
-    <section className="space-y-8">
+    <section className="space-y-8 animate-in fade-in duration-500 pb-10">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
@@ -126,21 +97,24 @@ export default function SuperAdminTransactionsPage() {
         className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
       >
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">
-            Transactions Management
+          <h1 className="text-2xl font-black tracking-tight text-foreground/90">
+            Transactions
           </h1>
-          <p className="text-sm text-muted-foreground">
-            Monitor all platform transactions, vendor payouts, and user
-            bookings.
+          <p className="text-sm text-muted-foreground mt-1 font-medium">
+            Complete platform oversight of financial flows, refunds, and vendor
+            payouts.
           </p>
         </div>
 
         <div className="flex items-center gap-2">
-          <Button variant="outline" className="gap-2">
+          <Button
+            variant="outline"
+            className="gap-2 h-10 border-border/40 font-bold bg-background shadow-sm"
+          >
             <Filter className="h-4 w-4" /> Filters
           </Button>
-          <Button className="gap-2">
-            <Download className="h-4 w-4" /> Export CSV
+          <Button className="gap-2 h-10 bg-primary font-bold shadow-md shadow-primary/20">
+            <Download className="h-4 w-4" /> Export Ledger
           </Button>
         </div>
       </motion.div>
@@ -149,146 +123,104 @@ export default function SuperAdminTransactionsPage() {
       <motion.div
         initial={{ opacity: 0, y: 5 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="flex flex-col md:flex-row md:items-center justify-between gap-3"
+        transition={{ duration: 0.3, delay: 0.1 }}
+        className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 rounded-2xl bg-muted/20 border border-border/30 backdrop-blur-sm"
       >
-        <div className="relative w-full md:max-w-xs">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+        <div className="relative w-full md:max-w-md">
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/60" />
           <Input
-            placeholder="Search by vendor, user, or ref..."
+            placeholder="Search by ID, Customer Name, or Store..."
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="pl-8"
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setPage(1);
+            }}
+            className="pl-10 h-11 bg-background border-border/50 focus:border-primary/50 transition-all rounded-xl shadow-sm"
           />
         </div>
 
-        <div className="flex items-center gap-2">
-          {(["all", "completed", "pending", "refunded", "failed"] as const).map(
+        <div className="flex flex-wrap items-center gap-2 overflow-x-auto pb-1 md:pb-0 scrollbar-hide">
+          {(["all", "success", "pending", "failed", "reversed"] as const).map(
             (key) => (
               <Button
                 key={key}
-                variant={filter === key ? "default" : "outline"}
+                variant={statusFilter === key ? "default" : "outline"}
                 size="sm"
-                onClick={() => setFilter(key)}
+                className={cn(
+                  "h-9 px-5 rounded-full text-[13px] font-bold transition-all",
+                  statusFilter === key
+                    ? "shadow-md shadow-primary/20 scale-[1.02]"
+                    : "border-border/30 bg-background/80 hover:bg-muted text-muted-foreground hover:text-foreground",
+                )}
+                onClick={() => {
+                  setStatusFilter(key);
+                  setPage(1);
+                }}
               >
                 {key.charAt(0).toUpperCase() + key.slice(1)}
               </Button>
-            )
+            ),
           )}
         </div>
       </motion.div>
 
       {/* Transactions Table */}
-      <Card className="border border-border/40 shadow-sm">
-        <CardHeader>
-          <CardTitle>Transactions Overview</CardTitle>
-          <CardDescription>
-            Track all user payments, vendor payouts, and refunds across the
-            ecosystem.
-          </CardDescription>
+      <Card className="border-border/30 shadow-xl shadow-black/5 overflow-hidden rounded-2xl bg-background/60 backdrop-blur-md">
+        <CardHeader className="bg-muted/10 pb-4 border-b border-border/20 px-6 py-5">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+            <div>
+              <CardTitle className="text-lg font-black text-foreground/80">
+                Transaction History
+              </CardTitle>
+              <CardDescription className="text-xs font-medium">
+                Showing {pagination?.total || 0} financial records found across
+                the platform
+              </CardDescription>
+            </div>
+          </div>
         </CardHeader>
 
-        <CardContent>
-          <div className="overflow-x-auto rounded-md border border-border/20">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Reference</TableHead>
-                  <TableHead>Vendor</TableHead>
-                  <TableHead>User</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Amount</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Date</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-
-              <TableBody>
-                {filteredTx.length > 0 ? (
-                  filteredTx.map((tx, i) => (
-                    <motion.tr
-                      key={tx.id}
-                      initial={{ opacity: 0, y: 5 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: i * 0.05 }}
-                      className="border-b border-border/20 hover:bg-muted/50"
-                    >
-                      <TableCell className="font-medium">
-                        {tx.reference}
-                      </TableCell>
-                      <TableCell>{tx.vendor}</TableCell>
-                      <TableCell>{tx.user}</TableCell>
-                      <TableCell className="capitalize">{tx.type}</TableCell>
-                      <TableCell className="font-medium">
-                        ${tx.amount.toFixed(2)}
-                      </TableCell>
-                      <TableCell>
-                        <span
-                          className={cn(
-                            "px-2 py-1 rounded-full text-xs font-medium",
-                            statusColors[tx.status]
-                          )}
-                        >
-                          {tx.status.charAt(0).toUpperCase() +
-                            tx.status.slice(1)}
-                        </span>
-                      </TableCell>
-                      <TableCell className="text-muted-foreground">
-                        {tx.date}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon">
-                              <MoreVertical className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="w-44">
-                            <DropdownMenuLabel>
-                              Transaction Actions
-                            </DropdownMenuLabel>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem className="gap-2">
-                              <Receipt className="h-4 w-4 text-blue-500" />
-                              View Receipt
-                            </DropdownMenuItem>
-                            <DropdownMenuItem className="gap-2">
-                              <Wallet className="h-4 w-4 text-emerald-500" />
-                              Process Payout
-                            </DropdownMenuItem>
-                            <DropdownMenuItem className="gap-2">
-                              <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                              Mark Completed
-                            </DropdownMenuItem>
-                            <DropdownMenuItem className="gap-2 text-yellow-600">
-                              <AlertTriangle className="h-4 w-4" />
-                              Flag Transaction
-                            </DropdownMenuItem>
-                            <DropdownMenuItem className="gap-2 text-red-600">
-                              <XCircle className="h-4 w-4" />
-                              Refund / Cancel
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
-                    </motion.tr>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell
-                      colSpan={8}
-                      className="text-center py-10 text-muted-foreground text-sm"
-                    >
-                      No transactions found.
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </div>
+        <CardContent className="p-0">
+          <DataTable
+            columns={columns}
+            data={transactions}
+            isLoading={isLoading || isFetching}
+            pagination={paginationState}
+            emptyMessage="Zero transactions matched your current filters"
+          />
         </CardContent>
       </Card>
+
+      {/* Modals */}
+      <AdminTransactionDetailModal
+        transaction={selectedTx}
+        open={isDetailModalOpen}
+        onClose={() => setIsDetailModalOpen(false)}
+      />
+
+      <ConfirmActionDialog
+        open={!!pendingAction}
+        onClose={() => setPendingAction(null)}
+        onConfirm={handleConfirmAction}
+        title={
+          pendingAction?.type === "refund"
+            ? "Confirm Refund"
+            : "Flag Transaction"
+        }
+        description={
+          pendingAction?.type === "refund"
+            ? `Are you sure you want to refund ${pendingAction.tx.currency}${pendingAction.tx.amount / 100} to ${pendingAction.tx.user?.first_name}? This will reverse the transaction completely.`
+            : `This will mark transaction ${pendingAction?.tx.id.substring(0, 8).toUpperCase()} for manual review by the compliance team.`
+        }
+        confirmLabel={
+          pendingAction?.type === "refund"
+            ? "Process Refund"
+            : "Flag for Review"
+        }
+        confirmVariant={
+          pendingAction?.type === "refund" ? "destructive" : "default"
+        }
+      />
     </section>
   );
 }

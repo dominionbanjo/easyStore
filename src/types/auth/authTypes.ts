@@ -23,6 +23,7 @@ export interface IUser {
   username: string | null;
 
   account_type: "user" | "vendor" | "admin";
+  account_status: "active" | "pending" | "restricted" | "banned";
 
   avatar: string | null;
 

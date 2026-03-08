@@ -94,11 +94,11 @@ export default function SuperAdminSettingsPage() {
             <CardContent className="grid sm:grid-cols-2 gap-6">
               <div>
                 <Label>Platform Name</Label>
-                <Input placeholder="StayAfrika HQ" />
+                <Input placeholder="easystore HQ" />
               </div>
               <div>
                 <Label>Support Email</Label>
-                <Input type="email" placeholder="support@stayafrika.com" />
+                <Input type="email" placeholder="support@easystore.com" />
               </div>
               <div className="sm:col-span-2">
                 <Label>Platform Description</Label>

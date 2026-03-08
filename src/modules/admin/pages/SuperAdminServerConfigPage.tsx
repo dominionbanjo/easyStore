@@ -117,7 +117,7 @@ export default function SuperAdminServerConfigPage() {
             <div>
               <Label>Database URL</Label>
               <Input
-                placeholder="postgresql://user:pass@host:5432/stayafrika_db"
+                placeholder="postgresql://user:pass@host:5432/easystore_db"
                 type="password"
               />
             </div>
