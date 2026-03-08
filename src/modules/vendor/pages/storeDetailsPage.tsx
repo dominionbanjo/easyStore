@@ -162,7 +162,7 @@ export default function StoreDetailsPage() {
   /* ───────────────── RENDER ───────────────── */
 
   return (
-    <section className="min-h-screen pb-20 mt-10">
+    <section className="min-h-screen pb-20 -mt-5 md:-mt-4">
       {/* ─── HEADER ─── */}
       <StoreHeaderSection
         store={{

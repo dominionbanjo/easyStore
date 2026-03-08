@@ -67,9 +67,9 @@ export default function StoreHeaderSection({ store }: StoreHeaderProps) {
   const displayLogo = store.user?.avatar || store.logo;
 
   return (
-    <div className="w-full bg-background relative rounded-t-[3.5rem] pb-8 md:pb-12">
+    <div className="w-full bg-background relative rounded-sm md:rounded-md xl:rounded-t-[2.5rem] pb-8 md:pb-12">
       {/* ─── BANNER ─── */}
-      <div className="relative h-64 md:h-80 w-full overflow-hidden group rounded-t-[3.5rem]">
+      <div className="relative h-64 md:h-80 w-full overflow-hidden group rounded-md">
         <img
           src={store.banner || "/images/defaultbanner.png"}
           alt={store.name}
