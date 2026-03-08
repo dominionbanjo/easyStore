@@ -81,7 +81,7 @@ export default function SuperAdminAccessControlPage() {
   const filteredRoles = mockRoles.filter(
     (r) =>
       r.role.toLowerCase().includes(search.toLowerCase()) ||
-      r.description.toLowerCase().includes(search.toLowerCase())
+      r.description.toLowerCase().includes(search.toLowerCase()),
   );
 
   return (
@@ -224,7 +224,7 @@ export default function SuperAdminAccessControlPage() {
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
-        className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5"
       >
         {[
           { icon: Shield, label: "Total Roles", value: "8" },
@@ -234,14 +234,14 @@ export default function SuperAdminAccessControlPage() {
         ].map((item, i) => (
           <Card
             key={i}
-            className="border border-border/30 shadow-sm flex items-center gap-3 p-4"
+            className="border border-border/30 shadow-sm flex items-center gap-4 p-4 sm:p-5"
           >
-            <item.icon className="h-8 w-8 text-primary" />
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">
+            <item.icon className="h-7 w-7 sm:h-8 sm:w-8 text-primary shrink-0" />
+            <div className="min-w-0">
+              <p className="text-[11px] sm:text-xs font-bold text-muted-foreground uppercase tracking-wider truncate">
                 {item.label}
               </p>
-              <p className="text-lg font-semibold">{item.value}</p>
+              <p className="text-lg sm:text-xl font-black">{item.value}</p>
             </div>
           </Card>
         ))}

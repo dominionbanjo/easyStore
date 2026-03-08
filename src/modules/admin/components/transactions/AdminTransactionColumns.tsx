@@ -3,7 +3,6 @@ import { format } from "date-fns";
 import {
   MoreVertical,
   Receipt,
-  Wallet,
   AlertTriangle,
   XCircle,
   Eye,

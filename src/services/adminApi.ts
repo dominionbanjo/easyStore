@@ -61,6 +61,82 @@ export interface IUpdateUserStatusPayload {
   status: "active" | "pending" | "restricted" | "banned";
 }
 
+/* ─── Analytics Types ─── */
+export interface IOverviewStats {
+  totals: {
+    users: number;
+    vendors: number;
+    stores: number;
+    products: number;
+    orders: number;
+  };
+  revenue: { thisMonth: number; lastMonth: number };
+  newUsers: { thisMonth: number; lastMonth: number };
+  orders: { thisMonth: number; lastMonth: number };
+  pendingVendors: number;
+  userStatusBreakdown: { status: string; count: string }[];
+  vendorStatusBreakdown: { status: string; count: string }[];
+  transactionStatusBreakdown: {
+    status: string;
+    count: string;
+    total: string;
+  }[];
+}
+
+export interface IGrowthDataPoint {
+  label: string;
+  period: string;
+  users: number;
+  vendors: number;
+  revenue: number;
+  orders: number;
+}
+
+export interface IDistributionItem {
+  name: string;
+  value: number;
+}
+
+export interface ITransactionTypeItem {
+  name: string;
+  count: number;
+  total: number;
+}
+
+export interface IRecentSignup {
+  id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  account_type: string;
+  account_status: string;
+  created_at: string;
+}
+
+export interface ITopStore {
+  id: string;
+  store_name: string;
+  slug: string;
+  category: string | null;
+  total_revenue: number;
+  total_orders: number;
+  total_products: number;
+  rating_average: number;
+  created_at: string;
+}
+
+export interface IOrderStatusItem {
+  name: string;
+  count: number;
+  totalAmount: number;
+}
+
+export interface IRevenueDataPoint {
+  month: string;
+  revenue: number;
+  txCount: number;
+}
+
 const buildQuery = (params: Record<string, any>) => {
   const urlParams = new URLSearchParams();
   Object.entries(params).forEach(([key, val]) => {
@@ -128,7 +204,88 @@ export const adminApi = apiManager.injectEndpoints({
       }
     >({
       query: (params) => `admin/transactions?${buildQuery(params)}`,
-      providesTags: ["Analytics"], // Using Analytics tag for now or define a new one
+      providesTags: ["Analytics"],
+    }),
+
+    // ─── Analytics: Overview ───
+    getAdminOverview: builder.query<
+      { message: string; data: IOverviewStats },
+      void
+    >({
+      query: () => "admin/analytics/overview",
+      providesTags: ["Analytics"],
+    }),
+
+    // ─── Analytics: Growth Chart ───
+    getAdminGrowthChart: builder.query<
+      { message: string; data: IGrowthDataPoint[] },
+      { months?: number }
+    >({
+      query: (params) => `admin/analytics/growth?${buildQuery(params)}`,
+      providesTags: ["Analytics"],
+    }),
+
+    // ─── Analytics: User Distribution ───
+    getAdminUserDistribution: builder.query<
+      { message: string; data: IDistributionItem[] },
+      void
+    >({
+      query: () => "admin/analytics/user-distribution",
+      providesTags: ["Analytics"],
+    }),
+
+    // ─── Analytics: Transaction Type Breakdown ───
+    getAdminTransactionBreakdown: builder.query<
+      { message: string; data: ITransactionTypeItem[] },
+      void
+    >({
+      query: () => "admin/analytics/transaction-breakdown",
+      providesTags: ["Analytics"],
+    }),
+
+    // ─── Analytics: Recent Signups ───
+    getAdminRecentSignups: builder.query<
+      { message: string; data: IRecentSignup[] },
+      { limit?: number }
+    >({
+      query: (params) => `admin/analytics/recent-signups?${buildQuery(params)}`,
+      providesTags: ["Analytics"],
+    }),
+
+    // ─── Analytics: Top Stores ───
+    getAdminTopStores: builder.query<
+      { message: string; data: ITopStore[] },
+      { limit?: number }
+    >({
+      query: (params) => `admin/analytics/top-stores?${buildQuery(params)}`,
+      providesTags: ["Analytics"],
+    }),
+
+    // ─── Analytics: Order Breakdown ───
+    getAdminOrderBreakdown: builder.query<
+      { message: string; data: IOrderStatusItem[] },
+      void
+    >({
+      query: () => "admin/analytics/order-breakdown",
+      providesTags: ["Analytics"],
+    }),
+
+    // ─── Analytics: Revenue by Month ───
+    getAdminRevenue: builder.query<
+      { message: string; data: IRevenueDataPoint[] },
+      { months?: number }
+    >({
+      query: (params) => `admin/analytics/revenue?${buildQuery(params)}`,
+      providesTags: ["Analytics"],
+    }),
+
+    // ─── Analytics: Signup Methods ───
+    getAdminSignupMethods: builder.query<
+      { message: string; data: IDistributionItem[] },
+      void
+    >({
+      query: () => "admin/analytics/signup-methods",
+      providesTags: ["Analytics"],
     }),
   }),
 });
@@ -139,4 +296,13 @@ export const {
   useGetAdminUserQuery,
   useUpdateAdminUserStatusMutation,
   useGetAdminTransactionsQuery,
+  useGetAdminOverviewQuery,
+  useGetAdminGrowthChartQuery,
+  useGetAdminUserDistributionQuery,
+  useGetAdminTransactionBreakdownQuery,
+  useGetAdminRecentSignupsQuery,
+  useGetAdminTopStoresQuery,
+  useGetAdminOrderBreakdownQuery,
+  useGetAdminRevenueQuery,
+  useGetAdminSignupMethodsQuery,
 } = adminApi;

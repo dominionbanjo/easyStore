@@ -156,19 +156,19 @@ export default function SuperAdminNotificationsPage() {
         initial={{ opacity: 0, y: 5 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
-        className="flex flex-col md:flex-row md:items-center justify-between gap-3"
+        className="flex flex-col lg:flex-row lg:items-center justify-between gap-4"
       >
-        <div className="relative w-full md:max-w-xs">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+        <div className="relative w-full lg:max-w-xs">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/60" />
           <Input
-            placeholder="Search notifications..."
+            placeholder="Search alerts..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-8"
+            className="pl-9 h-10 shadow-sm"
           />
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 lg:pb-0 scrollbar-hide -mx-2 px-2 lg:mx-0 lg:px-0">
           {(
             [
               "all",
@@ -183,6 +183,10 @@ export default function SuperAdminNotificationsPage() {
               key={key}
               variant={filter === key ? "default" : "outline"}
               size="sm"
+              className={cn(
+                "h-8 sm:h-9 px-4 rounded-full text-xs sm:text-[13px] font-bold shrink-0 transition-all",
+                filter === key && "shadow-md shadow-primary/10",
+              )}
               onClick={() => setFilter(key)}
             >
               {key.charAt(0).toUpperCase() + key.slice(1)}

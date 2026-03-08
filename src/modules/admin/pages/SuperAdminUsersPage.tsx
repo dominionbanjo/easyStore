@@ -16,6 +16,7 @@ import { useGetAdminUsersQuery } from "@/services/adminApi";
 import { buildAdminUserColumns } from "../components/users/AdminUserColumns";
 import { AdminUserDetailModal } from "../components/shared/AdminUserDetailModal";
 import { useDebounce } from "@/hooks";
+import { cn } from "@/lib/utils";
 
 type StatusFilter = "all" | "active" | "pending" | "restricted" | "banned";
 
@@ -92,27 +93,31 @@ export default function SuperAdminUsersPage() {
         initial={{ opacity: 0, y: 5 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: 0.05 }}
-        className="flex flex-col sm:flex-row sm:items-center gap-3"
+        className="flex flex-col lg:flex-row lg:items-center gap-4"
       >
-        <div className="relative w-full sm:max-w-xs">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground pointer-events-none" />
+        <div className="relative w-full lg:max-w-xs">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/60 pointer-events-none" />
           <Input
-            placeholder="Search by name or email..."
+            placeholder="Search users..."
             value={search}
             onChange={(e) => {
               setSearch(e.target.value);
               setPage(1);
             }}
-            className="pl-8"
+            className="pl-9 h-10 shadow-sm"
           />
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 lg:pb-0 scrollbar-hide -mx-2 px-2 lg:mx-0 lg:px-0">
           {STATUS_TABS.map(({ key, label }) => (
             <Button
               key={key}
               variant={statusFilter === key ? "default" : "outline"}
               size="sm"
+              className={cn(
+                "h-8 sm:h-9 px-4 rounded-full text-xs sm:text-[13px] font-bold shrink-0 transition-all",
+                statusFilter === key && "shadow-md shadow-primary/10",
+              )}
               onClick={() => {
                 setStatusFilter(key);
                 setPage(1);
@@ -125,15 +130,14 @@ export default function SuperAdminUsersPage() {
       </motion.div>
 
       {/* ── Table ── */}
-      <Card className="border border-border/40 shadow-sm">
-        <CardHeader className="pb-3">
-          <CardTitle>Users Overview</CardTitle>
-          <CardDescription>
-            Manage account lifecycle, verify identities, and control platform
-            access.
+      <Card className="border border-border/40 shadow-xl shadow-black/5 rounded-2xl overflow-hidden">
+        <CardHeader className="pb-4 px-4 sm:px-6">
+          <CardTitle className="text-lg font-black">Users Overview</CardTitle>
+          <CardDescription className="text-xs">
+            Manage account lifecycle and platform access.
           </CardDescription>
         </CardHeader>
-        <CardContent className="p-0 sm:px-6 sm:pb-6">
+        <CardContent className="p-0">
           <DataTable
             columns={columns}
             data={users}
