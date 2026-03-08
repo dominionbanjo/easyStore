@@ -39,7 +39,7 @@ export function ProductSection({
     <section
       className={`py-12 md:py-24 px-1 sm:px-6 overflow-hidden bg-white dark:bg-neutral-950 transition-colors duration-300 ${className}`}
     >
-      <div className="max-w-7xl mx-auto space-y-12">
+      <div className="w-full mx-auto space-y-12">
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 px-1">
           <motion.div

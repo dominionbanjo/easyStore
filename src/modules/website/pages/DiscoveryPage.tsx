@@ -65,7 +65,7 @@ export default function DiscoveryPage() {
       <section className="relative overflow-hidden pt-36 pb-20 px-4 mb-12">
         <div className="absolute top-0 center w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent dark:from-emerald-900/20" />
 
-        <div className="max-w-7xl mx-auto text-center relative z-10">
+        <div className="w-full mx-auto text-center relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -103,7 +103,7 @@ export default function DiscoveryPage() {
       </section>
 
       {/* Quick Links */}
-      <div className="max-w-7xl mx-auto px-4 mb-24">
+      <div className="w-full mx-auto px-4 mb-24">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
             {
@@ -148,7 +148,7 @@ export default function DiscoveryPage() {
       </div>
 
       {/* Featured Section */}
-      <section className="max-w-7xl mx-auto px-4 mb-24">
+      <section className="w-full mx-auto px-4 mb-24">
         <div className="flex items-center justify-between mb-10">
           <h2 className="text-3xl font-black tracking-tight flex items-center gap-2">
             <Sparkles className="w-6 h-6 text-primary" />
@@ -187,7 +187,7 @@ export default function DiscoveryPage() {
       </section>
 
       {/* Trending Section */}
-      <section className="max-w-7xl mx-auto px-4 mb-24">
+      <section className="w-full mx-auto px-4 mb-24">
         <div className="flex items-center justify-between mb-10">
           <h2 className="text-3xl font-black tracking-tight flex items-center gap-2">
             <TrendingUp className="w-6 h-6 text-orange-500" />
@@ -226,7 +226,7 @@ export default function DiscoveryPage() {
       </section>
 
       {/* New Arrivals Section */}
-      <section className="max-w-7xl mx-auto px-4 mb-24">
+      <section className="w-full mx-auto px-4 mb-24">
         <div className="flex items-center justify-between mb-10">
           <h2 className="text-3xl font-black tracking-tight flex items-center gap-2">
             <Zap className="w-6 h-6 text-blue-500" />

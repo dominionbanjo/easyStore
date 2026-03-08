@@ -43,7 +43,7 @@ export default function TopCategoriesSection({
       ref={containerRef}
       className={`py-12 md:py-20 px-1 sm:px-6 overflow-hidden bg-background ${className}`}
     >
-      <div className="max-w-7xl mx-auto space-y-10">
+      <div className="w-full mx-auto space-y-10">
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 px-1">
           <motion.div

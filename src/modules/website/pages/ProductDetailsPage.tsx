@@ -122,16 +122,16 @@ function ProductDetailsInner({ id }: { id: string }) {
   /* ───────── RENDER ───────── */
 
   return (
-    <section className="max-w-[1440px] mx-auto px-4 md:px-6 lg:px-8 py-8 md:py-12 space-y-12 md:space-y-16 bg-white dark:bg-neutral-950 transition-colors duration-300">
+    <section className="w-full px-4 md:px-6 lg:px-8 py-8 md:py-12 space-y-12 md:space-y-16 bg-white dark:bg-neutral-950 transition-colors duration-300">
       {/* Gallery + Sidebar Container */}
-      <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 xl:gap-24 justify-center items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 xl:gap-24 items-start">
         {/* Left Column: Gallery */}
-        <div className="w-full lg:w-[55%] xl:w-[60%] flex justify-center lg:justify-end">
+        <div className="w-full flex justify-center lg:justify-end">
           <ProductGallery images={uiProduct.images} />
         </div>
 
         {/* Right Column: Info */}
-        <div className="w-full lg:w-[45%] xl:w-[40%] flex justify-center lg:justify-start">
+        <div className="w-full flex justify-center lg:justify-start">
           <ProductInfoSidebar product={uiProduct} />
         </div>
       </div>

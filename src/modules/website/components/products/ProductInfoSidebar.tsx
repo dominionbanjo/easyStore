@@ -256,7 +256,7 @@ export default function ProductInfoSidebar({
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.5 }}
-      className="flex flex-col gap-8 w-full max-w-[550px]"
+      className="flex flex-col gap-8 w-full"
     >
       {/* ─── Product Header ─── */}
       <div className="space-y-4 px-1">

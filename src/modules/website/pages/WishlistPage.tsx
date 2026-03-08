@@ -69,7 +69,7 @@ export default function WishlistPage() {
 
   return (
     <section className="min-h-screen py-2 px-4 sm:px-8 mt-[40px] bg-white dark:bg-neutral-950 transition-colors duration-300">
-      <div className="max-w-6xl mx-auto space-y-10">
+      <div className="w-full mx-auto space-y-10">
         {/* ─── Header ─── */}
         <div className="flex flex-col sm:flex-row justify-between gap-4">
           <div>

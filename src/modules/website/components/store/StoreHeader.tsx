@@ -17,7 +17,7 @@ export default function StoreHeader() {
       <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#333_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-40 pointer-events-none" />
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2 pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-6 py-20 relative z-10">
+      <div className="w-full mx-auto px-6 py-20 relative z-10">
         <div className="max-w-3xl mx-auto text-center space-y-8">
           {/* Title Section */}
           <motion.div

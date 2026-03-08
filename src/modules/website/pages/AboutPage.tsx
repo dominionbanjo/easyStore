@@ -20,7 +20,7 @@ export default function AboutPage() {
       <section className="relative overflow-hidden border-b border-border/50 dark:border-white/10 bg-white dark:bg-neutral-900">
         <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#333_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-30 pointer-events-none" />
 
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-16 md:py-32 relative z-10 text-center">
+        <div className="w-full mx-auto px-4 sm:px-6 py-16 md:py-32 relative z-10 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -48,7 +48,7 @@ export default function AboutPage() {
       </section>
 
       {/* ──────────────── VISION & VALUES ──────────────── */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 py-16 md:py-24">
+      <section className="w-full mx-auto px-4 sm:px-6 py-16 md:py-24">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8">
           {[
             {
@@ -91,7 +91,7 @@ export default function AboutPage() {
 
       {/* ──────────────── LEADERSHIP ──────────────── */}
       <section className="bg-white dark:bg-neutral-900 border-y border-border/50 dark:border-white/10">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-16 md:py-24">
+        <div className="w-full mx-auto px-4 sm:px-6 py-16 md:py-24">
           <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
@@ -213,7 +213,7 @@ export default function AboutPage() {
       </section>
 
       {/* ──────────────── STATISTICS & CTA ──────────────── */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 py-16 md:py-24">
+      <section className="w-full mx-auto px-4 sm:px-6 py-16 md:py-24">
         <div className="rounded-[2rem] sm:rounded-[3rem] bg-neutral-900 overflow-hidden relative">
           <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent,rgba(255,255,255,0.05),transparent)]" />
 

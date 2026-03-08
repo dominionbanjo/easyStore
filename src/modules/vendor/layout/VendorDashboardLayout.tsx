@@ -70,7 +70,7 @@ export default function VendorDashboardLayout() {
       >
         <DashboardHeader onMenuToggle={() => setSidebarOpen(!sidebarOpen)} />
 
-        <main className="px-2 py-2 sm:p-4 md:p-6 w-full max-w-[1440px] mx-auto transition-all duration-300">
+        <main className="px-2 py-2 sm:p-4 md:p-6 w-full transition-all duration-300">
           <Outlet />
         </main>
       </div>

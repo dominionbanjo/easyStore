@@ -28,7 +28,7 @@ export default function FeaturedStoresPage() {
       <section className="relative overflow-hidden pt-36 pb-20 px-4 mb-12">
         <div className="absolute top-0 center w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent dark:from-emerald-900/10" />
 
-        <div className="max-w-7xl mx-auto text-center relative z-10 transition-colors">
+        <div className="w-full mx-auto text-center relative z-10 transition-colors">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/5 dark:bg-emerald-500/10 text-primary dark:text-emerald-400 font-bold text-sm mb-8 border border-primary/10 dark:border-emerald-500/20">
             <Store className="w-4 h-4" />
             <span>Top Rated Sellers</span>
@@ -49,7 +49,7 @@ export default function FeaturedStoresPage() {
       </section>
 
       {/* Stores Grid */}
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="w-full mx-auto px-4">
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[...Array(6)].map((_, i) => (

@@ -160,7 +160,7 @@ export default function ProductGallery({ images }: ProductGalleryProps) {
   );
 
   return (
-    <div className="flex flex-col gap-6 lg:sticky lg:top-10 h-fit w-full max-w-[650px]">
+    <div className="flex flex-col gap-6 lg:sticky lg:top-10 h-fit w-full">
       {/* ─── Main Display ─── */}
       <div className="group relative w-full aspect-square md:aspect-[4/5] rounded-[2rem] md:rounded-[3rem] overflow-hidden bg-muted/50 border border-border/60 shadow-2xl shadow-primary/5 touch-none">
         <AnimatePresence mode="wait">

@@ -57,7 +57,7 @@ export default function ReviewsSection({
 
   return (
     <section className="py-6 border-t border-border/40">
-      <div className="max-w-6xl mx-auto space-y-10">
+      <div className="w-full mx-auto space-y-10">
         {/* ─── Header & Stats ─── */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div className="space-y-1">

@@ -60,7 +60,7 @@ export default function ProductListingPage({
           className={`absolute top-0 center w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] ${gradientFrom}/10 via-transparent to-transparent`}
         />
 
-        <div className="max-w-7xl mx-auto text-center relative z-10 transition-colors">
+        <div className="w-full mx-auto text-center relative z-10 transition-colors">
           <div
             className={`inline-flex items-center gap-2 px-4 py-2 rounded-full ${badgeColor}/10 ${badgeTextColor} font-bold text-sm mb-8 border ${badgeColor}/20`}
           >
@@ -79,7 +79,7 @@ export default function ProductListingPage({
       </section>
 
       {/* Products Grid */}
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="w-full mx-auto px-4">
         {isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[...Array(8)].map((_, i) => (

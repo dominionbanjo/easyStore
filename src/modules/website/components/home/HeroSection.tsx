@@ -46,8 +46,8 @@ export default function HeroSection() {
   const user = useAppSelector(selectCurrentUser);
 
   return (
-    <section className="relative isolate  py-12 sm:py-24  dark:from-neutral-950 dark:via-neutral-900 dark:to-neutral-950 transition-colors duration-300">
-      <div className="max-w-7xl mx-auto">
+    <section className="relative isolate  py-6 sm:py-12  dark:from-neutral-950 dark:via-neutral-900 dark:to-neutral-950 transition-colors duration-300">
+      <div className="w-full mx-auto">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-16">
           {/* LEFT SIDE */}
           <div className="flex-1 text-center lg:text-left space-y-8">
@@ -79,7 +79,7 @@ export default function HeroSection() {
               initial="hidden"
               animate="visible"
               transition={{ delay: 0.1 }}
-              className="mt-6 max-w-xl mx-auto lg:mx-0 text-lg sm:text-xl leading-relaxed text-muted-foreground"
+              className="mt-6 max-w-2xl mx-auto lg:mx-0 text-lg sm:text-xl leading-relaxed text-muted-foreground"
             >
               EasyStore gives you everything you need to sell online. Create
               your professional storefront in minutes, showcase your products to

@@ -3,7 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 export function CartSkeleton() {
   return (
     <section className="min-h-screen bg-neutral-50/50 dark:bg-neutral-950 py-24 px-4 sm:px-8 transition-colors duration-300">
-      <div className="max-w-7xl mx-auto px-0 sm:px-4 py-8 sm:py-12 space-y-8 sm:space-y-12">
+      <div className="w-full mx-auto px-0 sm:px-4 py-8 sm:py-12 space-y-8 sm:space-y-12">
         {/* Header */}
         <div className="flex justify-between items-center">
           <Skeleton className="h-10 w-48" />

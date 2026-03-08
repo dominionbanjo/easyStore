@@ -45,7 +45,7 @@ export default function CategoryDetailsPage() {
     return (
       <div className="min-h-screen bg-neutral-50/50 dark:bg-neutral-950">
         <div className="bg-white dark:bg-neutral-900/50 border-b border-border/50 backdrop-blur-xl">
-          <div className="max-w-7xl mx-auto px-1.5 sm:px-4 py-24 space-y-12">
+          <div className="w-full mx-auto px-1.5 sm:px-4 py-24 space-y-12">
             <Skeleton className="h-6 w-32" />
             <div className="flex justify-between items-end gap-8">
               <div className="space-y-4">
@@ -57,7 +57,7 @@ export default function CategoryDetailsPage() {
             </div>
           </div>
         </div>
-        <div className="max-w-7xl mx-auto px-1.5 sm:px-4 py-16">
+        <div className="w-full mx-auto px-1.5 sm:px-4 py-16">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-8">
             {Array.from({ length: 8 }).map((_, i) => (
               <Skeleton key={i} className="h-[400px] rounded-[2.5rem]" />
@@ -92,7 +92,7 @@ export default function CategoryDetailsPage() {
 
       <CategoryDetailsHeader name={slug || ""} count={pagination?.total || 0} />
 
-      <div className="max-w-7xl mx-auto px-1.5 sm:px-4 py-20 space-y-16">
+      <div className="w-full mx-auto px-1.5 sm:px-4 py-20 space-y-16">
         <AnimatePresence mode="wait">
           {isFetching && !products.length ? (
             <motion.div

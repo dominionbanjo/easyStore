@@ -140,7 +140,7 @@ export default function StoresPage() {
       </FormProvider>
 
       {/* ─── CONTENT ─── */}
-      <div className="max-w-7xl mx-auto px-6 py-12 md:py-20">
+      <div className="w-full mx-auto px-6 py-12 md:py-20">
         {/* Results Count & Sort (Optional placeholder for future) */}
         {!isLoading && stores.length > 0 && (
           <div className="mb-8 flex items-center justify-between">

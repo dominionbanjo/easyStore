@@ -117,7 +117,7 @@ export default function TestimonialsCarousel() {
 
   return (
     <section className="py-24 bg-background dark:bg-neutral-950 overflow-hidden transition-colors duration-300">
-      <div className="max-w-7xl mx-auto px-4 mb-16">
+      <div className="w-full mx-auto px-4 mb-16">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-4">
             <h2 className="text-sm font-bold uppercase tracking-widest text-primary">

@@ -71,10 +71,7 @@ export default function SuperAdminDashboardLayout() {
       >
         <SuperAdminHeader onMenuToggle={() => setSidebarOpen(!sidebarOpen)} />
 
-        <motion.main
-          layout
-          className="p-6 md:p-10 w-full max-w-7xl mx-auto space-y-10"
-        >
+        <motion.main layout className="p-6 md:p-10 w-full space-y-10">
           <Outlet />
         </motion.main>
       </div>

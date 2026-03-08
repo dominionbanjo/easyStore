@@ -121,7 +121,7 @@ export default function UserProfilePage() {
         />
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 -mt-32 md:-mt-40 relative z-10">
+      <div className="w-full mx-auto px-4 -mt-32 md:-mt-40 relative z-10">
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -435,7 +435,7 @@ function UserProfileSkeleton() {
   return (
     <div className="min-h-screen bg-neutral-50/50 dark:bg-neutral-950 pb-20 transition-colors duration-300">
       <div className="h-64 md:h-80 bg-muted animate-pulse" />
-      <div className="max-w-6xl mx-auto px-4 -mt-32 md:-mt-40 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div className="w-full mx-auto px-4 -mt-32 md:-mt-40 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div className="lg:col-span-4">
           <Skeleton className="h-[500px] w-full rounded-[2.5rem]" />
         </div>

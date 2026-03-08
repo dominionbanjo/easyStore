@@ -197,12 +197,12 @@ export default function Header() {
     >
       <nav
         className={cn(
-          "flex w-full items-center justify-between backdrop-blur-md transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] px-4 sm:px-6 py-3",
+          "flex w-full items-center justify-between backdrop-blur-md transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] px-1.5 md:px-14 xl:px-16 py-3",
           "fixed top-0 left-1/2 -translate-x-1/2",
           "will-change-[transform,background-color,border-color,box-shadow]",
           isScrolled
-            ? "max-w-[100%] sm:max-w-[95%] bg-white/80 dark:bg-neutral-900/80 rounded-none sm:rounded-xl shadow-md sm:top-3 border border-border/20"
-            : "max-w-[100%] bg-white/30 dark:bg-neutral-900/30 sm:top-3 border border-transparent",
+            ? "max-w-full sm:max-w-[98%] bg-white/80 dark:bg-neutral-900/80 rounded-none sm:rounded-2xl shadow-xl sm:top-4 border border-border/20"
+            : "max-w-full bg-white/30 dark:bg-neutral-900/30 sm:top-2 border border-transparent",
         )}
       >
         {/* ---------- LEFT: Logo + Desktop Nav ---------- */}

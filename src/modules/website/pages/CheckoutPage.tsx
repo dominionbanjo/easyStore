@@ -130,7 +130,7 @@ export default function CheckoutPage() {
       />
 
       {/* ───────── PAGE CONTENT ───────── */}
-      <div className="max-w-7xl mx-auto px-2 sm:px-6 py-8 sm:py-20 relative z-10">
+      <div className="w-full mx-auto px-2 sm:px-6 py-8 sm:py-20 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}

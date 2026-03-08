@@ -66,7 +66,7 @@ export default function CareersPage() {
       <section className="relative overflow-hidden pt-32 pb-20 px-4">
         <div className="absolute top-0 center w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent dark:from-emerald-900/20" />
 
-        <div className="max-w-7xl mx-auto text-center relative z-10">
+        <div className="w-full mx-auto text-center relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -101,7 +101,7 @@ export default function CareersPage() {
 
       {/* Roles Section */}
       <section className="py-24 px-4 bg-zinc-50/50 dark:bg-neutral-900/20">
-        <div className="max-w-6xl mx-auto">
+        <div className="w-full mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-black mb-4 tracking-tight">
               Open Positions
@@ -163,7 +163,7 @@ export default function CareersPage() {
 
       {/* Perks Section */}
       <section className="py-24 px-4 overflow-hidden relative">
-        <div className="max-w-7xl mx-auto">
+        <div className="w-full mx-auto">
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <div>
               <h2 className="text-4xl md:text-5xl font-black mb-6 tracking-tight">

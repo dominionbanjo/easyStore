@@ -46,7 +46,7 @@ export default function CategoriesPage() {
     return (
       <div className="min-h-screen bg-white dark:bg-neutral-950 transition-colors duration-300">
         <div className="bg-white dark:bg-neutral-900 border-b border-border/50">
-          <div className="max-w-4xl mx-auto px-4 py-20 text-center space-y-10">
+          <div className="w-full mx-auto px-4 py-20 text-center space-y-10">
             <Skeleton className="h-4 w-32 mx-auto rounded-full" />
             <div className="space-y-4">
               <Skeleton className="h-12 sm:h-16 w-full max-w-lg mx-auto rounded-xl" />
@@ -55,7 +55,7 @@ export default function CategoriesPage() {
             <Skeleton className="h-16 w-full max-w-xl mx-auto rounded-3xl" />
           </div>
         </div>
-        <div className="max-w-7xl mx-auto px-4 py-12 md:py-20 space-y-20">
+        <div className="w-full mx-auto px-4 py-12 md:py-20 space-y-20">
           {Array.from({ length: 3 }).map((_, i) => (
             <div key={i} className="space-y-8">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 border-b-2 border-primary/5 pb-4">
@@ -99,7 +99,7 @@ export default function CategoriesPage() {
     <section className="min-h-screen bg-neutral-50/50 dark:bg-neutral-950 mt-10 transition-colors duration-300">
       <CategoryHeader search={search} onSearchChange={setSearch} />
 
-      <div className="max-w-7xl mx-auto px-4 py-16 md:py-28 space-y-16 md:space-y-24">
+      <div className="w-full mx-auto px-4 py-16 md:py-28 space-y-16 md:space-y-24">
         {filteredCategories.length === 0 ? (
           <div className="text-center py-20 md:py-32 bg-white dark:bg-neutral-900 rounded-[2.5rem] border-2 border-dashed border-border/60 dark:border-white/10 shadow-inner">
             <div className="w-20 h-20 bg-primary/5 rounded-full flex items-center justify-center mx-auto mb-6">

@@ -12,7 +12,7 @@ const brands = [
 export default function FeaturedBrands() {
   return (
     <section className="py-16 bg-muted/30 dark:bg-neutral-900/50 border-y border-border/50 transition-colors duration-300">
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="w-full mx-auto px-6">
         <div className="text-center space-y-4 mb-12">
           <h3 className="text-xl md:text-2xl font-bold text-foreground">
             Powering 40,000+ Stores & Growing Brands

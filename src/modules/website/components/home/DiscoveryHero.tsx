@@ -27,7 +27,7 @@ export default function DiscoveryHero() {
       <section className="relative overflow-hidden pt-20 pb-12 px-4">
         <div className="absolute top-0 center w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent dark:from-emerald-900/20" />
 
-        <div className="max-w-7xl mx-auto text-center relative z-10">
+        <div className="w-full mx-auto text-center relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -66,7 +66,7 @@ export default function DiscoveryHero() {
       </section>
 
       {/* Quick Links */}
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="w-full mx-auto px-4">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
             {
