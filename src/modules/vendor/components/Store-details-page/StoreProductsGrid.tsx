@@ -5,15 +5,11 @@ import { Pagination } from "@/components/shared/Pagination";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, PackageOpen, Filter } from "lucide-react";
+import type { IStoreProduct, IStorePagination } from "@/types/Store/storeTypes";
 
 type Props = {
-  products: any[];
-  pagination?: {
-    page: number;
-    pages: number;
-    hasNext: boolean;
-    hasPrev: boolean;
-  };
+  products: IStoreProduct[];
+  pagination?: IStorePagination;
   isLoading: boolean;
   isFetching: boolean;
   selectedCategory?: { id: string; name: string } | null;
@@ -55,7 +51,11 @@ export function StoreProductsGrid({
   const showSkeleton = isLoading || isPaging || isFetching;
 
   return (
-    <div ref={sectionRef} className="max-w-7xl mx-auto space-y-12 pb-24">
+    <div
+      id="main-grid"
+      ref={sectionRef}
+      className="max-w-7xl mx-auto space-y-12 pb-24"
+    >
       {/* ─── CATEGORY HEADER ─── */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 px-2">
         <div className="space-y-1">
@@ -157,7 +157,7 @@ export function StoreProductsGrid({
                     colors={product.colors}
                     sizes={product.sizes}
                     options={product.options}
-                    variants={product.variants?.map((v: any) => ({
+                    variants={product.variants?.map((v) => ({
                       ...v,
                       image_url: v.image_url ?? undefined,
                     }))}

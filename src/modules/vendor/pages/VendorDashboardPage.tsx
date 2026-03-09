@@ -41,28 +41,30 @@ const MONTH_NAMES = [
 
 export default function VendorDashboardPage() {
   const user = useAppSelector(selectCurrentUser);
-  const { data, isLoading, isError, refetch } = useGetMyStoreAnalyticsQuery();
+  const { data, isLoading, isError } = useGetMyStoreAnalyticsQuery();
 
-  if (isError) {
+  const summary = data?.summary;
+  const trends = data?.trends;
+
+  // Store status is used for the banner, account status for blocking access
+  const storeStatus = summary?.store_status || "pending";
+  const accountStatus = summary?.account_status || user?.account_status;
+
+  // We allow pending/active vendors to view the dashboard structure (even if analytics return 404/403)
+  if (isError && accountStatus === "banned") {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] space-y-4">
         <Alert variant="destructive" className="max-w-md">
           <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Error</AlertTitle>
+          <AlertTitle>Account Banned</AlertTitle>
           <AlertDescription>
-            We couldn't load your store analytics. This might be due to a
-            connection issue.
+            Your account has been banned. Please contact support if you believe
+            this is an error.
           </AlertDescription>
         </Alert>
-        <Button onClick={() => refetch()} variant="outline" className="gap-2">
-          Try Again
-        </Button>
       </div>
     );
   }
-
-  const summary = data?.summary;
-  const trends = data?.trends;
 
   const stats = [
     {
@@ -105,7 +107,7 @@ export default function VendorDashboardPage() {
       <DashboardOverviewHeader />
 
       {/* ─── Status Banners ─── */}
-      {user?.account_status === "pending" && (
+      {storeStatus === "pending" && (
         <Alert
           variant="default"
           className="mt-4 mb-2 bg-yellow-50 dark:bg-yellow-900/10 border-yellow-200 dark:border-yellow-900"
@@ -116,8 +118,8 @@ export default function VendorDashboardPage() {
           </AlertTitle>
           <AlertDescription className="text-yellow-700 dark:text-yellow-400">
             Your store is currently under review by our team. You can continue
-            setting it up and adding products, but your products won't be
-            visible to the public until your store is approved.{" "}
+            setting it up and adding products, but your store won't be visible
+            to the public until it is approved.{" "}
             <a
               href="mailto:support@easystore.com"
               className="font-semibold underline underline-offset-2"
@@ -128,7 +130,30 @@ export default function VendorDashboardPage() {
         </Alert>
       )}
 
-      {user?.account_status === "restricted" && (
+      {storeStatus === "restricted" && (
+        <Alert
+          variant="destructive"
+          className="mt-4 mb-2 bg-red-50 dark:bg-red-900/10 border-red-200 dark:border-red-900"
+        >
+          <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-500" />
+          <AlertTitle className="text-red-800 dark:text-red-500 font-bold">
+            Store Restricted
+          </AlertTitle>
+          <AlertDescription className="text-red-700 dark:text-red-400">
+            Your store has been restricted by an administrator. It is currently
+            hidden from the public. If you believe this is an error, please{" "}
+            <a
+              href="mailto:support@easystore.com"
+              className="font-semibold underline underline-offset-2"
+            >
+              Contact Support
+            </a>
+            .
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {accountStatus === "restricted" && (
         <Alert
           variant="destructive"
           className="mt-4 mb-2 bg-red-50 dark:bg-red-900/10 border-red-200 dark:border-red-900"
@@ -138,16 +163,8 @@ export default function VendorDashboardPage() {
             Account Restricted
           </AlertTitle>
           <AlertDescription className="text-red-700 dark:text-red-400">
-            Your account has been restricted. You can still access your
-            dashboard, but you can no longer add new products or receive new
-            orders. If you believe this is an error, please{" "}
-            <a
-              href="mailto:support@easystore.com"
-              className="font-semibold underline underline-offset-2"
-            >
-              Contact Support
-            </a>
-            .
+            Your personal account has been restricted. You can still access your
+            dashboard, but you may have limited functionality.
           </AlertDescription>
         </Alert>
       )}

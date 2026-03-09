@@ -78,6 +78,7 @@ export interface IStoreDetails {
   description: string | null;
   logo: string | null;
   cover_image: string | null;
+  cover_image_public_id: string | null;
   email: string | null;
   phone_number: string | null;
   social_links: Record<string, string> | null;
@@ -96,11 +97,13 @@ export interface IStoreDetails {
   bank_name: string | null;
   recipient_code: string | null;
   payout_verified: boolean;
+  status: "active" | "pending" | "restricted" | "banned";
   user?: {
     first_name: string;
     last_name: string;
     username: string;
     avatar: string | null;
+    account_status?: "active" | "pending" | "restricted" | "banned";
   };
   created_at: string;
 }
@@ -111,6 +114,15 @@ export interface IStoreCategory {
   slug: string;
 }
 
+export interface IStorePagination {
+  total: number;
+  page: number;
+  limit: number;
+  pages: number;
+  hasNext: boolean;
+  hasPrev: boolean;
+}
+
 export interface IStoreDetailsResponse {
   status: "success" | "error";
   message: string;
@@ -118,14 +130,7 @@ export interface IStoreDetailsResponse {
     store: IStoreDetails;
     products: {
       data: IStoreProduct[];
-      pagination: {
-        total: number;
-        page: number;
-        limit: number;
-        pages: number;
-        hasNext: boolean;
-        hasPrev: boolean;
-      };
+      pagination: IStorePagination;
     };
     categories: IStoreCategory[];
   };
@@ -145,6 +150,7 @@ export interface IStoreProduct {
   slug: string;
   price: number;
   discount_price?: number | null;
+  on_sale?: boolean;
   image: string;
   rating_average: number;
   stock: number;
@@ -155,6 +161,17 @@ export interface IStoreProduct {
   category?: string;
   store_name?: string;
   created_at?: string;
+  options?: { name: string; values: string[] }[] | null;
+  variants?:
+    | {
+        id: string;
+        combinations?: Record<string, string>;
+        price: number;
+        stock: number;
+        discount_price?: number;
+        image_url?: string | null;
+      }[]
+    | null;
 }
 
 /* ───────── GET STORE PRODUCTS ARGS ───────── */
@@ -173,14 +190,7 @@ export interface IGetStoreProductsResponse {
   message: string;
   data: {
     items: IStoreProduct[];
-    pagination: {
-      total: number;
-      page: number;
-      limit: number;
-      pages: number;
-      hasNext: boolean;
-      hasPrev: boolean;
-    };
+    pagination: IStorePagination;
   };
 }
 
@@ -189,6 +199,7 @@ export interface GetStoreCategoryProductsArgs {
   categoryId: string;
   page?: number;
   limit?: number;
+  q?: string;
 }
 
 // Reuse IStoreProduct since the shape matches
@@ -199,13 +210,75 @@ export interface IGetStoreCategoryProductsResponse {
   message: string;
   data: {
     items: IStoreCategoryProduct[];
-    pagination: {
-      total: number;
-      page: number;
-      limit: number;
-      pages: number;
-      hasNext: boolean;
-      hasPrev: boolean;
-    };
+    pagination: IStorePagination;
   };
+}
+
+/* ───────── TEMPLATES & THEMES ───────── */
+
+export interface ThemeConfig {
+  header_style?: string;
+  primary_color?: string;
+  font_family?: string;
+  layout_style?: string;
+  dark_mode_default?: boolean;
+}
+
+export interface ITemplate {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  default_config: ThemeConfig;
+  preview_url: string | null;
+  is_active: boolean;
+}
+
+export interface IStoreTheme {
+  id: string;
+  store_id: string;
+  template_id: string;
+  custom_config: ThemeConfig | null;
+  template: ITemplate;
+}
+
+/* ───────── ANALYTICS ───────── */
+
+export interface IStoreAnalytics {
+  summary: {
+    total_sales: number;
+    orders: number;
+    total_products: number;
+    customers: number;
+    out_of_stock_count: number;
+    pending_orders_count: number;
+    conversion_rate: number;
+    account_status?: "active" | "pending" | "restricted" | "banned";
+    store_status?: "active" | "pending" | "restricted" | "banned";
+    payout_verified?: boolean;
+  };
+  trends: {
+    monthly: {
+      year: number;
+      month: number;
+      revenue: number;
+      orders: number;
+    }[];
+  };
+  top_products: {
+    product_id: string;
+    name: string;
+    slug: string;
+    image: string | null;
+    total_sold: number;
+    total_revenue: number;
+  }[];
+  customers: {
+    id: string;
+    name: string;
+    email: string;
+    location: string | null;
+    spent: number;
+    orders: number;
+  }[];
 }

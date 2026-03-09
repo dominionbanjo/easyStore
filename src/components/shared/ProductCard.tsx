@@ -6,6 +6,7 @@ import {
   useEffect,
   type ReactNode,
 } from "react";
+import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "@/store";
@@ -140,6 +141,8 @@ const Root = ({
   children,
   className,
 }: ProductCardRootProps) => {
+  const [searchParams] = useSearchParams();
+  const previewTemplate = searchParams.get("preview_template");
   const { isAuthenticated } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
   const [isFavorited, setIsFavorited] = useState<boolean>(isFavorite);
@@ -394,7 +397,11 @@ const Root = ({
         )}
       >
         <SmartLink
-          to={buildRoute.productDetails(slug)}
+          to={
+            storeSlug
+              ? `/stores/${storeSlug}/products/${id}${previewTemplate ? `?preview_template=${previewTemplate}` : ""}`
+              : buildRoute.productDetails(slug)
+          }
           className="absolute inset-0 z-[1]"
           aria-label={`View ${name}`}
         />

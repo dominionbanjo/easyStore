@@ -10,9 +10,27 @@ import type {
   IGetStoreProductsResponse,
   GetStoreCategoryProductsArgs,
   IGetStoreCategoryProductsResponse,
+  IStore,
+  IStoreDetails,
+  IStoreAnalytics,
+  ITemplate,
+  IStoreTheme,
+  IStorePagination,
 } from "@/types/Store/storeTypes";
 
 import { apiManager } from "./apiManager";
+
+export interface CreateStoreArgs extends Partial<IStore> {
+  user_id?: string;
+  email?: string;
+  current_sales_channel?: string;
+}
+
+type ApiResponse<T> = {
+  status: string;
+  message: string;
+  data: T;
+};
 
 export const storeApi = apiManager.injectEndpoints({
   endpoints: (builder) => ({
@@ -76,7 +94,7 @@ export const storeApi = apiManager.injectEndpoints({
       }),
     }),
     /* ───────── CREATE STORE ───────── */
-    createStore: builder.mutation<any, Partial<any>>({
+    createStore: builder.mutation<ApiResponse<IStore>, CreateStoreArgs>({
       query: (body) => ({
         url: "store",
         method: "POST",
@@ -86,23 +104,29 @@ export const storeApi = apiManager.injectEndpoints({
     }),
 
     /* ───────── GET VENDOR CUSTOMERS ───────── */
-    getVendorCustomers: builder.query<any, any>({
+    getVendorCustomers: builder.query<
+      { items: any[]; pagination: IStorePagination },
+      any
+    >({
       query: (params) => ({
         url: "store-customers",
         method: "GET",
         params,
       }),
-      transformResponse: (response: any) => response?.data || response,
+      transformResponse: (
+        response: ApiResponse<{ items: any[]; pagination: IStorePagination }>,
+      ) => response.data,
       providesTags: ["Store"],
     }),
 
     /* ───────── GET VENDOR'S OWN STORE ───────── */
-    getMyStore: builder.query<any, void>({
+    getMyStore: builder.query<IStoreDetails, void>({
       query: () => ({
         url: "store/me",
         method: "GET",
       }),
-      transformResponse: (response: any) => response?.data || response,
+      transformResponse: (response: ApiResponse<IStoreDetails>) =>
+        response.data,
       providesTags: ["Store"],
     }),
 
@@ -153,13 +177,49 @@ export const storeApi = apiManager.injectEndpoints({
     }),
 
     /* ───────── GET STORE ANALYTICS ───────── */
-    getMyStoreAnalytics: builder.query<any, void>({
+    getMyStoreAnalytics: builder.query<IStoreAnalytics, void>({
       query: () => ({
         url: "store-analytics/me",
         method: "GET",
       }),
-      transformResponse: (response: any) => response?.data || response,
+      transformResponse: (response: ApiResponse<IStoreAnalytics>) =>
+        response.data,
       providesTags: ["Store"],
+    }),
+
+    /* ───────── THEME / TEMPLATES ───────── */
+    getTemplates: builder.query<ITemplate[], void>({
+      query: () => ({
+        url: "store/templates",
+        method: "GET",
+      }),
+      transformResponse: (response: ApiResponse<ITemplate[]>) => response.data,
+      providesTags: ["Store"],
+    }),
+
+    getStoreTheme: builder.query<IStoreTheme, string>({
+      query: (slug) => ({
+        url: `store/${slug}/theme`,
+        method: "GET",
+      }),
+      transformResponse: (response: ApiResponse<IStoreTheme>) => response.data,
+      providesTags: ["Store"],
+    }),
+
+    updateStoreTheme: builder.mutation<
+      ApiResponse<IStoreTheme>,
+      {
+        id: string;
+        template_id: string;
+        custom_config?: Record<string, unknown>;
+      }
+    >({
+      query: ({ id, ...body }) => ({
+        url: `store/${id}/theme`,
+        method: "PATCH",
+        body,
+      }),
+      invalidatesTags: ["Store"],
     }),
   }),
 });
@@ -191,4 +251,8 @@ export const {
   useUpdateStoreMutation,
   useRegisterStoreBankMutation,
   useUpdateStoreBankMutation,
+
+  useGetTemplatesQuery,
+  useGetStoreThemeQuery,
+  useUpdateStoreThemeMutation,
 } = storeApi;

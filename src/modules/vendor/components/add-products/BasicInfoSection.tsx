@@ -4,8 +4,11 @@ import { CategorySelect } from "@/components/shared/form/CategorySelect";
 import { Type, FolderTree, AlignLeft } from "lucide-react";
 import ChipSection from "./ChipSection";
 import { addChip, removeChip } from "../../utils/addProduct.helpers";
+import type { ProductExtras } from "./useProductExtras";
 
-export function BasicInfoSection({ highlights, setHighlights }: any) {
+type Props = Pick<ProductExtras, "highlights" | "setHighlights">;
+
+export function BasicInfoSection({ highlights, setHighlights }: Props) {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

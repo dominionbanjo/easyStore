@@ -22,3 +22,4 @@ export function useProductExtras() {
     setHighlights,
   };
 }
+export type ProductExtras = ReturnType<typeof useProductExtras>;

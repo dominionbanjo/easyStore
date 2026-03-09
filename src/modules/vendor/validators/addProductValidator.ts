@@ -6,14 +6,11 @@ import { z } from "zod";
  * error that occurs when the user clears a number input field.
  */
 const safeNum = (rules: z.ZodNumber = z.number()) =>
-  z.preprocess((val) => {
-    if (val === "" || val === null || val === undefined) return 0;
-    const n = Number(val);
-    return Number.isNaN(n) ? 0 : n;
-  }, rules);
+  z.coerce.number().pipe(rules);
 
 export const addProductSchema = z
   .object({
+    id: z.string().optional(),
     /* ───────── BASIC INFO ───────── */
     name: z.string().min(3, "Product name must be at least 3 characters long"),
 

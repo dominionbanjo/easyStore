@@ -26,6 +26,23 @@ import { Label } from "@/components/ui/label";
 import ChipSection from "./ChipSection";
 import { ColorSelectModal } from "./ColorSelectModal";
 
+/* ───────────────── TYPES ───────────────── */
+
+interface Option {
+  id?: string;
+  name: string;
+  values: string[];
+}
+
+interface VariantField {
+  id: string;
+  combinations: Record<string, string>;
+  sku?: string;
+  price: number;
+  stock: number;
+  discount_price?: number | null;
+}
+
 const OPTION_NAME_SUGGESTIONS = [
   { label: "Color", value: "Color" },
   { label: "Size", value: "Size" },
@@ -57,13 +74,13 @@ export function VariantBuilderSection() {
     name: "variants",
   });
 
-  const options = watch("options") || [];
+  const options = (watch("options") as Option[]) || [];
 
   // Generate combinations
   useEffect(() => {
     // Skip generation if options or some options are missing names
     const processedOptions = options.filter(
-      (o: any) => o.name && o.name.trim().length > 0,
+      (o) => o.name && o.name.trim().length > 0,
     );
 
     if (processedOptions.length === 0) {
@@ -77,12 +94,12 @@ export function VariantBuilderSection() {
     // This prevents placeholder combinations from overwriting real data
     // that was loaded from the backend during edit-mode hydration.
     const anyOptionEmpty = processedOptions.some(
-      (o: any) => !o.values || o.values.length === 0,
+      (o) => !o.values || o.values.length === 0,
     );
     if (anyOptionEmpty) return;
 
     const generateCombinations = (
-      opts: any[],
+      opts: Option[],
       current: Record<string, string> = {},
       index = 0,
     ): Record<string, string>[] => {
@@ -107,7 +124,7 @@ export function VariantBuilderSection() {
     const hydratedVariants = getValues("variants") || [];
 
     const nextVariants = combinations.map((combo) => {
-      const existing = hydratedVariants.find((v: any) => {
+      const existing = (hydratedVariants as VariantField[]).find((v) => {
         if (!v.combinations) return false;
         const keys1 = Object.keys(combo);
         const keys2 = Object.keys(v.combinations);
@@ -129,7 +146,7 @@ export function VariantBuilderSection() {
     });
 
     const currentSerialized = JSON.stringify(
-      hydratedVariants.map((v: any) => v.combinations),
+      (hydratedVariants as VariantField[]).map((v) => v.combinations),
     );
     const nextSerialized = JSON.stringify(
       nextVariants.map((v) => v.combinations),
@@ -184,7 +201,7 @@ export function VariantBuilderSection() {
 
         <div className="space-y-4">
           <AnimatePresence mode="popLayout">
-            {optionFields.map((field: any, index: number) => (
+            {optionFields.map((field, index: number) => (
               <motion.div
                 key={field.id}
                 layout
@@ -305,7 +322,7 @@ export function VariantBuilderSection() {
                                   options={OPTION_NAME_SUGGESTIONS}
                                   placeholder="Select Option (e.g. Size)"
                                   className="[&_button]:h-12 md:[&_button]:h-14 [&_button]:rounded-2xl"
-                                  onValueChange={(val: string) => {
+                                  onValueChange={(val) => {
                                     if (val && val !== "custom") {
                                       const currentValues =
                                         getValues(`options.${index}.values`) ||
@@ -404,34 +421,32 @@ export function VariantBuilderSection() {
                             />
                             <div className="flex flex-wrap gap-2 mt-4 p-5 rounded-[2rem] bg-muted/5 border border-border/40 min-h-[120px] border-dashed">
                               {(options[index]?.values || []).length > 0 ? (
-                                (options[index]?.values || []).map(
-                                  (v: string) => (
-                                    <Badge
-                                      key={v}
-                                      variant="secondary"
-                                      className="bg-primary/10 text-primary border-none rounded-2xl h-8 md:h-10 px-3 md:px-4 text-[10px] md:text-sm font-bold flex items-center gap-2 shadow-sm"
+                                (options[index]?.values || []).map((v) => (
+                                  <Badge
+                                    key={v}
+                                    variant="secondary"
+                                    className="bg-primary/10 text-primary border-none rounded-2xl h-8 md:h-10 px-3 md:px-4 text-[10px] md:text-sm font-bold flex items-center gap-2 shadow-sm"
+                                  >
+                                    {v}
+                                    <button
+                                      type="button"
+                                      className="p-1 hover:bg-primary/20 rounded-lg transition-colors"
+                                      onClick={() => {
+                                        const currentOpt = getValues(
+                                          `options.${index}`,
+                                        ) as Option;
+                                        updateOption(index, {
+                                          ...currentOpt,
+                                          values: (
+                                            currentOpt.values || []
+                                          ).filter((x: string) => x !== v),
+                                        });
+                                      }}
                                     >
-                                      {v}
-                                      <button
-                                        type="button"
-                                        className="p-1 hover:bg-primary/20 rounded-lg transition-colors"
-                                        onClick={() => {
-                                          const currentOpt = getValues(
-                                            `options.${index}`,
-                                          );
-                                          updateOption(index, {
-                                            ...currentOpt,
-                                            values: (
-                                              currentOpt.values || []
-                                            ).filter((x: string) => x !== v),
-                                          });
-                                        }}
-                                      >
-                                        <X className="h-3 w-3" />
-                                      </button>
-                                    </Badge>
-                                  ),
-                                )
+                                      <X className="h-3 w-3" />
+                                    </button>
+                                  </Badge>
+                                ))
                               ) : (
                                 <div className="w-full flex flex-col items-center justify-center text-center py-6 gap-2">
                                   <Palette className="h-6 w-6 text-muted-foreground/20" />
@@ -446,8 +461,10 @@ export function VariantBuilderSection() {
                           <ChipSection
                             label="Values"
                             values={options[index]?.values || []}
-                            onAdd={(v) => {
-                              const currentOpt = getValues(`options.${index}`);
+                            onAdd={(v: string) => {
+                              const currentOpt = getValues(
+                                `options.${index}`,
+                              ) as Option;
                               const currentVals = currentOpt?.values || [];
                               if (!currentVals.includes(v)) {
                                 updateOption(index, {
@@ -456,8 +473,10 @@ export function VariantBuilderSection() {
                                 });
                               }
                             }}
-                            onRemove={(v) => {
-                              const currentOpt = getValues(`options.${index}`);
+                            onRemove={(v: string) => {
+                              const currentOpt = getValues(
+                                `options.${index}`,
+                              ) as Option;
                               updateOption(index, {
                                 ...currentOpt,
                                 values: (currentOpt.values || []).filter(
@@ -591,8 +610,11 @@ export function VariantBuilderSection() {
 
             <div className="space-y-3">
               <AnimatePresence initial={false}>
-                {variantFields.map((field: any, index: number) => {
-                  const comboValues = Object.values(field.combinations || {});
+                {variantFields.map((field, index: number) => {
+                  const variantData = field as unknown as VariantField;
+                  const comboValues = Object.values(
+                    variantData.combinations || {},
+                  );
                   return (
                     <motion.div
                       key={field.id}

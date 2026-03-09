@@ -1,14 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  Menu,
-  Bell,
-  UserCog,
-  Sun,
-  Moon,
-  LogOut,
-  User,
-  Settings,
-} from "lucide-react";
+import { Menu, Bell, Sun, Moon, LogOut, User, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Popover,

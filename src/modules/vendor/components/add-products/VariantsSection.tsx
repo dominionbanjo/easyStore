@@ -76,65 +76,68 @@ export function VariantsSection({ sizes }: VariantsSectionProps) {
         </div>
 
         <div className="space-y-3">
-          {fields.map((field, index) => (
-            <div
-              key={field.id}
-              className="flex flex-col md:grid md:grid-cols-[80px_1fr_1fr_120px] gap-4 p-4 rounded-2xl border border-border/40 bg-background/50 hover:bg-muted/10 transition-all duration-300"
-            >
-              {/* Size Badge */}
-              <div className="flex items-center">
-                <Badge
-                  variant="outline"
-                  className="font-black text-xs h-9 w-full md:w-auto px-4 justify-center bg-background border-primary/20 text-primary shadow-sm"
-                >
-                  {(field as any).size}
-                </Badge>
-              </div>
+          {fields.map((field, index) => {
+            const variantField = field as unknown as Variant & { id: string };
+            return (
+              <div
+                key={field.id}
+                className="flex flex-col md:grid md:grid-cols-[80px_1fr_1fr_120px] gap-4 p-4 rounded-2xl border border-border/40 bg-background/50 hover:bg-muted/10 transition-all duration-300"
+              >
+                {/* Size Badge */}
+                <div className="flex items-center">
+                  <Badge
+                    variant="outline"
+                    className="font-black text-xs h-9 w-full md:w-auto px-4 justify-center bg-background border-primary/20 text-primary shadow-sm"
+                  >
+                    {variantField.size}
+                  </Badge>
+                </div>
 
-              {/* Price Field */}
-              <div className="space-y-1">
-                <span className="md:hidden text-[10px] font-bold text-muted-foreground uppercase ml-1">
-                  Price
-                </span>
-                <FormPriceInput
-                  name={`variants.${index}.price`}
-                  placeholder="0.00"
-                  className="space-y-0"
-                  inputClassName="h-11"
-                  icon={<Tag className="h-3.5 w-3.5" />}
-                />
-              </div>
+                {/* Price Field */}
+                <div className="space-y-1">
+                  <span className="md:hidden text-[10px] font-bold text-muted-foreground uppercase ml-1">
+                    Price
+                  </span>
+                  <FormPriceInput
+                    name={`variants.${index}.price`}
+                    placeholder="0.00"
+                    className="space-y-0"
+                    inputClassName="h-11"
+                    icon={<Tag className="h-3.5 w-3.5" />}
+                  />
+                </div>
 
-              {/* Discount Field */}
-              <div className="space-y-1">
-                <span className="md:hidden text-[10px] font-bold text-muted-foreground uppercase ml-1">
-                  Discount
-                </span>
-                <FormPriceInput
-                  name={`variants.${index}.discount_price`}
-                  placeholder="Optional"
-                  className="space-y-0"
-                  inputClassName="h-11"
-                  icon={<Percent className="h-3.5 w-3.5" />}
-                />
-              </div>
+                {/* Discount Field */}
+                <div className="space-y-1">
+                  <span className="md:hidden text-[10px] font-bold text-muted-foreground uppercase ml-1">
+                    Discount
+                  </span>
+                  <FormPriceInput
+                    name={`variants.${index}.discount_price`}
+                    placeholder="Optional"
+                    className="space-y-0"
+                    inputClassName="h-11"
+                    icon={<Percent className="h-3.5 w-3.5" />}
+                  />
+                </div>
 
-              {/* Stock Field */}
-              <div className="space-y-1">
-                <span className="md:hidden text-[10px] font-bold text-muted-foreground uppercase ml-1">
-                  Stock
-                </span>
-                <FormInput
-                  name={`variants.${index}.stock`}
-                  type="number"
-                  placeholder="Qty"
-                  className="space-y-0"
-                  inputClassName="h-11"
-                  icon={<Box className="h-3.5 w-3.5" />}
-                />
+                {/* Stock Field */}
+                <div className="space-y-1">
+                  <span className="md:hidden text-[10px] font-bold text-muted-foreground uppercase ml-1">
+                    Stock
+                  </span>
+                  <FormInput
+                    name={`variants.${index}.stock`}
+                    type="number"
+                    placeholder="Qty"
+                    className="space-y-0"
+                    inputClassName="h-11"
+                    icon={<Box className="h-3.5 w-3.5" />}
+                  />
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 

@@ -1,7 +1,10 @@
 import { addChip, removeChip } from "../../utils/addProduct.helpers";
 import ChipSection from "./ChipSection";
+import type { ProductExtras } from "./useProductExtras";
 
-export function ChipsSection({ tags, setTags }: any) {
+type Props = Pick<ProductExtras, "tags" | "setTags">;
+
+export function ChipsSection({ tags, setTags }: Props) {
   return (
     <>
       <ChipSection

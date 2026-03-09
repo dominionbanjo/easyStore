@@ -238,7 +238,7 @@ export default function ProductDetailsTabs({
 
                       {product.shipping?.returns && (
                         <div className="flex gap-4 p-4 sm:p-5 rounded-2xl bg-background border border-border/50 shadow-sm">
-                          <div className="shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-blue-50 dark:bg-blue-500/10 flex items-center justify-center text-blue-600 dark:text-blue-400">
+                          <div className="shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-primary/5 dark:bg-primary/10 flex items-center justify-center text-primary">
                             <RotateCcw className="w-5 h-5 sm:w-6 sm:h-6" />
                           </div>
                           <div>

@@ -118,14 +118,12 @@ export default function SettingsPage() {
     }
   }, [store]);
 
-  const setupStage = store?.setup_stage || 1;
-  const isSetupComplete = setupStage >= 4;
-
   useEffect(() => {
-    if (!isSetupComplete) {
-      setActiveStep(setupStage);
+    const stage = store?.setup_stage || 1;
+    if (stage < 4) {
+      setActiveStep(stage);
     }
-  }, [setupStage, isSetupComplete]);
+  }, [store]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -230,8 +228,9 @@ export default function SettingsPage() {
       if (!isSetupComplete && activeStep < 3) {
         setActiveStep(nextSetupStage);
       }
-    } catch (error: any) {
-      toast.error(error.data?.message || "Failed to update store details");
+    } catch (error: unknown) {
+      const err = error as { data?: { message?: string } };
+      toast.error(err.data?.message || "Failed to update store details");
     }
   };
 
@@ -249,8 +248,9 @@ export default function SettingsPage() {
       }).unwrap();
       setBankData((prev) => ({ ...prev, account_name: result.account_name }));
       toast.success("Bank account verified!");
-    } catch (error: any) {
-      toast.error(error.data?.message || "Verification failed");
+    } catch (error: unknown) {
+      const err = error as { data?: { message?: string } };
+      toast.error(err.data?.message || "Verification failed");
     }
   };
 
@@ -263,8 +263,9 @@ export default function SettingsPage() {
         account_number: bankData.account_number,
       }).unwrap();
       toast.success("Bank account registered successfully!");
-    } catch (error: any) {
-      toast.error(error.data?.message || "Failed to register bank account");
+    } catch (error: unknown) {
+      const err = error as { data?: { message?: string } };
+      toast.error(err.data?.message || "Failed to register bank account");
     }
   };
 
@@ -276,7 +277,28 @@ export default function SettingsPage() {
     );
   }
 
+  if (!store) {
+    return (
+      <div className="flex h-[60vh] items-center justify-center text-center">
+        <div className="space-y-4">
+          <p className="text-zinc-500 font-bold tracking-tight">
+            Store data not found.
+          </p>
+          <button
+            onClick={() => window.location.reload()}
+            className="text-[var(--theme-primary)] hover:underline text-sm font-black"
+          >
+            Reload page
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   // If setup is complete, show the finalized details view
+  const setupStage = store.setup_stage || 1;
+  const isSetupComplete = setupStage >= 4;
+
   if (isSetupComplete) {
     return (
       <StoreSettingsCompleteView store={store} bannerPreview={bannerPreview} />

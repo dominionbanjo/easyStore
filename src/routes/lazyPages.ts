@@ -5,6 +5,7 @@ import HomepageLayout from "@/modules/website/layout/HomePageLayout";
 import AccountsLayout from "@/modules/website/layout/AccountsLayout";
 import VendorDashboardLayout from "@/modules/vendor/layout/VendorDashboardLayout";
 import SuperAdminDashboardLayout from "@/modules/admin/layout/SuperAdminDashboardLayout";
+import StorefrontLayout from "@/modules/vendor/layout/StorefrontLayout";
 import LandingPage from "@/modules/website/pages/LandingPage";
 
 export {
@@ -12,6 +13,7 @@ export {
   AccountsLayout,
   VendorDashboardLayout,
   SuperAdminDashboardLayout,
+  StorefrontLayout,
   LandingPage,
 };
 
@@ -30,6 +32,11 @@ const StoreDetailsPageImport = () =>
   import("@/modules/vendor/pages/storeDetailsPage");
 export const StoreDetailsPage = lazy(StoreDetailsPageImport);
 export const preloadStoreDetailsPage = StoreDetailsPageImport;
+
+const StoreProductDetailsPageImport = () =>
+  import("@/modules/vendor/pages/StoreProductDetailsPage");
+export const StoreProductDetailsPage = lazy(StoreProductDetailsPageImport);
+export const preloadStoreProductDetailsPage = StoreProductDetailsPageImport;
 
 const CategoriesPageImport = () => import("@/modules/website/pages/Categories");
 export const CategoriesPage = lazy(CategoriesPageImport);
@@ -181,6 +188,11 @@ const AnalyticsPageImport = () =>
   import("@/modules/vendor/pages/AnalyticsPage");
 export const AnalyticsPage = lazy(AnalyticsPageImport);
 export const preloadAnalyticsPage = AnalyticsPageImport;
+
+const VendorTemplatesPageImport = () =>
+  import("@/modules/vendor/pages/VendorTemplatesPage");
+export const VendorTemplatesPage = lazy(VendorTemplatesPageImport);
+export const preloadVendorTemplatesPage = VendorTemplatesPageImport;
 
 /* ───────────────── ADMIN PAGES ───────────────── */
 const SuperAdminOverviewPageImport = () =>

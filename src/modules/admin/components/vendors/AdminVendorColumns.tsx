@@ -7,7 +7,6 @@ import {
   Ban,
   AlertTriangle,
   UserSearch,
-  CheckCircle2,
   RefreshCcw,
   Store,
 } from "lucide-react";
@@ -22,7 +21,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import type { IAdminUser } from "@/services/adminApi";
-import { useUpdateAdminUserStatusMutation } from "@/services/adminApi";
+import { useUpdateAdminVendorStatusMutation } from "@/services/adminApi";
 import { toast } from "sonner";
 import { ConfirmActionDialog } from "../shared/ConfirmActionDialog";
 
@@ -47,31 +46,31 @@ const confirmConfig: Record<
   }
 > = {
   active: {
-    title: "Approve Vendor",
+    title: "Approve Store",
     description:
-      "This vendor's store and products will become publicly visible. Their account will be set to active.",
+      "This store and its products will become publicly visible. The vendor will be notified.",
     label: "Approve",
     variant: "default",
   },
   pending: {
-    title: "Set Vendor Pending",
+    title: "Set Store Pending",
     description:
-      "This will move the vendor back to a pending state, hiding their store from public.",
+      "This will move the store back to a pending state, hiding it from public search and site categories.",
     label: "Set Pending",
     variant: "outline",
   },
   restricted: {
-    title: "Restrict Vendor",
+    title: "Restrict Store",
     description:
-      "This vendor can still log in but cannot add new products. Existing products remain hidden.",
+      "This vendor can still log in and view their dashboard, but their store and products will be hidden from the public.",
     label: "Restrict",
     variant: "outline",
   },
   banned: {
-    title: "Ban Vendor",
+    title: "Ban Store",
     description:
-      "This vendor will be immediately logged out and blocked from signing in. Their store will be hidden.",
-    label: "Ban Vendor",
+      "This store will be completely disabled. This is a high-level restriction.",
+    label: "Ban Store",
     variant: "destructive",
   },
 };
@@ -84,15 +83,18 @@ const VendorRowActions = ({
   onViewDetails: (id: string) => void;
 }) => {
   const [pendingStatus, setPendingStatus] = useState<StatusKey | null>(null);
-  const [updateStatus, { isLoading }] = useUpdateAdminUserStatusMutation();
+  const [updateStatus, { isLoading }] = useUpdateAdminVendorStatusMutation();
 
   const handleConfirm = async () => {
-    if (!pendingStatus) return;
+    if (!pendingStatus || !user.store?.id) return;
     try {
-      await updateStatus({ userId: user.id, status: pendingStatus }).unwrap();
-      toast.success(`Vendor marked as ${pendingStatus}`);
+      await updateStatus({
+        storeId: user.store.id,
+        status: pendingStatus,
+      }).unwrap();
+      toast.success(`Store marked as ${pendingStatus}`);
     } catch (err: any) {
-      toast.error(err?.data?.message || "Failed to update vendor status");
+      toast.error(err?.data?.message || "Failed to update store status");
     } finally {
       setPendingStatus(null);
     }
@@ -120,17 +122,17 @@ const VendorRowActions = ({
             View Details
           </DropdownMenuItem>
 
-          {user.account_status !== "active" && (
+          {user.store?.status !== "active" && (
             <DropdownMenuItem
               className="gap-2"
               onClick={() => setPendingStatus("active")}
             >
               <BadgeCheck className="h-4 w-4 text-emerald-500" />
-              Approve Vendor
+              Approve Store
             </DropdownMenuItem>
           )}
 
-          {user.account_status !== "pending" && (
+          {user.store?.status !== "pending" && (
             <DropdownMenuItem
               className="gap-2 text-blue-600"
               onClick={() => setPendingStatus("pending")}
@@ -140,7 +142,7 @@ const VendorRowActions = ({
             </DropdownMenuItem>
           )}
 
-          {user.account_status !== "restricted" && (
+          {user.store?.status !== "restricted" && (
             <DropdownMenuItem
               className="gap-2 text-yellow-600"
               onClick={() => setPendingStatus("restricted")}
@@ -150,21 +152,13 @@ const VendorRowActions = ({
             </DropdownMenuItem>
           )}
 
-          {user.account_status !== "banned" ? (
+          {user.store?.status !== "banned" && (
             <DropdownMenuItem
               className="gap-2 text-red-600"
               onClick={() => setPendingStatus("banned")}
             >
               <Ban className="h-4 w-4" />
-              Ban Vendor
-            </DropdownMenuItem>
-          ) : (
-            <DropdownMenuItem
-              className="gap-2 text-emerald-600"
-              onClick={() => setPendingStatus("active")}
-            >
-              <CheckCircle2 className="h-4 w-4" />
-              Unban Vendor
+              Ban Store
             </DropdownMenuItem>
           )}
         </DropdownMenuContent>
@@ -214,9 +208,6 @@ export const buildAdminVendorColumns = (
             <p className="font-semibold text-sm">
               {store?.store_name || "No Store"}
             </p>
-            <p className="text-xs text-muted-foreground">
-              {store?.category || "—"}
-            </p>
           </div>
         </div>
       );
@@ -241,10 +232,10 @@ export const buildAdminVendorColumns = (
     },
   },
   {
-    accessorKey: "account_status",
-    header: "Status",
+    accessorKey: "store.status",
+    header: "Store Status",
     cell: ({ row }) => {
-      const status = row.original.account_status || "pending";
+      const status = row.original.store?.status || "pending";
       return (
         <span
           className={cn(

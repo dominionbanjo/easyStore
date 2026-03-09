@@ -1,20 +1,29 @@
+import { cn } from "@/lib/utils";
 import { ProductCard } from "@/components/shared/ProductCard";
 import type { IProduct } from "@/types/product/productTypes";
 
 interface RelatedProductsGridProps {
   products: IProduct[];
+  title?: string | null;
+  className?: string;
+  showFooter?: boolean;
 }
 
 export default function RelatedProductsGrid({
   products,
+  title = "Related Products",
+  className,
+  showFooter = false,
 }: RelatedProductsGridProps) {
   if (!products?.length) return null;
 
   return (
-    <section className="pt-10 space-y-8 px-0 sm:px-0">
-      <h2 className="text-2xl font-bold text-foreground px-3 sm:px-0">
-        Related Products
-      </h2>
+    <section className={cn("pt-10 space-y-8 px-0 sm:px-0", className)}>
+      {title && (
+        <h2 className="text-2xl font-bold text-foreground px-3 sm:px-0">
+          {title}
+        </h2>
+      )}
       <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mx-auto">
         {products.slice(0, 4).map((product) => {
           const image =
@@ -56,7 +65,7 @@ export default function RelatedProductsGrid({
             >
               <ProductCard.Image />
               <ProductCard.Info />
-              <ProductCard.Footer />
+              {showFooter && <ProductCard.Footer />}
 
               {/* <ProductCard.Actions /> */}
             </ProductCard.Root>

@@ -13,6 +13,7 @@ import { Search, Filter, Download } from "lucide-react";
 import { useDebounce } from "@/hooks";
 import {
   useGetAdminTransactionsQuery,
+  useFlagAdminTransactionMutation,
   type IAdminTransaction,
 } from "@/services/adminApi";
 import { DataTable } from "@/components/shared/DataTable";
@@ -34,7 +35,7 @@ export default function SuperAdminTransactionsPage() {
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [pendingAction, setPendingAction] = useState<{
     tx: IAdminTransaction;
-    type: "refund" | "flag";
+    type: "flag";
   } | null>(null);
 
   const { data, isLoading, isFetching } = useGetAdminTransactionsQuery({
@@ -53,23 +54,24 @@ export default function SuperAdminTransactionsPage() {
     setIsDetailModalOpen(true);
   };
 
-  const handleActionClick = (
-    tx: IAdminTransaction,
-    type: "refund" | "flag",
-  ) => {
+  const [flagTransaction, { isLoading: isFlagging }] =
+    useFlagAdminTransactionMutation();
+
+  const handleActionClick = (tx: IAdminTransaction, type: "flag") => {
     setPendingAction({ tx, type });
   };
 
   const handleConfirmAction = async () => {
     if (!pendingAction) return;
 
-    // Simulate API call for now or implement mutation if available
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
-    toast.success(
-      `${pendingAction.type === "refund" ? "Refund" : "Flagged"} request processed successfully`,
-    );
-    setPendingAction(null);
+    try {
+      await flagTransaction({ transactionId: pendingAction.tx.id }).unwrap();
+      toast.success("Transaction flagged for review");
+    } catch (err: any) {
+      toast.error(err?.data?.message || "Failed to flag transaction");
+    } finally {
+      setPendingAction(null);
+    }
   };
 
   const columns = useMemo(
@@ -202,24 +204,11 @@ export default function SuperAdminTransactionsPage() {
         open={!!pendingAction}
         onClose={() => setPendingAction(null)}
         onConfirm={handleConfirmAction}
-        title={
-          pendingAction?.type === "refund"
-            ? "Confirm Refund"
-            : "Flag Transaction"
-        }
-        description={
-          pendingAction?.type === "refund"
-            ? `Are you sure you want to refund ${pendingAction.tx.currency}${pendingAction.tx.amount / 100} to ${pendingAction.tx.user?.first_name}? This will reverse the transaction completely.`
-            : `This will mark transaction ${pendingAction?.tx.id.substring(0, 8).toUpperCase()} for manual review by the compliance team.`
-        }
-        confirmLabel={
-          pendingAction?.type === "refund"
-            ? "Process Refund"
-            : "Flag for Review"
-        }
-        confirmVariant={
-          pendingAction?.type === "refund" ? "destructive" : "default"
-        }
+        isLoading={isFlagging}
+        title="Flag Transaction"
+        description={`This will mark transaction ${pendingAction?.tx.id.substring(0, 8).toUpperCase()} for manual review by the compliance team.`}
+        confirmLabel="Flag for Review"
+        confirmVariant="default"
       />
     </section>
   );

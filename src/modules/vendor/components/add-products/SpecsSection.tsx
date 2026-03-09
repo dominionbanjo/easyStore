@@ -4,8 +4,11 @@ import {
   removeSpec,
 } from "../../utils/addProduct.helpers";
 import SpecificationsSection from "./SpecificationsSection";
+import type { ProductExtras } from "./useProductExtras";
 
-export function SpecsSection({ specs, setSpecs }: any) {
+type Props = Pick<ProductExtras, "specs" | "setSpecs">;
+
+export function SpecsSection({ specs, setSpecs }: Props) {
   return (
     <SpecificationsSection
       specs={specs}

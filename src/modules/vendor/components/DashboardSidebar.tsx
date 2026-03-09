@@ -10,6 +10,7 @@ import {
   Store,
   ChevronLeft,
   ChevronRight,
+  Palette,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -21,6 +22,7 @@ const menuItems = [
   { label: "Products", icon: Package, to: "/vendor/products" },
   { label: "Orders", icon: ShoppingCart, to: "/vendor/orders" },
   { label: "Customers", icon: Users, to: "/vendor/customers" },
+  { label: "Templates", icon: Palette, to: "/vendor/templates" },
   { label: "Store Settings", icon: Settings, to: "/vendor/settings" },
   { label: "Analytics", icon: BarChart2, to: "/vendor/analytics" },
   { label: "Help", icon: HelpCircle, to: "/vendor/help" },

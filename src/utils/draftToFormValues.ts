@@ -7,28 +7,28 @@ export type BuildCreatePayloadArgs = {
   values: {
     name: string;
     category_id: string;
-    description?: string;
+    description?: string | null;
 
-    price?: number;
-    discount_price?: number;
-    stock?: number;
+    price?: number | null;
+    discount_price?: number | null;
+    stock?: number | null;
 
-    shipping_cost?: number;
-    shipping_note?: string;
-    returns_note?: string;
+    shipping_cost?: number | null;
+    shipping_note?: string | null;
+    returns_note?: string | null;
   };
 
-  options?: { name: string; values: string[] }[];
+  options?: { name: string; values: string[] }[] | null;
   image: UploadedImage | null;
   gallery: UploadedImage[];
   tags: string[];
   highlights: string[];
   variants: {
     combinations?: Record<string, string>;
-    size: string;
+    size?: string;
     price: number;
     stock: number;
-    discount_price?: number;
+    discount_price?: number | null;
     sku?: string;
   }[];
   specItems: SpecItem[];

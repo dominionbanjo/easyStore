@@ -28,7 +28,6 @@ export default function App() {
             <Route index element={<Pages.LandingPage />} />
             <Route path="s" element={<Pages.SearchResultsPage />} />
             <Route path="stores" element={<Pages.StoresPage />} />
-            <Route path="stores/:slug" element={<Pages.StoreDetailsPage />} />
             <Route path="categories" element={<Pages.CategoriesPage />} />
             <Route
               path="categories/:slug"
@@ -51,6 +50,15 @@ export default function App() {
             <Route path="new-arrivals" element={<Pages.NewArrivalsPage />} />
             <Route path="cart" element={<Pages.CartPage />} />
             <Route path="cart/preview" element={<Pages.CheckoutPage />} />
+          </Route>
+
+          {/* ─── VENDOR STOREFRONTS ─── */}
+          <Route path="/stores/:slug" element={<Pages.StorefrontLayout />}>
+            <Route index element={<Pages.StoreDetailsPage />} />
+            <Route
+              path="products/:productId"
+              element={<Pages.StoreProductDetailsPage />}
+            />
           </Route>
 
           {/* ─── ACCOUNT ─── */}
@@ -100,6 +108,7 @@ export default function App() {
             />
 
             <Route path="analytics" element={<Pages.AnalyticsPage />} />
+            <Route path="templates" element={<Pages.VendorTemplatesPage />} />
             <Route path="settings" element={<Pages.VendorSettingsPage />} />
             <Route path="help" element={<Pages.HelpPage />} />
           </Route>

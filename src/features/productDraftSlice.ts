@@ -13,33 +13,35 @@ export interface ProductDraftData {
   id?: string;
   name?: string;
   category_id?: string;
-  description?: string;
+  description?: string | null;
 
-  price?: number;
-  discount_price?: number;
-  stock?: number;
-  shipping_cost?: number;
-  shipping_note?: string;
-  returns_note?: string;
+  price?: number | null;
+  discount_price?: number | null;
+  stock?: number | null;
+  shipping_cost?: number | null;
+  shipping_note?: string | null;
+  returns_note?: string | null;
 
   tags?: string[];
   highlights?: string[];
-  options?: { name: string; values: string[] }[];
-  variants?: {
-    id?: string;
-    sku?: string;
-    combinations?: Record<string, string>;
-    size?: string;
-    price: number;
-    stock: number;
-    discount_price?: number;
-  }[];
+  options?: { name: string; values: string[] }[] | null;
+  variants?:
+    | {
+        id?: string;
+        sku?: string;
+        combinations?: Record<string, string>;
+        size?: string;
+        price: number;
+        stock: number;
+        discount_price?: number | null;
+      }[]
+    | null;
 
   /* legacy */
   sizes?: string[];
   colors?: DraftColor[];
 
-  specs?: Record<string, string>;
+  specs?: Record<string, string> | null;
 
   image?: UploadedImage | null;
   gallery?: UploadedImage[];

@@ -92,7 +92,7 @@ export default function LoginPage() {
       else if (user?.account_type === "admin") finalRedirect = "/admin";
       navigate(finalRedirect, { replace: true });
     } catch (err: any) {
-      toast.error(err.message || "Login failed");
+      toast.error(err?.data?.message || err?.message || "Login failed");
     }
   };
 
@@ -124,7 +124,9 @@ export default function LoginPage() {
             else if (user?.account_type === "admin") finalRedirect = "/admin";
             navigate(finalRedirect, { replace: true });
           } catch (err: any) {
-            toast.error(err.message || "Google login failed");
+            toast.error(
+              err?.data?.message || err?.message || "Google login failed",
+            );
           }
         },
       });

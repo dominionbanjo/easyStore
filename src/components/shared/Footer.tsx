@@ -20,7 +20,7 @@ export default function Footer() {
       {/* Background Decor */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2 pointer-events-none" />
 
-      <div className="w-full mx-auto px-1.5 md:px-14 xl:px-16 pt-20 pb-10 relative z-10">
+      <div className="w-full mx-auto px-4 sm:px-6 md:px-14 xl:px-16 pt-20 pb-10 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 mb-16">
           {/* Brand Column */}
           <div className="space-y-6">

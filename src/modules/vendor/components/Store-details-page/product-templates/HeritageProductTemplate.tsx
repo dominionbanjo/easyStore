@@ -1,0 +1,108 @@
+import { useState } from "react";
+import { useProductActions } from "../../../hooks/useProductActions";
+
+import ProductDetailsTabs from "@/modules/website/components/products/ProductDetailsTabs";
+import ReviewsSection from "@/modules/website/components/products/ReviewsSection";
+import RelatedProductsGrid from "@/modules/website/components/products/RelatedProductsGrid";
+import type { ProductTemplateProps } from "./ProductTemplateProps";
+import { adaptProductToUI } from "../../../utils/productAdapter";
+
+// Heritage Components
+import { HeritageHeader } from "./heritage/HeritageHeader";
+import { HeritageShowcase } from "./heritage/HeritageShowcase";
+
+export default function HeritageProductTemplate({
+  store,
+  product,
+  reviews,
+  relatedProducts,
+  onCartOpen,
+  cartItemsCount,
+}: ProductTemplateProps) {
+  const uiProduct = adaptProductToUI(product, store, reviews);
+
+  const {
+    quantity,
+    setQuantity,
+    liked,
+    selectedColor,
+    setSelectedColor,
+    selectedSize,
+    setSelectedSize,
+    addingToCart,
+    displayPrice,
+    displayOriginalPrice,
+    currentStock,
+    handleAddToCart,
+    toggleWishlist,
+    selectedOptions,
+    selectOption,
+  } = useProductActions(uiProduct);
+
+  const [searchOpen, setSearchOpen] = useState(false);
+
+  return (
+    <div className="w-full bg-[#F4EDE4] dark:bg-[#2C2622] text-[#3D352B] dark:text-[#EAE3DB] font-serif min-h-screen pb-24 selection:bg-[#8C7A6B] selection:text-white">
+      <HeritageHeader
+        store={store}
+        uiProduct={uiProduct}
+        onCartOpen={onCartOpen}
+        cartItemsCount={cartItemsCount}
+        searchOpen={searchOpen}
+        setSearchOpen={setSearchOpen}
+      />
+
+      {/* ─── SHOWCASE MAIN ─── */}
+      <main className="max-w-[1400px] mx-auto px-4 md:px-8 py-12">
+        <HeritageShowcase
+          uiProduct={uiProduct}
+          quantity={quantity}
+          setQuantity={setQuantity}
+          liked={liked}
+          selectedColor={selectedColor}
+          setSelectedColor={setSelectedColor}
+          selectedSize={selectedSize}
+          setSelectedSize={setSelectedSize}
+          addingToCart={addingToCart}
+          displayPrice={displayPrice}
+          displayOriginalPrice={displayOriginalPrice}
+          currentStock={currentStock}
+          selectedOptions={selectedOptions}
+          selectOption={selectOption}
+          handleAddToCart={handleAddToCart}
+          toggleWishlist={toggleWishlist}
+        />
+
+        {/* ─── TABS ─── */}
+        <div className="mt-16 bg-white dark:bg-[#1E1A17] rounded-[2rem] p-6 md:p-12 shadow-sm border border-[#EADDCE] dark:border-[#3D352B]">
+          <ProductDetailsTabs product={uiProduct} />
+        </div>
+
+        {/* ─── APPRECIATION (REVIEWS) ─── */}
+        <div className="mt-16 text-center">
+          <h2 className="text-3xl font-bold italic text-[#2C2622] dark:text-white mb-8 border-b border-[#EADDCE] dark:border-[#3D352B] pb-6 inline-block">
+            Words of Appreciation
+          </h2>
+          <div className="bg-white dark:bg-[#1E1A17] rounded-[2rem] p-6 md:p-12 shadow-sm border border-[#EADDCE] dark:border-[#3D352B] text-left">
+            <ReviewsSection
+              productId={product.id}
+              reviews={reviews}
+              ratingAverage={uiProduct.rating}
+              reviewCount={uiProduct.reviewCount}
+            />
+          </div>
+        </div>
+
+        {/* ─── RELATED CRAFTS ─── */}
+        {relatedProducts?.length > 0 && (
+          <div className="mt-16 text-center">
+            <h2 className="text-3xl font-bold italic text-[#2C2622] dark:text-white mb-8">
+              Similar Crafts from {store.store_name}
+            </h2>
+            <RelatedProductsGrid products={relatedProducts} />
+          </div>
+        )}
+      </main>
+    </div>
+  );
+}

@@ -52,9 +52,12 @@ export async function uploadToCloudinary(
       url: res.data.secure_url,
       public_id: res.data.public_id,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const err = error as {
+      response?: { data?: { error?: { message?: string } } };
+    };
     throw new Error(
-      error?.response?.data?.error?.message || "Cloudinary upload failed",
+      err.response?.data?.error?.message || "Cloudinary upload failed",
     );
   }
 }

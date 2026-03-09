@@ -19,13 +19,31 @@ import {
   useUpdateStoreBankMutation,
 } from "@/services/storeApi";
 import {
-  useGetNigerianBanksQuery,
   useVerifyBankAccountMutation,
+  useGetNigerianBanksQuery,
 } from "@/services/userApi";
+import type { IStoreDetails } from "@/types/Store/storeTypes";
 
 interface StoreSettingsCompleteViewProps {
-  store: any;
+  store: IStoreDetails;
   bannerPreview: string | null;
+}
+
+interface GeneralSettingsInput {
+  store_name: string;
+  description: string;
+  email: string;
+  phone_number: string;
+  address_street: string;
+  address_city: string;
+  address_state: string;
+  address_country: string;
+}
+
+interface BankDetails {
+  bank_code: string;
+  account_number: string;
+  account_name: string;
 }
 
 export function StoreSettingsCompleteView({
@@ -39,7 +57,7 @@ export function StoreSettingsCompleteView({
   const [verifyBank, { isLoading: isVerifyingBank }] =
     useVerifyBankAccountMutation();
 
-  const methods = useForm({
+  const methods = useForm<GeneralSettingsInput>({
     defaultValues: {
       store_name: store?.store_name || "",
       description: store?.description || "",
@@ -52,7 +70,7 @@ export function StoreSettingsCompleteView({
     },
   });
 
-  const [bankData, setBankData] = useState({
+  const [bankData, setBankData] = useState<BankDetails>({
     bank_code: store?.bank_code || "",
     account_number: store?.account_number || "",
     account_name: store?.bank_name || "",
@@ -80,12 +98,13 @@ export function StoreSettingsCompleteView({
       }).unwrap();
       setBankData((prev) => ({ ...prev, account_name: result.account_name }));
       toast.success("Bank account verified!");
-    } catch (error: any) {
-      toast.error(error.data?.message || "Verification failed");
+    } catch (error: unknown) {
+      const err = error as { data?: { message?: string } };
+      toast.error(err.data?.message || "Verification failed");
     }
   };
 
-  const handleSaveGeneral = async (data: any) => {
+  const handleSaveGeneral = async (data: GeneralSettingsInput) => {
     try {
       const formData = new FormData();
       Object.entries(data).forEach(([key, value]) => {
@@ -93,7 +112,8 @@ export function StoreSettingsCompleteView({
       });
       await updateStore({ id: store.id, data: formData }).unwrap();
       toast.success("Store details updated successfully");
-    } catch (err: any) {
+    } catch (error: unknown) {
+      const err = error as { data?: { message?: string } };
       toast.error(err.data?.message || "Failed to update store details");
     }
   };
@@ -107,7 +127,8 @@ export function StoreSettingsCompleteView({
         account_number: bankData.account_number,
       }).unwrap();
       toast.success("Bank details updated successfully");
-    } catch (err: any) {
+    } catch (error: unknown) {
+      const err = error as { data?: { message?: string } };
       toast.error(err.data?.message || "Failed to update bank details");
     }
   };
@@ -246,7 +267,7 @@ export function StoreSettingsCompleteView({
                 }
               >
                 <option value="">Select a Bank</option>
-                {banksResponse?.data?.map((b: any) => (
+                {banksResponse?.data?.map((b) => (
                   <option key={b.code} value={b.code}>
                     {b.name}
                   </option>

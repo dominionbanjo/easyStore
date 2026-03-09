@@ -67,7 +67,7 @@ export default function AnalyticsPage() {
     );
   }
 
-  const { data: analyticsData } = analytics;
+  const analyticsData = analytics;
 
   // Final UI
   return (

@@ -26,6 +26,7 @@ import {
 import { cn } from "@/lib/utils";
 import {
   useUpdateAdminUserStatusMutation,
+  useUpdateAdminVendorStatusMutation,
   useGetAdminUserQuery,
 } from "@/services/adminApi";
 import { toast } from "sonner";
@@ -164,8 +165,12 @@ export function AdminUserDetailModal({
     skip: !userId || !open,
   });
 
-  const [updateStatus, { isLoading: isUpdating }] =
+  const [updateUserStatus, { isLoading: isUpdatingUser }] =
     useUpdateAdminUserStatusMutation();
+  const [updateVendorStatus, { isLoading: isUpdatingVendor }] =
+    useUpdateAdminVendorStatusMutation();
+
+  const isUpdating = isUpdatingUser || isUpdatingVendor;
 
   const user = data?.data;
   const loading = isLoading || isFetching;
@@ -175,10 +180,19 @@ export function AdminUserDetailModal({
   const handleConfirm = async () => {
     if (!user || !pendingStatus) return;
     try {
-      await updateStatus({ userId: user.id, status: pendingStatus }).unwrap();
-      toast.success(
-        `${mode === "vendor" ? "Vendor" : "User"} updated to ${pendingStatus}`,
-      );
+      if (mode === "vendor" && user.store?.id) {
+        await updateVendorStatus({
+          storeId: user.store.id,
+          status: pendingStatus,
+        }).unwrap();
+        toast.success(`Store updated to ${pendingStatus}`);
+      } else {
+        await updateUserStatus({
+          userId: user.id,
+          status: pendingStatus,
+        }).unwrap();
+        toast.success(`User updated to ${pendingStatus}`);
+      }
     } catch (err: any) {
       toast.error(err?.data?.message || "Failed to update status");
     } finally {
@@ -235,11 +249,6 @@ export function AdminUserDetailModal({
                       {user.account_status?.charAt(0).toUpperCase() +
                         user.account_status?.slice(1)}
                     </span>
-                    {user.email_verified && (
-                      <span className="flex items-center gap-1 text-xs text-emerald-600 dark:text-emerald-400 font-medium">
-                        <ShieldCheck className="h-3.5 w-3.5" /> Verified
-                      </span>
-                    )}
                   </div>
                   <p className="text-sm text-muted-foreground mt-0.5">
                     @{user.username || "unknown"}
@@ -247,6 +256,25 @@ export function AdminUserDetailModal({
                   <p className="text-xs text-muted-foreground capitalize mt-0.5">
                     {user.account_type} · via {user.signup_medium || "email"}
                   </p>
+                  {mode === "vendor" && user.store && (
+                    <div className="flex items-center gap-2 mt-2">
+                      <span className="text-[10px] font-bold uppercase text-muted-foreground tracking-tighter">
+                        Store Status:
+                      </span>
+                      <span
+                        className={cn(
+                          "px-2 py-0.5 rounded-full text-[11px] font-bold",
+                          statusColors[user.store.status || "pending"] ||
+                            statusColors.pending,
+                        )}
+                      >
+                        {(user.store.status || "pending")
+                          .charAt(0)
+                          .toUpperCase() +
+                          (user.store.status || "pending").slice(1)}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -375,64 +403,66 @@ export function AdminUserDetailModal({
               {/* ── Status actions ── */}
               <div>
                 <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3">
-                  Change Status
+                  Change {mode === "vendor" ? "Store" : "User"} Status
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  {user.account_status !== "active" && (
+                  {(mode === "vendor"
+                    ? user.store?.status !== "active"
+                    : user.account_status !== "active") && (
                     <Button
                       size="sm"
                       variant="outline"
                       className="gap-2 border-emerald-500 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20"
                       onClick={() => setPendingStatus("active")}
+                      isLoading={isUpdating && pendingStatus === "active"}
                     >
                       <CheckCircle2 className="h-4 w-4" />
-                      {mode === "vendor" ? "Approve" : "Set Active"}
+                      Approve
                     </Button>
                   )}
 
-                  {mode === "vendor" && user.account_status !== "pending" && (
+                  {(mode === "vendor"
+                    ? user.store?.status !== "pending"
+                    : user.account_status !== "pending") && (
                     <Button
                       size="sm"
                       variant="outline"
                       className="gap-2 border-blue-400 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20"
                       onClick={() => setPendingStatus("pending")}
+                      isLoading={isUpdating && pendingStatus === "pending"}
                     >
                       <RefreshCcw className="h-4 w-4" />
                       Set Pending
                     </Button>
                   )}
 
-                  {user.account_status !== "restricted" && (
+                  {(mode === "vendor"
+                    ? user.store?.status !== "restricted"
+                    : user.account_status !== "restricted") && (
                     <Button
                       size="sm"
                       variant="outline"
                       className="gap-2 border-yellow-400 text-yellow-600 hover:bg-yellow-50 dark:hover:bg-yellow-900/20"
                       onClick={() => setPendingStatus("restricted")}
+                      isLoading={isUpdating && pendingStatus === "restricted"}
                     >
                       <AlertTriangle className="h-4 w-4" />
                       Restrict
                     </Button>
                   )}
 
-                  {user.account_status !== "banned" ? (
+                  {(mode === "vendor"
+                    ? user.store?.status !== "banned"
+                    : user.account_status !== "banned") && (
                     <Button
                       size="sm"
                       variant="destructive"
                       className="gap-2"
                       onClick={() => setPendingStatus("banned")}
+                      isLoading={isUpdating && pendingStatus === "banned"}
                     >
                       <Ban className="h-4 w-4" />
-                      Ban {mode === "vendor" ? "Vendor" : "User"}
-                    </Button>
-                  ) : (
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="gap-2 border-emerald-500 text-emerald-600 hover:bg-emerald-50"
-                      onClick={() => setPendingStatus("active")}
-                    >
-                      <CheckCircle2 className="h-4 w-4" />
-                      Unban
+                      Ban {mode === "vendor" ? "Store" : "User"}
                     </Button>
                   )}
                 </div>

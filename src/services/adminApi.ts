@@ -14,6 +14,7 @@ export interface IAdminUser extends IUser {
     address_city?: string | null;
     address_state?: string | null;
     address_country?: string | null;
+    status?: "active" | "pending" | "restricted" | "banned";
   } | null;
   phone_number: string | null;
   username: string | null;
@@ -37,6 +38,7 @@ export interface IAdminTransaction {
   updated_at: string;
   user?: IAdminUser | null;
   vendor?: IAdminUser | null;
+  is_flagged?: boolean;
 }
 
 interface IPaginationMeta {
@@ -58,6 +60,11 @@ interface IPaginatedResponse<T> {
 
 export interface IUpdateUserStatusPayload {
   userId: string;
+  status: "active" | "pending" | "restricted" | "banned";
+}
+
+export interface IUpdateVendorStatusPayload {
+  storeId: string;
   status: "active" | "pending" | "restricted" | "banned";
 }
 
@@ -192,6 +199,19 @@ export const adminApi = apiManager.injectEndpoints({
       invalidatesTags: ["User"],
     }),
 
+    // ─── Update vendor store status ───
+    updateAdminVendorStatus: builder.mutation<
+      { message: string; store: { id: string; status: string } },
+      IUpdateVendorStatusPayload
+    >({
+      query: ({ storeId, status }) => ({
+        url: `admin/users/vendor/${storeId}/status`,
+        method: "PATCH",
+        body: { status },
+      }),
+      invalidatesTags: ["User"],
+    }),
+
     // ─── Transactions ───
     getAdminTransactions: builder.query<
       IPaginatedResponse<IAdminTransaction>,
@@ -287,6 +307,18 @@ export const adminApi = apiManager.injectEndpoints({
       query: () => "admin/analytics/signup-methods",
       providesTags: ["Analytics"],
     }),
+
+    // ─── Action: Flag Transaction ───
+    flagAdminTransaction: builder.mutation<
+      { message: string; data: any },
+      { transactionId: string }
+    >({
+      query: ({ transactionId }) => ({
+        url: `admin/transactions/${transactionId}/flag`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["Analytics"],
+    }),
   }),
 });
 
@@ -295,6 +327,7 @@ export const {
   useGetAdminVendorsQuery,
   useGetAdminUserQuery,
   useUpdateAdminUserStatusMutation,
+  useUpdateAdminVendorStatusMutation,
   useGetAdminTransactionsQuery,
   useGetAdminOverviewQuery,
   useGetAdminGrowthChartQuery,
@@ -305,4 +338,5 @@ export const {
   useGetAdminOrderBreakdownQuery,
   useGetAdminRevenueQuery,
   useGetAdminSignupMethodsQuery,
+  useFlagAdminTransactionMutation,
 } = adminApi;

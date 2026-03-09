@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-
-import StoreHeaderSection from "@/modules/vendor/components/StoreHeaderSection";
-
+import { useParams, useSearchParams, useNavigate } from "react-router-dom";
+import { Store, ArrowLeft, Search } from "lucide-react";
 import {
   useGetStoreDetailsQuery,
   useGetStoreProductsQuery,
@@ -10,16 +8,27 @@ import {
 } from "@/services/storeApi";
 
 import { Skeleton } from "@/components/ui/skeleton";
-import { StoreCategoriesGrid } from "../components/Store-details-page/StoreCategoriesGrid";
-import { StoreProductsGrid } from "../components/Store-details-page/StoreProductsGrid";
-import { StoreTabs } from "../components/Store-details-page/StoreTabs";
-import { Search, X, Loader2 } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { useStoreTheme } from "../components/StoreThemeProvider";
+import DefaultTemplate from "../components/Store-details-page/templates/DefaultTemplate";
+import VanguardTemplate from "../components/Store-details-page/templates/VanguardTemplate";
+import BazaarTemplate from "../components/Store-details-page/templates/BazaarTemplate";
+import EditorialTemplate from "../components/Store-details-page/templates/EditorialTemplate";
+import TitanTemplate from "../components/Store-details-page/templates/TitanTemplate";
+import HeritageTemplate from "../components/Store-details-page/templates/HeritageTemplate";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/store";
+import { useGetCartQuery } from "@/services/cartApi";
+import { CartDrawer } from "@/modules/website/components/cart/CartDrawer";
+import type { StoreTemplateProps } from "../components/Store-details-page/templates/StoreTemplateProps";
+import type { IStorePagination } from "@/types/Store/storeTypes";
 
 /* ───────────────── COMPONENT ───────────────── */
 
 export default function StoreDetailsPage() {
   const { slug } = useParams<{ slug: string }>();
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const previewTemplate = searchParams.get("preview_template");
 
   const [activeTab, setActiveTab] = useState<"products" | "categories">(
     "products",
@@ -28,11 +37,22 @@ export default function StoreDetailsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [isSearching, setIsSearching] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
   const [selectedCategory, setSelectedCategory] = useState<{
     id: string;
     name: string;
   } | null>(null);
+
+  // Cart state
+  const { isAuthenticated } = useSelector((state: RootState) => state.user);
+  const cartState = useSelector((state: RootState) => state.cart);
+  const { data: cartData } = useGetCartQuery(undefined, {
+    skip: !isAuthenticated,
+  });
+  const cartItemsCount = isAuthenticated
+    ? cartData?.data?.cart?.items?.length || 0
+    : cartState.localItems?.length || 0;
 
   // Debounce search
   useEffect(() => {
@@ -59,6 +79,27 @@ export default function StoreDetailsPage() {
     { skip: !slug },
   );
 
+  // Handle category query param
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const categoryId = params.get("category");
+
+    if (categoryId && storeData?.data.categories) {
+      const category = storeData.data.categories.find(
+        (c: { id: string }) => c.id === categoryId,
+      );
+      if (category) {
+        setSelectedCategory(category);
+        setActiveTab("products");
+      }
+    }
+  }, [storeData]);
+
+  /* ─── NORMALIZED DATA (derived early for skip conditions) ─── */
+
+  const store = storeData?.data.store;
+  const categories = storeData?.data.categories ?? [];
+
   /* ─── ALL PRODUCTS ─── */
 
   const {
@@ -67,7 +108,7 @@ export default function StoreDetailsPage() {
     isFetching: productsFetching,
   } = useGetStoreProductsQuery(
     { slug: slug ?? "", page, limit: 20, q: debouncedSearch },
-    { skip: activeTab !== "products" },
+    { skip: !!selectedCategory || !store },
   );
 
   /* ─── CATEGORY PRODUCTS ─── */
@@ -82,39 +123,38 @@ export default function StoreDetailsPage() {
       categoryId: selectedCategory?.id ?? "",
       page,
       limit: 20,
+      q: debouncedSearch,
     },
-    { skip: activeTab !== "categories" || !selectedCategory },
+    { skip: !selectedCategory },
   );
 
-  /* ─── NORMALIZED DATA ─── */
+  // Use category data when a category is selected, otherwise use all products
+  const products = selectedCategory
+    ? (categoryProductsData?.data.items ?? [])
+    : (productsData?.data.items ?? []);
 
-  const store = storeData?.data.store;
-  const categories = storeData?.data.categories ?? [];
+  const pagination: IStorePagination = (selectedCategory
+    ? categoryProductsData?.data.pagination
+    : productsData?.data.pagination) || {
+    total: 0,
+    page: 1,
+    limit: 20,
+    pages: 1,
+    hasNext: false,
+    hasPrev: false,
+  };
 
-  const products =
-    activeTab === "products"
-      ? (productsData?.data.items ?? [])
-      : (categoryProductsData?.data.items ?? []);
+  const isProductsLoading = selectedCategory
+    ? categoryLoading
+    : productsLoading;
 
-  const pagination =
-    activeTab === "products"
-      ? productsData?.data.pagination
-      : categoryProductsData?.data.pagination;
+  const isProductsFetching = selectedCategory
+    ? categoryFetching
+    : productsFetching || isSearching;
 
-  const isProductsLoading =
-    activeTab === "products" ? productsLoading : categoryLoading;
-
-  const isProductsFetching =
-    activeTab === "products"
-      ? productsFetching || isSearching
-      : categoryFetching;
-
-  const productsKey =
-    activeTab === "products"
-      ? "all-products"
-      : selectedCategory
-        ? `category-${selectedCategory.id}`
-        : "no-category";
+  const productsKey = selectedCategory
+    ? `category-${selectedCategory.id}-page-${page}`
+    : `all-products-page-${page}`;
 
   /* ─── STORE LOADING STATE ─── */
 
@@ -138,133 +178,147 @@ export default function StoreDetailsPage() {
 
   if (storeError || !store) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-4 text-center">
-        <div className="bg-primary/5 p-8 rounded-[3rem] border border-primary/10 max-w-md">
-          <h1 className="text-4xl font-black text-zinc-900 mb-4 tracking-tighter">
+      <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-zinc-50/50 dark:bg-zinc-950/50">
+        <div className="bg-white dark:bg-zinc-900 p-10 rounded-2xl border border-zinc-200 dark:border-zinc-800 max-w-md w-full shadow-2xl shadow-zinc-200/50 dark:shadow-none text-center">
+          <div className="w-20 h-20 bg-emerald-50 dark:bg-emerald-500/10 rounded-2xl flex items-center justify-center mx-auto mb-8">
+            <Store className="w-10 h-10 text-emerald-600 dark:text-emerald-400" />
+          </div>
+          <h1 className="text-3xl font-black text-zinc-900 dark:text-zinc-100 mb-4 tracking-tight">
             Store Not Found
           </h1>
-          <p className="text-zinc-500 mb-8">
-            The store you're looking for might have been moved or deleted.
+          <p className="text-zinc-500 dark:text-zinc-400 mb-10 leading-relaxed">
+            The store you're looking for might be inactive, moved, or deleted.
+            Try searching for other top-rated stores on EasyStore.
           </p>
-          <button
-            onClick={() => window.history.back()}
-            className="bg-primary text-white font-bold py-4 px-8 rounded-2xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/20"
-          >
-            Go Back
-          </button>
+          <div className="space-y-3">
+            <button
+              onClick={() => navigate("/stores")}
+              className="w-full bg-emerald-600 text-white font-bold py-4 px-8 rounded-xl hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2"
+            >
+              <Search className="w-4 h-4" />
+              Explore All Stores
+            </button>
+            <button
+              onClick={() => navigate(-1)}
+              className="w-full bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 font-bold py-4 px-8 rounded-xl hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-all flex items-center justify-center gap-2"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Go Back
+            </button>
+          </div>
         </div>
       </div>
     );
   }
 
   const isCategoriesLoading = storeLoading;
+  const { templateName: activeTemplateName } = useStoreTheme();
 
-  /* ───────────────── RENDER ───────────────── */
+  // Override template if in preview mode
+  const templateName = previewTemplate || activeTemplateName;
+
+  const handleCategorySelect = (cat: { id: string; name: string } | null) => {
+    setSelectedCategory(cat);
+    if (cat) {
+      setActiveTab("products");
+    }
+    setPage(1);
+
+    // Auto-scroll to top of product grid section
+    setTimeout(() => {
+      const element = document.getElementById("main-grid");
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    }, 100);
+  };
+
+  const templateProps: StoreTemplateProps = {
+    store,
+    categories,
+    products,
+    pagination,
+    isProductsLoading,
+    isProductsFetching,
+    isCategoriesLoading,
+    activeTab,
+    selectedCategory,
+    searchQuery,
+    isSearching,
+    page,
+    productsKey,
+    onTabChange: (tab: "products" | "categories") => {
+      setActiveTab(tab);
+      setSelectedCategory(null);
+      setPage(1);
+      setSearchQuery("");
+    },
+    onCategorySelect: handleCategorySelect,
+    onSearchChange: (query: string) => setSearchQuery(query),
+    onPageChange: (p: number) => {
+      setPage(p);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    },
+    onCartOpen: () => setIsCartOpen(true),
+    cartItemsCount,
+  };
+
+  const renderTemplate = () => {
+    switch (templateName) {
+      case "Vanguard":
+        return <VanguardTemplate {...templateProps} />;
+      case "The Bazaar":
+        return <BazaarTemplate {...templateProps} />;
+      case "Editorial":
+        return <EditorialTemplate {...templateProps} />;
+      case "Titan":
+        return <TitanTemplate {...templateProps} />;
+      case "Heritage":
+        return <HeritageTemplate {...templateProps} />;
+      case "Default":
+      default:
+        return <DefaultTemplate {...templateProps} />;
+    }
+  };
 
   return (
-    <section className="min-h-screen pb-20 -mt-5 md:-mt-4">
-      {/* ─── HEADER ─── */}
-      <StoreHeaderSection
-        store={{
-          id: store.id,
-          name: store.store_name ?? "Unnamed Store",
-          banner: store.cover_image ?? undefined,
-          logo: store.logo ?? undefined,
-          description:
-            store.description ?? "This store has not added a description yet.",
-          rating: Number(store.rating_average ?? 0),
-          location:
-            [store.address_city, store.address_state, store.address_country]
-              .filter(Boolean)
-              .join(", ") || "Location not specified",
-          email: store.email ?? undefined,
-          phone: store.phone_number ?? undefined,
-          social_links: store.social_links ?? undefined,
-          totalProducts: store.total_products ?? 0,
-          user: store.user,
-        }}
-      />
-
-      <div className="max-w-7xl mx-auto">
-        {/* ─── TABS ─── */}
-        <StoreTabs
-          activeTab={activeTab}
-          onChange={(tab) => {
-            setActiveTab(tab);
-            setSelectedCategory(null);
-            setPage(1);
-            setSearchQuery(""); // Clear search when changing tabs
-          }}
-        />
-
-        {/* ─── SEARCH BAR ─── */}
-        {activeTab === "products" && (
-          <div className="max-w-md mx-auto mt-8 px-4">
-            <div className="relative group">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <Search className="h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
-              </div>
-              <Input
-                type="text"
-                placeholder="Search in this store..."
-                className="pl-11 pr-11 py-6 bg-white/50 dark:bg-neutral-900/50 backdrop-blur-xl border-zinc-200 dark:border-white/10 rounded-2xl shadow-sm focus-visible:ring-primary/20 focus-visible:border-primary transition-all text-base"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-              <div className="absolute inset-y-0 right-0 pr-4 flex items-center gap-2">
-                {isSearching && (
-                  <Loader2 className="h-5 w-5 animate-spin text-primary" />
-                )}
-                {searchQuery && (
-                  <button
-                    onClick={() => setSearchQuery("")}
-                    className="text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    <X className="h-5 w-5" />
-                  </button>
-                )}
-              </div>
-            </div>
+    <div className="relative">
+      {previewTemplate && (
+        <div className="fixed top-0 left-0 right-0 z-[100] text-zinc-100 py-2 px-4 flex items-center justify-between shadow-2xl border-b border-white/10 backdrop-blur-md bg-zinc-900/95 font-sans">
+          <div className="flex items-center gap-3">
+            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="text-[10px] font-black uppercase tracking-[0.2em]">
+              Previewing:{" "}
+              <span className="text-emerald-400">{previewTemplate}</span> Theme
+            </span>
           </div>
-        )}
-
-        {/* ─── CONTENT ─── */}
-        <div className="mt-16">
-          {/* ─── CATEGORY GRID ─── */}
-          {activeTab === "categories" && !selectedCategory && (
-            <div className="px-1.5 sm:px-4">
-              <StoreCategoriesGrid
-                key={slug}
-                categories={categories}
-                isLoading={isCategoriesLoading}
-                onSelect={(cat) => {
-                  setSelectedCategory(cat);
-                  setPage(1);
-                }}
-              />
-            </div>
-          )}
-
-          {/* ─── PRODUCTS GRID ─── */}
-          {(activeTab === "products" || selectedCategory) && (
-            <div className="px-1.5 sm:px-4">
-              <StoreProductsGrid
-                key={productsKey}
-                products={products}
-                pagination={pagination}
-                isLoading={isProductsLoading}
-                isFetching={isProductsFetching}
-                selectedCategory={selectedCategory}
-                onBackToCategories={() => {
-                  setSelectedCategory(null);
-                  setPage(1);
-                }}
-                onPageChange={(p) => setPage(p)}
-              />
-            </div>
-          )}
+          <button
+            onClick={() => navigate("/vendor/templates")}
+            className="text-[10px] font-black uppercase tracking-widest bg-white text-black px-4 py-1.5 rounded hover:bg-zinc-200 transition-colors"
+          >
+            Back to Dashboard
+          </button>
         </div>
-      </div>
-    </section>
+      )}
+      {renderTemplate()}
+
+      {/* ─── GLOBAL FLOATING CART BUTTON ─── */}
+      {/* <button
+        onClick={() => setIsCartOpen(true)}
+        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-[var(--theme-primary)] text-white shadow-2xl shadow-[var(--theme-primary)]/40 flex items-center justify-center hover:scale-110 active:scale-95 transition-transform duration-200"
+        aria-label="Open cart"
+      >
+        <ShoppingCart className="w-6 h-6" />
+        {cartItemsCount > 0 && (
+          <span className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-white text-[var(--theme-primary)] text-[10px] font-black ring-2 ring-[var(--theme-primary)] shadow">
+            {cartItemsCount > 9 ? "9+" : cartItemsCount}
+          </span>
+        )}
+      </button> */}
+
+      <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+    </div>
   );
 }

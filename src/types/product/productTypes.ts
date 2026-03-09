@@ -216,7 +216,7 @@ export interface CreateProductArgs {
 
 export interface UpdateProductArgs {
   id: string;
-  data: Partial<Record<string, any>>;
+  data: Partial<CreateProductCloudinaryArgs>;
 }
 
 /* ───────────────── SEARCH PAGINATION ───────────────── */
@@ -280,7 +280,7 @@ export interface IStoreProduct {
   gallery: IProductImage[];
 
   highlights: string[] | null;
-  specs: Record<string, any> | null;
+  specs: Record<string, string> | null;
 
   options: { name: string; values: string[] }[] | null;
   variants:
@@ -341,24 +341,24 @@ export type CreateProductCloudinaryArgs = {
   /* ───────── REQUIRED CORE ───────── */
   category_id: string;
   name: string;
-  price?: number;
-  stock?: number;
+  price?: number | null;
+  stock?: number | null;
 
   /* ───────── OPTIONAL DETAILS ───────── */
-  description?: string;
-  discount_price?: number;
+  description?: string | null;
+  discount_price?: number | null;
 
   /* ───────── PRODUCT META ───────── */
   tags?: string[];
   highlights?: string[];
-  options?: { name: string; values: string[] }[];
+  options?: { name: string; values: string[] }[] | null;
   variants?: {
     sku?: string;
     combinations?: Record<string, string>;
-    size: string;
+    size?: string;
     price: number;
     stock: number;
-    discount_price?: number;
+    discount_price?: number | null;
   }[];
 
   /* legacy */
@@ -366,12 +366,12 @@ export type CreateProductCloudinaryArgs = {
   colors?: string[];
 
   /* ───────── SPECIFICATIONS ───────── */
-  specs?: Record<string, string>;
+  specs?: Record<string, string> | null;
 
   /* ───────── SHIPPING ───────── */
-  shipping_cost?: number;
-  shipping_note?: string;
-  returns_note?: string;
+  shipping_cost?: number | null;
+  shipping_note?: string | null;
+  returns_note?: string | null;
   /* ───────── MEDIA ───────── */
   image?: CloudinaryAsset | null;
   gallery?: CloudinaryAsset[];
@@ -444,7 +444,7 @@ export interface VendorProductSearchItem {
   gallery: ProductImage[];
 
   highlights: string[];
-  specs: Record<string, any> | null;
+  specs: Record<string, string> | null;
   options: { name: string; values: string[] }[] | null;
   variants:
     | {

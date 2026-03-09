@@ -1,12 +1,6 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
-import {
-  MoreVertical,
-  Receipt,
-  AlertTriangle,
-  XCircle,
-  Eye,
-} from "lucide-react";
+import { MoreVertical, Receipt, AlertTriangle, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -31,7 +25,7 @@ const statusColors: Record<string, string> = {
 
 export const buildAdminTransactionColumns = (
   onViewDetails: (tx: IAdminTransaction) => void,
-  onAction: (tx: IAdminTransaction, action: "refund" | "flag") => void,
+  onAction: (tx: IAdminTransaction, action: "flag") => void,
 ): ColumnDef<IAdminTransaction>[] => [
   {
     accessorKey: "reference",
@@ -42,10 +36,13 @@ export const buildAdminTransactionColumns = (
       const ref =
         row.original.reference || row.original.id.substring(0, 8).toUpperCase();
       return (
-        <div className="text-left">
+        <div className="text-left flex items-center gap-1.5">
           <span className="font-mono text-xs font-semibold uppercase bg-muted/60 px-1.5 py-0.5 rounded tracking-tighter">
             {ref}
           </span>
+          {row.original.is_flagged && (
+            <AlertTriangle className="h-3.5 w-3.5 text-yellow-600 shrink-0 fill-yellow-600/10" />
+          )}
         </div>
       );
     },
@@ -198,13 +195,6 @@ export const buildAdminTransactionColumns = (
             >
               <AlertTriangle className="h-4 w-4" />
               Flag for Review
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              className="gap-2 text-red-600 cursor-pointer font-medium"
-              onClick={() => onAction(row.original, "refund")}
-            >
-              <XCircle className="h-4 w-4" />
-              Process Refund
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

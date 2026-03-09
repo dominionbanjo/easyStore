@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FormProvider } from "react-hook-form";
+import { FormProvider, type SubmitHandler } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "@/store";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -16,6 +16,10 @@ import {
   CheckCircle2,
   RefreshCw,
 } from "lucide-react";
+import type {
+  AddProductFormInput,
+  AddProductFormOutput,
+} from "../validators/addProductValidator";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -128,7 +132,8 @@ export default function AddProductPage() {
   }, [isEditMode, productData, draft, dispatch]);
 
   /* ───────── PREVIEW ───────── */
-  const onPreview = (values: any) => {
+  const onPreview = (data: AddProductFormInput) => {
+    const values = data as unknown as AddProductFormOutput;
     dispatch(
       setProductDraft({
         ...values,
@@ -145,8 +150,8 @@ export default function AddProductPage() {
   };
 
   /* ───────── SUBMIT ───────── */
-  const onSubmit = handleSubmit(async (rawValues) => {
-    const values = rawValues as any;
+  const onSubmit: SubmitHandler<AddProductFormInput> = async (data) => {
+    const values = data as unknown as AddProductFormOutput;
 
     if (!image) return toast.error("Upload a main product image");
     if (!gallery || gallery.length < 2)
@@ -159,7 +164,7 @@ export default function AddProductPage() {
       tags,
       highlights,
       specItems,
-      options: values.options || [],
+      options: values.options,
       variants: values.variants || [],
     });
 
@@ -177,7 +182,7 @@ export default function AddProductPage() {
     } catch {
       toast.error("Something went wrong");
     }
-  });
+  };
 
   /* ───────── LOADING ───────── */
   if (isEditMode && loadingProduct) {
@@ -201,7 +206,7 @@ export default function AddProductPage() {
   return (
     <FormProvider {...methods}>
       <form
-        onSubmit={handleSubmit(onPreview)}
+        onSubmit={handleSubmit(onSubmit)}
         className="max-w-6xl mx-auto space-y-8 pb-20 pt-4"
       >
         {/* Header Section */}
@@ -409,7 +414,8 @@ export default function AddProductPage() {
           <div className="pt-8 border-t border-border/40">
             <ActionsSection
               creating={creating || updating}
-              onCreate={onSubmit}
+              onPreview={handleSubmit(onPreview)}
+              onCreate={handleSubmit(onSubmit)}
               submitLabel={isEditMode ? "Update Product" : "Publish Product"}
               disabled={!canSubmit}
             />
