@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Search, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { TemplateProfileDropdown } from "@/components/shared/TemplateProfileDropdown";
 import type { IProductStore } from "@/types/product/productTypes";
 import type { UIProduct } from "@/modules/vendor/utils/productAdapter";
 
@@ -42,6 +43,11 @@ export function VanguardHeader({
         </Link>
 
         <div className="flex items-center gap-2">
+          <TemplateProfileDropdown
+            buttonClassName="relative p-2 text-zinc-400 hover:text-zinc-900 dark:hover:text-white rounded-md transition-colors"
+            iconClassName="h-5 w-5"
+          />
+
           <Button
             variant="ghost"
             size="icon"

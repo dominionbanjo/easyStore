@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Search, ShoppingBag } from "lucide-react";
+import { TemplateProfileDropdown } from "@/components/shared/TemplateProfileDropdown";
 import type { IProductStore } from "@/types/product/productTypes";
 
 interface EditorialHeaderProps {
@@ -33,6 +34,12 @@ export function EditorialHeader({
           >
             <Search className="w-5 h-5" />
           </button>
+          
+          <TemplateProfileDropdown
+            buttonClassName="p-2 hover:opacity-70 transition-opacity"
+            iconClassName="w-5 h-5"
+          />
+
           <button
             onClick={onCartOpen}
             className="p-2 hover:opacity-70 transition-opacity relative"

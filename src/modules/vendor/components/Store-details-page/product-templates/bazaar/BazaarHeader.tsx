@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Search, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { TemplateProfileDropdown } from "@/components/shared/TemplateProfileDropdown";
 import type { IProductStore } from "@/types/product/productTypes";
 
 interface BazaarHeaderProps {
@@ -63,6 +64,11 @@ export function BazaarHeader({
           >
             <Search className="h-5 w-5" />
           </Button>
+
+          <TemplateProfileDropdown
+            buttonClassName="relative p-2 flex-shrink-0 hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-700 dark:text-white rounded-md transition-colors"
+            iconClassName="h-5 w-5"
+          />
 
           <Button
             variant="ghost"

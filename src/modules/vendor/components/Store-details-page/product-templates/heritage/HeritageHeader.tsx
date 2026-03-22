@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Search, ShoppingBag } from "lucide-react";
+import { TemplateProfileDropdown } from "@/components/shared/TemplateProfileDropdown";
 import type { IProductStore } from "@/types/product/productTypes";
 import type { UIProduct } from "@/modules/vendor/utils/productAdapter";
 
@@ -46,6 +47,12 @@ export function HeritageHeader({
           >
             <Search className="h-5 w-5" />
           </button>
+
+          <TemplateProfileDropdown
+            buttonClassName="p-2.5 rounded-full hover:bg-[#EADDCE] dark:hover:bg-[#3D352B] text-[#5C5042] dark:text-[#A89F91] transition-colors"
+            iconClassName="h-5 w-5"
+          />
+
           <button
             onClick={onCartOpen}
             className="relative p-2.5 rounded-full hover:bg-[#EADDCE] dark:hover:bg-[#3D352B] text-[#5C5042] dark:text-[#A89F91] transition-colors"

@@ -23,10 +23,30 @@ export default function App() {
     const path = window.location.pathname;
     const baseHost = getBaseDomain();
 
-    // Redirect all auth pages on subdomains to the base domain
-    if (subdomain && path.startsWith("/auth")) {
-      window.location.href = `${window.location.protocol}//${baseHost}${path}${window.location.search}`;
-      return;
+    const PUBLIC_WEBSITE_ROUTES = [
+      "/s",
+      "/stores",
+      "/categories",
+      "/product/",
+      "/about",
+      "/privacy-policy",
+      "/terms-of-service",
+      "/careers",
+      "/discovery",
+      "/featured",
+      "/trending",
+      "/new-arrivals",
+      "/cart",
+    ];
+
+    if (subdomain) {
+      if (
+        path.startsWith("/auth") ||
+        PUBLIC_WEBSITE_ROUTES.some((route) => path.startsWith(route))
+      ) {
+        window.location.href = `${window.location.protocol}//${baseHost}${path}${window.location.search}`;
+        return;
+      }
     }
 
     // Force strict paths on the base domain to respective subdomains

@@ -304,8 +304,7 @@ export default function BazaarTemplate({
                 ))}
             </div>
             <p className="mt-8 text-xs font-black uppercase tracking-widest text-slate-400">
-              © {new Date().getFullYear()} {store?.store_name} • BUILT FOR
-              BAZAAR
+              © {new Date().getFullYear()} {store?.store_name}
             </p>
           </div>
         </div>

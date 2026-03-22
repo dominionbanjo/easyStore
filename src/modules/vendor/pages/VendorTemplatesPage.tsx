@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { motion } from "framer-motion";
 import {
   useGetTemplatesQuery,
   useGetMyStoreQuery,
@@ -109,82 +110,110 @@ export default function VendorTemplatesPage() {
                   tpl.id === currentTemplateId ||
                   (!currentTemplateId && tpl.name === "Default");
                 return (
-                  <div
+                  <motion.div
                     key={tpl.id}
-                    className={`border rounded-xl overflow-hidden transition-all duration-300 group flex flex-col h-full ${isActive ? "border-primary ring-1 ring-primary shadow-lg" : "border-border hover:border-primary/50 shadow-sm hover:shadow-md"}`}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    whileHover={{ y: -8 }}
+                    transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                    className={`group relative flex flex-col h-full bg-card rounded-2xl overflow-hidden border transition-all duration-500 ${
+                      isActive 
+                        ? "border-primary shadow-[0_0_40px_-10px_rgba(16,185,129,0.3)] ring-1 ring-primary/50" 
+                        : "border-border hover:border-primary/40 shadow-sm"
+                    }`}
                   >
-                    <div className="aspect-[16/10] bg-muted w-full relative overflow-hidden">
+                    {/* Preview Image */}
+                    <div className="aspect-[16/10] relative w-full overflow-hidden bg-muted">
                       {tpl.preview_url ? (
                         <img
                           src={tpl.preview_url}
                           alt={tpl.name}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                         />
                       ) : (
-                        <div className="absolute inset-0 flex items-center justify-center text-muted-foreground bg-gradient-to-br from-muted to-zinc-100 dark:from-neutral-900 dark:to-neutral-800">
-                          <span className="font-serif text-3xl opacity-10 italic uppercase tracking-widest">
+                        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-neutral-900 dark:to-neutral-800">
+                          <LayoutTemplate className="w-12 h-12 text-muted-foreground/20" />
+                          <span className="absolute font-black text-4xl opacity-[0.03] italic uppercase tracking-[0.2em] pointer-events-none">
                             {tpl.name}
                           </span>
                         </div>
                       )}
 
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
+                      {/* Overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                        <span className="text-white/80 text-[10px] font-medium tracking-widest uppercase">
+                          Full screen preview available
+                        </span>
+                      </div>
 
                       {isActive && (
-                        <div className="absolute top-3 right-3 bg-primary text-primary-foreground px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider flex items-center gap-1.5 shadow-xl ring-2 ring-background">
-                          <CheckCircle2 className="w-3 h-3" /> Active
+                        <div className="absolute top-4 right-4 z-10">
+                          <div className="bg-primary text-primary-foreground px-3.5 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-2 shadow-2xl ring-2 ring-background backdrop-blur-md animate-in zoom-in-50 duration-500">
+                            <CheckCircle2 className="w-3.5 h-3.5" />
+                            Active Layout
+                          </div>
                         </div>
                       )}
                     </div>
 
-                    <div className="p-5 flex flex-col flex-1 bg-card">
-                      <div className="mb-4">
-                        <h3 className="font-bold text-xl tracking-tight">
-                          {tpl.name}
-                        </h3>
-                        <p className="text-xs text-muted-foreground mt-1.5 line-clamp-2 leading-relaxed">
-                          {tpl.description ||
-                            "Experience a unique brand-tailored marketplace layout."}
+                    {/* Content Section */}
+                    <div className="p-6 flex flex-col flex-1">
+                      <div className="mb-6">
+                        <div className="flex items-center justify-between mb-2">
+                          <h3 className="font-black text-xl tracking-tight text-foreground group-hover:text-primary transition-colors duration-300">
+                            {tpl.name}
+                          </h3>
+                        </div>
+                        <p className="text-sm text-muted-foreground/80 leading-relaxed line-clamp-2 min-h-[40px]">
+                          {tpl.description || "Transform your store with our specialized marketplace layout."}
                         </p>
                       </div>
 
-                      <div className="mt-auto space-y-2">
-                        <div className="grid grid-cols-2 gap-2">
+                      <div className="mt-auto space-y-3">
+                        {/* Secondary Actions */}
+                        <div className="flex gap-2">
                           <button
                             onClick={() => setActiveTab("customize")}
-                            className="flex items-center justify-center gap-2 py-2.5 bg-secondary text-secondary-foreground hover:bg-secondary/80 text-xs font-bold rounded-lg transition-all uppercase tracking-tight"
+                            className="flex-1 flex items-center justify-center gap-2 py-3 bg-secondary/50 dark:bg-neutral-800/50 hover:bg-secondary dark:hover:bg-neutral-800 text-foreground font-bold text-[10px] uppercase tracking-widest rounded-xl transition-all border border-border/50"
                           >
-                            <Paintbrush className="w-3.5 h-3.5" /> Configure
+                            <Settings2 className="w-4 h-4 text-muted-foreground" />
+                            Setup
                           </button>
                           <a
                             href={`/stores/${storeSlug}?preview_template=${tpl.name}`}
                             target="_blank"
                             rel="noreferrer"
-                            className="flex items-center justify-center gap-2 py-2.5 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 hover:opacity-90 text-xs font-bold rounded-lg transition-all uppercase tracking-tight"
+                            className="flex-1 flex items-center justify-center gap-2 py-3 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 hover:scale-[1.02] active:scale-[0.98] font-bold text-[10px] uppercase tracking-widest rounded-xl transition-all shadow-lg"
                           >
-                            <Eye className="w-3.5 h-3.5" /> Preview
+                            <Eye className="w-4 h-4" />
+                            Preview
                           </a>
                         </div>
 
-                        {!isActive && (
+                        {/* Primary Action */}
+                        {!isActive ? (
                           <button
                             onClick={() => handleSelectTemplate(tpl.id)}
                             disabled={isUpdating}
-                            className="w-full py-3 bg-[var(--theme-primary)] text-white hover:opacity-90 text-xs font-black rounded-lg transition-all disabled:opacity-50 flex justify-center items-center uppercase tracking-widest shadow-lg shadow-primary/10"
+                            className="w-full py-3.5 bg-primary text-primary-foreground hover:opacity-95 active:scale-[0.99] font-black text-xs uppercase tracking-[0.1em] rounded-xl transition-all disabled:opacity-50 flex justify-center items-center shadow-xl shadow-primary/20"
                           >
                             {updatingTemplateId === tpl.id ? (
                               <>
                                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                Installing...
+                                Applying...
                               </>
                             ) : (
                               "Activate Template"
                             )}
                           </button>
+                        ) : (
+                          <div className="w-full py-3.5 border-2 border-primary/20 bg-primary/5 text-primary text-center font-black text-xs uppercase tracking-[0.1em] rounded-xl cursor-default">
+                             Current Selection
+                          </div>
                         )}
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
                 );
               })}
             </div>

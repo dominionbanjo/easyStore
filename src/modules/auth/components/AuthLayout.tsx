@@ -85,7 +85,7 @@ export function AuthLayout({
 
         {/* Footer */}
         <div className="relative z-10 text-zinc-400 text-xs font-medium tracking-widest uppercase">
-          © {new Date().getFullYear()} EasyStore Global.
+          © {new Date().getFullYear()} EasyStore.
         </div>
       </div>
 

@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import SmartLink from "./SmartLink";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "@/store";
+import { getBaseDomain } from "@/utils/subdomain";
 import { useLogoutMutation } from "@/services/authApi";
 import { clearLocalCart } from "@/features/cartSlice";
 import { Button } from "@/components/ui/button";
@@ -269,20 +270,43 @@ export default function Header() {
 
                     <div className="border-t my-3" />
 
-                    {isAuthenticated ? (
-                      /* ===== LOGGED IN ===== */
-                      <button
-                        onClick={() => {
-                          handleLogout();
-                          setMenuOpen(false);
-                        }}
-                        className="flex items-center gap-3 text-red-600 py-2 w-full"
-                      >
-                        <LogOut className="h-4 w-4" />
-                        Logout
-                      </button>
-                    ) : (
-                      /* ===== LOGGED OUT ===== */
+                    {isAuthenticated && user && (
+                      <div className="space-y-1">
+                        {(user.account_type === "vendor" || user.account_type === "admin") && (
+                          <button
+                            onClick={() => {
+                              const baseDomain = getBaseDomain();
+                              const target = user.account_type === "vendor" ? "vendor" : "admin";
+                              window.location.href = `${window.location.protocol}//${target}.${baseDomain}/`;
+                              setMenuOpen(false);
+                            }}
+                            className="flex items-center gap-3 text-primary py-2 w-full font-bold"
+                          >
+                            <Layers className="h-4 w-4" />
+                            Go to Dashboard
+                          </button>
+                        )}
+                        <SmartLink
+                          to={USER_ROUTES.PROFILE}
+                          onClick={() => setMenuOpen(false)}
+                          className="flex items-center gap-3 py-2 text-foreground hover:text-primary"
+                        >
+                          <UserIcon className="h-4 w-4" />
+                          My Profile
+                        </SmartLink>
+                        <button
+                          onClick={() => {
+                            handleLogout();
+                            setMenuOpen(false);
+                          }}
+                          className="flex items-center gap-3 text-red-600 py-2 w-full mt-2"
+                        >
+                          <LogOut className="h-4 w-4" />
+                          Logout
+                        </button>
+                      </div>
+                    )}
+                    {!isAuthenticated && (
                       <div className="space-y-2">
                         <SmartLink
                           to={`${AUTH_ROUTES.LOGIN}?redirect=${encodeURIComponent(
@@ -453,16 +477,18 @@ export default function Header() {
                     {/* 🔹 CONDITIONAL DASHBOARD LINK */}
                     {(user.account_type === "vendor" ||
                       user.account_type === "admin") && (
-                      <SmartLink
-                        to={
-                          user.account_type === "vendor" ? "/vendor" : "/admin"
-                        }
-                        onClick={() => setProfileOpen(false)}
-                        className="flex items-center gap-3 px-2 py-1.5 text-sm hover:bg-gray-100 dark:hover:bg-neutral-800 rounded transition-colors"
+                      <button
+                        onClick={() => {
+                          const baseDomain = getBaseDomain();
+                          const target = user.account_type === "vendor" ? "vendor" : "admin";
+                          window.location.href = `${window.location.protocol}//${target}.${baseDomain}/`;
+                          setProfileOpen(false);
+                        }}
+                        className="flex items-center gap-3 px-2 py-1.5 text-sm w-full text-left hover:bg-gray-100 dark:hover:bg-neutral-800 rounded transition-colors"
                       >
                         <Layers className="h-4 w-4" />
                         Go to Dashboard
-                      </SmartLink>
+                      </button>
                     )}
 
                     <SmartLink
