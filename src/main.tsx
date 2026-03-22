@@ -7,6 +7,7 @@ import { store } from "./store.ts";
 import AuthProvider from "./providers/AuthProvider.tsx";
 import { ThemeProvider } from "./components/shared/ThemeContext.tsx";
 import { Toaster } from "./components/shared/Toaster.tsx";
+import { Analytics } from "@vercel/analytics/react";
 
 import { BrowserRouter as Router } from "react-router-dom";
 
@@ -18,6 +19,7 @@ createRoot(document.getElementById("root")!).render(
           <Toaster />
           <AuthProvider>
             <App />
+            <Analytics />
           </AuthProvider>
         </Router>
       </ThemeProvider>

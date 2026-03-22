@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
+import { getSubdomain } from "@/utils/subdomain";
 import { Store, ArrowLeft, Search } from "lucide-react";
 import {
   useGetStoreDetailsQuery,
@@ -25,7 +26,11 @@ import type { IStorePagination } from "@/types/Store/storeTypes";
 /* ───────────────── COMPONENT ───────────────── */
 
 export default function StoreDetailsPage() {
-  const { slug } = useParams<{ slug: string }>();
+  let { slug } = useParams<{ slug: string }>();
+  const subdomain = getSubdomain();
+  if (subdomain && subdomain !== "vendor" && subdomain !== "admin") {
+    slug = subdomain;
+  }
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const previewTemplate = searchParams.get("preview_template");

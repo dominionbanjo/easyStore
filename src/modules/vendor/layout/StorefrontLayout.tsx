@@ -1,9 +1,14 @@
 import { Outlet, useParams } from "react-router-dom";
+import { getSubdomain } from "@/utils/subdomain";
 import { useGetStoreThemeQuery } from "@/services/storeApi";
 import { StoreThemeProvider } from "../components/StoreThemeProvider";
 
 export default function StorefrontLayout() {
-  const { slug } = useParams<{ slug: string }>();
+  let { slug } = useParams<{ slug: string }>();
+  const subdomain = getSubdomain();
+  if (subdomain && subdomain !== "vendor" && subdomain !== "admin") {
+    slug = subdomain;
+  }
 
   // Fetch the layout and theme configurations for the store
   const { data: themeResponse, isLoading } = useGetStoreThemeQuery(slug || "", {
