@@ -108,13 +108,12 @@ export function AuthLayout({
 
             {showBackLink && (
               <Button
-                variant="ghost"
                 size="icon"
                 className="rounded-xl w-10 h-10 bg-primary text-white hover:bg-primary/90 shadow-xl shadow-primary/25 transition-all hover:-translate-x-0.5 active:scale-90"
                 asChild
               >
                 <Link to="/" aria-label="Back to Home">
-                  <ArrowLeft className="w-5 h-5" />
+                  <ArrowLeft className="w-5 h-5 text-white" />
                 </Link>
               </Button>
             )}
