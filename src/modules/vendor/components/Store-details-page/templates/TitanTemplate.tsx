@@ -12,6 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { StoreProductsGrid } from "../StoreProductsGrid";
 import { Skeleton } from "@/components/ui/skeleton";
+import { TemplateProfileDropdown } from "@/components/shared/TemplateProfileDropdown";
 
 export default function TitanTemplate({
   store,
@@ -82,7 +83,6 @@ export default function TitanTemplate({
               </div>
             </div>
 
-            {/* Mobile Actions Container */}
             <div className="flex md:hidden items-center gap-2">
               <button
                 onClick={onCartOpen}
@@ -95,6 +95,11 @@ export default function TitanTemplate({
                   </span>
                 )}
               </button>
+
+              <TemplateProfileDropdown
+                buttonClassName="p-3 border border-zinc-800 bg-black text-[var(--theme-primary)] rounded-md hover:bg-[var(--theme-primary)]/10 transition-all"
+                iconClassName="w-5 h-5"
+              />
             </div>
           </div>
 
@@ -126,8 +131,7 @@ export default function TitanTemplate({
             </div>
           </div>
 
-          {/* Desktop Cart Action */}
-          <div className="hidden md:flex items-center relative z-10 font-mono">
+          <div className="hidden md:flex items-center gap-2 relative z-10 font-mono">
             <button
               onClick={onCartOpen}
               className="relative p-3 border border-zinc-800 bg-black text-[var(--theme-primary)] rounded-md hover:bg-[var(--theme-primary)]/10 transition-all group overflow-hidden"
@@ -140,6 +144,11 @@ export default function TitanTemplate({
                 </span>
               )}
             </button>
+
+            <TemplateProfileDropdown
+              buttonClassName="p-3 border border-zinc-800 bg-black text-[var(--theme-primary)] rounded-md hover:bg-[var(--theme-primary)]/10 transition-all"
+              iconClassName="w-5 h-5"
+            />
           </div>
         </header>
 

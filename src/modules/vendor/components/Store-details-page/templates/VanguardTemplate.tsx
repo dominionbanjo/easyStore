@@ -3,6 +3,7 @@ import { Search, X, Loader2, ShoppingCart } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { StoreProductsGrid } from "../StoreProductsGrid";
 import { Skeleton } from "@/components/ui/skeleton";
+import { TemplateProfileDropdown } from "@/components/shared/TemplateProfileDropdown";
 
 export default function VanguardTemplate({
   store,
@@ -32,8 +33,7 @@ export default function VanguardTemplate({
 
   return (
     <div className="min-h-screen bg-white dark:bg-black text-zinc-900 dark:text-zinc-100 font-serif pb-24">
-      {/* FLOATING HEADER FOR CART */}
-      <div className="fixed top-0 right-0 z-[60] p-6 md:p-10 pointer-events-none">
+      <div className="fixed top-0 right-0 z-[60] p-6 md:p-10 flex items-center gap-4 pointer-events-none">
         <button
           onClick={onCartOpen}
           className="pointer-events-auto relative p-4 bg-white/10 dark:bg-black/20 backdrop-blur-3xl border border-white/20 dark:border-white/10 rounded-full text-zinc-900 dark:text-zinc-100 shadow-2xl hover:scale-110 active:scale-95 transition-all group"
@@ -45,6 +45,11 @@ export default function VanguardTemplate({
             </span>
           )}
         </button>
+
+        <TemplateProfileDropdown
+          buttonClassName="pointer-events-auto p-4 bg-white/10 dark:bg-black/20 backdrop-blur-3xl border border-white/20 dark:border-white/10 rounded-full text-zinc-900 dark:text-zinc-100 shadow-2xl hover:scale-110 active:scale-95 transition-all"
+          iconClassName="w-6 h-6"
+        />
       </div>
 
       {/* OVERSIZED HERO */}

@@ -35,11 +35,6 @@ export function EditorialHeader({
             <Search className="w-5 h-5" />
           </button>
           
-          <TemplateProfileDropdown
-            buttonClassName="p-2 hover:opacity-70 transition-opacity"
-            iconClassName="w-5 h-5"
-          />
-
           <button
             onClick={onCartOpen}
             className="p-2 hover:opacity-70 transition-opacity relative"
@@ -49,6 +44,12 @@ export function EditorialHeader({
               <span className="absolute top-1 right-1 w-2 h-2 bg-[#FDFBF7] rounded-full" />
             )}
           </button>
+
+          <TemplateProfileDropdown
+            buttonClassName="p-2 hover:opacity-70 transition-opacity"
+            iconClassName="w-5 h-5"
+          />
+
           <Link
             to={`/stores/${store.slug}`}
             className="text-sm uppercase tracking-[0.2em] hover:opacity-70 transition-opacity hidden sm:block"

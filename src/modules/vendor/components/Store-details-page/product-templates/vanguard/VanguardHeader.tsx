@@ -43,11 +43,6 @@ export function VanguardHeader({
         </Link>
 
         <div className="flex items-center gap-2">
-          <TemplateProfileDropdown
-            buttonClassName="relative p-2 text-zinc-400 hover:text-zinc-900 dark:hover:text-white rounded-md transition-colors"
-            iconClassName="h-5 w-5"
-          />
-
           <Button
             variant="ghost"
             size="icon"
@@ -61,6 +56,11 @@ export function VanguardHeader({
               </span>
             )}
           </Button>
+
+          <TemplateProfileDropdown
+            buttonClassName="relative p-2 text-zinc-400 hover:text-zinc-900 dark:hover:text-white rounded-md transition-colors"
+            iconClassName="h-5 w-5"
+          />
         </div>
       </div>
 

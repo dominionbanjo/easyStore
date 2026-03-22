@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { StoreProductsGrid } from "../StoreProductsGrid";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { StoreTemplateProps } from "./StoreTemplateProps";
+import { TemplateProfileDropdown } from "@/components/shared/TemplateProfileDropdown";
 
 export default function DefaultTemplate({
   store,
@@ -120,6 +121,11 @@ export default function DefaultTemplate({
                 </span>
               )}
             </button>
+
+            <TemplateProfileDropdown
+              buttonClassName="relative p-2.5 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-900 text-zinc-600 dark:text-zinc-400 transition-all hover:scale-110"
+              iconClassName="w-5 h-5"
+            />
 
             <div className="h-6 w-px bg-zinc-200 dark:bg-zinc-800 hidden sm:block mx-1" />
 

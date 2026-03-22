@@ -48,11 +48,6 @@ export function HeritageHeader({
             <Search className="h-5 w-5" />
           </button>
 
-          <TemplateProfileDropdown
-            buttonClassName="p-2.5 rounded-full hover:bg-[#EADDCE] dark:hover:bg-[#3D352B] text-[#5C5042] dark:text-[#A89F91] transition-colors"
-            iconClassName="h-5 w-5"
-          />
-
           <button
             onClick={onCartOpen}
             className="relative p-2.5 rounded-full hover:bg-[#EADDCE] dark:hover:bg-[#3D352B] text-[#5C5042] dark:text-[#A89F91] transition-colors"
@@ -64,6 +59,11 @@ export function HeritageHeader({
               </span>
             )}
           </button>
+
+          <TemplateProfileDropdown
+            buttonClassName="p-2.5 rounded-full hover:bg-[#EADDCE] dark:hover:bg-[#3D352B] text-[#5C5042] dark:text-[#A89F91] transition-colors"
+            iconClassName="h-5 w-5"
+          />
           <div className="hidden lg:flex items-center gap-2 text-sm italic text-[#8C7A6B] dark:text-[#A89F91] ml-4">
             <span>Found in</span>
             <span className="mx-2">—</span>

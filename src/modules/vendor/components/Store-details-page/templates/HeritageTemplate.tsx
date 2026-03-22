@@ -3,6 +3,7 @@ import { Search, X, Loader2, ShoppingCart } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { StoreProductsGrid } from "../StoreProductsGrid";
 import { Skeleton } from "@/components/ui/skeleton";
+import { TemplateProfileDropdown } from "@/components/shared/TemplateProfileDropdown";
 
 export default function HeritageTemplate({
   store,
@@ -39,7 +40,7 @@ export default function HeritageTemplate({
       {/* ─── ELEGANT HEADER ─── */}
       <header className="relative w-full pt-16 pb-12 px-6 flex flex-col items-center justify-center text-center border-b border-[#3D352B]/10 dark:border-[#EAE3DB]/10 overflow-hidden">
         {/* Cart Icon (Absolute Positioned for Elegance) */}
-        <div className="absolute top-8 right-8 z-10">
+        <div className="absolute top-8 right-8 z-10 flex items-center gap-3">
           <button
             onClick={onCartOpen}
             className="group relative p-4 rounded-full bg-white dark:bg-[#2C2622] border border-[#EADDCE] dark:border-[#3D352B] shadow-sm hover:shadow-lg transition-all"
@@ -56,6 +57,11 @@ export default function HeritageTemplate({
               </span>
             </div>
           </button>
+
+          <TemplateProfileDropdown
+            buttonClassName="p-4 rounded-full bg-white dark:bg-[#2C2622] border border-[#EADDCE] dark:border-[#3D352B] shadow-sm hover:shadow-lg transition-all"
+            iconClassName="w-5 h-5 text-[#3D352B] dark:text-[#EAE3DB]"
+          />
         </div>
 
         <div className="w-16 h-px bg-[#3D352B]/30 dark:bg-[#EAE3DB]/30 mb-8" />

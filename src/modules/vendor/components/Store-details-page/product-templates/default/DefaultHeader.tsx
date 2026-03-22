@@ -49,11 +49,6 @@ export function DefaultHeader({
           </div>
 
           <div className="flex items-center gap-3">
-            <TemplateProfileDropdown
-              buttonClassName="relative p-2 flex-shrink-0 hover:bg-[var(--theme-primary)]/10 text-zinc-900 dark:text-white rounded-md transition-colors"
-              iconClassName="h-5 w-5"
-            />
-
             <Button
               variant="ghost"
               size="icon"
@@ -67,6 +62,11 @@ export function DefaultHeader({
                 </span>
               )}
             </Button>
+
+            <TemplateProfileDropdown
+              buttonClassName="relative p-2 flex-shrink-0 hover:bg-[var(--theme-primary)]/10 text-zinc-900 dark:text-white rounded-md transition-colors"
+              iconClassName="h-5 w-5"
+            />
           </div>
         </div>
       </header>

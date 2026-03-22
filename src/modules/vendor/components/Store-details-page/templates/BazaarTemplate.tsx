@@ -13,6 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { StoreProductsGrid } from "../StoreProductsGrid";
 import { Skeleton } from "@/components/ui/skeleton";
+import { TemplateProfileDropdown } from "@/components/shared/TemplateProfileDropdown";
 
 export default function BazaarTemplate({
   store,
@@ -103,6 +104,11 @@ export default function BazaarTemplate({
                 </span>
               )}
             </button>
+
+            <TemplateProfileDropdown
+              buttonClassName="relative p-3.5 rounded-2xl bg-white dark:bg-neutral-800 border-2 border-slate-100 dark:border-neutral-800 text-[var(--theme-primary)] shadow-sm hover:scale-110 active:scale-95 transition-all"
+              iconClassName="w-6 h-6"
+            />
           </div>
         </div>
       </header>

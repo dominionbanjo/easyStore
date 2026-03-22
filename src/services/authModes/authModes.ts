@@ -65,14 +65,18 @@ export const baseQueryWithAuth: BaseQueryFn<
       currentPath.startsWith("/admin") ||
       currentPath.startsWith("/account");
 
-    if (Cookies.get("token") || isProtectedRoute) {
+    const token = Cookies.get("token");
+
+    if (isProtectedRoute) {
       toast.error("Unauthorized! Session expired or access denied.", {
         description: "Redirecting you to the landing page...",
         duration: 4000,
       });
 
       // Clear all auth state
-      Cookies.remove("token", { domain: getCookieDomain() });
+      if (token) {
+        Cookies.remove("token", { domain: getCookieDomain() });
+      }
       api.dispatch(clearUser());
 
       // Redirect to landing page after a small delay to show the toast
@@ -81,6 +85,12 @@ export const baseQueryWithAuth: BaseQueryFn<
           window.location.href = "/";
         }
       }, 1500);
+    } else {
+      // If we're on a public route but got a 401 with a token, just clear the invalid token
+      if (token) {
+        Cookies.remove("token", { domain: getCookieDomain() });
+        api.dispatch(clearUser());
+      }
     }
     // Stop retrying on auth errors
     return retry.fail(result.error);

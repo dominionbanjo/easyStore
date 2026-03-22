@@ -10,6 +10,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { StoreProductsGrid } from "../StoreProductsGrid";
 import { Skeleton } from "@/components/ui/skeleton";
+import { TemplateProfileDropdown } from "@/components/shared/TemplateProfileDropdown";
 
 export default function EditorialTemplate({
   store,
@@ -107,6 +108,11 @@ export default function EditorialTemplate({
                     <span className="ml-1 opacity-60">({cartItemsCount})</span>
                   )}
                 </button>
+
+                <TemplateProfileDropdown
+                  buttonClassName="relative group flex items-center p-1 border-b-2 border-transparent hover:border-current transition-all"
+                  iconClassName="w-4 h-4"
+                />
               </div>
             </div>
           </div>

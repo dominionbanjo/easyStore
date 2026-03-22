@@ -47,11 +47,6 @@ export function TitanHeader({
             <Search className="h-5 w-5" />
           </Button>
 
-          <TemplateProfileDropdown
-            buttonClassName="relative p-2 flex-shrink-0 hover:bg-zinc-800 text-zinc-500 hover:text-white rounded-md transition-colors"
-            iconClassName="h-5 w-5"
-          />
-
           <Button
             variant="ghost"
             size="icon"
@@ -65,6 +60,11 @@ export function TitanHeader({
               </span>
             )}
           </Button>
+
+          <TemplateProfileDropdown
+            buttonClassName="relative p-2 flex-shrink-0 hover:bg-zinc-800 text-zinc-500 hover:text-white rounded-md transition-colors"
+            iconClassName="h-5 w-5"
+          />
         </div>
       </div>
 
