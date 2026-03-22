@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import SmartLink from "./SmartLink";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "@/store";
-import { getBaseDomain } from "@/utils/subdomain";
+import { getBaseDomain, getSubdomain } from "@/utils/subdomain";
 import { useLogoutMutation } from "@/services/authApi";
 import { clearLocalCart } from "@/features/cartSlice";
 import { Button } from "@/components/ui/button";
@@ -110,39 +110,59 @@ export default function Header() {
     syncCart();
   }, [isAuthenticated, localCart.localItems, addItemToCart, dispatch]);
 
+  const subdomain = getSubdomain();
+  const baseDomain = getBaseDomain();
+  const isIndividualStoreSubdomain = useMemo(
+    () => !!(subdomain && !["www", "vendor", "admin"].includes(subdomain)),
+    [subdomain],
+  );
+
   const navItems: {
     name: string;
     path: string;
     icon: React.ElementType;
     component: React.ComponentType;
+    isExternal?: boolean;
   }[] = useMemo(
     () => [
       {
         name: "Home",
-        path: WEBSITE_ROUTES.HOME,
+        path: isIndividualStoreSubdomain
+          ? `${window.location.protocol}//${baseDomain}${WEBSITE_ROUTES.HOME}`
+          : WEBSITE_ROUTES.HOME,
         icon: Home,
         component: Pages.LandingPage,
+        isExternal: isIndividualStoreSubdomain,
       },
       {
         name: "Discover",
-        path: WEBSITE_ROUTES.DISCOVERY,
+        path: isIndividualStoreSubdomain
+          ? `${window.location.protocol}//${baseDomain}${WEBSITE_ROUTES.DISCOVERY}`
+          : WEBSITE_ROUTES.DISCOVERY,
         icon: Compass,
         component: Pages.DiscoveryPage,
+        isExternal: isIndividualStoreSubdomain,
       },
       {
         name: "Stores",
-        path: WEBSITE_ROUTES.STORES,
+        path: isIndividualStoreSubdomain
+          ? `${window.location.protocol}//${baseDomain}${WEBSITE_ROUTES.STORES}`
+          : WEBSITE_ROUTES.STORES,
         icon: Store,
         component: Pages.StoresPage,
+        isExternal: isIndividualStoreSubdomain,
       },
       {
         name: "Categories",
-        path: WEBSITE_ROUTES.CATEGORIES,
+        path: isIndividualStoreSubdomain
+          ? `${window.location.protocol}//${baseDomain}${WEBSITE_ROUTES.CATEGORIES}`
+          : WEBSITE_ROUTES.CATEGORIES,
         icon: Layers,
         component: Pages.CategoriesPage,
+        isExternal: isIndividualStoreSubdomain,
       },
     ],
-    [],
+    [isIndividualStoreSubdomain, baseDomain],
   );
 
   const user = useSelector((state: RootState) => state.user.currentUser);
@@ -248,7 +268,19 @@ export default function Header() {
                   <nav className="space-y-4 text-base font-medium">
                     {navItems.map((item) => {
                       const Icon = item.icon;
-                      return (
+                      return item.isExternal ? (
+                        <a
+                          key={item.path}
+                          href={item.path}
+                          onClick={() => setMenuOpen(false)}
+                          className={cn(
+                            "flex items-center gap-3 transition-all duration-200 text-foreground hover:text-primary",
+                          )}
+                        >
+                          <Icon className="h-4 w-4" />
+                          {item.name}
+                        </a>
+                      ) : (
                         <SmartLink
                           key={item.path}
                           to={item.path}
@@ -275,7 +307,6 @@ export default function Header() {
                         {(user.account_type === "vendor" || user.account_type === "admin") && (
                           <button
                             onClick={() => {
-                              const baseDomain = getBaseDomain();
                               const target = user.account_type === "vendor" ? "vendor" : "admin";
                               window.location.href = `${window.location.protocol}//${target}.${baseDomain}/`;
                               setMenuOpen(false);
@@ -336,42 +367,77 @@ export default function Header() {
           </div>
 
           {/* Logo */}
-          <SmartLink
-            to={WEBSITE_ROUTES.HOME}
-            className="flex items-center flex-shrink-0"
-          >
-            <img
-              src={
-                theme === "dark"
-                  ? "/logos/EasyStore logo with tagline.png"
-                  : "/logos/inline-stripe-transparent.png"
-              }
-              alt="EasyStore logo"
-              className={cn(
-                "w-auto transition-all duration-300 object-contain",
-                theme === "dark"
-                  ? "h-10 sm:h-11 lg:h-12"
-                  : "h-9 sm:h-10 lg:h-11",
-              )}
-              loading="lazy"
-            />
-          </SmartLink>
+          {isIndividualStoreSubdomain ? (
+            <a
+              href={`${window.location.protocol}//${baseDomain}${WEBSITE_ROUTES.HOME}`}
+              className="flex items-center flex-shrink-0"
+            >
+              <img
+                src={
+                  theme === "dark"
+                    ? "/logos/EasyStore logo with tagline.png"
+                    : "/logos/inline-stripe-transparent.png"
+                }
+                alt="EasyStore logo"
+                className={cn(
+                  "w-auto transition-all duration-300 object-contain",
+                  theme === "dark"
+                    ? "h-10 sm:h-11 lg:h-12"
+                    : "h-9 sm:h-10 lg:h-11",
+                )}
+                loading="lazy"
+              />
+            </a>
+          ) : (
+            <SmartLink
+              to={WEBSITE_ROUTES.HOME}
+              className="flex items-center flex-shrink-0"
+            >
+              <img
+                src={
+                  theme === "dark"
+                    ? "/logos/EasyStore logo with tagline.png"
+                    : "/logos/inline-stripe-transparent.png"
+                }
+                alt="EasyStore logo"
+                className={cn(
+                  "w-auto transition-all duration-300 object-contain",
+                  theme === "dark"
+                    ? "h-10 sm:h-11 lg:h-12"
+                    : "h-9 sm:h-10 lg:h-11",
+                )}
+                loading="lazy"
+              />
+            </SmartLink>
+          )}
 
           {/* Desktop Nav */}
           <nav className="hidden lg:flex items-center gap-5 xl:gap-6 text-sm font-medium whitespace-nowrap">
             {navItems.slice(0, 4).map((item) => (
-              <SmartLink
-                key={item.path}
-                to={item.path}
-                className={cn(
-                  "transition-colors duration-200 relative inline-block group",
-                  location.pathname === item.path
-                    ? "text-primary font-semibold"
-                    : "text-foreground hover:text-primary",
-                )}
-              >
-                <FancyHoverText text={item.name} />
-              </SmartLink>
+              item.isExternal ? (
+                <a
+                  key={item.path}
+                  href={item.path}
+                  className={cn(
+                    "transition-colors duration-200 relative inline-block group text-foreground hover:text-primary",
+                  )}
+                >
+                  <FancyHoverText text={item.name} />
+                </a>
+              ) : (
+                <SmartLink
+                  key={item.path}
+                  to={item.path}
+                  className={cn(
+                    "transition-colors duration-200 relative inline-block group",
+                    location.pathname === item.path
+                      ? "text-primary font-semibold"
+                      : "text-foreground hover:text-primary",
+                  )}
+                >
+                  <FancyHoverText text={item.name} />
+                </SmartLink>
+              )
             ))}
           </nav>
         </div>
@@ -479,7 +545,6 @@ export default function Header() {
                       user.account_type === "admin") && (
                       <button
                         onClick={() => {
-                          const baseDomain = getBaseDomain();
                           const target = user.account_type === "vendor" ? "vendor" : "admin";
                           window.location.href = `${window.location.protocol}//${target}.${baseDomain}/`;
                           setProfileOpen(false);
