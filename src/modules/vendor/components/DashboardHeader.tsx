@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Menu, Bell, Sun, Moon, LogOut, Home, Settings } from "lucide-react";
+import { getBaseDomain } from "@/utils/subdomain";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -16,7 +17,6 @@ import {
 import { useLogoutMutation } from "@/services/authApi";
 import type { RootState } from "@/store";
 import { toast } from "sonner";
-import { WEBSITE_ROUTES } from "@/routes/temp";
 import NavigationProgressBar from "@/components/shared/NavigationProgressBar";
 
 interface DashboardHeaderProps {
@@ -124,17 +124,15 @@ export default function DashboardHeader({
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <Link
-                to={WEBSITE_ROUTES.HOME}
-                className="cursor-pointer font-medium"
-              >
-                <Home className="mr-2 h-4 w-4" />
-                Go to Website
-              </Link>
+            <DropdownMenuItem
+              onClick={() => (window.location.href = `${window.location.protocol}//${getBaseDomain()}`)}
+              className="cursor-pointer font-medium"
+            >
+              <Home className="mr-2 h-4 w-4" />
+              Go to Website
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link to="/vendor/settings" className="cursor-pointer">
+              <Link to="/settings" className="cursor-pointer">
                 <Settings className="mr-2 h-4 w-4" />
                 Store Settings
               </Link>

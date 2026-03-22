@@ -159,7 +159,7 @@ export default function ProductsPage() {
                 setShowSetupModal(true);
               } else {
                 dispatch(clearProductDraft());
-                navigate("/vendor/products/new");
+                navigate("/products/new");
               }
             }}
           >

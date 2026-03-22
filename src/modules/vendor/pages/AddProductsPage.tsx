@@ -146,7 +146,7 @@ export default function AddProductPage() {
       }),
     );
 
-    navigate("/vendor/products/preview");
+    navigate("/products/preview");
   };
 
   /* ───────── SUBMIT ───────── */
@@ -178,7 +178,7 @@ export default function AddProductPage() {
       }
 
       dispatch(clearProductDraft());
-      navigate("/vendor/products");
+      navigate("/products");
     } catch {
       toast.error("Something went wrong");
     }
@@ -213,7 +213,7 @@ export default function AddProductPage() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 px-2">
           <div className="space-y-3">
             <Link
-              to="/vendor/products"
+              to="/products"
               className="inline-flex items-center gap-2 text-sm font-bold text-muted-foreground hover:text-primary transition-colors group"
             >
               <div className="p-1.5 rounded-lg bg-muted group-hover:bg-primary/10 transition-colors">
@@ -432,7 +432,7 @@ export default function AddProductPage() {
         open={showSetupModal}
         onOpenChange={(open) => {
           setShowSetupModal(open);
-          if (!open) navigate("/vendor/products");
+          if (!open) navigate("/products");
         }}
       />
     </FormProvider>

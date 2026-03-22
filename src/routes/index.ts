@@ -45,42 +45,42 @@ export const ACCOUNT_ROUTES = {
 
 // 🧑‍💼 Vendor dashboard routes
 export const VENDOR_ROUTES = {
-  BASE: "/vendor",
-  DASHBOARD: "/vendor",
-  ANALYTICS: "/vendor/analytics",
+  BASE: "/",
+  DASHBOARD: "/",
+  ANALYTICS: "/analytics",
 
   // Products
-  PRODUCTS: "/vendor/products",
-  ADD_PRODUCT: "/vendor/products/new",
-  EDIT_PRODUCT: "/vendor/products/:slug/edit",
-  PRODUCT_PREVIEW: "/vendor/products/preview",
+  PRODUCTS: "/products",
+  ADD_PRODUCT: "/products/new",
+  EDIT_PRODUCT: "/products/:slug/edit",
+  PRODUCT_PREVIEW: "/products/preview",
 
   // Orders
-  ORDERS: "/vendor/orders",
-  ORDER_DETAILS: "/vendor/orders/:id",
+  ORDERS: "/orders",
+  ORDER_DETAILS: "/orders/:id",
 
   // Customers
-  CUSTOMERS: "/vendor/customers",
+  CUSTOMERS: "/customers",
 
   // Settings
-  SETTINGS: "/vendor/settings",
-  HELP: "/vendor/help",
+  SETTINGS: "/settings",
+  HELP: "/help",
 } as const;
 
 // 👑 Admin dashboard routes
 export const ADMIN_ROUTES = {
-  BASE: "/admin",
-  DASHBOARD: "/admin",
-  VENDORS: "/admin/vendors",
-  USERS: "/admin/users",
-  TRANSACTIONS: "/admin/transactions",
-  REPORTS: "/admin/reports",
-  LOGS: "/admin/logs",
-  NOTIFICATIONS: "/admin/notifications",
-  ANALYTICS: "/admin/analytics",
-  ACCESS_CONTROL: "/admin/access-control",
-  SETTINGS: "/admin/settings",
-  SYSTEM: "/admin/system",
+  BASE: "/",
+  DASHBOARD: "/",
+  VENDORS: "/vendors",
+  USERS: "/users",
+  TRANSACTIONS: "/transactions",
+  REPORTS: "/reports",
+  LOGS: "/logs",
+  NOTIFICATIONS: "/notifications",
+  ANALYTICS: "/analytics",
+  ACCESS_CONTROL: "/access-control",
+  SETTINGS: "/settings",
+  SYSTEM: "/system",
 } as const;
 
 // Helper function to build dynamic routes
@@ -89,8 +89,8 @@ export const buildRoute = {
   categoryDetails: (slug: string) => `/categories/${slug}`,
   productDetails: (slug: string) => `/product/${slug}`,
   orderDetails: (id: string) => `/account/orders/${id}`,
-  vendorOrderDetails: (id: string) => `/vendor/orders/${id}`,
-  editProduct: (slug: string) => `/vendor/products/${slug}/edit`,
+  vendorOrderDetails: (id: string) => `/orders/${id}`,
+  editProduct: (slug: string) => `/products/${slug}/edit`,
 } as const;
 
 // Export all routes as a single object for convenience

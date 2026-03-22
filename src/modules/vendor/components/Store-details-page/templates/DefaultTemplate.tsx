@@ -411,8 +411,6 @@ export default function DefaultTemplate({
             <span>
               © {new Date().getFullYear()} {store.store_name}
             </span>
-            <span className="hidden md:block opacity-30">•</span>
-            <span>Powered by EasyStore Engineering</span>
           </div>
         </div>
       </footer>

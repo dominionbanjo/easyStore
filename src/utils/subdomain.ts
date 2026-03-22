@@ -38,19 +38,20 @@ export const getSubdomain = (): string | null => {
 };
 
 export const getBaseDomain = (): string => {
+  const host = window.location.host; // Host includes the port
   const hostname = window.location.hostname;
   const subdomain = getSubdomain();
   
   if (subdomain) {
     if (hostname.startsWith(`${subdomain}.`)) {
-       return hostname.substring(subdomain.length + 1);
+       return host.substring(subdomain.length + 1);
     }
   }
-  return hostname;
+  return host;
 };
 
 export const getCookieDomain = (): string | undefined => {
-  const baseDomain = getBaseDomain();
+  const baseDomain = getBaseDomain().split(":")[0]; // Strip the port
   if (baseDomain === "localhost" || baseDomain.startsWith("127.0.0.1")) {
     return undefined; // Let browser handle localhost
   }

@@ -29,7 +29,7 @@ export function StoreSetupTracker({
   if (variant === "minimal") {
     return (
       <Link
-        to="/vendor/settings"
+        to="/settings"
         className={cn(
           "flex items-center gap-3 p-3 rounded-xl bg-orange-500/5 border border-orange-500/10 hover:bg-orange-500/10 transition-all group",
           className,
@@ -126,7 +126,7 @@ export function StoreSetupTracker({
             asChild
             className="bg-white text-orange-600 hover:bg-orange-50 rounded-xl font-black uppercase tracking-widest text-xs h-11 shadow-xl"
           >
-            <Link to="/vendor/settings">
+            <Link to="/settings">
               Finish Setup
               <ArrowRight className="h-4 w-4 ml-2" />
             </Link>

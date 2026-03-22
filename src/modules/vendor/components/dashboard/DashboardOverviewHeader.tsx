@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { clearProductDraft } from "@/features/productDraftSlice";
 
 import { useGetMyStoreQuery } from "@/services/storeApi";
+import { getBaseDomain } from "@/utils/subdomain";
 
 export function DashboardOverviewHeader() {
   const dispatch = useDispatch();
@@ -16,9 +17,16 @@ export function DashboardOverviewHeader() {
   const { data: store } = useGetMyStoreQuery();
 
   const handleShareStore = () => {
-    const baseUrl = window.location.origin;
-    const identifier = store?.slug || currentUser?.id;
-    const storeUrl = `${baseUrl}/stores/${identifier}`;
+    const baseDomain = getBaseDomain();
+    const slug = store?.slug; 
+    
+    let storeUrl = "";
+    if (slug) {
+      storeUrl = `${window.location.protocol}//${slug}.${baseDomain}`;
+    } else {
+      const identifier = store?.id || currentUser?.id;
+      storeUrl = `${window.location.protocol}//${baseDomain}/stores/${identifier}`;
+    }
 
     navigator.clipboard.writeText(storeUrl);
     toast.success("Store link copied to clipboard! 🚀");
@@ -75,7 +83,7 @@ export function DashboardOverviewHeader() {
           className="gap-2 shadow-lg shadow-primary/20"
           onClick={() => {
             dispatch(clearProductDraft());
-            navigate("/vendor/products/new");
+            navigate("/products/new");
           }}
         >
           <Plus className="h-4 w-4" />

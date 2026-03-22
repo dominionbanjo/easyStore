@@ -7,7 +7,7 @@ import {
   selectCurrentUser,
   setShowOnboardingModal,
 } from "@/features/userSlice";
-import { AUTH_ROUTES, VENDOR_ROUTES } from "@/routes/index";
+import { AUTH_ROUTES } from "@/routes/index";
 import SmartLink from "@/components/shared/SmartLink";
 
 // Hero main fade-in animation
@@ -99,7 +99,7 @@ export default function HeroSection() {
                   to={
                     !user
                       ? `${AUTH_ROUTES.SIGNUP}?role=vendor`
-                      : VENDOR_ROUTES.DASHBOARD || "/vendor"
+                      : "/vendor"
                   }
                   className="w-full sm:w-auto"
                 >

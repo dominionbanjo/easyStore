@@ -6,6 +6,7 @@ import { toast } from "sonner"; // Keep toast as it's used for vendor-specific e
 
 import { cn } from "@/lib/utils";
 import type { RootState } from "@/store";
+import { getBaseDomain } from "@/utils/subdomain";
 
 import DashboardSidebar from "../components/DashboardSidebar";
 import DashboardHeader from "../components/DashboardHeader";
@@ -26,8 +27,8 @@ export default function VendorDashboardLayout() {
   useEffect(() => {
     // 🚫 No token + not authenticated → redirect to landing page
     if (!token && !isAuthenticated && !isLoading) {
-      navigate("/", { replace: true });
-      return; // Add return to prevent further execution if not authenticated
+      window.location.href = `${window.location.protocol}//${getBaseDomain()}/auth/login?redirect=${encodeURIComponent(window.location.pathname)}`;
+      return;
     }
 
     // ⛔ Authenticated but not vendor
@@ -38,7 +39,7 @@ export default function VendorDashboardLayout() {
       currentUser.account_type !== "vendor"
     ) {
       toast.error("You do not have access to the vendor dashboard");
-      navigate("/", { replace: true });
+      window.location.href = `${window.location.protocol}//${getBaseDomain()}/`;
     }
   }, [token, isAuthenticated, isLoading, currentUser, navigate]);
 
