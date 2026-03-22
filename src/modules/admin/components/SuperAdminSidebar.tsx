@@ -17,17 +17,17 @@ import { NavLink } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
 const menuItems = [
-  { label: "Overview", icon: LayoutDashboard, to: "/admin" },
-  { label: "Vendors", icon: Store, to: "/admin/vendors" },
-  { label: "Users", icon: Users, to: "/admin/users" },
-  { label: "Transactions", icon: DollarSign, to: "/admin/transactions" },
-  { label: "Reports", icon: FileWarning, to: "/admin/reports" },
-  { label: "System Logs", icon: ClipboardList, to: "/admin/logs" },
-  { label: "Notifications", icon: Bell, to: "/admin/notifications" },
-  { label: "Platform Analytics", icon: BarChart3, to: "/admin/analytics" },
-  { label: "Access Control", icon: Shield, to: "/admin/access-control" },
-  { label: "Settings", icon: Settings, to: "/admin/settings" },
-  { label: "Server Config", icon: ServerCog, to: "/admin/system" },
+  { label: "Overview", icon: LayoutDashboard, to: "/" },
+  { label: "Vendors", icon: Store, to: "/vendors" },
+  { label: "Users", icon: Users, to: "/users" },
+  { label: "Transactions", icon: DollarSign, to: "/transactions" },
+  { label: "Reports", icon: FileWarning, to: "/reports" },
+  { label: "System Logs", icon: ClipboardList, to: "/logs" },
+  { label: "Notifications", icon: Bell, to: "/notifications" },
+  { label: "Platform Analytics", icon: BarChart3, to: "/analytics" },
+  { label: "Access Control", icon: Shield, to: "/access-control" },
+  { label: "Settings", icon: Settings, to: "/settings" },
+  { label: "Server Config", icon: ServerCog, to: "/system" },
 ];
 
 interface Props {

@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { motion } from "framer-motion";
 
 import { cn } from "@/lib/utils";
+import { getBaseDomain } from "@/utils/subdomain";
 import type { RootState } from "@/store";
 import LoadingScreen from "@/Loading";
 
@@ -29,7 +30,7 @@ export default function SuperAdminDashboardLayout() {
       toast.error("Unauthorized access", {
         description: "Please login to access the admin dashboard",
       });
-      navigate("/", { replace: true });
+      window.location.href = `${window.location.protocol}//${getBaseDomain()}/auth/login?redirect=${encodeURIComponent(window.location.pathname)}`;
       return;
     }
 
@@ -41,7 +42,7 @@ export default function SuperAdminDashboardLayout() {
       currentUser.account_type !== "admin"
     ) {
       toast.error("You do not have access to the admin dashboard");
-      navigate("/", { replace: true });
+      window.location.href = `${window.location.protocol}//${getBaseDomain()}/`;
     }
   }, [token, isAuthenticated, isLoading, currentUser, navigate]);
 

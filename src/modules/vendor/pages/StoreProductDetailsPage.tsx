@@ -158,7 +158,7 @@ export default function StoreProductDetailsPage() {
             </span>
           </div>
           <button
-            onClick={() => navigate("/vendor/templates")}
+            onClick={() => navigate("/templates")}
             className="text-[10px] font-black uppercase tracking-widest bg-white text-black px-4 py-1.5 rounded hover:bg-zinc-200 transition-colors"
           >
             Back to Dashboard

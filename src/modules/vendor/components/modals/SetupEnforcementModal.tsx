@@ -97,7 +97,7 @@ export function SetupEnforcementModal({
               asChild
               className="w-full bg-orange-500 hover:bg-orange-600 text-white rounded-2xl h-14 font-black uppercase tracking-widest text-xs shadow-xl shadow-orange-500/20"
             >
-              <Link to="/vendor/settings">
+              <Link to="/settings">
                 Go to Settings
                 <ArrowRight className="h-4 w-4 ml-2" />
               </Link>

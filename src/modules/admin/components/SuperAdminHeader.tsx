@@ -136,7 +136,7 @@ export default function SuperAdminHeader({
                     variant="ghost"
                     size="sm"
                     className="w-full justify-start gap-2 h-9 text-sm"
-                    onClick={() => navigate("/admin/settings")}
+                    onClick={() => navigate("/settings")}
                   >
                     <User className="h-4 w-4" />
                     Profile
@@ -145,7 +145,7 @@ export default function SuperAdminHeader({
                     variant="ghost"
                     size="sm"
                     className="w-full justify-start gap-2 h-9 text-sm"
-                    onClick={() => navigate("/admin/settings")}
+                    onClick={() => navigate("/settings")}
                   >
                     <Settings className="h-4 w-4" />
                     Settings

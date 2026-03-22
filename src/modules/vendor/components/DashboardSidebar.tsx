@@ -18,14 +18,14 @@ import { Button } from "@/components/ui/button";
 import { StoreSetupTracker } from "./shared/StoreSetupTracker";
 
 const menuItems = [
-  { label: "Dashboard", icon: LayoutDashboard, to: "/vendor", exact: true },
-  { label: "Products", icon: Package, to: "/vendor/products" },
-  { label: "Orders", icon: ShoppingCart, to: "/vendor/orders" },
-  { label: "Customers", icon: Users, to: "/vendor/customers" },
-  { label: "Templates", icon: Palette, to: "/vendor/templates" },
-  { label: "Store Settings", icon: Settings, to: "/vendor/settings" },
-  { label: "Analytics", icon: BarChart2, to: "/vendor/analytics" },
-  { label: "Help", icon: HelpCircle, to: "/vendor/help" },
+  { label: "Dashboard", icon: LayoutDashboard, to: "/", exact: true },
+  { label: "Products", icon: Package, to: "/products" },
+  { label: "Orders", icon: ShoppingCart, to: "/orders" },
+  { label: "Customers", icon: Users, to: "/customers" },
+  { label: "Templates", icon: Palette, to: "/templates" },
+  { label: "Store Settings", icon: Settings, to: "/settings" },
+  { label: "Analytics", icon: BarChart2, to: "/analytics" },
+  { label: "Help", icon: HelpCircle, to: "/help" },
 ];
 
 interface DashboardSidebarProps {

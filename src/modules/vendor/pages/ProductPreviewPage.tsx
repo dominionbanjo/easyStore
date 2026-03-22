@@ -19,7 +19,7 @@ export default function ProductPreviewPage() {
 
   /* ───────── GUARD ───────── */
   if (!draft) {
-    return <Navigate to="/vendor/products/new" replace />;
+    return <Navigate to="/products/new" replace />;
   }
 
   /* ───────── IMAGE NORMALIZATION (SAME AS DETAILS PAGE) ───────── */
@@ -87,7 +87,7 @@ export default function ProductPreviewPage() {
       <Button
         variant="ghost"
         className="flex items-center gap-2 text-muted-foreground hover:text-foreground px-0"
-        onClick={() => navigate("/vendor/products/new")}
+        onClick={() => navigate("/products/new")}
       >
         <ArrowLeft className="h-4 w-4" />
         Back to editing
