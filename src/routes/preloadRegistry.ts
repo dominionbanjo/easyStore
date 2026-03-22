@@ -1,5 +1,6 @@
 import * as Pages from "./lazyPages";
 import { ROUTES } from "./index";
+import { getSubdomain } from "@/utils/subdomain";
 
 /**
  * 🗺️ Route Preload Map
@@ -15,7 +16,6 @@ function getRegistry() {
   if (cachedRegistry) return cachedRegistry;
 
   cachedRegistry = {
-    [ROUTES.WEBSITE.HOME]: Pages.preloadLandingPage,
     [ROUTES.WEBSITE.ABOUT]: Pages.preloadAboutPage,
     [ROUTES.WEBSITE.STORES]: Pages.preloadStoresPage,
     [ROUTES.WEBSITE.CATEGORIES]: Pages.preloadCategoriesPage,
@@ -32,11 +32,9 @@ function getRegistry() {
     [ROUTES.ACCOUNT.ORDERS]: Pages.preloadOrdersPage,
     [ROUTES.AUTH.LOGIN]: Pages.preloadLoginPage,
     [ROUTES.AUTH.SIGNUP]: Pages.preloadSignupPage,
-    [ROUTES.VENDOR.DASHBOARD]: Pages.preloadVendorDashboardPage,
     [ROUTES.VENDOR.PRODUCTS]: Pages.preloadProductsPage,
     [ROUTES.VENDOR.ORDERS]: Pages.preloadVendorOrdersPage,
     [ROUTES.VENDOR.CUSTOMERS]: Pages.preloadCustomersPage,
-    [ROUTES.ADMIN.DASHBOARD]: Pages.preloadSuperAdminOverviewPage,
   };
 
   return cachedRegistry;
@@ -48,6 +46,15 @@ function getRegistry() {
  */
 export const getPreloadForPath = (path: string) => {
   const registry = getRegistry();
+  const subdomain = getSubdomain();
+
+  // Root Path Matching (Domain-aware)
+  if (path === "/") {
+    if (subdomain === "vendor") return Pages.preloadVendorDashboardPage;
+    if (subdomain === "admin") return Pages.preloadSuperAdminOverviewPage;
+    if (!subdomain) return Pages.preloadLandingPage;
+  }
+
   if (registry[path]) return registry[path];
 
   // Dynamic Route Matching
