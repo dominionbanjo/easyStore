@@ -3,6 +3,7 @@ import { Suspense, useEffect } from "react";
 // Utils & Components
 import ScrollToTop from "@/utils/ScrollToTop";
 import { getSubdomain, getBaseDomain } from "@/utils/subdomain";
+import ChunkLoadBoundary from "@/components/shared/ChunkLoadBoundary";
 
 // Lazy-loaded Components
 import * as Pages from "@/routes/lazyPages";
@@ -21,7 +22,13 @@ export default function App() {
 
   useEffect(() => {
     const path = window.location.pathname;
+    const query = window.location.search;
+    const hash = window.location.hash;
     const baseHost = getBaseDomain();
+
+    const redirectTo = (url: string) => {
+      window.location.replace(url);
+    };
 
     const PUBLIC_WEBSITE_ROUTES = [
       "/s",
@@ -44,7 +51,9 @@ export default function App() {
         path.startsWith("/auth") ||
         PUBLIC_WEBSITE_ROUTES.some((route) => path.startsWith(route))
       ) {
-        window.location.href = `${window.location.protocol}//${baseHost}${path}${window.location.search}`;
+        redirectTo(
+          `${window.location.protocol}//${baseHost}${path}${query}${hash}`,
+        );
         return;
       }
     }
@@ -52,15 +61,19 @@ export default function App() {
     // Force strict paths on the base domain to respective subdomains
     if (!subdomain && path.startsWith("/vendor")) {
       const newPath = path.replace(/^\/vendor/, "") || "/";
-      window.location.href = `${window.location.protocol}//vendor.${baseHost}${newPath}${window.location.search}`;
+      redirectTo(
+        `${window.location.protocol}//vendor.${baseHost}${newPath}${query}${hash}`,
+      );
     } else if (!subdomain && path.startsWith("/admin")) {
       const newPath = path.replace(/^\/admin/, "") || "/";
-      window.location.href = `${window.location.protocol}//admin.${baseHost}${newPath}${window.location.search}`;
+      redirectTo(
+        `${window.location.protocol}//admin.${baseHost}${newPath}${query}${hash}`,
+      );
     } else if (subdomain && subdomain !== "vendor" && subdomain !== "admin") {
       // Clean up /stores/slug on individual store subdomains
       if (path.startsWith(`/stores/${subdomain}`)) {
         const newPath = path.replace(`/stores/${subdomain}`, "") || "/";
-        window.location.href = newPath + window.location.search;
+        redirectTo(newPath + query + hash);
       }
     }
   }, [subdomain]);
@@ -70,8 +83,9 @@ export default function App() {
       <ScrollToTop />
 
       {/* ─── GLOBAL SUSPENSE ─── */}
-      <Suspense fallback={<LoadingScreen />}>
-        <Routes>
+      <ChunkLoadBoundary>
+        <Suspense fallback={<LoadingScreen />}>
+          <Routes>
           {/* ─── SITE ROOT ─── */}
           {subdomain && subdomain !== "vendor" && subdomain !== "admin" && (
             <Route path="/" element={<Pages.StorefrontLayout />}>
@@ -188,11 +202,14 @@ export default function App() {
 
           {/* ─── FALLBACK ─── */}
           <Route path="*" element={<Pages.NotFoundPage />} />
-        </Routes>
-      </Suspense>
-      <Suspense fallback={null}>
-        <Pages.OnboardingModal />
-      </Suspense>
+          </Routes>
+        </Suspense>
+      </ChunkLoadBoundary>
+      <ChunkLoadBoundary>
+        <Suspense fallback={null}>
+          <Pages.OnboardingModal />
+        </Suspense>
+      </ChunkLoadBoundary>
     </>
   );
 }

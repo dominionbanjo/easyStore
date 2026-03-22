@@ -1,4 +1,4 @@
-import { lazy } from "react";
+import { lazyWithRecovery as lazy } from "./lazyWithRecovery";
 
 /* ───────────────── LAYOUTS (Direct Imports for snappier Shell) ───────────────── */
 import HomepageLayout from "@/modules/website/layout/HomePageLayout";

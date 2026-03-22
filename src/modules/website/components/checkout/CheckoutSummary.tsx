@@ -235,7 +235,7 @@ export function CheckoutSummary({
                       Verification Needed
                     </p>
                     <p className="text-[9px] sm:text-[10px] text-blue-600/80 font-medium max-w-[200px] leading-tight">
-                      Compliance requires a verified vendor account.
+                      A valid bank account is required for refunds
                     </p>
                   </div>
                 </div>
