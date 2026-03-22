@@ -21,6 +21,7 @@ import {
   selectCurrentUser,
   setShowOnboardingModal,
   selectShowOnboardingModal,
+  selectOnboardingModalStep,
 } from "@/features/userSlice";
 import {
   useCreateStoreMutation,
@@ -41,10 +42,11 @@ export function OnboardingModal() {
   const user = useAppSelector(selectCurrentUser);
   const dispatch = useAppDispatch();
   const showViaRedux = useAppSelector(selectShowOnboardingModal);
+  const initialStep = useAppSelector(selectOnboardingModalStep);
 
   const [isOpen, setIsOpen] = useState(false);
   const [step, setStep] = useState<"role-selection" | "store-form">(
-    "role-selection",
+    initialStep || "role-selection",
   );
   const [createStore, { isLoading }] = useCreateStoreMutation();
 
@@ -87,8 +89,11 @@ export function OnboardingModal() {
   useEffect(() => {
     if (showViaRedux && !isVendor) {
       setIsOpen(true);
+      if (initialStep) {
+        setStep(initialStep);
+      }
     }
-  }, [showViaRedux, isVendor]);
+  }, [showViaRedux, isVendor, initialStep]);
 
   /* ───────── STORE NAME CHECK ───────── */
   useEffect(() => {
@@ -114,7 +119,7 @@ export function OnboardingModal() {
   const markAsSeen = () => {
     localStorage.setItem("easyStore_onboarding_seen", "true");
     setIsOpen(false);
-    dispatch(setShowOnboardingModal(false));
+    dispatch(setShowOnboardingModal({ show: false }));
   };
 
   const handleRoleSelection = (role: "buy" | "sell") => {
@@ -147,9 +152,9 @@ export function OnboardingModal() {
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && markAsSeen()}>
-      <DialogContent className="max-w-[95vw] sm:max-w-[550px] p-0 overflow-hidden rounded-[1.5rem] sm:rounded-[2.5rem] border-none shadow-2xl bg-background">
-        <div className="max-h-[90vh] overflow-y-auto custom-scrollbar">
-          <div className="p-6 sm:p-10">
+      <DialogContent className="max-w-[95vw] sm:max-w-[550px] p-0 overflow-hidden rounded-[1.5rem] sm:rounded-[2.5rem] border-none shadow-2xl bg-background flex flex-col">
+        <div className="overflow-y-auto custom-scrollbar flex-1">
+          <div className="p-4 sm:p-10">
             <AnimatePresence mode="wait">
               {step === "role-selection" ? (
                 <motion.div
@@ -171,7 +176,7 @@ export function OnboardingModal() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <button
                       onClick={() => handleRoleSelection("buy")}
-                      className="flex flex-col items-center justify-center gap-5 p-8 rounded-[2rem] border-2 border-muted bg-muted/20 hover:bg-primary/5 hover:border-primary/40 transition-all duration-300 group text-center"
+                      className="flex flex-col items-center justify-center gap-4 sm:gap-5 p-6 sm:p-8 rounded-[2rem] border-2 border-muted bg-muted/20 hover:bg-primary/5 hover:border-primary/40 transition-all duration-300 group text-center"
                     >
                       <div className="h-16 w-16 rounded-2xl bg-white shadow-xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
                         <User className="w-8 h-8 text-primary" />
@@ -188,7 +193,7 @@ export function OnboardingModal() {
 
                     <button
                       onClick={() => handleRoleSelection("sell")}
-                      className="flex flex-col items-center justify-center gap-5 p-8 rounded-[2rem] border-2 border-muted bg-muted/20 hover:bg-primary/5 hover:border-primary/40 transition-all duration-300 group text-center"
+                      className="flex flex-col items-center justify-center gap-4 sm:gap-5 p-6 sm:p-8 rounded-[2rem] border-2 border-muted bg-muted/20 hover:bg-primary/5 hover:border-primary/40 transition-all duration-300 group text-center"
                     >
                       <div className="h-16 w-16 rounded-2xl bg-white shadow-xl flex items-center justify-center group-hover:scale-110 group-hover:-rotate-3 transition-all duration-500">
                         <Store className="w-8 h-8 text-primary" />
@@ -286,18 +291,18 @@ export function OnboardingModal() {
                         ]}
                       />
 
-                      <div className="pt-6 flex gap-4">
+                      <div className="pt-6 flex flex-col sm:flex-row gap-3 sm:gap-4">
                         <Button
                           type="button"
                           variant="outline"
-                          className="flex-1 h-12 rounded-2xl font-bold uppercase tracking-widest text-xs border-muted-foreground/20"
+                          className="flex-1 h-12 rounded-2xl font-bold uppercase tracking-widest text-xs border-muted-foreground/20 order-2 sm:order-1"
                           onClick={() => setStep("role-selection")}
                         >
                           Back
                         </Button>
                         <Button
                           type="submit"
-                          className="flex-1 h-12 rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl shadow-primary/20"
+                          className="flex-1 h-12 rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl shadow-primary/20 order-1 sm:order-2"
                           isLoading={isLoading}
                           disabled={
                             storeNameStatus === "taken" ||

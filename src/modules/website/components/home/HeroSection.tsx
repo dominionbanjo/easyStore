@@ -117,7 +117,14 @@ export default function HeroSection() {
               ) : (
                 <Button
                   size="lg"
-                  onClick={() => dispatch(setShowOnboardingModal(true))}
+                  onClick={() =>
+                    dispatch(
+                      setShowOnboardingModal({
+                        show: true,
+                        step: "store-form",
+                      }),
+                    )
+                  }
                   className="group relative bg-primary hover:bg-emerald-500 dark:bg-emerald-500 dark:hover:bg-emerald-400 text-white dark:text-neutral-950 rounded-xl h-14 px-10 text-lg font-bold hover:scale-[1.05] active:scale-95 transition-all shadow-xl shadow-emerald-500/20 hover:shadow-emerald-500/40"
                 >
                   <div className="absolute inset-0 bg-emerald-400/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity rounded-xl" />

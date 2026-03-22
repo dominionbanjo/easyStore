@@ -6,6 +6,7 @@ export interface UserState {
   isAuthenticated: boolean;
   isLoading: boolean;
   showOnboardingModal: boolean;
+  onboardingModalStep: "role-selection" | "store-form";
 }
 
 const initialState: UserState = {
@@ -13,6 +14,7 @@ const initialState: UserState = {
   isAuthenticated: false,
   isLoading: false,
   showOnboardingModal: false,
+  onboardingModalStep: "role-selection",
 };
 
 const userSlice = createSlice({
@@ -37,8 +39,17 @@ const userSlice = createSlice({
       state.isLoading = action.payload;
     },
 
-    setShowOnboardingModal: (state, action: PayloadAction<boolean>) => {
-      state.showOnboardingModal = action.payload;
+    setShowOnboardingModal: (
+      state,
+      action: PayloadAction<{
+        show: boolean;
+        step?: "role-selection" | "store-form";
+      }>,
+    ) => {
+      state.showOnboardingModal = action.payload.show;
+      if (action.payload.step) {
+        state.onboardingModalStep = action.payload.step;
+      }
     },
   },
 });
@@ -56,5 +67,7 @@ export const selectCurrentUser = (state: { user: UserState }) =>
 
 export const selectShowOnboardingModal = (state: { user: UserState }) =>
   state.user.showOnboardingModal;
+export const selectOnboardingModalStep = (state: { user: UserState }) =>
+  state.user.onboardingModalStep;
 
 export default userSlice.reducer;
