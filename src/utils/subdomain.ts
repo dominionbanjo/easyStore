@@ -65,7 +65,6 @@ export const getCookieDomain = (): string | undefined => {
   return `.${baseDomain}`;
 };
 
-import Cookies from "js-cookie";
 
 export const handleRoleRedirect = (
   user: any,
@@ -76,14 +75,10 @@ export const handleRoleRedirect = (
   const currentSubdomain = getSubdomain();
   const baseDomain = getBaseDomain();
   
-  const token = Cookies.get("token");
-  
-  // Construct search params to pass token & redirect
-  const searchParams = new URLSearchParams();
-  if (token) searchParams.set("sync_token", token);
-  
   // Add any existing redirect param if we are using the fallback array
   const existingRedirect = new URLSearchParams(window.location.search).get("redirect");
+  
+  const searchParams = new URLSearchParams();
   if (existingRedirect && existingRedirect !== "/") {
     searchParams.set("redirect", existingRedirect);
   }
