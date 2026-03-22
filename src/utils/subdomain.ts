@@ -65,6 +65,8 @@ export const getCookieDomain = (): string | undefined => {
   return `.${baseDomain}`;
 };
 
+import Cookies from "js-cookie";
+
 export const handleRoleRedirect = (
   user: any,
   fallbackRedirect: string,
@@ -72,18 +74,33 @@ export const handleRoleRedirect = (
 ) => {
   const accountType = user?.account_type;
   const currentSubdomain = getSubdomain();
+  const baseDomain = getBaseDomain();
+  
+  const token = Cookies.get("token");
+  
+  // Construct search params to pass token & redirect
+  const searchParams = new URLSearchParams();
+  if (token) searchParams.set("sync_token", token);
+  
+  // Add any existing redirect param if we are using the fallback array
+  const existingRedirect = new URLSearchParams(window.location.search).get("redirect");
+  if (existingRedirect && existingRedirect !== "/") {
+    searchParams.set("redirect", existingRedirect);
+  }
+  
+  const queryString = searchParams.toString() ? `?${searchParams.toString()}` : "";
 
   if (accountType === "vendor") {
     if (currentSubdomain === "vendor") {
-      navigate("/", { replace: true });
+      navigate(existingRedirect || "/", { replace: true });
     } else {
-      window.location.href = `${window.location.protocol}//vendor.${getBaseDomain()}/`;
+      window.location.href = `${window.location.protocol}//vendor.${baseDomain}/${queryString}`;
     }
   } else if (accountType === "admin") {
     if (currentSubdomain === "admin") {
-      navigate("/", { replace: true });
+      navigate(existingRedirect || "/", { replace: true });
     } else {
-      window.location.href = `${window.location.protocol}//admin.${getBaseDomain()}/`;
+      window.location.href = `${window.location.protocol}//admin.${baseDomain}/${queryString}`;
     }
   } else {
     navigate(fallbackRedirect || "/", { replace: true });

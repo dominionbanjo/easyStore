@@ -27,8 +27,8 @@ export const authApi = apiManager.injectEndpoints({
           if (authData?.access && authData?.user) {
             Cookies.set("token", authData.access, {
               expires: 7,
-              secure: true,
-              sameSite: "strict",
+              secure: window.location.protocol === "https:",
+              sameSite: "lax",
               domain: getCookieDomain(),
             });
 
@@ -57,8 +57,8 @@ export const authApi = apiManager.injectEndpoints({
             if (authData?.access && authData?.user) {
               Cookies.set("token", authData.access, {
                 expires: 7,
-                secure: true,
-                sameSite: "strict",
+                secure: window.location.protocol === "https:",
+                sameSite: "lax",
                 domain: getCookieDomain(),
               });
 
@@ -87,8 +87,8 @@ export const authApi = apiManager.injectEndpoints({
           if (authData?.access && authData?.user) {
             Cookies.set("token", authData.access, {
               expires: 7,
-              secure: true,
-              sameSite: "strict",
+              secure: window.location.protocol === "https:",
+              sameSite: "lax",
               domain: getCookieDomain(),
             });
 
@@ -157,8 +157,8 @@ export const authApi = apiManager.injectEndpoints({
         } finally {
           // ✅ ALWAYS clear client auth
           Cookies.remove("token", {
-            secure: true,
-            sameSite: "strict",
+            secure: window.location.protocol === "https:",
+            sameSite: "lax",
             domain: getCookieDomain(),
           });
 

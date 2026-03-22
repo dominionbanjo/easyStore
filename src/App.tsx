@@ -2,9 +2,10 @@ import { Routes, Route, Outlet } from "react-router-dom";
 import { Suspense, useEffect } from "react";
 // Utils & Components
 import ScrollToTop from "@/utils/ScrollToTop";
-import { getSubdomain, getBaseDomain } from "@/utils/subdomain";
+import { getSubdomain, getBaseDomain, getCookieDomain } from "@/utils/subdomain";
 
 // Lazy-loaded Components
+import Cookies from "js-cookie";
 import * as Pages from "@/routes/lazyPages";
 import {
   HomepageLayout,
@@ -22,6 +23,22 @@ export default function App() {
   useEffect(() => {
     const path = window.location.pathname;
     const baseHost = getBaseDomain();
+
+    // -- Handle cross-subdomain auth sync --
+    const urlParams = new URLSearchParams(window.location.search);
+    const syncToken = urlParams.get("sync_token");
+    if (syncToken) {
+      Cookies.set("token", syncToken, {
+        expires: 7,
+        secure: window.location.protocol === "https:",
+        sameSite: "lax",
+        domain: getCookieDomain(),
+      });
+      // Remove sync_token from URL for cleanliness & security
+      urlParams.delete("sync_token");
+      const newSearch = urlParams.toString() ? `?${urlParams.toString()}` : "";
+      window.history.replaceState({}, "", `${path}${newSearch}`);
+    }
 
     // Redirect all auth pages on subdomains to the base domain
     if (subdomain && path.startsWith("/auth")) {
