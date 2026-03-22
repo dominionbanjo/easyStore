@@ -38,15 +38,21 @@ export const getSubdomain = (): string | null => {
 };
 
 export const getBaseDomain = (): string => {
-  const host = window.location.host; // Host includes the port
+  let host = window.location.host; // Host includes the port
   const hostname = window.location.hostname;
   const subdomain = getSubdomain();
   
   if (subdomain) {
     if (hostname.startsWith(`${subdomain}.`)) {
-       return host.substring(subdomain.length + 1);
+       host = host.substring(subdomain.length + 1);
     }
   }
+  
+  // Strip www. if it exists to prevent things like admin.www.eazystore.com.ng
+  if (host.startsWith("www.")) {
+    host = host.substring(4);
+  }
+
   return host;
 };
 
