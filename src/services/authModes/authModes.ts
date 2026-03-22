@@ -6,6 +6,7 @@ import {
   retry,
 } from "@reduxjs/toolkit/query/react";
 import Cookies from "js-cookie";
+import { getCookieDomain } from "@/utils/subdomain";
 import { clearUser } from "@/features/userSlice";
 import { toast } from "sonner";
 
@@ -71,7 +72,7 @@ export const baseQueryWithAuth: BaseQueryFn<
       });
 
       // Clear all auth state
-      Cookies.remove("token");
+      Cookies.remove("token", { domain: getCookieDomain() });
       api.dispatch(clearUser());
 
       // Redirect to landing page after a small delay to show the toast

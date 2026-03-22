@@ -1,7 +1,8 @@
 import { Routes, Route, Outlet } from "react-router-dom";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 // Utils & Components
 import ScrollToTop from "@/utils/ScrollToTop";
+import { getSubdomain, getBaseDomain } from "@/utils/subdomain";
 
 // Lazy-loaded Components
 import * as Pages from "@/routes/lazyPages";
@@ -16,6 +17,28 @@ import LoadingScreen from "@/Loading";
 /* ───────────────── APP ───────────────── */
 
 export default function App() {
+  const subdomain = getSubdomain();
+
+  useEffect(() => {
+    const path = window.location.pathname;
+    const baseHost = getBaseDomain();
+
+    // Force strict paths on the base domain to respective subdomains
+    if (!subdomain && path.startsWith("/vendor")) {
+      const newPath = path.replace(/^\/vendor/, "") || "/";
+      window.location.href = `${window.location.protocol}//vendor.${baseHost}${newPath}${window.location.search}`;
+    } else if (!subdomain && path.startsWith("/admin")) {
+      const newPath = path.replace(/^\/admin/, "") || "/";
+      window.location.href = `${window.location.protocol}//admin.${baseHost}${newPath}${window.location.search}`;
+    } else if (subdomain && subdomain !== "vendor" && subdomain !== "admin") {
+      // Clean up /stores/slug on individual store subdomains
+      if (path.startsWith(`/stores/${subdomain}`)) {
+        const newPath = path.replace(`/stores/${subdomain}`, "") || "/";
+        window.location.href = newPath + window.location.search;
+      }
+    }
+  }, [subdomain]);
+
   return (
     <>
       <ScrollToTop />
@@ -23,33 +46,80 @@ export default function App() {
       {/* ─── GLOBAL SUSPENSE ─── */}
       <Suspense fallback={<LoadingScreen />}>
         <Routes>
+          {/* ─── SITE ROOT ─── */}
+          {subdomain && subdomain !== "vendor" && subdomain !== "admin" && (
+            <Route path="/" element={<Pages.StorefrontLayout />}>
+              <Route index element={<Pages.StoreDetailsPage />} />
+              <Route
+                path="products/:productId"
+                element={<Pages.StoreProductDetailsPage />}
+              />
+            </Route>
+          )}
+
+          {/* ─── VENDOR DASHBOARD ─── */}
+          {subdomain === "vendor" && (
+            <Route path="/" element={<VendorDashboardLayout />}>
+              <Route index element={<Pages.VendorDashboardPage />} />
+              <Route path="customers" element={<Pages.CustomersPage />} />
+              <Route path="orders" element={<Pages.VendorOrdersPage />} />
+              <Route path="products" element={<Pages.ProductsPage />} />
+              <Route path="products/new" element={<Pages.AddProductPage />} />
+              <Route path="products/:slug/edit" element={<Pages.AddProductPage />} />
+              <Route path="products/preview" element={<Pages.ProductPreviewPage />} />
+              <Route path="analytics" element={<Pages.AnalyticsPage />} />
+              <Route path="templates" element={<Pages.VendorTemplatesPage />} />
+              <Route path="settings" element={<Pages.VendorSettingsPage />} />
+              <Route path="help" element={<Pages.HelpPage />} />
+            </Route>
+          )}
+
+          {/* ─── ADMIN DASHBOARD ─── */}
+          {subdomain === "admin" && (
+            <Route path="/" element={<SuperAdminDashboardLayout />}>
+              <Route index element={<Pages.SuperAdminOverviewPage />} />
+              <Route path="vendors" element={<Pages.SuperAdminVendorsPage />} />
+              <Route path="users" element={<Pages.SuperAdminUsersPage />} />
+              <Route path="transactions" element={<Pages.SuperAdminTransactionsPage />} />
+              <Route path="reports" element={<Pages.SuperAdminReportsPage />} />
+              <Route path="logs" element={<Pages.SuperAdminLogsPage />} />
+              <Route path="notifications" element={<Pages.SuperAdminNotificationsPage />} />
+              <Route path="analytics" element={<Pages.SuperAdminPlatformAnalysisPage />} />
+              <Route path="access-control" element={<Pages.SuperAdminAccessControlPage />} />
+              <Route path="settings" element={<Pages.SuperAdminSettingsPage />} />
+              <Route path="system" element={<Pages.SuperAdminServerConfigPage />} />
+            </Route>
+          )}
+
           {/* ─── WEBSITE ─── */}
-          <Route path="/" element={<HomepageLayout />}>
-            <Route index element={<Pages.LandingPage />} />
-            <Route path="s" element={<Pages.SearchResultsPage />} />
-            <Route path="stores" element={<Pages.StoresPage />} />
-            <Route path="categories" element={<Pages.CategoriesPage />} />
+          <Route element={<HomepageLayout />}>
+            {!subdomain && (
+              <Route path="/" element={<Pages.LandingPage />} />
+            )}
+            <Route path="/s" element={<Pages.SearchResultsPage />} />
+            <Route path="/stores" element={<Pages.StoresPage />} />
+            <Route path="/categories" element={<Pages.CategoriesPage />} />
             <Route
-              path="categories/:slug"
+              path="/categories/:slug"
               element={<Pages.CategoryDetailsPage />}
             />
-            <Route path="product/:slug" element={<Pages.ProductDetailPage />} />
-            <Route path="about" element={<Pages.AboutPage />} />
+            <Route path="/product/:slug" element={<Pages.ProductDetailPage />} />
+            <Route path="/about" element={<Pages.AboutPage />} />
             <Route
-              path="privacy-policy"
+              path="/privacy-policy"
               element={<Pages.PrivacyPolicyPage />}
             />
             <Route
-              path="terms-of-service"
+              path="/terms-of-service"
               element={<Pages.TermsOfServicePage />}
             />
-            <Route path="careers" element={<Pages.CareersPage />} />
-            <Route path="discovery" element={<Pages.DiscoveryPage />} />
-            <Route path="featured" element={<Pages.FeaturedProductsPage />} />
-            <Route path="trending" element={<Pages.TrendingProductsPage />} />
-            <Route path="new-arrivals" element={<Pages.NewArrivalsPage />} />
-            <Route path="cart" element={<Pages.CartPage />} />
-            <Route path="cart/preview" element={<Pages.CheckoutPage />} />
+            <Route path="/careers" element={<Pages.CareersPage />} />
+            <Route path="/discovery" element={<Pages.DiscoveryPage />} />
+            <Route path="/featured" element={<Pages.FeaturedProductsPage />} />
+            <Route path="/trending" element={<Pages.TrendingProductsPage />} />
+            <Route path="/new-arrivals" element={<Pages.NewArrivalsPage />} />
+            <Route path="/cart" element={<Pages.CartPage />} />
+            <Route path="/cart/preview" element={<Pages.CheckoutPage />} />
           </Route>
 
           {/* ─── VENDOR STOREFRONTS ─── */}
@@ -61,7 +131,8 @@ export default function App() {
             />
           </Route>
 
-          {/* ─── ACCOUNT ─── */}
+
+          {/* ─── ACCOUNT ROUTING (All domains) ─── */}
           <Route path="/account" element={<AccountsLayout />}>
             <Route path="profile" element={<Pages.UserProfilePage />} />
             <Route path="settings" element={<Pages.SettingsPage />} />
@@ -74,7 +145,7 @@ export default function App() {
             <Route path="orders/:id" element={<Pages.OrderDetailsPage />} />
           </Route>
 
-          {/* ─── AUTH ─── */}
+          {/* ─── AUTH ROUTING (All domains) ─── */}
           <Route path="/auth" element={<Outlet />}>
             <Route path="login" element={<Pages.LoginPage />} />
             <Route path="signup" element={<Pages.SignupPage />} />
@@ -86,60 +157,6 @@ export default function App() {
             <Route
               path="reset-password"
               element={<Pages.ResetPasswordPage />}
-            />
-          </Route>
-
-          {/* ─── VENDOR ─── */}
-          <Route path="/vendor" element={<VendorDashboardLayout />}>
-            <Route index element={<Pages.VendorDashboardPage />} />
-            <Route path="customers" element={<Pages.CustomersPage />} />
-            <Route path="orders" element={<Pages.VendorOrdersPage />} />
-
-            {/* Products */}
-            <Route path="products" element={<Pages.ProductsPage />} />
-            <Route path="products/new" element={<Pages.AddProductPage />} />
-            <Route
-              path="products/:slug/edit"
-              element={<Pages.AddProductPage />}
-            />
-            <Route
-              path="products/preview"
-              element={<Pages.ProductPreviewPage />}
-            />
-
-            <Route path="analytics" element={<Pages.AnalyticsPage />} />
-            <Route path="templates" element={<Pages.VendorTemplatesPage />} />
-            <Route path="settings" element={<Pages.VendorSettingsPage />} />
-            <Route path="help" element={<Pages.HelpPage />} />
-          </Route>
-
-          {/* ─── ADMIN ─── */}
-          <Route path="/admin" element={<SuperAdminDashboardLayout />}>
-            <Route index element={<Pages.SuperAdminOverviewPage />} />
-            <Route path="vendors" element={<Pages.SuperAdminVendorsPage />} />
-            <Route path="users" element={<Pages.SuperAdminUsersPage />} />
-            <Route
-              path="transactions"
-              element={<Pages.SuperAdminTransactionsPage />}
-            />
-            <Route path="reports" element={<Pages.SuperAdminReportsPage />} />
-            <Route path="logs" element={<Pages.SuperAdminLogsPage />} />
-            <Route
-              path="notifications"
-              element={<Pages.SuperAdminNotificationsPage />}
-            />
-            <Route
-              path="analytics"
-              element={<Pages.SuperAdminPlatformAnalysisPage />}
-            />
-            <Route
-              path="access-control"
-              element={<Pages.SuperAdminAccessControlPage />}
-            />
-            <Route path="settings" element={<Pages.SuperAdminSettingsPage />} />
-            <Route
-              path="system"
-              element={<Pages.SuperAdminServerConfigPage />}
             />
           </Route>
 

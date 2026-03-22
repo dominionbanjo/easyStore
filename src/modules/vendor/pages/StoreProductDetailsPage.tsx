@@ -1,4 +1,5 @@
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
+import { getSubdomain } from "@/utils/subdomain";
 import { PackageSearch, ArrowLeft, ShoppingBag } from "lucide-react";
 import { useGetStoreDetailsQuery } from "@/services/storeApi";
 import { useGetSingleProductQuery } from "@/services/productApi";
@@ -19,7 +20,11 @@ import { useGetCartQuery } from "@/services/cartApi";
 import { CartDrawer } from "@/modules/website/components/cart/CartDrawer";
 
 export default function StoreProductDetailsPage() {
-  const { slug, productId } = useParams<{ slug: string; productId: string }>();
+  let { slug, productId } = useParams<{ slug: string; productId: string }>();
+  const subdomain = getSubdomain();
+  if (subdomain && subdomain !== "vendor" && subdomain !== "admin") {
+    slug = subdomain;
+  }
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const previewTemplate = searchParams.get("preview_template");

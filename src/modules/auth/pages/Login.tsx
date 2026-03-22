@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import Cookies from "js-cookie";
 import { useLoginMutation, useGoogleLoginMutation } from "@/services/authApi";
+import { handleRoleRedirect } from "@/utils/subdomain";
 import { AUTH_ROUTES } from "@/routes/temp";
 import {
   LoginSchema,
@@ -63,10 +64,7 @@ export default function LoginPage() {
   useEffect(() => {
     const token = Cookies.get("token");
     if (token && isAuthenticated && currentUser) {
-      let finalRedirect = redirectTo;
-      if (currentUser?.account_type === "vendor") finalRedirect = "/vendor";
-      else if (currentUser?.account_type === "admin") finalRedirect = "/admin";
-      navigate(finalRedirect, { replace: true });
+      handleRoleRedirect(currentUser, redirectTo, navigate);
     }
   }, [navigate, redirectTo, isAuthenticated, currentUser]);
 
@@ -87,10 +85,7 @@ export default function LoginPage() {
       }
 
       toast.success("Login successful!");
-      let finalRedirect = redirectTo;
-      if (user?.account_type === "vendor") finalRedirect = "/vendor";
-      else if (user?.account_type === "admin") finalRedirect = "/admin";
-      navigate(finalRedirect, { replace: true });
+      handleRoleRedirect(user, redirectTo, navigate);
     } catch (err: any) {
       toast.error(err?.data?.message || err?.message || "Login failed");
     }
@@ -119,10 +114,7 @@ export default function LoginPage() {
             const res: any = await googleLogin({ token }).unwrap();
             const user = res?.data?.user || res?.user;
             toast.success("Logged in with Google!");
-            let finalRedirect = redirectTo;
-            if (user?.account_type === "vendor") finalRedirect = "/vendor";
-            else if (user?.account_type === "admin") finalRedirect = "/admin";
-            navigate(finalRedirect, { replace: true });
+            handleRoleRedirect(user, redirectTo, navigate);
           } catch (err: any) {
             toast.error(
               err?.data?.message || err?.message || "Google login failed",

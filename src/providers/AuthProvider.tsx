@@ -8,6 +8,7 @@ import { useGoogleLoginMutation } from "@/services/authApi";
 import type { RootState } from "@/store";
 
 import { useNavigate } from "react-router-dom";
+import { handleRoleRedirect } from "@/utils/subdomain";
 
 export default function AuthProvider({
   children,
@@ -58,11 +59,7 @@ export default function AuthProvider({
                 "/";
               let finalRedirect = redirectTo;
 
-              if (user?.account_type === "vendor") finalRedirect = "/vendor";
-              else if (user?.account_type === "admin") finalRedirect = "/admin";
-
-              toast.success("Logged in with Google!");
-              navigate(finalRedirect, { replace: true });
+              handleRoleRedirect(user, finalRedirect, navigate);
             } catch (err) {
               console.error("❌ One Tap login failed:", err);
               toast.error("Google login failed");

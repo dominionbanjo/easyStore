@@ -1,6 +1,7 @@
 import { apiManager } from "./apiManager";
 import { setUser, clearUser } from "@/features/userSlice";
 import Cookies from "js-cookie";
+import { getCookieDomain } from "@/utils/subdomain";
 
 import type {
   IAuthResponse,
@@ -28,6 +29,7 @@ export const authApi = apiManager.injectEndpoints({
               expires: 7,
               secure: true,
               sameSite: "strict",
+              domain: getCookieDomain(),
             });
 
             dispatch(setUser({ user: authData.user }));
@@ -57,6 +59,7 @@ export const authApi = apiManager.injectEndpoints({
                 expires: 7,
                 secure: true,
                 sameSite: "strict",
+                domain: getCookieDomain(),
               });
 
               dispatch(setUser({ user: authData.user }));
@@ -86,6 +89,7 @@ export const authApi = apiManager.injectEndpoints({
               expires: 7,
               secure: true,
               sameSite: "strict",
+              domain: getCookieDomain(),
             });
 
             dispatch(setUser({ user: authData.user }));
@@ -155,6 +159,7 @@ export const authApi = apiManager.injectEndpoints({
           Cookies.remove("token", {
             secure: true,
             sameSite: "strict",
+            domain: getCookieDomain(),
           });
 
           dispatch(clearUser());
