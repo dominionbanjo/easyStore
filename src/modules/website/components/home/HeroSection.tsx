@@ -52,19 +52,6 @@ export default function HeroSection() {
           {/* LEFT SIDE */}
           <div className="flex-1 text-center lg:text-left space-y-8">
             {/* Catchy TAG */}
-
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium border border-primary/20"
-            >
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-              </span>
-              Empowering 40,000+ Nigerian Businesses
-            </motion.div>
-
             <motion.h1
               variants={transitionVariants}
               initial="hidden"
@@ -96,11 +83,7 @@ export default function HeroSection() {
             >
               {!user || user.account_type === "vendor" ? (
                 <SmartLink
-                  to={
-                    !user
-                      ? `${AUTH_ROUTES.SIGNUP}?role=vendor`
-                      : "/vendor"
-                  }
+                  to={!user ? `${AUTH_ROUTES.SIGNUP}?role=vendor` : "/vendor"}
                   className="w-full sm:w-auto"
                 >
                   <Button
