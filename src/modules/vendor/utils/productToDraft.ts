@@ -12,40 +12,53 @@ function isProductImage(
 export function productToDraft(product: IProductDetails) {
   return {
     values: {
-      name: product.name,
-      category_id: product.category_id,
-      description: product.description,
+      name: product.name || "",
+      category_id: product.category_id || "",
+      description: product.description || "",
 
-      price: product.price > 0 ? Number(product.price) : undefined,
+      price:
+        product.price !== undefined && product.price !== null
+          ? Number(product.price)
+          : undefined,
       discount_price:
-        product.discount_price && Number(product.discount_price) > 0
+        product.discount_price !== undefined && product.discount_price !== null
           ? Number(product.discount_price)
           : undefined,
-      stock: product.stock > 0 ? product.stock : undefined,
+      stock:
+        product.stock !== undefined && product.stock !== null
+          ? Number(product.stock)
+          : 0,
 
       shipping_cost:
-        product.shipping_cost && product.shipping_cost > 0
-          ? product.shipping_cost
-          : undefined,
-      shipping_note: product.shipping_note ?? undefined,
-      returns_note: product.returns_note ?? undefined,
+        product.shipping_cost !== undefined && product.shipping_cost !== null
+          ? Number(product.shipping_cost)
+          : 0,
+      shipping_note: product.shipping_note || "",
+      returns_note: product.returns_note || "",
     },
 
     extras: {
-      tags: [...(product.tags ?? [])],
-      highlights: [...(product.highlights ?? [])],
-      options: product.options
-        ? product.options.map((o: any) => ({ ...o }))
+      tags: Array.isArray(product.tags) ? [...product.tags] : [],
+      highlights: Array.isArray(product.highlights)
+        ? [...product.highlights]
         : [],
-      variants: product.variants
+      options: Array.isArray(product.options)
+        ? product.options.map((o: any) => ({
+            name: o.name,
+            values: [...(o.values || [])],
+          }))
+        : [],
+      variants: Array.isArray(product.variants)
         ? product.variants.map((v) => ({
-            sku: v.sku ?? "",
+            id: v.id,
+            sku: v.sku || "",
             combinations: v.combinations ? { ...v.combinations } : {},
             price: v.price ? Number(v.price) : 0,
             stock: v.stock ?? 0,
-            discount_price: v.discount_price
-              ? Number(v.discount_price)
-              : undefined,
+            discount_price:
+              v.discount_price !== undefined && v.discount_price !== null
+                ? Number(v.discount_price)
+                : undefined,
           }))
         : [],
       specs: product.specs ? { ...product.specs } : {},

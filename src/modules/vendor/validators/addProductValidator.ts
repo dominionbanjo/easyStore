@@ -56,7 +56,10 @@ export const addProductSchema = z
     variants: z
       .array(
         z.object({
+          id: z.string().uuid().optional(),
           sku: z.string().optional(),
+          image_url: z.string().optional().nullable(),
+          image_public_id: z.string().optional().nullable(),
           combinations: z.record(z.string(), z.string()),
           price: safeNum(
             z.number().nonnegative("Variant price cannot be negative"),
@@ -77,18 +80,18 @@ export const addProductSchema = z
 
     if (!hasVariants) {
       // Validate top-level price if no variants
-      if (!data.price || data.price <= 0) {
+      if (data.price === undefined || data.price === null || data.price <= 0) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: "Price must be greater than 0",
           path: ["price"],
         });
       }
-      // Validate top-level stock if no variants
-      if (!data.stock || data.stock <= 0) {
+      // Validate top-level stock if no variants (Allow 0)
+      if (data.stock === undefined || data.stock === null || data.stock < 0) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "Stock must be greater than 0",
+          message: "Stock cannot be negative",
           path: ["stock"],
         });
       }

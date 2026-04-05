@@ -179,8 +179,14 @@ export default function AddProductPage() {
 
       dispatch(clearProductDraft());
       navigate("/products");
-    } catch {
-      toast.error("Something went wrong");
+    } catch (err: any) {
+      const errorMsg =
+        err?.data?.message ||
+        err?.data?.error ||
+        "Something went wrong while saving your product.";
+
+      const displayMsg = Array.isArray(errorMsg) ? errorMsg[0] : errorMsg;
+      toast.error(displayMsg);
     }
   };
 
