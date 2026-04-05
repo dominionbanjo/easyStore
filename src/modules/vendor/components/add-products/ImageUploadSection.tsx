@@ -14,6 +14,7 @@ import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
+import { optimizeImage } from "@/utils/imageOptimizer";
 import { uploadToCloudinary } from "@/utils/uploadToCloudinary";
 import {
   useGetCloudinarySignatureQuery,
@@ -65,8 +66,12 @@ export default function ImageUploadSection({
     try {
       const fresh = await refetch().unwrap();
       setMainProgress(0);
+
+      // Optimize image before upload
+      const optimized = await optimizeImage(file);
+
       const uploaded = await uploadToCloudinary(
-        file,
+        optimized,
         fresh as CloudinaryConfig,
         {
           onProgress: (p) => setMainProgress(p),
@@ -98,8 +103,11 @@ export default function ImageUploadSection({
 
     try {
       const results = await Promise.all(
-        fileArray.map((file, index) =>
-          uploadToCloudinary(file, fresh as CloudinaryConfig, {
+        fileArray.map(async (file, index) => {
+          // Optimize image before upload
+          const optimized = await optimizeImage(file);
+
+          return uploadToCloudinary(optimized, fresh as CloudinaryConfig, {
             onProgress: (p) => {
               setGalleryUploads((prev) =>
                 prev.map((u) =>
@@ -107,8 +115,8 @@ export default function ImageUploadSection({
                 ),
               );
             },
-          }),
-        ),
+          });
+        }),
       );
       onGalleryUploaded(results);
       toast.success(`${results.length} images added to gallery`);
