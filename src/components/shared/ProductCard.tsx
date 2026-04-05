@@ -7,6 +7,7 @@ import {
   type ReactNode,
 } from "react";
 import { useSearchParams } from "react-router-dom";
+import { getSubdomain } from "@/utils/subdomain";
 import { motion } from "framer-motion";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "@/store";
@@ -397,11 +398,24 @@ const Root = ({
         )}
       >
         <SmartLink
-          to={
-            storeSlug
-              ? `/stores/${storeSlug}/products/${id}${previewTemplate ? `?preview_template=${previewTemplate}` : ""}`
-              : buildRoute.productDetails(slug)
-          }
+          to={(() => {
+            const subdomain = getSubdomain();
+            const isStoreSubdomain =
+              subdomain && subdomain !== "vendor" && subdomain !== "admin";
+            const previewQuery = previewTemplate
+              ? `?preview_template=${previewTemplate}`
+              : "";
+
+            if (isStoreSubdomain) {
+              return `/products/${id}${previewQuery}`;
+            }
+
+            if (storeSlug) {
+              return `/stores/${storeSlug}/products/${id}${previewQuery}`;
+            }
+
+            return buildRoute.productDetails(slug);
+          })()}
           className="absolute inset-0 z-[1]"
           aria-label={`View ${name}`}
         />

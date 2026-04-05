@@ -1,5 +1,5 @@
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
-import { getSubdomain } from "@/utils/subdomain";
+import { getSubdomain, getBaseDomain } from "@/utils/subdomain";
 import { PackageSearch, ArrowLeft, ShoppingBag } from "lucide-react";
 import { useGetStoreDetailsQuery } from "@/services/storeApi";
 import { useGetSingleProductQuery } from "@/services/productApi";
@@ -158,7 +158,10 @@ export default function StoreProductDetailsPage() {
             </span>
           </div>
           <button
-            onClick={() => navigate("/templates")}
+            onClick={() => {
+              const baseHost = getBaseDomain();
+              window.location.href = `${window.location.protocol}/vendor.${baseHost}/templates`;
+            }}
             className="text-[10px] font-black uppercase tracking-widest bg-white text-black px-4 py-1.5 rounded hover:bg-zinc-200 transition-colors"
           >
             Back to Dashboard

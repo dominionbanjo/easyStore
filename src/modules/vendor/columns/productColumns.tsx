@@ -256,7 +256,7 @@ export const productColumns: ColumnDef<IStoreProduct>[] = [
                 onClick={() => {
                   // Clear any stale draft so the new product loads fresh
                   dispatch(clearProductDraft());
-                  navigate(`/vendor/products/${product.slug}/edit`);
+                  navigate(`/products/${product.slug}/edit`);
                 }}
               >
                 <Edit className="h-4 w-4" />

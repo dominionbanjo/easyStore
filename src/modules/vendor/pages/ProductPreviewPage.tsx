@@ -87,7 +87,7 @@ export default function ProductPreviewPage() {
       <Button
         variant="ghost"
         className="flex items-center gap-2 text-muted-foreground hover:text-foreground px-0"
-        onClick={() => navigate("/products/new")}
+        onClick={() => navigate(-1)}
       >
         <ArrowLeft className="h-4 w-4" />
         Back to editing
