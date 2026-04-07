@@ -6,6 +6,7 @@ import {
   CheckCircle2,
   Loader2,
   ImagePlus,
+  Trash2,
 } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -57,6 +58,7 @@ export default function ImageUploadSection({
     { id: string; progress: number }[]
   >([]);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
 
   const canUpload = Boolean(signature?.signature) && !signing && !isError;
 
@@ -136,6 +138,12 @@ export default function ImageUploadSection({
     e.stopPropagation();
     if (!image || deleting) return;
 
+    if (confirmDeleteId !== image.public_id) {
+      setConfirmDeleteId(image.public_id);
+      return;
+    }
+
+    setConfirmDeleteId(null);
     setDeletingId(image.public_id);
     try {
       await deleteImage({ public_id: image.public_id }).unwrap();
@@ -154,6 +162,12 @@ export default function ImageUploadSection({
     const img = gallery[index];
     if (!img || deleting) return;
 
+    if (confirmDeleteId !== img.public_id) {
+      setConfirmDeleteId(img.public_id);
+      return;
+    }
+
+    setConfirmDeleteId(null);
     setDeletingId(img.public_id);
     try {
       await deleteImage({ public_id: img.public_id }).unwrap();
@@ -260,6 +274,43 @@ export default function ImageUploadSection({
                     </div>
                   </div>
                 </div>
+
+                {/* Confirm Removal Overlay */}
+                <AnimatePresence>
+                  {confirmDeleteId === image.public_id && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.9 }}
+                      className="absolute inset-0 bg-red-600/90 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center z-20"
+                    >
+                      <Trash2 className="h-10 w-10 text-white mb-4 animate-bounce" />
+                      <p className="text-white text-sm font-black uppercase tracking-tight mb-6">
+                        Delete this cover image?
+                      </p>
+                      <div className="flex items-center gap-3 w-full max-w-[200px]">
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            setConfirmDeleteId(null);
+                          }}
+                          className="flex-1 h-10 rounded-xl bg-white/20 hover:bg-white/30 text-white font-bold text-[10px] uppercase tracking-widest transition-all"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="button"
+                          onClick={removeMainImage}
+                          className="flex-1 h-10 rounded-xl bg-white text-red-600 hover:bg-white/90 font-bold text-[10px] uppercase tracking-widest transition-all shadow-xl"
+                        >
+                          Confirm
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </motion.div>
             ) : (
               <motion.div
@@ -355,6 +406,42 @@ export default function ImageUploadSection({
                     <X className="h-5 w-5" />
                   </button>
                 </div>
+
+                {/* Confirm Deletion Overlay */}
+                <AnimatePresence>
+                  {confirmDeleteId === g.public_id && (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="absolute inset-0 bg-red-600/95 flex flex-col items-center justify-center p-2 text-center z-10"
+                    >
+                      <p className="text-[9px] font-black text-white uppercase tracking-tighter mb-3 leading-tight">
+                        Confirm Delete?
+                      </p>
+                      <div className="flex flex-col gap-2 w-full px-2">
+                         <button
+                           type="button"
+                           onClick={(e) => {
+                             e.preventDefault();
+                             e.stopPropagation();
+                             setConfirmDeleteId(null);
+                           }}
+                           className="h-8 rounded-lg bg-white/20 text-white text-[9px] font-bold uppercase transition-all hover:bg-white/30"
+                         >
+                           No
+                         </button>
+                         <button
+                           type="button"
+                           onClick={(e) => removeGalleryImage(i, e)}
+                           className="h-8 rounded-lg bg-white text-red-600 text-[9px] font-bold uppercase shadow-lg transition-all hover:bg-white/90"
+                         >
+                           Yes
+                         </button>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </motion.div>
             ))}
 

@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { areSubdomainsDisabled } from "@/utils/subdomain";
 
 const menuItems = [
   { label: "Overview", icon: LayoutDashboard, to: "/" },
@@ -53,23 +54,28 @@ export default function SuperAdminSidebar({ open, onToggle }: Props) {
         </div>
 
         <nav className="flex flex-col gap-1 px-2 mt-4">
-          {menuItems.map(({ label, icon: Icon, to }) => (
-            <NavLink
-              key={label}
-              to={to}
-              end
-              className={({ isActive }) =>
-                cn(
-                  "flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors",
-                  "text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                  isActive && "bg-muted text-foreground font-medium"
-                )
-              }
-            >
-              <Icon className="h-5 w-5 shrink-0" />
-              <span>{label}</span>
-            </NavLink>
-          ))}
+          {menuItems.map(({ label, icon: Icon, to }) => {
+            const pathPrefix = areSubdomainsDisabled() ? "/admin" : "";
+            const finalPath = to === "/" ? (pathPrefix || "/") : `${pathPrefix}${to}`;
+
+            return (
+              <NavLink
+                key={label}
+                to={finalPath}
+                end
+                className={({ isActive }: { isActive: boolean }) =>
+                  cn(
+                    "flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors",
+                    "text-muted-foreground hover:text-foreground hover:bg-muted/50",
+                    isActive && "bg-muted text-foreground font-medium"
+                  )
+                }
+              >
+                <Icon className="h-5 w-5 shrink-0" />
+                <span>{label}</span>
+              </NavLink>
+            );
+          })}
         </nav>
       </aside>
 
@@ -103,24 +109,29 @@ export default function SuperAdminSidebar({ open, onToggle }: Props) {
               </div>
 
               <nav className="flex flex-col gap-1 px-2 mt-4">
-                {menuItems.map(({ label, icon: Icon, to }) => (
-                  <NavLink
-                    key={label}
-                    to={to}
-                    end
-                    onClick={onToggle}
-                    className={({ isActive }) =>
-                      cn(
-                        "flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors",
-                        "text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "bg-muted text-foreground font-medium"
-                      )
-                    }
-                  >
-                    <Icon className="h-5 w-5 shrink-0" />
-                    <span>{label}</span>
-                  </NavLink>
-                ))}
+                {menuItems.map(({ label, icon: Icon, to }) => {
+                  const pathPrefix = areSubdomainsDisabled() ? "/admin" : "";
+                  const finalPath = to === "/" ? (pathPrefix || "/") : `${pathPrefix}${to}`;
+
+                  return (
+                    <NavLink
+                      key={label}
+                      to={finalPath}
+                      end
+                      onClick={onToggle}
+                      className={({ isActive }: { isActive: boolean }) =>
+                        cn(
+                          "flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors",
+                          "text-muted-foreground hover:text-foreground hover:bg-muted/50",
+                          isActive && "bg-muted text-foreground font-medium"
+                        )
+                      }
+                    >
+                      <Icon className="h-5 w-5 shrink-0" />
+                      <span>{label}</span>
+                    </NavLink>
+                  );
+                })}
               </nav>
             </motion.aside>
           </>

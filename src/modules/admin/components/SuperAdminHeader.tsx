@@ -10,6 +10,7 @@ import NavigationProgressBar from "@/components/shared/NavigationProgressBar";
 import { useAppDispatch, useAppSelector } from "@/hooks";
 import { selectCurrentUser, clearUser } from "@/features/userSlice";
 import { useNavigate } from "react-router-dom";
+import { getAppPath } from "@/utils/subdomain";
 import { ConfirmActionDialog } from "./shared/ConfirmActionDialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
@@ -136,7 +137,7 @@ export default function SuperAdminHeader({
                     variant="ghost"
                     size="sm"
                     className="w-full justify-start gap-2 h-9 text-sm"
-                    onClick={() => navigate("/settings")}
+                    onClick={() => navigate(getAppPath("/settings"))}
                   >
                     <User className="h-4 w-4" />
                     Profile
@@ -145,7 +146,7 @@ export default function SuperAdminHeader({
                     variant="ghost"
                     size="sm"
                     className="w-full justify-start gap-2 h-9 text-sm"
-                    onClick={() => navigate("/settings")}
+                    onClick={() => navigate(getAppPath("/settings"))}
                   >
                     <Settings className="h-4 w-4" />
                     Settings

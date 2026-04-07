@@ -28,6 +28,7 @@ import {
 } from "@/services/productApi";
 import { useDispatch } from "react-redux";
 import { clearProductDraft } from "@/features/productDraftSlice";
+import { getAppPath } from "@/utils/subdomain";
 
 export const productColumns: ColumnDef<IStoreProduct>[] = [
   /* ───────────── Product (LEFT ALIGNED) ───────────── */
@@ -242,7 +243,7 @@ export const productColumns: ColumnDef<IStoreProduct>[] = [
                 variant="ghost"
                 size="sm"
                 className="w-full justify-start gap-2"
-                onClick={() => navigate(`/product/${product.slug}`)}
+                onClick={() => navigate(getAppPath(`/product/${product.slug}`))}
               >
                 <Eye className="h-4 w-4" />
                 View
@@ -256,7 +257,7 @@ export const productColumns: ColumnDef<IStoreProduct>[] = [
                 onClick={() => {
                   // Clear any stale draft so the new product loads fresh
                   dispatch(clearProductDraft());
-                  navigate(`/products/${product.slug}/edit`);
+                  navigate(getAppPath(`/products/${product.slug}/edit`));
                 }}
               >
                 <Edit className="h-4 w-4" />

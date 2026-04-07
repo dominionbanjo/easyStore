@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Menu, Bell, Sun, Moon, LogOut, Home, Settings } from "lucide-react";
-import { getBaseDomain } from "@/utils/subdomain";
+import { getBaseDomain, getAppPath } from "@/utils/subdomain";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -132,7 +132,7 @@ export default function DashboardHeader({
               Go to Website
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link to="/settings" className="cursor-pointer">
+              <Link to={getAppPath("/settings")} className="cursor-pointer">
                 <Settings className="mr-2 h-4 w-4" />
                 Store Settings
               </Link>

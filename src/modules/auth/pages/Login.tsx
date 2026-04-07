@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import Cookies from "js-cookie";
 import { useLoginMutation, useGoogleLoginMutation } from "@/services/authApi";
-import { handleRoleRedirect } from "@/utils/subdomain";
+import { handleRoleRedirect, areSubdomainsDisabled } from "@/utils/subdomain";
 import { AUTH_ROUTES } from "@/routes/temp";
 import {
   LoginSchema,
@@ -47,6 +47,7 @@ export default function LoginPage() {
     (state: any) => state.user,
   );
   const googleButtonRef = useRef<HTMLDivElement>(null);
+  const showGoogleButton = !areSubdomainsDisabled();
 
   const [login, { isLoading }] = useLoginMutation();
   const [googleLogin] = useGoogleLoginMutation();
@@ -93,6 +94,7 @@ export default function LoginPage() {
 
   /* Google OAuth (TS-safe) */
   useEffect(() => {
+    if (!showGoogleButton) return;
     if (!googleButtonRef.current) return;
 
     // ✅ Type-safe guard
@@ -137,7 +139,7 @@ export default function LoginPage() {
     return () => {
       window.removeEventListener("resize", renderGoogleButton);
     };
-  }, [googleLogin, navigate, redirectTo]);
+  }, [googleLogin, navigate, redirectTo, showGoogleButton]);
 
   return (
     <AuthLayout
@@ -184,17 +186,21 @@ export default function LoginPage() {
       </FormProvider>
 
       {/* Divider */}
-      <div className="relative my-8 text-center">
-        <span className="absolute left-0 right-0 top-1/2 border-t border-border/50" />
-        <span className="relative bg-background px-3 text-xs uppercase tracking-wider text-muted-foreground font-medium">
-          or continue with
-        </span>
-      </div>
+      {showGoogleButton && (
+        <div className="relative my-8 text-center">
+          <span className="absolute left-0 right-0 top-1/2 border-t border-border/50" />
+          <span className="relative bg-background px-3 text-xs uppercase tracking-wider text-muted-foreground font-medium">
+            or continue with
+          </span>
+        </div>
+      )}
 
       {/* Google */}
-      <div className="flex justify-center">
-        <div ref={googleButtonRef} />
-      </div>
+      {showGoogleButton && (
+        <div className="flex justify-center">
+          <div ref={googleButtonRef} />
+        </div>
+      )}
 
       <div className="mt-8 text-center text-sm text-muted-foreground">
         Don’t have an account?{" "}

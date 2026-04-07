@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { motion } from "framer-motion";
 
 import { cn } from "@/lib/utils";
-import { getBaseDomain } from "@/utils/subdomain";
+import { getBaseDomain, areSubdomainsDisabled } from "@/utils/subdomain";
 import type { RootState } from "@/store";
 import LoadingScreen from "@/Loading";
 
@@ -25,12 +25,17 @@ export default function SuperAdminDashboardLayout() {
   const token = Cookies.get("token");
 
   useEffect(() => {
-    // 🚫 No token + not authenticated → redirect to landing page
+    // 🚫 No token + not authenticated → redirect to login
     if (!token && !isAuthenticated && !isLoading) {
       toast.error("Unauthorized access", {
         description: "Please login to access the admin dashboard",
       });
-      window.location.href = `${window.location.protocol}//${getBaseDomain()}/auth/login?redirect=${encodeURIComponent(window.location.pathname)}`;
+      const redirectPath = encodeURIComponent(window.location.pathname);
+      if (areSubdomainsDisabled()) {
+        navigate(`/auth/login?redirect=${redirectPath}`, { replace: true });
+      } else {
+        window.location.href = `${window.location.protocol}//${getBaseDomain()}/auth/login?redirect=${redirectPath}`;
+      }
       return;
     }
 
@@ -42,7 +47,11 @@ export default function SuperAdminDashboardLayout() {
       currentUser.account_type !== "admin"
     ) {
       toast.error("You do not have access to the admin dashboard");
-      window.location.href = `${window.location.protocol}//${getBaseDomain()}/`;
+      if (areSubdomainsDisabled()) {
+        navigate("/", { replace: true });
+      } else {
+        window.location.href = `${window.location.protocol}//${getBaseDomain()}/`;
+      }
     }
   }, [token, isAuthenticated, isLoading, currentUser, navigate]);
 

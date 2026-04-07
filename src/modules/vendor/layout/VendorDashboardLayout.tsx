@@ -6,7 +6,7 @@ import { toast } from "sonner"; // Keep toast as it's used for vendor-specific e
 
 import { cn } from "@/lib/utils";
 import type { RootState } from "@/store";
-import { getBaseDomain } from "@/utils/subdomain";
+import { getBaseDomain, areSubdomainsDisabled } from "@/utils/subdomain";
 
 import DashboardSidebar from "../components/DashboardSidebar";
 import DashboardHeader from "../components/DashboardHeader";
@@ -25,9 +25,14 @@ export default function VendorDashboardLayout() {
   const token = Cookies.get("token");
 
   useEffect(() => {
-    // 🚫 No token + not authenticated → redirect to landing page
+    // 🚫 No token + not authenticated → redirect to login
     if (!token && !isAuthenticated && !isLoading) {
-      window.location.href = `${window.location.protocol}//${getBaseDomain()}/auth/login?redirect=${encodeURIComponent(window.location.pathname)}`;
+      const redirectPath = encodeURIComponent(window.location.pathname);
+      if (areSubdomainsDisabled()) {
+        navigate(`/auth/login?redirect=${redirectPath}`, { replace: true });
+      } else {
+        window.location.href = `${window.location.protocol}//${getBaseDomain()}/auth/login?redirect=${redirectPath}`;
+      }
       return;
     }
 
@@ -39,7 +44,11 @@ export default function VendorDashboardLayout() {
       currentUser.account_type !== "vendor"
     ) {
       toast.error("You do not have access to the vendor dashboard");
-      window.location.href = `${window.location.protocol}//${getBaseDomain()}/`;
+      if (areSubdomainsDisabled()) {
+        navigate("/", { replace: true });
+      } else {
+        window.location.href = `${window.location.protocol}//${getBaseDomain()}/`;
+      }
     }
   }, [token, isAuthenticated, isLoading, currentUser, navigate]);
 

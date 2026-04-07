@@ -43,6 +43,9 @@ type Option = { label: string; value: string };
 interface SearchFiltersProps {
   className?: string;
   products?: IProduct[];
+  /** Aggregated variant combination options from the search API response.
+   *  Keys are option names (e.g. "Color", "Size"), values are unique sorted strings. */
+  filters?: Record<string, string[]>;
 }
 
 /* ───────────────── COMPONENTS ───────────────── */
@@ -62,7 +65,8 @@ import {
 
 export function SearchFiltersSidebar({
   className,
-  products = [],
+  products: _products = [],
+  filters = {},
 }: SearchFiltersProps) {
   return (
     <div className={cn("hidden lg:block w-full space-y-6", className)}>
@@ -84,7 +88,7 @@ export function SearchFiltersSidebar({
           <ResetButton />
         </div>
         <div className="max-h-[calc(100vh-180px)] overflow-y-auto custom-scrollbar">
-          <FilterContent products={products} />
+          <FilterContent filters={filters} />
         </div>
       </motion.div>
     </div>
@@ -93,8 +97,10 @@ export function SearchFiltersSidebar({
 
 export function MobileSearchFilters({
   products = [],
+  filters = {},
 }: {
   products?: IProduct[];
+  filters?: Record<string, string[]>;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [params] = useSearchParams();
@@ -158,7 +164,7 @@ export function MobileSearchFilters({
         <div className="overflow-y-auto custom-scrollbar flex-1">
           <FilterContent
             mobile
-            products={products}
+            filters={filters}
             onClose={() => setIsOpen(false)}
           />
         </div>
@@ -215,58 +221,40 @@ function ResetButton({
 
 function FilterContent({
   mobile,
-  products,
+  filters = {},
 }: {
   mobile?: boolean;
-  products: IProduct[];
+  filters?: Record<string, string[]>;
   onClose?: () => void;
 }) {
   const [params, setParams] = useSearchParams();
   const [stateOptions, setStateOptions] = useState<Option[]>([]);
 
-  // Calculate dynamic options from products
-  const { availableColors, availableSizes } = useMemo(() => {
-    const colorsMap = new Map<
-      string,
-      { label: string; value: string; hex: string }
-    >();
-    const sizesSet = new Set<string>();
+  // Derive available filter chips directly from the API-aggregated filters map.
+  // Each key is a variant combination attribute (e.g. "Color", "Size").
+  const availableColors = useMemo(
+    () =>
+      (filters["Color"] ?? []).map((name) => ({
+        label: name,
+        value: name,
+        hex: "#000000", // no hex from backend; CSS color-name fallback handled by browser
+      })),
+    [filters],
+  );
 
-    products.forEach((p) => {
-      // @ts-ignore - Backend sometimes returns varying structures
-      if (Array.isArray(p.colors)) {
-        p.colors.forEach((c: any) => {
-          let name = "";
-          let hex = "";
+  const availableSizes = useMemo(
+    () => filters["Size"] ?? [],
+    [filters],
+  );
 
-          if (typeof c === "object" && c.name) {
-            name = c.name;
-            hex = c.hex || "";
-          } else if (typeof c === "string") {
-            name = c;
-          }
-
-          if (name) {
-            const value = hex || name;
-            // Use name as key to ensure uniqueness for display, but value is hex if available
-            colorsMap.set(name, {
-              label: name,
-              value: value,
-              hex: hex || "#000000",
-            });
-          }
-        });
-      }
-      if (Array.isArray(p.sizes)) {
-        p.sizes.forEach((s) => sizesSet.add(s));
-      }
-    });
-
-    return {
-      availableColors: Array.from(colorsMap.values()),
-      availableSizes: Array.from(sizesSet),
-    };
-  }, [products]);
+  // All other option types (e.g. "Material", "Style") beyond Color & Size
+  const extraFilters = useMemo(
+    () =>
+      Object.entries(filters).filter(
+        ([key]) => key !== "Color" && key !== "Size",
+      ),
+    [filters],
+  );
 
   /* ───────────────── ANIMATION VARIANTS ───────────────── */
 
@@ -600,6 +588,50 @@ function FilterContent({
             </div>
           </Section>
         </motion.div>
+        {/* Extra variant filters (Material, Style, etc.) */}
+        {extraFilters.map(([key, values]) => (
+          <motion.div key={key} variants={itemVariants}>
+            <Section
+              title={key}
+              isActive={(params.get(key.toLowerCase()) ?? "").length > 0}
+              onClear={() => updateParam(key.toLowerCase(), undefined)}
+            >
+              <div className="flex flex-wrap gap-2">
+                {values.map((val) => {
+                  const paramKey = key.toLowerCase();
+                  const active = (params.get(paramKey) ?? "")
+                    .split(",")
+                    .includes(val);
+                  return (
+                    <div
+                      key={val}
+                      onClick={() => {
+                        const current = (params.get(paramKey) ?? "")
+                          .split(",")
+                          .filter(Boolean);
+                        const next = active
+                          ? current.filter((v) => v !== val)
+                          : [...current, val];
+                        updateParam(
+                          paramKey,
+                          next.length > 0 ? next.join(",") : undefined,
+                        );
+                      }}
+                      className={cn(
+                        "cursor-pointer text-[10px] font-black uppercase border rounded-xl h-10 min-w-[44px] px-3 flex items-center justify-center transition-all",
+                        active
+                          ? "bg-primary text-white border-primary shadow-lg shadow-primary/20"
+                          : "bg-white text-muted-foreground border-border/50 hover:border-primary/30 hover:bg-primary/[0.02]",
+                      )}
+                    >
+                      {val}
+                    </div>
+                  );
+                })}
+              </div>
+            </Section>
+          </motion.div>
+        ))}
       </motion.div>
     </FormProvider>
   );

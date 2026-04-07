@@ -2,8 +2,34 @@
  * Utility functions for handling domains and subdomains
  */
 
+/**
+ * Checks if subdomain-based routing is explicitly disabled via env.
+ * This is useful for localhost development where subdomains like 
+ * vendor.localhost are tricky to set up.
+ */
+export const areSubdomainsDisabled = (): boolean => {
+  return (import.meta.env as any).VITE_DISABLE_SUBDOMAIN === "true";
+};
+
 export const getSubdomain = (): string | null => {
   const hostname = window.location.hostname;
+  const path = window.location.pathname;
+
+  // If subdomains are disabled, we infer the "subdomain" from the path prefix
+  if (areSubdomainsDisabled()) {
+    if (path.startsWith("/vendor")) return "vendor";
+    if (path.startsWith("/admin")) return "admin";
+    
+    // For store subdomains, they usually appear as /stores/:slug
+    // If we are on a path like /stores/my-store, we can treat 'my-store' as the subdomain
+    if (path.startsWith("/stores/")) {
+      const parts = path.split("/");
+      if (parts.length >= 3 && parts[2]) {
+        return parts[2];
+      }
+    }
+    return null;
+  }
   
   if (hostname === "localhost" || hostname.startsWith("127.0.0.1")) return null;
 
@@ -40,6 +66,12 @@ export const getSubdomain = (): string | null => {
 export const getBaseDomain = (): string => {
   let host = window.location.host; // Host includes the port
   const hostname = window.location.hostname;
+  
+  // If subdomains are disabled, the base domain is just the host
+  if (areSubdomainsDisabled()) {
+    return host;
+  }
+
   const subdomain = getSubdomain();
   
   if (subdomain) {
@@ -74,6 +106,7 @@ export const handleRoleRedirect = (
   const accountType = user?.account_type;
   const currentSubdomain = getSubdomain();
   const baseDomain = getBaseDomain();
+  const subdomainsDisabled = areSubdomainsDisabled();
   
   // Add any existing redirect param if we are using the fallback array
   const existingRedirect = new URLSearchParams(window.location.search).get("redirect");
@@ -89,15 +122,45 @@ export const handleRoleRedirect = (
     if (currentSubdomain === "vendor") {
       navigate(existingRedirect || "/", { replace: true });
     } else {
-      window.location.href = `${window.location.protocol}//vendor.${baseDomain}/${queryString}`;
+      if (subdomainsDisabled) {
+        navigate(`/vendor${queryString}`, { replace: true });
+      } else {
+        window.location.href = `${window.location.protocol}//vendor.${baseDomain}/${queryString}`;
+      }
     }
   } else if (accountType === "admin") {
     if (currentSubdomain === "admin") {
       navigate(existingRedirect || "/", { replace: true });
     } else {
-      window.location.href = `${window.location.protocol}//admin.${baseDomain}/${queryString}`;
+      if (subdomainsDisabled) {
+        navigate(`/admin${queryString}`, { replace: true });
+      } else {
+        window.location.href = `${window.location.protocol}//admin.${baseDomain}/${queryString}`;
+      }
     }
   } else {
     navigate(fallbackRedirect || "/", { replace: true });
   }
+};
+
+/**
+ * Resolves a given route path into an application-aware path.
+ * If subdomains are disabled (e.g., localhost), it prefixes dashboard paths
+ * with the appropriate context (/vendor or /admin).
+ */
+export const getAppPath = (path: string): string => {
+  // If subdomains are enabled, or path is not absolute, return as-is
+  if (!areSubdomainsDisabled() || !path.startsWith("/")) return path;
+
+  // For localhost routing, we check the current "effective" subdomain (from path)
+  const subdomain = getSubdomain();
+
+  // If we're not in a dashboard context, return as-is
+  if (subdomain !== "vendor" && subdomain !== "admin") return path;
+
+  // Avoid double-prefixing if the path already has it
+  if (path.startsWith("/vendor") || path.startsWith("/admin")) return path;
+
+  // Prefix with the current context
+  return `/${subdomain}${path === "/" ? "" : path}`;
 };

@@ -41,6 +41,7 @@ import { productToDraft } from "../utils/productToDraft";
 import { useProductExtras } from "../components/add-products/useProductExtras";
 import { useAddProductForm } from "../components/add-products/useAddProductForm";
 import { useStoreSetup } from "../hooks/useStoreSetup";
+import { getAppPath } from "@/utils/subdomain";
 import { SetupEnforcementModal } from "../components/modals/SetupEnforcementModal";
 import { BasicInfoSection } from "../components/add-products/BasicInfoSection";
 import { ActionsSection } from "../components/add-products/ActionsSection";
@@ -146,7 +147,7 @@ export default function AddProductPage() {
       }),
     );
 
-    navigate("/products/preview");
+    navigate(getAppPath("/products/preview"));
   };
 
   /* ───────── SUBMIT ───────── */
@@ -178,7 +179,7 @@ export default function AddProductPage() {
       }
 
       dispatch(clearProductDraft());
-      navigate("/products");
+      navigate(getAppPath("/products"));
     } catch (err: any) {
       const errorMsg =
         err?.data?.message ||
@@ -219,7 +220,7 @@ export default function AddProductPage() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 px-2">
           <div className="space-y-3">
             <Link
-              to="/products"
+              to={getAppPath("/products")}
               className="inline-flex items-center gap-2 text-sm font-bold text-muted-foreground hover:text-primary transition-colors group"
             >
               <div className="p-1.5 rounded-lg bg-muted group-hover:bg-primary/10 transition-colors">
@@ -438,7 +439,7 @@ export default function AddProductPage() {
         open={showSetupModal}
         onOpenChange={(open) => {
           setShowSetupModal(open);
-          if (!open) navigate("/products");
+          if (!open) navigate(getAppPath("/products"));
         }}
       />
     </FormProvider>

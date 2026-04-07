@@ -12,7 +12,7 @@ import {
   FileText,
   LayoutGrid,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -20,6 +20,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 
 import { useRegisterMutation } from "@/services/authApi";
 import { useLazyCheckStoreNameQuery } from "@/services/storeApi";
+import { useDebounce } from "@/hooks";
 
 import {
   SignupSchema,
@@ -32,13 +33,35 @@ import { cn } from "@/lib/utils";
 import { AUTH_ROUTES } from "@/routes/temp";
 import { AuthLayout } from "../components/AuthLayout";
 import { PasswordStrengthMeter } from "../components/PasswordStrengthMeter";
+import { useGoogleLoginMutation } from "@/services/authApi";
+import { areSubdomainsDisabled, handleRoleRedirect } from "@/utils/subdomain";
+
+/* -------------------- Google button width helper -------------------- */
+const getGoogleButtonWidth = () => {
+  if (window.innerWidth < 360) return 260;
+  if (window.innerWidth < 480) return 280;
+  if (window.innerWidth < 640) return 300;
+  return 340;
+};
+
+/* -------------------- Type guard for Google -------------------- */
+function hasGoogleIdentity(win: Window): win is Window & {
+  google: { accounts: { id: { initialize: Function; renderButton: Function } } };
+} {
+  return Boolean((win as any).google?.accounts?.id);
+}
 
 export default function SignupPage() {
   const navigate = useNavigate();
   const [registerUser, { isLoading }] = useRegisterMutation();
+  const [googleLogin] = useGoogleLoginMutation();
   const [searchParams] = useSearchParams();
   const role = searchParams.get("role");
   const redirectTo = searchParams.get("redirect") || "/";
+  const googleButtonRef = useRef<HTMLDivElement>(null);
+  // Only show Google button when subdomains ARE enabled (i.e. production)
+  // Google OAuth blocks localhost origins, so we hide it there.
+  const showGoogleButton = !areSubdomainsDisabled();
 
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(SignupSchema),
@@ -62,6 +85,8 @@ export default function SignupPage() {
   const storeName = watch("store_name");
   const password = watch("password"); // Added for strength meter
 
+  const debouncedStoreName = useDebounce(storeName, 500);
+
   /* ───────── Store name lookup ───────── */
   const [checkStoreName] = useLazyCheckStoreNameQuery();
 
@@ -69,6 +94,7 @@ export default function SignupPage() {
     "idle" | "checking" | "available" | "taken"
   >("idle");
 
+  // Effect 1: Handle "Checking..." status immediately
   useEffect(() => {
     if (accountType !== "vendor") return;
 
@@ -77,21 +103,32 @@ export default function SignupPage() {
       return;
     }
 
-    setStoreNameStatus("checking");
+    if (storeName !== debouncedStoreName) {
+      setStoreNameStatus("checking");
+    }
+  }, [storeName, debouncedStoreName, accountType]);
 
-    const timeout = setTimeout(async () => {
+  // Effect 2: Run the actual check when debounced
+  useEffect(() => {
+    if (
+      accountType !== "vendor" ||
+      !debouncedStoreName ||
+      debouncedStoreName.trim().length < 3
+    ) {
+      return;
+    }
+
+    const checkAvailability = async () => {
       try {
-        // ✅ SUCCESS = AVAILABLE
-        await checkStoreName({ name: storeName }).unwrap();
+        await checkStoreName({ name: debouncedStoreName }).unwrap();
         setStoreNameStatus("available");
       } catch {
-        // ❌ ERROR = TAKEN
         setStoreNameStatus("taken");
       }
-    }, 500);
+    };
 
-    return () => clearTimeout(timeout);
-  }, [storeName, accountType, checkStoreName]);
+    checkAvailability();
+  }, [debouncedStoreName, accountType, checkStoreName]);
 
   const isStoreNameInvalid =
     accountType === "vendor" && storeNameStatus === "taken";
@@ -112,6 +149,48 @@ export default function SignupPage() {
       toast.error(error?.data?.message || "Signup failed. Please try again.");
     }
   };
+
+  /* Google OAuth */
+  useEffect(() => {
+    if (!showGoogleButton) return;
+    if (!googleButtonRef.current) return;
+    if (!hasGoogleIdentity(window)) return;
+
+    const google = window.google;
+
+    const renderGoogleButton = () => {
+      if (!googleButtonRef.current) return;
+      googleButtonRef.current.innerHTML = "";
+
+      google.accounts.id.initialize({
+        client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID!,
+        callback: async (response: any) => {
+          try {
+            const token = response.credential;
+            const res: any = await googleLogin({ token }).unwrap();
+            const user = res?.data?.user || res?.user;
+            toast.success("Signed up with Google!");
+            handleRoleRedirect(user, redirectTo, navigate);
+          } catch (err: any) {
+            toast.error(
+              err?.data?.message || err?.message || "Google sign-up failed",
+            );
+          }
+        },
+      });
+
+      google.accounts.id.renderButton(googleButtonRef.current, {
+        theme: "outline",
+        size: "large",
+        shape: "pill",
+        width: getGoogleButtonWidth(),
+      });
+    };
+
+    renderGoogleButton();
+    window.addEventListener("resize", renderGoogleButton);
+    return () => window.removeEventListener("resize", renderGoogleButton);
+  }, [googleLogin, navigate, redirectTo, showGoogleButton]);
 
   return (
     <AuthLayout
@@ -311,6 +390,21 @@ export default function SignupPage() {
           </div>
         </form>
       </FormProvider>
+
+      {/* Google OAuth — only shown in production where subdomains work */}
+      {showGoogleButton && (
+        <>
+          <div className="relative my-6 text-center">
+            <span className="absolute left-0 right-0 top-1/2 border-t border-border/50" />
+            <span className="relative bg-background px-3 text-xs uppercase tracking-wider text-muted-foreground font-medium">
+              or continue with
+            </span>
+          </div>
+          <div className="flex justify-center">
+            <div ref={googleButtonRef} />
+          </div>
+        </>
+      )}
 
       <div className="mt-8 text-center text-sm text-muted-foreground">
         Already have an account?{" "}

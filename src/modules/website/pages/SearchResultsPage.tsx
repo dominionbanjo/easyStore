@@ -60,6 +60,7 @@ export default function SearchResultsPage() {
 
   const products = data?.data.items ?? [];
   const pagination = data?.data.pagination;
+  const filters = data?.data.filters ?? {};
 
   return (
     <section className="mx-auto px-4 py-8 bg-white dark:bg-neutral-950 transition-colors duration-300 min-h-screen">
@@ -71,7 +72,7 @@ export default function SearchResultsPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-8 mt-6">
         {/* Sidebar */}
-        <SearchFiltersSidebar products={products} />
+        <SearchFiltersSidebar products={products} filters={filters} />
 
         {/* Results */}
         <SearchResultsGrid

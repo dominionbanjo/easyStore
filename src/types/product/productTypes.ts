@@ -236,6 +236,11 @@ export interface ISearchProductsResponse {
   data: {
     items: IProduct[];
     pagination: IPagination;
+    /** Aggregated variant combination options across all results.
+     *  Keys are combination attribute names (e.g. "Color", "Size"),
+     *  values are the sorted unique values found in the result set.
+     *  Used to dynamically populate sidebar filter chips. */
+    filters: Record<string, string[]>;
   };
 }
 

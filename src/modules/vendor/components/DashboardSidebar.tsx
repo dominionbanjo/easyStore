@@ -16,6 +16,7 @@ import { NavLink } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { StoreSetupTracker } from "./shared/StoreSetupTracker";
+import { areSubdomainsDisabled } from "@/utils/subdomain";
 
 const menuItems = [
   { label: "Dashboard", icon: LayoutDashboard, to: "/", exact: true },
@@ -79,33 +80,38 @@ export default function DashboardSidebar({
         </div>
 
         <nav className="flex flex-col gap-1 px-2 mt-4">
-          {menuItems.map(({ label, icon: Icon, to, exact }) => (
-            <NavLink
-              key={label}
-              to={to}
-              end={exact}
-              title={isCollapsed ? label : ""}
-              className={({ isActive }) =>
-                cn(
-                  "flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors",
-                  "text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                  isActive && "bg-muted text-foreground font-medium",
-                  isCollapsed && "justify-center px-0",
-                )
-              }
-            >
-              <Icon className="h-5 w-5 shrink-0" />
-              {!isCollapsed && (
-                <motion.span
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  className="truncate"
-                >
-                  {label}
-                </motion.span>
-              )}
-            </NavLink>
-          ))}
+          {menuItems.map(({ label, icon: Icon, to, exact }) => {
+            const pathPrefix = areSubdomainsDisabled() ? "/vendor" : "";
+            const finalPath = to === "/" ? (pathPrefix || "/") : `${pathPrefix}${to}`;
+
+            return (
+              <NavLink
+                key={label}
+                to={finalPath}
+                end={exact}
+                title={isCollapsed ? label : ""}
+                className={({ isActive }) =>
+                  cn(
+                    "flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors",
+                    "text-muted-foreground hover:text-foreground hover:bg-muted/50",
+                    isActive && "bg-muted text-foreground font-medium",
+                    isCollapsed && "justify-center px-0",
+                  )
+                }
+              >
+                <Icon className="h-5 w-5 shrink-0" />
+                {!isCollapsed && (
+                  <motion.span
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    className="truncate"
+                  >
+                    {label}
+                  </motion.span>
+                )}
+              </NavLink>
+            );
+          })}
         </nav>
 
         {!isCollapsed && (
@@ -146,24 +152,29 @@ export default function DashboardSidebar({
               </div>
 
               <nav className="flex flex-col gap-1 px-2 mt-4">
-                {menuItems.map(({ label, icon: Icon, to, exact }) => (
-                  <NavLink
-                    key={label}
-                    to={to}
-                    end={exact}
-                    onClick={onToggle}
-                    className={({ isActive }) =>
-                      cn(
-                        "flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors",
-                        "text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "bg-muted text-foreground font-medium",
-                      )
-                    }
-                  >
-                    <Icon className="h-5 w-5 shrink-0" />
-                    <span>{label}</span>
-                  </NavLink>
-                ))}
+                {menuItems.map(({ label, icon: Icon, to, exact }) => {
+                  const pathPrefix = areSubdomainsDisabled() ? "/vendor" : "";
+                  const finalPath = to === "/" ? (pathPrefix || "/") : `${pathPrefix}${to}`;
+
+                  return (
+                    <NavLink
+                      key={label}
+                      to={finalPath}
+                      end={exact}
+                      onClick={onToggle}
+                      className={({ isActive }) =>
+                        cn(
+                          "flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors",
+                          "text-muted-foreground hover:text-foreground hover:bg-muted/50",
+                          isActive && "bg-muted text-foreground font-medium",
+                        )
+                      }
+                    >
+                      <Icon className="h-5 w-5 shrink-0" />
+                      <span>{label}</span>
+                    </NavLink>
+                  );
+                })}
               </nav>
 
               <div className="mt-auto p-4 border-t border-border/20">

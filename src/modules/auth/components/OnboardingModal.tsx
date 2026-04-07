@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { handleRoleRedirect } from "@/utils/subdomain";
 import { useForm, FormProvider } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,7 +18,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { FormInput } from "@/components/shared/form/FormInput";
 import { FormSelect } from "@/components/shared/form/FormSelect";
-import { useAppSelector, useAppDispatch } from "@/hooks";
+import {
+  useAppSelector,
+  useAppDispatch,
+  useDebounce,
+} from "@/hooks";
 import {
   selectCurrentUser,
   setShowOnboardingModal,
@@ -41,6 +47,7 @@ type CreateStoreValues = z.infer<typeof CreateStoreSchema>;
 export function OnboardingModal() {
   const user = useAppSelector(selectCurrentUser);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const showViaRedux = useAppSelector(selectShowOnboardingModal);
   const initialStep = useAppSelector(selectOnboardingModalStep);
 
@@ -62,6 +69,7 @@ export function OnboardingModal() {
 
   const { watch, handleSubmit } = form;
   const storeName = watch("store_name");
+  const debouncedStoreName = useDebounce(storeName, 500);
 
   // Prevent showing if user is already a vendor
   const isVendor = user?.account_type === "vendor";
@@ -96,24 +104,42 @@ export function OnboardingModal() {
   }, [showViaRedux, isVendor, initialStep]);
 
   /* ───────── STORE NAME CHECK ───────── */
+  // Effect 1: Handle "Checking..." state immediately as user types
   useEffect(() => {
-    if (step !== "store-form" || !storeName || storeName.trim().length < 3) {
+    if (step !== "store-form") return;
+
+    if (!storeName || storeName.trim().length < 3) {
       setStoreNameStatus("idle");
       return;
     }
 
-    setStoreNameStatus("checking");
-    const timeout = setTimeout(async () => {
+    // Set checking status as soon as we have enough characters and they are different from debounced
+    if (storeName !== debouncedStoreName) {
+      setStoreNameStatus("checking");
+    }
+  }, [storeName, debouncedStoreName, step]);
+
+  // Effect 2: Run the actual check when name is debounced
+  useEffect(() => {
+    if (
+      step !== "store-form" ||
+      !debouncedStoreName ||
+      debouncedStoreName.trim().length < 3
+    ) {
+      return;
+    }
+
+    const checkAvailability = async () => {
       try {
-        await checkStoreName({ name: storeName }).unwrap();
+        await checkStoreName({ name: debouncedStoreName }).unwrap();
         setStoreNameStatus("available");
       } catch {
         setStoreNameStatus("taken");
       }
-    }, 500);
+    };
 
-    return () => clearTimeout(timeout);
-  }, [storeName, step, checkStoreName]);
+    checkAvailability();
+  }, [debouncedStoreName, step, checkStoreName]);
 
   /* ───────── ACTIONS ───────── */
   const markAsSeen = () => {
@@ -141,8 +167,13 @@ export function OnboardingModal() {
       }).unwrap();
 
       toast.success("Store created successfully!");
-      window.location.reload();
       markAsSeen();
+      
+      handleRoleRedirect(
+        { ...user, account_type: "vendor" },
+        "/",
+        navigate
+      );
     } catch (error: any) {
       toast.error(error?.data?.message || "Failed to create store");
     }
@@ -291,18 +322,18 @@ export function OnboardingModal() {
                         ]}
                       />
 
-                      <div className="pt-6 flex flex-col sm:flex-row gap-3 sm:gap-4">
+                      <div className="pt-6 grid grid-cols-2 gap-4">
                         <Button
                           type="button"
                           variant="outline"
-                          className="flex-1 h-12 rounded-2xl font-bold uppercase tracking-widest text-xs border-muted-foreground/20 order-2 sm:order-1"
+                          className="h-12 rounded-full font-semibold text-sm border-muted-foreground/20"
                           onClick={() => setStep("role-selection")}
                         >
                           Back
                         </Button>
                         <Button
                           type="submit"
-                          className="flex-1 h-12 rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl shadow-primary/20 order-1 sm:order-2"
+                          className="h-12 rounded-full font-semibold text-sm shadow-lg shadow-primary/20"
                           isLoading={isLoading}
                           disabled={
                             storeNameStatus === "taken" ||

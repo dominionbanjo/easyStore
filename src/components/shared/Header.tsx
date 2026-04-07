@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import SmartLink from "./SmartLink";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "@/store";
-import { getBaseDomain, getSubdomain } from "@/utils/subdomain";
+import { getBaseDomain, getSubdomain, areSubdomainsDisabled } from "@/utils/subdomain";
 import { useLogoutMutation } from "@/services/authApi";
 import { clearLocalCart } from "@/features/cartSlice";
 import { Button } from "@/components/ui/button";
@@ -308,7 +308,11 @@ export default function Header() {
                           <button
                             onClick={() => {
                               const target = user.account_type === "vendor" ? "vendor" : "admin";
-                              window.location.href = `${window.location.protocol}//${target}.${baseDomain}/`;
+                              if (areSubdomainsDisabled()) {
+                                navigate(`/${target}`);
+                              } else {
+                                window.location.href = `${window.location.protocol}//${target}.${baseDomain}/`;
+                              }
                               setMenuOpen(false);
                             }}
                             className="flex items-center gap-3 text-primary py-2 w-full font-bold"
@@ -546,7 +550,11 @@ export default function Header() {
                       <button
                         onClick={() => {
                           const target = user.account_type === "vendor" ? "vendor" : "admin";
-                          window.location.href = `${window.location.protocol}//${target}.${baseDomain}/`;
+                          if (areSubdomainsDisabled()) {
+                            navigate(`/${target}`);
+                          } else {
+                            window.location.href = `${window.location.protocol}//${target}.${baseDomain}/`;
+                          }
                           setProfileOpen(false);
                         }}
                         className="flex items-center gap-3 px-2 py-1.5 text-sm w-full text-left hover:bg-gray-100 dark:hover:bg-neutral-800 rounded transition-colors"
