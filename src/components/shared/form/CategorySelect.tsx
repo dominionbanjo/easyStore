@@ -9,6 +9,9 @@ import {
   Check,
   History,
   X,
+  Plus,
+  Loader2,
+  AlertCircle,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -19,13 +22,18 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
   DialogTitle,
   DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog";
+import { toast } from "sonner";
+import { motion, AnimatePresence } from "framer-motion";
 
-import { useLazyGetCategoriesQuery } from "@/services/productDetailsApi";
+import { extractErrorMessage } from "@/utils/errorHandler";
+import {
+  useLazyGetCategoriesQuery,
+  useCreateCategoryMutation,
+} from "@/services/productDetailsApi";
 import type { ICategory } from "@/types/category/categoryTypes";
 
 const STORAGE_KEY = "last_selected_category";
@@ -43,28 +51,76 @@ export function CategorySelect({
   className,
   icon,
 }: CategorySelectProps) {
-  const { control, setValue } = useFormContext();
+  const {
+    control,
+    setValue,
+    formState: { errors },
+  } = useFormContext();
+
+  const error = (errors as any)?.[name]?.message as string | undefined;
 
   const [loadCategories, { data, isLoading }] = useLazyGetCategoriesQuery();
+  const [createCategory, { isLoading: isCreating }] =
+    useCreateCategoryMutation();
 
   const [open, setOpen] = useState(false);
   const [expanded, setExpanded] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [lastUsed, setLastUsed] = useState<string | null>(null);
 
+  // Quick Add State
+  const [showQuickAdd, setShowQuickAdd] = useState(false);
+  const [newCatName, setNewCatName] = useState("");
+  const [newCatParentId, setNewCatParentId] = useState<string | null>(null);
+
   const categories: ICategory[] = data?.data ?? [];
 
   /* ───────── LOAD ───────── */
   useEffect(() => {
-    loadCategories({});
+    if (open) {
+      loadCategories({});
+    }
+  }, [open, loadCategories]);
+
+  useEffect(() => {
     setLastUsed(localStorage.getItem(STORAGE_KEY));
-  }, [loadCategories]);
+  }, []);
 
   function selectCategory(id: string) {
     setValue(name, id, { shouldValidate: true });
     localStorage.setItem(STORAGE_KEY, id);
     setLastUsed(id);
     setOpen(false);
+  }
+
+  /* ───────── HANDLE QUICK ADD ───────── */
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  async function handleQuickAdd() {
+    if (!newCatName.trim() || isSubmitting) return;
+
+    setIsSubmitting(true);
+    try {
+      const res = await createCategory({
+        name: newCatName.trim(),
+        parent_id: newCatParentId,
+      }).unwrap();
+
+      if (res?.data?.id) {
+        toast.success("Category created successfully!");
+        selectCategory(res.data.id);
+        setNewCatName("");
+        setNewCatParentId(null);
+        setShowQuickAdd(false);
+        loadCategories({}); // Refresh list
+      } else {
+        throw new Error("Invalid response from server");
+      }
+    } catch (err: any) {
+      toast.error(extractErrorMessage(err, "Failed to create category"));
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   /* ───────── FIND LAST USED CATEGORY ───────── */
@@ -101,8 +157,6 @@ export function CategorySelect({
         );
 
         if (parentMatches || childMatches.length) {
-          // If parent matches, show all its children so they can be selected.
-          // If only children match, only show matching children.
           return {
             ...c,
             children: parentMatches ? c.children : childMatches,
@@ -115,18 +169,26 @@ export function CategorySelect({
   }, [categories, search]);
 
   function getSelectedLabel(value?: string) {
+    if (!value) return "Select category";
     for (const c of categories) {
       if (c.id === value) return c.name;
       for (const ch of c.children) {
         if (ch.id === value) return `${c.name} / ${ch.name}`;
       }
     }
-    return "Select category";
+    return "Selected Category";
   }
 
   return (
-    <div className={cn("space-y-1.5 relative", className)}>
-      <Label className="font-medium text-[15px]">{label}</Label>
+    <div className={cn("flex flex-col gap-1.5 group", className)}>
+      {label && (
+        <Label
+          htmlFor={name}
+          className="text-sm font-medium text-foreground group-focus-within:text-primary transition-colors"
+        >
+          {label}
+        </Label>
+      )}
 
       <Controller
         name={name}
@@ -134,206 +196,345 @@ export function CategorySelect({
         render={({ field }) => (
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-              <div className="relative group cursor-pointer">
+              <button
+                type="button"
+                className={cn(
+                  "w-full h-12 rounded-xl border border-muted-foreground/10 bg-muted/20 px-3 py-[10px] text-[15px] shadow-xs transition-colors focus:bg-background relative text-left",
+                  !field.value && "text-muted-foreground",
+                  icon ? "pl-11" : "px-4",
+                  error &&
+                    "border-destructive focus-visible:ring-destructive/20",
+                )}
+              >
                 {icon && (
                   <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors">
                     {icon}
                   </div>
                 )}
-                <button
-                  type="button"
-                  className={cn(
-                    "w-full h-12 rounded-xl border px-3 flex items-center justify-between text-left text-[15px] transition-all duration-200 bg-muted/20 border-muted-foreground/10 hover:border-primary/30",
-                    icon ? "pl-11" : "px-4",
-                    !field.value && "text-muted-foreground",
-                  )}
-                >
-                  <span className="truncate">
-                    {getSelectedLabel(field.value)}
-                  </span>
-                  <ChevronDown className="h-4 w-4 opacity-60" />
-                </button>
-              </div>
+                <span className="truncate">
+                  {getSelectedLabel(field.value)}
+                </span>
+                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 opacity-40" />
+              </button>
             </DialogTrigger>
 
-            <DialogContent
-              showCloseButton={false}
-              className="max-w-4xl p-0 overflow-hidden rounded-[2.5rem] border-none shadow-2xl h-[85vh] min-h-[600px] flex flex-col"
-            >
-              <DialogHeader className="p-8 pb-4 shrink-0 flex flex-row items-center justify-between space-y-0">
-                <DialogTitle className="text-2xl font-black uppercase tracking-tight flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-2xl bg-primary/10 flex items-center justify-center">
-                    <FolderTree className="h-5 w-5 text-primary" />
+            <DialogContent className="max-w-5xl p-0 overflow-hidden sm:rounded-3xl border-none shadow-2xl h-full sm:h-[85vh] sm:min-h-[600px] flex flex-col bg-background/95 backdrop-blur-xl">
+              {/* Header */}
+              <div className="p-5 sm:p-8 pb-4 shrink-0 flex flex-row items-center justify-between">
+                <DialogTitle className="text-xl sm:text-3xl font-black uppercase tracking-tighter flex items-center gap-3 sm:gap-4">
+                  <div className="h-10 w-10 sm:h-14 sm:w-14 rounded-lg sm:rounded-[1.25rem] bg-primary shadow-lg shadow-primary/20 flex items-center justify-center">
+                    <FolderTree className="h-5 w-5 sm:h-7 sm:w-7 text-white" />
                   </div>
-                  Choose Category
+                  <div className="flex flex-col gap-0.5">
+                    <span>Choose Category</span>
+                    <span className="text-[8px] sm:text-[10px] font-bold text-muted-foreground tracking-widest uppercase">
+                      Organize your store products
+                    </span>
+                  </div>
                 </DialogTitle>
 
                 <DialogClose asChild>
                   <Button
-                    variant="ghost"
-                    size="sm"
-                    className="rounded-xl h-9 px-4 font-black uppercase tracking-widest text-[10px] bg-muted/30 hover:bg-muted/50 border border-muted-foreground/10 flex items-center gap-2 group transition-all"
+                    type="button"
+                    variant="secondary"
+                    className="rounded-full h-10 w-10 p-0 bg-muted hover:bg-muted-foreground/10 border-none transition-all group"
                   >
-                    <X className="h-3 w-3 text-muted-foreground group-hover:text-foreground transition-colors" />
-                    Close
+                    <X className="h-5 w-5 text-muted-foreground group-hover:text-foreground transition-colors" />
                   </Button>
                 </DialogClose>
-              </DialogHeader>
+              </div>
 
-              <div className="px-8 pb-3 shrink-0">
+              {/* Search & Tabs */}
+              <div className="px-8 pb-4 shrink-0 space-y-4">
                 <div className="relative group">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
                   <Input
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    placeholder="Search categories..."
-                    className="pl-11 h-12 rounded-2xl bg-muted/20 border-muted-foreground/10 focus-visible:ring-primary/20 transition-all font-medium"
+                    placeholder="Search master categories or sub-categories..."
+                    className="pl-12 h-12 sm:h-14 rounded-xl sm:rounded-2xl bg-muted/30 border-none focus-visible:ring-2 focus-visible:ring-primary/20 transition-all font-bold text-base sm:text-lg placeholder:text-muted-foreground/50 shadow-inner"
                   />
+                  {search && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 rounded-xl h-10 w-10 hover:bg-muted"
+                      onClick={() => setSearch("")}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  )}
                 </div>
 
-                {lastUsedLabel && !search && (
-                  <button
-                    type="button"
-                    onClick={() => selectCategory(lastUsedLabel.id)}
-                    className="w-full flex items-center gap-3 px-4 py-3 mt-3 rounded-2xl bg-primary/5 hover:bg-primary/10 border border-primary/10 text-sm transition-all"
-                  >
-                    <History className="h-4 w-4 text-primary" />
-                    <span className="truncate font-bold uppercase tracking-widest text-[10px]">
-                      {lastUsedLabel.label}
-                    </span>
-                    <span className="ml-auto text-[9px] font-black uppercase tracking-widest text-primary opacity-60">
-                      Recent
-                    </span>
-                  </button>
-                )}
+                {/* Last Used / Recent */}
+                <AnimatePresence>
+                  {lastUsedLabel && !search && !showQuickAdd && (
+                    <motion.button
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      type="button"
+                      onClick={() => selectCategory(lastUsedLabel.id)}
+                      className="w-full flex items-center gap-4 px-5 py-4 rounded-2xl bg-primary/[0.03] hover:bg-primary/[0.08] border border-primary/10 transition-all group"
+                    >
+                      <div className="h-8 w-8 rounded-xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <History className="h-4 w-4 text-primary" />
+                      </div>
+                      <div className="flex flex-col text-left">
+                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60">
+                          Recently Used
+                        </span>
+                        <span className="text-sm font-bold text-foreground">
+                          {lastUsedLabel.label}
+                        </span>
+                      </div>
+                      <Plus className="ml-auto h-4 w-4 text-primary opacity-40 group-hover:translate-x-1 transition-transform" />
+                    </motion.button>
+                  )}
+                </AnimatePresence>
               </div>
 
-              <div className="px-8 flex-1 overflow-y-auto custom-scrollbar min-h-0 py-4">
-                {isLoading && (
-                  <div className="space-y-3">
-                    <Skeleton className="h-12 w-full rounded-2xl" />
-                    <Skeleton className="h-12 w-full rounded-2xl" />
-                    <Skeleton className="h-12 w-full rounded-2xl" />
-                  </div>
-                )}
+              {/* Main Content Areas */}
+              <div className="flex-1 overflow-hidden flex flex-col px-4 sm:px-8 pb-4 sm:pb-8">
+                <div className="flex-1 bg-muted/20 rounded-2xl sm:rounded-[2rem] border border-border/40 overflow-hidden flex flex-col">
+                  {/* Category List */}
+                  <div className="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-3">
+                    {isLoading ? (
+                      <div className="space-y-4">
+                        {[1, 2, 3, 4].map((i) => (
+                          <Skeleton
+                            key={i}
+                            className="h-20 w-full rounded-2xl"
+                          />
+                        ))}
+                      </div>
+                    ) : filtered.length === 0 ? (
+                      <div className="flex flex-col items-center justify-center p-12 text-center space-y-4 h-full">
+                        <div className="h-20 w-20 rounded-full bg-muted/40 flex items-center justify-center">
+                          <AlertCircle className="h-10 w-10 text-muted-foreground opacity-30" />
+                        </div>
+                        <div className="space-y-1">
+                          <p className="font-black uppercase tracking-widest text-sm text-foreground/60">
+                            No categories found
+                          </p>
+                          <p className="text-xs font-medium text-muted-foreground max-w-[240px]">
+                            We couldn&apos;t find any results for &quot;{search}
+                            &quot;. Try a different term or add it below.
+                          </p>
+                        </div>
+                      </div>
+                    ) : (
+                      filtered.map((cat) => {
+                        const isExpanded =
+                          expanded === cat.id || search.length > 0;
+                        const hasChildren = cat.children.length > 0;
+                        const hasSelectedChild = cat.children.some(
+                          (ch) => ch.id === field.value,
+                        );
 
-                {!isLoading && filtered.length === 0 && (
-                  <div className="p-12 text-center">
-                    <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest">
-                      No categories found
-                    </p>
-                  </div>
-                )}
-
-                {!isLoading &&
-                  filtered.map((cat) => {
-                    const isOpen = expanded === cat.id || search.length > 0;
-                    const hasChildren = cat.children.length > 0;
-                    const hasSelectedChild = cat.children.some(
-                      (ch) => ch.id === field.value,
-                    );
-
-                    return (
-                      <div key={cat.id} className="mb-2">
-                        <button
-                          type="button"
-                          onClick={() => setExpanded(isOpen ? null : cat.id)}
-                          className={cn(
-                            "w-full flex items-center justify-between p-4 rounded-2xl border transition-all duration-300",
-                            hasSelectedChild
-                              ? "bg-primary/5 border-primary/40 shadow-sm"
-                              : "bg-muted/5 border-muted-foreground/10 hover:border-primary/30",
-                          )}
-                        >
-                          <div className="flex items-center gap-3">
-                            <div
+                        return (
+                          <div key={cat.id} className="group/cat">
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setExpanded(isExpanded ? null : cat.id)
+                              }
                               className={cn(
-                                "h-8 w-8 rounded-xl flex items-center justify-center transition-colors",
-                                hasSelectedChild
-                                  ? "bg-primary/20"
-                                  : "bg-muted/20",
+                                "w-full flex items-center justify-between p-5 rounded-2xl border transition-all duration-300",
+                                isExpanded
+                                  ? "bg-background border-primary/30 shadow-lg shadow-primary/[0.03]"
+                                  : "bg-background/40 border-border group-hover/cat:bg-background group-hover/cat:border-primary/20",
+                                hasSelectedChild && "border-primary/40",
                               )}
                             >
-                              <Folder
-                                className={cn(
-                                  "h-4 w-4",
-                                  hasSelectedChild
-                                    ? "text-primary"
-                                    : "text-muted-foreground",
-                                )}
-                              />
-                            </div>
-                            <span
-                              className={cn(
-                                "text-sm font-bold",
-                                hasSelectedChild
-                                  ? "text-primary uppercase tracking-tight"
-                                  : "text-foreground",
-                              )}
-                            >
-                              {cat.name}
-                            </span>
-                          </div>
-
-                          <div className="flex items-center gap-2">
-                            {hasSelectedChild && (
-                              <Check className="h-4 w-4 text-primary opacity-40" />
-                            )}
-                            {hasChildren && (
-                              <ChevronRight
-                                className={cn(
-                                  "h-4 w-4 transition-transform opacity-40",
-                                  isOpen && "rotate-90",
-                                )}
-                              />
-                            )}
-                          </div>
-                        </button>
-
-                        {isOpen && (
-                          <div className="mt-2 ml-4 pl-4 border-l-2 border-primary/10 flex flex-col gap-2">
-                            {cat.children.map((ch) => {
-                              const isChildSelected = field.value === ch.id;
-                              return (
-                                <button
-                                  key={ch.id}
-                                  type="button"
-                                  onClick={() => selectCategory(ch.id)}
+                              <div className="flex items-center gap-4">
+                                <div
                                   className={cn(
-                                    "w-full flex items-center gap-3 p-3 rounded-xl transition-all",
-                                    isChildSelected
-                                      ? "bg-primary/5 text-primary font-bold"
-                                      : "hover:bg-muted text-muted-foreground",
+                                    "h-10 w-10 rounded-xl flex items-center justify-center transition-all",
+                                    isExpanded
+                                      ? "bg-primary text-white shadow-md shadow-primary/20"
+                                      : "bg-muted text-muted-foreground",
                                   )}
                                 >
-                                  <FolderTree className="h-3.5 w-3.5 opacity-40" />
-                                  <span className="text-sm">{ch.name}</span>
-                                  {isChildSelected && (
-                                    <Check className="ml-auto h-3.5 w-3.5 stroke-[3]" />
-                                  )}
-                                </button>
-                              );
-                            })}
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-              </div>
+                                  <Folder className="h-5 w-5" />
+                                </div>
+                                <div className="text-left">
+                                  <p className="font-bold text-foreground">
+                                    {cat.name}
+                                  </p>
+                                  <p className="text-[10px] items-center gap-1 font-bold text-muted-foreground/60 uppercase tracking-widest inline-flex pt-0.5">
+                                    {cat.children.length} Sub-Categories
+                                  </p>
+                                </div>
+                              </div>
+                              <ChevronRight
+                                className={cn(
+                                  "h-5 w-5 transition-all text-muted-foreground/40",
+                                  isExpanded && "rotate-90 text-primary",
+                                )}
+                              />
+                            </button>
 
-              <div className="p-8 border-t border-border/40 shrink-0 flex justify-end">
-                <Button
-                  variant="outline"
-                  className="rounded-xl px-8 font-black uppercase tracking-widest text-xs h-11"
-                  onClick={() => setOpen(false)}
-                >
-                  Cancel
-                </Button>
+                            <AnimatePresence>
+                              {isExpanded && hasChildren && (
+                                <motion.div
+                                  initial={{ height: 0, opacity: 0 }}
+                                  animate={{ height: "auto", opacity: 1 }}
+                                  exit={{ height: 0, opacity: 0 }}
+                                  className="overflow-hidden"
+                                >
+                                  <div className="mt-2 ml-7 pl-6 border-l-2 border-primary/20 flex flex-col gap-2 py-2">
+                                    {cat.children.map((ch) => {
+                                      const isSelected = field.value === ch.id;
+                                      return (
+                                        <button
+                                          key={ch.id}
+                                          type="button"
+                                          onClick={() => selectCategory(ch.id)}
+                                          className={cn(
+                                            "w-full flex items-center gap-3 py-3.5 px-5 rounded-xl transition-all relative group/sub",
+                                            isSelected
+                                              ? "bg-primary text-white shadow-md shadow-primary/20 font-bold"
+                                              : "hover:bg-primary/[0.05] text-muted-foreground hover:text-primary",
+                                          )}
+                                        >
+                                          <div
+                                            className={cn(
+                                              "h-2 w-2 rounded-full",
+                                              isSelected
+                                                ? "bg-white"
+                                                : "bg-muted-foreground/30 group-hover/sub:bg-primary/50",
+                                            )}
+                                          />
+                                          <span className="text-sm font-semibold">
+                                            {ch.name}
+                                          </span>
+                                          {isSelected && (
+                                            <Check className="ml-auto h-4 w-4 stroke-[3]" />
+                                          )}
+                                        </button>
+                                      );
+                                    })}
+                                  </div>
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
+                          </div>
+                        );
+                      })
+                    )}
+                  </div>
+
+                  {/* Quick Add Bar */}
+                  <div className="shrink-0 p-6 bg-background/50 border-t border-border/40 backdrop-blur-md">
+                    <AnimatePresence mode="wait">
+                      {showQuickAdd ? (
+                        <motion.div
+                          key="form"
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 20 }}
+                          className="space-y-5"
+                        >
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs font-black uppercase tracking-[0.25em] text-primary">
+                              Add Custom Category
+                            </span>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              className="h-8 rounded-lg text-muted-foreground hover:text-foreground"
+                              onClick={() => setShowQuickAdd(false)}
+                            >
+                              Cancel
+                            </Button>
+                          </div>
+
+                          <div className="grid grid-cols-1 md:grid-cols-[1fr_200px] gap-4">
+                            <div className="space-y-2">
+                              <label className="text-[10px] font-bold text-muted-foreground uppercase ml-1">
+                                Category Name
+                              </label>
+                              <Input
+                                value={newCatName}
+                                onChange={(e) => setNewCatName(e.target.value)}
+                                placeholder="e.g. Vintage Apparel"
+                                className="h-12 rounded-xl bg-background border-border"
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <label className="text-[10px] font-bold text-muted-foreground uppercase ml-1">
+                                Parent (Optional)
+                              </label>
+                              <select
+                                className="w-full h-12 rounded-xl border border-border bg-background px-3 text-sm font-semibold outline-none focus:ring-2 focus:ring-primary/10"
+                                value={newCatParentId || ""}
+                                onChange={(e) =>
+                                  setNewCatParentId(e.target.value || null)
+                                }
+                              >
+                                <option value="">None (Top Level)</option>
+                                {categories.map((c) => (
+                                  <option key={c.id} value={c.id}>
+                                    {c.name}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+                          </div>
+
+                          <Button
+                            type="button"
+                            className="w-full h-12 rounded-xl bg-primary hover:bg-primary/90 text-white font-black uppercase tracking-widest text-xs gap-3 shadow-lg shadow-primary/20"
+                            onClick={handleQuickAdd}
+                            disabled={isCreating || !newCatName.trim()}
+                          >
+                            {isCreating ? (
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                              <Plus className="h-4 w-4" />
+                            )}
+                            Save Category
+                          </Button>
+                        </motion.div>
+                      ) : (
+                        <motion.div
+                          key="trigger"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          className="flex flex-col sm:flex-row items-center justify-between gap-6"
+                        >
+                          <div className="flex flex-col text-center sm:text-left">
+                            <span className="text-xs font-bold text-foreground/80">
+                              Don&apos;t see what you need?
+                            </span>
+                            <span className="text-[10px] text-muted-foreground font-medium">
+                              Add a custom category to specifically fit your
+                              products.
+                            </span>
+                          </div>
+                          <Button
+                            type="button"
+                            onClick={() => setShowQuickAdd(true)}
+                            className="w-full sm:w-auto bg-foreground text-background hover:bg-foreground/90 rounded-xl h-12 px-6 font-black uppercase tracking-widest text-[10px] gap-2 shadow-xl shadow-foreground/5 shrink-0"
+                          >
+                            <Plus className="h-4 w-4" />
+                            Quick Add
+                          </Button>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </div>
               </div>
             </DialogContent>
           </Dialog>
         )}
       />
+
+      {error && <p className="text-xs text-destructive">{error}</p>}
     </div>
   );
 }

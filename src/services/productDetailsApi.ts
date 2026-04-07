@@ -4,6 +4,7 @@ import type {
   GetCategoriesArgs,
   IGetCategoriesResponse,
   IGetColorsResponse,
+  ICategory,
 } from "@/types/category/categoryTypes";
 
 /* ───────────────── COLORS TYPES ───────────────── */
@@ -19,6 +20,7 @@ export const productDetailsApi = apiManager.injectEndpoints({
         method: "GET",
         params,
       }),
+      providesTags: ["Categories" as any],
     }),
 
     /* ───────── GET COLORS ───────── */
@@ -27,6 +29,33 @@ export const productDetailsApi = apiManager.injectEndpoints({
         url: "colors",
         method: "GET",
       }),
+      providesTags: ["Colors" as any],
+    }),
+
+    /* ───────── CREATE CATEGORY ───────── */
+    createCategory: builder.mutation<
+      { data: ICategory },
+      { name: string; parent_id?: string | null }
+    >({
+      query: (body) => ({
+        url: "categories",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Categories" as any],
+    }),
+
+    /* ───────── CREATE COLOR ───────── */
+    createColor: builder.mutation<
+      { color: { id: string; name: string; hex: string } },
+      { name: string; hex: string }
+    >({
+      query: (body) => ({
+        url: "colors",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Colors" as any],
     }),
   }),
 });
@@ -38,4 +67,6 @@ export const {
   useLazyGetCategoriesQuery,
   useGetColorsQuery,
   useLazyGetColorsQuery,
+  useCreateCategoryMutation,
+  useCreateColorMutation,
 } = productDetailsApi;

@@ -19,12 +19,11 @@ export function BasicInfoSection({ highlights, setHighlights }: Props) {
           icon={<Type className="h-4 w-4" />}
         />
 
-        <div className="space-y-1.5">
-          <CategorySelect
-            name="category_id"
-            icon={<FolderTree className="h-4 w-4" />}
-          />
-        </div>
+        <CategorySelect
+          name="category_id"
+          label="Category"
+          icon={<FolderTree className="h-4 w-4" />}
+        />
       </div>
 
       <FormTextarea

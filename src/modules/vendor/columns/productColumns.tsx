@@ -28,7 +28,7 @@ import {
 } from "@/services/productApi";
 import { useDispatch } from "react-redux";
 import { clearProductDraft } from "@/features/productDraftSlice";
-import { getAppPath } from "@/utils/subdomain";
+import { getAppPath, getWebsitePath } from "@/utils/subdomain";
 
 export const productColumns: ColumnDef<IStoreProduct>[] = [
   /* ───────────── Product (LEFT ALIGNED) ───────────── */
@@ -243,7 +243,14 @@ export const productColumns: ColumnDef<IStoreProduct>[] = [
                 variant="ghost"
                 size="sm"
                 className="w-full justify-start gap-2"
-                onClick={() => navigate(getAppPath(`/product/${product.slug}`))}
+                onClick={() => {
+                  const path = getWebsitePath(`/product/${product.slug}`);
+                  if (path?.startsWith("http")) {
+                    window.location.href = path;
+                  } else if (path) {
+                    navigate(path);
+                  }
+                }}
               >
                 <Eye className="h-4 w-4" />
                 View

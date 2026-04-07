@@ -164,3 +164,23 @@ export const getAppPath = (path: string): string => {
   // Prefix with the current context
   return `/${subdomain}${path === "/" ? "" : path}`;
 };
+
+/**
+ * Resolves a given route path into a public website path.
+ * On live domains, this ensures the link points to the base domain (easystore.com).
+ * On localhost, it ensures the path is root-level (no /vendor or /admin prefix).
+ */
+export const getWebsitePath = (path: string): string | undefined => {
+  if (!path) return undefined;
+  
+  const subdomainsDisabled = areSubdomainsDisabled();
+  const baseDomain = getBaseDomain();
+  
+  // On localhost, we just return the path as-is (root level)
+  if (subdomainsDisabled) {
+    return path;
+  }
+  
+  // On live domains, we specify the base domain to escape any subdomain context
+  return `${window.location.protocol}//${baseDomain}${path}`;
+};

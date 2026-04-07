@@ -35,7 +35,7 @@ import { productColumns } from "../columns/productColumns";
 import { cn } from "@/lib/utils";
 import { useDispatch, useSelector } from "react-redux";
 import { clearProductDraft } from "@/features/productDraftSlice";
-import { getAppPath } from "@/utils/subdomain";
+import { getAppPath, getWebsitePath } from "@/utils/subdomain";
 import { DraftRecoveryModal } from "../components/modals/DraftRecoveryModal";
 import type { RootState } from "@/store";
 
@@ -436,7 +436,15 @@ export default function ProductsPage() {
                   items.map((product) => (
                     <Card
                       key={product.id}
-                      className="p-2 rounded-2xl border-border/40 hover:border-primary/40 transition-all group bg-card shadow-sm hover:shadow-md"
+                      className="p-2 rounded-2xl border-border/40 hover:border-primary/40 transition-all group bg-card shadow-sm hover:shadow-md cursor-pointer"
+                      onClick={() => {
+                        const path = getWebsitePath(`/product/${product.slug}`);
+                        if (path?.startsWith("http")) {
+                          window.location.href = path;
+                        } else if (path) {
+                          navigate(path);
+                        }
+                      }}
                     >
                       <div className="aspect-square relative overflow-hidden rounded-xl bg-muted/20">
                         <img
