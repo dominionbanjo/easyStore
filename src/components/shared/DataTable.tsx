@@ -22,6 +22,7 @@ import { Pagination } from "@/components/shared/Pagination";
 type PaginationState = {
   page: number;
   pages: number;
+  limit?: number;
   hasNext: boolean;
   hasPrev: boolean;
   onPageChange: (page: number) => void;
@@ -49,9 +50,26 @@ export function DataTable<TData, TValue>({
   const containerRef = useRef<HTMLDivElement>(null);
   const prevPageRef = useRef<number | undefined>(undefined);
 
+  // 🔢 Auto-generated Serial Number Column (Pagination Aware)
+  const snColumn: ColumnDef<TData, any> = {
+    id: "sn",
+    header: () => (
+      <div className="w-8 text-center font-bold text-muted-foreground">#</div>
+    ),
+    cell: ({ row }) => {
+      const page = pagination?.page || 1;
+      const limit = pagination?.limit || 10;
+      return (
+        <div className="w-8 text-center font-medium text-muted-foreground/80">
+          {(page - 1) * limit + row.index + 1}
+        </div>
+      );
+    },
+  };
+
   const table = useReactTable({
     data,
-    columns,
+    columns: [snColumn, ...columns],
     getCoreRowModel: getCoreRowModel(),
   });
 
@@ -93,8 +111,8 @@ export function DataTable<TData, TValue>({
                   <TableHead
                     key={header.id}
                     className={cn(
-                      "px-2 sm:px-4 h-11 text-xs sm:text-sm",
-                      index === 0 && "sticky left-0 z-20 bg-background",
+                      "px-2 sm:px-4 h-11 text-xs sm:text-sm whitespace-nowrap",
+                      index === 0 && "sticky left-0 z-20 bg-background shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)] border-r border-border/10",
                     )}
                   >
                     {header.isPlaceholder
@@ -113,11 +131,11 @@ export function DataTable<TData, TValue>({
             {isLoading ? (
               [...Array(5)].map((_, i) => (
                 <TableRow key={i}>
-                  {columns.map((_, j) => (
+                  {[...Array(columns.length + 1)].map((_, j) => (
                     <TableCell
                       key={j}
                       className={cn(
-                        j === 0 && "sticky left-0 z-10 bg-background",
+                        j === 0 && "sticky left-0 z-10 bg-background shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]",
                       )}
                     >
                       <Skeleton className="h-4 w-full" />
@@ -133,7 +151,7 @@ export function DataTable<TData, TValue>({
                       key={cell.id}
                       className={cn(
                         "px-2 sm:px-4 py-3 sm:py-4",
-                        index === 0 && "sticky left-0 z-10 bg-background",
+                        index === 0 && "sticky left-0 z-10 bg-background shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)] border-r border-border/10",
                       )}
                     >
                       {flexRender(
@@ -147,7 +165,7 @@ export function DataTable<TData, TValue>({
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={columns.length}
+                  colSpan={columns.length + 1}
                   className="h-[400px] text-center"
                 >
                   <div className="flex flex-col items-center justify-center gap-3 animate-in fade-in zoom-in duration-300">

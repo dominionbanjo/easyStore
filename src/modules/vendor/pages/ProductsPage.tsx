@@ -395,12 +395,13 @@ export default function ProductsPage() {
                   pagination={
                     pagination
                       ? {
-                          page: pagination.page,
-                          pages: pagination.pages,
-                          hasNext: pagination.hasNext,
-                          hasPrev: pagination.hasPrev,
-                          onPageChange: setPage,
-                        }
+                        page: pagination.page,
+                        pages: pagination.pages,
+                        limit: PAGE_SIZE,
+                        hasNext: pagination.hasNext,
+                        hasPrev: pagination.hasPrev,
+                        onPageChange: setPage,
+                      }
                       : undefined
                   }
                 />

@@ -234,6 +234,7 @@ export default function OrdersPage() {
               ? {
                   page: pagination.page,
                   pages: pagination.pages,
+                  limit: PAGE_SIZE,
                   hasNext: pagination.hasNext,
                   hasPrev: pagination.hasPrev,
                   onPageChange: setPage,

@@ -83,6 +83,7 @@ export default function SuperAdminTransactionsPage() {
     ? {
         page: Number(pagination.page),
         pages: Number(pagination.pages),
+        limit: 20,
         hasNext: pagination.hasNext,
         hasPrev: pagination.hasPrev,
         onPageChange: (p: number) => setPage(p),
