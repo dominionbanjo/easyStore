@@ -39,7 +39,7 @@ export default function BazaarTemplate({
     <div className="min-h-screen bg-slate-50 dark:bg-neutral-900 font-sans text-slate-900 dark:text-slate-100 flex flex-col">
       {/* ─── MARKETPLACE HEADER ─── */}
       <header className="sticky top-0 z-50 bg-white dark:bg-neutral-950 border-b-4 border-[var(--theme-primary)] ">
-        <div className="max-w-7xl mx-auto px-4 h-24 flex items-center justify-between gap-6">
+        <div className="max-w-7xl mx-auto px-1.5 sm:px-4 h-20 md:h-24 flex items-center justify-between gap-3 sm:gap-6">
           <div className="flex items-center gap-4 shrink-0">
             {store?.logo ? (
               <div className="w-14 h-14 rounded-sm overflow-hidden bg-white  border-2 border-slate-100 dark:border-neutral-800">
@@ -54,8 +54,8 @@ export default function BazaarTemplate({
                 {store?.store_name?.charAt(0).toUpperCase() || "B"}
               </div>
             )}
-            <div className="hidden sm:block">
-              <h1 className="text-xl font-black tracking-tight leading-none text-[var(--theme-primary)]">
+            <div className="hidden xs:block">
+              <h1 className="text-lg sm:text-xl font-black tracking-tight leading-none text-[var(--theme-primary)]">
                 {store?.store_name ?? "THE BAZAAR"}
               </h1>
               <p className="text-[10px] uppercase tracking-widest font-bold text-slate-400 mt-1 dark:text-neutral-500">
@@ -71,8 +71,8 @@ export default function BazaarTemplate({
               </span>
               <Input
                 type="text"
-                placeholder="Search the market..."
-                className="w-full py-7 pl-12 pr-12 bg-slate-100 dark:bg-neutral-900 border-2 border-transparent focus-visible:bg-white dark:focus-visible:bg-neutral-800 focus-visible:border-[var(--theme-primary)] rounded-sm font-bold transition-all text-base "
+                placeholder="Search..."
+                className="w-full py-6 sm:py-7 pl-10 sm:pl-12 pr-10 sm:pr-12 bg-slate-100 dark:bg-neutral-900 border-2 border-transparent focus-visible:bg-white dark:focus-visible:bg-neutral-800 focus-visible:border-[var(--theme-primary)] rounded-sm font-bold transition-all text-sm sm:text-base "
                 value={searchQuery}
                 onChange={(e) => onSearchChange(e.target.value)}
               />
@@ -92,22 +92,22 @@ export default function BazaarTemplate({
             </div>
           </div>
 
-          <div className="shrink-0 flex items-center gap-4">
+          <div className="shrink-0 flex items-center gap-2 sm:gap-4">
             <button
               onClick={onCartOpen}
-              className="relative p-3.5 rounded-sm bg-[var(--theme-primary)] text-white  -[var(--theme-primary)]/20 hover:scale-110 active:scale-95 transition-all"
+              className="relative p-2.5 sm:p-3.5 rounded-sm bg-[var(--theme-primary)] text-white hover:scale-110 active:scale-95 transition-all"
             >
-              <ShoppingCart className="w-6 h-6" />
+              <ShoppingCart className="w-5 h-5 sm:w-6 sm:h-6" />
               {cartItemsCount > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 h-6 w-6 rounded-sm bg-white text-[var(--theme-primary)] text-[11px] flex items-center justify-center font-black ring-2 ring-[var(--theme-primary)] ">
+                <span className="absolute -top-1 -right-1 h-5 w-5 sm:h-6 sm:w-6 rounded-sm bg-white text-[var(--theme-primary)] text-[10px] sm:text-[11px] flex items-center justify-center font-black ring-2 ring-[var(--theme-primary)] ">
                   {cartItemsCount}
                 </span>
               )}
             </button>
-
+ 
             <TemplateProfileDropdown
-              buttonClassName="relative p-3.5 rounded-sm bg-white dark:bg-neutral-800 border-2 border-slate-100 dark:border-neutral-800 text-[var(--theme-primary)]  hover:scale-110 active:scale-95 transition-all"
-              iconClassName="w-6 h-6"
+              buttonClassName="relative p-2.5 sm:p-3.5 rounded-sm bg-white dark:bg-neutral-800 border-2 border-slate-100 dark:border-neutral-800 text-[var(--theme-primary)]  hover:scale-110 active:scale-95 transition-all"
+              iconClassName="w-5 h-5 sm:w-6 sm:h-6"
             />
           </div>
         </div>
@@ -131,7 +131,7 @@ export default function BazaarTemplate({
             </div>
           )}
 
-          <div className="relative z-10 max-w-7xl mx-auto px-4 py-20 w-full">
+          <div className="relative z-10 max-w-7xl mx-auto px-2 sm:px-4 py-12 md:py-20 w-full">
             <div className="max-w-3xl">
               <div className="inline-flex items-center gap-2 px-3 py-1 bg-[var(--theme-primary)] text-white text-[10px] font-black uppercase tracking-[0.3em] mb-6 rounded-sm">
                 Verified Merchant
@@ -181,7 +181,7 @@ export default function BazaarTemplate({
         </section>
       )}
 
-      <main className="max-w-7xl mx-auto px-4 py-12 flex-1 w-full">
+      <main className="max-w-7xl mx-auto px-1.5 sm:px-4 py-8 md:py-12 flex-1 w-full">
         {/* TAB NAVIGATION */}
         <div className="flex gap-4 mb-12">
           <button
@@ -266,8 +266,8 @@ export default function BazaarTemplate({
       </main>
 
       {/* ─── MARKETPLACE FOOTER ─── */}
-      <footer className="bg-white dark:bg-neutral-950 border-t-4 border-slate-200 dark:border-neutral-800 py-16">
-        <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-12 text-center md:text-left">
+      <footer className="bg-white dark:bg-neutral-950 border-t-4 border-slate-200 dark:border-neutral-800 py-12 md:py-16">
+        <div className="max-w-7xl mx-auto px-2 sm:px-4 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 text-center md:text-left">
           <div>
             <h4 className="text-2xl font-black text-[var(--theme-primary)] uppercase mb-4">
               {store?.store_name}

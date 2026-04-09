@@ -50,7 +50,7 @@ export function SearchResultsHeader({
   return (
     <div className="flex flex-col gap-6 md:flex-row md:items-end justify-between border-b border-zinc-200 dark:border-white/10 pb-8 transition-colors duration-300">
       <div className="space-y-2">
-        <h1 className="text-3xl md:text-5xl font-black tracking-tighter text-foreground">
+        <h1 className="text-2xl sm:text-4xl md:text-5xl font-black tracking-tighter text-foreground leading-[1.1]">
           {categoryName ? (
             categoryName
           ) : query ? (

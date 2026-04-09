@@ -38,9 +38,9 @@ export default function HeritageTemplate({
   return (
     <div className="min-h-screen bg-[#FAF7F2] dark:bg-[#1E1B18] text-[#3D352B] dark:text-[#EAE3DB] font-sans">
       {/* ─── ELEGANT HEADER ─── */}
-      <header className="relative w-full pt-16 pb-12 px-6 flex flex-col items-center justify-center text-center border-b border-[#3D352B]/10 dark:border-[#EAE3DB]/10 overflow-hidden">
+      <header className="relative w-full pt-16 pb-12 px-2 sm:px-6 flex flex-col items-center justify-center text-center border-b border-[#3D352B]/10 dark:border-[#EAE3DB]/10 overflow-hidden">
         {/* Cart Icon (Absolute Positioned for Elegance) */}
-        <div className="absolute top-8 right-8 z-10 flex items-center gap-3">
+        <div className="absolute top-4 sm:top-8 right-2 sm:right-8 z-10 flex items-center gap-2 sm:gap-3">
           <button
             onClick={onCartOpen}
             className="group relative p-4 rounded-sm bg-white dark:bg-[#2C2622] border border-[#EADDCE] dark:border-[#3D352B]  hover: transition-all"
@@ -96,62 +96,65 @@ export default function HeritageTemplate({
       </header>
 
       {/* ─── NAVIGATION & SEARCH ─── */}
-      <div className="max-w-5xl mx-auto px-6 py-12 flex flex-col items-center">
-        <div className="flex justify-center gap-8 mb-12">
-          <button
-            onClick={() => {
-              onCategorySelect(null);
-              onTabChange("products");
-            }}
-            className={`text-sm tracking-[0.15em] uppercase pb-2 transition-all ${
-              activeTab === "products"
-                ? "border-b-2 border-[#3D352B] dark:border-[#EAE3DB] font-bold"
-                : "border-b-2 border-transparent opacity-60 hover:opacity-100"
-            }`}
-          >
-            All Goods
-          </button>
-          <button
-            onClick={() => onTabChange("categories")}
-            className={`text-sm tracking-[0.15em] uppercase pb-2 transition-all ${
-              activeTab === "categories"
-                ? "border-b-2 border-[#3D352B] dark:border-[#EAE3DB] font-bold"
-                : "border-b-2 border-transparent opacity-60 hover:opacity-100"
-            }`}
-          >
-            Collections
-          </button>
-        </div>
+      <div className="max-w-5xl mx-auto px-2 sm:px-6 py-8 md:py-12 flex flex-col items-center">
+        {/* ─── TABS ─── */}
+        <div className="mt-12 md:mt-16 bg-white dark:bg-[#1E1A17] rounded-sm p-4 md:p-12  border border-[#EADDCE] dark:border-[#3D352B]">
+          <div className="flex justify-center gap-8 mb-12">
+            <button
+              onClick={() => {
+                onCategorySelect(null);
+                onTabChange("products");
+              }}
+              className={`text-sm tracking-[0.15em] uppercase pb-2 transition-all ${
+                activeTab === "products"
+                  ? "border-b-2 border-[#3D352B] dark:border-[#EAE3DB] font-bold"
+                  : "border-b-2 border-transparent opacity-60 hover:opacity-100"
+              }`}
+            >
+              All Goods
+            </button>
+            <button
+              onClick={() => onTabChange("categories")}
+              className={`text-sm tracking-[0.15em] uppercase pb-2 transition-all ${
+                activeTab === "categories"
+                  ? "border-b-2 border-[#3D352B] dark:border-[#EAE3DB] font-bold"
+                  : "border-b-2 border-transparent opacity-60 hover:opacity-100"
+              }`}
+            >
+              Collections
+            </button>
+          </div>
 
-        <div className="w-full max-lg relative group">
-          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#3D352B]/40 dark:text-[#EAE3DB]/40">
-            <Search className="w-4 h-4" />
-          </span>
-          <Input
-            type="text"
-            placeholder="Search our catalog..."
-            className="w-full pl-12 pr-12 py-6 bg-white dark:bg-[#2C2622] border-[#EADDCE] dark:border-[#3D352B] rounded-sm focus-visible:ring-1 focus-visible:ring-[#3D352B]  text-center placeholder:text-center text-base"
-            value={searchQuery}
-            onChange={(e) => onSearchChange(e.target.value)}
-          />
-          <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2 text-[#3D352B]/40 dark:text-[#EAE3DB]/40">
-            {isSearching && (
-              <Loader2 className="w-4 h-4 animate-spin text-primary" />
-            )}
-            {searchQuery && (
-              <button
-                onClick={() => onSearchChange("")}
-                className="hover:text-primary transition-colors"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            )}
+          <div className="w-full max-lg relative group">
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#3D352B]/40 dark:text-[#EAE3DB]/40">
+              <Search className="w-4 h-4" />
+            </span>
+            <Input
+              type="text"
+              placeholder="Search our catalog..."
+              className="w-full pl-12 pr-12 py-6 bg-white dark:bg-[#2C2622] border-[#EADDCE] dark:border-[#3D352B] rounded-sm focus-visible:ring-1 focus-visible:ring-[#3D352B]  text-center placeholder:text-center text-base"
+              value={searchQuery}
+              onChange={(e) => onSearchChange(e.target.value)}
+            />
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2 text-[#3D352B]/40 dark:text-[#EAE3DB]/40">
+              {isSearching && (
+                <Loader2 className="w-4 h-4 animate-spin text-primary" />
+              )}
+              {searchQuery && (
+                <button
+                  onClick={() => onSearchChange("")}
+                  className="hover:text-primary transition-colors"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>
 
-      {/* ─── CONTENT GRID ─── */}
-      <main className="max-w-[1400px] mx-auto px-6 md:px-12 pb-24">
+      {/* ─── SHOWCASE MAIN ─── */}
+      <main className="max-w-[1400px] mx-auto px-1 sm:px-8 py-8 md:py-12">
         {activeTab === "categories" && !selectedCategory && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10">
             {isCategoriesLoading
@@ -165,7 +168,7 @@ export default function HeritageTemplate({
                   <button
                     key={cat.id}
                     onClick={() => onCategorySelect(cat)}
-                    className="group flex flex-col items-center justify-center p-8 lg:p-12 bg-white dark:bg-[#2C2622] rounded-sm border border-[#EADDCE] dark:border-[#3D352B]  hover: transition-all hover:-translate-y-1 hover:border-[var(--theme-primary)]"
+                    className="group flex flex-col items-center justify-center bg-white dark:bg-[#1E1A17] rounded-sm p-4 md:p-12  border border-[#EADDCE] dark:border-[#3D352B] text-left hover: transition-all hover:-translate-y-1 hover:border-[var(--theme-primary)]"
                   >
                     <div className="w-16 h-16 rounded-sm bg-[#F4EDE4] dark:bg-[#3D352B]/50 text-[var(--theme-primary)] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                       <span className="font-serif text-2xl italic">

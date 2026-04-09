@@ -38,7 +38,7 @@ export function VanguardMain({
   toggleWishlist,
 }: VanguardMainProps) {
   return (
-    <main className="max-w-[1400px] mx-auto px-6 md:px-12 py-16 font-sans">
+    <main className="max-w-[1400px] mx-auto px-1.5 sm:px-6 pt-6 sm:pt-8 md:px-12 pb-16 font-sans">
       <div className="flex flex-col lg:flex-row gap-16 lg:gap-24">
         {/* Left: Sticky Info */}
         <div className="w-full lg:w-1/3 lg:sticky lg:top-8 self-start space-y-10 order-2 lg:order-1">

@@ -3,11 +3,23 @@ import { useSelector } from "react-redux";
 import type { RootState } from "@/store";
 import { Home, Compass, ShoppingBag, User, Briefcase } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { WEBSITE_ROUTES, ACCOUNT_ROUTES as USER_ROUTES, AUTH_ROUTES } from "@/routes";
+import {
+  WEBSITE_ROUTES,
+  ACCOUNT_ROUTES as USER_ROUTES,
+  AUTH_ROUTES,
+} from "@/routes";
 import { motion } from "framer-motion";
 
-import { setMobileMenuOpen } from "@/features/uiSlice";
+import {
+  preloadDiscoveryPage,
+  preloadOrdersPage,
+  preloadUserProfilePage,
+  preloadSettingsPage,
+  preloadWishlistPage,
+} from "@/routes/lazyPages";
 import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { setMobileMenuOpen } from "@/features/uiSlice";
 
 export function BottomNav() {
   const dispatch = useDispatch();
@@ -25,6 +37,27 @@ export function BottomNav() {
       navigate(AUTH_ROUTES.LOGIN);
     }
   };
+
+  // 🚀 Auto-preload mobile routes on mount
+  useEffect(() => {
+    const triggerPreloads = async () => {
+      try {
+        // Preload primary and secondary mobile destinations
+        await Promise.allSettled([
+          preloadDiscoveryPage(),
+          preloadOrdersPage(),
+          preloadUserProfilePage(),
+          preloadSettingsPage(),
+          preloadWishlistPage(),
+        ]);
+        console.log("Mobile routes preloaded successfully");
+      } catch (err) {
+        console.warn("Preloading failed partially", err);
+      }
+    };
+
+    triggerPreloads();
+  }, []);
 
   const navItems = [
     { name: "Home", path: WEBSITE_ROUTES.HOME, icon: Home },

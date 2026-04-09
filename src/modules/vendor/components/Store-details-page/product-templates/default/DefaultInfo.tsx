@@ -43,7 +43,7 @@ export function DefaultInfo({
   toggleWishlist,
 }: DefaultInfoProps) {
   return (
-    <div className="w-full p-6 md:p-10 lg:p-12 flex flex-col justify-center">
+    <div className="w-full px-1.5 py-6 md:p-10 lg:p-12 flex flex-col justify-center">
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-4">
           <div className="bg-[var(--theme-primary)]/10 text-[var(--theme-primary)] px-3 py-1 rounded-sm text-xs font-bold uppercase tracking-wider">

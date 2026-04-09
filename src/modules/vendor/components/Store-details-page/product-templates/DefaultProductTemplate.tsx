@@ -50,7 +50,7 @@ export default function DefaultProductTemplate({
       />
 
       {/* ─── PRODUCT MAIN ─── */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+      <main className="max-w-7xl mx-auto px-1.5 sm:px-6 lg:px-8 py-8 md:py-12">
         <GoBackButton className="mb-6" />
         <div className="bg-white dark:bg-zinc-950 rounded-sm  -zinc-200/20 dark: border border-zinc-200/60 dark:border-zinc-800/60 overflow-hidden">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
@@ -76,7 +76,7 @@ export default function DefaultProductTemplate({
                 toggleWishlist={toggleWishlist}
               />
 
-              <div className="px-6 md:px-10 lg:px-12 pb-12">
+              <div className="px-2 sm:px-10 lg:px-12 pb-12">
                 <DefaultLogistics uiProduct={uiProduct} />
               </div>
             </div>
@@ -84,8 +84,8 @@ export default function DefaultProductTemplate({
         </div>
 
         {/* ─── TABS & DETAILS ─── */}
-        <div className="mt-16 md:mt-24">
-          <div className="bg-white dark:bg-zinc-950 rounded-sm p-6 md:p-10  border border-zinc-200/60 dark:border-zinc-800/60">
+        <div className="mt-12 md:mt-24">
+          <div className="bg-white dark:bg-zinc-950 rounded-sm px-2 py-6 sm:p-10  border border-zinc-200/60 dark:border-zinc-800/60">
             <ProductDetailsTabs product={uiProduct} />
           </div>
         </div>
@@ -98,7 +98,7 @@ export default function DefaultProductTemplate({
             </h2>
             <div className="h-px flex-1 bg-zinc-200 dark:bg-zinc-800" />
           </div>
-          <div className="bg-white dark:bg-zinc-950 rounded-sm p-6 md:p-10  border border-zinc-200/60 dark:border-zinc-800/60">
+          <div className="bg-white dark:bg-zinc-950 rounded-sm px-2 py-6 sm:p-10  border border-zinc-200/60 dark:border-zinc-800/60">
             <StoreProductReviews
               productId={product.id}
               reviews={reviews}

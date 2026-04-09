@@ -49,7 +49,7 @@ export default function VanguardProductTemplate({
         setSearchOpen={setSearchOpen}
       />
 
-      <div className="max-w-[1400px] mx-auto px-6 pt-8">
+      <div className="max-w-[1400px] mx-auto px-1.5 sm:px-6 pt-6 sm:pt-8">
         <GoBackButton />
       </div>
 
@@ -72,7 +72,7 @@ export default function VanguardProductTemplate({
       />
 
       {/* ─── REVIEWS ─── */}
-      <div className="mt-32 max-w-4xl mx-auto">
+      <div className="mt-20 md:mt-32 max-w-4xl mx-auto px-2 sm:px-0">
         <StoreProductReviews
           productId={product.id}
           reviews={reviews}
@@ -83,7 +83,7 @@ export default function VanguardProductTemplate({
 
       {/* ─── RELATED PRODUCTS ─── */}
       {relatedProducts?.length > 0 && (
-        <div className="mt-32 border-t border-zinc-100 dark:border-zinc-900 pt-16">
+        <div className="mt-20 md:mt-32 border-t border-zinc-100 dark:border-zinc-900 pt-12 md:pt-16 px-1.5 sm:px-0">
           <h2 className="text-3xl font-light font-serif text-center mb-12">
             Related Pieces
           </h2>

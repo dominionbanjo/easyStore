@@ -68,11 +68,11 @@ export default function ProductListingPage({
             <span>{badgeText}</span>
           </div>
 
-          <h1 className="text-5xl md:text-7xl font-black tracking-tighter mb-8 text-foreground">
+          <h1 className="text-3xl sm:text-5xl md:text-7xl font-black tracking-tighter mb-8 text-foreground leading-[0.9]">
             {title}
           </h1>
 
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed font-medium">
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed font-medium">
             {subtitle}
           </p>
         </div>

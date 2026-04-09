@@ -40,10 +40,10 @@ export default function TitanTemplate({
   // - Monospaced utility accents
 
   return (
-    <div className="min-h-screen bg-black text-zinc-400 font-sans selection:bg-[var(--theme-primary)] selection:text-black">
-      <div className="max-w-[1600px] mx-auto px-4 py-8 md:py-12 space-y-8">
+    <div className="w-full bg-black text-zinc-300 font-mono min-h-screen selection:bg-[var(--theme-primary)] selection:text-black pb-24 border-x border-zinc-900 mx-auto max-w-[1600px]">
+      <div className="px-1.5 sm:px-4 py-6 md:py-12 space-y-6 md:space-y-8">
         {/* ─── TITAN HEADER ─── */}
-        <header className="w-full border border-zinc-800 bg-zinc-950/80 backdrop-blur-md rounded-sm p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden">
+        <header className="w-full border border-zinc-800 bg-zinc-950/80 backdrop-blur-md rounded-sm px-2.5 py-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden">
           {/* Subtle Grid Background Pattern */}
           <div
             className="absolute inset-0 opacity-10 pointer-events-none"
@@ -154,7 +154,7 @@ export default function TitanTemplate({
 
         {/* ─── TITAN HERO SYSTEM ─── */}
         {!searchQuery && !selectedCategory && activeTab === "products" && (
-          <section className="relative w-full min-h-[400px] md:min-h-[500px] rounded-sm border border-zinc-800 bg-zinc-950 overflow-hidden flex flex-col justify-end p-8 md:p-16 group">
+          <section className="relative w-full min-h-[400px] md:min-h-[500px] rounded-sm border border-zinc-800 bg-zinc-950 overflow-hidden flex flex-col justify-end p-4 sm:p-8 md:p-16 group">
             {/* Background Layer */}
             {store.cover_image ? (
               <>
@@ -244,112 +244,114 @@ export default function TitanTemplate({
         )}
 
         {/* ─── BENTO BOX LAYOUT ─── */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-          {/* Main Content Area */}
-          <div className="lg:col-span-12 space-y-6">
-            {/* Nav Tabs Bento Unit */}
-            <div className="p-1.5 bg-zinc-900/50 border border-zinc-800 rounded-sm flex items-center gap-2 w-fit">
-              <button
-                onClick={() => {
-                  onTabChange("products");
-                  onCategorySelect(null);
-                }}
-                className={`px-6 py-2.5 rounded-sm text-xs font-mono font-bold uppercase tracking-wider transition-all ${
-                  activeTab === "products" && !selectedCategory
-                    ? "bg-[var(--theme-primary)] text-black -[0_0_15px_var(--theme-primary)]/30"
-                    : "text-zinc-500 hover:text-zinc-300"
-                }`}
-              >
-                [ ALL_MODULES ]
-              </button>
-              <button
-                onClick={() => onTabChange("categories")}
-                className={`px-6 py-2.5 rounded-sm text-xs font-mono font-bold uppercase tracking-wider transition-all ${
-                  activeTab === "categories" || selectedCategory
-                    ? "bg-[var(--theme-primary)] text-black -[0_0_15px_var(--theme-primary)]/30"
-                    : "text-zinc-500 hover:text-zinc-300"
-                }`}
-              >
-                [ CATEGORIES ]
-              </button>
-            </div>
+        <main className="px-1.5 py-6 sm:p-6 lg:p-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+            {/* Main Content Area */}
+            <div className="lg:col-span-12 space-y-6">
+              {/* Nav Tabs Bento Unit */}
+              <div className="p-1.5 bg-zinc-900/50 border border-zinc-800 rounded-sm flex items-center gap-2 w-fit">
+                <button
+                  onClick={() => {
+                    onTabChange("products");
+                    onCategorySelect(null);
+                  }}
+                  className={`px-6 py-2.5 rounded-sm text-xs font-mono font-bold uppercase tracking-wider transition-all ${
+                    activeTab === "products" && !selectedCategory
+                      ? "bg-[var(--theme-primary)] text-black -[0_0_15px_var(--theme-primary)]/30"
+                      : "text-zinc-500 hover:text-zinc-300"
+                  }`}
+                >
+                  [ ALL_MODULES ]
+                </button>
+                <button
+                  onClick={() => onTabChange("categories")}
+                  className={`px-6 py-2.5 rounded-sm text-xs font-mono font-bold uppercase tracking-wider transition-all ${
+                    activeTab === "categories" || selectedCategory
+                      ? "bg-[var(--theme-primary)] text-black -[0_0_15px_var(--theme-primary)]/30"
+                      : "text-zinc-500 hover:text-zinc-300"
+                  }`}
+                >
+                  [ CATEGORIES ]
+                </button>
+              </div>
 
-            {/* Content View Unit */}
-            <div className="bg-zinc-950/40 border border-zinc-800 rounded-sm p-8 min-h-[600px]">
-              {/* CATEGORIES VIEW */}
-              {activeTab === "categories" && !selectedCategory && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
-                  {isCategoriesLoading
-                    ? Array.from({ length: 8 }).map((_, i) => (
-                        <Skeleton
-                          key={i}
-                          className="h-48 rounded-sm bg-zinc-900/50 border border-zinc-800"
-                        />
-                      ))
-                    : categories?.map((cat) => (
-                        <button
-                          key={cat.id}
-                          onClick={() => onCategorySelect(cat)}
-                          className="group relative h-48 rounded-sm bg-zinc-900/30 border border-zinc-800 hover:border-[var(--theme-primary)] p-6 text-left transition-all hover:bg-zinc-900/60 overflow-hidden"
-                        >
-                          <div className="absolute top-0 right-0 p-2 text-[var(--theme-primary)]/20 font-mono text-[10px]">
-                            ID_{cat.id.substring(0, 6).toUpperCase()}
-                          </div>
-                          <div className="relative z-10 flex flex-col justify-between h-full">
-                            <h3 className="text-xl font-bold text-white uppercase group-hover:text-[var(--theme-primary)] transition-colors">
-                              {cat.name}
-                            </h3>
-                            <div className="flex items-center gap-2 text-xs font-mono text-zinc-500 group-hover:text-zinc-300">
-                              <span>ACCESS_DATA</span>
-                              <div className="h-[1px] flex-1 bg-zinc-800 group-hover:bg-[var(--theme-primary)]/50 transition-colors" />
+              {/* Content View Unit */}
+              <div className="bg-zinc-950/40 border border-zinc-800 rounded-sm px-1.5 py-6 sm:p-8 min-h-[600px]">
+                {/* CATEGORIES VIEW */}
+                {activeTab === "categories" && !selectedCategory && (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
+                    {isCategoriesLoading
+                      ? Array.from({ length: 8 }).map((_, i) => (
+                          <Skeleton
+                            key={i}
+                            className="h-48 rounded-sm bg-zinc-900/50 border border-zinc-800"
+                          />
+                        ))
+                      : categories?.map((cat) => (
+                          <button
+                            key={cat.id}
+                            onClick={() => onCategorySelect(cat)}
+                            className="group relative h-48 rounded-sm bg-zinc-900/30 border border-zinc-800 hover:border-[var(--theme-primary)] p-6 text-left transition-all hover:bg-zinc-900/60 overflow-hidden"
+                          >
+                            <div className="absolute top-0 right-0 p-2 text-[var(--theme-primary)]/20 font-mono text-[10px]">
+                              ID_{cat.id.substring(0, 6).toUpperCase()}
                             </div>
-                          </div>
-                        </button>
-                      ))}
-                </div>
-              )}
-
-              {/* PRODUCTS VIEW */}
-              {(activeTab === "products" || selectedCategory) && (
-                <div className="space-y-8 animate-in fade-in duration-500">
-                  <div className="flex flex-col md:flex-row md:items-end justify-between p-4 border-l-2 border-[var(--theme-primary)] bg-zinc-900/20 gap-4">
-                    <div>
-                      <h2 className="text-3xl font-black text-white italic uppercase tracking-tighter">
-                        {selectedCategory
-                          ? `TYPE_ID: ${selectedCategory.name}`
-                          : "GLOBAL_INVENTORY"}
-                      </h2>
-                      {selectedCategory && (
-                        <button
-                          onClick={() => onCategorySelect(null)}
-                          className="text-xs font-mono text-[var(--theme-primary)] hover:underline mt-2 flex items-center gap-1 uppercase"
-                        >
-                          [ RESET_FILTER ]
-                        </button>
-                      )}
-                    </div>
-                    <div className="text-xs font-mono text-zinc-600 uppercase bg-black px-3 py-1 border border-zinc-800 rounded-sm">
-                      BLOCK_COUNT: {pagination?.total || 0}
-                    </div>
+                            <div className="relative z-10 flex flex-col justify-between h-full">
+                              <h3 className="text-xl font-bold text-white uppercase group-hover:text-[var(--theme-primary)] transition-colors">
+                                {cat.name}
+                              </h3>
+                              <div className="flex items-center gap-2 text-xs font-mono text-zinc-500 group-hover:text-zinc-300">
+                                <span>ACCESS_DATA</span>
+                                <div className="h-[1px] flex-1 bg-zinc-800 group-hover:bg-[var(--theme-primary)]/50 transition-colors" />
+                              </div>
+                            </div>
+                          </button>
+                        ))}
                   </div>
+                )}
 
-                  <StoreProductsGrid
-                    key={productsKey}
-                    products={products}
-                    pagination={pagination}
-                    isLoading={isProductsLoading}
-                    isFetching={isProductsFetching}
-                    selectedCategory={selectedCategory}
-                    onBackToCategories={() => {
-                      onCategorySelect(null);
-                    }}
-                    onPageChange={onPageChange}
-                  />
-                </div>
-              )}
+                {/* PRODUCTS VIEW */}
+                {(activeTab === "products" || selectedCategory) && (
+                  <div className="space-y-8 animate-in fade-in duration-500">
+                    <div className="flex flex-col md:flex-row md:items-end justify-between p-4 border-l-2 border-[var(--theme-primary)] bg-zinc-900/20 gap-4">
+                      <div>
+                        <h2 className="text-3xl font-black text-white italic uppercase tracking-tighter">
+                          {selectedCategory
+                            ? `TYPE_ID: ${selectedCategory.name}`
+                            : "GLOBAL_INVENTORY"}
+                        </h2>
+                        {selectedCategory && (
+                          <button
+                            onClick={() => onCategorySelect(null)}
+                            className="text-xs font-mono text-[var(--theme-primary)] hover:underline mt-2 flex items-center gap-1 uppercase"
+                          >
+                            [ RESET_FILTER ]
+                          </button>
+                        )}
+                      </div>
+                      <div className="text-xs font-mono text-zinc-600 uppercase bg-black px-3 py-1 border border-zinc-800 rounded-sm">
+                        BLOCK_COUNT: {pagination?.total || 0}
+                      </div>
+                    </div>
+
+                    <StoreProductsGrid
+                      key={productsKey}
+                      products={products}
+                      pagination={pagination}
+                      isLoading={isProductsLoading}
+                      isFetching={isProductsFetching}
+                      selectedCategory={selectedCategory}
+                      onBackToCategories={() => {
+                        onCategorySelect(null);
+                      }}
+                      onPageChange={onPageChange}
+                    />
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        </div>
+        </main>
 
         {/* ─── TITAN FOOTER ─── */}
         <footer className="border border-zinc-800 bg-zinc-950/80 rounded-sm p-10 mt-12 overflow-hidden relative">

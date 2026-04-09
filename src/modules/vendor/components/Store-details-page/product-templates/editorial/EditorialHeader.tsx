@@ -19,11 +19,11 @@ export function EditorialHeader({
   setSearchOpen,
 }: EditorialHeaderProps) {
   return (
-    <nav className="fixed top-0 w-full z-50 p-6 md:p-10 flex flex-col gap-4 bg-transparent mix-blend-difference text-[#FDFBF7]">
+    <nav className="fixed top-0 w-full z-50 p-3 md:p-10 flex flex-col gap-4 bg-transparent mix-blend-difference text-[#FDFBF7]">
       <div className="w-full flex justify-between items-center">
         <Link
           to={`/stores/${store.slug}`}
-          className="text-2xl font-bold tracking-widest uppercase"
+          className="text-xl sm:text-2xl font-bold tracking-widest uppercase"
         >
           {store.store_name}
         </Link>

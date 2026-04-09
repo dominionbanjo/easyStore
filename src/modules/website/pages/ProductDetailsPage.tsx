@@ -73,6 +73,7 @@ function ProductDetailsInner({ id }: { id: string }) {
     originalPrice:
       product.on_sale && product.discount_price ? product.price : null,
     category: product.category_ref?.name ?? "",
+    slug: product.slug, // ✅ added for sharing
     rating: Number(product.rating_average ?? 0),
     stock: product.stock,
 

@@ -24,7 +24,7 @@ export function VanguardHeader({
   setSearchOpen,
 }: VanguardHeaderProps) {
   return (
-    <header className="py-8 px-6 md:px-12 flex flex-col items-center justify-center border-b border-zinc-100 dark:border-zinc-900 sticky top-0 bg-white/80 dark:bg-black/80 backdrop-blur-xl z-50">
+    <header className="py-4 px-2 md:px-12 flex flex-col items-center justify-center border-b border-zinc-100 dark:border-zinc-900 sticky top-0 bg-white/80 dark:bg-black/80 backdrop-blur-xl z-50">
       <div className="w-full flex items-center justify-between mb-6">
         <Button
           variant="ghost"
@@ -37,7 +37,7 @@ export function VanguardHeader({
 
         <Link
           to={`/stores/${store.slug}`}
-          className="text-2xl md:text-3xl tracking-[0.2em] uppercase font-light text-zinc-900 dark:text-white"
+          className="text-xl sm:text-2xl md:text-3xl tracking-[0.2em] uppercase font-light text-zinc-900 dark:text-white"
         >
           {store.store_name}
         </Link>

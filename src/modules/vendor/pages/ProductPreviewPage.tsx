@@ -77,6 +77,7 @@ export default function ProductPreviewPage() {
       })) ?? [],
 
     is_in_wishlist: false,
+    slug: "preview-slug",
   };
 
   /* ───────── RENDER ───────── */

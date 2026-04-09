@@ -42,15 +42,15 @@ export function EditorialNarrative({
   toggleWishlist,
 }: EditorialNarrativeProps) {
   return (
-    <main className="w-full flex flex-col md:flex-row min-h-screen">
+    <main className="w-full flex flex-col min-h-screen">
       {/* Left Side: Images */}
-      <div className="w-full md:w-1/2 min-h-[50vh] md:min-h-screen relative bg-[#F4F1EA] dark:bg-[#111]">
-        <div className="md:sticky md:top-0 h-full max-h-screen overflow-y-auto no-scrollbar snap-y snap-mandatory">
+      <div className="w-full min-h-[50vh] relative bg-[#F4F1EA] dark:bg-[#111]">
+        <div className="w-full h-full overflow-y-auto no-scrollbar snap-y snap-mandatory">
           {uiProduct.images.length > 0 ? (
             uiProduct.images.map((img: string, idx: number) => (
               <div
                 key={idx}
-                className="w-full h-screen snap-start flex items-center justify-center p-8 md:p-16"
+                className="w-full h-screen snap-start flex items-center justify-center p-2"
               >
                 <img
                   src={img}
@@ -70,7 +70,7 @@ export function EditorialNarrative({
       </div>
 
       {/* Right Side: Editorial Content */}
-      <div className="w-full md:w-1/2 p-8 md:p-16 lg:p-24 flex flex-col justify-center">
+      <div className="w-full md:w-1/2 px-2 py-8 md:p-16 lg:p-24 flex flex-col justify-center">
         <div className="max-w-xl mx-auto space-y-12">
           <header className="space-y-6">
             <span className="text-sm font-sans uppercase tracking-[0.2em] text-[var(--theme-primary)]">
@@ -231,7 +231,7 @@ export function EditorialNarrative({
           </div>
 
           {/* Editorial Details Footer */}
-          <div className="pt-16 mt-16 border-t border-[#2C2C2C]/10 dark:border-[#EAEAEA]/10 grid grid-cols-2 gap-8 font-sans">
+          <div className="pt-16 mt-16 border-t border-[#2C2C2C]/10 dark:border-[#EAEAEA]/10 grid grid-cols-1 sm:grid-cols-2 gap-8 font-sans">
             <div>
               <ShieldCheck className="w-6 h-6 mb-4 opacity-60" />
               <h4 className="text-sm font-medium uppercase tracking-widest mb-2">

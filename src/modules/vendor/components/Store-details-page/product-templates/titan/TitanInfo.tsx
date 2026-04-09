@@ -42,7 +42,7 @@ export function TitanInfo({
   toggleWishlist,
 }: TitanInfoProps) {
   return (
-    <div className="border border-zinc-800 bg-zinc-900/40 p-6 rounded-sm relative overflow-hidden group">
+    <div className="border border-zinc-800 bg-zinc-900/40 px-2.5 py-6 sm:p-6 rounded-sm relative overflow-hidden group">
       <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-[var(--theme-primary)] to-transparent opacity-50 group-hover:opacity-100 transition-opacity" />
 
       <div className="text-[10px] text-[var(--theme-primary)] mb-4 flex justify-between">

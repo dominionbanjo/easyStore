@@ -43,7 +43,7 @@ export function HeritageShowcase({
   toggleWishlist,
 }: HeritageShowcaseProps) {
   return (
-    <div className="bg-white dark:bg-[#1E1A17] rounded-sm md:rounded-sm p-6 md:p-12 lg:p-16  -[#3D352B]/5 border border-[#EADDCE] dark:border-[#3D352B]">
+    <div className="bg-white dark:bg-[#1E1A17] rounded-sm md:rounded-sm px-1 py-6 md:p-12 lg:p-16 -[#3D352B]/5 border border-[#EADDCE] dark:border-[#3D352B]">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
         {/* Gallery: Gentle Borders */}
         <div className="w-full">
@@ -221,7 +221,7 @@ export function HeritageShowcase({
           </div>
 
           {/* Handcrafted Details */}
-          <div className="pt-8 border-t border-[#EADDCE] dark:border-[#3D352B] grid grid-cols-2 gap-6 text-sm font-sans">
+          <div className="pt-8 border-t border-[#EADDCE] dark:border-[#3D352B] grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm font-sans">
             <div className="flex gap-3 text-[#5C5042] dark:text-[#C4BCB3]">
               <ShieldCheck className="w-5 h-5 text-[var(--theme-primary)] shrink-0" />
               <p>Crafted with care, authenticity guaranteed.</p>

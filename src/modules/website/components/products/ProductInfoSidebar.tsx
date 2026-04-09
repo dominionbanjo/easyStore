@@ -63,6 +63,7 @@ interface ProductInfoSidebarProps {
     colors?: { id: string; name: string; hex: string }[];
     image?: string | null;
     is_in_wishlist?: boolean;
+    slug: string;
   };
 }
 

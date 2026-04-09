@@ -33,12 +33,12 @@ export default function VanguardTemplate({
 
   return (
     <div className="min-h-screen bg-white dark:bg-black text-zinc-900 dark:text-zinc-100 font-serif pb-24">
-      <div className="fixed top-0 right-0 z-[60] p-6 md:p-10 flex items-center gap-4 pointer-events-none">
+      <div className="fixed top-0 right-0 z-[60] p-3 sm:p-6 md:p-10 flex items-center gap-2 sm:gap-4 pointer-events-none">
         <button
           onClick={onCartOpen}
-          className="pointer-events-auto relative p-4 bg-white/10 dark:bg-black/20 backdrop-blur-3xl border border-white/20 dark:border-white/10 rounded-sm text-zinc-900 dark:text-zinc-100  hover:scale-110 active:scale-95 transition-all group"
+          className="pointer-events-auto relative p-3 sm:p-4 bg-white/10 dark:bg-black/20 backdrop-blur-3xl border border-white/20 dark:border-white/10 rounded-sm text-zinc-900 dark:text-zinc-100  hover:scale-110 active:scale-95 transition-all group"
         >
-          <ShoppingCart className="w-6 h-6" />
+          <ShoppingCart className="w-5 h-5 sm:w-6 sm:h-6" />
           {cartItemsCount > 0 && (
             <span className="absolute -top-1 -right-1 h-6 w-6 rounded-sm bg-[var(--theme-primary)] text-white text-[11px] flex items-center justify-center font-black ring-2 ring-white dark:ring-black ">
               {cartItemsCount}
@@ -47,8 +47,8 @@ export default function VanguardTemplate({
         </button>
 
         <TemplateProfileDropdown
-          buttonClassName="pointer-events-auto p-4 bg-white/10 dark:bg-black/20 backdrop-blur-3xl border border-white/20 dark:border-white/10 rounded-sm text-zinc-900 dark:text-zinc-100  hover:scale-110 active:scale-95 transition-all"
-          iconClassName="w-6 h-6"
+          buttonClassName="pointer-events-auto p-3 sm:p-4 bg-white/10 dark:bg-black/20 backdrop-blur-3xl border border-white/20 dark:border-white/10 rounded-sm text-zinc-900 dark:text-zinc-100  hover:scale-110 active:scale-95 transition-all"
+          iconClassName="w-5 h-5 sm:w-6 sm:h-6"
         />
       </div>
 
@@ -82,7 +82,7 @@ export default function VanguardTemplate({
         </div>
       </div>
 
-      <div className="max-w-screen-2xl mx-auto px-6 md:px-12 mt-12">
+      <div className="max-w-screen-2xl mx-auto px-1.5 sm:px-6 md:px-12 mt-8 md:mt-12 text-center md:text-left">
         {/* DISCREET TABS */}
         <div className="flex justify-center border-b border-zinc-200 dark:border-zinc-800 mb-12">
           <button

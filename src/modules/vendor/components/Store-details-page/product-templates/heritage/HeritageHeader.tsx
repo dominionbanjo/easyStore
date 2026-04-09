@@ -22,8 +22,8 @@ export function HeritageHeader({
   setSearchOpen,
 }: HeritageHeaderProps) {
   return (
-    <header className="py-6 px-4 md:px-12 flex flex-col gap-4 border-b border-[#EADDCE] dark:border-[#3D352B] bg-[#FAF7F2] dark:bg-[#1E1A17] sticky top-0 z-50  transition-all duration-300">
-      <div className="flex items-center justify-between w-full">
+    <header className="py-3 px-1.5 md:px-12 flex flex-col gap-4 border-b border-[#EADDCE] dark:border-[#3D352B] bg-[#FAF7F2] dark:bg-[#1E1A17] sticky top-0 z-50  transition-all duration-300">
+      <div className="flex items-center justify-between w-full px-1 sm:px-0">
         <Link
           to={`/stores/${store.slug}`}
           className="flex items-center gap-4 group"
@@ -32,10 +32,10 @@ export function HeritageHeader({
             <img
               src={store.logo}
               alt="logo"
-              className="w-12 h-12 rounded-sm object-cover border-2 border-[#EADDCE] group-hover:border-[#8C7A6B] transition-colors"
+              className="w-10 h-10 sm:w-12 sm:h-12 rounded-sm object-cover border-2 border-[#EADDCE] group-hover:border-[#8C7A6B] transition-colors"
             />
           )}
-          <span className="text-2xl font-bold tracking-tight text-[#2C2622] dark:text-white group-hover:text-[var(--theme-primary)] transition-colors">
+          <span className="text-xl sm:text-2xl font-bold tracking-tight text-[#2C2622] dark:text-white group-hover:text-[var(--theme-primary)] transition-colors">
             {store.store_name}
           </span>
         </Link>

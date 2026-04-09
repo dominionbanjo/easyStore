@@ -31,7 +31,7 @@ export function BazaarBuyBox({
   addingToCart,
 }: BazaarBuyBoxProps) {
   return (
-    <div className="w-full lg:w-[400px] border border-slate-200 dark:border-zinc-800 rounded-sm p-5 bg-white dark:bg-zinc-900  sticky top-[100px] space-y-5">
+    <div className="w-full lg:w-[360px] xl:w-[400px] border border-slate-200 dark:border-zinc-800 rounded-sm px-2.5 py-5 sm:p-5 bg-white dark:bg-zinc-900 sticky top-[100px] space-y-5 flex-shrink-0">
       <div className="text-2xl font-black text-slate-900 dark:text-white">
         ₦{displayPrice?.toLocaleString()}
       </div>

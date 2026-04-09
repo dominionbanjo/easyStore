@@ -54,7 +54,7 @@ export default function HeritageProductTemplate({
       />
 
       {/* ─── SHOWCASE MAIN ─── */}
-      <main className="max-w-[1400px] mx-auto px-4 md:px-8 py-12">
+      <main className="max-w-[1400px] mx-auto px-1 sm:px-8 py-8 md:py-12">
         <GoBackButton className="mb-6" />
         <HeritageShowcase
           uiProduct={uiProduct}

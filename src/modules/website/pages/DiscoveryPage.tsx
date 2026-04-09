@@ -75,7 +75,7 @@ export default function DiscoveryPage() {
               <span>Curated Selection</span>
             </div>
 
-            <h1 className="text-6xl md:text-8xl font-black tracking-tighter mb-8 text-foreground">
+            <h1 className="text-4xl sm:text-5xl md:text-8xl font-black tracking-tighter mb-8 text-foreground leading-[0.9]">
               Discover <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-emerald-600 dark:from-emerald-400 dark:to-teal-500">
                 Something New
@@ -149,16 +149,18 @@ export default function DiscoveryPage() {
 
       {/* Featured Section */}
       <section className="w-full mx-auto px-4 mb-24">
-        <div className="flex items-center justify-between mb-10">
-          <h2 className="text-3xl font-black tracking-tight flex items-center gap-2">
-            <Sparkles className="w-6 h-6 text-primary" />
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-10 lg:px-1">
+          <h2 className="text-2xl sm:text-3xl font-black tracking-tight flex items-center gap-2">
+            <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
             Featured
           </h2>
-          <SmartLink to={WEBSITE_ROUTES.FEATURED}>
-            <Button variant="ghost" className="gap-2">
-              View All <ArrowRight className="w-4 h-4" />
-            </Button>
-          </SmartLink>
+          <div className="flex items-center">
+            <SmartLink to={WEBSITE_ROUTES.FEATURED}>
+              <Button variant="ghost" className="gap-2 -ml-3 sm:ml-0 h-9 sm:h-11">
+                View All <ArrowRight className="w-4 h-4" />
+              </Button>
+            </SmartLink>
+          </div>
         </div>
         <motion.div
           key={isFeaturedLoading ? "loading" : "loaded"}
@@ -188,16 +190,18 @@ export default function DiscoveryPage() {
 
       {/* Trending Section */}
       <section className="w-full mx-auto px-4 mb-24">
-        <div className="flex items-center justify-between mb-10">
-          <h2 className="text-3xl font-black tracking-tight flex items-center gap-2">
-            <TrendingUp className="w-6 h-6 text-orange-500" />
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-10 lg:px-1">
+          <h2 className="text-2xl sm:text-3xl font-black tracking-tight flex items-center gap-2">
+            <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-orange-500" />
             Trending Now
           </h2>
-          <SmartLink to={WEBSITE_ROUTES.TRENDING}>
-            <Button variant="ghost" className="gap-2">
-              View All <ArrowRight className="w-4 h-4" />
-            </Button>
-          </SmartLink>
+          <div className="flex items-center">
+            <SmartLink to={WEBSITE_ROUTES.TRENDING}>
+              <Button variant="ghost" className="gap-2 -ml-3 sm:ml-0 h-9 sm:h-11">
+                View All <ArrowRight className="w-4 h-4" />
+              </Button>
+            </SmartLink>
+          </div>
         </div>
         <motion.div
           key={isTrendingLoading ? "loading" : "loaded"}
@@ -227,16 +231,18 @@ export default function DiscoveryPage() {
 
       {/* New Arrivals Section */}
       <section className="w-full mx-auto px-4 mb-24">
-        <div className="flex items-center justify-between mb-10">
-          <h2 className="text-3xl font-black tracking-tight flex items-center gap-2">
-            <Zap className="w-6 h-6 text-blue-500" />
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-10 lg:px-1">
+          <h2 className="text-2xl sm:text-3xl font-black tracking-tight flex items-center gap-2">
+            <Zap className="w-5 h-5 sm:w-6 sm:h-6 text-blue-500" />
             New Arrivals
           </h2>
-          <SmartLink to={WEBSITE_ROUTES.NEW_ARRIVALS}>
-            <Button variant="ghost" className="gap-2">
-              View All <ArrowRight className="w-4 h-4" />
-            </Button>
-          </SmartLink>
+          <div className="flex items-center">
+            <SmartLink to={WEBSITE_ROUTES.NEW_ARRIVALS}>
+              <Button variant="ghost" className="gap-2 -ml-3 sm:ml-0 h-9 sm:h-11">
+                View All <ArrowRight className="w-4 h-4" />
+              </Button>
+            </SmartLink>
+          </div>
         </div>
         <motion.div
           key={isNewArrivalsLoading ? "loading" : "loaded"}

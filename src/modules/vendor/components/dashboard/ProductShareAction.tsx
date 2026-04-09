@@ -47,24 +47,25 @@ export function ProductShareAction({ product, className }: ProductShareActionPro
       // 3. Construct shareable URL
       const baseDomain = getBaseDomain();
       const storeSlug = product.store_slug || "market";
-      const storeUrl = `${window.location.protocol}//${storeSlug}.${baseDomain}/product/${product.slug}`;
+      const productUrl = `${window.location.protocol}//${storeSlug}.${baseDomain}/product/${product.slug}`;
+      const shareTitle = `Check out ${product.name} on ${product.store_name || "EazyStore"}`;
+      const shareText = `Visit my site to view this amazing find! ${product.name} for ₦${Number(product.price).toLocaleString()} at ${product.store_name || "EazyStore"}.\n\nView here: ${productUrl}`;
 
       // 4. Use Web Share API if available
       if (navigator.canShare && navigator.canShare({ files: [file] })) {
         await navigator.share({
-          title: `Check out ${product.name} on ${product.store_name || "EasyStore"}`,
-          text: `Found this amazing find! ₦${Number(product.price).toLocaleString()} at ${product.store_name || "EasyStore"}.`,
-          url: storeUrl,
+          title: shareTitle,
+          text: shareText,
           files: [file],
         });
       } else if (navigator.share) {
         await navigator.share({
-          title: product.name,
-          url: storeUrl,
+          title: shareTitle,
+          text: shareText,
         });
       } else {
         // Fallback: Copy Link
-        await navigator.clipboard.writeText(storeUrl);
+        await navigator.clipboard.writeText(productUrl);
         toast.success("Link copied! Now you can share it anywhere.");
       }
     } catch (err: any) {
@@ -113,7 +114,7 @@ export function ProductShareAction({ product, className }: ProductShareActionPro
                   <span className="text-white font-black text-xs">ES</span>
                </div>
                <span className="font-black text-2xl tracking-tighter text-black uppercase">
-                 EasyStore
+                 EazyStore
                </span>
             </div>
             <div className="flex items-center gap-2 bg-zinc-100 px-4 py-2 rounded-full border border-zinc-200">
@@ -165,7 +166,7 @@ export function ProductShareAction({ product, className }: ProductShareActionPro
               
               <div className="bg-zinc-950 text-white p-4 rounded-xl flex flex-col items-center justify-center">
                  <span className="text-[8px] font-black uppercase tracking-widest opacity-50 mb-1">Buy via</span>
-                 <span className="text-sm font-black">EasyStore.ng</span>
+                 <span className="text-sm font-black">EazyStore.ng</span>
               </div>
             </div>
           </div>

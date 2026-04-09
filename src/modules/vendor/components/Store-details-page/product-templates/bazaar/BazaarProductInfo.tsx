@@ -38,7 +38,7 @@ export function BazaarProductInfo({
   toggleWishlist,
 }: BazaarProductInfoProps) {
   return (
-    <div className="bg-white dark:bg-zinc-900 rounded-sm  border border-slate-200 dark:border-zinc-800 p-6 flex flex-col md:flex-row gap-8">
+    <div className="bg-white dark:bg-zinc-900 rounded-sm  border border-slate-200 dark:border-zinc-800 px-2 py-6 sm:p-6 flex flex-col md:flex-row gap-6 md:gap-8">
       {/* Product Gallery (Compact for Bazaar) */}
       <div className="w-full md:w-5/12 shrink-0">
         <ProductGallery images={uiProduct.images} />

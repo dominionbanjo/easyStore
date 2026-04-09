@@ -51,7 +51,7 @@ export default function EditorialProductTemplate({
         setSearchOpen={setSearchOpen}
       />
 
-      <div className="max-w-7xl mx-auto px-6 pt-8">
+      <div className="max-w-7xl mx-auto px-2 sm:px-6 pt-6 sm:pt-8">
         <GoBackButton />
       </div>
 
@@ -75,7 +75,7 @@ export default function EditorialProductTemplate({
       />
 
       {/* ─── APPENDICES ─── */}
-      <div className="max-w-7xl mx-auto px-6 py-24 space-y-32">
+      <div className="max-w-7xl mx-auto px-2 sm:px-6 py-12 md:py-24 space-y-20 md:space-y-32">
         {/* tabs and reviews remain narrow for reading comfort */}
         <div className="max-w-4xl mx-auto prose-editorial">
           <ProductDetailsTabs product={uiProduct} />

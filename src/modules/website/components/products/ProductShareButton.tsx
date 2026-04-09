@@ -14,6 +14,7 @@ interface ProductShareButtonProps {
     image?: string | null;
     vendor: string;
     storeSlug: string;
+    slug: string;
   };
 }
 
@@ -39,25 +40,25 @@ export function ProductShareButton({ product }: ProductShareButtonProps) {
       );
 
       const baseDomain = getBaseDomain();
-      const storeUrl = `${window.location.protocol}//${product.storeSlug}.${baseDomain}/products/${product.id}`;
+      const productUrl = `${window.location.protocol}//${baseDomain}/product/${product.slug}`;
+      const shareTitle = `Check out ${product.name} on EazyStore`;
+      const shareText = `Visit eazystore to discover this: ${product.name} for ₦${Number(product.price).toLocaleString()} at ${product.vendor}.\n\nView here: ${productUrl}`;
 
       if (navigator.canShare && navigator.canShare({ files: [file] })) {
         await navigator.share({
-          title: `Check out ${product.name} on ${product.vendor}`,
-          text: `I found this amazing product: ${product.name} for ₦${Number(product.price).toLocaleString()} at ${product.vendor}.`,
-          url: storeUrl,
+          title: shareTitle,
+          text: shareText,
           files: [file],
         });
       } else if (navigator.share) {
         // Fallback to URL only if file sharing is not supported
         await navigator.share({
-          title: `Check out ${product.name} on ${product.vendor}`,
-          text: `I found this amazing product: ${product.name} for ₦${Number(product.price).toLocaleString()} at ${product.vendor}.`,
-          url: storeUrl,
+          title: shareTitle,
+          text: shareText,
         });
       } else {
         // Ultimate fallback to generic clipboard copy
-        await navigator.clipboard.writeText(storeUrl);
+        await navigator.clipboard.writeText(productUrl);
         toast.success("Product link copied to clipboard!");
       }
     } catch (err: any) {
@@ -100,7 +101,7 @@ export function ProductShareButton({ product }: ProductShareButtonProps) {
         >
           <div className="flex items-center justify-between">
             <span className="font-black text-2xl tracking-tighter text-emerald-600 uppercase">
-              EasyStore
+              EazyStore
             </span>
             <span className="text-sm font-bold bg-neutral-100 px-3 py-1 rounded-sm text-neutral-600">
               {product.vendor}

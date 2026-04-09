@@ -22,11 +22,11 @@ export function BazaarHeader({
 }: BazaarHeaderProps) {
   return (
     <header className="bg-white dark:bg-zinc-900  border-b-4 border-[var(--theme-primary)] sticky top-0 z-50 transition-colors">
-      <div className="max-w-[1600px] mx-auto px-4 py-3 flex items-center justify-between gap-4">
-        <div className="flex items-center gap-6 flex-1">
+      <div className="max-w-[1600px] mx-auto px-4 py-3 flex items-center justify-between gap-4 overflow-hidden">
+        <div className="flex items-center gap-6 flex-1 min-w-0">
           <Link
             to={`/stores/${store.slug}`}
-            className="flex items-center gap-3 shrink-0"
+            className="flex items-center gap-3 shrink-0 min-w-0"
           >
             {store.logo && (
               <img
@@ -35,7 +35,7 @@ export function BazaarHeader({
                 className="w-8 h-8 rounded-sm shrink-0 object-cover"
               />
             )}
-            <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white truncate max-w-[120px] sm:max-w-none">
+            <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white truncate">
               {store.store_name}
             </span>
           </Link>
