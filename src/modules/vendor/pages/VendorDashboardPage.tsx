@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { lazy, Suspense } from "react";
 import {
   BarChart2,
   Package,
@@ -15,9 +16,15 @@ import { Button } from "@/components/ui/button";
 
 import { DashboardStatsLoader } from "../components/dashboard/DashboardStatsLoader";
 import { StatCard } from "../components/dashboard/StatCard";
-import { SalesChart } from "../components/dashboard/SalesChart";
 import { DashboardOverviewHeader } from "../components/dashboard/DashboardOverviewHeader";
-import { StoreSetupTracker } from "../components/shared/StoreSetupTracker";
+
+// Lazy-load heavy below-fold components — Recharts is the biggest LCP offender
+const SalesChart = lazy(() =>
+  import("../components/dashboard/SalesChart").then((m) => ({ default: m.SalesChart }))
+);
+const StoreSetupTracker = lazy(() =>
+  import("../components/shared/StoreSetupTracker").then((m) => ({ default: m.StoreSetupTracker }))
+);
 
 import { useGetMyStoreAnalyticsQuery } from "@/services/storeApi";
 import { formatCompactNumber } from "@/utils/numberUtils";
@@ -171,50 +178,49 @@ export default function VendorDashboardPage() {
 
       {/* ─── Setup Progress Call to Action ─── */}
       <div className="mb-8 mt-4">
-        <StoreSetupTracker />
+        <Suspense fallback={<div className="h-24 rounded-sm bg-muted/40 animate-pulse" />}>
+          <StoreSetupTracker />
+        </Suspense>
       </div>
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="space-y-8"
-      >
-        {/* ─── Stats Overview ─── */}
-        {isLoading ? (
-          <DashboardStatsLoader />
-        ) : (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {stats.map((s, i) => (
-              <StatCard
-                key={i}
-                title={s.title}
-                value={s.value}
-                icon={s.icon}
-                color={s.color}
-                trend={s.trend}
-                delay={s.delay}
-              />
-            ))}
-          </div>
-        )}
+      {/* ─── Stats Overview ─── */}
+      {isLoading ? (
+        <DashboardStatsLoader />
+      ) : (
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {stats.map((s, i) => (
+            <StatCard
+              key={i}
+              title={s.title}
+              value={s.value}
+              icon={s.icon}
+              color={s.color}
+              trend={s.trend}
+              delay={s.delay}
+            />
+          ))}
+        </div>
+      )}
 
-        <div className="grid gap-8 lg:grid-cols-3">
+      <div className="grid gap-8 lg:grid-cols-3 mt-8">
           {/* ─── Main Analytics Chart ─── */}
           <div className="lg:col-span-2">
             {isLoading ? (
               <div className="h-[450px] w-full rounded-sm bg-muted/40 animate-pulse border border-border/40" />
             ) : (
-              <SalesChart
-                data={
-                  trends?.monthly?.map((m: any) => ({
-                    ...m,
-                    month: MONTH_NAMES[m.month - 1] || m.month.toString(),
-                    sales: Number(m.revenue || 0) / 100,
-                    online: Number(m.online_revenue || 0) / 100,
-                    offline: Number(m.offline_revenue || 0) / 100,
-                  })) ?? []
-                }
-              />
+              <Suspense fallback={<div className="h-[450px] w-full rounded-sm bg-muted/40 animate-pulse border border-border/40" />}>
+                <SalesChart
+                  data={
+                    trends?.monthly?.map((m: any) => ({
+                      ...m,
+                      month: MONTH_NAMES[m.month - 1] || m.month.toString(),
+                      sales: Number(m.revenue || 0) / 100,
+                      online: Number(m.online_revenue || 0) / 100,
+                      offline: Number(m.offline_revenue || 0) / 100,
+                    })) ?? []
+                  }
+                />
+              </Suspense>
             )}
           </div>
 
@@ -292,8 +298,7 @@ export default function VendorDashboardPage() {
                 )}
             </div>
           </div>
-        </div>
-      </motion.div>
+      </div>
     </div>
   );
 }

@@ -17,6 +17,43 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { StoreSetupTracker } from "./shared/StoreSetupTracker";
 import { getAppPath } from "@/utils/subdomain";
+import { useEffect } from "react";
+import {
+  preloadVendorDashboardPage,
+  preloadProductsPage,
+  preloadVendorOrdersPage,
+  preloadCustomersPage,
+  preloadVendorTemplatesPage,
+  preloadVendorSettingsPage,
+  preloadAnalyticsPage,
+  preloadHelpPage,
+  preloadAddProductPage,
+} from "@/routes/lazyPages";
+
+// Map each nav path to its preload function
+const preloadMap: Record<string, () => Promise<any>> = {
+  "/": preloadVendorDashboardPage,
+  "/products": preloadProductsPage,
+  "/orders": preloadVendorOrdersPage,
+  "/customers": preloadCustomersPage,
+  "/templates": preloadVendorTemplatesPage,
+  "/settings": preloadVendorSettingsPage,
+  "/analytics": preloadAnalyticsPage,
+  "/help": preloadHelpPage,
+};
+
+// All vendor chunks to warm up in background
+const allVendorPreloaders = [
+  preloadVendorDashboardPage,
+  preloadProductsPage,
+  preloadVendorOrdersPage,
+  preloadCustomersPage,
+  preloadVendorTemplatesPage,
+  preloadVendorSettingsPage,
+  preloadAnalyticsPage,
+  preloadHelpPage,
+  preloadAddProductPage,
+];
 
 const menuItems = [
   { label: "Dashboard", icon: LayoutDashboard, to: "/", exact: true },
@@ -42,6 +79,32 @@ export default function DashboardSidebar({
   isCollapsed,
   onCollapse,
 }: DashboardSidebarProps) {
+  // Preload all vendor page chunks during browser idle time so navigation is instant
+  useEffect(() => {
+    const preload = () => {
+      allVendorPreloaders.forEach((fn) => fn());
+    };
+    if ("requestIdleCallback" in window) {
+      const id = requestIdleCallback(preload, { timeout: 3000 });
+      return () => cancelIdleCallback(id);
+    } else {
+      // Fallback for Safari
+      const t = setTimeout(preload, 2000);
+      return () => clearTimeout(t);
+    }
+  }, []);
+
+  // Also eagerly preload all pages the moment the mobile drawer opens
+  useEffect(() => {
+    if (open) {
+      allVendorPreloaders.forEach((fn) => fn());
+    }
+  }, [open]);
+
+  const handlePreload = (path: string) => {
+    preloadMap[path]?.();
+  };
+
   return (
     <>
       {/* ─── Desktop Sidebar ─── */}
@@ -89,6 +152,8 @@ export default function DashboardSidebar({
                 to={finalPath}
                 end={exact}
                 title={isCollapsed ? label : ""}
+                onMouseEnter={() => handlePreload(to)}
+                onFocus={() => handlePreload(to)}
                 className={({ isActive }) =>
                   cn(
                     "flex items-center gap-3 px-3 py-2 rounded-sm text-sm transition-colors",
@@ -160,6 +225,8 @@ export default function DashboardSidebar({
                       to={finalPath}
                       end={exact}
                       onClick={onToggle}
+                      onMouseEnter={() => handlePreload(to)}
+                      onFocus={() => handlePreload(to)}
                       className={({ isActive }) =>
                         cn(
                           "flex items-center gap-3 px-3 py-2 rounded-sm text-sm transition-colors",
@@ -185,3 +252,4 @@ export default function DashboardSidebar({
     </>
   );
 }
+
