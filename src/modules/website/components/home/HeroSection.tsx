@@ -1,6 +1,14 @@
 import { motion, type Variants } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import {
+  ArrowRight,
+  Globe,
+  Zap,
+  ShieldCheck,
+  MapPin,
+  PlayCircle,
+  Lock,
+} from "lucide-react";
 import SocialProofBadge from "./SocialProofBadge";
 import { useAppDispatch, useAppSelector } from "@/hooks";
 import {
@@ -27,14 +35,25 @@ const transitionVariants: Variants = {
 export function HeroTitle() {
   return (
     <>
-      Transform Your Business with a
-      <br />
+      <span className="block text-lg md:text-2xl text-muted-foreground font-semibold mb-4 tracking-normal">
+        Stop struggling to sell online.
+      </span>
+      Launch your store, own your link, and get paid securely{" "}
       <span className="relative inline-block mt-2">
         <span className="relative z-10 text-primary">
-          Professional{" "}
-          <span className="text-emerald-500 dark:text-emerald-400 font-bold underline decoration-dotted underline-offset-8">
-            Online Storefront
-          </span>
+          all in minutes.
+          <svg
+            className="absolute w-full h-3 -bottom-1 left-0 text-emerald-400 opacity-50 z-[-1]"
+            viewBox="0 0 100 10"
+            preserveAspectRatio="none"
+          >
+            <path
+              d="M0 5 Q 50 10 100 5"
+              stroke="currentColor"
+              strokeWidth="4"
+              fill="transparent"
+            />
+          </svg>
         </span>
       </span>
     </>
@@ -46,17 +65,17 @@ export default function HeroSection() {
   const user = useAppSelector(selectCurrentUser);
 
   return (
-    <section className="relative isolate  py-6 sm:py-12  dark:from-neutral-950 dark:via-neutral-900 dark:to-neutral-950 transition-colors duration-300">
-      <div className="w-full mx-auto">
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-16">
+    <section className="relative isolate pt-6 pb-12 sm:py-20 dark:from-neutral-950 dark:via-neutral-900 dark:to-neutral-950 transition-colors duration-300 overflow-hidden">
+      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+        <div className="flex flex-col xl:flex-row items-center justify-between gap-16">
           {/* LEFT SIDE */}
-          <div className="flex-1 text-center lg:text-left space-y-8">
+          <div className="flex-1 text-center xl:text-left space-y-8 max-w-3xl mx-auto xl:mx-0">
             {/* Catchy TAG */}
             <motion.h1
               variants={transitionVariants}
               initial="hidden"
               animate="visible"
-              className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-balance leading-[1.1]"
+              className="text-3xl sm:text-5xl md:text-5xl lg:text-[54px] font-extrabold tracking-tight md:text-balance leading-[1.1] px-1 sm:px-0"
             >
               <HeroTitle />
             </motion.h1>
@@ -66,81 +85,177 @@ export default function HeroSection() {
               initial="hidden"
               animate="visible"
               transition={{ delay: 0.1 }}
-              className="mt-6 max-w-2xl mx-auto lg:mx-0 text-lg sm:text-xl leading-relaxed text-muted-foreground"
+              className="mt-6 max-w-2xl mx-auto xl:mx-0 text-lg sm:text-xl leading-relaxed text-muted-foreground font-medium px-2 sm:px-0"
             >
-              EazyStore gives you everything you need to sell online. Create
-              your professional storefront in minutes, showcase your products to
-              millions, and manage your entire business from one simple
-              dashboard.
+              Build a professional online business without stress. EazyStore
+              gives you{" "}
+              <strong>
+                your own website, professional store link, and secure escrow
+                payments
+              </strong>{" "}
+              — so you can sell with confidence.
             </motion.p>
 
+            {/* Core Value Pillars */}
             <motion.div
               variants={transitionVariants}
               initial="hidden"
               animate="visible"
               transition={{ delay: 0.2 }}
-              className="mt-10 flex flex-col sm:flex-row items-center lg:items-start gap-6"
+              className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-left max-w-2xl mx-auto xl:mx-0"
             >
-              {!user || user.account_type === "vendor" ? (
-                <SmartLink
-                  to={!user ? `${AUTH_ROUTES.SIGNUP}?role=vendor` : "/vendor"}
-                  className="w-full sm:w-auto"
-                >
+              <div className="flex items-start gap-3">
+                <div className="p-2.5 bg-primary/10 rounded-sm shrink-0">
+                  <Globe className="w-5 h-5 text-primary" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-foreground">Your Store Link</h3>
+                  <p className="text-sm text-muted-foreground mt-0.5">
+                    Not a marketplace profile — a real brand.
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="p-2.5 bg-amber-500/10 rounded-sm shrink-0">
+                  <Zap className="w-5 h-5 text-amber-500" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-foreground">Instant Setup</h3>
+                  <p className="text-sm text-muted-foreground mt-0.5">
+                    No coding, no stress. Go live in minutes.
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="p-2.5 bg-emerald-500/10 rounded-sm shrink-0">
+                  <ShieldCheck className="w-5 h-5 text-emerald-500" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-foreground">Secure Escrow</h3>
+                  <p className="text-sm text-muted-foreground mt-0.5">
+                    Get paid safely. Buyers trust you more.
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="p-2.5 bg-blue-500/10 rounded-sm shrink-0">
+                  <MapPin className="w-5 h-5 text-blue-500" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-foreground">
+                    Built for Nigeria
+                  </h3>
+                  <p className="text-sm text-muted-foreground mt-0.5">
+                    Works with local payment realities.
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              variants={transitionVariants}
+              initial="hidden"
+              animate="visible"
+              transition={{ delay: 0.3 }}
+              className="mt-10 flex flex-col items-center xl:items-start gap-4"
+            >
+              <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+                {!user || user.account_type === "vendor" ? (
+                  <SmartLink
+                    to={!user ? `${AUTH_ROUTES.SIGNUP}?role=vendor` : "/vendor"}
+                    className="w-full sm:w-auto"
+                  >
+                    <Button
+                      size="lg"
+                      className="group relative bg-primary hover:bg-emerald-600 dark:bg-emerald-500 dark:hover:bg-emerald-400 text-white rounded-sm h-14 px-8 text-lg font-bold hover:scale-[1.02] active:scale-95 transition-all w-full shadow-lg shadow-emerald-500/20"
+                    >
+                      <span className="relative flex items-center gap-2">
+                        Start Selling Now — It's Free
+                        <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+                      </span>
+                    </Button>
+                  </SmartLink>
+                ) : (
                   <Button
                     size="lg"
-                    className="group relative bg-primary hover:bg-emerald-500 dark:bg-emerald-500 dark:hover:bg-emerald-400 text-white dark:text-neutral-950 rounded-sm h-14 px-10 text-lg font-bold hover:scale-[1.05] active:scale-95 transition-all  -emerald-500/20 hover:-emerald-500/40 w-full"
+                    onClick={() =>
+                      dispatch(
+                        setShowOnboardingModal({
+                          show: true,
+                          step: "store-form",
+                        }),
+                      )
+                    }
+                    className="group relative bg-primary hover:bg-emerald-600 dark:bg-emerald-500 dark:hover:bg-emerald-400 text-white rounded-sm h-14 px-8 text-lg font-bold hover:scale-[1.02] active:scale-95 transition-all w-full shadow-lg shadow-emerald-500/20"
                   >
-                    <div className="absolute inset-0 bg-emerald-400/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity rounded-sm" />
                     <span className="relative flex items-center gap-2">
-                      Start Selling Now
+                      Start Selling Now — It's Free
                       <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
                     </span>
                   </Button>
-                </SmartLink>
-              ) : (
-                <Button
-                  size="lg"
-                  onClick={() =>
-                    dispatch(
-                      setShowOnboardingModal({
-                        show: true,
-                        step: "store-form",
-                      }),
-                    )
-                  }
-                  className="group relative bg-primary hover:bg-emerald-500 dark:bg-emerald-500 dark:hover:bg-emerald-400 text-white dark:text-neutral-950 rounded-sm h-14 px-10 text-lg font-bold hover:scale-[1.05] active:scale-95 transition-all  -emerald-500/20 hover:-emerald-500/40"
-                >
-                  <div className="absolute inset-0 bg-emerald-400/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity rounded-sm" />
-                  <span className="relative flex items-center gap-2">
-                    Start Selling Now
-                    <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
-                  </span>
-                </Button>
-              )}
+                )}
 
-              <SocialProofBadge
-                users={[
-                  { src: "/images/fash4.png", alt: "@user1", fallback: "U1" },
-                  { src: "/images/fash0.png", alt: "@user2", fallback: "U2" },
-                  { src: "/images/fash1.png", alt: "@user3", fallback: "U3" },
-                ]}
-                rating={4.9}
-                totalUsers={100}
-                maxAvatars={3}
-              />
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="h-14 px-8 font-bold rounded-sm border-2 w-full sm:w-auto hover:bg-muted text-foreground"
+                >
+                  <PlayCircle className="w-5 h-5 mr-2" /> See How It Works
+                </Button>
+              </div>
+
+              <div className="flex items-center flex-wrap justify-center xl:justify-start gap-3 mt-4">
+                <SocialProofBadge
+                  users={[
+                    { src: "/images/fash4.png", alt: "@user1", fallback: "U1" },
+                    { src: "/images/fash0.png", alt: "@user2", fallback: "U2" },
+                    { src: "/images/fash1.png", alt: "@user3", fallback: "U3" },
+                  ]}
+                  rating={4.9}
+                  totalUsers={150}
+                  maxAvatars={3}
+                />
+                <div className="w-px h-6 bg-border hidden sm:block" />
+                <div className="flex flex-wrap justify-center gap-2 text-xs sm:text-sm text-muted-foreground font-medium text-center xl:text-left">
+                  <span>No tech skills needed</span>
+                  <span className="hidden sm:inline-block">•</span>
+                  <span>No upfront cost</span>
+                  <span className="hidden sm:inline-block">•</span>
+                  <span>Trusted by growing businesses</span>
+                </div>
+              </div>
             </motion.div>
           </div>
 
-          {/* RIGHT SIDE */}
+          {/* RIGHT SIDE Visual Direction */}
           <motion.div
             variants={transitionVariants}
             initial="hidden"
             animate="visible"
             transition={{ delay: 0.5 }}
-            className="flex-1 w-full max-w-2xl"
+            className="flex-1 w-full max-w-[600px] xl:max-w-[550px] relative mt-10 xl:mt-0"
           >
-            <div className="relative group p-2 bg-white dark:bg-neutral-800 rounded-sm  border border-border/50 dark:border-white/5 overflow-hidden transform hover:-rotate-1 transition-transform duration-700">
-              <div className="relative aspect-[4/3] rounded-sm overflow-hidden bg-muted">
+            {/* Background elements */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 via-transparent to-emerald-500/10 blur-[80px] rounded-full -z-10" />
+
+            <div className="relative p-2 bg-white dark:bg-neutral-800 rounded-sm border border-border shadow-2xl">
+              {/* Browser/Domain Bar Frame */}
+              <div className="bg-muted/50 rounded-t-sm p-3 border-b border-border/50 flex items-center gap-3">
+                <div className="flex gap-1.5">
+                  <div className="w-3 h-3 rounded-full bg-red-400" />
+                  <div className="w-3 h-3 rounded-full bg-amber-400" />
+                  <div className="w-3 h-3 rounded-full bg-emerald-400" />
+                </div>
+                <div className="flex-1 bg-white dark:bg-neutral-900 rounded-sm h-8 flex items-center justify-center px-3 gap-2 border border-border/50">
+                  <Lock className="w-3.5 h-3.5 text-emerald-500" />
+                  <span className="text-xs font-semibold tracking-wide text-foreground">
+                    shop.eazystore.com.ng
+                  </span>
+                </div>
+              </div>
+
+              {/* Main Visual */}
+              <div className="relative aspect-[4/3] bg-muted overflow-hidden rounded-b-sm">
                 <video
                   className="w-full h-full object-cover"
                   src="/videos/campaign5.mp4"
@@ -150,22 +265,57 @@ export default function HeroSection() {
                   playsInline
                 />
 
-                {/* Floating Elements for "Story" feel */}
-                <div className="absolute top-6 right-6 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-xl px-4 py-3 rounded-sm  border border-white/20 dark:border-white/5 flex items-center gap-3 animate-bounce">
-                  <div className="w-10 h-10 bg-emerald-500 dark:bg-emerald-600 rounded-sm flex items-center justify-center text-white  -emerald-500/20">
-                    <div className="bg-white/20 p-1 rounded-sm">
-                      <ArrowRight className="h-4 w-4 rotate-[-45deg]" />
-                    </div>
+                {/* Overlays / Trust badges */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
+
+                {/* Sale notification */}
+                <motion.div
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{
+                    delay: 1,
+                    duration: 0.5,
+                    type: "spring",
+                    bounce: 0.4,
+                  }}
+                  className="absolute bottom-6 left-6 right-6 sm:bottom-8 sm:left-8 sm:right-auto bg-white/95 dark:bg-neutral-900/95 backdrop-blur-xl px-4 py-3 rounded-sm border border-border/40 shadow-xl flex items-center gap-4"
+                >
+                  <div className="w-10 h-10 bg-emerald-500/20 rounded-full flex items-center justify-center shrink-0">
+                    <span className="text-emerald-600 dark:text-emerald-400 font-extrabold text-lg">
+                      ₦
+                    </span>
                   </div>
-                  <div>
-                    <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.15em]">
-                      Recent Sale
-                    </p>
-                    <p className="text-sm font-black text-foreground">
-                      ₦45,000 received
-                    </p>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-black tracking-tight text-foreground">
+                      Payment Received
+                    </span>
+                    <span className="text-xs font-semibold text-muted-foreground flex items-center gap-1">
+                      <ShieldCheck className="w-3 h-3 text-emerald-500" /> via
+                      Escrow
+                    </span>
                   </div>
-                </div>
+                  <div className="ml-auto sm:ml-4 font-black text-lg text-emerald-600 dark:text-emerald-400">
+                    ₦45,000
+                  </div>
+                </motion.div>
+
+                {/* Escrow badge floating */}
+                <motion.div
+                  animate={{ y: [0, -8, 0] }}
+                  transition={{
+                    repeat: Infinity,
+                    duration: 3.5,
+                    ease: "easeInOut",
+                  }}
+                  className="absolute top-6 right-6 max-w-[160px]"
+                >
+                  <div className="bg-white/90 dark:bg-neutral-900/90 backdrop-blur-md border border-border/40 shadow-lg p-2.5 rounded-sm flex items-center gap-2">
+                    <ShieldCheck className="w-5 h-5 text-emerald-500" />
+                    <span className="text-[10px] font-black leading-tight uppercase tracking-widest text-foreground">
+                      Escrow Secured
+                    </span>
+                  </div>
+                </motion.div>
               </div>
             </div>
           </motion.div>
