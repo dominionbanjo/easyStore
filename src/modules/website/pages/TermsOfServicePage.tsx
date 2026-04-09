@@ -212,7 +212,7 @@ export default function TermsOfServicePage() {
                     </div>
                   </div>
                   <a
-                    href="mailto:legal@eazystore.com.ng"
+                    href="mailto:support@eazystore.com.ng"
                     className="inline-flex items-center justify-center px-10 py-5 border border-transparent text-sm font-black uppercase tracking-[0.2em] rounded-sm text-white dark:text-neutral-950 bg-primary dark:bg-emerald-500 hover:scale-105 transition-all active:scale-95 whitespace-nowrap   dark:-emerald-500/20"
                   >
                     Contact Legal Team

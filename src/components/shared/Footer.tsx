@@ -175,10 +175,13 @@ export default function Footer() {
                 <MapPin className="w-4 h-4 text-primary" />
                 <span>Lagos, Nigeria</span>
               </div>
-              <div className="flex items-center gap-3 text-sm text-muted-foreground">
+              <a
+                href="mailto:support@eazystore.com.ng"
+                className="flex items-center gap-3 text-sm text-muted-foreground hover:text-primary transition-colors"
+              >
                 <Mail className="w-4 h-4 text-primary" />
-                <span>hello@eazystore.com.ng</span>
-              </div>
+                <span>support@eazystore.com.ng</span>
+              </a>
             </div>
           </div>
         </div>

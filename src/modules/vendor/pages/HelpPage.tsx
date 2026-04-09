@@ -43,9 +43,12 @@ export default function HelpPage() {
       <div className="pt-10 border-t border-border/50 text-center">
         <p className="text-muted-foreground text-sm font-medium">
           Still having trouble? Email us directly at{" "}
-          <span className="text-emerald-500 font-bold">
+          <a
+            href="mailto:support@eazystore.com.ng"
+            className="text-emerald-500 font-bold hover:underline transition-all"
+          >
             support@eazystore.com.ng
-          </span>
+          </a>
         </p>
         <div className="flex items-center justify-center gap-6 mt-6 opacity-60">
           {["System Status: Online", "Documentation v2.4", "Vendor Policy"].map(
