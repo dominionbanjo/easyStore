@@ -240,22 +240,21 @@ export default function HeroSection() {
 
             <div className="relative p-2 bg-white dark:bg-neutral-800 rounded-sm border border-border shadow-2xl">
               {/* Browser/Domain Bar Frame */}
-              <div className="bg-muted/50 rounded-t-sm p-3 border-b border-border/50 flex items-center gap-3">
-                <div className="flex gap-1.5">
-                  <div className="w-3 h-3 rounded-full bg-red-400" />
-                  <div className="w-3 h-3 rounded-full bg-amber-400" />
-                  <div className="w-3 h-3 rounded-full bg-emerald-400" />
-                </div>
-                <div className="flex-1 bg-white dark:bg-neutral-900 rounded-sm h-8 flex items-center justify-center px-3 gap-2 border border-border/50">
-                  <Lock className="w-3.5 h-3.5 text-emerald-500" />
-                  <span className="text-xs font-semibold tracking-wide text-foreground">
-                    shop.eazystore.com.ng
+              <div className="bg-muted/50 rounded-t-sm p-2 px-4 border-b border-border/50 flex items-center justify-center">
+
+                <div className="flex-1 bg-white dark:bg-neutral-900 rounded-sm min-h-[32px] sm:h-8 flex flex-col sm:flex-row items-center justify-center px-3 py-1 sm:py-0 gap-0.5 sm:gap-2 border border-border/50">
+                  <div className="flex items-center gap-1.5">
+                    <Lock className="w-3 h-3 text-emerald-500" />
+                    <span className="text-muted-foreground font-bold uppercase tracking-widest text-[8px] sm:text-[10px] whitespace-nowrap">Get your custom link e.g.</span>
+                  </div>
+                  <span className="text-[11px] sm:text-xs font-black tracking-tight text-foreground">
+                    <span className="text-emerald-500 underline decoration-emerald-500/30 underline-offset-2">gameshop</span>.eazystore.com.ng
                   </span>
                 </div>
               </div>
 
               {/* Main Visual */}
-              <div className="aspect-[16/10] sm:aspect-[16/9] w-full relative overflow-hidden bg-neutral-900 group">
+              <div className="aspect-[16/11] sm:aspect-[16/9] w-full relative overflow-hidden bg-neutral-900 group">
                 <AnimatePresence mode="wait">
                   <motion.img
                     key={currentSlide}
@@ -265,61 +264,12 @@ export default function HeroSection() {
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.95 }}
                     transition={{ duration: 0.8, ease: "easeInOut" }}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover object-top"
                   />
                 </AnimatePresence>
 
                 {/* Overlays / Trust badges */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
-
-                {/* Sale notification */}
-                <motion.div
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{
-                    delay: 1,
-                    duration: 0.5,
-                    type: "spring",
-                    bounce: 0.4,
-                  }}
-                  className="absolute bottom-6 left-6 right-6 sm:bottom-8 sm:left-8 sm:right-auto bg-white/95 dark:bg-neutral-900/95 backdrop-blur-xl px-4 py-3 rounded-sm border border-border/40 shadow-xl flex items-center gap-4"
-                >
-                  <div className="w-10 h-10 bg-emerald-500/20 rounded-full flex items-center justify-center shrink-0">
-                    <span className="text-emerald-600 dark:text-emerald-400 font-extrabold text-lg">
-                      ₦
-                    </span>
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-sm font-black tracking-tight text-foreground">
-                      Payment Received
-                    </span>
-                    <span className="text-xs font-semibold text-muted-foreground flex items-center gap-1">
-                      <ShieldCheck className="w-3 h-3 text-emerald-500" /> via
-                      Escrow
-                    </span>
-                  </div>
-                  <div className="ml-auto sm:ml-4 font-black text-lg text-emerald-600 dark:text-emerald-400">
-                    ₦45,000
-                  </div>
-                </motion.div>
-
-                {/* Escrow badge floating */}
-                <motion.div
-                  animate={{ y: [0, -8, 0] }}
-                  transition={{
-                    repeat: Infinity,
-                    duration: 3.5,
-                    ease: "easeInOut",
-                  }}
-                  className="absolute top-6 right-6 max-w-[160px]"
-                >
-                  <div className="bg-white/90 dark:bg-neutral-900/90 backdrop-blur-md border border-border/40 shadow-lg p-2.5 rounded-sm flex items-center gap-2">
-                    <ShieldCheck className="w-5 h-5 text-emerald-500" />
-                    <span className="text-[10px] font-black leading-tight uppercase tracking-widest text-foreground">
-                      Escrow Secured
-                    </span>
-                  </div>
-                </motion.div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
               </div>
             </div>
           </motion.div>
