@@ -35,7 +35,7 @@ export function SearchResultsGrid({
     return (
       <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4">
         {Array.from({ length: 8 }).map((_, i) => (
-          <Skeleton key={i} className="aspect-[3/4] rounded-xl" />
+          <Skeleton key={i} className="aspect-[3/4] rounded-sm" />
         ))}
       </div>
     );
@@ -43,8 +43,8 @@ export function SearchResultsGrid({
 
   if (isError) {
     return (
-      <div className="flex flex-col items-center justify-center py-32 text-center bg-white/50 dark:bg-neutral-900/40 backdrop-blur-xl rounded-[3rem] border border-zinc-200 dark:border-white/5 shadow-sm px-8">
-        <div className="w-24 h-24 bg-rose-500/10 dark:bg-rose-500/10 rounded-full flex items-center justify-center mb-8 ring-8 ring-rose-500/5">
+      <div className="flex flex-col items-center justify-center py-32 text-center bg-white/50 dark:bg-neutral-900/40 backdrop-blur-xl rounded-sm border border-zinc-200 dark:border-white/5  px-8">
+        <div className="w-24 h-24 bg-rose-500/10 dark:bg-rose-500/10 rounded-sm flex items-center justify-center mb-8 ring-8 ring-rose-500/5">
           <div className="text-3xl">⚠️</div>
         </div>
         <h3 className="text-2xl font-black text-foreground mb-3 tracking-tight">
@@ -60,8 +60,8 @@ export function SearchResultsGrid({
 
   if (!products.length) {
     return (
-      <div className="flex flex-col items-center justify-center py-40 text-center bg-white/50 dark:bg-neutral-900/40 backdrop-blur-xl rounded-[3rem] border border-zinc-200 dark:border-white/5 shadow-sm px-8">
-        <div className="w-24 h-24 bg-primary/10 dark:bg-emerald-500/10 rounded-full flex items-center justify-center mb-8 ring-8 ring-primary/5 dark:ring-emerald-500/5">
+      <div className="flex flex-col items-center justify-center py-40 text-center bg-white/50 dark:bg-neutral-900/40 backdrop-blur-xl rounded-sm border border-zinc-200 dark:border-white/5  px-8">
+        <div className="w-24 h-24 bg-primary/10 dark:bg-emerald-500/10 rounded-sm flex items-center justify-center mb-8 ring-8 ring-primary/5 dark:ring-emerald-500/5">
           <div className="text-4xl text-primary dark:text-emerald-400">🔍</div>
         </div>
         <h3 className="text-3xl font-black text-foreground mb-3 tracking-tight">

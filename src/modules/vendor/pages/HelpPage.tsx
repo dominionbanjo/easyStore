@@ -44,7 +44,7 @@ export default function HelpPage() {
         <p className="text-muted-foreground text-sm font-medium">
           Still having trouble? Email us directly at{" "}
           <span className="text-emerald-500 font-bold">
-            support@easystore.com
+            support@eazystore.com.ng
           </span>
         </p>
         <div className="flex items-center justify-center gap-6 mt-6 opacity-60">
@@ -62,8 +62,8 @@ export default function HelpPage() {
       </div>
 
       {/* Decorative background gradients */}
-      <div className="fixed top-0 right-0 -z-10 w-[600px] h-[600px] bg-emerald-500/5 blur-[120px] rounded-full pointer-events-none" />
-      <div className="fixed bottom-0 left-0 -z-10 w-[600px] h-[600px] bg-blue-500/5 blur-[120px] rounded-full pointer-events-none" />
+      <div className="fixed top-0 right-0 -z-10 w-[600px] h-[600px] bg-emerald-500/5 blur-[120px] rounded-sm pointer-events-none" />
+      <div className="fixed bottom-0 left-0 -z-10 w-[600px] h-[600px] bg-blue-500/5 blur-[120px] rounded-sm pointer-events-none" />
     </motion.div>
   );
 }

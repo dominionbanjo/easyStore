@@ -6,35 +6,24 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Building } from "lucide-react";
+import { Building, Map, MapPin, Navigation } from "lucide-react";
+import { FormInput } from "@/components/shared/form/FormInput";
 
 interface AddressModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  addressData: {
-    address_street: string;
-    address_city: string;
-    address_state: string;
-    address_country: string;
-    address_postal_code: string;
-  };
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export function AddressModal({
   open,
   onOpenChange,
-  addressData,
-  onChange,
 }: AddressModalProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-[95vw] sm:max-w-[500px] rounded-[1.5rem] sm:rounded-3xl p-0 overflow-hidden">
-        <DialogHeader className="p-6 sm:p-8 bg-muted/30">
-          <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
+      <DialogContent className="w-[95vw] sm:max-w-[500px] rounded-sm sm:rounded-sm p-0 overflow-hidden">
+        <DialogHeader className="p-6 sm:p-8 bg-muted/30 border-b">
+          <div className="h-12 w-12 rounded-sm bg-primary/10 flex items-center justify-center mb-4">
             <Building className="text-primary w-6 h-6" />
           </div>
           <DialogTitle className="text-2xl font-black">
@@ -45,72 +34,50 @@ export function AddressModal({
           </DialogDescription>
         </DialogHeader>
         <div className="p-8 space-y-6">
-          <div className="space-y-2">
-            <Label>Street Address</Label>
-            <Input
-              name="address_street"
-              value={addressData.address_street}
-              onChange={onChange}
-              className="h-11 rounded-xl"
-              placeholder="e.g. 12 Main St, Ikeja"
-            />
-          </div>
+          <FormInput
+            name="address_street"
+            label="Street Address"
+            placeholder="e.g. 12 Main St, Ikeja"
+            icon={<MapPin className="w-4 h-4" />}
+          />
           <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label>City</Label>
-              <Input
-                name="address_city"
-                value={addressData.address_city}
-                onChange={onChange}
-                className="h-11 rounded-xl"
-                placeholder="Lagos"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>State</Label>
-              <Input
-                name="address_state"
-                value={addressData.address_state}
-                onChange={onChange}
-                className="h-11 rounded-xl"
-                placeholder="Lagos State"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>Country</Label>
-              <Input
-                name="address_country"
-                value={addressData.address_country}
-                onChange={onChange}
-                className="h-11 rounded-xl"
-                placeholder="Nigeria"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>Postal Code</Label>
-              <Input
-                name="address_postal_code"
-                value={addressData.address_postal_code}
-                onChange={onChange}
-                className="h-11 rounded-xl"
-                placeholder="100001"
-              />
-            </div>
+            <FormInput
+              name="address_city"
+              label="City"
+              placeholder="Lagos"
+              icon={<Map className="w-4 h-4" />}
+            />
+            <FormInput
+              name="address_state"
+              label="State"
+              placeholder="Lagos State"
+              icon={<Navigation className="w-4 h-4" />}
+            />
+            <FormInput
+              name="address_country"
+              label="Country"
+              placeholder="Nigeria"
+            />
+            <FormInput
+              name="address_postal_code"
+              label="Postal Code"
+              placeholder="100001"
+            />
           </div>
         </div>
         <DialogFooter className="p-8 pt-0 flex gap-2">
           <Button
             variant="ghost"
-            className="rounded-full"
+            className="rounded-sm"
             onClick={() => onOpenChange(false)}
           >
             Cancel
           </Button>
           <Button
-            className="rounded-full px-8 bg-primary shadow-lg shadow-primary/20"
+            className="rounded-sm px-8 bg-primary  "
             onClick={() => onOpenChange(false)}
           >
-            Keep Changes
+            Done
           </Button>
         </DialogFooter>
       </DialogContent>

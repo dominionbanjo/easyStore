@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { useForm, FormProvider } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { Loader2, Store, Globe, CreditCard } from "lucide-react";
 import { toast } from "sonner";
@@ -21,7 +23,7 @@ import { uploadToCloudinary } from "@/utils/uploadToCloudinary";
 
 // Sub-components
 import { SettingsHeader } from "../components/settings/SettingsHeader";
-import { SettingsSidebar } from "../components/settings/SettingsSidebar";
+import { HorizontalStepper } from "../components/settings/HorizontalStepper";
 import { StoreIdentityStep } from "../components/settings/StoreIdentityStep";
 import { ContactLocationStep } from "../components/settings/ContactLocationStep";
 import { PayoutSetupStep } from "../components/settings/PayoutSetupStep";
@@ -36,6 +38,7 @@ const STEPS = [
 ];
 
 export default function SettingsPage() {
+  const navigate = useNavigate();
   const {
     store,
     isLoading: isLoadingStore,
@@ -74,29 +77,40 @@ export default function SettingsPage() {
   const canUpload =
     Boolean(signature?.signature) && !signing && !signatureError;
 
-  // Form States
-  const [storeData, setStoreData] = useState({
-    store_name: "",
-    description: "",
-    email: "",
-    phone_number: "",
-    address_street: "",
-    address_city: "",
-    address_state: "",
-    address_country: "Nigeria",
-    address_postal_code: "",
-    social_links: {} as Record<string, string>,
+  const methods = useForm({
+    defaultValues: {
+      store_name: "",
+      description: "",
+      email: "",
+      phone_number: "",
+      address_street: "",
+      address_city: "",
+      address_state: "",
+      address_country: "Nigeria",
+      address_postal_code: "",
+      social_links: {} as Record<string, string>,
+      bank_code: "",
+      account_number: "",
+      account_name: "",
+    },
   });
 
-  const [bankData, setBankData] = useState({
-    bank_code: "",
-    account_number: "",
-    account_name: "",
-  });
+  const { reset, watch, setValue, getValues } = methods;
+
+  // Define setup stage logic early so handlers can use it
+  const setupStage = store?.setup_stage || 1;
+  const isSetupComplete = setupStage >= 4;
+
+  // Subscriptions for internal handlers
+  const bankData = {
+    bank_code: watch("bank_code"),
+    account_number: watch("account_number"),
+    account_name: watch("account_name"),
+  };
 
   useEffect(() => {
     if (store) {
-      setStoreData({
+      reset({
         store_name: store.store_name || "",
         description: store.description || "",
         email: store.email || "",
@@ -107,16 +121,14 @@ export default function SettingsPage() {
         address_country: store.address_country || "Nigeria",
         address_postal_code: store.address_postal_code || "",
         social_links: store.social_links || {},
-      });
-      setBannerPreview(store.cover_image);
-      setBannerPublicId(store.cover_image_public_id);
-      setBankData({
         bank_code: store.bank_code || "",
         account_number: store.account_number || "",
-        account_name: store.bank_name || "",
+        account_name: "",
       });
+      setBannerPreview(store.cover_image || null);
+      setBannerPublicId(store.cover_image_public_id || null);
     }
-  }, [store]);
+  }, [store, reset]);
 
   useEffect(() => {
     const stage = store?.setup_stage || 1;
@@ -124,13 +136,6 @@ export default function SettingsPage() {
       setActiveStep(stage);
     }
   }, [store]);
-
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    const { name, value } = e.target;
-    setStoreData((prev) => ({ ...prev, [name]: value }));
-  };
 
   const handleBannerUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -190,25 +195,34 @@ export default function SettingsPage() {
   };
 
   const handleUpdateSocials = (social_links: Record<string, string>) => {
-    setStoreData((prev) => ({ ...prev, social_links }));
+    setValue("social_links", social_links);
   };
 
   const saveStoreDetails = async () => {
     if (!store?.id) return;
     try {
+      const data = getValues();
       const formData = new FormData();
-      Object.entries(storeData).forEach(([key, value]) => {
-        if (key === "social_links") {
-          formData.append(key, JSON.stringify(value));
-        } else {
-          formData.append(key, value as string);
-        }
+
+      // Fields for Store Update
+      const mainFields = [
+        "store_name",
+        "description",
+        "email",
+        "phone_number",
+        "address_street",
+        "address_city",
+        "address_state",
+        "address_country",
+        "address_postal_code",
+      ];
+
+      mainFields.forEach((field) => {
+        formData.append(field, (data as any)[field] || "");
       });
-      /* 
-         Attach Banner Data:
-         - If we have a preview & id, send them to update.
-         - If we DON'T have them (User deleted), but store HAD them, send empty strings (or null) to clear on backend.
-      */
+
+      formData.append("social_links", JSON.stringify(data.social_links));
+
       let nextSetupStage = setupStage;
       if (!isSetupComplete && activeStep < 3) {
         nextSetupStage = setupStage + 1;
@@ -235,7 +249,8 @@ export default function SettingsPage() {
   };
 
   const handleVerifyBank = async () => {
-    if (bankData.account_number.length !== 10 || !bankData.bank_code) {
+    const { account_number, bank_code } = getValues();
+    if (account_number.length !== 10 || !bank_code) {
       toast.error(
         "Please provide a valid 10-digit account number and select a bank",
       );
@@ -243,10 +258,10 @@ export default function SettingsPage() {
     }
     try {
       const result = await verifyBank({
-        account_number: bankData.account_number,
-        bank_code: bankData.bank_code,
+        account_number,
+        bank_code,
       }).unwrap();
-      setBankData((prev) => ({ ...prev, account_name: result.account_name }));
+      setValue("account_name", result.account_name);
       toast.success("Bank account verified!");
     } catch (error: unknown) {
       const err = error as { data?: { message?: string } };
@@ -263,6 +278,8 @@ export default function SettingsPage() {
         account_number: bankData.account_number,
       }).unwrap();
       toast.success("Bank account registered successfully!");
+      // Redirect to products with success flag for guided onboarding
+      navigate("/products?setup=success");
     } catch (error: unknown) {
       const err = error as { data?: { message?: string } };
       toast.error(err.data?.message || "Failed to register bank account");
@@ -296,8 +313,7 @@ export default function SettingsPage() {
   }
 
   // If setup is complete, show the finalized details view
-  const setupStage = store.setup_stage || 1;
-  const isSetupComplete = setupStage >= 4;
+  // (Logic moved to top of component)
 
   if (isSetupComplete) {
     return (
@@ -306,31 +322,37 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8 pb-20">
-      <SettingsHeader progress={progress} isValidated={isValidated} />
+    <FormProvider {...methods}>
+      <div className="max-w-[1400px] mx-auto space-y-6 pb-20 px-2 sm:px-4">
+        <SettingsHeader progress={progress} isValidated={isValidated} />
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        <SettingsSidebar steps={STEPS} activeStep={activeStep} />
+        <div className="bg-muted/10 rounded-sm border border-border/40 p-1">
+          <HorizontalStepper
+            steps={STEPS}
+            activeStep={activeStep}
+            onStepClick={(id) => setActiveStep(id)}
+          />
+        </div>
 
-        <div className="lg:col-span-8">
+        <div className="mt-8">
           <AnimatePresence mode="wait">
             {activeStep === 1 && (
               <motion.div
                 key="step1"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.98 }}
+                transition={{ duration: 0.2 }}
               >
                 <StoreIdentityStep
-                  storeData={storeData}
                   bannerPreview={bannerPreview}
-                  onInputChange={handleInputChange}
                   onBannerChange={handleBannerUpload}
                   onBannerRemove={handleRemoveBanner}
                   uploadProgress={bannerUploadProgress}
                   isDeletingBanner={isDeletingBanner}
                   onSave={saveStoreDetails}
                   isSaving={isUpdatingStore}
+                  isValidated={isValidated}
                 />
               </motion.div>
             )}
@@ -338,17 +360,17 @@ export default function SettingsPage() {
             {activeStep === 2 && (
               <motion.div
                 key="step2"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.98 }}
+                transition={{ duration: 0.2 }}
               >
                 <ContactLocationStep
-                  storeData={storeData}
-                  onInputChange={handleInputChange}
                   onUpdateSocials={handleUpdateSocials}
                   onOpenAddressModal={() => setShowAddressModal(true)}
                   onSave={saveStoreDetails}
                   isSaving={isUpdatingStore}
+                  isValidated={isValidated}
                 />
               </motion.div>
             )}
@@ -356,22 +378,16 @@ export default function SettingsPage() {
             {activeStep === 3 && (
               <motion.div
                 key="step3"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.98 }}
+                transition={{ duration: 0.2 }}
               >
                 <PayoutSetupStep
-                  bankData={bankData}
                   banks={banksResponse?.data || []}
                   isVerifying={isVerifyingBank}
                   isRegistering={isRegisteringBank}
                   isValidated={isValidated}
-                  onBankChange={(val) =>
-                    setBankData((p) => ({ ...p, bank_code: val }))
-                  }
-                  onAccountNumberChange={(val) =>
-                    setBankData((p) => ({ ...p, account_number: val }))
-                  }
                   onVerify={handleVerifyBank}
                   onRegister={handleRegisterBank}
                 />
@@ -379,14 +395,12 @@ export default function SettingsPage() {
             )}
           </AnimatePresence>
         </div>
-      </div>
 
-      <AddressModal
-        open={showAddressModal}
-        onOpenChange={setShowAddressModal}
-        addressData={storeData}
-        onChange={handleInputChange}
-      />
-    </div>
+        <AddressModal
+          open={showAddressModal}
+          onOpenChange={setShowAddressModal}
+        />
+      </div>
+    </FormProvider>
   );
 }

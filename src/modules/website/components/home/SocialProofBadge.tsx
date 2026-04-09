@@ -24,7 +24,7 @@ export default function SocialProofBadge({
   const remainingCount = users.length - maxAvatars;
 
   return (
-    <div className="inline-flex items-center gap-4 rounded-full bg-white/80 dark:bg-neutral-900/50 backdrop-blur px-4 py-2 shadow-sm border border-gray-100 dark:border-white/10 transition-colors">
+    <div className="inline-flex items-center gap-4 rounded-sm bg-white/80 dark:bg-neutral-900/50 backdrop-blur px-4 py-2  border border-gray-100 dark:border-white/10 transition-colors">
       {/* Avatar Stack */}
       <div className="flex -space-x-2">
         {displayedUsers.map((user, index) => (
@@ -40,7 +40,7 @@ export default function SocialProofBadge({
         ))}
 
         {remainingCount > 0 && (
-          <div className="flex items-center justify-center h-8 w-8 rounded-full bg-gray-100 dark:bg-neutral-800 ring-2 ring-white dark:ring-neutral-900 border border-gray-200 dark:border-white/5 text-[10px] font-black text-gray-600 dark:text-neutral-400">
+          <div className="flex items-center justify-center h-8 w-8 rounded-sm bg-gray-100 dark:bg-neutral-800 ring-2 ring-white dark:ring-neutral-900 border border-gray-200 dark:border-white/5 text-[10px] font-black text-gray-600 dark:text-neutral-400">
             +{remainingCount}
           </div>
         )}

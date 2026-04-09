@@ -43,11 +43,11 @@ export function HeritageShowcase({
   toggleWishlist,
 }: HeritageShowcaseProps) {
   return (
-    <div className="bg-white dark:bg-[#1E1A17] rounded-[2rem] md:rounded-[3rem] p-6 md:p-12 lg:p-16 shadow-xl shadow-[#3D352B]/5 border border-[#EADDCE] dark:border-[#3D352B]">
+    <div className="bg-white dark:bg-[#1E1A17] rounded-sm md:rounded-sm p-6 md:p-12 lg:p-16  -[#3D352B]/5 border border-[#EADDCE] dark:border-[#3D352B]">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
         {/* Gallery: Gentle Borders */}
         <div className="w-full">
-          <div className="rounded-[2rem] overflow-hidden border border-[#EADDCE] dark:border-[#3D352B] bg-[#FAF7F2] dark:bg-[#2C2622] p-2">
+          <div className="rounded-sm overflow-hidden border border-[#EADDCE] dark:border-[#3D352B] bg-[#FAF7F2] dark:bg-[#2C2622] p-2">
             <ProductGallery images={uiProduct.images} />
           </div>
         </div>
@@ -69,7 +69,7 @@ export function HeritageShowcase({
               </div>
               <span
                 className={cn(
-                  "text-[10px] uppercase tracking-widest px-3 py-1 rounded-full border",
+                  "text-[10px] uppercase tracking-widest px-3 py-1 rounded-sm border",
                   currentStock > 0
                     ? "border-emerald-200 text-emerald-700 bg-emerald-50 dark:bg-emerald-900/10"
                     : "border-red-200 text-red-700 bg-red-50 dark:bg-red-900/10 font-bold",
@@ -105,9 +105,9 @@ export function HeritageShowcase({
                       <button
                         key={value}
                         onClick={() => selectOption(option.name, value)}
-                        className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all border ${
+                        className={`px-6 py-2.5 rounded-sm text-sm font-medium transition-all border ${
                           selectedOptions[option.name] === value
-                            ? "bg-[var(--theme-primary)] text-white border-[var(--theme-primary)] shadow-md"
+                            ? "bg-[var(--theme-primary)] text-white border-[var(--theme-primary)] "
                             : "bg-[#FAF7F2] dark:bg-[#2C2622] text-[#5C5042] dark:text-[#EAE3DB] border-[#EADDCE] dark:border-[#5C5042] hover:bg-white dark:hover:bg-[#3D352B]"
                         }`}
                       >
@@ -128,9 +128,9 @@ export function HeritageShowcase({
                     <button
                       key={color.id}
                       onClick={() => setSelectedColor(color)}
-                      className={`w-12 h-12 rounded-full border-4 transition-all ${
+                      className={`w-12 h-12 rounded-sm border-4 transition-all ${
                         selectedColor?.id === color.id
-                          ? "border-white dark:border-[#1E1A17] ring-2 ring-[var(--theme-primary)] scale-110 shadow-lg"
+                          ? "border-white dark:border-[#1E1A17] ring-2 ring-[var(--theme-primary)] scale-110 "
                           : "border-transparent ring-1 ring-[#EADDCE] dark:ring-[#3D352B]"
                       }`}
                       style={{ backgroundColor: color.hex }}
@@ -151,9 +151,9 @@ export function HeritageShowcase({
                     <button
                       key={size}
                       onClick={() => setSelectedSize(size)}
-                      className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all border ${
+                      className={`px-6 py-2.5 rounded-sm text-sm font-medium transition-all border ${
                         selectedSize === size
-                          ? "bg-[var(--theme-primary)] text-white border-[var(--theme-primary)] shadow-md"
+                          ? "bg-[var(--theme-primary)] text-white border-[var(--theme-primary)] "
                           : "bg-[#FAF7F2] dark:bg-[#2C2622] text-[#5C5042] dark:text-[#EAE3DB] border-[#EADDCE] dark:border-[#5C5042] hover:bg-white dark:hover:bg-[#3D352B]"
                       }`}
                     >
@@ -168,10 +168,10 @@ export function HeritageShowcase({
           {/* Basket Actions */}
           <div className="pt-6 space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-4">
-              <div className="flex items-center justify-between border-2 border-[#EADDCE] dark:border-[#5C5042] rounded-full px-2 py-1 bg-[#FAF7F2] dark:bg-[#2C2622] h-16 md:h-auto">
+              <div className="flex items-center justify-between border-2 border-[#EADDCE] dark:border-[#5C5042] rounded-sm px-2 py-1 bg-[#FAF7F2] dark:bg-[#2C2622] h-16 md:h-auto">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="w-10 h-10 rounded-full hover:bg-[#EADDCE] dark:hover:bg-[#3D352B] flex items-center justify-center font-bold text-[#5C5042] dark:text-[#EAE3DB] transition-colors"
+                  className="w-10 h-10 rounded-sm hover:bg-[#EADDCE] dark:hover:bg-[#3D352B] flex items-center justify-center font-bold text-[#5C5042] dark:text-[#EAE3DB] transition-colors"
                 >
                   <Minus className="w-4 h-4" />
                 </button>
@@ -182,7 +182,7 @@ export function HeritageShowcase({
                   onClick={() =>
                     setQuantity(Math.min(currentStock || 1, quantity + 1))
                   }
-                  className="w-10 h-10 rounded-full hover:bg-[#EADDCE] dark:hover:bg-[#3D352B] flex items-center justify-center font-bold text-[#5C5042] dark:text-[#EAE3DB] transition-colors"
+                  className="w-10 h-10 rounded-sm hover:bg-[#EADDCE] dark:hover:bg-[#3D352B] flex items-center justify-center font-bold text-[#5C5042] dark:text-[#EAE3DB] transition-colors"
                 >
                   <Plus className="w-4 h-4" />
                 </button>
@@ -191,10 +191,10 @@ export function HeritageShowcase({
               <button
                 disabled={currentStock <= 0 || addingToCart}
                 onClick={handleAddToCart}
-                className="w-full h-16 px-8 bg-[var(--theme-primary)] text-white font-bold rounded-full font-sans tracking-wide uppercase shadow-lg shadow-[var(--theme-primary)]/20 hover:opacity-90 transition-all hover:translate-y-[-2px] hover:shadow-xl flex items-center justify-center gap-2 disabled:bg-zinc-200 dark:disabled:bg-zinc-800 disabled:text-zinc-500 disabled:shadow-none disabled:translate-y-0"
+                className="w-full h-16 px-8 bg-[var(--theme-primary)] text-white font-bold rounded-sm font-sans tracking-wide uppercase  -[var(--theme-primary)]/20 hover:opacity-90 transition-all hover:translate-y-[-2px] hover: flex items-center justify-center gap-2 disabled:bg-zinc-200 dark:disabled:bg-zinc-800 disabled:text-zinc-500 disabled: disabled:translate-y-0"
               >
                 {addingToCart ? (
-                  <div className="h-5 w-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  <div className="h-5 w-5 border-2 border-white/30 border-t-white rounded-sm animate-spin" />
                 ) : currentStock <= 0 ? (
                   "Sold Out"
                 ) : (

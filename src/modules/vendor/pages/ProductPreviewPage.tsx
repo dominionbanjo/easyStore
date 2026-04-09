@@ -94,7 +94,7 @@ export default function ProductPreviewPage() {
       </Button>
 
       {/* Preview Banner */}
-      <div className="rounded-xl bg-muted/40 px-4 py-3 text-sm font-medium text-muted-foreground">
+      <div className="rounded-sm bg-muted/40 px-4 py-3 text-sm font-medium text-muted-foreground">
         Preview mode — this is how your product page will look
       </div>
 

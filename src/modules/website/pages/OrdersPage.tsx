@@ -79,23 +79,23 @@ export default function OrdersPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-emerald-50/30 dark:from-neutral-950 dark:via-neutral-900 dark:to-emerald-950/20 transition-colors duration-300">
-      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-        <div className="space-y-8">
+      <div className="w-full mx-auto px-2 sm:px-6 lg:px-8 py-6 sm:py-10">
+        <div className="space-y-6 sm:space-y-10">
           {/* Header */}
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
           >
             <OrdersHeader totalOrders={totalOrders} isLoading={isLoading} />
           </motion.div>
 
-          {/* Filters */}
+          {/* Filters - More integrated */}
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.1 }}
-            className="bg-white dark:bg-neutral-900 rounded-3xl border-2 border-gray-100 dark:border-white/5 shadow-sm p-6"
+            className="pb-2 px-1"
           >
             <OrdersFilters
               searchValue={search}
@@ -107,19 +107,19 @@ export default function OrdersPage() {
           </motion.div>
 
           {/* Content Area */}
-          <div className="relative">
+          <div className="relative pt-2">
             {/* Loading Indicator */}
             <AnimatePresence>
               {isFetching && hasOrders && (
                 <motion.div
-                  initial={{ opacity: 0, y: -10 }}
+                  initial={{ opacity: 0, y: -5 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="absolute -top-4 left-1/2 -translate-x-1/2 z-20"
+                  exit={{ opacity: 0, y: -5 }}
+                  className="absolute -top-10 left-1/2 -translate-x-1/2 z-20"
                 >
-                  <div className="bg-emerald-600 text-white px-6 py-2 rounded-full shadow-lg flex items-center gap-2 text-sm font-bold">
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    Updating...
+                  <div className="bg-emerald-600/90 backdrop-blur-md text-white px-4 py-1.5 rounded-sm border border-emerald-500/20 shadow-lg flex items-center gap-2 text-[10px] font-black uppercase tracking-widest">
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    Fetching Data...
                   </div>
                 </motion.div>
               )}
@@ -128,10 +128,9 @@ export default function OrdersPage() {
             {/* Error State */}
             {error ? (
               <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
+                initial={{ opacity: 0, scale: 0.98 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.3 }}
-                className="bg-white dark:bg-neutral-900 rounded-3xl border-2 border-red-100 dark:border-red-950/20 shadow-sm"
+                className="bg-card/50 backdrop-blur-sm rounded-sm border border-red-500/20 p-8"
               >
                 <OrdersErrorState onRetry={handleRetry} />
               </motion.div>
@@ -140,7 +139,7 @@ export default function OrdersPage() {
               <OrdersSkeleton />
             ) : hasOrders ? (
               /* Orders List */
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 <AnimatePresence mode="popLayout">
                   {orders.map((order: IOrder, index: number) => (
                     <OrderCard key={order.id} order={order} index={index} />
@@ -153,7 +152,7 @@ export default function OrdersPage() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.2 }}
-                    className="flex justify-center mt-8 pt-8 border-t-2 border-gray-100 dark:border-white/5"
+                    className="flex justify-center mt-10 pt-8 border-t border-border/40"
                   >
                     <Pagination
                       page={pagination.page}
@@ -168,10 +167,9 @@ export default function OrdersPage() {
             ) : (
               /* Empty States */
               <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
+                initial={{ opacity: 0, scale: 0.98 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.3 }}
-                className="bg-white dark:bg-neutral-900 rounded-3xl border-2 border-gray-100 dark:border-white/5 shadow-sm"
+                className="bg-card/50 backdrop-blur-sm rounded-sm border border-border/40 p-12"
               >
                 {hasActiveFilters ? (
                   <OrdersNoResults

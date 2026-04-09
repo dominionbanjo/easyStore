@@ -89,7 +89,7 @@ export function SearchResultsHeader({
             <Button
               variant="outline"
               size="sm"
-              className="flex-1 md:flex-none h-12 md:h-11 px-6 rounded-2xl border-zinc-200 dark:border-emerald-500/20 bg-white dark:bg-neutral-900 backdrop-blur-xl hover:bg-zinc-50 dark:hover:bg-neutral-800 transition-all font-black text-xs shadow-sm justify-between gap-4 min-w-[160px] text-zinc-900 dark:text-white relative group overflow-hidden"
+              className="flex-1 md:flex-none h-12 md:h-11 px-6 rounded-sm border-zinc-200 dark:border-emerald-500/20 bg-white dark:bg-neutral-900 backdrop-blur-xl hover:bg-zinc-50 dark:hover:bg-neutral-800 transition-all font-black text-xs  justify-between gap-4 min-w-[160px] text-zinc-900 dark:text-white relative group overflow-hidden"
             >
               <div className="absolute inset-0 bg-gradient-to-tr from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
               <span className="flex items-center gap-2.5 truncate relative z-10">
@@ -103,7 +103,7 @@ export function SearchResultsHeader({
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align="end"
-            className="w-[220px] rounded-2xl shadow-2xl border-zinc-200 dark:border-emerald-500/10 p-2 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-xl"
+            className="w-[220px] rounded-sm  border-zinc-200 dark:border-emerald-500/10 p-2 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-xl"
           >
             <DropdownMenuLabel className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/50 px-3 py-3">
               Order by
@@ -115,7 +115,7 @@ export function SearchResultsHeader({
                   key={option.value}
                   onClick={() => handleSort(option.value)}
                   className={cn(
-                    "flex items-center justify-between rounded-xl px-3 py-3 text-xs font-bold transition-all cursor-pointer",
+                    "flex items-center justify-between rounded-sm px-3 py-3 text-xs font-bold transition-all cursor-pointer",
                     currentSort === option.value
                       ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
                       : "text-muted-foreground hover:bg-zinc-100 dark:hover:bg-white/5 hover:text-foreground",
@@ -123,7 +123,7 @@ export function SearchResultsHeader({
                 >
                   {option.label}
                   {currentSort === option.value && (
-                    <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]" />
+                    <div className="h-1.5 w-1.5 rounded-sm bg-emerald-500 -[0_0_8px_rgba(16,185,129,0.6)]" />
                   )}
                 </DropdownMenuItem>
               ))}

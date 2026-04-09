@@ -103,7 +103,7 @@ export function FormPriceInput({
           placeholder={placeholder}
           aria-invalid={shouldShowError}
           className={cn(
-            "h-12 rounded-xl text-[15px] transition-all duration-200 bg-muted/20 border-muted-foreground/10 focus:bg-background",
+            "h-12 rounded-sm text-[15px] transition-all duration-200 bg-muted/20 border-muted-foreground/10 focus:bg-background",
             icon ? "pl-11" : "px-4",
             shouldShowError &&
               "border-destructive ring-0 focus-visible:ring-destructive/30",

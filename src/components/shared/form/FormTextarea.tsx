@@ -55,13 +55,13 @@ export function FormTextarea({
           aria-invalid={!!shouldShowError}
           {...register(name)}
           className={cn(
-            "rounded-2xl text-sm transition-all duration-300 bg-muted/30 border-muted-foreground/10 focus:bg-background/80 focus:border-primary/30 focus:ring-4 focus:ring-primary/5 resize-none shadow-sm group-hover:bg-muted/40",
+            "rounded-sm text-sm transition-all duration-300 bg-muted/30 border-muted-foreground/10 focus:bg-background/80 focus:border-primary/30 focus:ring-4 focus:ring-primary/5 resize-none  group-hover:bg-muted/40",
             icon ? "pl-11" : "px-4",
             shouldShowError &&
               "border-destructive/50 ring-4 ring-destructive/10 focus-visible:ring-destructive/20",
           )}
         />
-        <div className="absolute inset-0 rounded-2xl border border-primary/0 pointer-events-none group-focus-within:border-primary/10 transition-colors duration-500" />
+        <div className="absolute inset-0 rounded-sm border border-primary/0 pointer-events-none group-focus-within:border-primary/10 transition-colors duration-500" />
       </div>
 
       {shouldShowError && (

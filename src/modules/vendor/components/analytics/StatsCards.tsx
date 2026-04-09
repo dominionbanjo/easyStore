@@ -66,18 +66,18 @@ export function StatsCards({ summary }: StatsCardsProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: idx * 0.1 }}
         >
-          <Card className="border-none shadow-xl bg-card overflow-hidden group hover:ring-2 hover:ring-primary/20 transition-all duration-300">
+          <Card className="border-none  bg-card overflow-hidden group hover:ring-2 hover:ring-primary/20 transition-all duration-300">
             <CardContent className="p-6 relative">
               <div className="flex items-center justify-between mb-4">
                 <div
                   className={cn(
-                    "p-3 rounded-2xl border transition-transform duration-500 group-hover:scale-110",
+                    "p-3 rounded-sm border transition-transform duration-500 group-hover:scale-110",
                     colorConfig[card.color],
                   )}
                 >
                   <card.icon className="w-6 h-6" />
                 </div>
-                <div className="flex items-center gap-1 text-[10px] font-black bg-emerald-500/10 text-emerald-500 px-2 py-1 rounded-full border border-emerald-500/20 uppercase tracking-widest">
+                <div className="flex items-center gap-1 text-[10px] font-black bg-emerald-500/10 text-emerald-500 px-2 py-1 rounded-sm border border-emerald-500/20 uppercase tracking-widest">
                   <ArrowUpRight className="w-3 h-3" /> {card.trend}
                 </div>
               </div>
@@ -94,7 +94,7 @@ export function StatsCards({ summary }: StatsCardsProps) {
               {/* Decorative background shape */}
               <div
                 className={cn(
-                  "absolute -right-4 -bottom-4 w-24 h-24 rounded-full opacity-[0.03] group-hover:scale-150 transition-transform duration-700",
+                  "absolute -right-4 -bottom-4 w-24 h-24 rounded-sm opacity-[0.03] group-hover:scale-150 transition-transform duration-700",
                   `bg-${card.color}-500`,
                 )}
               />

@@ -199,7 +199,7 @@ export function CategorySelect({
               <button
                 type="button"
                 className={cn(
-                  "w-full h-12 rounded-xl border border-muted-foreground/10 bg-muted/20 px-3 py-[10px] text-[15px] shadow-xs transition-colors focus:bg-background relative text-left",
+                  "w-full h-12 rounded-sm border border-muted-foreground/10 bg-muted/20 px-3 py-[10px] text-[15px]  transition-colors focus:bg-background relative text-left",
                   !field.value && "text-muted-foreground",
                   icon ? "pl-11" : "px-4",
                   error &&
@@ -218,11 +218,11 @@ export function CategorySelect({
               </button>
             </DialogTrigger>
 
-            <DialogContent className="max-w-5xl p-0 overflow-hidden sm:rounded-3xl border-none shadow-2xl h-full sm:h-[85vh] sm:min-h-[600px] flex flex-col bg-background/95 backdrop-blur-xl">
+            <DialogContent className="max-w-5xl p-0 overflow-hidden sm:rounded-sm border-none  h-full sm:h-[85vh] sm:min-h-[600px] flex flex-col bg-background/95 backdrop-blur-xl">
               {/* Header */}
               <div className="p-5 sm:p-8 pb-4 shrink-0 flex flex-row items-center justify-between">
                 <DialogTitle className="text-xl sm:text-3xl font-black uppercase tracking-tighter flex items-center gap-3 sm:gap-4">
-                  <div className="h-10 w-10 sm:h-14 sm:w-14 rounded-lg sm:rounded-[1.25rem] bg-primary shadow-lg shadow-primary/20 flex items-center justify-center">
+                  <div className="h-10 w-10 sm:h-14 sm:w-14 rounded-sm sm:rounded-sm bg-primary   flex items-center justify-center">
                     <FolderTree className="h-5 w-5 sm:h-7 sm:w-7 text-white" />
                   </div>
                   <div className="flex flex-col gap-0.5">
@@ -237,7 +237,7 @@ export function CategorySelect({
                   <Button
                     type="button"
                     variant="secondary"
-                    className="rounded-full h-10 w-10 p-0 bg-muted hover:bg-muted-foreground/10 border-none transition-all group"
+                    className="rounded-sm h-10 w-10 p-0 bg-muted hover:bg-muted-foreground/10 border-none transition-all group"
                   >
                     <X className="h-5 w-5 text-muted-foreground group-hover:text-foreground transition-colors" />
                   </Button>
@@ -252,14 +252,14 @@ export function CategorySelect({
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     placeholder="Search master categories or sub-categories..."
-                    className="pl-12 h-12 sm:h-14 rounded-xl sm:rounded-2xl bg-muted/30 border-none focus-visible:ring-2 focus-visible:ring-primary/20 transition-all font-bold text-base sm:text-lg placeholder:text-muted-foreground/50 shadow-inner"
+                    className="pl-12 h-12 sm:h-14 rounded-sm sm:rounded-sm bg-muted/30 border-none focus-visible:ring-2 focus-visible:ring-primary/20 transition-all font-bold text-base sm:text-lg placeholder:text-muted-foreground/50 "
                   />
                   {search && (
                     <Button
                       type="button"
                       variant="ghost"
                       size="icon"
-                      className="absolute right-2 top-1/2 -translate-y-1/2 rounded-xl h-10 w-10 hover:bg-muted"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 rounded-sm h-10 w-10 hover:bg-muted"
                       onClick={() => setSearch("")}
                     >
                       <X className="h-4 w-4" />
@@ -276,9 +276,9 @@ export function CategorySelect({
                       exit={{ opacity: 0, y: -10 }}
                       type="button"
                       onClick={() => selectCategory(lastUsedLabel.id)}
-                      className="w-full flex items-center gap-4 px-5 py-4 rounded-2xl bg-primary/[0.03] hover:bg-primary/[0.08] border border-primary/10 transition-all group"
+                      className="w-full flex items-center gap-4 px-5 py-4 rounded-sm bg-primary/[0.03] hover:bg-primary/[0.08] border border-primary/10 transition-all group"
                     >
-                      <div className="h-8 w-8 rounded-xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <div className="h-8 w-8 rounded-sm bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
                         <History className="h-4 w-4 text-primary" />
                       </div>
                       <div className="flex flex-col text-left">
@@ -297,7 +297,7 @@ export function CategorySelect({
 
               {/* Main Content Areas */}
               <div className="flex-1 overflow-hidden flex flex-col px-4 sm:px-8 pb-4 sm:pb-8">
-                <div className="flex-1 bg-muted/20 rounded-2xl sm:rounded-[2rem] border border-border/40 overflow-hidden flex flex-col">
+                <div className="flex-1 bg-muted/20 rounded-sm sm:rounded-sm border border-border/40 overflow-hidden flex flex-col">
                   {/* Category List */}
                   <div className="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-3">
                     {isLoading ? (
@@ -305,13 +305,13 @@ export function CategorySelect({
                         {[1, 2, 3, 4].map((i) => (
                           <Skeleton
                             key={i}
-                            className="h-20 w-full rounded-2xl"
+                            className="h-20 w-full rounded-sm"
                           />
                         ))}
                       </div>
                     ) : filtered.length === 0 ? (
                       <div className="flex flex-col items-center justify-center p-12 text-center space-y-4 h-full">
-                        <div className="h-20 w-20 rounded-full bg-muted/40 flex items-center justify-center">
+                        <div className="h-20 w-20 rounded-sm bg-muted/40 flex items-center justify-center">
                           <AlertCircle className="h-10 w-10 text-muted-foreground opacity-30" />
                         </div>
                         <div className="space-y-1">
@@ -341,9 +341,9 @@ export function CategorySelect({
                                 setExpanded(isExpanded ? null : cat.id)
                               }
                               className={cn(
-                                "w-full flex items-center justify-between p-5 rounded-2xl border transition-all duration-300",
+                                "w-full flex items-center justify-between p-5 rounded-sm border transition-all duration-300",
                                 isExpanded
-                                  ? "bg-background border-primary/30 shadow-lg shadow-primary/[0.03]"
+                                  ? "bg-background border-primary/30  -primary/[0.03]"
                                   : "bg-background/40 border-border group-hover/cat:bg-background group-hover/cat:border-primary/20",
                                 hasSelectedChild && "border-primary/40",
                               )}
@@ -351,9 +351,9 @@ export function CategorySelect({
                               <div className="flex items-center gap-4">
                                 <div
                                   className={cn(
-                                    "h-10 w-10 rounded-xl flex items-center justify-center transition-all",
+                                    "h-10 w-10 rounded-sm flex items-center justify-center transition-all",
                                     isExpanded
-                                      ? "bg-primary text-white shadow-md shadow-primary/20"
+                                      ? "bg-primary text-white  "
                                       : "bg-muted text-muted-foreground",
                                   )}
                                 >
@@ -393,15 +393,15 @@ export function CategorySelect({
                                           type="button"
                                           onClick={() => selectCategory(ch.id)}
                                           className={cn(
-                                            "w-full flex items-center gap-3 py-3.5 px-5 rounded-xl transition-all relative group/sub",
+                                            "w-full flex items-center gap-3 py-3.5 px-5 rounded-sm transition-all relative group/sub",
                                             isSelected
-                                              ? "bg-primary text-white shadow-md shadow-primary/20 font-bold"
+                                              ? "bg-primary text-white   font-bold"
                                               : "hover:bg-primary/[0.05] text-muted-foreground hover:text-primary",
                                           )}
                                         >
                                           <div
                                             className={cn(
-                                              "h-2 w-2 rounded-full",
+                                              "h-2 w-2 rounded-sm",
                                               isSelected
                                                 ? "bg-white"
                                                 : "bg-muted-foreground/30 group-hover/sub:bg-primary/50",
@@ -445,7 +445,7 @@ export function CategorySelect({
                               type="button"
                               variant="ghost"
                               size="sm"
-                              className="h-8 rounded-lg text-muted-foreground hover:text-foreground"
+                              className="h-8 rounded-sm text-muted-foreground hover:text-foreground"
                               onClick={() => setShowQuickAdd(false)}
                             >
                               Cancel
@@ -461,7 +461,7 @@ export function CategorySelect({
                                 value={newCatName}
                                 onChange={(e) => setNewCatName(e.target.value)}
                                 placeholder="e.g. Vintage Apparel"
-                                className="h-12 rounded-xl bg-background border-border"
+                                className="h-12 rounded-sm bg-background border-border"
                               />
                             </div>
                             <div className="space-y-2">
@@ -469,7 +469,7 @@ export function CategorySelect({
                                 Parent (Optional)
                               </label>
                               <select
-                                className="w-full h-12 rounded-xl border border-border bg-background px-3 text-sm font-semibold outline-none focus:ring-2 focus:ring-primary/10"
+                                className="w-full h-12 rounded-sm border border-border bg-background px-3 text-sm font-semibold outline-none focus:ring-2 focus:ring-primary/10"
                                 value={newCatParentId || ""}
                                 onChange={(e) =>
                                   setNewCatParentId(e.target.value || null)
@@ -487,7 +487,7 @@ export function CategorySelect({
 
                           <Button
                             type="button"
-                            className="w-full h-12 rounded-xl bg-primary hover:bg-primary/90 text-white font-black uppercase tracking-widest text-xs gap-3 shadow-lg shadow-primary/20"
+                            className="w-full h-12 rounded-sm bg-primary hover:bg-primary/90 text-white font-black uppercase tracking-widest text-xs gap-3  "
                             onClick={handleQuickAdd}
                             disabled={isCreating || !newCatName.trim()}
                           >
@@ -518,7 +518,7 @@ export function CategorySelect({
                           <Button
                             type="button"
                             onClick={() => setShowQuickAdd(true)}
-                            className="w-full sm:w-auto bg-foreground text-background hover:bg-foreground/90 rounded-xl h-12 px-6 font-black uppercase tracking-widest text-[10px] gap-2 shadow-xl shadow-foreground/5 shrink-0"
+                            className="w-full sm:w-auto bg-foreground text-background hover:bg-foreground/90 rounded-sm h-12 px-6 font-black uppercase tracking-widest text-[10px] gap-2  -foreground/5 shrink-0"
                           >
                             <Plus className="h-4 w-4" />
                             Quick Add

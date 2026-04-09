@@ -57,14 +57,14 @@ export function DefaultHeader({
             >
               <ShoppingBag className="h-5 w-5" />
               {cartItemsCount > 0 && (
-                <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[var(--theme-primary)] text-[10px] font-black text-white ring-2 ring-white dark:ring-black shadow-sm tabular-nums">
+                <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-sm bg-[var(--theme-primary)] text-[10px] font-black text-white ring-2 ring-white dark:ring-black  tabular-nums">
                   {cartItemsCount}
                 </span>
               )}
             </Button>
 
             <TemplateProfileDropdown
-              buttonClassName="relative p-2 flex-shrink-0 hover:bg-[var(--theme-primary)]/10 text-zinc-900 dark:text-white rounded-md transition-colors"
+              buttonClassName="relative p-2 flex-shrink-0 hover:bg-[var(--theme-primary)]/10 text-zinc-900 dark:text-white rounded-sm transition-colors"
               iconClassName="h-5 w-5"
             />
           </div>

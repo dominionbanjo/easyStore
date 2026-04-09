@@ -11,6 +11,7 @@ import RelatedProductsGrid from "@/modules/website/components/products/RelatedPr
 import { formatLocation } from "@/utils/location";
 
 import { useGetSingleProductQuery } from "@/services/productApi";
+import { GoBackButton } from "@/components/shared/GoBackButton";
 
 export default function ProductDetailsPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -123,6 +124,7 @@ function ProductDetailsInner({ id }: { id: string }) {
 
   return (
     <section className="w-full px-4 md:px-6 lg:px-8 py-8 md:py-12 space-y-12 md:space-y-16 bg-white dark:bg-neutral-950 transition-colors duration-300">
+      <GoBackButton className="mb-2" />
       {/* Gallery + Sidebar Container */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 xl:gap-24 items-start">
         {/* Left Column: Gallery */}

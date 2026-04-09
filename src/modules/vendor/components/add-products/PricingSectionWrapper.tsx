@@ -47,7 +47,7 @@ export function Wrapper() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between bg-muted/30 p-3 rounded-lg border border-border/40">
+      <div className="flex items-center justify-between bg-muted/30 p-3 rounded-sm border border-border/40">
         <div className="space-y-0.5">
           <Label className="text-base font-bold">
             Variant Pricing (Options & Combinations)

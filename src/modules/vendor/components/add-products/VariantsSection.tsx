@@ -50,9 +50,9 @@ export function VariantsSection({ sizes }: VariantsSectionProps) {
 
   if (!sizes || sizes.length === 0) {
     return (
-      <div className="p-10 text-center border-2 border-dashed rounded-[2rem] bg-muted/20 border-border/60">
+      <div className="p-10 text-center border-2 border-dashed rounded-sm bg-muted/20 border-border/60">
         <div className="flex flex-col items-center gap-3">
-          <div className="h-12 w-12 rounded-2xl bg-muted/50 flex items-center justify-center">
+          <div className="h-12 w-12 rounded-sm bg-muted/50 flex items-center justify-center">
             <Box className="h-6 w-6 text-muted-foreground/60" />
           </div>
           <p className="text-muted-foreground font-semibold text-sm max-w-[240px]">
@@ -81,13 +81,13 @@ export function VariantsSection({ sizes }: VariantsSectionProps) {
             return (
               <div
                 key={field.id}
-                className="flex flex-col md:grid md:grid-cols-[80px_1fr_1fr_120px] gap-4 p-4 rounded-2xl border border-border/40 bg-background/50 hover:bg-muted/10 transition-all duration-300"
+                className="flex flex-col md:grid md:grid-cols-[80px_1fr_1fr_120px] gap-4 p-4 rounded-sm border border-border/40 bg-background/50 hover:bg-muted/10 transition-all duration-300"
               >
                 {/* Size Badge */}
                 <div className="flex items-center">
                   <Badge
                     variant="outline"
-                    className="font-black text-xs h-9 w-full md:w-auto px-4 justify-center bg-background border-primary/20 text-primary shadow-sm"
+                    className="font-black text-xs h-9 w-full md:w-auto px-4 justify-center bg-background border-primary/20 text-primary "
                   >
                     {variantField.size}
                   </Badge>
@@ -142,11 +142,11 @@ export function VariantsSection({ sizes }: VariantsSectionProps) {
       </div>
 
       <div className="flex items-center justify-center gap-2 py-2 border-t border-border/20">
-        <div className="h-1 w-1 rounded-full bg-primary/40 animate-pulse" />
+        <div className="h-1 w-1 rounded-sm bg-primary/40 animate-pulse" />
         <p className="text-[10px] text-muted-foreground uppercase tracking-[0.2em] font-bold opacity-60">
           Individual Variant Details
         </p>
-        <div className="h-1 w-1 rounded-full bg-primary/40 animate-pulse" />
+        <div className="h-1 w-1 rounded-sm bg-primary/40 animate-pulse" />
       </div>
     </div>
   );

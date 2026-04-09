@@ -9,12 +9,15 @@ import { clearProductDraft } from "@/features/productDraftSlice";
 
 import { useGetMyStoreQuery } from "@/services/storeApi";
 import { getBaseDomain } from "@/utils/subdomain";
+import { RecordOfflineSaleModal } from "./RecordOfflineSaleModal";
+import { useState } from "react";
 
 export function DashboardOverviewHeader() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { currentUser } = useSelector((state: RootState) => state.user);
   const { data: store } = useGetMyStoreQuery();
+  const [offlineModalOpen, setOfflineModalOpen] = useState(false);
 
   const handleShareStore = () => {
     const baseDomain = getBaseDomain();
@@ -79,8 +82,17 @@ export function DashboardOverviewHeader() {
           <span className="hidden sm:inline">Share Store</span>
         </Button>
         <Button
+          variant="outline"
           size="sm"
-          className="gap-2 shadow-lg shadow-primary/20"
+          className="flex gap-2 border-border/60"
+          onClick={() => setOfflineModalOpen(true)}
+        >
+          <span className="hidden sm:inline">Record Offline Sale</span>
+          <span className="sm:hidden">Record Sale</span>
+        </Button>
+        <Button
+          size="sm"
+          className="gap-2  "
           onClick={() => {
             dispatch(clearProductDraft());
             navigate("/products/new");
@@ -91,6 +103,8 @@ export function DashboardOverviewHeader() {
           <span className="xs:hidden">Add</span>
         </Button>
       </motion.div>
+
+      <RecordOfflineSaleModal open={offlineModalOpen} onOpenChange={setOfflineModalOpen} />
     </div>
   );
 }

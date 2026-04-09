@@ -19,7 +19,7 @@ export function AnalyticsHeader({ storeName }: AnalyticsHeaderProps) {
               {storeName || "your store"}
             </span>
           </p>
-          <div className="w-1 h-1 rounded-full bg-border" />
+          <div className="w-1 h-1 rounded-sm bg-border" />
           <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60">
             Refreshed just now
           </p>
@@ -29,12 +29,12 @@ export function AnalyticsHeader({ storeName }: AnalyticsHeaderProps) {
       <div className="flex items-center gap-3 w-full md:w-auto">
         <Button
           variant="outline"
-          className="rounded-xl h-11 px-5 border-border/60 bg-card/50 backdrop-blur-sm gap-2 flex-1 md:flex-none"
+          className="rounded-sm h-11 px-5 border-border/60 bg-card/50 backdrop-blur-sm gap-2 flex-1 md:flex-none"
         >
           <Calendar className="w-4 h-4 text-emerald-500" />
           <span>Last 30 Days</span>
         </Button>
-        <Button className="rounded-xl h-11 px-5 shadow-lg shadow-primary/20 gap-2 flex-1 md:flex-none">
+        <Button className="rounded-sm h-11 px-5   gap-2 flex-1 md:flex-none">
           <Download className="w-4 h-4" />
           <span>Export Report</span>
         </Button>

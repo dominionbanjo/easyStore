@@ -134,55 +134,63 @@ export function StoreSettingsCompleteView({
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 pb-20 mt-8">
-      <div>
-        <h1 className="text-3xl font-bold text-foreground">Store Settings</h1>
-        <p className="text-muted-foreground mt-1 text-sm">
-          Manage your store's information, contact details, and payout settings.
+    <div className="w-full space-y-10 pb-20 mt-4">
+      <div className="px-1">
+        <h1 className="text-3xl font-black text-foreground uppercase tracking-tight">Store Settings</h1>
+        <p className="text-muted-foreground mt-1 text-[10px] uppercase tracking-[0.2em] font-medium opacity-70">
+          Management & Configuration
         </p>
       </div>
 
       <FormProvider {...methods}>
         {/* General Store Info */}
-        <Card className="border-none shadow-md overflow-hidden">
-          <CardHeader className="bg-gradient-to-r from-emerald-500/10 via-emerald-500/5 to-transparent p-6 md:p-8">
-            <CardTitle className="text-xl text-emerald-600 dark:text-emerald-400 flex items-center gap-2">
-              <Store className="w-5 h-5" /> General Details
+        <Card className="border-border/40  overflow-hidden bg-card/50 backdrop-blur-sm rounded-sm">
+          <CardHeader className="bg-muted/30 p-4 sm:p-6 border-b border-border/40">
+            <CardTitle className="text-lg font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400 flex items-center gap-2">
+              <Store className="w-4.5 h-4.5" /> General Details
             </CardTitle>
-            <CardDescription>
-              View and edit your store's identity and contact information.
+            <CardDescription className="text-[10px] uppercase font-bold text-muted-foreground/60">
+              View and edit your store's identity and basic information.
             </CardDescription>
           </CardHeader>
-          <CardContent className="p-6 md:p-8 space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <FormInput
-                name="store_name"
-                label="Store Name"
-                placeholder="Your Store Name"
-              />
-              <FormInput
-                name="email"
-                label="Support Email"
-                type="email"
-                placeholder="support@mystore.com"
-              />
-              <FormInput
-                name="phone_number"
-                label="Support Phone"
-                placeholder="+234..."
+          <CardContent className="p-0 space-y-0">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border-b border-border/40">
+              <div className="p-4 md:p-5 border-r border-border/40">
+                <FormInput
+                  name="store_name"
+                  label="Store Name"
+                  placeholder="Your Store Name"
+                />
+              </div>
+              <div className="p-4 md:p-5 border-r border-border/40">
+                <FormInput
+                  name="email"
+                  label="Support Email"
+                  type="email"
+                  placeholder="support@mystore.com"
+                />
+              </div>
+              <div className="p-4 md:p-5">
+                <FormInput
+                  name="phone_number"
+                  label="Support Phone"
+                  placeholder="+234..."
+                />
+              </div>
+            </div>
+            <div className="p-4 md:p-5">
+              <FormTextarea
+                name="description"
+                label="About the Store"
+                placeholder="Describe your store..."
               />
             </div>
-            <FormTextarea
-              name="description"
-              label="About the Store"
-              placeholder="Describe your store..."
-            />
 
-            <div className="pt-4 border-t flex justify-end">
+            <div className="p-4 md:p-5 pt-0 flex justify-end">
               <Button
                 onClick={methods.handleSubmit(handleSaveGeneral)}
                 disabled={isUpdatingStore}
-                className="rounded-full px-8 shadow-md hover:shadow-lg transition-all bg-emerald-600 hover:bg-emerald-700"
+                className="rounded-sm px-10 h-12 font-black uppercase tracking-widest text-xs bg-emerald-600 hover:bg-emerald-700 shadow-lg shadow-emerald-500/10"
               >
                 {isUpdatingStore ? (
                   <Loader2 className="w-4 h-4 animate-spin mr-2" />
@@ -196,33 +204,37 @@ export function StoreSettingsCompleteView({
         </Card>
 
         {/* Location Info */}
-        <Card className="border-none shadow-md overflow-hidden">
-          <CardHeader className="bg-gradient-to-r from-emerald-500/10 via-emerald-500/5 to-transparent p-6 md:p-8">
-            <CardTitle className="text-xl text-emerald-600 dark:text-emerald-400 flex items-center gap-2">
-              <MapPin className="w-5 h-5" /> Location
+        <Card className="border-border/40  overflow-hidden bg-card/50 backdrop-blur-sm rounded-sm">
+          <CardHeader className="bg-muted/30 p-4 sm:p-6 border-b border-border/40">
+            <CardTitle className="text-lg font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400 flex items-center gap-2">
+              <MapPin className="w-4.5 h-4.5" /> Location
             </CardTitle>
           </CardHeader>
-          <CardContent className="p-6 md:p-8 space-y-6">
-            <div className="grid grid-cols-1 gap-6">
+          <CardContent className="p-0">
+            <div className="p-4 md:p-5 border-b border-border/40">
               <FormInput
                 name="address_street"
                 label="Street Address"
                 placeholder="123 Store Lane"
               />
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <FormInput name="address_city" label="City" placeholder="City" />
-              <FormInput
-                name="address_state"
-                label="State"
-                placeholder="State"
-              />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-0 border-b border-border/40">
+              <div className="p-4 md:p-5 border-r border-border/40">
+                <FormInput name="address_city" label="City" placeholder="City" />
+              </div>
+              <div className="p-4 md:p-5">
+                <FormInput
+                  name="address_state"
+                  label="State"
+                  placeholder="State"
+                />
+              </div>
             </div>
-            <div className="pt-4 border-t flex justify-end">
+            <div className="p-4 md:p-5 pt-6 flex justify-end">
               <Button
                 onClick={methods.handleSubmit(handleSaveGeneral)}
                 disabled={isUpdatingStore}
-                className="rounded-full px-8 shadow-md bg-emerald-600 hover:bg-emerald-700"
+                className="rounded-sm px-10 h-12 font-black uppercase tracking-widest text-xs bg-emerald-600 hover:bg-emerald-700 shadow-lg shadow-emerald-500/10"
               >
                 {isUpdatingStore ? (
                   <Loader2 className="w-4 h-4 animate-spin mr-2" />
@@ -237,30 +249,30 @@ export function StoreSettingsCompleteView({
       </FormProvider>
 
       {/* Payout Settings */}
-      <Card className="border-none shadow-md overflow-hidden">
-        <CardHeader className="bg-gradient-to-r from-emerald-500/10 via-emerald-500/5 to-transparent p-6 md:p-8">
-          <CardTitle className="text-xl text-emerald-600 dark:text-emerald-400 flex items-center gap-2">
-            <CreditCard className="w-5 h-5" /> Bank & Payout
+      <Card className="border-border/40  overflow-hidden bg-card/50 backdrop-blur-sm rounded-sm">
+        <CardHeader className="bg-muted/30 p-4 sm:p-6 border-b border-border/40">
+          <CardTitle className="text-lg font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400 flex items-center gap-2">
+            <CreditCard className="w-4.5 h-4.5" /> Bank & Payout
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-[10px] uppercase font-bold text-muted-foreground/60">
             Manage where you receive your payments.
           </CardDescription>
         </CardHeader>
-        <CardContent className="p-6 md:p-8 space-y-6">
+        <CardContent className="p-0">
           {!canUpdateBank && (
-            <div className="bg-amber-50 dark:bg-amber-950/20 text-amber-800 dark:text-amber-500 p-4 rounded-xl text-sm border border-amber-200 dark:border-amber-900/50">
+            <div className="m-4 md:m-5 bg-amber-500/10 text-amber-600 dark:text-amber-400 p-4 rounded-sm text-[11px] font-bold uppercase tracking-wider border border-amber-500/20">
               <strong>Notice:</strong> Your bank account was updated recently.
               For security reasons, you can only change your payout details once
               every 3 days.
             </div>
           )}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label>Bank Code</Label>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-0 border-b border-border/40">
+            <div className="p-4 md:p-5 border-r border-border/40 space-y-2">
+              <Label className="text-[10px] uppercase font-black text-muted-foreground ml-1 font-outfit">Bank Name</Label>
               <select
                 disabled={!canUpdateBank}
-                className="flex h-12 w-full items-center justify-between rounded-xl border border-input bg-muted/20 px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex h-12 w-full items-center justify-between rounded-sm border border-border/40 bg-muted/20 px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary disabled:cursor-not-allowed disabled:opacity-50"
                 value={bankData.bank_code}
                 onChange={(e) =>
                   setBankData({ ...bankData, bank_code: e.target.value })
@@ -275,8 +287,8 @@ export function StoreSettingsCompleteView({
               </select>
             </div>
 
-            <div className="space-y-2">
-              <Label>Account Number</Label>
+            <div className="p-4 md:p-5 space-y-2">
+              <Label className="text-[10px] uppercase font-black text-muted-foreground ml-1 font-outfit">Account Number</Label>
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-2">
                 <Input
                   disabled={!canUpdateBank}
@@ -284,13 +296,13 @@ export function StoreSettingsCompleteView({
                   onChange={(e) =>
                     setBankData({ ...bankData, account_number: e.target.value })
                   }
-                  className="h-12 rounded-xl bg-muted/20"
+                  className="h-12 rounded-sm bg-muted/20 border-border/40 focus:ring-1"
                   placeholder="0123456789"
                   maxLength={10}
                 />
                 <Button
                   variant="secondary"
-                  className="h-12 rounded-xl w-full sm:w-auto px-6"
+                  className="h-12 rounded-sm w-full sm:w-auto px-8 font-black uppercase tracking-widest text-[10px]"
                   onClick={handleBankVerify}
                   disabled={isVerifyingBank || !canUpdateBank}
                 >
@@ -303,24 +315,24 @@ export function StoreSettingsCompleteView({
               </div>
             </div>
 
-            <div className="space-y-2 md:col-span-2">
-              <Label>Account Name</Label>
+            <div className="p-4 md:p-5 pt-0 md:col-span-2 space-y-2">
+              <Label className="text-[10px] uppercase font-black text-muted-foreground ml-1 font-outfit">Verified Account Name</Label>
               <Input
                 value={bankData.account_name}
                 readOnly
-                className="h-12 rounded-xl bg-muted/50 border-none font-semibold text-foreground/80"
+                className="h-14 rounded-sm bg-muted/30 border-dashed border-border/60 font-black uppercase tracking-tight text-foreground/80 text-lg sm:text-2xl"
                 placeholder="Account Name will appear here"
               />
             </div>
           </div>
 
-          <div className="pt-4 border-t flex justify-end">
+          <div className="p-4 md:p-5 py-6 flex justify-end">
             <Button
               onClick={handleSaveBank}
               disabled={
                 isUpdatingBank || !bankData.account_name || !canUpdateBank
               }
-              className="rounded-full px-8 shadow-md bg-emerald-600 hover:bg-emerald-700"
+              className="rounded-sm px-10 h-12 font-black uppercase tracking-widest text-xs bg-emerald-600 hover:bg-emerald-700 shadow-xl shadow-emerald-500/10"
             >
               {isUpdatingBank ? (
                 <Loader2 className="w-4 h-4 animate-spin mr-2" />

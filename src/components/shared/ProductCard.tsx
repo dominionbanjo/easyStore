@@ -6,7 +6,7 @@ import {
   useEffect,
   type ReactNode,
 } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useLocation } from "react-router-dom";
 import { getSubdomain } from "@/utils/subdomain";
 import { motion } from "framer-motion";
 import { useSelector, useDispatch } from "react-redux";
@@ -143,6 +143,7 @@ const Root = ({
   className,
 }: ProductCardRootProps) => {
   const [searchParams] = useSearchParams();
+  const location = useLocation();
   const previewTemplate = searchParams.get("preview_template");
   const { isAuthenticated } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
@@ -393,27 +394,33 @@ const Root = ({
         animate={{ opacity: 1, scale: 1 }}
         whileHover={{ y: -8 }}
         className={cn(
-          "group relative w-full bg-white dark:bg-neutral-900 rounded-3xl p-1 shadow-sm border border-zinc-100 dark:border-white/5 transition-all hover:shadow-2xl hover:shadow-emerald-500/10 cursor-pointer overflow-hidden flex flex-col h-full",
+          "group relative w-full bg-white dark:bg-neutral-900 rounded-sm p-1  border border-zinc-100 dark:border-white/5 transition-all hover: hover:-emerald-500/10 cursor-pointer overflow-hidden flex flex-col h-full",
           className,
         )}
       >
         <SmartLink
           to={(() => {
             const subdomain = getSubdomain();
-            const isStoreSubdomain =
-              subdomain && subdomain !== "vendor" && subdomain !== "admin";
             const previewQuery = previewTemplate
               ? `?preview_template=${previewTemplate}`
               : "";
 
+            // 1. Check if we are currently viewing a store's page on the base domain (e.g., localhost preview)
+            if (location.pathname.startsWith(`/stores/`)) {
+              // We grab the actual slug from the URL to ensure it matches the current view
+              const pathParts = location.pathname.split("/");
+              const currentStoreSlug = pathParts[2]; // /stores/:slug
+              return `/stores/${currentStoreSlug || storeSlug}/products/${slug}${previewQuery}`;
+            }
+
+            // 2. Check if we're naturally on a store subdomain
+            const isStoreSubdomain =
+              subdomain && subdomain !== "vendor" && subdomain !== "admin";
             if (isStoreSubdomain) {
-              return `/products/${id}${previewQuery}`;
+              return `/products/${slug}${previewQuery}`;
             }
 
-            if (storeSlug) {
-              return `/stores/${storeSlug}/products/${id}${previewQuery}`;
-            }
-
+            // Otherwise, we're browsing the Base Site directly
             return buildRoute.productDetails(slug);
           })()}
           className="absolute inset-0 z-[1]"
@@ -424,7 +431,7 @@ const Root = ({
         {/* ─── VARIANT SELECTION DIALOG ─── */}
         <Dialog open={showVariantModal} onOpenChange={setShowVariantModal}>
           <DialogContent
-            className="rounded-3xl sm:max-w-[440px]"
+            className="rounded-sm sm:max-w-[440px]"
             onClick={(e) => e.stopPropagation()}
           >
             <DialogHeader>
@@ -432,7 +439,7 @@ const Root = ({
               <DialogDescription className="flex items-center gap-3 mt-1">
                 <img
                   src={image}
-                  className="w-12 h-12 rounded-lg object-cover border"
+                  className="w-12 h-12 rounded-sm object-cover border"
                 />
                 <div className="flex flex-col flex-1">
                   <span className="font-semibold text-zinc-900 dark:text-zinc-100 text-sm leading-tight line-clamp-1">
@@ -525,9 +532,9 @@ const Root = ({
                               }
                               disabled={!hasStock}
                               className={cn(
-                                "px-4 py-2 rounded-xl text-sm font-medium transition-all border relative",
+                                "px-4 py-2 rounded-sm text-sm font-medium transition-all border relative",
                                 isSelected
-                                  ? "bg-zinc-900 text-white border-zinc-900 shadow-md scale-105"
+                                  ? "bg-zinc-900 text-white border-zinc-900  scale-105"
                                   : hasStock
                                     ? "bg-white text-zinc-600 border-zinc-200 hover:border-zinc-400 dark:bg-zinc-800 dark:text-zinc-200 dark:border-zinc-700"
                                     : "bg-zinc-50 text-zinc-300 border-zinc-200 cursor-not-allowed opacity-50 line-through dark:bg-zinc-900 dark:text-zinc-600",
@@ -535,7 +542,7 @@ const Root = ({
                             >
                               {val}
                               {isSelected && (
-                                <Check className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 bg-emerald-600 text-white rounded-full p-0.5" />
+                                <Check className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 bg-emerald-600 text-white rounded-sm p-0.5" />
                               )}
                             </button>
                           );
@@ -564,9 +571,9 @@ const Root = ({
                         key={s}
                         onClick={() => setSelectedSize(s)}
                         className={cn(
-                          "px-4 py-2 rounded-xl text-sm font-medium transition-all border",
+                          "px-4 py-2 rounded-sm text-sm font-medium transition-all border",
                           selectedSize === s
-                            ? "bg-zinc-900 text-white border-zinc-900 shadow-md scale-105"
+                            ? "bg-zinc-900 text-white border-zinc-900  scale-105"
                             : "bg-white text-zinc-600 border-zinc-200 hover:border-zinc-400 dark:bg-zinc-800 dark:text-zinc-200 dark:border-zinc-700",
                         )}
                       >
@@ -596,16 +603,16 @@ const Root = ({
                         key={c.id}
                         onClick={() => setSelectedColor(c.id)}
                         className={cn(
-                          "w-10 h-10 rounded-full border-2 transition-all relative flex items-center justify-center shadow-sm",
+                          "w-10 h-10 rounded-sm border-2 transition-all relative flex items-center justify-center ",
                           selectedColor === c.id
                             ? "border-emerald-500 ring-2 ring-emerald-500/20 scale-110"
-                            : "border-transparent hover:scale-110 hover:shadow-md",
+                            : "border-transparent hover:scale-110 hover:",
                         )}
                         style={{ backgroundColor: c.hex }}
                         title={c.name}
                       >
                         {selectedColor === c.id && (
-                          <Check className="w-4 h-4 text-white drop-shadow-md" />
+                          <Check className="w-4 h-4 text-white drop-" />
                         )}
                       </button>
                     ))}
@@ -616,7 +623,7 @@ const Root = ({
 
             <DialogFooter>
               <Button
-                className="w-full rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold h-12"
+                className="w-full rounded-sm bg-emerald-600 hover:bg-emerald-700 text-white font-bold h-12"
                 onClick={handleAddToCart}
                 disabled={isAddingToCart}
               >
@@ -663,18 +670,18 @@ const Image = () => {
   const discountPercentage = calculateDiscount();
 
   return (
-    <div className="relative aspect-square w-full rounded-2xl overflow-hidden bg-zinc-50 dark:bg-zinc-800 group-hover:shadow-inner transition-all duration-500">
+    <div className="relative aspect-square w-full rounded-sm overflow-hidden bg-zinc-50 dark:bg-zinc-800 group-hover: transition-all duration-500">
       {/* 🏷️ Status Badges (Now on Right) */}
       <div className="absolute top-3 right-3 z-20 flex flex-col items-end gap-2">
         {isOutOfStock ? (
-          <div className="px-3 py-1 bg-zinc-900/90 backdrop-blur-md text-white text-[10px] font-bold rounded-full uppercase tracking-widest shadow-lg border border-white/10">
+          <div className="px-3 py-1 bg-zinc-900/90 backdrop-blur-md text-white text-[10px] font-bold rounded-sm uppercase tracking-widest  border border-white/10">
             Sold Out
           </div>
         ) : (
           isOnSale &&
           discountPrice &&
           discountPercentage > 0 && (
-            <div className="px-3 py-1.5 bg-emerald-500/90 backdrop-blur-md text-white text-[11px] font-black rounded-xl flex items-center gap-1 shadow-xl shadow-emerald-500/20 uppercase tracking-tighter border border-white/20 scale-110 origin-top-right">
+            <div className="px-3 py-1.5 bg-emerald-500/90 backdrop-blur-md text-white text-[11px] font-black rounded-sm flex items-center gap-1  -emerald-500/20 uppercase tracking-tighter border border-white/20 scale-110 origin-top-right">
               {discountPercentage}% OFF
             </div>
           )
@@ -689,7 +696,7 @@ const Image = () => {
           toggleFavorite();
         }}
         aria-label="Toggle wishlist"
-        className="absolute top-3 left-3 z-30 p-2 hover:scale-110 transition-transform active:scale-95 drop-shadow-sm"
+        className="absolute top-3 left-3 z-30 p-2 hover:scale-110 transition-transform active:scale-95 drop-"
       >
         <Heart
           className={cn(
@@ -713,7 +720,7 @@ const Image = () => {
       {/* 👁️ Quick Action Overlay */}
       <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none z-20">
         <div className="flex gap-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] items-center pointer-events-auto">
-          <div className="p-3 bg-white/95 text-zinc-900 rounded-2xl shadow-2xl backdrop-blur-md flex items-center gap-2 font-medium text-xs hover:bg-emerald-500 hover:text-white transition-colors cursor-pointer">
+          <div className="p-3 bg-white/95 text-zinc-900 rounded-sm  backdrop-blur-md flex items-center gap-2 font-medium text-xs hover:bg-emerald-500 hover:text-white transition-colors cursor-pointer">
             <Eye className="w-4 h-4" />
             <span>Quick View</span>
           </div>
@@ -743,10 +750,10 @@ const Info = () => {
     <div className="px-1.5 pt-2 flex flex-col flex-1">
       {/* Category & Rating Row */}
       <div className="flex items-center justify-between mb-2">
-        <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest bg-emerald-50 dark:bg-emerald-500/10 px-2 py-0.5 rounded-md">
+        <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest bg-emerald-50 dark:bg-emerald-500/10 px-2 py-0.5 rounded-sm">
           {category}
         </span>
-        <div className="flex items-center gap-1 px-1.5 py-0.5 bg-amber-50 dark:bg-amber-500/10 rounded-md border border-amber-100/50 dark:border-amber-400/20">
+        <div className="flex items-center gap-1 px-1.5 py-0.5 bg-amber-50 dark:bg-amber-500/10 rounded-sm border border-amber-100/50 dark:border-amber-400/20">
           <Star className="w-2.5 h-2.5 fill-amber-500 stroke-amber-500" />
           <span className="text-[10px] font-bold text-amber-700 dark:text-amber-400">
             {Number(rating || 0).toFixed(1)}
@@ -780,10 +787,10 @@ const Info = () => {
           }}
           disabled={isOutOfStock || isAddingToCart}
           className={cn(
-            "p-2 rounded-2xl transition-all shadow-md group/btn relative z-10 overflow-hidden",
+            "p-2 rounded-sm transition-all  group/btn relative z-10 overflow-hidden",
             isOutOfStock
               ? "bg-zinc-100 text-zinc-400 cursor-not-allowed"
-              : "bg-zinc-900 text-white hover:bg-emerald-500 hover:shadow-emerald-500/40 active:scale-95",
+              : "bg-zinc-900 text-white hover:bg-emerald-500 hover:-emerald-500/40 active:scale-95",
           )}
         >
           {isAddingToCart ? (
@@ -796,7 +803,7 @@ const Info = () => {
 
       {/* Stock Footer */}
       <div className="mt-1.5 flex items-center gap-2">
-        <div className="flex-1 h-1 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+        <div className="flex-1 h-1 bg-zinc-100 dark:bg-zinc-800 rounded-sm overflow-hidden">
           <div
             className={cn(
               "h-full transition-all duration-1000",
@@ -840,7 +847,7 @@ const Footer = () => {
         className="flex items-center gap-2.5 truncate relative z-10 group/vendor"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="h-8 w-8 rounded-full border-2 border-white dark:border-zinc-800 shadow-sm overflow-hidden ring-1 ring-zinc-100 dark:ring-zinc-800">
+        <div className="h-8 w-8 rounded-sm border-2 border-white dark:border-zinc-800  overflow-hidden ring-1 ring-zinc-100 dark:ring-zinc-800">
           <img
             src={
               avatar || "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix"

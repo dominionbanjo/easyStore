@@ -42,7 +42,7 @@ export function StatCard({
     >
       <Card
         className={cn(
-          "group relative overflow-hidden border border-border/40 hover:border-primary/30 transition-all duration-300 hover:shadow-xl hover:shadow-primary/5 flex flex-col",
+          "group relative overflow-hidden border border-border/40 hover:border-primary/30 transition-all duration-300 hover: hover: flex flex-col",
           className,
         )}
       >
@@ -66,7 +66,7 @@ export function StatCard({
             </div>
             <div
               className={cn(
-                "p-2 shrink-0 rounded-xl border transition-all duration-300 group-hover:scale-110 shadow-sm",
+                "p-2 shrink-0 rounded-sm border transition-all duration-300 group-hover:scale-110 ",
                 colorMap[color],
               )}
             >
@@ -79,7 +79,7 @@ export function StatCard({
             <div className="flex items-center gap-2 mt-1">
               <div
                 className={cn(
-                  "flex items-center gap-0.5 text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded-full",
+                  "flex items-center gap-0.5 text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded-sm",
                   trend.isPositive
                     ? "bg-emerald-500/10 text-emerald-600"
                     : "bg-red-500/10 text-red-600",

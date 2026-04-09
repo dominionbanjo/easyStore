@@ -81,7 +81,7 @@ export default function TopCategoriesSection({
         {isLoading ? (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {Array.from({ length: 8 }).map((_, i) => (
-              <Skeleton key={i} className="h-24 md:h-32 rounded-2xl w-full" />
+              <Skeleton key={i} className="h-24 md:h-32 rounded-sm w-full" />
             ))}
           </div>
         ) : isError || isEmpty ? (
@@ -89,7 +89,7 @@ export default function TopCategoriesSection({
             icon={Tag}
             title="No Categories"
             description="We haven't set up our product categories yet."
-            className="bg-muted/30 rounded-[2rem] py-12"
+            className="bg-muted/30 rounded-sm py-12"
           />
         ) : (
           <motion.div
@@ -106,7 +106,7 @@ export default function TopCategoriesSection({
               >
                 <Card
                   className={cn(
-                    "h-24 md:h-32 border-none shadow-sm hover:shadow-md transition-all duration-300 rounded-2xl flex flex-col items-center justify-center gap-2 p-4 text-center cursor-pointer group-hover:-translate-y-1 relative overflow-hidden",
+                    "h-24 md:h-32 border-none  hover: transition-all duration-300 rounded-sm flex flex-col items-center justify-center gap-2 p-4 text-center cursor-pointer group-hover:-translate-y-1 relative overflow-hidden",
                     CATEGORY_COLORS[index % CATEGORY_COLORS.length],
                   )}
                 >

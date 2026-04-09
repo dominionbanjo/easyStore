@@ -155,11 +155,11 @@ export default function SuperAdminReportsPage() {
         <div className="flex items-center gap-2">
           <Button
             variant="outline"
-            className="gap-2 font-bold border-border/40 shadow-sm"
+            className="gap-2 font-bold border-border/40 "
           >
             <Filter className="h-4 w-4" /> Filter Reports
           </Button>
-          <Button className="gap-2 font-bold shadow-md shadow-primary/20">
+          <Button className="gap-2 font-bold  ">
             <Download className="h-4 w-4" /> Export Data
           </Button>
         </div>
@@ -181,7 +181,7 @@ export default function SuperAdminReportsPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05 }}
             >
-              <Card className="border-border/30 shadow-lg shadow-black/5 hover:shadow-xl transition-all duration-300 overflow-hidden group relative">
+              <Card className="border-border/30   hover: transition-all duration-300 overflow-hidden group relative">
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 px-4 pt-4 sm:px-6 sm:pt-6">
                   <CardTitle className="text-[11px] sm:text-[13px] font-bold text-muted-foreground uppercase tracking-wider truncate mr-2">
@@ -189,7 +189,7 @@ export default function SuperAdminReportsPage() {
                   </CardTitle>
                   <div
                     className={cn(
-                      "p-1.5 sm:p-2 rounded-xl flex-shrink-0",
+                      "p-1.5 sm:p-2 rounded-sm flex-shrink-0",
                       m.bgColor,
                     )}
                   >
@@ -234,7 +234,7 @@ export default function SuperAdminReportsPage() {
       </motion.div>
 
       {/* ─── Revenue Trend Area Chart ─── */}
-      <Card className="border-border/30 shadow-lg shadow-black/5 overflow-hidden">
+      <Card className="border-border/30   overflow-hidden">
         <CardHeader className="border-b border-border/20 bg-muted/10 px-4 py-4 sm:px-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="flex items-center gap-3">
@@ -248,7 +248,7 @@ export default function SuperAdminReportsPage() {
                 </CardDescription>
               </div>
             </div>
-            <span className="self-start sm:self-center text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase bg-muted px-2.5 py-1 rounded-full">
+            <span className="self-start sm:self-center text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase bg-muted px-2.5 py-1 rounded-sm">
               {revenueChart.length} months data
             </span>
           </div>
@@ -256,7 +256,7 @@ export default function SuperAdminReportsPage() {
         <CardContent className="pt-6 px-2 sm:px-6">
           <div className="h-64 sm:h-80 w-full">
             {revenueLoading ? (
-              <Skeleton className="h-full w-full rounded-xl" />
+              <Skeleton className="h-full w-full rounded-sm" />
             ) : (
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart
@@ -316,7 +316,7 @@ export default function SuperAdminReportsPage() {
       {/* ─── Order Breakdown + Top Stores ─── */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Order Status Pie */}
-        <Card className="border-border/30 shadow-lg shadow-black/5 overflow-hidden">
+        <Card className="border-border/30   overflow-hidden">
           <CardHeader className="border-b border-border/20 bg-muted/10 px-4 py-4 sm:px-6">
             <CardTitle className="text-base font-black flex items-center gap-2">
               <PieChartIcon className="h-4 w-4 text-primary" /> Order Status
@@ -328,7 +328,7 @@ export default function SuperAdminReportsPage() {
           <CardContent className="pt-6 px-2 sm:px-6">
             <div className="h-64 sm:h-72">
               {ordersLoading ? (
-                <Skeleton className="h-full w-full rounded-xl" />
+                <Skeleton className="h-full w-full rounded-sm" />
               ) : orderStatuses.length === 0 ? (
                 <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
                   No order data yet
@@ -375,7 +375,7 @@ export default function SuperAdminReportsPage() {
         </Card>
 
         {/* Transaction Types Bar Chart */}
-        <Card className="border-border/30 shadow-lg shadow-black/5 overflow-hidden">
+        <Card className="border-border/30   overflow-hidden">
           <CardHeader className="border-b border-border/20 bg-muted/10 px-4 py-4 sm:px-6">
             <CardTitle className="text-base font-black flex items-center gap-2">
               <BarChart3 className="h-4 w-4 text-primary" /> Transaction Volume
@@ -387,7 +387,7 @@ export default function SuperAdminReportsPage() {
           <CardContent className="pt-6 px-2 sm:px-6">
             <div className="h-64 sm:h-72">
               {txLoading ? (
-                <Skeleton className="h-full w-full rounded-xl" />
+                <Skeleton className="h-full w-full rounded-sm" />
               ) : (
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={txTypes.slice(0, 7)}>
@@ -425,7 +425,7 @@ export default function SuperAdminReportsPage() {
       </div>
 
       {/* ─── Top Stores Table ─── */}
-      <Card className="border-border/30 shadow-lg shadow-black/5 overflow-hidden">
+      <Card className="border-border/30   overflow-hidden">
         <CardHeader className="border-b border-border/20 bg-muted/10">
           <div className="flex items-center justify-between">
             <div>
@@ -462,9 +462,9 @@ export default function SuperAdminReportsPage() {
                     <div className="flex items-center gap-4">
                       <span
                         className={cn(
-                          "h-8 w-8 rounded-lg flex items-center justify-center text-xs font-black text-white shadow-sm",
+                          "h-8 w-8 rounded-sm flex items-center justify-center text-xs font-black text-white ",
                           i === 0
-                            ? "bg-gradient-to-br from-amber-400 to-amber-600 shadow-amber-200/50"
+                            ? "bg-gradient-to-br from-amber-400 to-amber-600 -amber-200/50"
                             : i === 1
                               ? "bg-gradient-to-br from-slate-300 to-slate-500"
                               : i === 2

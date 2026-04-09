@@ -49,13 +49,13 @@ export function TutorialList() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: idx * 0.1 }}
           >
-            <Card className="group border-none shadow-xl bg-card overflow-hidden h-full flex flex-col hover:ring-2 hover:ring-primary/20 transition-all cursor-pointer">
+            <Card className="group border-none  bg-card overflow-hidden h-full flex flex-col hover:ring-2 hover:ring-primary/20 transition-all cursor-pointer">
               {/* Thumbnail Placeholder */}
               <div
                 className={`relative aspect-video bg-${item.color}-500/10 flex items-center justify-center border-b border-border/50`}
               >
                 <div
-                  className={`w-16 h-16 rounded-full bg-${item.color}-500/20 flex items-center justify-center transition-transform group-hover:scale-125 duration-700`}
+                  className={`w-16 h-16 rounded-sm bg-${item.color}-500/20 flex items-center justify-center transition-transform group-hover:scale-125 duration-700`}
                 >
                   {item.type === "Video" ? (
                     <Play
@@ -67,7 +67,7 @@ export function TutorialList() {
                 </div>
 
                 {/* Duration Badge */}
-                <div className="absolute bottom-4 right-4 bg-card/90 backdrop-blur-md px-3 py-1.5 rounded-xl border border-border/50 text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
+                <div className="absolute bottom-4 right-4 bg-card/90 backdrop-blur-md px-3 py-1.5 rounded-sm border border-border/50 text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
                   <Clock className="w-3.5 h-3.5 text-primary" />
                   {item.duration}
                 </div>
@@ -76,7 +76,7 @@ export function TutorialList() {
               <CardContent className="p-6 space-y-3 flex-1">
                 <div className="flex items-center gap-2">
                   <span
-                    className={`text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded-md bg-${item.color}-500/10 text-${item.color}-500 border border-${item.color}-500/20`}
+                    className={`text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded-sm bg-${item.color}-500/10 text-${item.color}-500 border border-${item.color}-500/20`}
                   >
                     {item.type}
                   </span>

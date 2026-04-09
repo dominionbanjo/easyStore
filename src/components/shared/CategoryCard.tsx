@@ -7,7 +7,7 @@
 
 // export default function CategoryCard({ name, image }: CategoryCardProps) {
 //   return (
-//     <Card className="bg-card rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-transform duration-300 hover:-translate-y-1 cursor-pointer">
+//     <Card className="bg-card rounded-sm overflow-hidden  hover: transition-transform duration-300 hover:-translate-y-1 cursor-pointer">
 //       <img src={image} alt={name} className="w-full h-48 object-cover" />
 //       <CardHeader className="text-lg font-semibold text-primary pt-4">
 //         {name}
@@ -29,7 +29,7 @@ type CardComponent = React.FC<{ children: React.ReactNode }> & {
 const Card: CardComponent = ({ children }) => (
   <div
     className={cn(
-      "group relative flex flex-col overflow-hidden rounded-2xl border border-border/30 bg-gradient-to-b from-background to-muted/20 shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+      "group relative flex flex-col overflow-hidden rounded-sm border border-border/30 bg-gradient-to-b from-background to-muted/20  transition-all duration-300 hover: hover:-translate-y-1"
     )}
   >
     {children}

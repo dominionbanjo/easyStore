@@ -46,27 +46,27 @@ export default function CategoriesPage() {
     return (
       <div className="min-h-screen bg-white dark:bg-neutral-950 transition-colors duration-300">
         <div className="bg-white dark:bg-neutral-900 border-b border-border/50">
-          <div className="w-full mx-auto px-4 py-20 text-center space-y-10">
-            <Skeleton className="h-4 w-32 mx-auto rounded-full" />
+          <div className="w-full mx-auto px-4 py-12 md:py-16 text-center space-y-10">
+            <Skeleton className="h-4 w-32 mx-auto rounded-sm" />
             <div className="space-y-4">
-              <Skeleton className="h-12 sm:h-16 w-full max-w-lg mx-auto rounded-xl" />
-              <Skeleton className="h-6 w-full max-w-md mx-auto rounded-lg" />
+              <Skeleton className="h-12 sm:h-16 w-full max-w-lg mx-auto rounded-sm" />
+              <Skeleton className="h-6 w-full max-w-md mx-auto rounded-sm" />
             </div>
-            <Skeleton className="h-16 w-full max-w-xl mx-auto rounded-3xl" />
+            <Skeleton className="h-16 w-full max-w-xl mx-auto rounded-sm" />
           </div>
         </div>
-        <div className="w-full mx-auto px-4 py-12 md:py-20 space-y-20">
+        <div className="w-full mx-auto px-4 py-8 md:py-16 space-y-20">
           {Array.from({ length: 3 }).map((_, i) => (
             <div key={i} className="space-y-8">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 border-b-2 border-primary/5 pb-4">
-                <Skeleton className="h-10 w-48 rounded-lg" />
-                <Skeleton className="h-8 w-32 rounded-full" />
+                <Skeleton className="h-10 w-48 rounded-sm" />
+                <Skeleton className="h-8 w-32 rounded-sm" />
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
                 {Array.from({ length: 4 }).map((_, j) => (
                   <Skeleton
                     key={j}
-                    className="h-32 rounded-[2rem] border border-border/50"
+                    className="h-32 rounded-sm border border-border/50"
                   />
                 ))}
               </div>
@@ -81,7 +81,7 @@ export default function CategoriesPage() {
   if (isError) {
     return (
       <section className="min-h-[60vh] flex flex-col items-center justify-center text-center p-4 bg-white dark:bg-neutral-950 transition-colors duration-300">
-        <div className="w-20 h-20 bg-destructive/5 dark:bg-destructive/10 rounded-full flex items-center justify-center mb-6">
+        <div className="w-20 h-20 bg-destructive/5 dark:bg-destructive/10 rounded-sm flex items-center justify-center mb-6">
           <FolderTreeIcon className="h-10 w-10 text-destructive" />
         </div>
         <h2 className="text-2xl font-black text-foreground">
@@ -96,13 +96,12 @@ export default function CategoriesPage() {
   }
 
   return (
-    <section className="min-h-screen bg-neutral-50/50 dark:bg-neutral-950 mt-10 transition-colors duration-300">
+    <section className="min-h-screen bg-neutral-50/50 dark:bg-neutral-950 mt-4 transition-colors duration-300">
       <CategoryHeader search={search} onSearchChange={setSearch} />
-
-      <div className="w-full mx-auto px-4 py-16 md:py-28 space-y-16 md:space-y-24">
+      <div className="w-full mx-auto px-4 py-8 md:py-16 space-y-16 md:space-y-24">
         {filteredCategories.length === 0 ? (
-          <div className="text-center py-20 md:py-32 bg-white dark:bg-neutral-900 rounded-[2.5rem] border-2 border-dashed border-border/60 dark:border-white/10 shadow-inner">
-            <div className="w-20 h-20 bg-primary/5 rounded-full flex items-center justify-center mx-auto mb-6">
+          <div className="text-center py-20 md:py-32 bg-white dark:bg-neutral-900 rounded-sm border-2 border-dashed border-border/60 dark:border-white/10 ">
+            <div className="w-20 h-20 bg-primary/5 rounded-sm flex items-center justify-center mx-auto mb-6">
               <Search className="h-10 w-10 text-primary/40" />
             </div>
             <h3 className="text-xl md:text-2xl font-black text-foreground tracking-tight px-4">

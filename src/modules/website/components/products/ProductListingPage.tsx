@@ -55,14 +55,14 @@ export default function ProductListingPage({
   return (
     <div className="min-h-screen bg-white dark:bg-neutral-950 transition-colors duration-300 pb-24">
       {/* Hero Header */}
-      <section className="relative overflow-hidden pt-36 pb-20 px-4 mb-12">
+      <section className="relative overflow-hidden pt-20 md:pt-28 pb-16 md:pb-24 px-4 mb-12">
         <div
           className={`absolute top-0 center w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] ${gradientFrom}/10 via-transparent to-transparent`}
         />
 
         <div className="w-full mx-auto text-center relative z-10 transition-colors">
           <div
-            className={`inline-flex items-center gap-2 px-4 py-2 rounded-full ${badgeColor}/10 ${badgeTextColor} font-bold text-sm mb-8 border ${badgeColor}/20`}
+            className={`inline-flex items-center gap-2 px-4 py-2 rounded-sm ${badgeColor}/10 ${badgeTextColor} font-bold text-sm mb-8 border ${badgeColor}/20`}
           >
             <Icon className="w-4 h-4" />
             <span>{badgeText}</span>
@@ -83,7 +83,7 @@ export default function ProductListingPage({
         {isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[...Array(8)].map((_, i) => (
-              <Skeleton key={i} className="h-80 w-full rounded-3xl" />
+              <Skeleton key={i} className="h-80 w-full rounded-sm" />
             ))}
           </div>
         ) : (

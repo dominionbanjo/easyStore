@@ -45,7 +45,7 @@ export default function ChipSection({
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">
-        <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+        <div className="h-8 w-8 rounded-sm bg-primary/10 flex items-center justify-center">
           <Icon className="h-4 w-4 text-primary" />
         </div>
         <Label className="text-sm font-black uppercase tracking-widest text-muted-foreground/80">
@@ -58,7 +58,7 @@ export default function ChipSection({
         <input
           ref={inputRef}
           className={cn(
-            "w-full h-12 bg-muted/20 border-muted-foreground/10 rounded-[1.25rem] pl-4 pr-14 text-sm font-medium focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-muted-foreground/40",
+            "w-full h-12 bg-muted/20 border-muted-foreground/10 rounded-sm pl-4 pr-14 text-sm font-medium focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-muted-foreground/40",
           )}
           placeholder={placeholder || `Add new ${label.toLowerCase()}...`}
           value={input}
@@ -74,7 +74,7 @@ export default function ChipSection({
         <button
           type="button"
           onClick={handleAdd}
-          className="absolute right-1.5 top-1/2 -translate-y-1/2 h-9 w-9 rounded-xl bg-primary text-white flex items-center justify-center shadow-lg transition-transform hover:scale-105 active:scale-95"
+          className="absolute right-1.5 top-1/2 -translate-y-1/2 h-9 w-9 rounded-sm bg-primary text-white flex items-center justify-center  transition-transform hover:scale-105 active:scale-95"
         >
           <Plus className="h-5 w-5" />
         </button>
@@ -93,13 +93,13 @@ export default function ChipSection({
             >
               <Badge
                 variant="secondary"
-                className="pl-3 pr-1 py-1.5 gap-2 rounded-xl group bg-muted/30 border-muted-foreground/10 hover:bg-muted/50 transition-all"
+                className="pl-3 pr-1 py-1.5 gap-2 rounded-sm group bg-muted/30 border-muted-foreground/10 hover:bg-muted/50 transition-all"
               >
                 <span className="text-xs font-bold">{v}</span>
                 <button
                   type="button"
                   onClick={() => onRemove(v)}
-                  className="p-1 hover:bg-destructive/10 hover:text-destructive rounded-md transition-colors"
+                  className="p-1 hover:bg-destructive/10 hover:text-destructive rounded-sm transition-colors"
                 >
                   <X className="h-3 w-3" />
                 </button>

@@ -50,7 +50,7 @@ export default function NavigationProgressBar() {
         >
           {/* Main Progress Bar */}
           <motion.div
-            className="h-[3px] bg-primary shadow-[0_0_10px_rgba(23,192,110,0.5)]"
+            className="h-[3px] bg-primary -[0_0_10px_rgba(23,192,110,0.5)]"
             initial={{ width: "0%" }}
             animate={{ width: `${progress}%` }}
             transition={{

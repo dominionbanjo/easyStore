@@ -38,7 +38,7 @@ export default function OrderCard({
   };
 
   return (
-    <Card className="overflow-hidden hover:shadow-md transition-all rounded-2xl bg-white">
+    <Card className="overflow-hidden hover: transition-all rounded-sm bg-white">
       <img src={image} alt={name} className="w-full h-48 object-cover" />
       <CardHeader>
         <CardTitle className="text-lg font-semibold text-center">
@@ -65,7 +65,7 @@ export default function OrderCard({
             <Button
               size="sm"
               variant="outline"
-              className="w-full rounded-full border-border hover:bg-muted/60"
+              className="w-full rounded-sm border-border hover:bg-muted/60"
             >
               View Order
             </Button>
@@ -73,7 +73,7 @@ export default function OrderCard({
           <Link to={`/product/${productId}`} className="flex-1">
             <Button
               size="sm"
-              className="w-full rounded-full bg-primary text-primary-foreground hover:bg-primary/90"
+              className="w-full rounded-sm bg-primary text-primary-foreground hover:bg-primary/90"
             >
               View Product
             </Button>

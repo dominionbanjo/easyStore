@@ -128,7 +128,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent className="w-full sm:max-w-md p-0 flex flex-col h-full border-l border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-2xl">
+      <SheetContent className="w-full sm:max-w-md p-0 flex flex-col h-full border-l border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 ">
         <SheetHeader className="p-6 border-b border-zinc-100 dark:border-zinc-800">
           <div className="flex items-center justify-between">
             <SheetTitle className="text-xl font-black tracking-tight flex items-center gap-2">
@@ -143,17 +143,17 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
             <div className="space-y-4">
               {[1, 2, 3].map((i) => (
                 <div key={i} className="flex gap-4 animate-pulse">
-                  <div className="w-20 h-20 bg-muted rounded-xl" />
+                  <div className="w-20 h-20 bg-muted rounded-sm" />
                   <div className="flex-1 space-y-2 py-1">
-                    <div className="h-4 bg-muted rounded w-3/4" />
-                    <div className="h-4 bg-muted rounded w-1/2" />
+                    <div className="h-4 bg-muted rounded-sm w-3/4" />
+                    <div className="h-4 bg-muted rounded-sm w-1/2" />
                   </div>
                 </div>
               ))}
             </div>
           ) : cartItems.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-center space-y-4 opacity-60 py-10">
-              <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center">
+              <div className="w-16 h-16 bg-muted rounded-sm flex items-center justify-center">
                 <ShoppingCart className="w-8 h-8" />
               </div>
               <p className="font-medium text-muted-foreground">
@@ -161,7 +161,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
               </p>
               <Button
                 variant="outline"
-                className="rounded-full"
+                className="rounded-sm"
                 onClick={onClose}
               >
                 Start Shopping
@@ -179,7 +179,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                     exit={{ opacity: 0, x: -20 }}
                     className="flex gap-4 group"
                   >
-                    <div className="w-20 h-24 rounded-2xl overflow-hidden bg-muted flex-shrink-0 border border-border/40">
+                    <div className="w-20 h-24 rounded-sm overflow-hidden bg-muted flex-shrink-0 border border-border/40">
                       <img
                         src={item.image ?? "/placeholder.png"}
                         alt={item.name}
@@ -211,12 +211,12 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                             ([key, value]) => (
                               <div
                                 key={key}
-                                className="flex items-center gap-1 text-[10px] text-muted-foreground font-bold uppercase tracking-widest bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded border border-zinc-200/50 dark:border-white/5"
+                                className="flex items-center gap-1 text-[10px] text-muted-foreground font-bold uppercase tracking-widest bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded-sm border border-zinc-200/50 dark:border-white/5"
                               >
                                 {key.toLowerCase() === "color" &&
                                   item.color_hex && (
                                     <div
-                                      className="w-1.5 h-1.5 rounded-full border border-black/10"
+                                      className="w-1.5 h-1.5 rounded-sm border border-black/10"
                                       style={{
                                         backgroundColor: item.color_hex,
                                       }}
@@ -230,7 +230,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                         ) : (
                           <>
                             {item.size && (
-                              <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded border border-zinc-200/50 dark:border-white/5">
+                              <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded-sm border border-zinc-200/50 dark:border-white/5">
                                 {item.size}
                                 <span className="ml-1 opacity-50 underline decoration-primary/30 font-black">
                                   Size
@@ -238,10 +238,10 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                               </span>
                             )}
                             {item.color && (
-                              <div className="flex items-center gap-1 text-[10px] text-muted-foreground font-bold uppercase tracking-widest bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded border border-zinc-200/50 dark:border-white/5">
+                              <div className="flex items-center gap-1 text-[10px] text-muted-foreground font-bold uppercase tracking-widest bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded-sm border border-zinc-200/50 dark:border-white/5">
                                 {item.color_hex && (
                                   <div
-                                    className="w-1.5 h-1.5 rounded-full border border-black/10"
+                                    className="w-1.5 h-1.5 rounded-sm border border-black/10"
                                     style={{ backgroundColor: item.color_hex }}
                                   />
                                 )}
@@ -256,7 +256,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                       </div>
 
                       <div className="flex flex-wrap items-center justify-between pt-2 gap-2">
-                        <div className="flex items-center gap-2 bg-muted/50 rounded-lg p-1">
+                        <div className="flex items-center gap-2 bg-muted/50 rounded-sm p-1">
                           <button
                             onClick={() =>
                               handleUpdateQty(
@@ -267,7 +267,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                                 item.color,
                               )
                             }
-                            className="p-1 hover:bg-white dark:hover:bg-zinc-800 rounded shadow-sm transition-all"
+                            className="p-1 hover:bg-white dark:hover:bg-zinc-800 rounded-sm  transition-all"
                           >
                             <Minus className="w-3 h-3" />
                           </button>
@@ -284,7 +284,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                                 item.color,
                               )
                             }
-                            className="p-1 hover:bg-white dark:hover:bg-zinc-800 rounded shadow-sm transition-all"
+                            className="p-1 hover:bg-white dark:hover:bg-zinc-800 rounded-sm  transition-all"
                           >
                             <Plus className="w-3 h-3" />
                           </button>
@@ -305,7 +305,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
         </div>
 
         {cartItems.length > 0 && (
-          <div className="p-6 border-t border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/30 space-y-4">
+          <div className="p-6 pb-24 sm:pb-6 border-t border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/30 space-y-4">
             <div className="space-y-1.5">
               <div className="flex justify-between text-sm text-muted-foreground font-medium">
                 <span>Subtotal</span>
@@ -330,7 +330,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
               <SmartLink to={WEBSITE_ROUTES.CART} className="w-full">
                 <Button
                   variant="outline"
-                  className="rounded-2xl h-12 font-bold w-full"
+                  className="rounded-sm h-12 font-bold w-full"
                   onClick={onClose}
                 >
                   View Cart
@@ -345,7 +345,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                 className="w-full"
               >
                 <Button
-                  className="rounded-2xl h-12 font-black shadow-lg shadow-primary/20 w-full"
+                  className="rounded-sm h-12 font-black   w-full"
                   onClick={onClose}
                 >
                   Checkout

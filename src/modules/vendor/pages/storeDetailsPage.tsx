@@ -8,7 +8,7 @@ import {
   useGetStoreCategoryProductsQuery,
 } from "@/services/storeApi";
 
-import { Skeleton } from "@/components/ui/skeleton";
+import { StoreSkeleton } from "../components/skeletons/StoreSkeleton";
 import { useStoreTheme } from "../components/StoreThemeProvider";
 import DefaultTemplate from "../components/Store-details-page/templates/DefaultTemplate";
 import VanguardTemplate from "../components/Store-details-page/templates/VanguardTemplate";
@@ -164,28 +164,14 @@ export default function StoreDetailsPage() {
   /* ─── STORE LOADING STATE ─── */
 
   if (storeLoading) {
-    return (
-      <div className="min-h-screen py-20 px-1.5 sm:px-4">
-        <div className="max-w-7xl mx-auto space-y-8">
-          <Skeleton className="h-[400px] rounded-[3rem]" />
-          <div className="flex justify-center">
-            <Skeleton className="h-14 w-64 rounded-full" />
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <Skeleton key={i} className="h-[400px] rounded-[2.5rem]" />
-            ))}
-          </div>
-        </div>
-      </div>
-    );
+    return <StoreSkeleton />;
   }
 
   if (storeError || !store) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-zinc-50/50 dark:bg-zinc-950/50">
-        <div className="bg-white dark:bg-zinc-900 p-10 rounded-2xl border border-zinc-200 dark:border-zinc-800 max-w-md w-full shadow-2xl shadow-zinc-200/50 dark:shadow-none text-center">
-          <div className="w-20 h-20 bg-emerald-50 dark:bg-emerald-500/10 rounded-2xl flex items-center justify-center mx-auto mb-8">
+        <div className="bg-white dark:bg-zinc-900 p-10 rounded-sm border border-zinc-200 dark:border-zinc-800 max-w-md w-full  -zinc-200/50 dark: text-center">
+          <div className="w-20 h-20 bg-emerald-50 dark:bg-emerald-500/10 rounded-sm flex items-center justify-center mx-auto mb-8">
             <Store className="w-10 h-10 text-emerald-600 dark:text-emerald-400" />
           </div>
           <h1 className="text-3xl font-black text-zinc-900 dark:text-zinc-100 mb-4 tracking-tight">
@@ -193,19 +179,19 @@ export default function StoreDetailsPage() {
           </h1>
           <p className="text-zinc-500 dark:text-zinc-400 mb-10 leading-relaxed">
             The store you're looking for might be inactive, moved, or deleted.
-            Try searching for other top-rated stores on EasyStore.
+            Try searching for other top-rated stores on EazyStore.
           </p>
           <div className="space-y-3">
             <button
               onClick={() => navigate("/stores")}
-              className="w-full bg-emerald-600 text-white font-bold py-4 px-8 rounded-xl hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2"
+              className="w-full bg-emerald-600 text-white font-bold py-4 px-8 rounded-sm hover:bg-emerald-700 transition-all  -emerald-600/20 flex items-center justify-center gap-2"
             >
               <Search className="w-4 h-4" />
               Explore All Stores
             </button>
             <button
               onClick={() => navigate(-1)}
-              className="w-full bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 font-bold py-4 px-8 rounded-xl hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-all flex items-center justify-center gap-2"
+              className="w-full bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 font-bold py-4 px-8 rounded-sm hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-all flex items-center justify-center gap-2"
             >
               <ArrowLeft className="w-4 h-4" />
               Go Back
@@ -291,9 +277,9 @@ export default function StoreDetailsPage() {
   return (
     <div className="relative">
       {previewTemplate && (
-        <div className="fixed top-0 left-0 right-0 z-[100] text-zinc-100 py-2 px-4 flex items-center justify-between shadow-2xl border-b border-white/10 backdrop-blur-md bg-zinc-900/95 font-sans">
+        <div className="fixed top-0 left-0 right-0 z-[100] text-zinc-100 py-2 px-4 flex items-center justify-between  border-b border-white/10 backdrop-blur-md bg-zinc-900/95 font-sans">
           <div className="flex items-center gap-3">
-            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <div className="w-2 h-2 rounded-sm bg-emerald-500 animate-pulse" />
             <span className="text-[10px] font-black uppercase tracking-[0.2em]">
               Previewing:{" "}
               <span className="text-emerald-400">{previewTemplate}</span> Theme
@@ -304,7 +290,7 @@ export default function StoreDetailsPage() {
               const baseHost = getBaseDomain();
               window.location.href = `${window.location.protocol}//vendor.${baseHost}/templates`;
             }}
-            className="text-[10px] font-black uppercase tracking-widest bg-white text-black px-4 py-1.5 rounded hover:bg-zinc-200 transition-colors"
+            className="text-[10px] font-black uppercase tracking-widest bg-white text-black px-4 py-1.5 rounded-sm hover:bg-zinc-200 transition-colors"
           >
             Back to Dashboard
           </button>
@@ -315,12 +301,12 @@ export default function StoreDetailsPage() {
       {/* ─── GLOBAL FLOATING CART BUTTON ─── */}
       {/* <button
         onClick={() => setIsCartOpen(true)}
-        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-[var(--theme-primary)] text-white shadow-2xl shadow-[var(--theme-primary)]/40 flex items-center justify-center hover:scale-110 active:scale-95 transition-transform duration-200"
+        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-sm bg-[var(--theme-primary)] text-white  -[var(--theme-primary)]/40 flex items-center justify-center hover:scale-110 active:scale-95 transition-transform duration-200"
         aria-label="Open cart"
       >
         <ShoppingCart className="w-6 h-6" />
         {cartItemsCount > 0 && (
-          <span className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-white text-[var(--theme-primary)] text-[10px] font-black ring-2 ring-[var(--theme-primary)] shadow">
+          <span className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-sm bg-white text-[var(--theme-primary)] text-[10px] font-black ring-2 ring-[var(--theme-primary)] ">
             {cartItemsCount > 9 ? "9+" : cartItemsCount}
           </span>
         )}

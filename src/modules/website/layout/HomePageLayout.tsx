@@ -1,11 +1,14 @@
 import { Outlet } from "react-router-dom";
 import Header from "@/components/shared/Header";
 import Footer from "@/components/shared/Footer";
+import { BottomNav } from "@/components/shared/BottomNav";
+import { HomeFloater } from "@/components/shared/HomeFloater";
+
 export default function HomepageLayout() {
   return (
     <div className="min-h-screen flex flex-col bg-white dark:bg-neutral-950 text-foreground transition-colors duration-300">
       {/* 🌐 Header */}
-      <div className="mb-20">
+      <div className="mb-14">
         <Header />
       </div>
 
@@ -14,6 +17,8 @@ export default function HomepageLayout() {
         <Outlet />
       </main>
       <Footer />
+      <BottomNav />
+      <HomeFloater />
     </div>
   );
 }

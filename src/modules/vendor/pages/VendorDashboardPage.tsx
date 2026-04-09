@@ -47,7 +47,7 @@ export default function VendorDashboardPage() {
   const trends = data?.trends;
 
   // Store status is used for the banner, account status for blocking access
-  const storeStatus = summary?.store_status || "pending";
+  const storeStatus = summary?.store_status;
   const accountStatus = summary?.account_status || user?.account_status;
 
   // We allow pending/active vendors to view the dashboard structure (even if analytics return 404/403)
@@ -107,7 +107,7 @@ export default function VendorDashboardPage() {
       <DashboardOverviewHeader />
 
       {/* ─── Status Banners ─── */}
-      {storeStatus === "pending" && (
+      {!isLoading && storeStatus === "pending" && (
         <Alert
           variant="default"
           className="mt-4 mb-2 bg-yellow-50 dark:bg-yellow-900/10 border-yellow-200 dark:border-yellow-900"
@@ -121,7 +121,7 @@ export default function VendorDashboardPage() {
             setting it up and adding products, but your store won't be visible
             to the public until it is approved.{" "}
             <a
-              href="mailto:support@easystore.com"
+              href="mailto:support@eazystore.com.ng"
               className="font-semibold underline underline-offset-2"
             >
               Contact Support
@@ -130,7 +130,7 @@ export default function VendorDashboardPage() {
         </Alert>
       )}
 
-      {storeStatus === "restricted" && (
+      {!isLoading && storeStatus === "restricted" && (
         <Alert
           variant="destructive"
           className="mt-4 mb-2 bg-red-50 dark:bg-red-900/10 border-red-200 dark:border-red-900"
@@ -143,7 +143,7 @@ export default function VendorDashboardPage() {
             Your store has been restricted by an administrator. It is currently
             hidden from the public. If you believe this is an error, please{" "}
             <a
-              href="mailto:support@easystore.com"
+              href="mailto:support@eazystore.com.ng"
               className="font-semibold underline underline-offset-2"
             >
               Contact Support
@@ -153,7 +153,7 @@ export default function VendorDashboardPage() {
         </Alert>
       )}
 
-      {accountStatus === "restricted" && (
+      {!isLoading && accountStatus === "restricted" && (
         <Alert
           variant="destructive"
           className="mt-4 mb-2 bg-red-50 dark:bg-red-900/10 border-red-200 dark:border-red-900"
@@ -202,7 +202,7 @@ export default function VendorDashboardPage() {
           {/* ─── Main Analytics Chart ─── */}
           <div className="lg:col-span-2">
             {isLoading ? (
-              <div className="h-[450px] w-full rounded-2xl bg-muted/40 animate-pulse border border-border/40" />
+              <div className="h-[450px] w-full rounded-sm bg-muted/40 animate-pulse border border-border/40" />
             ) : (
               <SalesChart
                 data={
@@ -210,6 +210,8 @@ export default function VendorDashboardPage() {
                     ...m,
                     month: MONTH_NAMES[m.month - 1] || m.month.toString(),
                     sales: Number(m.revenue || 0) / 100,
+                    online: Number(m.online_revenue || 0) / 100,
+                    offline: Number(m.offline_revenue || 0) / 100,
                   })) ?? []
                 }
               />
@@ -222,7 +224,7 @@ export default function VendorDashboardPage() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.5 }}
-              className="bg-primary/5 rounded-2xl p-6 border border-primary/10 relative overflow-hidden group"
+              className="bg-primary/5 rounded-sm p-6 border border-primary/10 relative overflow-hidden group"
             >
               <div className="relative z-10">
                 <h4 className="text-lg font-bold text-foreground mb-2 flex items-center gap-2">
@@ -241,14 +243,14 @@ export default function VendorDashboardPage() {
               </div>
 
               {/* Decorative Circle */}
-              <div className="absolute -top-12 -right-12 w-32 h-32 bg-primary/10 rounded-full blur-3xl group-hover:bg-primary/20 transition-colors" />
+              <div className="absolute -top-12 -right-12 w-32 h-32 bg-primary/10 rounded-sm blur-3xl group-hover:bg-primary/20 transition-colors" />
             </motion.div>
 
             {/* Quick Tips / Info Cards */}
             <div className="grid gap-4">
               {Number(summary?.out_of_stock_count) > 0 && (
-                <div className="p-4 rounded-xl border border-border/40 bg-card hover:bg-muted/30 transition-colors flex items-center gap-4 group cursor-pointer">
-                  <div className="h-10 w-10 rounded-lg bg-orange-100 dark:bg-orange-500/10 text-orange-600 flex items-center justify-center">
+                <div className="p-4 rounded-sm border border-border/40 bg-card hover:bg-muted/30 transition-colors flex items-center gap-4 group cursor-pointer">
+                  <div className="h-10 w-10 rounded-sm bg-orange-100 dark:bg-orange-500/10 text-orange-600 flex items-center justify-center">
                     <Package className="h-5 w-5" />
                   </div>
                   <div>
@@ -261,8 +263,8 @@ export default function VendorDashboardPage() {
               )}
 
               {Number(summary?.pending_orders_count) > 0 && (
-                <div className="p-4 rounded-xl border border-border/40 bg-card hover:bg-muted/30 transition-colors flex items-center gap-4 group cursor-pointer">
-                  <div className="h-10 w-10 rounded-lg bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 flex items-center justify-center">
+                <div className="p-4 rounded-sm border border-border/40 bg-card hover:bg-muted/30 transition-colors flex items-center gap-4 group cursor-pointer">
+                  <div className="h-10 w-10 rounded-sm bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 flex items-center justify-center">
                     <ShoppingBag className="h-5 w-5" />
                   </div>
                   <div>
@@ -279,8 +281,8 @@ export default function VendorDashboardPage() {
                 summary.out_of_stock_count === 0) &&
                 (!summary?.pending_orders_count ||
                   summary.pending_orders_count === 0) && (
-                  <div className="p-6 rounded-xl border border-dashed border-border/60 bg-muted/20 text-center space-y-2">
-                    <div className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/10 text-emerald-500">
+                  <div className="p-6 rounded-sm border border-dashed border-border/60 bg-muted/20 text-center space-y-2">
+                    <div className="inline-flex items-center justify-center w-8 h-8 rounded-sm bg-emerald-500/10 text-emerald-500">
                       <CheckCircle2 className="w-4 h-4" />
                     </div>
                     <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">

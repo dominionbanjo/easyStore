@@ -4,7 +4,7 @@ import { Switch } from "@/components/ui/switch";
 
 export default function NotificationSettings() {
   return (
-    <Card className="p-6 bg-white rounded-xl shadow-sm">
+    <Card className="p-6 bg-white rounded-sm ">
       <CardHeader>
         <CardTitle>Notifications</CardTitle>
       </CardHeader>

@@ -1,9 +1,10 @@
 import { useState } from "react";
-import ReviewsSection from "@/modules/website/components/products/ReviewsSection";
+import { StoreProductReviews } from "../StoreProductReviews";
 import RelatedProductsGrid from "@/modules/website/components/products/RelatedProductsGrid";
 import { useProductActions } from "../../../hooks/useProductActions";
 import type { ProductTemplateProps } from "./ProductTemplateProps";
 import { adaptProductToUI } from "../../../utils/productAdapter";
+import { GoBackButton } from "@/components/shared/GoBackButton";
 
 // Vanguard Components
 import { VanguardHeader } from "./vanguard/VanguardHeader";
@@ -48,6 +49,10 @@ export default function VanguardProductTemplate({
         setSearchOpen={setSearchOpen}
       />
 
+      <div className="max-w-[1400px] mx-auto px-6 pt-8">
+        <GoBackButton />
+      </div>
+
       {/* ─── PRODUCT MAIN ─── */}
       <VanguardMain
         uiProduct={uiProduct}
@@ -68,7 +73,7 @@ export default function VanguardProductTemplate({
 
       {/* ─── REVIEWS ─── */}
       <div className="mt-32 max-w-4xl mx-auto">
-        <ReviewsSection
+        <StoreProductReviews
           productId={product.id}
           reviews={reviews}
           ratingAverage={uiProduct.rating}

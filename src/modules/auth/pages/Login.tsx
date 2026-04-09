@@ -128,7 +128,7 @@ export default function LoginPage() {
       google.accounts.id.renderButton(googleButtonRef.current, {
         theme: "outline",
         size: "large",
-        shape: "pill",
+        shape: "rectangular",
         width: getGoogleButtonWidth(),
       });
     };
@@ -176,7 +176,7 @@ export default function LoginPage() {
           <Button
             type="submit"
             size="lg"
-            className="w-full h-12 rounded-xl text-lg font-bold shadow-xl shadow-primary/20 active:scale-95 transition-all"
+            className="w-full h-12 rounded-sm text-lg font-bold   active:scale-95 transition-all"
             isLoading={isLoading}
             loadingText="Signing In..."
           >

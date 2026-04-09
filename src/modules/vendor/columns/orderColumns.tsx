@@ -39,7 +39,7 @@ const CopyableRef = ({ value }: { value: string }) => {
       </span>
       <button
         onClick={handleCopy}
-        className="p-1 opacity-0 group-hover/id:opacity-100 hover:bg-muted rounded-md transition-all text-muted-foreground hover:text-foreground"
+        className="p-1 opacity-0 group-hover/id:opacity-100 hover:bg-muted rounded-sm transition-all text-muted-foreground hover:text-foreground"
       >
         {isCopied ? (
           <Check className="h-3 w-3 text-emerald-600" />

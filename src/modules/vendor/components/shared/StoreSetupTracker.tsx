@@ -32,11 +32,11 @@ export function StoreSetupTracker({
       <Link
         to={getAppPath("/settings")}
         className={cn(
-          "flex items-center gap-3 p-3 rounded-xl bg-orange-500/5 border border-orange-500/10 hover:bg-orange-500/10 transition-all group",
+          "flex items-center gap-3 p-3 rounded-sm bg-orange-500/5 border border-orange-500/10 hover:bg-orange-500/10 transition-all group",
           className,
         )}
       >
-        <div className="h-8 w-8 rounded-lg bg-orange-500/10 flex items-center justify-center shrink-0">
+        <div className="h-8 w-8 rounded-sm bg-orange-500/10 flex items-center justify-center shrink-0">
           <AlertTriangle className="h-4 w-4 text-orange-500" />
         </div>
         <div className="flex-1 min-w-0">
@@ -60,7 +60,7 @@ export function StoreSetupTracker({
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       className={cn(
-        "relative overflow-hidden rounded-[1.5rem] sm:rounded-[2rem] border-none shadow-2xl bg-gradient-to-br from-orange-500 to-orange-600 text-white p-6 sm:p-8",
+        "relative overflow-hidden rounded-sm sm:rounded-sm border-none  bg-gradient-to-br from-orange-500 to-orange-600 text-white p-6 sm:p-8",
         className,
       )}
     >
@@ -72,7 +72,7 @@ export function StoreSetupTracker({
       <div className="relative z-10 flex flex-col md:flex-row gap-8 items-start md:items-center">
         <div className="flex-1 space-y-4">
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center">
+            <div className="h-10 w-10 rounded-sm bg-white/20 backdrop-blur-md flex items-center justify-center">
               <ShieldAlert className="h-5 w-5 text-white" />
             </div>
             <div>
@@ -90,18 +90,18 @@ export function StoreSetupTracker({
               <span>Overall Progress</span>
               <span>{progress}% Complete</span>
             </div>
-            <div className="relative h-3 w-full bg-white/20 rounded-full overflow-hidden">
+            <div className="relative h-3 w-full bg-white/20 rounded-sm overflow-hidden">
               <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: `${progress}%` }}
-                className="absolute inset-y-0 left-0 bg-white shadow-[0_0_20px_rgba(255,255,255,0.5)]"
+                className="absolute inset-y-0 left-0 bg-white -[0_0_20px_rgba(255,255,255,0.5)]"
               />
             </div>
           </div>
         </div>
 
         <div className="shrink-0 w-full md:w-auto h-full flex flex-col gap-3">
-          <div className="bg-white/10 backdrop-blur-md border border-white/10 p-4 rounded-2xl space-y-3">
+          <div className="bg-white/10 backdrop-blur-md border border-white/10 p-4 rounded-sm space-y-3">
             <p className="text-[10px] font-black uppercase tracking-widest text-white/60 border-b border-white/5 pb-2">
               Remaining Tasks ({missingSteps.length})
             </p>
@@ -125,7 +125,7 @@ export function StoreSetupTracker({
 
           <Button
             asChild
-            className="bg-white text-orange-600 hover:bg-orange-50 rounded-xl font-black uppercase tracking-widest text-xs h-11 shadow-xl"
+            className="bg-white text-orange-600 hover:bg-orange-50 rounded-sm font-black uppercase tracking-widest text-xs h-11 "
           >
             <Link to={getAppPath("/settings")}>
               Finish Setup

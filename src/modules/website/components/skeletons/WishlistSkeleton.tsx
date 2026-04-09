@@ -7,15 +7,15 @@ export function WishlistSkeleton() {
       <div className="w-full mx-auto space-y-10">
         {/* Header */}
         <div className="space-y-3">
-          <Skeleton className="h-10 w-64 rounded-xl" />
-          <Skeleton className="h-4 w-40 rounded-lg" />
+          <Skeleton className="h-10 w-64 rounded-sm" />
+          <Skeleton className="h-4 w-40 rounded-sm" />
         </div>
 
         <Separator className="bg-zinc-100 dark:bg-white/5" />
 
         {/* Search */}
         <div className="flex items-center gap-3">
-          <Skeleton className="h-12 w-full sm:w-80 rounded-full" />
+          <Skeleton className="h-12 w-full sm:w-80 rounded-sm" />
         </div>
 
         {/* Grid */}
@@ -23,21 +23,21 @@ export function WishlistSkeleton() {
           {Array.from({ length: 6 }).map((_, i) => (
             <div
               key={i}
-              className="bg-zinc-50/50 dark:bg-neutral-900/50 rounded-3xl p-1 border border-zinc-100 dark:border-white/5 space-y-4"
+              className="bg-zinc-50/50 dark:bg-neutral-900/50 rounded-sm p-1 border border-zinc-100 dark:border-white/5 space-y-4"
             >
-              <Skeleton className="aspect-square w-full rounded-2xl" />
+              <Skeleton className="aspect-square w-full rounded-sm" />
               <div className="px-3 pb-4 space-y-3 mt-4">
                 <div className="flex justify-between items-center mb-4">
-                  <Skeleton className="h-4 w-20 rounded-md" />
-                  <Skeleton className="h-4 w-10 rounded-md" />
+                  <Skeleton className="h-4 w-20 rounded-sm" />
+                  <Skeleton className="h-4 w-10 rounded-sm" />
                 </div>
-                <Skeleton className="h-5 w-full rounded-md" />
+                <Skeleton className="h-5 w-full rounded-sm" />
                 <div className="flex justify-between items-center pt-2">
                   <div className="space-y-2">
                     <Skeleton className="h-3 w-12 rounded-sm" />
-                    <Skeleton className="h-6 w-24 rounded-md" />
+                    <Skeleton className="h-6 w-24 rounded-sm" />
                   </div>
-                  <Skeleton className="h-10 w-10 rounded-2xl" />
+                  <Skeleton className="h-10 w-10 rounded-sm" />
                 </div>
               </div>
             </div>
@@ -45,7 +45,7 @@ export function WishlistSkeleton() {
         </div>
 
         {/* Footer card */}
-        <Skeleton className="h-24 w-full rounded-2xl" />
+        <Skeleton className="h-24 w-full rounded-sm" />
       </div>
     </section>
   );

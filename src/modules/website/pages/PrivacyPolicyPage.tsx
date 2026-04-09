@@ -27,7 +27,7 @@ export default function PrivacyPolicyPage() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-20"
         >
-          <div className="inline-flex items-center justify-center p-5 bg-primary/10 dark:bg-emerald-500/10 rounded-[2rem] mb-8 ring-8 ring-primary/5 dark:ring-emerald-500/5 transition-all">
+          <div className="inline-flex items-center justify-center p-5 bg-primary/10 dark:bg-emerald-500/10 rounded-sm mb-8 ring-8 ring-primary/5 dark:ring-emerald-500/5 transition-all">
             <Shield className="w-12 h-12 text-primary dark:text-emerald-400" />
           </div>
           <h1 className="text-5xl md:text-7xl font-black text-foreground mb-8 tracking-tighter leading-none italic">
@@ -37,7 +37,7 @@ export default function PrivacyPolicyPage() {
             Your privacy is our priority. We are committed to protecting your
             personal data with the highest security standards.
           </p>
-          <div className="mt-8 inline-flex items-center justify-center gap-3 text-xs font-black uppercase tracking-widest text-muted-foreground bg-white/50 dark:bg-neutral-900/40 backdrop-blur-xl px-6 py-3 rounded-2xl shadow-sm border border-zinc-200 dark:border-white/5 mx-auto">
+          <div className="mt-8 inline-flex items-center justify-center gap-3 text-xs font-black uppercase tracking-widest text-muted-foreground bg-white/50 dark:bg-neutral-900/40 backdrop-blur-xl px-6 py-3 rounded-sm  border border-zinc-200 dark:border-white/5 mx-auto">
             <CheckCircle2 className="w-4 h-4 text-emerald-500" />
             Last updated: February 7, 2026
           </div>
@@ -48,23 +48,23 @@ export default function PrivacyPolicyPage() {
           variants={container}
           initial="hidden"
           animate="show"
-          className="bg-white/50 dark:bg-neutral-900/40 backdrop-blur-3xl rounded-[3rem] shadow-2xl shadow-primary/5 dark:shadow-emerald-500/5 border border-zinc-200 dark:border-white/5 p-8 sm:p-12 md:p-20 relative overflow-hidden"
+          className="bg-white/50 dark:bg-neutral-900/40 backdrop-blur-3xl rounded-sm   dark:-emerald-500/5 border border-zinc-200 dark:border-white/5 p-8 sm:p-12 md:p-20 relative overflow-hidden"
         >
           {/* Decorative background element */}
-          <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 dark:bg-emerald-500/10 rounded-full blur-3xl -z-0 translate-x-1/2 -translate-y-1/2 opacity-50" />
+          <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 dark:bg-emerald-500/10 rounded-sm blur-3xl -z-0 translate-x-1/2 -translate-y-1/2 opacity-50" />
 
           <div className="relative z-10 space-y-16">
             <motion.div variants={item}>
               <PolicySection title="1. Introduction">
                 <p>
-                  Welcome to EasyStore ("we," "our," or "us"). We respect your
+                  Welcome to EazyStore ("we," "our," or "us"). We respect your
                   privacy and are committed to protecting your personal data.
                   This privacy policy will inform you as to how we look after
                   your personal data when you visit our website (regardless of
                   where you visit it from) and tell you about your privacy
                   rights and how the law protects you.
                 </p>
-                <div className="mt-6 p-6 bg-emerald-500/5 dark:bg-emerald-500/10 rounded-[2rem] border border-emerald-500/10 dark:border-emerald-500/20 text-sm text-emerald-700 dark:text-emerald-400 flex gap-4">
+                <div className="mt-6 p-6 bg-emerald-500/5 dark:bg-emerald-500/10 rounded-sm border border-emerald-500/10 dark:border-emerald-500/20 text-sm text-emerald-700 dark:text-emerald-400 flex gap-4">
                   <div className="shrink-0 mt-0.5">
                     <FileText className="w-6 h-6" />
                   </div>
@@ -84,7 +84,7 @@ export default function PrivacyPolicyPage() {
                   follows:
                 </p>
                 <div className="grid sm:grid-cols-2 gap-6 mt-8">
-                  <div className="p-6 rounded-[2rem] bg-white/50 dark:bg-neutral-950/50 border border-zinc-200 dark:border-white/5 hover:border-emerald-500/30 transition-all group">
+                  <div className="p-6 rounded-sm bg-white/50 dark:bg-neutral-950/50 border border-zinc-200 dark:border-white/5 hover:border-emerald-500/30 transition-all group">
                     <h3 className="font-black text-foreground mb-3 flex items-center gap-2 uppercase tracking-widest text-xs">
                       Identity Data
                     </h3>
@@ -93,7 +93,7 @@ export default function PrivacyPolicyPage() {
                       identifier, title, date of birth and gender.
                     </p>
                   </div>
-                  <div className="p-6 rounded-[2rem] bg-white/50 dark:bg-neutral-950/50 border border-zinc-200 dark:border-white/5 hover:border-emerald-500/30 transition-all group">
+                  <div className="p-6 rounded-sm bg-white/50 dark:bg-neutral-950/50 border border-zinc-200 dark:border-white/5 hover:border-emerald-500/30 transition-all group">
                     <h3 className="font-black text-foreground mb-3 flex items-center gap-2 uppercase tracking-widest text-xs">
                       Contact Data
                     </h3>
@@ -102,7 +102,7 @@ export default function PrivacyPolicyPage() {
                       and telephone numbers.
                     </p>
                   </div>
-                  <div className="p-6 rounded-[2rem] bg-white/50 dark:bg-neutral-950/50 border border-zinc-200 dark:border-white/5 hover:border-emerald-500/30 transition-all group">
+                  <div className="p-6 rounded-sm bg-white/50 dark:bg-neutral-950/50 border border-zinc-200 dark:border-white/5 hover:border-emerald-500/30 transition-all group">
                     <h3 className="font-black text-foreground mb-3 flex items-center gap-2 uppercase tracking-widest text-xs">
                       Financial Data
                     </h3>
@@ -111,7 +111,7 @@ export default function PrivacyPolicyPage() {
                       securely via our payment providers).
                     </p>
                   </div>
-                  <div className="p-6 rounded-[2rem] bg-white/50 dark:bg-neutral-950/50 border border-zinc-200 dark:border-white/5 hover:border-emerald-500/30 transition-all group">
+                  <div className="p-6 rounded-sm bg-white/50 dark:bg-neutral-950/50 border border-zinc-200 dark:border-white/5 hover:border-emerald-500/30 transition-all group">
                     <h3 className="font-black text-foreground mb-3 flex items-center gap-2 uppercase tracking-widest text-xs">
                       Technical Data
                     </h3>
@@ -141,7 +141,7 @@ export default function PrivacyPolicyPage() {
                       key={i}
                       className="flex gap-4 items-start font-medium text-muted-foreground"
                     >
-                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-2.5 shrink-0" />
+                      <div className="w-1.5 h-1.5 rounded-sm bg-emerald-500 mt-2.5 shrink-0" />
                       {text}
                     </li>
                   ))}
@@ -152,7 +152,7 @@ export default function PrivacyPolicyPage() {
             <motion.div variants={item}>
               <PolicySection title="4. Data Security">
                 <div className="flex flex-col sm:flex-row gap-8 items-start">
-                  <div className="bg-emerald-500/10 p-4 rounded-2xl shrink-0 ring-4 ring-emerald-500/5">
+                  <div className="bg-emerald-500/10 p-4 rounded-sm shrink-0 ring-4 ring-emerald-500/5">
                     <Lock className="w-8 h-8 text-emerald-500 dark:text-emerald-400" />
                   </div>
                   <div className="space-y-4">
@@ -196,7 +196,7 @@ export default function PrivacyPolicyPage() {
                   ].map((right) => (
                     <span
                       key={right}
-                      className="inline-flex items-center px-4 py-2 rounded-xl bg-white dark:bg-neutral-950 text-foreground text-xs font-black uppercase tracking-widest border border-zinc-200 dark:border-white/5 shadow-sm"
+                      className="inline-flex items-center px-4 py-2 rounded-sm bg-white dark:bg-neutral-950 text-foreground text-xs font-black uppercase tracking-widest border border-zinc-200 dark:border-white/5 "
                     >
                       {right}
                     </span>
@@ -207,7 +207,7 @@ export default function PrivacyPolicyPage() {
 
             <motion.div variants={item}>
               <PolicySection title="6. Contact Us">
-                <div className="bg-emerald-500/5 dark:bg-emerald-500/10 rounded-[2.5rem] p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8 border border-emerald-500/10 dark:border-emerald-500/20">
+                <div className="bg-emerald-500/5 dark:bg-emerald-500/10 rounded-sm p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8 border border-emerald-500/10 dark:border-emerald-500/20">
                   <div>
                     <h3 className="text-2xl font-black text-foreground mb-3 tracking-tight">
                       Have questions about your privacy?
@@ -218,8 +218,8 @@ export default function PrivacyPolicyPage() {
                     </p>
                   </div>
                   <a
-                    href="mailto:privacy@easystore.com"
-                    className="inline-flex items-center justify-center px-10 py-5 border border-transparent text-sm font-black uppercase tracking-[0.2em] rounded-2xl text-white dark:text-neutral-950 bg-primary dark:bg-emerald-500 hover:scale-105 transition-all active:scale-95 whitespace-nowrap shadow-xl shadow-primary/20 dark:shadow-emerald-500/20"
+                    href="mailto:legal@eazystore.com.ng"
+                    className="inline-flex items-center justify-center px-10 py-5 border border-transparent text-sm font-black uppercase tracking-[0.2em] rounded-sm text-white dark:text-neutral-950 bg-primary dark:bg-emerald-500 hover:scale-105 transition-all active:scale-95 whitespace-nowrap   dark:-emerald-500/20"
                   >
                     Contact Privacy Team
                   </a>

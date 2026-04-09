@@ -64,7 +64,7 @@ export function AddReviewForm({
   };
 
   return (
-    <Card className="p-6 md:p-8 rounded-[2rem] border-none bg-background shadow-none relative overflow-hidden">
+    <Card className="p-6 md:p-8 rounded-sm border-none bg-background  relative overflow-hidden">
       <div className="relative z-10">
         <div className="flex justify-between items-start mb-6">
           <div>
@@ -116,7 +116,7 @@ export function AddReviewForm({
                 <Textarea
                   {...methods.register("comment")}
                   placeholder="What did you like or dislike?"
-                  className="min-h-[120px] rounded-xl border-muted-foreground/20 bg-muted/30 focus:bg-background transition-all text-base p-4 resize-none"
+                  className="min-h-[120px] rounded-sm border-muted-foreground/20 bg-muted/30 focus:bg-background transition-all text-base p-4 resize-none"
                 />
                 {methods.formState.errors.comment && (
                   <motion.p
@@ -135,10 +135,10 @@ export function AddReviewForm({
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="flex-1 bg-primary text-white hover:bg-primary/90 h-12 rounded-xl text-base font-bold shadow-lg shadow-primary/10 group"
+                className="flex-1 bg-primary text-white hover:bg-primary/90 h-12 rounded-sm text-base font-bold   group"
               >
                 {isLoading ? (
-                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-sm animate-spin" />
                 ) : (
                   <div className="flex items-center justify-center gap-2">
                     Submit Review

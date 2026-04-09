@@ -56,7 +56,7 @@ export function ProductSection({
                 {subtitle}
               </p>
             )}
-            <div className="h-1.5 w-20 bg-primary rounded-full" />
+            <div className="h-1.5 w-20 bg-primary rounded-sm" />
           </motion.div>
           {headerAction && (
             <motion.div
@@ -73,7 +73,7 @@ export function ProductSection({
         {isLoading ? (
           <div className="grid gap-2 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {Array.from({ length: skeletonCount }).map((_, i) => (
-              <Skeleton key={i} className="h-[320px] rounded-[2rem]" />
+              <Skeleton key={i} className="h-[320px] rounded-sm" />
             ))}
           </div>
         ) : isError || isEmpty ? (
@@ -81,7 +81,7 @@ export function ProductSection({
             icon={emptyIcon}
             title={emptyTitle}
             description={emptyDescription}
-            className="bg-muted/30 dark:bg-neutral-900/50 rounded-[3rem]"
+            className="bg-muted/30 dark:bg-neutral-900/50 rounded-sm"
           />
         ) : (
           <motion.div

@@ -67,9 +67,9 @@ export default function StoreHeaderSection({ store }: StoreHeaderProps) {
   const displayLogo = store.user?.avatar || store.logo;
 
   return (
-    <div className="w-full bg-background relative rounded-sm md:rounded-md xl:rounded-t-[2.5rem] pb-8 md:pb-12">
+    <div className="w-full bg-background relative rounded-sm md:rounded-sm xl:rounded-t-sm pb-8 md:pb-12">
       {/* ─── BANNER ─── */}
-      <div className="relative h-64 md:h-80 w-full overflow-hidden group rounded-md">
+      <div className="relative h-64 md:h-80 w-full overflow-hidden group rounded-sm">
         <img
           src={store.banner || "/images/defaultbanner.png"}
           alt={store.name}
@@ -84,7 +84,7 @@ export default function StoreHeaderSection({ store }: StoreHeaderProps) {
         <div className="flex flex-col md:flex-row gap-8 items-center md:items-start">
           {/* 🖼️ Logo / Profile Picture Container (Overlapping) */}
           <div className="relative group shrink-0 -mt-20 sm:-mt-24 z-30">
-            <div className="w-32 h-32 sm:w-44 sm:h-44 rounded-3xl sm:rounded-[2.5rem] border-[6px] border-background bg-background shadow-2xl overflow-hidden flex items-center justify-center transition-transform duration-300 hover:scale-[1.02]">
+            <div className="w-32 h-32 sm:w-44 sm:h-44 rounded-sm sm:rounded-sm border-[6px] border-background bg-background  overflow-hidden flex items-center justify-center transition-transform duration-300 hover:scale-[1.02]">
               {displayLogo ? (
                 <img
                   src={displayLogo}
@@ -102,7 +102,7 @@ export default function StoreHeaderSection({ store }: StoreHeaderProps) {
 
             {/* Verified Badge */}
             <div className="absolute -bottom-2 -right-2 z-40">
-              <div className="bg-emerald-500 text-white p-2 sm:p-2.5 rounded-2xl shadow-lg shadow-emerald-500/30 ring-4 ring-background">
+              <div className="bg-emerald-500 text-white p-2 sm:p-2.5 rounded-sm  -emerald-500/30 ring-4 ring-background">
                 <ShieldCheck className="w-5 h-5 sm:w-6 sm:h-6" />
               </div>
             </div>
@@ -114,14 +114,14 @@ export default function StoreHeaderSection({ store }: StoreHeaderProps) {
               <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 mb-2">
                 <Badge
                   variant="outline"
-                  className="bg-primary/10 text-primary border-primary/20 font-bold py-1 px-4 rounded-full"
+                  className="bg-primary/10 text-primary border-primary/20 font-bold py-1 px-4 rounded-sm"
                 >
                   Official Store
                 </Badge>
                 {store.totalProducts! > 50 && (
                   <Badge
                     variant="outline"
-                    className="bg-amber-500/10 text-amber-600 border-amber-500/20 font-bold py-1 px-4 rounded-full"
+                    className="bg-amber-500/10 text-amber-600 border-amber-500/20 font-bold py-1 px-4 rounded-sm"
                   >
                     Top Rated
                   </Badge>
@@ -137,15 +137,15 @@ export default function StoreHeaderSection({ store }: StoreHeaderProps) {
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="rounded-full hover:bg-primary/10 h-10 w-10 shrink-0"
+                        className="rounded-sm hover:bg-primary/10 h-10 w-10 shrink-0"
                       >
                         <Info className="w-6 h-6 text-muted-foreground" />
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-80 p-6 rounded-[2.5rem] border-border/50 shadow-2xl backdrop-blur-xl bg-background/95">
+                    <PopoverContent className="w-80 p-6 rounded-sm border-border/50  backdrop-blur-xl bg-background/95">
                       <div className="space-y-5">
                         <div className="flex items-center gap-4 border-b border-border/50 pb-4">
-                          <div className="w-14 h-14 rounded-2xl overflow-hidden bg-primary/10 flex items-center justify-center shrink-0 shadow-inner">
+                          <div className="w-14 h-14 rounded-sm overflow-hidden bg-primary/10 flex items-center justify-center shrink-0 ">
                             {store.user?.avatar ? (
                               <img
                                 src={store.user.avatar}
@@ -178,9 +178,9 @@ export default function StoreHeaderSection({ store }: StoreHeaderProps) {
                                 onClick={() =>
                                   window.open(`tel:${store.phone}`)
                                 }
-                                className="w-full flex items-center gap-3 p-3 rounded-2xl hover:bg-primary/5 transition-colors text-sm font-bold group text-foreground"
+                                className="w-full flex items-center gap-3 p-3 rounded-sm hover:bg-primary/5 transition-colors text-sm font-bold group text-foreground"
                               >
-                                <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors">
+                                <div className="w-8 h-8 rounded-sm bg-primary/10 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors">
                                   <Phone className="w-4 h-4" />
                                 </div>
                                 {store.phone}
@@ -191,9 +191,9 @@ export default function StoreHeaderSection({ store }: StoreHeaderProps) {
                                 onClick={() =>
                                   window.open(`mailto:${store.email}`)
                                 }
-                                className="w-full flex items-center gap-3 p-3 rounded-2xl hover:bg-primary/5 transition-colors text-sm font-bold group text-foreground"
+                                className="w-full flex items-center gap-3 p-3 rounded-sm hover:bg-primary/5 transition-colors text-sm font-bold group text-foreground"
                               >
-                                <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors">
+                                <div className="w-8 h-8 rounded-sm bg-primary/10 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors">
                                   <Mail className="w-4 h-4" />
                                 </div>
                                 {store.email}
@@ -210,21 +210,21 @@ export default function StoreHeaderSection({ store }: StoreHeaderProps) {
 
             <div className="flex flex-col gap-3">
               <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 text-sm">
-                <div className="flex items-center gap-2 text-foreground bg-background/80 backdrop-blur-md px-4 py-2 rounded-full border border-border/50 shadow-sm">
+                <div className="flex items-center gap-2 text-foreground bg-background/80 backdrop-blur-md px-4 py-2 rounded-sm border border-border/50 ">
                   <MapPin className="w-4 h-4 text-primary" />
                   <span className="font-semibold">
                     {store.location || "Online Everywhere"}
                   </span>
                 </div>
 
-                <div className="flex items-center gap-2 text-foreground bg-background/80 backdrop-blur-md px-4 py-2 rounded-full border border-border/50 shadow-sm">
+                <div className="flex items-center gap-2 text-foreground bg-background/80 backdrop-blur-md px-4 py-2 rounded-sm border border-border/50 ">
                   <Store className="w-4 h-4 text-primary" />
                   <span className="font-semibold">
                     {store.totalProducts} Products
                   </span>
                 </div>
 
-                <div className="flex items-center gap-2 bg-amber-500/10 backdrop-blur-md text-amber-600 px-4 py-2 rounded-full border border-amber-500/30 shadow-sm">
+                <div className="flex items-center gap-2 bg-amber-500/10 backdrop-blur-md text-amber-600 px-4 py-2 rounded-sm border border-amber-500/30 ">
                   <Star className="w-4 h-4 fill-amber-500 text-amber-500" />
                   <span className="font-bold">
                     {store.rating?.toFixed(1) ?? "0.0"} Rating
@@ -234,8 +234,8 @@ export default function StoreHeaderSection({ store }: StoreHeaderProps) {
 
               {/* Description Section (Moved up) */}
               {store.description && (
-                <div className="bg-background/60 backdrop-blur-md p-5 rounded-[2.5rem] border border-border/50 relative mt-2 w-full max-w-2xl mx-auto md:mx-0 shadow-sm transition-all hover:bg-background/80">
-                  <div className="absolute -top-3 left-8 bg-primary text-primary-foreground px-4 py-1 rounded-full text-[10px] uppercase font-black tracking-widest shadow-lg">
+                <div className="bg-background/60 backdrop-blur-md p-5 rounded-sm border border-border/50 relative mt-2 w-full max-w-2xl mx-auto md:mx-0  transition-all hover:bg-background/80">
+                  <div className="absolute -top-3 left-8 bg-primary text-primary-foreground px-4 py-1 rounded-sm text-[10px] uppercase font-black tracking-widest ">
                     About Store
                   </div>
                   <p className="text-foreground/80 leading-relaxed text-base font-medium italic">
@@ -246,7 +246,7 @@ export default function StoreHeaderSection({ store }: StoreHeaderProps) {
 
               {/* Actions (Integrated into flow) */}
               <div className="flex gap-3 justify-center md:justify-start">
-                <div className="flex bg-muted/30 p-1.5 rounded-3xl border border-border/50 backdrop-blur-sm gap-2">
+                <div className="flex bg-muted/30 p-1.5 rounded-sm border border-border/50 backdrop-blur-sm gap-2">
                   {/* Dynamic Social Links */}
                   {store.social_links &&
                     Object.entries(store.social_links).map(
@@ -277,7 +277,7 @@ export default function StoreHeaderSection({ store }: StoreHeaderProps) {
                             key={platform}
                             size="icon"
                             variant="ghost"
-                            className="rounded-2xl hover:bg-primary/10 hover:text-primary transition-colors h-11 w-11"
+                            className="rounded-sm hover:bg-primary/10 hover:text-primary transition-colors h-11 w-11"
                             title={platform}
                             onClick={() => window.open(url, "_blank")}
                           >
@@ -292,7 +292,7 @@ export default function StoreHeaderSection({ store }: StoreHeaderProps) {
                     <Button
                       size="icon"
                       variant="ghost"
-                      className="rounded-2xl hover:bg-primary/10 hover:text-primary transition-colors h-11 w-11"
+                      className="rounded-sm hover:bg-primary/10 hover:text-primary transition-colors h-11 w-11"
                       title="Website"
                       onClick={() => window.open(store.website, "_blank")}
                     >
@@ -304,7 +304,7 @@ export default function StoreHeaderSection({ store }: StoreHeaderProps) {
                   <Button
                     size="icon"
                     variant="ghost"
-                    className="rounded-2xl hover:bg-primary/10 hover:text-primary transition-colors h-11 w-11"
+                    className="rounded-sm hover:bg-primary/10 hover:text-primary transition-colors h-11 w-11"
                     title="Share"
                     onClick={handleShare}
                   >

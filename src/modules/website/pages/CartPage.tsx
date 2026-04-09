@@ -133,7 +133,7 @@ export default function CartPage() {
         <Button
           onClick={() => refetch()}
           variant="outline"
-          className="rounded-full"
+          className="rounded-sm"
         >
           Retry
         </Button>
@@ -236,8 +236,8 @@ export default function CartPage() {
 
         {cartItems.length === 0 ? (
           /* Empty State */
-          <Card className="flex flex-col items-center justify-center py-20 px-4 text-center bg-white dark:bg-neutral-900 rounded-[3rem] border-2 border-dashed border-gray-100 dark:border-white/5 mx-4 sm:mx-0 shadow-none">
-            <div className="w-24 h-24 bg-gray-50 dark:bg-neutral-800 rounded-full flex items-center justify-center mb-8">
+          <Card className="flex flex-col items-center justify-center py-20 px-4 text-center bg-white dark:bg-neutral-900 rounded-sm border-2 border-dashed border-gray-100 dark:border-white/5 mx-4 sm:mx-0 ">
+            <div className="w-24 h-24 bg-gray-50 dark:bg-neutral-800 rounded-sm flex items-center justify-center mb-8">
               <ShoppingCart className="h-10 w-10 text-muted-foreground/40" />
             </div>
             <h2 className="text-2xl sm:text-3xl font-black text-foreground mb-3">
@@ -248,7 +248,7 @@ export default function CartPage() {
               marketplace to find great products.
             </p>
             <SmartLink to={WEBSITE_ROUTES.HOME}>
-              <Button className="rounded-2xl h-14 px-10 text-lg font-bold shadow-xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all">
+              <Button className="rounded-sm h-14 px-10 text-lg font-bold   hover:scale-105 active:scale-95 transition-all">
                 Start Shopping
               </Button>
             </SmartLink>

@@ -46,7 +46,7 @@ export function DefaultInfo({
     <div className="w-full p-6 md:p-10 lg:p-12 flex flex-col justify-center">
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-4">
-          <div className="bg-[var(--theme-primary)]/10 text-[var(--theme-primary)] px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
+          <div className="bg-[var(--theme-primary)]/10 text-[var(--theme-primary)] px-3 py-1 rounded-sm text-xs font-bold uppercase tracking-wider">
             {uiProduct.category}
           </div>
           {uiProduct.rating > 0 && (
@@ -72,7 +72,7 @@ export function DefaultInfo({
             </span>
           )}
           {displayOriginalPrice && (
-            <span className="bg-red-500/10 text-red-600 dark:text-red-400 text-xs font-bold px-2 py-1 rounded-md ml-2 mb-2">
+            <span className="bg-red-500/10 text-red-600 dark:text-red-400 text-xs font-bold px-2 py-1 rounded-sm ml-2 mb-2">
               SALE
             </span>
           )}
@@ -95,9 +95,9 @@ export function DefaultInfo({
                   <button
                     key={value}
                     onClick={() => selectOption(option.name, value)}
-                    className={`min-w-[4rem] px-6 py-3 rounded-xl text-sm font-bold transition-all shadow-sm ${
+                    className={`min-w-[4rem] px-6 py-3 rounded-sm text-sm font-bold transition-all  ${
                       selectedOptions[option.name] === value
-                        ? "bg-[var(--theme-primary)] text-white shadow-[var(--theme-primary)]/25"
+                        ? "bg-[var(--theme-primary)] text-white -[var(--theme-primary)]/25"
                         : "bg-zinc-50 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-800 hover:border-[var(--theme-primary)]/50"
                     }`}
                   >
@@ -124,9 +124,9 @@ export function DefaultInfo({
                   <button
                     key={color.id}
                     onClick={() => setSelectedColor(color)}
-                    className={`w-10 h-10 rounded-full border-2 transition-all ${
+                    className={`w-10 h-10 rounded-sm border-2 transition-all ${
                       selectedColor?.id === color.id
-                        ? "border-[var(--theme-primary)] ring-2 ring-[var(--theme-primary)]/10 scale-110 shadow-lg"
+                        ? "border-[var(--theme-primary)] ring-2 ring-[var(--theme-primary)]/10 scale-110 "
                         : "border-slate-200 dark:border-zinc-800 hover:border-slate-300"
                     }`}
                     style={{ backgroundColor: color.hex }}
@@ -148,9 +148,9 @@ export function DefaultInfo({
                 <button
                   key={size}
                   onClick={() => setSelectedSize(size)}
-                  className={`min-w-[4rem] px-6 py-3 rounded-xl text-sm font-bold transition-all shadow-sm ${
+                  className={`min-w-[4rem] px-6 py-3 rounded-sm text-sm font-bold transition-all  ${
                     selectedSize === size
-                      ? "bg-[var(--theme-primary)] text-white shadow-[var(--theme-primary)]/25"
+                      ? "bg-[var(--theme-primary)] text-white -[var(--theme-primary)]/25"
                       : "bg-zinc-50 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-800 hover:border-[var(--theme-primary)]/50"
                   }`}
                 >
@@ -165,10 +165,10 @@ export function DefaultInfo({
       {/* Actions */}
       <div className="space-y-6 mt-10">
         <div className="flex flex-col sm:flex-row gap-4">
-          <div className="flex items-center justify-between border-2 border-zinc-200 dark:border-zinc-800 rounded-2xl bg-zinc-50 dark:bg-zinc-950 p-1 w-full sm:w-40 shrink-0">
+          <div className="flex items-center justify-between border-2 border-zinc-200 dark:border-zinc-800 rounded-sm bg-zinc-50 dark:bg-zinc-950 p-1 w-full sm:w-40 shrink-0">
             <button
               onClick={() => setQuantity(Math.max(1, quantity - 1))}
-              className="w-12 h-12 flex items-center justify-center text-zinc-500 hover:text-zinc-900 dark:hover:text-white rounded-xl hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors"
+              className="w-12 h-12 flex items-center justify-center text-zinc-500 hover:text-zinc-900 dark:hover:text-white rounded-sm hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors"
             >
               <Minus className="w-4 h-4" />
             </button>
@@ -179,7 +179,7 @@ export function DefaultInfo({
               onClick={() =>
                 setQuantity(Math.min(currentStock || 1, quantity + 1))
               }
-              className="w-12 h-12 flex items-center justify-center text-zinc-500 hover:text-zinc-900 dark:hover:text-white rounded-xl hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors"
+              className="w-12 h-12 flex items-center justify-center text-zinc-500 hover:text-zinc-900 dark:hover:text-white rounded-sm hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors"
             >
               <Plus className="w-4 h-4" />
             </button>
@@ -188,10 +188,10 @@ export function DefaultInfo({
           <button
             disabled={currentStock <= 0 || addingToCart}
             onClick={handleAddToCart}
-            className="flex-1 h-16 bg-[var(--theme-primary)] text-white font-bold text-lg rounded-2xl shadow-xl shadow-[var(--theme-primary)]/20 hover:shadow-[var(--theme-primary)]/40 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:bg-zinc-100 dark:disabled:bg-zinc-800 disabled:text-zinc-400 disabled:translate-y-0 disabled:shadow-none"
+            className="flex-1 h-16 bg-[var(--theme-primary)] text-white font-bold text-lg rounded-sm  -[var(--theme-primary)]/20 hover:-[var(--theme-primary)]/40 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:bg-zinc-100 dark:disabled:bg-zinc-800 disabled:text-zinc-400 disabled:translate-y-0 disabled:"
           >
             {addingToCart ? (
-              <div className="h-5 w-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              <div className="h-5 w-5 border-2 border-white/30 border-t-white rounded-sm animate-spin" />
             ) : currentStock <= 0 ? (
               "Out of Stock"
             ) : (
@@ -216,7 +216,7 @@ export function DefaultInfo({
             <Heart className={cn("w-4 h-4", liked && "fill-current")} />
             {liked ? "Saved to Wishlist" : "Save for Later"}
           </button>
-          <div className="w-1 h-1 rounded-full bg-zinc-300 dark:bg-zinc-700" />
+          <div className="w-1 h-1 rounded-sm bg-zinc-300 dark:bg-zinc-700" />
           <button className="flex items-center gap-2 text-sm font-semibold text-zinc-500 hover:text-[var(--theme-primary)] transition-colors">
             <Share2 className="w-4 h-4" /> Share Product
           </button>
@@ -227,7 +227,7 @@ export function DefaultInfo({
           className={`text-sm font-medium flex items-center gap-2 ${currentStock > 0 ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"}`}
         >
           <div
-            className={`w-2 h-2 rounded-full ${currentStock > 0 ? "bg-emerald-500 animate-pulse" : "bg-red-500"}`}
+            className={`w-2 h-2 rounded-sm ${currentStock > 0 ? "bg-emerald-500 animate-pulse" : "bg-red-500"}`}
           />
           {currentStock > 0
             ? `${currentStock} items available`

@@ -1,9 +1,10 @@
 import { useProductActions } from "../../../hooks/useProductActions";
 import ProductDetailsTabs from "@/modules/website/components/products/ProductDetailsTabs";
-import ReviewsSection from "@/modules/website/components/products/ReviewsSection";
+import { StoreProductReviews } from "../StoreProductReviews";
 import RelatedProductsGrid from "@/modules/website/components/products/RelatedProductsGrid";
 import type { ProductTemplateProps } from "./ProductTemplateProps";
 import { adaptProductToUI } from "../../../utils/productAdapter";
+import { GoBackButton } from "@/components/shared/GoBackButton";
 
 // Default Components
 import { DefaultHeader } from "./default/DefaultHeader";
@@ -50,7 +51,8 @@ export default function DefaultProductTemplate({
 
       {/* ─── PRODUCT MAIN ─── */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
-        <div className="bg-white dark:bg-zinc-950 rounded-3xl shadow-xl shadow-zinc-200/20 dark:shadow-none border border-zinc-200/60 dark:border-zinc-800/60 overflow-hidden">
+        <GoBackButton className="mb-6" />
+        <div className="bg-white dark:bg-zinc-950 rounded-sm  -zinc-200/20 dark: border border-zinc-200/60 dark:border-zinc-800/60 overflow-hidden">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
             <DefaultVisuals uiProduct={uiProduct} />
 
@@ -83,7 +85,7 @@ export default function DefaultProductTemplate({
 
         {/* ─── TABS & DETAILS ─── */}
         <div className="mt-16 md:mt-24">
-          <div className="bg-white dark:bg-zinc-950 rounded-3xl p-6 md:p-10 shadow-sm border border-zinc-200/60 dark:border-zinc-800/60">
+          <div className="bg-white dark:bg-zinc-950 rounded-sm p-6 md:p-10  border border-zinc-200/60 dark:border-zinc-800/60">
             <ProductDetailsTabs product={uiProduct} />
           </div>
         </div>
@@ -96,8 +98,8 @@ export default function DefaultProductTemplate({
             </h2>
             <div className="h-px flex-1 bg-zinc-200 dark:bg-zinc-800" />
           </div>
-          <div className="bg-white dark:bg-zinc-950 rounded-3xl p-6 md:p-10 shadow-sm border border-zinc-200/60 dark:border-zinc-800/60">
-            <ReviewsSection
+          <div className="bg-white dark:bg-zinc-950 rounded-sm p-6 md:p-10  border border-zinc-200/60 dark:border-zinc-800/60">
+            <StoreProductReviews
               productId={product.id}
               reviews={reviews}
               ratingAverage={uiProduct.rating}

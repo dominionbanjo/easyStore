@@ -1,3 +1,4 @@
+import { useFormContext } from "react-hook-form";
 import {
   Card,
   CardHeader,
@@ -5,48 +6,39 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { CreditCard, Loader2, CheckCircle2 } from "lucide-react";
+import { CreditCard, Loader2, CheckCircle2, Hash, Landmark, User } from "lucide-react";
+import { FormSelect } from "@/components/shared/form/FormSelect";
+import { FormInput } from "@/components/shared/form/FormInput";
 
 interface PayoutSetupStepProps {
-  bankData: {
-    bank_code: string;
-    account_number: string;
-    account_name: string;
-  };
   banks: any[];
   isVerifying: boolean;
   isRegistering: boolean;
   isValidated: boolean;
-  onBankChange: (val: string) => void;
-  onAccountNumberChange: (val: string) => void;
   onVerify: () => void;
   onRegister: () => void;
 }
 
 export function PayoutSetupStep({
-  bankData,
   banks,
   isVerifying,
   isRegistering,
   isValidated,
-  onBankChange,
-  onAccountNumberChange,
   onVerify,
   onRegister,
 }: PayoutSetupStepProps) {
+  const { watch } = useFormContext();
+  const account_name = watch("account_name");
+
+  const bankOptions = banks.map((bank) => ({
+    label: bank.name,
+    value: bank.code,
+  }));
+
   return (
-    <Card className="border-none shadow-md overflow-hidden">
-      <CardHeader className="bg-gradient-to-r from-emerald-500/10 via-emerald-500/5 to-transparent p-6 md:p-8">
+    <Card className="border-none  overflow-hidden">
+      <CardHeader className="bg-gradient-to-r from-emerald-500/10 via-emerald-500/5 to-transparent px-0 py-6">
         <CardTitle className="text-xl text-emerald-600 dark:text-emerald-400">
           Payout Setup
         </CardTitle>
@@ -54,8 +46,8 @@ export function PayoutSetupStep({
           Setup your bank account to receive payments from sales.
         </CardDescription>
       </CardHeader>
-      <CardContent className="p-3 sm:p-8 space-y-6 sm:space-y-8 -mt-4">
-        <div className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-2xl bg-emerald-500/5 text-emerald-600 dark:text-emerald-400 border border-emerald-500/10">
+      <CardContent className="px-0 py-6 space-y-6 sm:space-y-8 -mt-4">
+        <div className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-sm bg-emerald-500/5 text-emerald-600 dark:text-emerald-400 border border-emerald-500/10">
           <CreditCard className="w-8 h-8 sm:w-10 sm:h-10 shrink-0" />
           <div className="text-sm">
             <p className="font-bold">Automated Daily Payouts</p>
@@ -67,34 +59,29 @@ export function PayoutSetupStep({
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-          <div className="space-y-2 md:col-span-2">
-            <Label>Select Bank</Label>
-            <Select value={bankData.bank_code} onValueChange={onBankChange}>
-              <SelectTrigger className="h-11 rounded-xl">
-                <SelectValue placeholder="Choose your bank" />
-              </SelectTrigger>
-              <SelectContent className="max-h-[300px]">
-                {banks?.map((bank) => (
-                  <SelectItem key={bank.code} value={bank.code}>
-                    {bank.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          <div className="md:col-span-2">
+            <FormSelect
+              name="bank_code"
+              label="Select Bank"
+              placeholder="Start typing your bank name..."
+              options={bankOptions}
+              isSearchable
+              icon={<Landmark className="w-4 h-4" />}
+            />
           </div>
-          <div className="space-y-2">
-            <Label>Account Number</Label>
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-2">
-              <Input
-                value={bankData.account_number}
-                onChange={(e) => onAccountNumberChange(e.target.value)}
-                className="h-11 rounded-xl"
+          
+          <div className="flex flex-col gap-2">
+            <div className="flex items-end gap-2">
+              <FormInput
+                name="account_number"
+                label="Account Number"
                 placeholder="0123456789"
-                maxLength={10}
+                icon={<Hash className="w-4 h-4" />}
+                className="flex-1"
               />
               <Button
                 variant="secondary"
-                className="h-11 rounded-xl w-full sm:w-auto px-6"
+                className="h-12 rounded-sm px-6 border border-muted-foreground/10"
                 onClick={onVerify}
                 disabled={isVerifying}
               >
@@ -106,19 +93,19 @@ export function PayoutSetupStep({
               </Button>
             </div>
           </div>
-          <div className="space-y-2">
-            <Label>Account Name</Label>
-            <Input
-              value={bankData.account_name}
-              readOnly
-              className="h-11 rounded-xl bg-muted/50 border-none font-semibold text-foreground/80"
-              placeholder="Account Name will appear here"
-            />
-          </div>
+
+          <FormInput
+            name="account_name"
+            label="Account Name"
+            placeholder="Verified name will appear here"
+            icon={<User className="w-4 h-4" />}
+            className="opacity-90"
+            inputClassName="bg-muted/50 font-bold text-foreground/70 pointer-events-none"
+          />
         </div>
 
         {isValidated && (
-          <div className="flex items-center gap-3 p-4 rounded-2xl bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 text-sm font-bold">
+          <div className="flex items-center gap-3 p-4 rounded-sm bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 text-sm font-bold">
             <CheckCircle2 className="w-5 h-5 shrink-0" />
             Your payout account is verified and active.
           </div>
@@ -127,8 +114,8 @@ export function PayoutSetupStep({
         <div className="pt-4 border-t flex justify-end">
           <Button
             onClick={onRegister}
-            disabled={isRegistering || !bankData.account_name}
-            className="w-full sm:w-auto rounded-full px-12 h-12 shadow-lg shadow-primary/20 bg-emerald-600 hover:bg-emerald-700"
+            disabled={isRegistering || !account_name}
+            className="w-full sm:w-auto rounded-sm px-12 h-12   bg-emerald-600 hover:bg-emerald-700"
           >
             {isRegistering ? (
               <Loader2 className="w-4 h-4 animate-spin mr-2" />

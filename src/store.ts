@@ -13,12 +13,14 @@ import storage from "redux-persist/lib/storage";
 import userReducer from "../src/features/userSlice";
 import productDraftReducer from "../src/features/productDraftSlice";
 import cartReducer from "./features/cartSlice";
+import uiReducer from "./features/uiSlice";
 import { apiManager } from "./services/apiManager";
 
 const rootReducer = combineReducers({
   user: userReducer,
   productDraft: productDraftReducer,
   cart: cartReducer,
+  ui: uiReducer,
   [apiManager.reducerPath]: apiManager.reducer,
 });
 

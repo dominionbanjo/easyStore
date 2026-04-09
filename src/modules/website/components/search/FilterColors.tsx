@@ -8,7 +8,7 @@ export function FilterColors() {
         {colors.map((c) => (
           <button
             key={c}
-            className="w-7 h-7 rounded-full border"
+            className="w-7 h-7 rounded-sm border"
             style={{ backgroundColor: c }}
           />
         ))}

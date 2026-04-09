@@ -84,7 +84,7 @@ export default function SuperAdminSettingsPage() {
 
         {/* ─── General Settings ─── */}
         <TabsContent value="general">
-          <Card className="border border-border/40 shadow-sm">
+          <Card className="border border-border/40 ">
             <CardHeader>
               <CardTitle>General Preferences</CardTitle>
               <CardDescription>
@@ -94,11 +94,11 @@ export default function SuperAdminSettingsPage() {
             <CardContent className="grid sm:grid-cols-2 gap-6">
               <div>
                 <Label>Platform Name</Label>
-                <Input placeholder="easystore HQ" />
+                <Input placeholder="eazystore HQ" />
               </div>
               <div>
                 <Label>Support Email</Label>
-                <Input type="email" placeholder="support@easystore.com" />
+                 <Input type="email" placeholder="support@eazystore.com.ng" />
               </div>
               <div className="sm:col-span-2">
                 <Label>Platform Description</Label>
@@ -113,7 +113,7 @@ export default function SuperAdminSettingsPage() {
 
         {/* ─── Appearance Settings ─── */}
         <TabsContent value="appearance">
-          <Card className="border border-border/40 shadow-sm">
+          <Card className="border border-border/40 ">
             <CardHeader>
               <CardTitle>Appearance & Theme</CardTitle>
               <CardDescription>
@@ -129,7 +129,7 @@ export default function SuperAdminSettingsPage() {
                   </p>
                 </div>
                 <select
-                  className="bg-muted border rounded-md p-2 text-sm"
+                  className="bg-muted border rounded-sm p-2 text-sm"
                   value={theme}
                   onChange={(e) => setTheme(e.target.value)}
                 >
@@ -158,7 +158,7 @@ export default function SuperAdminSettingsPage() {
 
         {/* ─── Integrations ─── */}
         <TabsContent value="integrations">
-          <Card className="border border-border/40 shadow-sm">
+          <Card className="border border-border/40 ">
             <CardHeader>
               <CardTitle>Third-Party Integrations</CardTitle>
               <CardDescription>
@@ -191,7 +191,7 @@ export default function SuperAdminSettingsPage() {
 
         {/* ─── System Settings ─── */}
         <TabsContent value="system">
-          <Card className="border border-border/40 shadow-sm">
+          <Card className="border border-border/40 ">
             <CardHeader>
               <CardTitle>System Operations</CardTitle>
               <CardDescription>
@@ -231,7 +231,7 @@ export default function SuperAdminSettingsPage() {
 
         {/* ─── Security Settings ─── */}
         <TabsContent value="security">
-          <Card className="border border-border/40 shadow-sm">
+          <Card className="border border-border/40 ">
             <CardHeader>
               <CardTitle>Security & Access</CardTitle>
               <CardDescription>

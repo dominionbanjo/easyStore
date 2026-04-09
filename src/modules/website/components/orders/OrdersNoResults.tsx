@@ -21,7 +21,7 @@ export function OrdersNoResults({
       className="flex flex-col items-center justify-center py-16 px-6 text-center"
     >
       {/* No Results Icon */}
-      <div className="w-20 h-20 bg-gray-100 dark:bg-neutral-800 rounded-full flex items-center justify-center mb-6">
+      <div className="w-20 h-20 bg-gray-100 dark:bg-neutral-800 rounded-sm flex items-center justify-center mb-6">
         <SearchX className="h-10 w-10 text-gray-400 dark:text-neutral-500" />
       </div>
 
@@ -38,7 +38,7 @@ export function OrdersNoResults({
         {searchTerm && (
           <Badge
             variant="secondary"
-            className="px-3 py-1.5 text-sm font-semibold rounded-full bg-gray-100 dark:bg-neutral-800 text-gray-700 dark:text-neutral-300"
+            className="px-3 py-1.5 text-sm font-semibold rounded-sm bg-gray-100 dark:bg-neutral-800 text-gray-700 dark:text-neutral-300"
           >
             Search: "{searchTerm}"
           </Badge>
@@ -46,7 +46,7 @@ export function OrdersNoResults({
         {statusFilter !== "all" && (
           <Badge
             variant="secondary"
-            className="px-3 py-1.5 text-sm font-semibold rounded-full bg-gray-100 dark:bg-neutral-800 text-gray-700 dark:text-neutral-300 capitalize"
+            className="px-3 py-1.5 text-sm font-semibold rounded-sm bg-gray-100 dark:bg-neutral-800 text-gray-700 dark:text-neutral-300 capitalize"
           >
             Status: {statusFilter}
           </Badge>
@@ -57,7 +57,7 @@ export function OrdersNoResults({
       <Button
         onClick={onClearFilters}
         variant="outline"
-        className="rounded-full h-12 px-8 text-base font-bold border-2 flex items-center gap-2"
+        className="rounded-sm h-12 px-8 text-base font-bold border-2 flex items-center gap-2"
       >
         <X className="h-4 w-4" />
         Clear Filters

@@ -21,7 +21,7 @@ export default function TrendingProductsPage() {
   return (
     <ProductListingPage
       title="Trending Now"
-      subtitle="The most popular items on EasyStore right now. Don't miss out on what everyone is talking about."
+      subtitle="The most popular items on EazyStore right now. Don't miss out on what everyone is talking about."
       icon={TrendingUp}
       badgeText="Going Fast"
       badgeColor="bg-orange-500"

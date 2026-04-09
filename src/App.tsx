@@ -170,7 +170,7 @@ export default function App() {
               <Route path="/" element={<Pages.StorefrontLayout />}>
                 <Route index element={<Pages.StoreDetailsPage />} />
                 <Route
-                  path="products/:productId"
+                  path="products/:productSlug"
                   element={<Pages.StoreProductDetailsPage />}
                 />
               </Route>
@@ -212,7 +212,7 @@ export default function App() {
             <Route path="/stores/:slug" element={<Pages.StorefrontLayout />}>
               <Route index element={<Pages.StoreDetailsPage />} />
               <Route
-                path="products/:productId"
+                path="products/:productSlug"
                 element={<Pages.StoreProductDetailsPage />}
               />
             </Route>

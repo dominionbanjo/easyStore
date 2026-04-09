@@ -92,7 +92,7 @@ export default function DashboardSidebar({
                 title={isCollapsed ? label : ""}
                 className={({ isActive }) =>
                   cn(
-                    "flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors",
+                    "flex items-center gap-3 px-3 py-2 rounded-sm text-sm transition-colors",
                     "text-muted-foreground hover:text-foreground hover:bg-muted/50",
                     isActive && "bg-muted text-foreground font-medium",
                     isCollapsed && "justify-center px-0",
@@ -164,7 +164,7 @@ export default function DashboardSidebar({
                       onClick={onToggle}
                       className={({ isActive }) =>
                         cn(
-                          "flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors",
+                          "flex items-center gap-3 px-3 py-2 rounded-sm text-sm transition-colors",
                           "text-muted-foreground hover:text-foreground hover:bg-muted/50",
                           isActive && "bg-muted text-foreground font-medium",
                         )

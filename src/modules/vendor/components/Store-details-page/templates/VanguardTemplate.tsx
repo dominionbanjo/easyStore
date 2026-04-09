@@ -36,18 +36,18 @@ export default function VanguardTemplate({
       <div className="fixed top-0 right-0 z-[60] p-6 md:p-10 flex items-center gap-4 pointer-events-none">
         <button
           onClick={onCartOpen}
-          className="pointer-events-auto relative p-4 bg-white/10 dark:bg-black/20 backdrop-blur-3xl border border-white/20 dark:border-white/10 rounded-full text-zinc-900 dark:text-zinc-100 shadow-2xl hover:scale-110 active:scale-95 transition-all group"
+          className="pointer-events-auto relative p-4 bg-white/10 dark:bg-black/20 backdrop-blur-3xl border border-white/20 dark:border-white/10 rounded-sm text-zinc-900 dark:text-zinc-100  hover:scale-110 active:scale-95 transition-all group"
         >
           <ShoppingCart className="w-6 h-6" />
           {cartItemsCount > 0 && (
-            <span className="absolute -top-1 -right-1 h-6 w-6 rounded-full bg-[var(--theme-primary)] text-white text-[11px] flex items-center justify-center font-black ring-2 ring-white dark:ring-black shadow-lg">
+            <span className="absolute -top-1 -right-1 h-6 w-6 rounded-sm bg-[var(--theme-primary)] text-white text-[11px] flex items-center justify-center font-black ring-2 ring-white dark:ring-black ">
               {cartItemsCount}
             </span>
           )}
         </button>
 
         <TemplateProfileDropdown
-          buttonClassName="pointer-events-auto p-4 bg-white/10 dark:bg-black/20 backdrop-blur-3xl border border-white/20 dark:border-white/10 rounded-full text-zinc-900 dark:text-zinc-100 shadow-2xl hover:scale-110 active:scale-95 transition-all"
+          buttonClassName="pointer-events-auto p-4 bg-white/10 dark:bg-black/20 backdrop-blur-3xl border border-white/20 dark:border-white/10 rounded-sm text-zinc-900 dark:text-zinc-100  hover:scale-110 active:scale-95 transition-all"
           iconClassName="w-6 h-6"
         />
       </div>
@@ -70,7 +70,7 @@ export default function VanguardTemplate({
             <img
               src={store.logo ?? undefined}
               alt="Store Logo"
-              className="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover shadow-xl mb-6 border-4 border-white dark:border-zinc-800"
+              className="w-24 h-24 md:w-32 md:h-32 rounded-sm object-cover  mb-6 border-4 border-white dark:border-zinc-800"
             />
           )}
           <h1 className="text-5xl md:text-7xl font-light tracking-tight mb-4 text-zinc-900 dark:text-white">

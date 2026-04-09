@@ -38,11 +38,11 @@ export default function BazaarTemplate({
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-neutral-900 font-sans text-slate-900 dark:text-slate-100 flex flex-col">
       {/* ─── MARKETPLACE HEADER ─── */}
-      <header className="sticky top-0 z-50 bg-white dark:bg-neutral-950 border-b-4 border-[var(--theme-primary)] shadow-md">
+      <header className="sticky top-0 z-50 bg-white dark:bg-neutral-950 border-b-4 border-[var(--theme-primary)] ">
         <div className="max-w-7xl mx-auto px-4 h-24 flex items-center justify-between gap-6">
           <div className="flex items-center gap-4 shrink-0">
             {store?.logo ? (
-              <div className="w-14 h-14 rounded-2xl overflow-hidden bg-white shadow-inner border-2 border-slate-100 dark:border-neutral-800">
+              <div className="w-14 h-14 rounded-sm overflow-hidden bg-white  border-2 border-slate-100 dark:border-neutral-800">
                 <img
                   src={store.logo ?? undefined}
                   alt={store.store_name}
@@ -50,7 +50,7 @@ export default function BazaarTemplate({
                 />
               </div>
             ) : (
-              <div className="w-14 h-14 rounded-2xl bg-[var(--theme-primary)] flex items-center justify-center font-black text-white text-2xl shadow-lg">
+              <div className="w-14 h-14 rounded-sm bg-[var(--theme-primary)] flex items-center justify-center font-black text-white text-2xl ">
                 {store?.store_name?.charAt(0).toUpperCase() || "B"}
               </div>
             )}
@@ -72,7 +72,7 @@ export default function BazaarTemplate({
               <Input
                 type="text"
                 placeholder="Search the market..."
-                className="w-full py-7 pl-12 pr-12 bg-slate-100 dark:bg-neutral-900 border-2 border-transparent focus-visible:bg-white dark:focus-visible:bg-neutral-800 focus-visible:border-[var(--theme-primary)] rounded-2xl font-bold transition-all text-base shadow-inner"
+                className="w-full py-7 pl-12 pr-12 bg-slate-100 dark:bg-neutral-900 border-2 border-transparent focus-visible:bg-white dark:focus-visible:bg-neutral-800 focus-visible:border-[var(--theme-primary)] rounded-sm font-bold transition-all text-base "
                 value={searchQuery}
                 onChange={(e) => onSearchChange(e.target.value)}
               />
@@ -83,7 +83,7 @@ export default function BazaarTemplate({
                 {searchQuery && (
                   <button
                     onClick={() => onSearchChange("")}
-                    className="p-1 hover:bg-slate-200 dark:hover:bg-neutral-700 rounded-full transition-colors"
+                    className="p-1 hover:bg-slate-200 dark:hover:bg-neutral-700 rounded-sm transition-colors"
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -95,18 +95,18 @@ export default function BazaarTemplate({
           <div className="shrink-0 flex items-center gap-4">
             <button
               onClick={onCartOpen}
-              className="relative p-3.5 rounded-2xl bg-[var(--theme-primary)] text-white shadow-xl shadow-[var(--theme-primary)]/20 hover:scale-110 active:scale-95 transition-all"
+              className="relative p-3.5 rounded-sm bg-[var(--theme-primary)] text-white  -[var(--theme-primary)]/20 hover:scale-110 active:scale-95 transition-all"
             >
               <ShoppingCart className="w-6 h-6" />
               {cartItemsCount > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 h-6 w-6 rounded-full bg-white text-[var(--theme-primary)] text-[11px] flex items-center justify-center font-black ring-2 ring-[var(--theme-primary)] shadow-sm">
+                <span className="absolute -top-1.5 -right-1.5 h-6 w-6 rounded-sm bg-white text-[var(--theme-primary)] text-[11px] flex items-center justify-center font-black ring-2 ring-[var(--theme-primary)] ">
                   {cartItemsCount}
                 </span>
               )}
             </button>
 
             <TemplateProfileDropdown
-              buttonClassName="relative p-3.5 rounded-2xl bg-white dark:bg-neutral-800 border-2 border-slate-100 dark:border-neutral-800 text-[var(--theme-primary)] shadow-sm hover:scale-110 active:scale-95 transition-all"
+              buttonClassName="relative p-3.5 rounded-sm bg-white dark:bg-neutral-800 border-2 border-slate-100 dark:border-neutral-800 text-[var(--theme-primary)]  hover:scale-110 active:scale-95 transition-all"
               iconClassName="w-6 h-6"
             />
           </div>
@@ -189,9 +189,9 @@ export default function BazaarTemplate({
               onTabChange("products");
               onCategorySelect(null);
             }}
-            className={`px-5 py-3 md:px-8 md:py-4 rounded-2xl font-black tracking-tighter text-sm md:text-lg transition-all ${
+            className={`px-5 py-3 md:px-8 md:py-4 rounded-sm font-black tracking-tighter text-sm md:text-lg transition-all ${
               activeTab === "products" && !selectedCategory
-                ? "bg-[var(--theme-primary)] text-white shadow-xl shadow-[var(--theme-primary)]/20 translate-y-[-2px]"
+                ? "bg-[var(--theme-primary)] text-white  -[var(--theme-primary)]/20 translate-y-[-2px]"
                 : "bg-white dark:bg-neutral-800 text-slate-600 dark:text-neutral-400 border-b-4 border-slate-200 dark:border-neutral-950 hover:border-[var(--theme-primary)]"
             }`}
           >
@@ -199,9 +199,9 @@ export default function BazaarTemplate({
           </button>
           <button
             onClick={() => onTabChange("categories")}
-            className={`px-5 py-3 md:px-8 md:py-4 rounded-2xl font-black tracking-tighter text-sm md:text-lg transition-all ${
+            className={`px-5 py-3 md:px-8 md:py-4 rounded-sm font-black tracking-tighter text-sm md:text-lg transition-all ${
               activeTab === "categories" || selectedCategory
-                ? "bg-[var(--theme-primary)] text-white shadow-xl shadow-[var(--theme-primary)]/20 translate-y-[-2px]"
+                ? "bg-[var(--theme-primary)] text-white  -[var(--theme-primary)]/20 translate-y-[-2px]"
                 : "bg-white dark:bg-neutral-800 text-slate-600 dark:text-neutral-400 border-b-4 border-slate-200 dark:border-neutral-950 hover:border-[var(--theme-primary)]"
             }`}
           >
@@ -216,14 +216,14 @@ export default function BazaarTemplate({
               ? Array.from({ length: 6 }).map((_, i) => (
                   <Skeleton
                     key={i}
-                    className="h-64 rounded-3xl bg-slate-200 dark:bg-neutral-800"
+                    className="h-64 rounded-sm bg-slate-200 dark:bg-neutral-800"
                   />
                 ))
               : categories?.map((cat) => (
                   <button
                     key={cat.id}
                     onClick={() => onCategorySelect(cat)}
-                    className="group relative h-64 rounded-3xl overflow-hidden bg-white dark:bg-neutral-800 border-4 border-slate-100 dark:border-neutral-800 hover:border-[var(--theme-primary)] transition-all flex items-center justify-center p-8 text-center"
+                    className="group relative h-64 rounded-sm overflow-hidden bg-white dark:bg-neutral-800 border-4 border-slate-100 dark:border-neutral-800 hover:border-[var(--theme-primary)] transition-all flex items-center justify-center p-8 text-center"
                   >
                     <div className="relative z-10">
                       <h3 className="text-3xl font-black text-slate-900 dark:text-white uppercase tracking-tighter group-hover:scale-110 transition-transform">
@@ -303,7 +303,7 @@ export default function BazaarTemplate({
                     href={link as string}
                     target="_blank"
                     rel="noreferrer"
-                    className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-neutral-900 flex items-center justify-center hover:bg-[var(--theme-primary)] hover:text-white transition-all font-black"
+                    className="w-12 h-12 rounded-sm bg-slate-100 dark:bg-neutral-900 flex items-center justify-center hover:bg-[var(--theme-primary)] hover:text-white transition-all font-black"
                   >
                     {platform.charAt(0).toUpperCase()}
                   </a>

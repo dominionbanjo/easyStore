@@ -26,7 +26,7 @@ export default function SecuritySettings() {
   return (
     <FormProvider {...methods}>
       <form onSubmit={methods.handleSubmit(onSubmit)}>
-        <Card className="p-6 bg-white rounded-xl shadow-sm">
+        <Card className="p-6 bg-white rounded-sm ">
           <CardHeader className="flex items-center justify-between">
             <CardTitle>Password & Security</CardTitle>
           </CardHeader>
@@ -50,7 +50,7 @@ export default function SecuritySettings() {
 
             <Button
               type="submit"
-              className="rounded-full bg-primary text-white mt-2"
+              className="rounded-sm bg-primary text-white mt-2"
             >
               <Lock className="h-4 w-4 mr-2" />
               Update Password

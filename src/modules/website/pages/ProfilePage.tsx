@@ -96,7 +96,7 @@ export default function UserProfilePage() {
   if (isError) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
-        <div className="p-4 rounded-full bg-destructive/10 text-destructive text-3xl">
+        <div className="p-4 rounded-sm bg-destructive/10 text-destructive text-3xl">
           ⚠️
         </div>
         <h2 className="text-xl font-semibold">Failed to load profile</h2>
@@ -117,7 +117,7 @@ export default function UserProfilePage() {
           initial={{ scale: 1.2, opacity: 0 }}
           animate={{ scale: 1, opacity: 0.1 }}
           transition={{ duration: 1.5 }}
-          className="absolute -right-20 -bottom-20 w-96 h-96 bg-white rounded-full blur-3xl"
+          className="absolute -right-20 -bottom-20 w-96 h-96 bg-white rounded-sm blur-3xl"
         />
       </div>
 
@@ -126,15 +126,15 @@ export default function UserProfilePage() {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="grid grid-cols-1 lg:grid-cols-12 gap-8"
+          className="grid grid-cols-1 lg:grid-cols-12 gap-5"
         >
           {/* ================= LEFT COLUMN: PERSONAL CARD ================= */}
           <div className="lg:col-span-4 space-y-6">
             <motion.div variants={itemVariants}>
-              <Card className="rounded-[2.5rem] border-none shadow-2xl overflow-hidden bg-card/80 dark:bg-neutral-900/80 backdrop-blur-xl">
-                <CardContent className="p-8 flex flex-col items-center text-center">
+              <Card className="rounded-sm border-none  overflow-hidden bg-card/80 dark:bg-neutral-900/80 backdrop-blur-xl">
+                <CardContent className="p-5 flex flex-col items-center text-center">
                   <div className="relative mb-6">
-                    <Avatar className="h-32 w-32 md:h-40 md:w-40 border-4 border-background shadow-xl">
+                    <Avatar className="h-32 w-32 md:h-40 md:w-40 border-4 border-background ">
                       <AvatarImage src={user.avatar || undefined} />
                       <AvatarFallback className="bg-primary/10 text-primary text-4xl">
                         {user.first_name?.[0]}
@@ -142,7 +142,7 @@ export default function UserProfilePage() {
                       </AvatarFallback>
                     </Avatar>
                     {user.email_verified && (
-                      <div className="absolute bottom-2 right-2 p-1.5 bg-background rounded-full shadow-lg">
+                      <div className="absolute bottom-2 right-2 p-1.5 bg-background rounded-sm ">
                         <CheckCircle className="h-5 w-5 text-green-500 fill-green-500/10" />
                       </div>
                     )}
@@ -160,14 +160,14 @@ export default function UserProfilePage() {
                   <div className="flex flex-wrap items-center justify-center gap-2 mt-4">
                     <Badge
                       variant="secondary"
-                      className="px-3 py-1 rounded-full capitalize bg-primary/10 text-primary border-none"
+                      className="px-3 py-1 rounded-sm capitalize bg-primary/10 text-primary border-none"
                     >
                       {user.account_type}
                     </Badge>
                     {user.payout_verified && (
                       <Badge
                         variant="outline"
-                        className="px-3 py-1 rounded-full gap-1 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-900/30 bg-blue-50 dark:bg-blue-900/10"
+                        className="px-3 py-1 rounded-sm gap-1 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-900/30 bg-blue-50 dark:bg-blue-900/10"
                       >
                         <ShieldCheck size={12} />
                         Verified Payout
@@ -179,7 +179,7 @@ export default function UserProfilePage() {
 
                   <div className="w-full space-y-4">
                     <Button
-                      className="w-full rounded-2xl h-12 font-semibold shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all gap-2"
+                      className="w-full rounded-sm h-12 font-semibold   hover: transition-all gap-2"
                       onClick={() => setEditOpen(true)}
                     >
                       <Settings className="h-4 w-4" />
@@ -187,7 +187,7 @@ export default function UserProfilePage() {
                     </Button>
                     <Button
                       variant="outline"
-                      className="w-full rounded-2xl h-12 font-semibold hover:bg-destructive/5 hover:text-destructive hover:border-destructive/20 transition-all gap-2"
+                      className="w-full rounded-sm h-12 font-semibold hover:bg-destructive/5 hover:text-destructive hover:border-destructive/20 transition-all gap-2"
                       onClick={() => setLogoutOpen(true)}
                     >
                       <LogOut className="h-4 w-4" />
@@ -200,7 +200,7 @@ export default function UserProfilePage() {
 
             {/* QUICK STATS */}
             <motion.div variants={itemVariants}>
-              <Card className="rounded-3xl border-none shadow-xl bg-card/80 dark:bg-neutral-900/80 backdrop-blur-xl">
+              <Card className="rounded-sm border-none  bg-card/80 dark:bg-neutral-900/80 backdrop-blur-xl">
                 <CardContent className="p-6">
                   <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4">
                     Member Overview
@@ -234,7 +234,7 @@ export default function UserProfilePage() {
           </div>
 
           {/* ================= RIGHT COLUMN: CONTENT ================= */}
-          <div className="lg:col-span-8 space-y-8">
+          <div className="lg:col-span-8 space-y-6">
             <motion.div variants={itemVariants}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Contact Information */}
@@ -274,17 +274,17 @@ export default function UserProfilePage() {
             </motion.div>
 
             <motion.div variants={itemVariants}>
-              <Card className="rounded-3xl border-none shadow-lg overflow-hidden">
+              <Card className="rounded-sm border-none  overflow-hidden">
                 <div className="p-6 border-b bg-muted/30">
                   <h3 className="text-lg font-bold flex items-center gap-2">
                     <MapPin className="h-5 w-5 text-primary" />
                     Office Address
                   </h3>
                 </div>
-                <CardContent className="p-8">
+                <CardContent className="p-6">
                   {user.address ? (
                     <div className="flex items-start gap-4 text-left">
-                      <div className="p-3 rounded-2xl bg-primary/10 text-primary shrink-0">
+                      <div className="p-3 rounded-sm bg-primary/10 text-primary shrink-0">
                         <MapPin className="h-6 w-6" />
                       </div>
                       <div className="space-y-1">
@@ -311,7 +311,7 @@ export default function UserProfilePage() {
 
             {/* PERFORMANCE SECTION */}
             <motion.div variants={itemVariants}>
-              <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-[2rem] p-8 text-white shadow-2xl relative overflow-hidden group">
+              <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-sm p-6 text-white  relative overflow-hidden group">
                 <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-110 transition-transform duration-500">
                   <Star size={120} />
                 </div>
@@ -372,7 +372,7 @@ function ProfileSection({
   children: React.ReactNode;
 }) {
   return (
-    <Card className="rounded-3xl border-none shadow-lg overflow-hidden h-full">
+    <Card className="rounded-sm border-none  overflow-hidden h-full">
       <div className="px-6 py-4 border-b bg-muted/30 flex items-center justify-between">
         <h3 className="font-bold flex items-center gap-2">
           {icon}
@@ -396,7 +396,7 @@ function DetailItem({
 }) {
   return (
     <div className="flex items-start gap-3 text-left">
-      <div className="mt-1 p-1.5 rounded-lg bg-muted text-muted-foreground shrink-0">
+      <div className="mt-1 p-1.5 rounded-sm bg-muted text-muted-foreground shrink-0">
         {icon}
       </div>
       <div className="space-y-0.5">
@@ -437,14 +437,14 @@ function UserProfileSkeleton() {
       <div className="h-64 md:h-80 bg-muted animate-pulse" />
       <div className="w-full mx-auto px-4 -mt-32 md:-mt-40 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div className="lg:col-span-4">
-          <Skeleton className="h-[500px] w-full rounded-[2.5rem]" />
+          <Skeleton className="h-[500px] w-full rounded-sm" />
         </div>
         <div className="lg:col-span-8 space-y-6">
           <div className="grid grid-cols-2 gap-6">
-            <Skeleton className="h-48 rounded-3xl" />
-            <Skeleton className="h-48 rounded-3xl" />
+            <Skeleton className="h-48 rounded-sm" />
+            <Skeleton className="h-48 rounded-sm" />
           </div>
-          <Skeleton className="h-64 rounded-3xl" />
+          <Skeleton className="h-64 rounded-sm" />
         </div>
       </div>
     </div>

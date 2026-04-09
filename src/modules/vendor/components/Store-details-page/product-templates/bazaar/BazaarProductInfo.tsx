@@ -38,7 +38,7 @@ export function BazaarProductInfo({
   toggleWishlist,
 }: BazaarProductInfoProps) {
   return (
-    <div className="bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-slate-200 dark:border-zinc-800 p-6 flex flex-col md:flex-row gap-8">
+    <div className="bg-white dark:bg-zinc-900 rounded-sm  border border-slate-200 dark:border-zinc-800 p-6 flex flex-col md:flex-row gap-8">
       {/* Product Gallery (Compact for Bazaar) */}
       <div className="w-full md:w-5/12 shrink-0">
         <ProductGallery images={uiProduct.images} />
@@ -57,7 +57,7 @@ export function BazaarProductInfo({
         </h1>
 
         <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
-          <span className="bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400 px-2 py-0.5 rounded font-bold text-xs">
+          <span className="bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400 px-2 py-0.5 rounded-sm font-bold text-xs">
             {uiProduct.rating > 0 ? uiProduct.rating.toFixed(1) : "New"} ★
           </span>
           <span>|</span>
@@ -131,7 +131,7 @@ export function BazaarProductInfo({
                     <button
                       key={color.id}
                       onClick={() => setSelectedColor(color)}
-                      className={`w-9 h-9 rounded-full border-2 transition-all ${
+                      className={`w-9 h-9 rounded-sm border-2 transition-all ${
                         selectedColor?.id === color.id
                           ? "border-[var(--theme-primary)] ring-2 ring-[var(--theme-primary)]/30 scale-110"
                           : "border-slate-300 dark:border-zinc-700 hover:border-slate-400"
@@ -183,9 +183,9 @@ export function BazaarProductInfo({
                   <button
                     key={size}
                     onClick={() => setSelectedSize(size)}
-                    className={`px-3 py-1.5 border rounded-md text-sm font-medium transition-all ${
+                    className={`px-3 py-1.5 border rounded-sm text-sm font-medium transition-all ${
                       selectedSize === size
-                        ? "bg-[var(--theme-primary)] text-white border-[var(--theme-primary)] shadow-sm"
+                        ? "bg-[var(--theme-primary)] text-white border-[var(--theme-primary)] "
                         : "bg-white dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 border-slate-300 dark:border-zinc-700 hover:bg-slate-50"
                     }`}
                   >

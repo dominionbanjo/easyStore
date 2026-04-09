@@ -25,7 +25,7 @@ export default function AccountPreferences() {
   return (
     <FormProvider {...methods}>
       <form onSubmit={methods.handleSubmit(onSubmit)}>
-        <Card className="p-6 bg-white rounded-xl shadow-sm">
+        <Card className="p-6 bg-white rounded-sm ">
           <CardHeader>
             <CardTitle>Account Preferences</CardTitle>
           </CardHeader>
@@ -40,7 +40,7 @@ export default function AccountPreferences() {
             <div className="flex justify-end pt-4">
               <Button
                 type="submit"
-                className="rounded-full bg-primary text-white"
+                className="rounded-sm bg-primary text-white"
               >
                 Save Changes
               </Button>

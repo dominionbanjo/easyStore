@@ -5,7 +5,7 @@ export function SearchResultsHeader() {
         Showing results for <strong>"tablet"</strong>
       </p>
 
-      <select className="border rounded-full px-4 py-2 text-sm">
+      <select className="border rounded-sm px-4 py-2 text-sm">
         <option>Featured</option>
         <option>Price: Low to High</option>
         <option>Price: High to Low</option>

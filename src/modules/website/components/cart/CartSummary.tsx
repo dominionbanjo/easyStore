@@ -40,7 +40,7 @@ export function CartSummary({
   continueShoppingHref,
 }: CartSummaryProps) {
   return (
-    <Card className="h-fit rounded-2xl sm:rounded-3xl border shadow-lg bg-white border-zinc-100 dark:bg-zinc-900 dark:border-white/5">
+    <Card className="h-fit rounded-sm sm:rounded-sm border  bg-white border-zinc-100 dark:bg-zinc-900 dark:border-white/5">
       <CardHeader className="px-5 py-4 flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-lg font-black tracking-tight text-foreground">
           Order Summary
@@ -55,7 +55,7 @@ export function CartSummary({
               Clear Cart
             </Button>
           </AlertDialogTrigger>
-          <AlertDialogContent className="rounded-3xl border-zinc-100 dark:border-zinc-800">
+          <AlertDialogContent className="rounded-sm border-zinc-100 dark:border-zinc-800">
             <AlertDialogHeader>
               <AlertDialogTitle>Clear Shopping Cart?</AlertDialogTitle>
               <AlertDialogDescription>
@@ -64,12 +64,12 @@ export function CartSummary({
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel className="rounded-full font-bold">
+              <AlertDialogCancel className="rounded-sm font-bold">
                 Cancel
               </AlertDialogCancel>
               <AlertDialogAction
                 onClick={onClear}
-                className="bg-red-500 hover:bg-red-600 text-white rounded-full px-6 font-bold"
+                className="bg-red-500 hover:bg-red-600 text-white rounded-sm px-6 font-bold"
               >
                 Clear Everything
               </AlertDialogAction>
@@ -108,7 +108,7 @@ export function CartSummary({
 
       <CardFooter className="px-5 pb-5 flex flex-col gap-3">
         <SmartLink to={previewHref} className="w-full">
-          <Button className="w-full rounded-2xl h-12 text-base font-bold shadow-lg shadow-primary/20">
+          <Button className="w-full rounded-sm h-12 text-base font-bold  ">
             Checkout
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
@@ -117,7 +117,7 @@ export function CartSummary({
         <SmartLink to={continueShoppingHref} className="w-full">
           <Button
             variant="outline"
-            className="w-full rounded-2xl h-12 text-base font-bold border-zinc-200 dark:border-white/10"
+            className="w-full rounded-sm h-12 text-base font-bold border-zinc-200 dark:border-white/10"
           >
             <Package className="mr-2 h-4 w-4" />
             Continue Shopping

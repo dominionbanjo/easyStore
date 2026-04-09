@@ -182,7 +182,7 @@ export function TitanInfo({
           className="w-full py-4 bg-[var(--theme-primary)] text-black font-black uppercase tracking-widest hover:bg-[var(--theme-primary)]/80 transition-colors flex items-center justify-center gap-3 group disabled:opacity-50 disabled:bg-zinc-800 disabled:text-zinc-500 disabled:border-zinc-700"
         >
           {addingToCart ? (
-            <div className="h-5 w-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
+            <div className="h-5 w-5 border-2 border-black/30 border-t-black rounded-sm animate-spin" />
           ) : currentStock <= 0 ? (
             <span>STOCK DEPLETED</span>
           ) : (

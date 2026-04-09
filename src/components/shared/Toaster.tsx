@@ -11,7 +11,7 @@ export function Toaster() {
       theme={theme as "light" | "dark"}
       toastOptions={{
         style: {
-          borderRadius: "1rem",
+          borderRadius: "var(--radius-sm)",
           fontSize: "0.9rem",
           marginTop: "60px",
         },

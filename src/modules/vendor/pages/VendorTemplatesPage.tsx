@@ -79,7 +79,7 @@ export default function VendorTemplatesPage() {
         </p>
       </div>
 
-      <div className="bg-card border border-border shadow-sm rounded-xl overflow-hidden">
+      <div className="bg-card border border-border  rounded-sm overflow-hidden">
         {/* Tabs */}
         <div className="flex border-b border-border">
           <button
@@ -100,7 +100,7 @@ export default function VendorTemplatesPage() {
           {isLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[1, 2, 3].map((n) => (
-                <Skeleton key={n} className="w-full h-64 rounded-xl" />
+                <Skeleton key={n} className="w-full h-64 rounded-sm" />
               ))}
             </div>
           ) : activeTab === "gallery" ? (
@@ -116,10 +116,10 @@ export default function VendorTemplatesPage() {
                     animate={{ opacity: 1, y: 0 }}
                     whileHover={{ y: -8 }}
                     transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                    className={`group relative flex flex-col h-full bg-card rounded-2xl overflow-hidden border transition-all duration-500 ${
+                    className={`group relative flex flex-col h-full bg-card rounded-sm overflow-hidden border transition-all duration-500 ${
                       isActive 
-                        ? "border-primary shadow-[0_0_40px_-10px_rgba(16,185,129,0.3)] ring-1 ring-primary/50" 
-                        : "border-border hover:border-primary/40 shadow-sm"
+                        ? "border-primary -[0_0_40px_-10px_rgba(16,185,129,0.3)] ring-1 ring-primary/50" 
+                        : "border-border hover:border-primary/40 "
                     }`}
                   >
                     {/* Preview Image */}
@@ -148,7 +148,7 @@ export default function VendorTemplatesPage() {
 
                       {isActive && (
                         <div className="absolute top-4 right-4 z-10">
-                          <div className="bg-primary text-primary-foreground px-3.5 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-2 shadow-2xl ring-2 ring-background backdrop-blur-md animate-in zoom-in-50 duration-500">
+                          <div className="bg-primary text-primary-foreground px-3.5 py-1.5 rounded-sm text-[10px] font-black uppercase tracking-widest flex items-center gap-2  ring-2 ring-background backdrop-blur-md animate-in zoom-in-50 duration-500">
                             <CheckCircle2 className="w-3.5 h-3.5" />
                             Active Layout
                           </div>
@@ -174,7 +174,7 @@ export default function VendorTemplatesPage() {
                         <div className="flex gap-2">
                           <button
                             onClick={() => setActiveTab("customize")}
-                            className="flex-1 flex items-center justify-center gap-2 py-3 bg-secondary/50 dark:bg-neutral-800/50 hover:bg-secondary dark:hover:bg-neutral-800 text-foreground font-bold text-[10px] uppercase tracking-widest rounded-xl transition-all border border-border/50"
+                            className="flex-1 flex items-center justify-center gap-2 py-3 bg-secondary/50 dark:bg-neutral-800/50 hover:bg-secondary dark:hover:bg-neutral-800 text-foreground font-bold text-[10px] uppercase tracking-widest rounded-sm transition-all border border-border/50"
                           >
                             <Settings2 className="w-4 h-4 text-muted-foreground" />
                             Setup
@@ -183,7 +183,7 @@ export default function VendorTemplatesPage() {
                             href={`/stores/${storeSlug}?preview_template=${tpl.name}`}
                             target="_blank"
                             rel="noreferrer"
-                            className="flex-1 flex items-center justify-center gap-2 py-3 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 hover:scale-[1.02] active:scale-[0.98] font-bold text-[10px] uppercase tracking-widest rounded-xl transition-all shadow-lg"
+                            className="flex-1 flex items-center justify-center gap-2 py-3 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 hover:scale-[1.02] active:scale-[0.98] font-bold text-[10px] uppercase tracking-widest rounded-sm transition-all "
                           >
                             <Eye className="w-4 h-4" />
                             Preview
@@ -195,7 +195,7 @@ export default function VendorTemplatesPage() {
                           <button
                             onClick={() => handleSelectTemplate(tpl.id)}
                             disabled={isUpdating}
-                            className="w-full py-3.5 bg-primary text-primary-foreground hover:opacity-95 active:scale-[0.99] font-black text-xs uppercase tracking-[0.1em] rounded-xl transition-all disabled:opacity-50 flex justify-center items-center shadow-xl shadow-primary/20"
+                            className="w-full py-3.5 bg-primary text-primary-foreground hover:opacity-95 active:scale-[0.99] font-black text-xs uppercase tracking-[0.1em] rounded-sm transition-all disabled:opacity-50 flex justify-center items-center  "
                           >
                             {updatingTemplateId === tpl.id ? (
                               <>
@@ -207,7 +207,7 @@ export default function VendorTemplatesPage() {
                             )}
                           </button>
                         ) : (
-                          <div className="w-full py-3.5 border-2 border-primary/20 bg-primary/5 text-primary text-center font-black text-xs uppercase tracking-[0.1em] rounded-xl cursor-default">
+                          <div className="w-full py-3.5 border-2 border-primary/20 bg-primary/5 text-primary text-center font-black text-xs uppercase tracking-[0.1em] rounded-sm cursor-default">
                              Current Selection
                           </div>
                         )}
@@ -232,7 +232,7 @@ export default function VendorTemplatesPage() {
                   Saving changes...
                 </div>
               )}
-              <div className="w-full max-w-2xl bg-card border border-border rounded-xl p-8 text-left space-y-8 shadow-sm">
+              <div className="w-full max-w-2xl bg-card border border-border rounded-sm p-8 text-left space-y-8 ">
                 <div>
                   <label className="block text-sm font-semibold mb-3">
                     Primary Accent Color
@@ -257,7 +257,7 @@ export default function VendorTemplatesPage() {
                           custom_config: newConfig,
                         }).then(() => refetchTheme());
                       }}
-                      className="w-12 h-12 cursor-pointer border-0 p-0 rounded-md bg-transparent"
+                      className="w-12 h-12 cursor-pointer border-0 p-0 rounded-sm bg-transparent"
                     />
                     <span className="text-sm text-muted-foreground">
                       Select a hex color to override the default theme accent
@@ -291,7 +291,7 @@ export default function VendorTemplatesPage() {
                           custom_config: newConfig,
                         }).then(() => refetchTheme());
                       }}
-                      className="w-5 h-5 rounded border-muted-foreground text-primary focus:ring-primary"
+                      className="w-5 h-5 rounded-sm border-muted-foreground text-primary focus:ring-primary"
                     />
                     <span className="text-sm">
                       Force dark mode styling for all visitors to your

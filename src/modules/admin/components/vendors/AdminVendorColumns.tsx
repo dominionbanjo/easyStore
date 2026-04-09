@@ -193,7 +193,7 @@ export const buildAdminVendorColumns = (
       const store = row.original.store;
       return (
         <div className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-md bg-muted flex items-center justify-center flex-shrink-0 overflow-hidden">
+          <div className="h-8 w-8 rounded-sm bg-muted flex items-center justify-center flex-shrink-0 overflow-hidden">
             {store?.logo ? (
               <img
                 src={store.logo}
@@ -239,7 +239,7 @@ export const buildAdminVendorColumns = (
       return (
         <span
           className={cn(
-            "px-2 py-1 rounded-full text-xs font-semibold",
+            "px-2 py-1 rounded-sm text-xs font-semibold",
             statusColors[status],
           )}
         >

@@ -28,7 +28,7 @@ export default function AnalyticsPage() {
       <div className="flex h-[70vh] items-center justify-center flex-col gap-4">
         <div className="relative">
           <Loader2 className="h-12 w-12 animate-spin text-primary" />
-          <div className="absolute inset-0 blur-xl bg-primary/20 animate-pulse rounded-full" />
+          <div className="absolute inset-0 blur-xl bg-primary/20 animate-pulse rounded-sm" />
         </div>
         <div className="text-center">
           <p className="font-black text-xl tracking-tight">
@@ -45,7 +45,7 @@ export default function AnalyticsPage() {
   if (isError || !analytics) {
     return (
       <div className="flex h-[60vh] items-center justify-center flex-col gap-6 max-w-md mx-auto text-center">
-        <div className="h-20 w-20 rounded-3xl bg-destructive/10 flex items-center justify-center text-destructive">
+        <div className="h-20 w-20 rounded-sm bg-destructive/10 flex items-center justify-center text-destructive">
           <AlertCircle className="w-10 h-10" />
         </div>
         <div className="space-y-2">
@@ -59,7 +59,7 @@ export default function AnalyticsPage() {
         </div>
         <Button
           onClick={() => refetch()}
-          className="rounded-2xl px-8 h-12 shadow-lg shadow-primary/20 gap-2"
+          className="rounded-sm px-8 h-12   gap-2"
         >
           <RefreshCw className="w-4 h-4" /> Try Again
         </Button>
@@ -108,8 +108,8 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Decorative background gradients */}
-      <div className="fixed top-0 right-0 -z-10 w-[500px] h-[500px] bg-emerald-500/5 blur-[120px] rounded-full" />
-      <div className="fixed bottom-0 left-0 -z-10 w-[500px] h-[500px] bg-blue-500/5 blur-[120px] rounded-full" />
+      <div className="fixed top-0 right-0 -z-10 w-[500px] h-[500px] bg-emerald-500/5 blur-[120px] rounded-sm" />
+      <div className="fixed bottom-0 left-0 -z-10 w-[500px] h-[500px] bg-blue-500/5 blur-[120px] rounded-sm" />
     </motion.div>
   );
 }

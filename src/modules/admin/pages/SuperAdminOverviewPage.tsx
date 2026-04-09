@@ -71,13 +71,13 @@ function StatCard({
 }) {
   const isUp = change.startsWith("+");
   return (
-    <Card className="border-border/30 shadow-lg shadow-black/5 hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-background to-muted/20 overflow-hidden relative group">
+    <Card className="border-border/30   hover: transition-all duration-300 bg-gradient-to-br from-background to-muted/20 overflow-hidden relative group">
       <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
       <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 px-4 pt-4 sm:px-6 sm:pt-6">
         <CardTitle className="text-[11px] sm:text-[13px] font-bold text-muted-foreground uppercase tracking-wider truncate mr-2">
           {title}
         </CardTitle>
-        <div className={cn("p-1.5 sm:p-2 rounded-xl flex-shrink-0", iconColor)}>
+        <div className={cn("p-1.5 sm:p-2 rounded-sm flex-shrink-0", iconColor)}>
           <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
         </div>
       </CardHeader>
@@ -183,7 +183,7 @@ export default function SuperAdminOverviewPage() {
             Real-time platform performance and vendor ecosystem metrics.
           </p>
         </div>
-        <Button className="gap-2 shadow-md shadow-primary/20 font-bold">
+        <Button className="gap-2   font-bold">
           <Settings className="h-4 w-4" /> System Settings
         </Button>
       </div>
@@ -208,7 +208,7 @@ export default function SuperAdminOverviewPage() {
         className="grid gap-6 lg:grid-cols-5"
       >
         {/* Growth Chart (3 cols) */}
-        <Card className="border-border/30 shadow-lg shadow-black/5 lg:col-span-3 overflow-hidden">
+        <Card className="border-border/30   lg:col-span-3 overflow-hidden">
           <CardHeader className="border-b border-border/20 bg-muted/10 px-4 py-4 sm:px-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
@@ -221,11 +221,11 @@ export default function SuperAdminOverviewPage() {
               </div>
               <div className="flex items-center gap-4 text-[10px] sm:text-[11px] font-bold">
                 <span className="flex items-center gap-1.5">
-                  <span className="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-emerald-500" />{" "}
+                  <span className="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-sm bg-emerald-500" />{" "}
                   Users
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <span className="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-blue-500" />{" "}
+                  <span className="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-sm bg-blue-500" />{" "}
                   Vendors
                 </span>
               </div>
@@ -234,7 +234,7 @@ export default function SuperAdminOverviewPage() {
           <CardContent className="h-[280px] sm:h-[320px] pt-6 px-2 sm:px-6">
             {growthLoading ? (
               <div className="flex items-center justify-center h-full">
-                <Skeleton className="h-full w-full rounded-xl" />
+                <Skeleton className="h-full w-full rounded-sm" />
               </div>
             ) : (
               <ResponsiveContainer width="100%" height="100%">
@@ -305,7 +305,7 @@ export default function SuperAdminOverviewPage() {
         </Card>
 
         {/* User Distribution Pie (2 cols) */}
-        <Card className="border-border/30 shadow-lg shadow-black/5 lg:col-span-2 overflow-hidden">
+        <Card className="border-border/30   lg:col-span-2 overflow-hidden">
           <CardHeader className="border-b border-border/20 bg-muted/10 px-4 py-4 sm:px-6">
             <CardTitle className="text-base font-black">
               User Distribution
@@ -316,7 +316,7 @@ export default function SuperAdminOverviewPage() {
           </CardHeader>
           <CardContent className="h-[280px] sm:h-[320px] pt-6 px-2 sm:px-6">
             {distLoading ? (
-              <Skeleton className="h-full w-full rounded-xl" />
+              <Skeleton className="h-full w-full rounded-sm" />
             ) : (
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -364,7 +364,7 @@ export default function SuperAdminOverviewPage() {
         className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
       >
         {/* Recent Signups */}
-        <Card className="border-border/30 shadow-lg shadow-black/5 md:col-span-2 overflow-hidden">
+        <Card className="border-border/30   md:col-span-2 overflow-hidden">
           <CardHeader className="border-b border-border/20 bg-muted/10 px-4 py-4 sm:px-6">
             <div className="flex items-center justify-between">
               <div>
@@ -395,7 +395,7 @@ export default function SuperAdminOverviewPage() {
                     className="py-3.5 flex items-start justify-between gap-3 group hover:bg-muted/30 -mx-6 px-6 transition-colors"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="h-9 w-9 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center text-primary font-black text-sm">
+                      <div className="h-9 w-9 rounded-sm bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center text-primary font-black text-sm">
                         {u.first_name?.charAt(0)}
                         {u.last_name?.charAt(0)}
                       </div>
@@ -411,7 +411,7 @@ export default function SuperAdminOverviewPage() {
                     <div className="text-right flex-shrink-0">
                       <span
                         className={cn(
-                          "px-2 py-0.5 rounded-full text-[10px] font-black uppercase",
+                          "px-2 py-0.5 rounded-sm text-[10px] font-black uppercase",
                           u.account_type === "vendor"
                             ? "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300"
                             : "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300",
@@ -430,7 +430,7 @@ export default function SuperAdminOverviewPage() {
         </Card>
 
         {/* Quick Stats */}
-        <Card className="border-border/30 shadow-lg shadow-black/5 overflow-hidden">
+        <Card className="border-border/30   overflow-hidden">
           <CardHeader className="border-b border-border/20 bg-muted/10">
             <CardTitle className="text-base font-black">
               Platform Totals
@@ -474,10 +474,10 @@ export default function SuperAdminOverviewPage() {
             ].map((item, i) => (
               <div
                 key={i}
-                className="flex items-center justify-between p-3 rounded-xl border border-border/20 hover:border-border/40 transition-colors bg-background"
+                className="flex items-center justify-between p-3 rounded-sm border border-border/20 hover:border-border/40 transition-colors bg-background"
               >
                 <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-muted/60">
+                  <div className="p-2 rounded-sm bg-muted/60">
                     <item.icon className={cn("h-4 w-4", item.color)} />
                   </div>
                   <p className="text-sm font-bold">{item.label}</p>

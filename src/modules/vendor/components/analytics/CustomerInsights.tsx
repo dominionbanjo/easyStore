@@ -27,7 +27,7 @@ export function CustomerInsights({ customers }: CustomerInsightsProps) {
   const topVIPs = [...customers].sort((a, b) => b.spent - a.spent).slice(0, 5);
 
   return (
-    <Card className="border-none shadow-xl bg-card flex flex-col h-full overflow-hidden">
+    <Card className="border-none  bg-card flex flex-col h-full overflow-hidden">
       <CardHeader className="border-b border-border/50 bg-muted/20">
         <CardTitle className="text-xl font-black flex items-center gap-2">
           <UserCheck className="w-5 h-5 text-blue-500" /> Customer Insights
@@ -50,11 +50,11 @@ export function CustomerInsights({ customers }: CustomerInsightsProps) {
                 transition={{ delay: idx * 0.05 }}
                 className="p-4 flex items-center gap-4 hover:bg-muted/30 transition-colors group"
               >
-                <Avatar className="h-12 w-12 rounded-2xl border border-border/50 ring-2 ring-transparent group-hover:ring-blue-500/20 transition-all">
+                <Avatar className="h-12 w-12 rounded-sm border border-border/50 ring-2 ring-transparent group-hover:ring-blue-500/20 transition-all">
                   <AvatarImage
                     src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${customer.email}`}
                   />
-                  <AvatarFallback className="rounded-2xl bg-blue-500/10 text-blue-600 font-bold">
+                  <AvatarFallback className="rounded-sm bg-blue-500/10 text-blue-600 font-bold">
                     {customer.name.substring(0, 2).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>

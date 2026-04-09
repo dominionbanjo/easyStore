@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useProductActions } from "../../../hooks/useProductActions";
 import ProductDetailsTabs from "@/modules/website/components/products/ProductDetailsTabs";
-import ReviewsSection from "@/modules/website/components/products/ReviewsSection";
+import { StoreProductReviews } from "../StoreProductReviews";
 import RelatedProductsGrid from "@/modules/website/components/products/RelatedProductsGrid";
 import type { ProductTemplateProps } from "./ProductTemplateProps";
 import { adaptProductToUI } from "../../../utils/productAdapter";
+import { GoBackButton } from "@/components/shared/GoBackButton";
 
 // Titan Components
 import { TitanHeader } from "./titan/TitanHeader";
@@ -55,6 +56,7 @@ export default function TitanProductTemplate({
 
       {/* ─── DATA GRID (MAIN CONTENT) ─── */}
       <main className="p-4 md:p-6 lg:p-8">
+        <GoBackButton className="mb-6" />
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
           <TitanVisuals uiProduct={uiProduct} />
 
@@ -104,7 +106,7 @@ export default function TitanProductTemplate({
               {uiProduct.reviewCount} ENTRIES]
             </span>
           </div>
-          <ReviewsSection
+          <StoreProductReviews
             productId={product.id}
             reviews={reviews}
             ratingAverage={uiProduct.rating}
@@ -115,9 +117,9 @@ export default function TitanProductTemplate({
         {/* ─── CORRELATED NODES (RELATED) ─── */}
         {relatedProducts?.length > 0 && (
           <div className="mt-12 border border-[var(--theme-primary)]/30 bg-black p-6 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--theme-primary)]/5 blur-[50px] rounded-full" />
+            <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--theme-primary)]/5 blur-[50px] rounded-sm" />
             <div className="text-[10px] text-[var(--theme-primary)] mb-6 tracking-widest uppercase flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[var(--theme-primary)] animate-pulse" />
+              <span className="w-2 h-2 rounded-sm bg-[var(--theme-primary)] animate-pulse" />
               CORRELATED_DATA_NODES
             </div>
             <RelatedProductsGrid products={relatedProducts} />

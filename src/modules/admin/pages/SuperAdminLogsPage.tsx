@@ -156,7 +156,7 @@ export default function SuperAdminLogsPage() {
             placeholder="Search logs..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-9 h-10 shadow-sm"
+            className="pl-9 h-10 "
           />
         </div>
 
@@ -168,8 +168,8 @@ export default function SuperAdminLogsPage() {
                 variant={filter === key ? "default" : "outline"}
                 size="sm"
                 className={cn(
-                  "h-8 sm:h-9 px-4 rounded-full text-xs sm:text-[13px] font-bold shrink-0 transition-all",
-                  filter === key && "shadow-md shadow-primary/10",
+                  "h-8 sm:h-9 px-4 rounded-sm text-xs sm:text-[13px] font-bold shrink-0 transition-all",
+                  filter === key && " ",
                 )}
                 onClick={() => setFilter(key)}
               >
@@ -181,7 +181,7 @@ export default function SuperAdminLogsPage() {
       </motion.div>
 
       {/* ─── Logs Table ─── */}
-      <Card className="border border-border/40 shadow-xl shadow-black/5 rounded-2xl overflow-hidden">
+      <Card className="border border-border/40   rounded-sm overflow-hidden">
         <CardHeader className="pb-4 px-4 sm:px-6">
           <CardTitle className="text-lg font-black">Activity Log</CardTitle>
           <CardDescription className="text-xs">
@@ -244,7 +244,7 @@ export default function SuperAdminLogsPage() {
                         <TableCell className="px-4 sm:px-6">
                           <span
                             className={cn(
-                              "px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-tight",
+                              "px-2 py-0.5 rounded-sm text-[10px] font-black uppercase tracking-tight",
                               statusColors[log.status],
                             )}
                           >
@@ -285,7 +285,7 @@ export default function SuperAdminLogsPage() {
         ].map((item, i) => (
           <Card
             key={i}
-            className="border border-border/30 shadow-sm flex items-center gap-4 p-4 sm:p-5"
+            className="border border-border/30  flex items-center gap-4 p-4 sm:p-5"
           >
             <item.icon className="h-7 w-7 sm:h-8 sm:w-8 text-primary shrink-0" />
             <div className="min-w-0">

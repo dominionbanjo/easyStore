@@ -1,7 +1,10 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ArrowLeft, ShoppingBag } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import SmartLink from "@/components/shared/SmartLink";
+import { HomeFloater } from "@/components/shared/HomeFloater";
+import { Logo, LogoIcon } from "@/components/shared/Logo";
 
 interface AuthLayoutProps {
   children: React.ReactNode;
@@ -37,7 +40,7 @@ export function AuthLayout({
         <div className="absolute inset-0 bg-primary/20 mix-blend-overlay" />
 
         {/* Abstract Shapes */}
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/30 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2 z-0 opacity-60" />
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/30 rounded-sm blur-[120px] -translate-y-1/2 translate-x-1/2 z-0 opacity-60" />
 
         {/* Logo Area */}
         <div className="relative z-10">
@@ -45,10 +48,8 @@ export function AuthLayout({
             to="/"
             className="flex items-center gap-3 text-2xl font-black tracking-tighter hover:opacity-90 transition-opacity"
           >
-            <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-primary shadow-2xl">
-              <ShoppingBag className="w-7 h-7" />
-            </div>
-            <span className="text-3xl">EasyStore</span>
+            <LogoIcon size="md" />
+            <span className="text-3xl">EazyStore</span>
           </Link>
         </div>
 
@@ -59,7 +60,7 @@ export function AuthLayout({
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <h2 className="text-5xl font-black tracking-tight mb-8 leading-[1.1] drop-shadow-2xl">
+            <h2 className="text-5xl font-black tracking-tight mb-8 leading-[1.1] drop-">
               Launch your <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-green-400">
                 E-commerce
@@ -68,15 +69,15 @@ export function AuthLayout({
             </h2>
             <ul className="space-y-5 text-zinc-100/90 text-lg font-semibold">
               <li className="flex items-center gap-4">
-                <div className="w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_15px_rgba(34,197,94,1)]" />
+                <div className="w-2.5 h-2.5 rounded-sm bg-primary -[0_0_15px_rgba(34,197,94,1)]" />
                 No setup fees. No hidden costs.
               </li>
               <li className="flex items-center gap-4">
-                <div className="w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_15px_rgba(34,197,94,1)]" />
+                <div className="w-2.5 h-2.5 rounded-sm bg-primary -[0_0_15px_rgba(34,197,94,1)]" />
                 Integrated payment gateways
               </li>
               <li className="flex items-center gap-4">
-                <div className="w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_15px_rgba(34,197,94,1)]" />
+                <div className="w-2.5 h-2.5 rounded-sm bg-primary -[0_0_15px_rgba(34,197,94,1)]" />
                 Real-time inventory sync
               </li>
             </ul>
@@ -85,31 +86,26 @@ export function AuthLayout({
 
         {/* Footer */}
         <div className="relative z-10 text-zinc-400 text-xs font-medium tracking-widest uppercase">
-          © {new Date().getFullYear()} EasyStore.
+          © {new Date().getFullYear()} EazyStore.
         </div>
       </div>
 
       {/* RIGHT SIDE: FORM */}
-      <div className="relative z-10 flex flex-col items-center justify-start py-12 px-6 sm:px-12 lg:bg-background bg-background/95 backdrop-blur-md lg:backdrop-blur-none h-full lg:h-screen overflow-y-auto no-scrollbar">
+      <div className="relative z-10 flex flex-col items-center justify-start py-8 px-6 sm:px-10 lg:bg-background bg-background/95 backdrop-blur-md lg:backdrop-blur-none h-full lg:h-screen overflow-y-auto no-scrollbar">
         <div className="w-full max-w-md">
           {/* Navigation Header */}
           <div className="w-full flex items-center justify-between mb-5 animate-in fade-in slide-in-from-top-4 duration-700">
-            <Link
+            <SmartLink
               to="/"
               className="flex items-center gap-3 group transition-transform active:scale-95"
             >
-              <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shadow-sm border border-primary/20 transition-colors group-hover:bg-primary/20">
-                <ShoppingBag className="w-7 h-7" />
-              </div>
-              <span className="text-2xl font-black tracking-tighter text-foreground">
-                EasyStore
-              </span>
-            </Link>
+              <Logo size="lg" />
+            </SmartLink>
 
             {showBackLink && (
               <Button
                 size="icon"
-                className="rounded-xl w-10 h-10 bg-primary text-white hover:bg-primary/90 shadow-xl shadow-primary/25 transition-all hover:-translate-x-0.5 active:scale-90"
+                className="rounded-sm w-10 h-10 bg-primary text-white hover:bg-primary/90   transition-all hover:-translate-x-0.5 active:scale-90"
                 asChild
               >
                 <Link to="/" aria-label="Back to Home">
@@ -123,7 +119,7 @@ export function AuthLayout({
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
-            className="space-y-10"
+            className="space-y-6"
           >
             <div className="space-y-4 text-left">
               <h1 className="text-4xl sm:text-5xl font-black tracking-tight text-foreground leading-[1.1]">
@@ -140,6 +136,7 @@ export function AuthLayout({
           </motion.div>
         </div>
       </div>
+      <HomeFloater />
     </div>
   );
 }

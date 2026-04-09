@@ -133,13 +133,13 @@ export default function CustomersPage() {
       </div>
 
       {/* ─── Toolbar (Search & Filters) ─── */}
-      <div className="flex flex-col gap-4 bg-card/50 backdrop-blur-sm p-2 sm:p-3 md:p-4 rounded-2xl border border-border/40 shadow-sm transition-all duration-300">
+      <div className="flex flex-col gap-4 bg-card/50 backdrop-blur-sm p-2 sm:p-3 md:p-4 rounded-sm border border-border/40  transition-all duration-300">
         <div className="flex flex-col sm:flex-row items-center gap-3 w-full">
           <div className="relative w-full sm:flex-1 group">
             <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
             <Input
               placeholder="Search by name, email, location or phone..."
-              className="pl-9 h-10 bg-background/50 border-border/40 focus:bg-background transition-all rounded-xl"
+              className="pl-9 h-10 bg-background/50 border-border/40 focus:bg-background transition-all rounded-sm"
               value={search}
               onChange={(e) => handleSearchChange(e.target.value)}
             />
@@ -159,7 +159,7 @@ export default function CustomersPage() {
               <PopoverTrigger asChild>
                 <Button
                   variant={sort !== "created_at" ? "secondary" : "outline"}
-                  className="gap-2 h-10 border-dashed rounded-xl shrink-0"
+                  className="gap-2 h-10 border-dashed rounded-sm shrink-0"
                 >
                   <ArrowUpDown className="h-4 w-4" />
                   <span className="text-xs uppercase tracking-wider font-bold">
@@ -169,7 +169,7 @@ export default function CustomersPage() {
                 </Button>
               </PopoverTrigger>
               <PopoverContent
-                className="w-56 p-1.5 rounded-xl border-border/40"
+                className="w-56 p-1.5 rounded-sm border-border/40"
                 align="end"
               >
                 <div className="space-y-1">
@@ -201,7 +201,7 @@ export default function CustomersPage() {
               <Button
                 variant="ghost"
                 onClick={clearFilters}
-                className="text-muted-foreground hover:text-foreground h-10 px-4 rounded-xl gap-2"
+                className="text-muted-foreground hover:text-foreground h-10 px-4 rounded-sm gap-2"
               >
                 <X className="w-4 h-4" />
                 Clear

@@ -8,6 +8,7 @@ import {
   XCircle,
   Loader2,
 } from "lucide-react";
+import { ProductShareAction } from "../components/dashboard/ProductShareAction";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -47,7 +48,7 @@ export const productColumns: ColumnDef<IStoreProduct>[] = [
           <img
             src={product.image?.url}
             alt={product.name}
-            className="w-10 h-10 sm:w-12 sm:h-12 rounded-md object-cover border shrink-0"
+            className="w-10 h-10 sm:w-12 sm:h-12 rounded-sm object-cover border shrink-0"
           />
           <div className="min-w-0 flex-1 overflow-hidden">
             <p
@@ -113,7 +114,7 @@ export const productColumns: ColumnDef<IStoreProduct>[] = [
       const status = row.original.status;
 
       const base =
-        "inline-flex items-center justify-center gap-1.5 text-xs font-medium px-2 py-1 rounded-full";
+        "inline-flex items-center justify-center gap-1.5 text-xs font-medium px-2 py-1 rounded-sm";
 
       if (status === "active") {
         return (
@@ -255,8 +256,10 @@ export const productColumns: ColumnDef<IStoreProduct>[] = [
                 <Eye className="h-4 w-4" />
                 View
               </Button>
+              <ProductShareAction product={product} />
 
               {/* ✏️ EDIT */}
+
               <Button
                 variant="ghost"
                 size="sm"

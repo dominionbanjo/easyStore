@@ -5,7 +5,7 @@ import { Camera } from "lucide-react";
 
 export default function ProfileOverview() {
   return (
-    <Card className="p-6 bg-white rounded-xl shadow-sm">
+    <Card className="p-6 bg-white rounded-sm ">
       <CardContent className="flex flex-col sm:flex-row items-center gap-6">
         <div className="relative">
           <Avatar className="h-24 w-24">
@@ -14,7 +14,7 @@ export default function ProfileOverview() {
           </Avatar>
           <Button
             size="icon"
-            className="absolute bottom-0 right-0 rounded-full bg-primary text-white"
+            className="absolute bottom-0 right-0 rounded-sm bg-primary text-white"
           >
             <Camera className="h-4 w-4" />
           </Button>

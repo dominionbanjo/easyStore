@@ -74,41 +74,40 @@ export function OrderDeliveryInfo({ order }: { order: IOrder }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.15 }}
     >
-      <Card className="overflow-hidden rounded-2xl border-2 border-gray-100 dark:border-white/5 bg-white dark:bg-neutral-900/50">
-        <div className="bg-gradient-to-r from-blue-50 to-white dark:from-blue-500/10 dark:to-transparent px-6 py-4 border-b-2 border-gray-100 dark:border-white/5">
+      <Card className="overflow-hidden rounded-sm border border-border/40 bg-card/50 backdrop-blur-sm">
+        <div className="bg-muted/30 px-4 py-3 border-b border-border/40">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-black text-foreground flex items-center gap-2">
-              <Truck className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-              Delivery Information
+            <h2 className="text-sm font-black text-foreground flex items-center gap-2 uppercase tracking-widest font-outfit">
+              <Truck className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+              Delivery
             </h2>
             <Badge
               variant="outline"
-              className={`capitalize px-3 py-1.5 text-sm font-bold rounded-full border-2 flex items-center gap-2 ${deliveryConfig.color}`}
+              className={`capitalize px-3 py-1 text-[10px] font-black rounded-sm border flex items-center gap-1.5 uppercase tracking-widest ${deliveryConfig.color}`}
             >
-              {deliveryConfig.icon}
               {deliveryConfig.label}
             </Badge>
           </div>
         </div>
-        <div className="p-6 space-y-4">
+        <div className="p-3 sm:p-5 space-y-3">
           {order.delivery ? (
             <>
               <div className="flex items-start justify-between gap-4">
                 <div className="flex items-center gap-2 text-muted-foreground">
-                  <Package className="h-4 w-4 flex-shrink-0" />
-                  <span className="font-medium">Tracking Number</span>
+                  <Package className="h-3.5 w-3.5 flex-shrink-0" />
+                  <span className="text-[10px] font-black uppercase tracking-widest">Tracking Number</span>
                 </div>
-                <span className="font-mono text-sm font-bold text-foreground">
-                  {order.delivery.tracking_number || "Not assigned yet"}
+                <span className="font-mono text-xs font-black text-foreground">
+                  {order.delivery.tracking_number || "NOT ASSIGNED"}
                 </span>
               </div>
 
               <div className="flex items-start justify-between gap-4">
                 <div className="flex items-center gap-2 text-muted-foreground">
-                  <Calendar className="h-4 w-4 flex-shrink-0" />
-                  <span className="font-medium">Estimated Delivery</span>
+                  <Calendar className="h-3.5 w-3.5 flex-shrink-0" />
+                  <span className="text-[10px] font-black uppercase tracking-widest">Est. Delivery</span>
                 </div>
-                <span className="font-semibold text-foreground">
+                <span className="text-xs font-black text-foreground uppercase tracking-tight">
                   {order.delivery.estimated_delivery
                     ? new Date(
                         order.delivery.estimated_delivery,
@@ -117,17 +116,17 @@ export function OrderDeliveryInfo({ order }: { order: IOrder }) {
                         day: "numeric",
                         year: "numeric",
                       })
-                    : "To be determined"}
+                    : "TBD"}
                 </span>
               </div>
 
               {order.delivery.delivered_at && (
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex items-center gap-2 text-muted-foreground">
-                    <CheckCircle className="h-4 w-4 flex-shrink-0" />
-                    <span className="font-medium">Delivered On</span>
+                    <CheckCircle className="h-3.5 w-3.5 flex-shrink-0" />
+                    <span className="text-[10px] font-black uppercase tracking-widest">Delivered On</span>
                   </div>
-                  <span className="font-semibold text-emerald-600 dark:text-emerald-400">
+                  <span className="text-xs font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-tight">
                     {new Date(order.delivery.delivered_at).toLocaleDateString(
                       "en-US",
                       {
@@ -140,20 +139,20 @@ export function OrderDeliveryInfo({ order }: { order: IOrder }) {
                 </div>
               )}
 
-              <Separator className="dark:bg-white/5" />
+              <Separator className="bg-border/40" />
               <div>
                 <div className="flex items-center gap-2 text-muted-foreground mb-3">
-                  <MapPin className="h-4 w-4 flex-shrink-0" />
-                  <h3 className="font-bold">Delivery Address</h3>
+                  <MapPin className="h-3.5 w-3.5 flex-shrink-0" />
+                  <h3 className="text-[10px] font-black uppercase tracking-widest">Delivery Address</h3>
                 </div>
-                <div className="ml-6 text-sm text-foreground space-y-1">
+                <div className="ml-5 text-sm font-medium text-foreground space-y-1">
                   {order.delivery.address ? (
                     <>
-                      <p className="font-medium">{order.delivery.address}</p>
+                      <p>{order.delivery.address}</p>
                       {(order.delivery.city ||
                         order.delivery.state ||
                         order.delivery.postal_code) && (
-                        <p>
+                        <p className="opacity-70 text-xs">
                           {[
                             order.delivery.city,
                             order.delivery.state,
@@ -164,11 +163,11 @@ export function OrderDeliveryInfo({ order }: { order: IOrder }) {
                         </p>
                       )}
                       {order.delivery.country && (
-                        <p>{order.delivery.country}</p>
+                        <p className="opacity-70 text-xs">{order.delivery.country}</p>
                       )}
                     </>
                   ) : (
-                    <p className="text-muted-foreground italic">
+                    <p className="text-muted-foreground italic text-xs">
                       No delivery address provided
                     </p>
                   )}
@@ -176,20 +175,15 @@ export function OrderDeliveryInfo({ order }: { order: IOrder }) {
               </div>
             </>
           ) : (
-            <div className="text-center py-8">
-              <div className="w-16 h-16 bg-gray-100 dark:bg-neutral-800 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Truck className="h-8 w-8 text-gray-400 dark:text-neutral-500" />
-              </div>
-              <p className="text-foreground font-medium mb-1">
-                No delivery information yet
-              </p>
-              <p className="text-sm text-muted-foreground">
-                Delivery details will be added once the order is processed
+            <div className="text-center py-6">
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
+                No delivery info yet
               </p>
             </div>
           )}
         </div>
       </Card>
     </motion.div>
+
   );
 }

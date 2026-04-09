@@ -146,7 +146,7 @@ export function OrderDetailsModal({
             Reference: #{displayRef}
             <button
               onClick={handleCopy}
-              className="p-1 hover:bg-accent rounded-md transition-colors text-muted-foreground"
+              className="p-1 hover:bg-accent rounded-sm transition-colors text-muted-foreground"
               title="Copy Full Reference"
             >
               {isCopied ? (
@@ -158,15 +158,15 @@ export function OrderDetailsModal({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-6 mt-4">
+        <div className="space-y-4 mt-4">
           {/* Order Status Overview */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Payment Status */}
-            <div className="group relative overflow-hidden rounded-xl border bg-card/40 dark:bg-muted/10 p-5 transition-all hover:shadow-lg hover:border-primary/30">
+            <div className="group relative overflow-hidden rounded-sm border bg-card/40 dark:bg-muted/10 p-3 transition-all hover: hover:border-primary/30">
               <div className="flex items-start justify-between gap-3 relative z-10">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-3">
-                    <div className="p-2 rounded-lg bg-primary/15 text-primary">
+                    <div className="p-2 rounded-sm bg-primary/15 text-primary">
                       <CreditCard className="h-4 w-4" />
                     </div>
                     <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/80">
@@ -184,15 +184,15 @@ export function OrderDetailsModal({
                   </Badge>
                 </div>
               </div>
-              <div className="absolute -right-6 -bottom-6 h-32 w-32 rounded-full bg-primary/5 blur-3xl transition-all group-hover:bg-primary/10" />
+              <div className="absolute -right-6 -bottom-6 h-32 w-32 rounded-sm bg-primary/5 blur-3xl transition-all group-hover:bg-primary/10" />
             </div>
 
             {/* Order Status */}
-            <div className="group relative overflow-hidden rounded-xl border bg-card/40 dark:bg-muted/10 p-5 transition-all hover:shadow-lg hover:border-blue-500/30">
+            <div className="group relative overflow-hidden rounded-sm border bg-card/40 dark:bg-muted/10 p-5 transition-all hover: hover:border-blue-500/30">
               <div className="flex items-start justify-between gap-3 relative z-10">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-3">
-                    <div className="p-2 rounded-lg bg-blue-500/15 text-blue-500">
+                    <div className="p-2 rounded-sm bg-blue-500/15 text-blue-500">
                       <Package className="h-4 w-4" />
                     </div>
                     <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/80">
@@ -210,15 +210,15 @@ export function OrderDetailsModal({
                   </Badge>
                 </div>
               </div>
-              <div className="absolute -right-6 -bottom-6 h-32 w-32 rounded-full bg-blue-500/5 blur-3xl transition-all group-hover:bg-blue-500/10" />
+              <div className="absolute -right-6 -bottom-6 h-32 w-32 rounded-sm bg-blue-500/5 blur-3xl transition-all group-hover:bg-blue-500/10" />
             </div>
 
             {/* Delivery Status */}
-            <div className="group relative overflow-hidden rounded-xl border bg-card/40 dark:bg-muted/10 p-5 transition-all hover:shadow-lg hover:border-purple-500/30">
+            <div className="group relative overflow-hidden rounded-sm border bg-card/40 dark:bg-muted/10 p-5 transition-all hover: hover:border-purple-500/30">
               <div className="flex items-start justify-between gap-3 relative z-10">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-3">
-                    <div className="p-2 rounded-lg bg-purple-500/15 text-purple-500">
+                    <div className="p-2 rounded-sm bg-purple-500/15 text-purple-500">
                       <Truck className="h-4 w-4" />
                     </div>
                     <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/80">
@@ -236,20 +236,20 @@ export function OrderDetailsModal({
                   </Badge>
                 </div>
               </div>
-              <div className="absolute -right-6 -bottom-6 h-32 w-32 rounded-full bg-purple-500/5 blur-3xl transition-all group-hover:bg-purple-500/10" />
+              <div className="absolute -right-6 -bottom-6 h-32 w-32 rounded-sm bg-purple-500/5 blur-3xl transition-all group-hover:bg-purple-500/10" />
             </div>
           </div>
 
           {/* Buyer Information Section */}
           {order.buyer && (
-            <div className="rounded-xl border bg-card p-5">
+            <div className="rounded-sm border bg-card p-4">
               <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
                 <User className="h-5 w-5 text-primary" />
                 Customer Information
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full overflow-hidden border bg-muted flex-shrink-0">
+                  <div className="w-12 h-12 rounded-sm overflow-hidden border bg-muted flex-shrink-0">
                     {order.buyer.avatar ? (
                       <img
                         src={order.buyer.avatar}
@@ -311,13 +311,13 @@ export function OrderDetailsModal({
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.05 }}
-                  className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl border bg-card hover:bg-accent/50 transition-colors"
+                  className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-sm border bg-card hover:bg-accent/50 transition-colors"
                 >
                   {/* Product Image */}
                   <img
                     src={item.image || "/placeholder-product.png"}
                     alt={item.name}
-                    className="w-20 h-20 sm:w-16 sm:h-16 rounded-lg object-cover border shrink-0"
+                    className="w-20 h-20 sm:w-16 sm:h-16 rounded-sm object-cover border shrink-0"
                   />
 
                   {/* Product Info */}
@@ -347,7 +347,7 @@ export function OrderDetailsModal({
                             <span className="flex items-center gap-1">
                               <span className="font-medium">Color:</span>
                               <span
-                                className="w-4 h-4 rounded-full border inline-block"
+                                className="w-4 h-4 rounded-sm border inline-block"
                                 style={{ backgroundColor: item.color }}
                               />
                             </span>
@@ -469,7 +469,7 @@ export function OrderDetailsModal({
               </div>
 
               {/* Delivery Address Section */}
-              <div className="mt-6 p-4 rounded-xl bg-blue-500/5 border border-blue-500/15">
+              <div className="mt-4 p-3 rounded-sm bg-blue-500/5 border border-blue-500/15">
                 <div className="flex items-center gap-2 text-blue-500 dark:text-blue-400 mb-3">
                   <MapPin className="h-4 w-4" />
                   <h4 className="font-bold text-xs uppercase tracking-widest">
@@ -477,7 +477,7 @@ export function OrderDetailsModal({
                   </h4>
                 </div>
                 {order.delivery.address ? (
-                  <div className="ml-6 space-y-1">
+                  <div className="ml-4 space-y-1">
                     <p className="text-sm font-semibold text-foreground leading-relaxed">
                       {order.delivery.address}
                     </p>
@@ -593,7 +593,7 @@ export function OrderDetailsModal({
                     </span>
                     <button
                       onClick={handleCopy}
-                      className="p-1 hover:bg-accent rounded-md transition-colors text-muted-foreground"
+                      className="p-1 hover:bg-accent rounded-sm transition-colors text-muted-foreground"
                       title="Copy Full Reference"
                     >
                       {isCopied ? (

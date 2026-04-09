@@ -72,7 +72,7 @@ export default function CareersPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/5 dark:bg-emerald-500/10 text-primary dark:text-emerald-400 font-bold text-sm mb-8 border border-primary/10 dark:border-emerald-500/20">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-sm bg-primary/5 dark:bg-emerald-500/10 text-primary dark:text-emerald-400 font-bold text-sm mb-8 border border-primary/10 dark:border-emerald-500/20">
               <Rocket className="w-4 h-4" />
               <span>We are hiring!</span>
             </div>
@@ -91,7 +91,7 @@ export default function CareersPage() {
 
             <Button
               size="lg"
-              className="rounded-full px-8 h-12 text-base font-bold shadow-lg shadow-primary/20 hover:scale-105 transition-transform"
+              className="rounded-sm px-8 h-12 text-base font-bold   hover:scale-105 transition-transform"
             >
               View Open Positions
             </Button>
@@ -120,9 +120,9 @@ export default function CareersPage() {
               <motion.div
                 key={role.id}
                 variants={item}
-                className="group relative bg-white dark:bg-neutral-900 rounded-3xl p-8 border border-zinc-200 dark:border-white/5 hover:border-primary/50 dark:hover:border-emerald-500/50 transition-all duration-300 hover:shadow-2xl hover:shadow-primary/5 dark:hover:shadow-emerald-500/5 hover:-translate-y-1"
+                className="group relative bg-white dark:bg-neutral-900 rounded-sm p-8 border border-zinc-200 dark:border-white/5 hover:border-primary/50 dark:hover:border-emerald-500/50 transition-all duration-300 hover: hover: dark:hover:-emerald-500/5 hover:-translate-y-1"
               >
-                <div className="w-14 h-14 rounded-2xl bg-primary/5 dark:bg-emerald-500/10 flex items-center justify-center text-primary dark:text-emerald-400 mb-6 group-hover:scale-110 transition-transform duration-300">
+                <div className="w-14 h-14 rounded-sm bg-primary/5 dark:bg-emerald-500/10 flex items-center justify-center text-primary dark:text-emerald-400 mb-6 group-hover:scale-110 transition-transform duration-300">
                   {role.icon}
                 </div>
 
@@ -144,7 +144,7 @@ export default function CareersPage() {
                   {role.skills.map((skill) => (
                     <span
                       key={skill}
-                      className="px-3 py-1 bg-zinc-100 dark:bg-white/5 rounded-lg text-xs font-medium text-zinc-600 dark:text-zinc-300"
+                      className="px-3 py-1 bg-zinc-100 dark:bg-white/5 rounded-sm text-xs font-medium text-zinc-600 dark:text-zinc-300"
                     >
                       {skill}
                     </span>
@@ -200,7 +200,7 @@ export default function CareersPage() {
                   },
                 ].map((perk) => (
                   <div key={perk.title} className="flex gap-4 items-start">
-                    <div className="p-2 rounded-lg bg-primary/10 dark:bg-emerald-500/10 text-primary dark:text-emerald-400">
+                    <div className="p-2 rounded-sm bg-primary/10 dark:bg-emerald-500/10 text-primary dark:text-emerald-400">
                       <perk.icon className="w-5 h-5" />
                     </div>
                     <div>
@@ -215,8 +215,8 @@ export default function CareersPage() {
             </div>
 
             <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-purple-500/20 rounded-[3rem] blur-3xl" />
-              <div className="relative bg-zinc-100 dark:bg-neutral-900 rounded-[3rem] p-8 border border-zinc-200 dark:border-white/5 aspect-square flex items-center justify-center">
+              <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-purple-500/20 rounded-sm blur-3xl" />
+              <div className="relative bg-zinc-100 dark:bg-neutral-900 rounded-sm p-8 border border-zinc-200 dark:border-white/5 aspect-square flex items-center justify-center">
                 <div className="text-center">
                   <div className="text-8xl mb-4">🚀</div>
                   <div className="text-2xl font-black">Join the Mission</div>

@@ -1,4 +1,5 @@
 import { WEBSITE_ROUTES } from "@/routes/temp";
+import { Logo } from "./Logo";
 import SmartLink from "./SmartLink";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -11,34 +12,19 @@ import {
   Mail,
   MapPin,
 } from "lucide-react";
-import { useTheme } from "./ThemeContext";
 
 export default function Footer() {
-  const { theme } = useTheme();
   return (
-    <footer className="bg-card text-card-foreground relative overflow-hidden border-t border-border/50 rounded-t-[3rem] mt-12 shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.05)] transition-colors duration-300">
+    <footer className="bg-card text-card-foreground relative overflow-hidden border-t border-border/50 rounded-t-sm mt-12 -[0_-10px_40px_-15px_rgba(0,0,0,0.05)] transition-colors duration-300">
       {/* Background Decor */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-sm blur-[120px] -translate-y-1/2 translate-x-1/2 pointer-events-none" />
 
       <div className="w-full mx-auto px-4 sm:px-6 md:px-14 xl:px-16 pt-20 pb-10 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 mb-16">
           {/* Brand Column */}
           <div className="space-y-6">
             <SmartLink to={WEBSITE_ROUTES.HOME} className="block">
-              <img
-                src={
-                  theme === "dark"
-                    ? "/logos/EasyStore logo with tagline.png"
-                    : "/logos/inline-stripe-transparent.png"
-                }
-                alt="EasyStore logo"
-                className={
-                  theme === "dark"
-                    ? "h-14 w-auto scale-110 origin-left"
-                    : "h-10 w-auto"
-                }
-                loading="lazy"
-              />
+              <Logo size="lg" />
             </SmartLink>
             <p className="text-muted-foreground text-sm leading-relaxed max-w-xs">
               The premium marketplace for verified creators and authentic
@@ -50,7 +36,7 @@ export default function Footer() {
                 <a
                   key={i}
                   href="#"
-                  className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-white transition-all duration-300"
+                  className="w-10 h-10 rounded-sm bg-muted flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-white transition-all duration-300"
                 >
                   <Icon className="w-5 h-5" />
                 </a>
@@ -69,7 +55,7 @@ export default function Footer() {
                   to={WEBSITE_ROUTES.STORES}
                   className="hover:text-primary transition-colors flex items-center gap-2 group"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-primary/0 group-hover:bg-primary transition-colors" />
+                  <span className="w-1.5 h-1.5 rounded-sm bg-primary/0 group-hover:bg-primary transition-colors" />
                   Marketplace
                 </SmartLink>
               </li>
@@ -78,7 +64,7 @@ export default function Footer() {
                   to={WEBSITE_ROUTES.DISCOVERY}
                   className="hover:text-primary transition-colors flex items-center gap-2 group"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-primary/0 group-hover:bg-primary transition-colors" />
+                  <span className="w-1.5 h-1.5 rounded-sm bg-primary/0 group-hover:bg-primary transition-colors" />
                   Discovery
                 </SmartLink>
               </li>
@@ -87,7 +73,7 @@ export default function Footer() {
                   to={WEBSITE_ROUTES.FEATURED}
                   className="hover:text-primary transition-colors flex items-center gap-2 group"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-primary/0 group-hover:bg-primary transition-colors" />
+                  <span className="w-1.5 h-1.5 rounded-sm bg-primary/0 group-hover:bg-primary transition-colors" />
                   Featured Stores
                 </SmartLink>
               </li>
@@ -96,7 +82,7 @@ export default function Footer() {
                   to={WEBSITE_ROUTES.CATEGORIES}
                   className="hover:text-primary transition-colors flex items-center gap-2 group"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-primary/0 group-hover:bg-primary transition-colors" />
+                  <span className="w-1.5 h-1.5 rounded-sm bg-primary/0 group-hover:bg-primary transition-colors" />
                   Categories
                 </SmartLink>
               </li>
@@ -105,7 +91,7 @@ export default function Footer() {
                   to={WEBSITE_ROUTES.TRENDING}
                   className="hover:text-primary transition-colors flex items-center gap-2 group"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-primary/0 group-hover:bg-primary transition-colors" />
+                  <span className="w-1.5 h-1.5 rounded-sm bg-primary/0 group-hover:bg-primary transition-colors" />
                   Trending Products
                 </SmartLink>
               </li>
@@ -114,7 +100,7 @@ export default function Footer() {
                   to={WEBSITE_ROUTES.NEW_ARRIVALS}
                   className="hover:text-primary transition-colors flex items-center gap-2 group"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-primary/0 group-hover:bg-primary transition-colors" />
+                  <span className="w-1.5 h-1.5 rounded-sm bg-primary/0 group-hover:bg-primary transition-colors" />
                   New Arrivals
                 </SmartLink>
               </li>
@@ -130,7 +116,7 @@ export default function Footer() {
                   to={WEBSITE_ROUTES.ABOUT}
                   className="hover:text-primary transition-colors flex items-center gap-2 group"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-primary/0 group-hover:bg-primary transition-colors" />
+                  <span className="w-1.5 h-1.5 rounded-sm bg-primary/0 group-hover:bg-primary transition-colors" />
                   About Us
                 </SmartLink>
               </li>
@@ -139,7 +125,7 @@ export default function Footer() {
                   to={WEBSITE_ROUTES.CAREERS}
                   className="hover:text-primary transition-colors flex items-center gap-2 group"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-primary/0 group-hover:bg-primary transition-colors" />
+                  <span className="w-1.5 h-1.5 rounded-sm bg-primary/0 group-hover:bg-primary transition-colors" />
                   Careers
                 </SmartLink>
               </li>
@@ -148,7 +134,7 @@ export default function Footer() {
                   to="/privacy-policy"
                   className="hover:text-primary transition-colors flex items-center gap-2 group"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-primary/0 group-hover:bg-primary transition-colors" />
+                  <span className="w-1.5 h-1.5 rounded-sm bg-primary/0 group-hover:bg-primary transition-colors" />
                   Privacy Policy
                 </SmartLink>
               </li>
@@ -157,7 +143,7 @@ export default function Footer() {
                   to="/terms-of-service"
                   className="hover:text-primary transition-colors flex items-center gap-2 group"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-primary/0 group-hover:bg-primary transition-colors" />
+                  <span className="w-1.5 h-1.5 rounded-sm bg-primary/0 group-hover:bg-primary transition-colors" />
                   Terms of Service
                 </SmartLink>
               </li>
@@ -174,11 +160,11 @@ export default function Footer() {
             <form className="relative" onSubmit={(e) => e.preventDefault()}>
               <Input
                 placeholder="Enter your email"
-                className="bg-muted/50 border-border text-foreground placeholder:text-muted-foreground rounded-full pr-12 h-12 focus-visible:ring-primary/20"
+                className="bg-muted/50 border-border text-foreground placeholder:text-muted-foreground rounded-sm pr-12 h-12 focus-visible:ring-primary/20"
               />
               <Button
                 size="icon"
-                className="absolute right-1 top-1 h-10 w-10 rounded-full bg-primary text-primary-foreground hover:bg-primary/90"
+                className="absolute right-1 top-1 h-10 w-10 rounded-sm bg-primary text-primary-foreground hover:bg-primary/90"
               >
                 <Send className="w-4 h-4 ml-0.5" />
               </Button>
@@ -191,7 +177,7 @@ export default function Footer() {
               </div>
               <div className="flex items-center gap-3 text-sm text-muted-foreground">
                 <Mail className="w-4 h-4 text-primary" />
-                <span>hello@easystore.com</span>
+                <span>hello@eazystore.com.ng</span>
               </div>
             </div>
           </div>
@@ -200,7 +186,7 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-border/50 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-xs text-muted-foreground">
-            © {new Date().getFullYear()} EasyStore Inc. All rights reserved.
+            © {new Date().getFullYear()} EazyStore Inc. All rights reserved.
           </p>
           <div className="flex gap-6 text-xs text-muted-foreground font-medium">
             <SmartLink to="#" className="hover:text-primary transition-colors">

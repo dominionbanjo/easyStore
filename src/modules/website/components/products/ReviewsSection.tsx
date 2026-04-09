@@ -93,7 +93,7 @@ export default function ReviewsSection({
             <DialogTrigger asChild>
               <Button
                 size="lg"
-                className="rounded-2xl bg-primary text-white hover:bg-primary/90 shadow-xl shadow-primary/10 transition-all font-bold px-8 h-14"
+                className="rounded-sm bg-primary text-white hover:bg-primary/90   transition-all font-bold px-8 h-14"
               >
                 <MessageSquarePlus className="w-5 h-5 mr-3" />
                 Write a Review
@@ -115,8 +115,8 @@ export default function ReviewsSection({
         {/* ─── Rating Highlights (Compact) ─── */}
         {reviews.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <Card className="p-4 rounded-2xl bg-muted/30 border-none flex items-center gap-4">
-              <div className="p-2.5 rounded-xl bg-background shadow-sm text-primary">
+            <Card className="p-4 rounded-sm bg-muted/30 border-none flex items-center gap-4">
+              <div className="p-2.5 rounded-sm bg-background  text-primary">
                 <Star className="w-5 h-5 fill-current" />
               </div>
               <div>
@@ -129,8 +129,8 @@ export default function ReviewsSection({
               </div>
             </Card>
 
-            <Card className="p-4 rounded-2xl bg-muted/30 border-none flex items-center gap-4">
-              <div className="p-2.5 rounded-xl bg-background shadow-sm text-teal-600">
+            <Card className="p-4 rounded-sm bg-muted/30 border-none flex items-center gap-4">
+              <div className="p-2.5 rounded-sm bg-background  text-teal-600">
                 <Filter className="w-5 h-5" />
               </div>
               <div>
@@ -146,8 +146,8 @@ export default function ReviewsSection({
         {/* ─── Reviews List ─── */}
         <div className="space-y-8">
           {reviews.length === 0 ? (
-            <div className="text-center py-20 px-6 rounded-[3rem] border-2 border-dashed border-muted flex flex-col items-center">
-              <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center mb-6">
+            <div className="text-center py-20 px-6 rounded-sm border-2 border-dashed border-muted flex flex-col items-center">
+              <div className="w-20 h-20 rounded-sm bg-muted flex items-center justify-center mb-6">
                 <MessageSquarePlus className="w-10 h-10 text-muted-foreground" />
               </div>
               <h3 className="text-2xl font-bold text-foreground">

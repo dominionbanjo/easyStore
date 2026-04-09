@@ -33,9 +33,9 @@ export function CartItem({
 }: CartItemProps) {
   return (
     <motion.div layout>
-      <Card className="group flex flex-col sm:flex-row gap-4 p-4 sm:p-5 rounded-3xl border sm:border shadow-sm sm:shadow-md bg-white dark:bg-zinc-900 border-zinc-100 dark:border-white/5 relative overflow-hidden transition-all hover:shadow-lg">
+      <Card className="group flex flex-col sm:flex-row gap-4 p-4 sm:p-5 rounded-sm border sm:border  sm: bg-white dark:bg-zinc-900 border-zinc-100 dark:border-white/5 relative overflow-hidden transition-all hover:">
         {/* Image */}
-        <div className="relative h-48 sm:h-32 w-full sm:w-32 shrink-0 rounded-2xl overflow-hidden bg-gray-100 dark:bg-zinc-800">
+        <div className="relative h-48 sm:h-32 w-full sm:w-32 shrink-0 rounded-sm overflow-hidden bg-gray-100 dark:bg-zinc-800">
           <img
             src={item.image ?? "/placeholder.png"}
             alt={item.name}
@@ -57,11 +57,11 @@ export function CartItem({
                     <Badge
                       key={key}
                       variant="secondary"
-                      className="rounded-lg px-2 py-0 h-6 font-bold text-[10px] uppercase tracking-widest bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 border border-zinc-200/50 dark:border-white/5 flex items-center gap-1.5"
+                      className="rounded-sm px-2 py-0 h-6 font-bold text-[10px] uppercase tracking-widest bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 border border-zinc-200/50 dark:border-white/5 flex items-center gap-1.5"
                     >
                       {key.toLowerCase() === "color" && item.color_hex && (
                         <div
-                          className="w-2 h-2 rounded-full border border-black/10"
+                          className="w-2 h-2 rounded-sm border border-black/10"
                           style={{ backgroundColor: item.color_hex }}
                         />
                       )}
@@ -73,7 +73,7 @@ export function CartItem({
                     {item.size && (
                       <Badge
                         variant="secondary"
-                        className="rounded-lg px-2 py-0 h-6 font-bold text-[10px] uppercase tracking-widest bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400"
+                        className="rounded-sm px-2 py-0 h-6 font-bold text-[10px] uppercase tracking-widest bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400"
                       >
                         Size: {item.size}
                       </Badge>
@@ -81,11 +81,11 @@ export function CartItem({
                     {item.color && (
                       <Badge
                         variant="outline"
-                        className="rounded-lg px-2 py-0 h-6 font-bold text-[10px] uppercase tracking-widest border-zinc-200 dark:border-white/10 flex items-center gap-1.5"
+                        className="rounded-sm px-2 py-0 h-6 font-bold text-[10px] uppercase tracking-widest border-zinc-200 dark:border-white/10 flex items-center gap-1.5"
                       >
                         {item.color_hex && (
                           <div
-                            className="w-2 h-2 rounded-full border border-black/10"
+                            className="w-2 h-2 rounded-sm border border-black/10"
                             style={{ backgroundColor: item.color_hex }}
                           />
                         )}
@@ -109,7 +109,7 @@ export function CartItem({
                   item.color,
                 )
               }
-              className="h-9 w-9 rounded-xl text-muted-foreground hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors"
+              className="h-9 w-9 rounded-sm text-muted-foreground hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors"
             >
               <Trash2 className="h-5 w-5" />
             </Button>
@@ -125,7 +125,7 @@ export function CartItem({
               </p>
 
               {/* Quantity Controls */}
-              <div className="flex items-center gap-1 w-fit bg-gray-50 dark:bg-zinc-800/50 rounded-2xl p-1.5 border border-border/50">
+              <div className="flex items-center gap-1 w-fit bg-gray-50 dark:bg-zinc-800/50 rounded-sm p-1.5 border border-border/50">
                 <Button
                   size="icon"
                   variant="ghost"
@@ -139,7 +139,7 @@ export function CartItem({
                       item.color,
                     )
                   }
-                  className="h-8 w-8 rounded-xl hover:bg-white dark:hover:bg-zinc-700 shadow-sm transition-all"
+                  className="h-8 w-8 rounded-sm hover:bg-white dark:hover:bg-zinc-700  transition-all"
                 >
                   <Minus className="h-4 w-4" />
                 </Button>
@@ -161,7 +161,7 @@ export function CartItem({
                       item.color,
                     )
                   }
-                  className="h-8 w-8 rounded-xl hover:bg-white dark:hover:bg-zinc-700 shadow-sm transition-all"
+                  className="h-8 w-8 rounded-sm hover:bg-white dark:hover:bg-zinc-700  transition-all"
                 >
                   <Plus className="h-4 w-4" />
                 </Button>

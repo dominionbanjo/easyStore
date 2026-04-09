@@ -57,13 +57,13 @@ export function SalesTrendChart({ data }: SalesTrendChartProps) {
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-card/95 backdrop-blur-md border border-border/50 p-4 rounded-2xl shadow-2xl">
+        <div className="bg-card/95 backdrop-blur-md border border-border/50 p-4 rounded-sm ">
           <p className="text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">
             {label}
           </p>
           <div className="space-y-1">
             <p className="text-sm font-bold flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-500" />
+              <span className="w-2 h-2 rounded-sm bg-emerald-500" />
               Revenue:{" "}
               <span className="text-emerald-500 font-black">
                 ₦{payload[0].value.toLocaleString()}
@@ -71,7 +71,7 @@ export function SalesTrendChart({ data }: SalesTrendChartProps) {
             </p>
             {payload[1] && (
               <p className="text-sm font-bold flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-blue-500" />
+                <span className="w-2 h-2 rounded-sm bg-blue-500" />
                 Orders:{" "}
                 <span className="text-blue-500 font-black">
                   {payload[1].value}
@@ -86,7 +86,7 @@ export function SalesTrendChart({ data }: SalesTrendChartProps) {
   };
 
   return (
-    <Card className="border-none shadow-xl bg-card overflow-hidden">
+    <Card className="border-none  bg-card overflow-hidden">
       <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border/50 bg-muted/20">
         <div>
           <CardTitle className="text-xl font-black flex items-center gap-2">
@@ -98,13 +98,13 @@ export function SalesTrendChart({ data }: SalesTrendChartProps) {
           </CardDescription>
         </div>
 
-        <div className="flex bg-muted/50 p-1 rounded-xl border border-border/50">
+        <div className="flex bg-muted/50 p-1 rounded-sm border border-border/50">
           <button
             onClick={() => setActiveMetric("revenue")}
             className={cn(
-              "px-4 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-2",
+              "px-4 py-1.5 rounded-sm text-xs font-bold transition-all flex items-center gap-2",
               activeMetric === "revenue"
-                ? "bg-card text-emerald-500 shadow-sm"
+                ? "bg-card text-emerald-500 "
                 : "text-muted-foreground hover:text-foreground",
             )}
           >
@@ -113,9 +113,9 @@ export function SalesTrendChart({ data }: SalesTrendChartProps) {
           <button
             onClick={() => setActiveMetric("orders")}
             className={cn(
-              "px-4 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-2",
+              "px-4 py-1.5 rounded-sm text-xs font-bold transition-all flex items-center gap-2",
               activeMetric === "orders"
-                ? "bg-card text-blue-500 shadow-sm"
+                ? "bg-card text-blue-500 "
                 : "text-muted-foreground hover:text-foreground",
             )}
           >

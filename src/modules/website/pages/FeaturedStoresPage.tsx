@@ -25,11 +25,11 @@ export default function FeaturedStoresPage() {
   return (
     <div className="min-h-screen bg-white dark:bg-neutral-950 transition-colors duration-300 pb-24">
       {/* Hero Header */}
-      <section className="relative overflow-hidden pt-36 pb-20 px-4 mb-12">
+      <section className="relative overflow-hidden pt-20 md:pt-28 pb-16 md:pb-24 px-4 mb-12">
         <div className="absolute top-0 center w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent dark:from-emerald-900/10" />
 
         <div className="w-full mx-auto text-center relative z-10 transition-colors">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/5 dark:bg-emerald-500/10 text-primary dark:text-emerald-400 font-bold text-sm mb-8 border border-primary/10 dark:border-emerald-500/20">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-sm bg-primary/5 dark:bg-emerald-500/10 text-primary dark:text-emerald-400 font-bold text-sm mb-8 border border-primary/10 dark:border-emerald-500/20">
             <Store className="w-4 h-4" />
             <span>Top Rated Sellers</span>
           </div>
@@ -42,7 +42,7 @@ export default function FeaturedStoresPage() {
           </h1>
 
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed font-medium">
-            Explore the best sellers on EasyStore. Hand-picked for quality,
+            Explore the best sellers on EazyStore. Hand-picked for quality,
             reliability, and excellent service.
           </p>
         </div>
@@ -53,7 +53,7 @@ export default function FeaturedStoresPage() {
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[...Array(6)].map((_, i) => (
-              <Skeleton key={i} className="h-64 w-full rounded-3xl" />
+              <Skeleton key={i} className="h-64 w-full rounded-sm" />
             ))}
           </div>
         ) : (

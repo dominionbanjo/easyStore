@@ -29,7 +29,7 @@ export default function AboutPage() {
           >
             <Badge
               variant="secondary"
-              className="px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium bg-primary/10 text-primary border-0 mb-2 sm:mb-4"
+              className="px-4 py-1.5 rounded-sm text-xs sm:text-sm font-medium bg-primary/10 text-primary border-0 mb-2 sm:mb-4"
             >
               Redefining Digital Commerce
             </Badge>
@@ -38,7 +38,7 @@ export default function AboutPage() {
               <span className="text-primary italic">Global Marketplaces</span>
             </h1>
             <p className="text-base sm:text-lg md:text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto px-2">
-              EasyStore is more than a platform; it's a bridge connecting
+              EazyStore is more than a platform; it's a bridge connecting
               visionary sellers with customers worldwide. We are building the
               infrastructure for a seamless, transparent, and connected digital
               economy.
@@ -73,9 +73,9 @@ export default function AboutPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              className="bg-white dark:bg-neutral-900 rounded-[2rem] p-6 sm:p-8 shadow-sm border border-border/50 dark:border-white/10 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+              className="bg-white dark:bg-neutral-900 rounded-sm p-6 sm:p-8  border border-border/50 dark:border-white/10 hover: hover:-translate-y-1 transition-all duration-300"
             >
-              <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-primary/5 flex items-center justify-center text-primary mb-5 md:mb-6">
+              <div className="w-10 h-10 md:w-12 md:h-12 rounded-sm bg-primary/5 flex items-center justify-center text-primary mb-5 md:mb-6">
                 {item.icon}
               </div>
               <h3 className="text-lg md:text-xl font-bold mb-3">
@@ -99,11 +99,11 @@ export default function AboutPage() {
               viewport={{ once: true }}
               className="relative order-2 md:order-1"
             >
-              <div className="aspect-square sm:aspect-[4/5] md:aspect-square bg-muted rounded-[2rem] md:rounded-[2.5rem] overflow-hidden relative shadow-2xl">
+              <div className="aspect-square sm:aspect-[4/5] md:aspect-square bg-muted rounded-sm md:rounded-sm overflow-hidden relative ">
                 {/* Placeholder for an actual CEO image, stylized abstractly for now */}
                 <div className="absolute inset-0 bg-neutral-900 flex items-center justify-center text-white">
                   <div className="text-center p-6 md:p-8">
-                    <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-primary/20 mx-auto mb-4 md:mb-6 flex items-center justify-center text-2xl md:text-3xl font-black text-primary border-4 border-white/10">
+                    <div className="w-20 h-20 md:w-24 md:h-24 rounded-sm bg-primary/20 mx-auto mb-4 md:mb-6 flex items-center justify-center text-2xl md:text-3xl font-black text-primary border-4 border-white/10">
                       DA
                     </div>
                     <h3 className="text-xl md:text-2xl font-bold">
@@ -117,8 +117,8 @@ export default function AboutPage() {
                 </div>
               </div>
               {/* Decorative elements */}
-              <div className="hidden sm:block absolute -top-10 -left-10 w-40 h-40 bg-primary/10 rounded-full blur-3xl -z-10" />
-              <div className="hidden sm:block absolute -bottom-10 -right-10 w-40 h-40 bg-primary/10 rounded-full blur-3xl -z-10" />
+              <div className="hidden sm:block absolute -top-10 -left-10 w-40 h-40 bg-primary/10 rounded-sm blur-3xl -z-10" />
+              <div className="hidden sm:block absolute -bottom-10 -right-10 w-40 h-40 bg-primary/10 rounded-sm blur-3xl -z-10" />
             </motion.div>
 
             <div className="space-y-6 md:space-y-8 order-1 md:order-2">
@@ -136,7 +136,7 @@ export default function AboutPage() {
                   Visionary Leadership
                 </h2>
                 <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
-                  "At EasyStore, we aren't just building software; we are
+                  "At EazyStore, we aren't just building software; we are
                   cultivating an ecosystem. My goal is to bridge the gap between
                   complex engineering and intuitive human experiences, creating
                   a platform that empowers users to thrive in the digital age."
@@ -158,7 +158,7 @@ export default function AboutPage() {
                 <div className="flex flex-col sm:flex-row flex-wrap gap-4">
                   <Button
                     variant="outline"
-                    className="rounded-full h-10 sm:h-12 px-4 sm:px-6 gap-2 border-border/50 dark:border-white/10 hover:bg-neutral-50 dark:hover:bg-neutral-800 hover:text-primary transition-colors text-xs sm:text-sm overflow-hidden"
+                    className="rounded-sm h-10 sm:h-12 px-4 sm:px-6 gap-2 border-border/50 dark:border-white/10 hover:bg-neutral-50 dark:hover:bg-neutral-800 hover:text-primary transition-colors text-xs sm:text-sm overflow-hidden"
                   >
                     <Mail className="w-4 h-4 shrink-0" />
                     <a
@@ -170,7 +170,7 @@ export default function AboutPage() {
                   </Button>
                   <Button
                     variant="outline"
-                    className="rounded-full h-10 sm:h-12 px-4 sm:px-6 gap-2 border-border/50 dark:border-white/10 hover:bg-neutral-50 dark:hover:bg-neutral-800 hover:text-primary transition-colors text-xs sm:text-sm"
+                    className="rounded-sm h-10 sm:h-12 px-4 sm:px-6 gap-2 border-border/50 dark:border-white/10 hover:bg-neutral-50 dark:hover:bg-neutral-800 hover:text-primary transition-colors text-xs sm:text-sm"
                   >
                     <Phone className="w-4 h-4 shrink-0" />
                     <a href="tel:+2347063442580">+234 706 344 2580</a>
@@ -179,7 +179,7 @@ export default function AboutPage() {
                     <Button
                       size="icon"
                       variant="ghost"
-                      className="rounded-full w-10 sm:w-12 h-10 sm:h-12 hover:bg-primary/10 hover:text-primary"
+                      className="rounded-sm w-10 sm:w-12 h-10 sm:h-12 hover:bg-primary/10 hover:text-primary"
                       asChild
                     >
                       <a
@@ -193,7 +193,7 @@ export default function AboutPage() {
                     <Button
                       size="icon"
                       variant="ghost"
-                      className="rounded-full w-10 sm:w-12 h-10 sm:h-12 hover:bg-primary/10 hover:text-primary"
+                      className="rounded-sm w-10 sm:w-12 h-10 sm:h-12 hover:bg-primary/10 hover:text-primary"
                       asChild
                     >
                       <a
@@ -214,7 +214,7 @@ export default function AboutPage() {
 
       {/* ──────────────── STATISTICS & CTA ──────────────── */}
       <section className="w-full mx-auto px-4 sm:px-6 py-16 md:py-24">
-        <div className="rounded-[2rem] sm:rounded-[3rem] bg-neutral-900 overflow-hidden relative">
+        <div className="rounded-sm sm:rounded-sm bg-neutral-900 overflow-hidden relative">
           <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent,rgba(255,255,255,0.05),transparent)]" />
 
           <div className="grid md:grid-cols-2 items-center">
@@ -224,9 +224,9 @@ export default function AboutPage() {
               </h2>
               <p className="text-neutral-400 text-base sm:text-lg max-w-md leading-relaxed">
                 Join thousands of merchants who are transforming their digital
-                presence with EasyStore's premium infrastructure.
+                presence with EazyStore's premium infrastructure.
               </p>
-              <Button className="w-full sm:w-auto h-12 sm:h-14 px-8 rounded-full bg-white text-black hover:bg-neutral-200 font-bold text-base sm:text-lg gap-2 group">
+              <Button className="w-full sm:w-auto h-12 sm:h-14 px-8 rounded-sm bg-white text-black hover:bg-neutral-200 font-bold text-base sm:text-lg gap-2 group">
                 Start Your Journey
                 <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
               </Button>
@@ -242,7 +242,7 @@ export default function AboutPage() {
                 ].map((stat, i) => (
                   <Card
                     key={i}
-                    className="bg-neutral-800/50 backdrop-blur-sm border-white/5 border text-center p-4 sm:p-6 rounded-2xl sm:rounded-3xl"
+                    className="bg-neutral-800/50 backdrop-blur-sm border-white/5 border text-center p-4 sm:p-6 rounded-sm sm:rounded-sm"
                   >
                     <h4 className="text-2xl sm:text-3xl font-black text-white mb-1">
                       {stat.value}
@@ -255,7 +255,7 @@ export default function AboutPage() {
               </div>
 
               {/* Decorative Gradients */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 sm:w-64 h-48 sm:h-64 bg-primary/20 rounded-full blur-[60px] sm:blur-[80px]" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 sm:w-64 h-48 sm:h-64 bg-primary/20 rounded-sm blur-[60px] sm:blur-[80px]" />
             </div>
           </div>
         </div>

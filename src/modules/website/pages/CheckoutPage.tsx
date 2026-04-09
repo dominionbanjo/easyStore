@@ -114,8 +114,8 @@ export default function CheckoutPage() {
     <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#020617] pb-20 sm:pb-32 transition-colors duration-500 relative overflow-hidden">
       {/* Background Decorative Elements */}
       <div className="absolute top-0 left-0 w-full h-[600px] bg-gradient-to-b from-primary/5 to-transparent pointer-events-none" />
-      <div className="absolute -top-[10%] -right-[5%] w-[40%] h-[40%] bg-primary/5 blur-[120px] rounded-full pointer-events-none" />
-      <div className="absolute top-[20%] -left-[10%] w-[30%] h-[30%] bg-emerald-500/5 blur-[100px] rounded-full pointer-events-none" />
+      <div className="absolute -top-[10%] -right-[5%] w-[40%] h-[40%] bg-primary/5 blur-[120px] rounded-sm pointer-events-none" />
+      <div className="absolute top-[20%] -left-[10%] w-[30%] h-[30%] bg-emerald-500/5 blur-[100px] rounded-sm pointer-events-none" />
 
       {/* ───────── MODALS ───────── */}
       <AddressRequiredModal
@@ -142,14 +142,14 @@ export default function CheckoutPage() {
               <Button
                 variant="ghost"
                 onClick={() => navigate(-1)}
-                className="group rounded-2xl h-10 px-5 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-md border border-border/40 hover:bg-white dark:hover:bg-zinc-800 transition-all font-black text-[10px] tracking-widest uppercase"
+                className="group rounded-sm h-10 px-5 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-md border border-border/40 hover:bg-white dark:hover:bg-zinc-800 transition-all font-black text-[10px] tracking-widest uppercase"
               >
                 <ArrowLeft className="h-4 w-4 mr-2 transition-transform group-hover:-translate-x-1" />
                 Return to Shopping
               </Button>
               <div className="space-y-2">
                 <div className="flex items-center gap-3">
-                  <div className="h-1.5 w-10 bg-primary rounded-full" />
+                  <div className="h-1.5 w-10 bg-primary rounded-sm" />
                   <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">
                     Final Stage
                   </p>
@@ -210,13 +210,13 @@ export default function CheckoutPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
-                className="p-6 sm:p-8 rounded-[1.5rem] sm:rounded-[2.5rem] bg-background border border-border/40 shadow-xl overflow-hidden relative group"
+                className="p-6 sm:p-8 rounded-sm sm:rounded-sm bg-background border border-border/40  overflow-hidden relative group"
               >
                 <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:scale-110 transition-transform duration-700">
                   <ShieldCheck className="h-32 w-32 rotate-12" />
                 </div>
                 <div className="flex flex-col sm:flex-row gap-6 sm:gap-8 relative z-10">
-                  <div className="w-14 h-14 sm:w-16 sm:h-16 bg-primary/10 rounded-2xl sm:rounded-[1.5rem] flex items-center justify-center shrink-0 shadow-inner">
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 bg-primary/10 rounded-sm sm:rounded-sm flex items-center justify-center shrink-0 ">
                     <ShieldCheck className="h-7 w-7 sm:h-8 sm:w-8 text-primary" />
                   </div>
                   <div className="space-y-3">
@@ -231,7 +231,7 @@ export default function CheckoutPage() {
                       and will be active shortly.
                     </p>
                     <div className="flex items-center gap-2 pt-1">
-                      <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                      <div className="h-1.5 w-1.5 rounded-sm bg-emerald-500 animate-pulse" />
                       <span className="text-[10px] font-black uppercase tracking-widest text-emerald-600">
                         Encrypted Tunnel Active
                       </span>

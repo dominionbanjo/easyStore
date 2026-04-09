@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { ProductShareButton } from "./ProductShareButton";
 
 import { useAddItemToCartMutation } from "@/services/cartApi";
 import {
@@ -262,14 +263,18 @@ export default function ProductInfoSidebar({
       <div className="space-y-4 px-1">
         <div className="space-y-2">
           <div className="flex items-center justify-between gap-4">
-            <Badge className="bg-primary/10 text-primary hover:bg-primary/20 border-none px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider shrink-0">
+            <Badge className="bg-primary/10 text-primary hover:bg-primary/20 border-none px-3 py-1 rounded-sm text-xs font-bold uppercase tracking-wider shrink-0">
               {product.category}
             </Badge>
-            <div className="flex items-center gap-1.5 bg-yellow-50 dark:bg-yellow-950/30 px-2.5 py-1 rounded-full border border-yellow-200 dark:border-yellow-900/50 shrink-0">
+            <div className="flex items-center gap-1.5 bg-yellow-50 dark:bg-yellow-950/30 px-2.5 py-1 rounded-sm border border-yellow-200 dark:border-yellow-900/50 shrink-0">
               <Star className="h-3.5 w-3.5 fill-yellow-500 text-yellow-500" />
               <span className="text-sm font-black text-yellow-700 dark:text-yellow-400">
                 {product.rating.toFixed(1)}
               </span>
+            </div>
+            
+            <div className="ms-auto flex items-center justify-end border-l border-border/40 pl-4 ml-2">
+              <ProductShareButton product={product} />
             </div>
           </div>
           <h1 className="text-3xl md:text-4xl font-black tracking-tight text-foreground leading-[1.1]">
@@ -289,12 +294,12 @@ export default function ProductInfoSidebar({
             )}
           </div>
           {currentStock > 0 ? (
-            <div className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-bold text-sm bg-emerald-50 dark:bg-emerald-950/30 px-3 py-1 rounded-full border border-emerald-100 dark:border-emerald-900/50">
+            <div className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-bold text-sm bg-emerald-50 dark:bg-emerald-950/30 px-3 py-1 rounded-sm border border-emerald-100 dark:border-emerald-900/50">
               <PackageCheck className="w-4 h-4" />
               In Stock {activeVariant && `(${currentStock} left)`}
             </div>
           ) : (
-            <div className="flex items-center gap-1.5 text-rose-600 dark:text-rose-400 font-bold text-sm bg-rose-50 dark:bg-rose-950/30 px-3 py-1 rounded-full border border-rose-100 dark:border-rose-900/50">
+            <div className="flex items-center gap-1.5 text-rose-600 dark:text-rose-400 font-bold text-sm bg-rose-50 dark:bg-rose-950/30 px-3 py-1 rounded-sm border border-rose-100 dark:border-rose-900/50">
               Out of Stock
             </div>
           )}
@@ -313,7 +318,7 @@ export default function ProductInfoSidebar({
                 key={i}
                 className="flex items-center gap-2 text-xs font-medium text-foreground/80"
               >
-                <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                <div className="w-1.5 h-1.5 rounded-sm bg-primary" />
                 {h}
               </div>
             ))}
@@ -360,9 +365,9 @@ export default function ProductInfoSidebar({
                       }
                       disabled={!hasStock}
                       className={cn(
-                        "min-w-[50px] h-11 px-4 rounded-xl text-sm font-bold transition-all duration-200 border-2 relative",
+                        "min-w-[50px] h-11 px-4 rounded-sm text-sm font-bold transition-all duration-200 border-2 relative",
                         isSelected
-                          ? "bg-primary text-white border-primary shadow-lg shadow-primary/20 scale-105"
+                          ? "bg-primary text-white border-primary   scale-105"
                           : hasStock
                             ? "bg-background text-foreground border-border hover:border-primary/50"
                             : "bg-muted text-muted-foreground border-border cursor-not-allowed opacity-40 line-through",
@@ -370,7 +375,7 @@ export default function ProductInfoSidebar({
                     >
                       {value}
                       {isSelected && (
-                        <Check className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 bg-primary text-white rounded-full p-0.5" />
+                        <Check className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 bg-primary text-white rounded-sm p-0.5" />
                       )}
                     </button>
                   );
@@ -399,14 +404,14 @@ export default function ProductInfoSidebar({
                     type="button"
                     onClick={() => setSelectedColor(color)}
                     className={cn(
-                      "group relative w-10 h-10 rounded-full flex items-center justify-center p-0.5 transition-all duration-300",
+                      "group relative w-10 h-10 rounded-sm flex items-center justify-center p-0.5 transition-all duration-300",
                       isSelected
                         ? "ring-2 ring-primary ring-offset-2"
                         : "ring-1 ring-border ring-offset-0 hover:ring-2 hover:ring-primary/40 hover:ring-offset-1",
                     )}
                   >
                     <div
-                      className="w-full h-full rounded-full border border-black/5"
+                      className="w-full h-full rounded-sm border border-black/5"
                       style={{ backgroundColor: color.hex }}
                     />
                     {isSelected && (
@@ -460,9 +465,9 @@ export default function ProductInfoSidebar({
                     onClick={() => !outOfStock && setSelectedSize(size)}
                     disabled={outOfStock}
                     className={cn(
-                      "min-w-[50px] h-11 px-4 rounded-xl text-sm font-bold transition-all duration-200 border-2",
+                      "min-w-[50px] h-11 px-4 rounded-sm text-sm font-bold transition-all duration-200 border-2",
                       isSelected
-                        ? "bg-primary text-white border-primary shadow-lg shadow-primary/20 scale-105"
+                        ? "bg-primary text-white border-primary   scale-105"
                         : outOfStock
                           ? "bg-muted text-muted-foreground border-border cursor-not-allowed opacity-40 line-through"
                           : "bg-background text-foreground border-border hover:border-primary/50",
@@ -488,13 +493,13 @@ export default function ProductInfoSidebar({
             className="px-1 -mt-2"
           >
             {activeVariant.stock <= 0 ? (
-              <p className="text-rose-500 text-xs font-black flex items-center gap-1.5 bg-rose-500/5 py-1.5 px-3 rounded-lg border border-rose-500/10 w-fit">
-                <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
+              <p className="text-rose-500 text-xs font-black flex items-center gap-1.5 bg-rose-500/5 py-1.5 px-3 rounded-sm border border-rose-500/10 w-fit">
+                <span className="w-1.5 h-1.5 rounded-sm bg-rose-500 animate-pulse" />
                 This combination is out of stock
               </p>
             ) : activeVariant.stock <= 5 ? (
               <div className="flex flex-col gap-1">
-                <p className="text-amber-600 dark:text-amber-400 text-xs font-black flex items-center gap-2 bg-amber-500/5 py-2 px-3 rounded-xl border border-amber-500/20 w-fit shadow-sm">
+                <p className="text-amber-600 dark:text-amber-400 text-xs font-black flex items-center gap-2 bg-amber-500/5 py-2 px-3 rounded-sm border border-amber-500/20 w-fit ">
                   <motion.span
                     animate={{ scale: [1, 1.2, 1] }}
                     transition={{ repeat: Infinity, duration: 2 }}
@@ -506,7 +511,7 @@ export default function ProductInfoSidebar({
                 </p>
               </div>
             ) : (
-              <p className="text-emerald-600 dark:text-emerald-400 text-xs font-black flex items-center gap-2 bg-emerald-500/5 py-2 px-3 rounded-xl border border-emerald-500/10 w-fit">
+              <p className="text-emerald-600 dark:text-emerald-400 text-xs font-black flex items-center gap-2 bg-emerald-500/5 py-2 px-3 rounded-sm border border-emerald-500/10 w-fit">
                 <PackageCheck className="w-4 h-4" />
                 {activeVariant.stock} items available in stock
               </p>
@@ -519,11 +524,11 @@ export default function ProductInfoSidebar({
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
           {/* Quantity Selector */}
-          <div className="bg-muted/50 dark:bg-neutral-800 rounded-2xl flex items-center justify-between p-1 border border-border/40 dark:border-white/10 h-14 sm:w-fit">
+          <div className="bg-muted/50 dark:bg-neutral-800 rounded-sm flex items-center justify-between p-1 border border-border/40 dark:border-white/10 h-14 sm:w-fit">
             <Button
               variant="ghost"
               size="icon"
-              className="rounded-xl h-12 w-12 hover:bg-background dark:hover:bg-neutral-700 shadow-xs text-muted-foreground"
+              className="rounded-sm h-12 w-12 hover:bg-background dark:hover:bg-neutral-700  text-muted-foreground"
               onClick={() => setQuantity((q) => Math.max(1, q - 1))}
             >
               <Minus className="h-4 w-4" />
@@ -534,7 +539,7 @@ export default function ProductInfoSidebar({
             <Button
               variant="ghost"
               size="icon"
-              className="rounded-xl h-12 w-12 hover:bg-background dark:hover:bg-neutral-700 shadow-xs text-muted-foreground"
+              className="rounded-sm h-12 w-12 hover:bg-background dark:hover:bg-neutral-700  text-muted-foreground"
               onClick={() =>
                 setQuantity((q) => Math.min(q + 1, currentStock || 999))
               }
@@ -553,7 +558,7 @@ export default function ProductInfoSidebar({
                   (!allOptionsSelected || (matchedVariant?.stock ?? 0) <= 0))
               }
               onClick={handleAddToCart}
-              className="flex-1 rounded-[1.25rem] bg-emerald-600 text-white hover:bg-emerald-700 h-14 text-base font-black shadow-xl shadow-emerald-200/20 group relative overflow-hidden active:scale-95 transition-all"
+              className="flex-1 rounded-sm bg-emerald-600 text-white hover:bg-emerald-700 h-14 text-base font-black  -emerald-200/20 group relative overflow-hidden active:scale-95 transition-all"
             >
               <AnimatePresence mode="wait">
                 {addingToCart ? (
@@ -564,7 +569,7 @@ export default function ProductInfoSidebar({
                     exit={{ opacity: 0, y: -10 }}
                     className="flex items-center gap-2"
                   >
-                    <div className="h-5 w-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    <div className="h-5 w-5 border-2 border-white/30 border-t-white rounded-sm animate-spin" />
                     Adding...
                   </motion.div>
                 ) : (
@@ -592,9 +597,9 @@ export default function ProductInfoSidebar({
               onClick={toggleWishlist}
               title={liked ? "Remove from Favorites" : "Add to Favorites"}
               className={cn(
-                "h-14 w-14 shrink-0 rounded-[1.25rem] border-2 transition-all active:scale-90",
+                "h-14 w-14 shrink-0 rounded-sm border-2 transition-all active:scale-90",
                 liked
-                  ? "bg-rose-50 dark:bg-rose-950/30 border-rose-100 dark:border-rose-900/50 text-rose-500 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-950/50 shadow-lg shadow-rose-200/20 dark:shadow-rose-900/20"
+                  ? "bg-rose-50 dark:bg-rose-950/30 border-rose-100 dark:border-rose-900/50 text-rose-500 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-950/50  -rose-200/20 dark:-rose-900/20"
                   : "hover:border-primary/50 text-muted-foreground",
               )}
             >
@@ -611,7 +616,7 @@ export default function ProductInfoSidebar({
         {/* ─── Trust Factors ─── */}
         <div className="grid grid-cols-2 gap-4 pt-4 border-t border-border/40">
           <div className="flex items-start gap-2.5">
-            <div className="p-2 rounded-xl bg-orange-50 dark:bg-orange-950/30 text-orange-600 dark:text-orange-400">
+            <div className="p-2 rounded-sm bg-orange-50 dark:bg-orange-950/30 text-orange-600 dark:text-orange-400">
               <Store className="w-5 h-5" />
             </div>
             <div>
@@ -627,7 +632,7 @@ export default function ProductInfoSidebar({
             </div>
           </div>
           <div className="flex items-start gap-2.5">
-            <div className="p-2 rounded-xl bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400">
+            <div className="p-2 rounded-sm bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400">
               <ShieldCheck className="w-5 h-5" />
             </div>
             <div>
@@ -641,7 +646,7 @@ export default function ProductInfoSidebar({
           </div>
         </div>
 
-        <div className="flex items-center justify-between px-4 py-3 rounded-2xl bg-muted/30 dark:bg-neutral-800/50 border border-border/40 dark:border-white/10">
+        <div className="flex items-center justify-between px-4 py-3 rounded-sm bg-muted/30 dark:bg-neutral-800/50 border border-border/40 dark:border-white/10">
           <div className="flex items-center gap-2 text-xs font-bold text-muted-foreground">
             <Truck className="w-4 h-4 text-primary" />
             Standard Shipping Available

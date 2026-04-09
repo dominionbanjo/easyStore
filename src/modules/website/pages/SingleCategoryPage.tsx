@@ -53,14 +53,14 @@ export default function CategoryDetailsPage() {
                 <Skeleton className="h-16 w-96" />
                 <Skeleton className="h-6 w-[500px]" />
               </div>
-              <Skeleton className="h-24 w-32 rounded-[2rem]" />
+              <Skeleton className="h-24 w-32 rounded-sm" />
             </div>
           </div>
         </div>
         <div className="w-full mx-auto px-1.5 sm:px-4 py-16">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-8">
             {Array.from({ length: 8 }).map((_, i) => (
-              <Skeleton key={i} className="h-[400px] rounded-[2.5rem]" />
+              <Skeleton key={i} className="h-[400px] rounded-sm" />
             ))}
           </div>
         </div>
@@ -72,7 +72,7 @@ export default function CategoryDetailsPage() {
   if (isError) {
     return (
       <section className="min-h-[70vh] flex flex-col items-center justify-center text-center p-4 bg-white dark:bg-neutral-950">
-        <div className="w-24 h-24 bg-rose-500/10 dark:bg-rose-500/10 rounded-full flex items-center justify-center mb-8 ring-8 ring-rose-500/5">
+        <div className="w-24 h-24 bg-rose-500/10 dark:bg-rose-500/10 rounded-sm flex items-center justify-center mb-8 ring-8 ring-rose-500/5">
           <PackageOpen className="h-12 w-12 text-rose-500" />
         </div>
         <h2 className="text-3xl font-black text-foreground tracking-tight">
@@ -103,7 +103,7 @@ export default function CategoryDetailsPage() {
               className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-8 px-0"
             >
               {Array.from({ length: 8 }).map((_, i) => (
-                <Skeleton key={i} className="h-[400px] rounded-[2.5rem]" />
+                <Skeleton key={i} className="h-[400px] rounded-sm" />
               ))}
             </motion.div>
           ) : products.length > 0 ? (
@@ -184,9 +184,9 @@ export default function CategoryDetailsPage() {
               key="empty"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-center py-32 bg-white/50 dark:bg-neutral-900/40 backdrop-blur-xl rounded-[3rem] border border-zinc-200 dark:border-white/5 shadow-sm px-4"
+              className="text-center py-32 bg-white/50 dark:bg-neutral-900/40 backdrop-blur-xl rounded-sm border border-zinc-200 dark:border-white/5  px-4"
             >
-              <div className="w-24 h-24 bg-primary/10 dark:bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-8 ring-8 ring-primary/5 dark:ring-emerald-500/5">
+              <div className="w-24 h-24 bg-primary/10 dark:bg-emerald-500/10 rounded-sm flex items-center justify-center mx-auto mb-8 ring-8 ring-primary/5 dark:ring-emerald-500/5">
                 <Search className="h-12 w-12 text-primary dark:text-emerald-400" />
               </div>
               <h3 className="text-3xl font-black text-foreground tracking-tight">

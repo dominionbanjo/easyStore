@@ -23,7 +23,7 @@ export default function PaymentOption({
     <motion.div
       whileTap={{ scale: 0.99 }}
       onClick={onClick}
-      className={`p-3 rounded-md border cursor-pointer transition ${
+      className={`p-3 rounded-sm border cursor-pointer transition ${
         active
           ? "border-primary bg-primary/5"
           : "border-gray-200 hover:bg-gray-50"

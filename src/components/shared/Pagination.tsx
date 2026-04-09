@@ -64,7 +64,7 @@ export function Pagination({
           key={1}
           variant="outline"
           size="icon"
-          className="h-9 w-9 text-sm font-medium rounded-xl border-border/40 hover:bg-muted/50"
+          className="h-9 w-9 text-sm font-medium rounded-sm border-border/40 hover:bg-muted/50"
           onClick={() => handlePageChange(1)}
         >
           1
@@ -90,9 +90,9 @@ export function Pagination({
           variant={i === activePage ? "default" : "outline"}
           size="icon"
           className={cn(
-            "h-9 w-9 text-sm font-medium rounded-xl transition-all duration-200",
+            "h-9 w-9 text-sm font-medium rounded-sm transition-all duration-200",
             i === activePage
-              ? "shadow-lg shadow-primary/20 scale-105 z-10"
+              ? "  scale-105 z-10"
               : "border-border/40 hover:bg-muted/50 text-muted-foreground hover:text-foreground",
           )}
           onClick={() => handlePageChange(i)}
@@ -119,7 +119,7 @@ export function Pagination({
           key={pages}
           variant="outline"
           size="icon"
-          className="h-9 w-9 text-sm font-medium rounded-xl border-border/40 hover:bg-muted/50"
+          className="h-9 w-9 text-sm font-medium rounded-sm border-border/40 hover:bg-muted/50"
           onClick={() => handlePageChange(pages)}
         >
           {pages}
@@ -132,11 +132,11 @@ export function Pagination({
 
   return (
     <div className="flex items-center justify-center py-8">
-      <div className="flex items-center gap-1.5 p-1.5 bg-background border border-border/40 rounded-2xl shadow-sm max-w-full overflow-hidden">
+      <div className="flex items-center gap-1.5 p-1.5 bg-background border border-border/40 rounded-sm  max-w-full overflow-hidden">
         <Button
           variant="outline"
           size="icon"
-          className="h-9 w-9 shrink-0 rounded-xl border-border/40 text-muted-foreground hover:bg-muted/50 disabled:opacity-30"
+          className="h-9 w-9 shrink-0 rounded-sm border-border/40 text-muted-foreground hover:bg-muted/50 disabled:opacity-30"
           disabled={!hasPrev && activePage <= 1}
           onClick={() => handlePageChange(activePage - 1)}
           aria-label="Previous page"
@@ -151,7 +151,7 @@ export function Pagination({
         <Button
           variant="outline"
           size="icon"
-          className="h-9 w-9 shrink-0 rounded-xl border-border/40 text-muted-foreground hover:bg-muted/50 disabled:opacity-30"
+          className="h-9 w-9 shrink-0 rounded-sm border-border/40 text-muted-foreground hover:bg-muted/50 disabled:opacity-30"
           disabled={!hasNext && activePage >= pages}
           onClick={() => handlePageChange(activePage + 1)}
           aria-label="Next page"

@@ -105,7 +105,7 @@ export default function SuperAdminUsersPage() {
               setSearch(e.target.value);
               setPage(1);
             }}
-            className="pl-9 h-10 shadow-sm"
+            className="pl-9 h-10 "
           />
         </div>
 
@@ -116,8 +116,8 @@ export default function SuperAdminUsersPage() {
               variant={statusFilter === key ? "default" : "outline"}
               size="sm"
               className={cn(
-                "h-8 sm:h-9 px-4 rounded-full text-xs sm:text-[13px] font-bold shrink-0 transition-all",
-                statusFilter === key && "shadow-md shadow-primary/10",
+                "h-8 sm:h-9 px-4 rounded-sm text-xs sm:text-[13px] font-bold shrink-0 transition-all",
+                statusFilter === key && " ",
               )}
               onClick={() => {
                 setStatusFilter(key);
@@ -131,7 +131,7 @@ export default function SuperAdminUsersPage() {
       </motion.div>
 
       {/* ── Table ── */}
-      <Card className="border border-border/40 shadow-xl shadow-black/5 rounded-2xl overflow-hidden">
+      <Card className="border border-border/40   rounded-sm overflow-hidden">
         <CardHeader className="pb-4 px-4 sm:px-6">
           <CardTitle className="text-lg font-black">Users Overview</CardTitle>
           <CardDescription className="text-xs">

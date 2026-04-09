@@ -2,10 +2,11 @@ import { useState } from "react";
 import { useProductActions } from "../../../hooks/useProductActions";
 
 import ProductDetailsTabs from "@/modules/website/components/products/ProductDetailsTabs";
-import ReviewsSection from "@/modules/website/components/products/ReviewsSection";
+import { StoreProductReviews } from "../StoreProductReviews";
 import RelatedProductsGrid from "@/modules/website/components/products/RelatedProductsGrid";
 import type { ProductTemplateProps } from "./ProductTemplateProps";
 import { adaptProductToUI } from "../../../utils/productAdapter";
+import { GoBackButton } from "@/components/shared/GoBackButton";
 
 // Heritage Components
 import { HeritageHeader } from "./heritage/HeritageHeader";
@@ -54,6 +55,7 @@ export default function HeritageProductTemplate({
 
       {/* ─── SHOWCASE MAIN ─── */}
       <main className="max-w-[1400px] mx-auto px-4 md:px-8 py-12">
+        <GoBackButton className="mb-6" />
         <HeritageShowcase
           uiProduct={uiProduct}
           quantity={quantity}
@@ -74,7 +76,7 @@ export default function HeritageProductTemplate({
         />
 
         {/* ─── TABS ─── */}
-        <div className="mt-16 bg-white dark:bg-[#1E1A17] rounded-[2rem] p-6 md:p-12 shadow-sm border border-[#EADDCE] dark:border-[#3D352B]">
+        <div className="mt-16 bg-white dark:bg-[#1E1A17] rounded-sm p-6 md:p-12  border border-[#EADDCE] dark:border-[#3D352B]">
           <ProductDetailsTabs product={uiProduct} />
         </div>
 
@@ -83,8 +85,8 @@ export default function HeritageProductTemplate({
           <h2 className="text-3xl font-bold italic text-[#2C2622] dark:text-white mb-8 border-b border-[#EADDCE] dark:border-[#3D352B] pb-6 inline-block">
             Words of Appreciation
           </h2>
-          <div className="bg-white dark:bg-[#1E1A17] rounded-[2rem] p-6 md:p-12 shadow-sm border border-[#EADDCE] dark:border-[#3D352B] text-left">
-            <ReviewsSection
+          <div className="bg-white dark:bg-[#1E1A17] rounded-sm p-6 md:p-12  border border-[#EADDCE] dark:border-[#3D352B] text-left">
+            <StoreProductReviews
               productId={product.id}
               reviews={reviews}
               ratingAverage={uiProduct.rating}

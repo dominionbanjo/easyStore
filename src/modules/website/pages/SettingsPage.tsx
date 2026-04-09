@@ -42,8 +42,8 @@ export default function SettingsPage() {
             <TabsList
               className="
                 flex flex-wrap justify-center items-center gap-3
-                bg-transparent shadow-none
-                rounded-full px-0 py-0
+                bg-transparent 
+                rounded-sm px-0 py-0
               "
             >
               {[
@@ -64,7 +64,7 @@ export default function SettingsPage() {
                   value={key}
                   className={`
                     flex items-center justify-center gap-2 
-                    rounded-full text-sm font-medium transition-all
+                    rounded-sm text-sm font-medium transition-all
                     px-6 py-3 md:px-8 md:py-3.5
                     ${
                       danger
@@ -72,7 +72,7 @@ export default function SettingsPage() {
                         : "text-gray-800 bg-gray-100 data-[state=active]:bg-neutral-900 data-[state=active]:text-white"
                     }
                     hover:bg-gray-200
-                    data-[state=active]:shadow-md
+                    data-[state=active]:
                     focus-visible:outline-none
                   `}
                 >

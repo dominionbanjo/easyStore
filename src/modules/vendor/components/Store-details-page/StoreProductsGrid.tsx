@@ -72,7 +72,7 @@ export function StoreProductsGrid({
         {selectedCategory && (
           <Button
             variant="outline"
-            className="rounded-full border-primary/20 text-primary hover:bg-primary/5 font-bold group h-12 px-6"
+            className="rounded-sm border-primary/20 text-primary hover:bg-primary/5 font-bold group h-12 px-6"
             onClick={onBackToCategories}
           >
             <ArrowLeft className="h-4 w-4 mr-2 group-hover:-translate-x-1 transition-transform" />
@@ -92,7 +92,7 @@ export function StoreProductsGrid({
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-8 px-0 sm:px-2"
           >
             {Array.from({ length: 8 }).map((_, i) => (
-              <Skeleton key={i} className="h-[400px] rounded-[2.5rem]" />
+              <Skeleton key={i} className="h-[400px] rounded-sm" />
             ))}
           </motion.div>
         ) : !products.length ? (
@@ -100,9 +100,9 @@ export function StoreProductsGrid({
             key="empty"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center py-32 bg-white/50 dark:bg-neutral-900/40 backdrop-blur-xl rounded-[3rem] border border-zinc-200 dark:border-white/5 px-4 mx-2 shadow-sm"
+            className="text-center py-32 bg-white/50 dark:bg-neutral-900/40 backdrop-blur-xl rounded-sm border border-zinc-200 dark:border-white/5 px-4 mx-2 "
           >
-            <div className="w-20 h-20 bg-primary/10 dark:bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-6 ring-8 ring-primary/5 dark:ring-emerald-500/5">
+            <div className="w-20 h-20 bg-primary/10 dark:bg-emerald-500/10 rounded-sm flex items-center justify-center mx-auto mb-6 ring-8 ring-primary/5 dark:ring-emerald-500/5">
               <PackageOpen className="w-10 h-10 text-primary dark:text-emerald-400" />
             </div>
             <h3 className="text-2xl md:text-3xl font-black text-foreground tracking-tight">

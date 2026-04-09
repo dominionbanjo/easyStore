@@ -7,8 +7,6 @@ import {
   CheckCircle,
   XCircle,
   Clock,
-  ShoppingBag,
-  Loader2,
   AlertCircle,
   Copy,
   Check,
@@ -22,10 +20,12 @@ import { useGetOrderByIdQuery } from "@/services/ordersApi";
 import { ACCOUNT_ROUTES } from "@/routes";
 import { useState } from "react";
 import { toast } from "sonner";
+import { OrderVendorInfo } from "../components/orders/OrderVendorInfo";
+import { ReceiptDownloadButton } from "../components/orders/ReceiptDownloadButton";
+import { OrderPaymentSummary } from "../components/orders/OrderPaymentSummary";
 import { OrderItemsList } from "../components/orders/OrderItemsList";
 import { OrderDeliveryInfo } from "../components/orders/OrderDeliveryInfo";
-import { OrderPaymentSummary } from "../components/orders/OrderPaymentSummary";
-import { OrderVendorInfo } from "../components/orders/OrderVendorInfo";
+import { OrderDetailsSkeleton } from "../components/orders/OrderDetailsSkeleton";
 
 export default function OrderDetailsPage() {
   const { id } = useParams<{ id: string }>();
@@ -83,16 +83,7 @@ export default function OrderDetailsPage() {
 
   // Loading State
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-emerald-50/30 dark:from-neutral-950 dark:via-neutral-900 dark:to-emerald-950/20 flex items-center justify-center transition-colors duration-300">
-        <div className="text-center">
-          <Loader2 className="h-12 w-12 animate-spin text-emerald-600 mx-auto mb-4" />
-          <p className="text-gray-600 dark:text-zinc-400 font-medium">
-            Loading order details...
-          </p>
-        </div>
-      </div>
-    );
+    return <OrderDetailsSkeleton />;
   }
 
   // Error State
@@ -100,7 +91,7 @@ export default function OrderDetailsPage() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-emerald-50/30 dark:from-neutral-950 dark:via-neutral-900 dark:to-emerald-950/20 flex items-center justify-center p-4 transition-colors duration-300">
         <Card className="max-w-md w-full p-8 text-center bg-white dark:bg-neutral-900/50 dark:border-white/5">
-          <div className="w-16 h-16 bg-red-50 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="w-16 h-16 bg-red-50 dark:bg-red-900/20 rounded-sm flex items-center justify-center mx-auto mb-4">
             <AlertCircle className="h-8 w-8 text-red-500 dark:text-red-400" />
           </div>
           <h2 className="text-2xl font-black text-foreground mb-2">
@@ -110,7 +101,7 @@ export default function OrderDetailsPage() {
             We couldn't find the order you're looking for.
           </p>
           <SmartLink to={ACCOUNT_ROUTES.ORDERS}>
-            <Button className="rounded-full bg-emerald-600 hover:bg-emerald-700">
+            <Button className="rounded-sm bg-emerald-600 hover:bg-emerald-700">
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Orders
             </Button>
@@ -139,81 +130,107 @@ export default function OrderDetailsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-emerald-50/30 dark:from-neutral-950 dark:via-neutral-900 dark:to-emerald-950/20 py-8 sm:py-12 transition-colors duration-300">
-      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="space-y-6">
-          {/* Back Button */}
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-emerald-50/30 dark:from-neutral-950 dark:via-neutral-900 dark:to-emerald-950/20 py-6 sm:py-10 transition-colors duration-300">
+      <div className="w-full mx-auto px-2 sm:px-6 lg:px-8">
+        <div className="space-y-8">
+          {/* Back Button & Breadcrumb */}
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
+            initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3 }}
+            className="flex items-center justify-between"
           >
             <SmartLink to={ACCOUNT_ROUTES.ORDERS}>
               <Button
                 variant="ghost"
-                className="group flex items-center gap-2 text-gray-700 hover:text-gray-900 -ml-2 dark:text-zinc-300 dark:hover:text-white"
+                size="sm"
+                className="group flex gap-2 items-center text-muted-foreground hover:text-primary transition-all duration-300 font-bold uppercase tracking-widest text-[10px]"
               >
-                <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
+                <ArrowLeft className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1" />
                 Back to Orders
               </Button>
             </SmartLink>
+
+            {(order.payment_status === "success" ||
+              order.status === "paid" ||
+              order.status === "delivered" ||
+              order.status === "completed") && (
+              <ReceiptDownloadButton
+                orderId={order.id}
+                showText={true}
+                className="h-9 px-4 text-[10px] font-black uppercase tracking-widest shadow-sm border-2"
+              />
+            )}
           </motion.div>
 
-          {/* Header */}
+          {/* Header Section */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className="flex flex-col sm:flex-row justify-between sm:items-start gap-4"
+            className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-border/40 pb-8 px-1"
           >
-            <div>
-              <h1 className="text-3xl sm:text-4xl font-black text-foreground mb-2">
-                Order Details
-              </h1>
-              <div className="flex flex-wrap items-center gap-3 text-muted-foreground">
-                <div className="flex items-center gap-2">
-                  <ShoppingBag className="h-4 w-4" />
-                  <span className="text-sm font-semibold">#{displayRef}</span>
+            <div className="space-y-3">
+              <div className="flex items-center gap-3">
+                <Badge
+                  variant="outline"
+                  className={`capitalize px-3 py-1 text-[10px] font-black rounded-sm border-2 flex items-center gap-2 tracking-widest ${statusConfig.color}`}
+                >
+                  {statusConfig.icon}
+                  {statusConfig.label}
+                </Badge>
+                <div className="h-4 w-px bg-border/40 hidden sm:block" />
+                <div className="flex items-center gap-2 px-2 py-1 rounded-sm bg-muted/30 border border-border/40">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                    Ref
+                  </span>
+                  <span className="text-xs font-black text-foreground font-outfit">
+                    #{displayRef}
+                  </span>
                   <button
                     onClick={handleCopy}
-                    className="p-1 hover:bg-gray-100 rounded-md transition-colors text-gray-400 hover:text-gray-600 dark:hover:bg-neutral-800 dark:text-zinc-500 dark:hover:text-zinc-300"
-                    title="Copy Full Reference"
+                    className="ml-1 p-0.5 hover:bg-muted rounded-sm"
                   >
                     {isCopied ? (
                       <Check className="h-3 w-3 text-emerald-600" />
                     ) : (
-                      <Copy className="h-3 w-3" />
+                      <Copy className="h-3 w-3 text-muted-foreground" />
                     )}
                   </button>
                 </div>
-                <span className="text-gray-300 dark:text-zinc-600">•</span>
-                <div className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4" />
-                  <span className="text-sm">{formattedDate}</span>
-                </div>
+              </div>
+              <h1 className="text-4xl sm:text-5xl font-black text-foreground tracking-tighter uppercase font-outfit">
+                Order Details
+              </h1>
+              <div className="flex items-center gap-3 text-muted-foreground">
+                <Calendar className="h-3.5 w-3.5" />
+                <span className="text-[10px] font-black uppercase tracking-[0.2em]">
+                  {formattedDate}
+                </span>
               </div>
             </div>
 
-            {/* Status Badge */}
-            <Badge
-              variant="outline"
-              className={`capitalize px-4 py-2 text-sm font-bold rounded-full border-2 flex items-center gap-2 ${statusConfig.color}`}
-            >
-              {statusConfig.icon}
-              {statusConfig.label}
-            </Badge>
+            <div className="flex items-center gap-4">
+              <div className="text-right">
+                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60 mb-1">
+                  Items Summary
+                </p>
+                <p className="text-2xl font-black text-foreground font-outfit">
+                  {order.order_items?.length || 0} Products
+                </p>
+              </div>
+            </div>
           </motion.div>
 
-          {/* Main Content Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Left Column - Order Items & Delivery */}
-            <div className="lg:col-span-2 space-y-6">
+          {/* New Unified Grid Layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            {/* Left: Main Content (8 columns) */}
+            <div className="lg:col-span-8 space-y-6">
               <OrderItemsList order={order} />
               <OrderDeliveryInfo order={order} />
             </div>
 
-            {/* Right Column - Payment & Vendor */}
-            <div className="lg:col-span-1 space-y-6">
+            {/* Right: Sidebar (4 columns) */}
+            <div className="lg:col-span-4 space-y-6">
               <OrderPaymentSummary
                 order={order}
                 handleCopy={handleCopy}

@@ -6,42 +6,35 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-
 import { Button } from "@/components/ui/button";
-import { Upload, Save, Loader2, Trash2 } from "lucide-react";
+import { Upload, Save, Loader2, Trash2, Store, Info } from "lucide-react";
+import { FormInput } from "@/components/shared/form/FormInput";
+import { FormTextarea } from "@/components/shared/form/FormTextarea";
 
 interface StoreIdentityStepProps {
-  storeData: {
-    store_name: string;
-    description: string;
-  };
   bannerPreview: string | null;
   uploadProgress: number | null;
   isDeletingBanner?: boolean;
-  onInputChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => void;
   onBannerChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBannerRemove?: () => void;
   onSave: () => void;
   isSaving: boolean;
+  isValidated?: boolean;
 }
 
 export function StoreIdentityStep({
-  storeData,
   bannerPreview,
   uploadProgress,
   isDeletingBanner,
-  onInputChange,
   onBannerChange,
   onBannerRemove,
   onSave,
   isSaving,
+  isValidated,
 }: StoreIdentityStepProps) {
   return (
-    <Card className="border-none shadow-md overflow-hidden">
-      <CardHeader className="bg-gradient-to-r from-emerald-500/10 via-emerald-500/5 to-transparent p-6 md:p-8">
+    <Card className="border-none  overflow-hidden">
+      <CardHeader className="bg-gradient-to-r from-emerald-500/10 via-emerald-500/5 to-transparent px-0 py-6">
         <CardTitle className="text-xl text-emerald-600 dark:text-emerald-400">
           Store Identity
         </CardTitle>
@@ -49,14 +42,14 @@ export function StoreIdentityStep({
           Configure how your store appears to customers.
         </CardDescription>
       </CardHeader>
-      <CardContent className="p-3 sm:p-6 md:p-8 space-y-6 sm:space-y-8 -mt-4">
+      <CardContent className="px-0 py-6 space-y-6 sm:space-y-8 -mt-4">
         {/* Banner Section */}
         <div className="space-y-4">
           <Label className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
             Store Banner
           </Label>
           <div
-            className={`relative h-48 rounded-3xl overflow-hidden border-2 border-dashed border-border/60 group cursor-pointer hover:border-primary/50 transition-colors ${
+            className={`relative h-48 rounded-sm overflow-hidden border-2 border-dashed border-border/60 group cursor-pointer hover:border-primary/50 transition-colors ${
               uploadProgress !== null || isDeletingBanner
                 ? "pointer-events-none opacity-80"
                 : ""
@@ -93,7 +86,7 @@ export function StoreIdentityStep({
                   <Button
                     variant="secondary"
                     size="sm"
-                    className="rounded-full shadow-2xl"
+                    className="rounded-sm "
                   >
                     <Upload className="w-4 h-4 mr-2" /> Change Banner
                   </Button>
@@ -101,7 +94,7 @@ export function StoreIdentityStep({
                   <Button
                     variant="destructive"
                     size="icon"
-                    className="rounded-full h-9 w-9 shadow-2xl"
+                    className="rounded-sm h-9 w-9 "
                     onClick={(e) => {
                       e.stopPropagation();
                       onBannerRemove?.();
@@ -113,7 +106,7 @@ export function StoreIdentityStep({
               </>
             ) : (
               <div className="flex flex-col items-center justify-center h-full gap-3 text-muted-foreground">
-                <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center">
+                <div className="h-12 w-12 rounded-sm bg-muted flex items-center justify-center">
                   <Upload className="w-6 h-6" />
                 </div>
                 <div className="text-center">
@@ -135,25 +128,20 @@ export function StoreIdentityStep({
           </div>
         </div>
 
-        <div className="space-y-2">
-          <Label>Store Name</Label>
-          <Input
+        <div className="grid grid-cols-1 gap-6">
+          <FormInput
             name="store_name"
-            value={storeData.store_name}
-            onChange={onInputChange}
-            className="rounded-xl h-11"
+            label="Store Name"
             placeholder="e.g. Dominion Gadgets"
+            icon={<Store className="w-4 h-4" />}
           />
-        </div>
 
-        <div className="space-y-2">
-          <Label>About the Store</Label>
-          <textarea
+          <FormTextarea
             name="description"
-            value={storeData.description}
-            onChange={onInputChange}
-            className="w-full min-h-[120px] rounded-xl border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            label="Store Bio"
             placeholder="Tell your customers what you sell..."
+            icon={<Info className="w-4 h-4" />}
+            rows={5}
           />
         </div>
 
@@ -161,14 +149,14 @@ export function StoreIdentityStep({
           <Button
             onClick={onSave}
             disabled={isSaving}
-            className="rounded-full px-8 h-12 shadow-lg shadow-primary/20"
+            className="rounded-sm px-8 h-12   bg-emerald-600 hover:bg-emerald-700"
           >
             {isSaving ? (
               <Loader2 className="w-4 h-4 animate-spin mr-2" />
             ) : (
               <Save className="w-4 h-4 mr-2" />
             )}
-            Save Changes
+            {isValidated ? "Save Changes" : "Save & Continue"}
           </Button>
         </div>
       </CardContent>

@@ -128,7 +128,7 @@ export function ColorSelectModal({
           <Button
             type="button"
             variant="outline"
-            className="rounded-2xl border-2 border-dashed border-primary/30 hover:border-primary/60 text-primary gap-3 h-14 px-8 font-black uppercase tracking-widest text-xs transition-all hover:bg-primary/[0.02]"
+            className="rounded-sm border-2 border-dashed border-primary/30 hover:border-primary/60 text-primary gap-3 h-14 px-8 font-black uppercase tracking-widest text-xs transition-all hover:bg-primary/[0.02]"
           >
             <Palette className="h-4 w-4" /> Pick Variant Colors
           </Button>
@@ -137,11 +137,11 @@ export function ColorSelectModal({
 
       <DialogContent
         showCloseButton={false}
-        className="max-w-6xl p-0 overflow-hidden sm:rounded-3xl border-none shadow-2xl h-full sm:h-[85vh] flex flex-col bg-background/95 backdrop-blur-3xl"
+        className="max-w-6xl p-0 overflow-hidden sm:rounded-sm border-none  h-full sm:h-[85vh] flex flex-col bg-background/95 backdrop-blur-3xl"
       >
         <div className="px-5 sm:px-8 py-5 sm:py-8 shrink-0 flex flex-row items-center justify-between">
           <DialogTitle className="text-xl sm:text-4xl font-black uppercase tracking-tighter flex items-center gap-3 sm:gap-5">
-            <div className="h-12 w-12 sm:h-16 sm:w-16 rounded-2xl sm:rounded-3xl bg-primary shadow-xl shadow-primary/20 flex items-center justify-center text-white">
+            <div className="h-12 w-12 sm:h-16 sm:w-16 rounded-sm sm:rounded-sm bg-primary   flex items-center justify-center text-white">
               <Palette className="h-6 w-6 sm:h-8 sm:w-8" />
             </div>
             <div className="flex flex-col">
@@ -155,7 +155,7 @@ export function ColorSelectModal({
             type="button"
             variant="ghost"
             size="icon"
-            className="rounded-xl h-12 w-12 bg-muted/40 hover:bg-muted"
+            className="rounded-sm h-12 w-12 bg-muted/40 hover:bg-muted"
             onClick={() => setOpen(false)}
           >
             <X className="h-6 w-6" />
@@ -169,17 +169,17 @@ export function ColorSelectModal({
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search by name or hex code (#...)"
-              className="pl-12 h-12 sm:h-14 rounded-xl sm:rounded-2xl bg-muted/30 border-none focus-visible:ring-2 focus-visible:ring-primary/20 transition-all font-bold text-base sm:text-lg"
+              className="pl-12 h-12 sm:h-14 rounded-sm sm:rounded-sm bg-muted/30 border-none focus-visible:ring-2 focus-visible:ring-primary/20 transition-all font-bold text-base sm:text-lg"
             />
           </div>
           <Button
             type="button"
             onClick={() => setShowAdd(!showAdd)}
             className={cn(
-              "h-12 sm:h-14 px-6 rounded-xl sm:rounded-2xl font-black uppercase tracking-widest text-[10px] gap-2 transition-all shadow-lg",
+              "h-12 sm:h-14 px-6 rounded-sm sm:rounded-sm font-black uppercase tracking-widest text-[10px] gap-2 transition-all ",
               showAdd
                 ? "bg-muted text-foreground"
-                : "bg-foreground text-background shadow-foreground/10 hover:shadow-foreground/20",
+                : "bg-foreground text-background -foreground/10 hover:-foreground/20",
             )}
           >
             {showAdd ? <X className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
@@ -204,7 +204,7 @@ export function ColorSelectModal({
                     value={newName}
                     onChange={(e) => setNewName(e.target.value)}
                     placeholder="e.g. Midnight Azure"
-                    className="h-12 rounded-xl bg-background border-border"
+                    className="h-12 rounded-sm bg-background border-border"
                   />
                 </div>
                 <div className="w-full md:w-48 space-y-2">
@@ -216,13 +216,13 @@ export function ColorSelectModal({
                       type="color"
                       value={newHex}
                       onChange={(e) => setNewHex(e.target.value)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 h-6 w-6 rounded-full overflow-hidden border-none p-0 bg-transparent cursor-pointer"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 h-6 w-6 rounded-sm overflow-hidden border-none p-0 bg-transparent cursor-pointer"
                     />
                     <Input
                       value={newHex}
                       onChange={(e) => setNewHex(e.target.value)}
                       placeholder="#000000"
-                      className="h-12 rounded-xl bg-background border-border pr-12 font-mono uppercase"
+                      className="h-12 rounded-sm bg-background border-border pr-12 font-mono uppercase"
                     />
                   </div>
                 </div>
@@ -230,7 +230,7 @@ export function ColorSelectModal({
                   type="button"
                   onClick={handleAddColor}
                   disabled={isCreating || !newName.trim()}
-                  className="h-12 rounded-xl bg-primary text-white font-black uppercase tracking-widest text-xs px-8 shadow-lg shadow-primary/20"
+                  className="h-12 rounded-sm bg-primary text-white font-black uppercase tracking-widest text-xs px-8  "
                 >
                   {isCreating ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -247,12 +247,12 @@ export function ColorSelectModal({
           {isLoading ? (
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
               {Array.from({ length: 15 }).map((_, i) => (
-                <Skeleton key={i} className="h-32 w-full rounded-[2rem]" />
+                <Skeleton key={i} className="h-32 w-full rounded-sm" />
               ))}
             </div>
           ) : filtered.length === 0 ? (
             <div className="flex flex-col items-center justify-center p-20 text-center space-y-6">
-              <div className="h-24 w-24 rounded-full bg-muted/40 flex items-center justify-center">
+              <div className="h-24 w-24 rounded-sm bg-muted/40 flex items-center justify-center">
                 <Droplets className="h-12 w-12 text-muted-foreground opacity-20" />
               </div>
               <div className="space-y-2">
@@ -275,14 +275,14 @@ export function ColorSelectModal({
                     type="button"
                     onClick={() => toggleColor(c.name)}
                     className={cn(
-                      "flex flex-col items-center gap-4 p-5 rounded-2xl border-2 transition-all duration-300 relative group overflow-hidden",
+                      "flex flex-col items-center gap-4 p-5 rounded-sm border-2 transition-all duration-300 relative group overflow-hidden",
                       isSelected
-                        ? "bg-primary/[0.03] border-primary shadow-xl shadow-primary/[0.05]"
-                        : "bg-background border-border/40 hover:border-primary/40 shadow-sm",
+                        ? "bg-primary/[0.03] border-primary  -primary/[0.05]"
+                        : "bg-background border-border/40 hover:border-primary/40 ",
                     )}
                   >
                     <div
-                      className="h-16 w-16 rounded-3xl border-4 border-white shadow-2xl transition-transform group-hover:scale-110 duration-500"
+                      className="h-16 w-16 rounded-sm border-4 border-white  transition-transform group-hover:scale-110 duration-500"
                       style={{ backgroundColor: c.hex }}
                     />
                     <div className="flex flex-col items-center min-w-0 w-full">
@@ -334,13 +334,13 @@ export function ColorSelectModal({
                   return (
                     <div
                       key={name}
-                      className="h-8 w-8 rounded-full border-2 border-background shadow-md"
+                      className="h-8 w-8 rounded-sm border-2 border-background "
                       style={{ backgroundColor: color?.hex }}
                     />
                   );
                 })}
                 {localSelected.length > 5 && (
-                  <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center text-[10px] font-black border-2 border-background">
+                  <div className="h-8 w-8 rounded-sm bg-muted flex items-center justify-center text-[10px] font-black border-2 border-background">
                     +{localSelected.length - 5}
                   </div>
                 )}
@@ -351,14 +351,14 @@ export function ColorSelectModal({
             <Button
               type="button"
               variant="outline"
-              className="w-full sm:w-auto rounded-xl h-12 sm:h-14 px-8 font-black uppercase tracking-widest text-[11px] border-border hover:bg-muted"
+              className="w-full sm:w-auto rounded-sm h-12 sm:h-14 px-8 font-black uppercase tracking-widest text-[11px] border-border hover:bg-muted"
               onClick={() => setOpen(false)}
             >
               Discard Changes
             </Button>
             <Button
               type="button"
-              className="w-full sm:w-auto rounded-xl h-12 sm:h-14 px-12 font-black uppercase tracking-widest text-xs bg-primary hover:bg-primary/90 text-white shadow-2xl shadow-primary/30 gap-3 group"
+              className="w-full sm:w-auto rounded-sm h-12 sm:h-14 px-12 font-black uppercase tracking-widest text-xs bg-primary hover:bg-primary/90 text-white   gap-3 group"
               onClick={handleApply}
             >
               Apply Selection{" "}

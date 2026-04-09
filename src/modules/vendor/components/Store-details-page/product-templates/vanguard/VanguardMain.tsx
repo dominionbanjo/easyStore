@@ -63,7 +63,7 @@ export function VanguardMain({
             <div className="mt-4 flex items-center gap-2">
               <div
                 className={cn(
-                  "w-1.5 h-1.5 rounded-full",
+                  "w-1.5 h-1.5 rounded-sm",
                   currentStock > 0 ? "bg-emerald-500" : "bg-red-500",
                 )}
               />
@@ -121,9 +121,9 @@ export function VanguardMain({
                     <button
                       key={color.id}
                       onClick={() => setSelectedColor(color)}
-                      className={`w-8 h-8 rounded-full border transition-all ${
+                      className={`w-8 h-8 rounded-sm border transition-all ${
                         selectedColor?.id === color.id
-                          ? "border-zinc-900 dark:border-white scale-110 shadow-md"
+                          ? "border-zinc-900 dark:border-white scale-110 "
                           : "border-transparent"
                       }`}
                       style={{ backgroundColor: color.hex }}
@@ -165,7 +165,7 @@ export function VanguardMain({
               className="w-full py-4 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-100 transition-colors uppercase tracking-[0.2em] text-sm font-medium disabled:bg-zinc-100 dark:disabled:bg-zinc-900 disabled:text-zinc-500 dark:disabled:text-zinc-200 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {addingToCart ? (
-                <div className="h-4 w-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                <div className="h-4 w-4 border-2 border-current border-t-transparent rounded-sm animate-spin" />
               ) : currentStock <= 0 ? (
                 "OUT OF STOCK"
               ) : (

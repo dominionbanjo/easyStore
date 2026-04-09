@@ -195,13 +195,13 @@ export default function AddProductPage() {
   if (isEditMode && loadingProduct) {
     return (
       <div className="max-w-5xl mx-auto space-y-8 animate-pulse">
-        <Skeleton className="h-12 w-64 rounded-xl" />
+        <Skeleton className="h-12 w-64 rounded-sm" />
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-8">
-            <Skeleton className="h-[400px] rounded-3xl" />
-            <Skeleton className="h-[200px] rounded-3xl" />
+            <Skeleton className="h-[400px] rounded-sm" />
+            <Skeleton className="h-[200px] rounded-sm" />
           </div>
-          <Skeleton className="h-[600px] rounded-3xl" />
+          <Skeleton className="h-[600px] rounded-sm" />
         </div>
       </div>
     );
@@ -223,13 +223,13 @@ export default function AddProductPage() {
               to={getAppPath("/products")}
               className="inline-flex items-center gap-2 text-sm font-bold text-muted-foreground hover:text-primary transition-colors group"
             >
-              <div className="p-1.5 rounded-lg bg-muted group-hover:bg-primary/10 transition-colors">
+              <div className="p-1.5 rounded-sm bg-muted group-hover:bg-primary/10 transition-colors">
                 <ChevronLeft className="h-4 w-4" />
               </div>
               Back to Catalog
             </Link>
             <div className="flex items-center gap-4">
-              <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center">
+              <div className="h-12 w-12 rounded-sm bg-primary/10 flex items-center justify-center">
                 <Package className="h-6 w-6 text-primary" />
               </div>
               <div>
@@ -241,7 +241,7 @@ export default function AddProductPage() {
                 <div className="flex items-center gap-3 mt-1">
                   <div
                     className={cn(
-                      "flex items-center gap-1.5 transition-all duration-500 px-3 py-0.5 rounded-full border shadow-sm",
+                      "flex items-center gap-1.5 transition-all duration-500 px-3 py-0.5 rounded-sm border ",
                       isSyncing
                         ? "bg-amber-500/5 border-amber-500/20 text-amber-600 animate-pulse"
                         : "bg-emerald-500/5 border-emerald-500/20 text-emerald-600",
@@ -275,7 +275,7 @@ export default function AddProductPage() {
             <Badge
               variant="outline"
               className={cn(
-                "h-8 px-4 rounded-full font-bold uppercase tracking-wider text-[10px]",
+                "h-8 px-4 rounded-sm font-bold uppercase tracking-wider text-[10px]",
                 canSubmit
                   ? "border-emerald-500/30 text-emerald-500 bg-emerald-500/5"
                   : "border-orange-500/30 text-orange-500 bg-orange-500/5",
@@ -293,10 +293,10 @@ export default function AddProductPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <Card className="border-border/40 shadow-sm overflow-hidden rounded-[2.5rem]">
+            <Card className="border-border/40  overflow-hidden rounded-sm">
               <CardHeader className="bg-muted/30 p-6 md:p-8 border-b border-border/40">
                 <div className="flex items-center gap-4">
-                  <div className="h-9 w-9 rounded-xl bg-background flex items-center justify-center shadow-sm">
+                  <div className="h-9 w-9 rounded-sm bg-background flex items-center justify-center ">
                     <Settings className="h-5 w-5 text-primary" />
                   </div>
                   <CardTitle className="text-lg font-black uppercase tracking-tight">
@@ -319,10 +319,10 @@ export default function AddProductPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
           >
-            <Card className="border-border/40 shadow-sm overflow-hidden rounded-[2.5rem]">
+            <Card className="border-border/40  overflow-hidden rounded-sm">
               <CardHeader className="bg-muted/30 p-6 md:p-8 border-b border-border/40">
                 <div className="flex items-center gap-4">
-                  <div className="h-9 w-9 rounded-xl bg-background flex items-center justify-center shadow-sm">
+                  <div className="h-9 w-9 rounded-sm bg-background flex items-center justify-center ">
                     <ImageIcon className="h-5 w-5 text-primary" />
                   </div>
                   <CardTitle className="text-lg font-black uppercase tracking-tight">
@@ -342,10 +342,10 @@ export default function AddProductPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <Card className="border-border/40 shadow-sm overflow-hidden rounded-[2.5rem]">
+            <Card className="border-border/40  overflow-hidden rounded-sm">
               <CardHeader className="bg-muted/30 p-6 md:p-8 border-b border-border/40">
                 <div className="flex items-center gap-4">
-                  <div className="h-9 w-9 rounded-xl bg-background flex items-center justify-center shadow-sm">
+                  <div className="h-9 w-9 rounded-sm bg-background flex items-center justify-center ">
                     <Tag className="h-5 w-5 text-primary" />
                   </div>
                   <CardTitle className="text-lg font-black uppercase tracking-tight">
@@ -365,17 +365,17 @@ export default function AddProductPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
           >
-            <Card className="border-border/40 shadow-sm overflow-hidden rounded-[2.5rem]">
+            <Card className="border-border/40  overflow-hidden rounded-sm">
               <CardHeader className="bg-muted/30 p-6 md:p-8 border-b border-border/40">
                 <div className="flex items-center gap-4">
-                  <div className="h-9 w-9 rounded-xl bg-background flex items-center justify-center shadow-sm">
+                  <div className="h-9 w-9 rounded-sm bg-background flex items-center justify-center ">
                     <Layers className="h-5 w-5 text-primary" />
                   </div>
                   <div className="flex items-center gap-2">
                     <CardTitle className="text-lg font-black uppercase tracking-tight">
                       Specifications
                     </CardTitle>
-                    <span className="text-xs font-medium text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
+                    <span className="text-xs font-medium text-muted-foreground bg-muted px-2 py-0.5 rounded-sm">
                       Optional
                     </span>
                   </div>
@@ -395,17 +395,17 @@ export default function AddProductPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
           >
-            <Card className="border-border/40 shadow-sm overflow-hidden rounded-[2.5rem]">
+            <Card className="border-border/40  overflow-hidden rounded-sm">
               <CardHeader className="bg-muted/30 p-6 md:p-8 border-b border-border/40">
                 <div className="flex items-center gap-4">
-                  <div className="h-9 w-9 rounded-xl bg-background flex items-center justify-center shadow-sm">
+                  <div className="h-9 w-9 rounded-sm bg-background flex items-center justify-center ">
                     <Truck className="h-5 w-5 text-primary" />
                   </div>
                   <div className="flex items-center gap-2">
                     <CardTitle className="text-lg font-black uppercase tracking-tight">
                       Logistics
                     </CardTitle>
-                    <span className="text-xs font-medium text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
+                    <span className="text-xs font-medium text-muted-foreground bg-muted px-2 py-0.5 rounded-sm">
                       Optional
                     </span>
                   </div>

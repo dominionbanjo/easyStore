@@ -35,7 +35,7 @@ export function PasswordStrengthMeter({
   return (
     <div className="space-y-3 mt-3 animate-in fade-in slide-in-from-top-1">
       {/* Progress Bar */}
-      <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+      <div className="h-1.5 w-full bg-slate-100 rounded-sm overflow-hidden">
         <div
           className={cn(
             "h-full transition-all duration-500 ease-out",

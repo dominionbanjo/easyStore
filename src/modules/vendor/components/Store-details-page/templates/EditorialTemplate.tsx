@@ -68,7 +68,7 @@ export default function EditorialTemplate({
 
             <div className="flex flex-col items-center md:items-end gap-10">
               {store?.logo ? (
-                <div className="p-4 bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 shadow-2xl rotate-3 hover:rotate-0 transition-transform duration-500">
+                <div className="p-4 bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800  rotate-3 hover:rotate-0 transition-transform duration-500">
                   <img
                     src={store.logo ?? undefined}
                     alt={store.store_name}
@@ -161,7 +161,7 @@ export default function EditorialTemplate({
                 {searchQuery && (
                   <button
                     onClick={() => onSearchChange("")}
-                    className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-full transition-colors"
+                    className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-sm transition-colors"
                   >
                     <X className="w-6 h-6" />
                   </button>

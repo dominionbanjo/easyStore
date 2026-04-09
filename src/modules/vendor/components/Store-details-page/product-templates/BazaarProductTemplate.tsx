@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useProductActions } from "../../../hooks/useProductActions";
 import ProductDetailsTabs from "@/modules/website/components/products/ProductDetailsTabs";
-import ReviewsSection from "@/modules/website/components/products/ReviewsSection";
+import { StoreProductReviews } from "../StoreProductReviews";
 import RelatedProductsGrid from "@/modules/website/components/products/RelatedProductsGrid";
 import type { ProductTemplateProps } from "./ProductTemplateProps";
 import { adaptProductToUI } from "../../../utils/productAdapter";
+import { GoBackButton } from "@/components/shared/GoBackButton";
 
 // Bazaar Components
 import { BazaarHeader } from "./bazaar/BazaarHeader";
@@ -53,6 +54,7 @@ export default function BazaarProductTemplate({
 
       {/* ─── MAIN CONTENT ─── */}
       <main className="max-w-[1600px] mx-auto px-4 py-8">
+        <GoBackButton className="mb-6" />
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-8 items-start">
           {/* Main Info - Order 1 */}
           <div className="order-1 lg:col-start-1">
@@ -91,16 +93,16 @@ export default function BazaarProductTemplate({
           {/* Tabs & Reviews - Order 3 & 4 on mobile, below info on desktop */}
           <div className="order-3 lg:col-start-1 space-y-8">
             {/* Bottom Tabs */}
-            <div className="bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-slate-200 dark:border-zinc-800 p-6">
+            <div className="bg-white dark:bg-zinc-900 rounded-sm  border border-slate-200 dark:border-zinc-800 p-6">
               <ProductDetailsTabs product={uiProduct} />
             </div>
 
             {/* Reviews Section */}
             <div
               id="reviews"
-              className="bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-slate-200 dark:border-zinc-800 p-6"
+              className="bg-white dark:bg-zinc-900 rounded-sm  border border-slate-200 dark:border-zinc-800 p-6"
             >
-              <ReviewsSection
+              <StoreProductReviews
                 productId={product.id}
                 reviews={reviews}
                 ratingAverage={uiProduct.rating}
@@ -112,7 +114,7 @@ export default function BazaarProductTemplate({
 
         {/* ─── RELATED PRODUCTS (Bottom Spanning) ─── */}
         {relatedProducts?.length > 0 && (
-          <div className="mt-12 bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-slate-200 dark:border-zinc-800 p-6 lg:p-8">
+          <div className="mt-12 bg-white dark:bg-zinc-900 rounded-sm  border border-slate-200 dark:border-zinc-800 p-6 lg:p-8">
             <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-6 border-b border-slate-200 dark:border-zinc-800 pb-4">
               Customers who viewed this item also viewed
             </h2>

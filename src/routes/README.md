@@ -1,6 +1,6 @@
 # Routes Directory
 
-This directory contains all routing-related configuration and lazy-loaded component imports for the EasyStore application.
+This directory contains all routing-related configuration and lazy-loaded component imports for the EazyStore application.
 
 ## Files
 

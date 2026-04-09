@@ -24,9 +24,9 @@ export function LogoutConfirmModal({
 
         {/* Modal */}
         <Dialog.Content className="fixed inset-0 z-50 flex items-center justify-center px-4">
-          <Card className="w-full max-w-sm rounded-2xl">
+          <Card className="w-full max-w-sm rounded-sm">
             <CardHeader className="flex flex-col items-center gap-2 text-center">
-              <div className="h-12 w-12 rounded-full bg-red-100 flex items-center justify-center">
+              <div className="h-12 w-12 rounded-sm bg-red-100 flex items-center justify-center">
                 <AlertTriangle className="h-6 w-6 text-red-600" />
               </div>
               <CardTitle>Confirm Logout</CardTitle>

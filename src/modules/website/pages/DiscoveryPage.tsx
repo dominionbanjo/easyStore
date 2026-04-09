@@ -62,7 +62,7 @@ export default function DiscoveryPage() {
   return (
     <div className="min-h-screen bg-white dark:bg-neutral-950 transition-colors duration-300 pb-24">
       {/* Hero Header */}
-      <section className="relative overflow-hidden pt-36 pb-20 px-4 mb-12">
+      <section className="relative overflow-hidden pt-20 md:pt-28 pb-16 md:pb-24 px-4 mb-12">
         <div className="absolute top-0 center w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent dark:from-emerald-900/20" />
 
         <div className="w-full mx-auto text-center relative z-10">
@@ -70,7 +70,7 @@ export default function DiscoveryPage() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/5 dark:bg-emerald-500/10 text-primary dark:text-emerald-400 font-bold text-sm mb-8 border border-primary/10 dark:border-emerald-500/20">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-sm bg-primary/5 dark:bg-emerald-500/10 text-primary dark:text-emerald-400 font-bold text-sm mb-8 border border-primary/10 dark:border-emerald-500/20">
               <Sparkles className="w-4 h-4" />
               <span>Curated Selection</span>
             </div>
@@ -89,11 +89,11 @@ export default function DiscoveryPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={handleKeyDown}
-                className="w-full h-14 pl-6 pr-14 rounded-full bg-white dark:bg-neutral-900 border border-zinc-200 dark:border-white/10 shadow-lg text-lg focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all dark:placeholder:text-zinc-600"
+                className="w-full h-14 pl-6 pr-14 rounded-sm bg-white dark:bg-neutral-900 border border-zinc-200 dark:border-white/10  text-lg focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all dark:placeholder:text-zinc-600"
               />
               <button
                 onClick={handleSearch}
-                className="absolute right-2 top-2 h-10 w-10 bg-primary rounded-full flex items-center justify-center text-white hover:bg-primary/90 transition-colors"
+                className="absolute right-2 top-2 h-10 w-10 bg-primary rounded-sm flex items-center justify-center text-white hover:bg-primary/90 transition-colors"
               >
                 <Search className="w-5 h-5" />
               </button>
@@ -134,10 +134,10 @@ export default function DiscoveryPage() {
             <SmartLink
               to={link.href}
               key={link.title}
-              className="group relative overflow-hidden h-32 rounded-3xl bg-zinc-50 dark:bg-neutral-900 border border-zinc-200 dark:border-white/5 flex flex-col items-center justify-center gap-3 hover:bg-white dark:hover:bg-neutral-800 transition-colors shadow-sm hover:shadow-md"
+              className="group relative overflow-hidden h-32 rounded-sm bg-zinc-50 dark:bg-neutral-900 border border-zinc-200 dark:border-white/5 flex flex-col items-center justify-center gap-3 hover:bg-white dark:hover:bg-neutral-800 transition-colors  hover:"
             >
               <div
-                className={`p-3 rounded-full ${link.color}/10 text-${link.color.split("-")[1]}-500 group-hover:scale-110 transition-transform`}
+                className={`p-3 rounded-sm ${link.color}/10 text-${link.color.split("-")[1]}-500 group-hover:scale-110 transition-transform`}
               >
                 <link.icon className="w-6 h-6" />
               </div>
@@ -171,7 +171,7 @@ export default function DiscoveryPage() {
           {isFeaturedLoading
             ? Array.from({ length: 4 }).map((_, i) => (
                 <div key={i} className="space-y-4">
-                  <Skeleton className="h-[300px] w-full rounded-xl" />
+                  <Skeleton className="h-[300px] w-full rounded-sm" />
                   <div className="space-y-2">
                     <Skeleton className="h-4 w-3/4" />
                     <Skeleton className="h-4 w-1/2" />
@@ -210,7 +210,7 @@ export default function DiscoveryPage() {
           {isTrendingLoading
             ? Array.from({ length: 4 }).map((_, i) => (
                 <div key={i} className="space-y-4">
-                  <Skeleton className="h-[300px] w-full rounded-xl" />
+                  <Skeleton className="h-[300px] w-full rounded-sm" />
                   <div className="space-y-2">
                     <Skeleton className="h-4 w-3/4" />
                     <Skeleton className="h-4 w-1/2" />
@@ -249,7 +249,7 @@ export default function DiscoveryPage() {
           {isNewArrivalsLoading
             ? Array.from({ length: 4 }).map((_, i) => (
                 <div key={i} className="space-y-4">
-                  <Skeleton className="h-[300px] w-full rounded-xl" />
+                  <Skeleton className="h-[300px] w-full rounded-sm" />
                   <div className="space-y-2">
                     <Skeleton className="h-4 w-3/4" />
                     <Skeleton className="h-4 w-1/2" />

@@ -88,7 +88,7 @@ const notifications = [
     id: 6,
     title: "New Announcement Published",
     message:
-      "‘easystore October Updates’ announcement is now live on the dashboard.",
+      "‘eazystore October Updates’ announcement is now live on the dashboard.",
     type: "announcement",
     date: "2025-10-23 18:10",
     status: "unread",
@@ -164,7 +164,7 @@ export default function SuperAdminNotificationsPage() {
             placeholder="Search alerts..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-9 h-10 shadow-sm"
+            className="pl-9 h-10 "
           />
         </div>
 
@@ -184,8 +184,8 @@ export default function SuperAdminNotificationsPage() {
               variant={filter === key ? "default" : "outline"}
               size="sm"
               className={cn(
-                "h-8 sm:h-9 px-4 rounded-full text-xs sm:text-[13px] font-bold shrink-0 transition-all",
-                filter === key && "shadow-md shadow-primary/10",
+                "h-8 sm:h-9 px-4 rounded-sm text-xs sm:text-[13px] font-bold shrink-0 transition-all",
+                filter === key && " ",
               )}
               onClick={() => setFilter(key)}
             >
@@ -210,12 +210,12 @@ export default function SuperAdminNotificationsPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.05 }}
               >
-                <Card className="border border-border/30 shadow-sm hover:shadow-md transition-all duration-300">
+                <Card className="border border-border/30  hover: transition-all duration-300">
                   <CardHeader className="flex items-start justify-between space-y-0 pb-2">
                     <div className="flex items-center gap-2">
                       <div
                         className={cn(
-                          "p-2 rounded-full bg-muted",
+                          "p-2 rounded-sm bg-muted",
                           n.status === "unread" && "ring-2 ring-primary",
                         )}
                       >

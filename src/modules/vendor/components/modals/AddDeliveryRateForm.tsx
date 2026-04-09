@@ -147,7 +147,7 @@ export function AddDeliveryRateForm(props: Props) {
   /* ───────────────── UI ───────────────── */
 
   return (
-    <Card className="rounded-lg border p-4 space-y-4">
+    <Card className="rounded-sm border p-4 space-y-4">
       <FormProvider {...methods}>
         <div className="space-y-4">
           <FormSelect label="Country" name="country" options={countryOptions} />

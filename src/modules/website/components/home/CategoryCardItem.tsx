@@ -34,7 +34,7 @@ export default function CategoryCard({
   const isVideo = /\.(mp4|webm|ogg)$/i.test(thumbnail);
 
   return (
-    <div className="group relative w-full max-w-sm cursor-pointer overflow-hidden rounded-xl bg-card shadow-sm transition-all hover:shadow-lg">
+    <div className="group relative w-full max-w-sm cursor-pointer overflow-hidden rounded-sm bg-card  transition-all hover:">
       {/* ─────── Media Layer (Auto-detect image or video) ─────── */}
       <div className="relative h-[26rem] w-full overflow-hidden">
         {isVideo ? (
@@ -64,7 +64,7 @@ export default function CategoryCard({
           initial={{ opacity: 0, y: 10 }}
           whileHover={{ scale: 1.05 }}
           transition={{ duration: 0.3 }}
-          className="absolute right-3 top-3 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-white/80 shadow-md backdrop-blur-sm transition-all hover:bg-white group-hover:opacity-100 group-hover:translate-y-0 opacity-0 translate-y-3"
+          className="absolute right-3 top-3 z-20 flex h-9 w-9 items-center justify-center rounded-sm bg-white/80  backdrop-blur-sm transition-all hover:bg-white group-hover:opacity-100 group-hover:translate-y-0 opacity-0 translate-y-3"
         >
           <Heart
             className={`h-4 w-4 transition-colors ${
@@ -93,7 +93,7 @@ export default function CategoryCard({
           {/* Seller Info */}
           <div className="flex items-center gap-2">
             <span className="text-sm font-semibold">{seller}</span>
-            <span className="rounded bg-white/10 px-2 py-0.5 text-xs font-medium">
+            <span className="rounded-sm bg-white/10 px-2 py-0.5 text-xs font-medium">
               Seller
             </span>
           </div>
@@ -102,7 +102,7 @@ export default function CategoryCard({
           <div className="flex items-center gap-4 text-sm">
             <button
               onClick={handleLike}
-              className="rounded-full p-1.5 shadow-sm transition-all"
+              className="rounded-sm p-1.5  transition-all"
             >
               <Heart
                 className={`h-5 w-5 ${

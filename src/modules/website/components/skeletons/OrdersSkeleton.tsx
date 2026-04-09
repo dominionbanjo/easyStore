@@ -7,7 +7,7 @@ export function OrdersSkeleton() {
       {[...Array(5)].map((_, i) => (
         <Card
           key={i}
-          className="border dark:border-white/5 bg-white dark:bg-neutral-900 overflow-hidden shadow-sm"
+          className="border dark:border-white/5 bg-white dark:bg-neutral-900 overflow-hidden "
         >
           <CardContent className="p-0">
             <div className="flex flex-col sm:flex-row h-auto sm:h-24">
@@ -21,12 +21,12 @@ export function OrdersSkeleton() {
                     <Skeleton className="h-4 w-32" />
                     <Skeleton className="h-5 w-48" />
                   </div>
-                  <Skeleton className="h-6 w-20 rounded-full" />
+                  <Skeleton className="h-6 w-20 rounded-sm" />
                 </div>
 
                 <div className="flex justify-between items-center mt-2">
                   <Skeleton className="h-3 w-24" />
-                  <Skeleton className="h-8 w-24 rounded-full" />
+                  <Skeleton className="h-8 w-24 rounded-sm" />
                 </div>
               </div>
             </div>

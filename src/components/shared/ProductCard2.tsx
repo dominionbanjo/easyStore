@@ -35,7 +35,7 @@ export default function ProductCard({
 
   return (
     <Link to={`/product/${id}`}>
-      <Card className="overflow-hidden hover:shadow-md transition-all cursor-pointer rounded-2xl">
+      <Card className="overflow-hidden hover: transition-all cursor-pointer rounded-sm">
         {/* Image Section */}
         <div className="relative">
           <div
@@ -44,7 +44,7 @@ export default function ProductCard({
           />
           <button
             onClick={handleLike}
-            className="absolute top-3 right-3 bg-white/80 hover:bg-white rounded-full p-1.5 shadow-sm transition-all"
+            className="absolute top-3 right-3 bg-white/80 hover:bg-white rounded-sm p-1.5  transition-all"
           >
             <Heart
               className={`h-5 w-5 ${
@@ -72,7 +72,7 @@ export default function ProductCard({
 
           <Button
             size="sm"
-            className="rounded-full px-4 bg-primary text-primary-foreground hover:bg-primary/90"
+            className="rounded-sm px-4 bg-primary text-primary-foreground hover:bg-primary/90"
           >
             Add to Cart
           </Button>

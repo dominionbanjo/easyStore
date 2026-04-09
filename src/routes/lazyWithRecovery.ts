@@ -7,7 +7,7 @@ type ModuleWithDefault<T extends ComponentType<any>> = {
 type Importer<T extends ComponentType<any>> = () => Promise<ModuleWithDefault<T>>;
 
 const RETRY_PARAM = "_lr";
-const RETRY_PREFIX = "easystore:lazy-retry:";
+const RETRY_PREFIX = "eazystore:lazy-retry:";
 
 function getRetryStorageKey(moduleKey: string) {
   return `${RETRY_PREFIX}${moduleKey}`;

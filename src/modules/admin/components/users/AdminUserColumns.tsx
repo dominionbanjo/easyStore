@@ -218,7 +218,7 @@ export const buildAdminUserColumns = (
       return (
         <span
           className={cn(
-            "px-2 py-1 rounded-full text-xs font-semibold",
+            "px-2 py-1 rounded-sm text-xs font-semibold",
             statusColors[status],
           )}
         >

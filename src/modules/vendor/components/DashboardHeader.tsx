@@ -100,7 +100,7 @@ export default function DashboardHeader({
         {/* Profile Dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="relative h-9 w-9 rounded-full">
+            <Button variant="ghost" className="relative h-9 w-9 rounded-sm">
               <Avatar className="h-9 w-9 border border-border">
                 <AvatarImage
                   src={currentUser?.avatar || undefined}

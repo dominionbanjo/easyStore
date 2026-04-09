@@ -50,14 +50,14 @@ export function TabbedGrid<T>({
         className="w-full"
       >
         {/* ───────── CATEGORY HEADER (CARD) ───────── */}
-        <Card className="rounded-2xl border border-border/40 shadow-sm bg-background">
+        <Card className="rounded-sm border border-border/40  bg-background">
           <div
             ref={scrollRef}
             className={cn(
               "overflow-x-auto px-4 py-4 pb-5",
               // scrollbar styling
               "scrollbar-thin",
-              "scrollbar-thumb-rounded-full",
+              "scrollbar-thumb-rounded-sm",
               "scrollbar-track-transparent",
               "scrollbar-thumb-muted-foreground/40 hover:scrollbar-thumb-muted-foreground/60"
             )}
@@ -75,12 +75,12 @@ export function TabbedGrid<T>({
                   key={tab.value}
                   value={tab.value}
                   className={cn(
-                    "px-6 py-3 rounded-full text-sm font-medium",
+                    "px-6 py-3 rounded-sm text-sm font-medium",
                     "leading-tight text-center whitespace-nowrap",
                     "text-muted-foreground hover:text-foreground hover:bg-muted/50",
                     "transition-all duration-200",
                     "data-[state=active]:bg-primary/90 data-[state=active]:text-white",
-                    "data-[state=active]:shadow-sm"
+                    "data-[state=active]:"
                   )}
                 >
                   {tab.label}

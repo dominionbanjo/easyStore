@@ -48,7 +48,7 @@ const InfoRow = ({
   className?: string;
 }) => (
   <div className={cn("flex items-start gap-3 py-3", className)}>
-    <div className="mt-0.5 p-1.5 rounded-md bg-muted/60 flex-shrink-0">
+    <div className="mt-0.5 p-1.5 rounded-sm bg-muted/60 flex-shrink-0">
       <Icon className="h-4 w-4 text-muted-foreground" />
     </div>
     <div className="flex-1 min-w-0">
@@ -78,7 +78,7 @@ export function AdminTransactionDetailModal({
       <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto custom-scrollbar">
         <DialogHeader>
           <div className="flex items-center gap-2">
-            <div className="p-2 rounded-lg bg-primary/10">
+            <div className="p-2 rounded-sm bg-primary/10">
               <Receipt className="h-5 w-5 text-primary" />
             </div>
             <div>
@@ -94,7 +94,7 @@ export function AdminTransactionDetailModal({
 
         <div className="mt-4 space-y-6">
           {/* Amount and Status Card */}
-          <div className="p-6 rounded-2xl bg-muted/30 border border-border/40 text-center space-y-2">
+          <div className="p-6 rounded-sm bg-muted/30 border border-border/40 text-center space-y-2">
             <p className="text-xs text-muted-foreground uppercase tracking-widest font-bold">
               Total Amount
             </p>
@@ -104,7 +104,7 @@ export function AdminTransactionDetailModal({
             </h2>
             <Badge
               className={cn(
-                "mt-2 px-3 py-1 rounded-full text-xs font-bold border-none capitalize",
+                "mt-2 px-3 py-1 rounded-sm text-xs font-bold border-none capitalize",
                 statusColors[transaction.status],
               )}
             >
@@ -118,7 +118,7 @@ export function AdminTransactionDetailModal({
               icon={Hash}
               label="Transaction ID"
               value={
-                <code className="text-[11px] bg-muted px-1.5 py-0.5 rounded uppercase">
+                <code className="text-[11px] bg-muted px-1.5 py-0.5 rounded-sm uppercase">
                   {transaction.id}
                 </code>
               }
@@ -155,8 +155,8 @@ export function AdminTransactionDetailModal({
             </h3>
             <div className="grid grid-cols-1 gap-3">
               {/* Customer */}
-              <div className="flex items-center gap-3 p-3 rounded-xl border border-border/40 bg-background">
-                <div className="h-9 w-9 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+              <div className="flex items-center gap-3 p-3 rounded-sm border border-border/40 bg-background">
+                <div className="h-9 w-9 rounded-sm bg-blue-100 flex items-center justify-center text-blue-600">
                   <User className="h-4 w-4" />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -177,8 +177,8 @@ export function AdminTransactionDetailModal({
               </div>
 
               {/* Vendor */}
-              <div className="flex items-center gap-3 p-3 rounded-xl border border-border/40 bg-background">
-                <div className="h-9 w-9 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
+              <div className="flex items-center gap-3 p-3 rounded-sm border border-border/40 bg-background">
+                <div className="h-9 w-9 rounded-sm bg-emerald-100 flex items-center justify-center text-emerald-600">
                   <Store className="h-4 w-4" />
                 </div>
                 <div className="flex-1 min-w-0">

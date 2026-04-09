@@ -15,9 +15,9 @@ export default function StoreHeader() {
     <section className="relative overflow-hidden bg-white dark:bg-neutral-900 border-b border-border/40 dark:border-white/5 transition-colors duration-300">
       {/* Decorative Background Elements */}
       <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#333_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-40 pointer-events-none" />
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/5 rounded-sm blur-[100px] -translate-y-1/2 translate-x-1/2 pointer-events-none" />
 
-      <div className="w-full mx-auto px-6 py-20 relative z-10">
+      <div className="w-full mx-auto px-6 py-12 md:py-16 relative z-10">
         <div className="max-w-3xl mx-auto text-center space-y-8">
           {/* Title Section */}
           <motion.div
@@ -28,7 +28,7 @@ export default function StoreHeader() {
           >
             <Badge
               variant="secondary"
-              className="px-4 py-1.5 rounded-full text-sm font-medium bg-primary/10 text-primary border-0 mb-2"
+              className="px-4 py-1.5 rounded-sm text-sm font-medium bg-primary/10 text-primary border-0 mb-2"
             >
               <Store className="w-3.5 h-3.5 mr-2" />
               Verified Merchants
@@ -62,7 +62,7 @@ export default function StoreHeader() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="p-2 bg-white/80 dark:bg-neutral-800/80 backdrop-blur-xl border border-border/50 dark:border-white/10 rounded-[2rem] shadow-xl shadow-neutral-200/40 dark:shadow-black/20 max-w-2xl mx-auto"
+            className="p-2 bg-white/80 dark:bg-neutral-800/80 backdrop-blur-xl border border-border/50 dark:border-white/10 rounded-sm  -neutral-200/40 dark: max-w-2xl mx-auto"
           >
             <div className="flex flex-col md:flex-row gap-2">
               <div className="flex-1 relative group">
@@ -72,7 +72,7 @@ export default function StoreHeader() {
                 <FormInput
                   name="search"
                   placeholder="Search stores by name..."
-                  className="pl-12 !mt-0 border-0 bg-transparent shadow-none focus-visible:ring-0 text-base h-12 rounded-xl hover:bg-neutral-50 dark:hover:bg-neutral-700 focus:bg-white dark:focus:bg-neutral-800 transition-colors"
+                  className="pl-12 !mt-0 border-0 bg-transparent  focus-visible:ring-0 text-base h-12 rounded-sm hover:bg-neutral-50 dark:hover:bg-neutral-700 focus:bg-white dark:focus:bg-neutral-800 transition-colors"
                 />
               </div>
 
@@ -98,7 +98,7 @@ export default function StoreHeader() {
                     type="button"
                     variant="ghost"
                     size="icon"
-                    className="h-12 w-12 shrink-0 rounded-xl bg-destructive/5 text-destructive hover:bg-destructive/10 hover:text-destructive transition-all"
+                    className="h-12 w-12 shrink-0 rounded-sm bg-destructive/5 text-destructive hover:bg-destructive/10 hover:text-destructive transition-all"
                     onClick={() => setValue("state", "")}
                     title="Clear filter"
                   >

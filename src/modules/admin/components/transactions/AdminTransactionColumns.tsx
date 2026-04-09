@@ -37,7 +37,7 @@ export const buildAdminTransactionColumns = (
         row.original.reference || row.original.id.substring(0, 8).toUpperCase();
       return (
         <div className="text-left flex items-center gap-1.5">
-          <span className="font-mono text-xs font-semibold uppercase bg-muted/60 px-1.5 py-0.5 rounded tracking-tighter">
+          <span className="font-mono text-xs font-semibold uppercase bg-muted/60 px-1.5 py-0.5 rounded-sm tracking-tighter">
             {ref}
           </span>
           {row.original.is_flagged && (
@@ -136,7 +136,7 @@ export const buildAdminTransactionColumns = (
       return (
         <span
           className={cn(
-            "px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-tighter",
+            "px-2.5 py-0.5 rounded-sm text-[10px] font-black uppercase tracking-tighter",
             statusColors[status] || "bg-muted text-muted-foreground",
           )}
         >

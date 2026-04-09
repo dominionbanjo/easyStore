@@ -55,7 +55,7 @@ export function EditorialNarrative({
                 <img
                   src={img}
                   alt={`View ${idx}`}
-                  className="w-full max-h-full object-cover shadow-2xl"
+                  className="w-full max-h-full object-cover "
                 />
               </div>
             ))
@@ -92,7 +92,7 @@ export function EditorialNarrative({
               </div>
               <div
                 className={cn(
-                  "text-[10px] uppercase tracking-[0.3em] px-3 py-1 border rounded-full",
+                  "text-[10px] uppercase tracking-[0.3em] px-3 py-1 border rounded-sm",
                   currentStock > 0
                     ? "border-emerald-500/20 text-emerald-600 dark:text-emerald-400"
                     : "border-red-500/20 text-red-600 dark:text-red-400 font-bold",
@@ -143,7 +143,7 @@ export function EditorialNarrative({
                     <button
                       key={color.id}
                       onClick={() => setSelectedColor(color)}
-                      className={`w-10 h-10 rounded-full transition-all flex items-center justify-center ${
+                      className={`w-10 h-10 rounded-sm transition-all flex items-center justify-center ${
                         selectedColor?.id === color.id
                           ? "ring-1 ring-offset-4 ring-offset-[#FDFBF7] dark:ring-offset-[#1A1A1A] ring-[#2C2C2C] dark:ring-[#EAEAEA]"
                           : ""
@@ -205,7 +205,7 @@ export function EditorialNarrative({
                 className="flex-1 py-4 bg-[#2C2C2C] dark:bg-[#EAEAEA] text-[#FDFBF7] dark:text-[#1A1A1A] font-sans font-medium uppercase tracking-[0.2em] text-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2 disabled:opacity-40 disabled:bg-zinc-200 dark:disabled:bg-zinc-800 disabled:text-zinc-600 dark:disabled:text-zinc-300"
               >
                 {addingToCart ? (
-                  <div className="h-4 w-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                  <div className="h-4 w-4 border-2 border-current border-t-transparent rounded-sm animate-spin" />
                 ) : currentStock <= 0 ? (
                   "Piece Unavailable"
                 ) : (

@@ -152,11 +152,11 @@ export default function SuperAdminPlatformAnalysisPage() {
         <div className="flex items-center gap-2">
           <Button
             variant="outline"
-            className="gap-2 font-bold border-border/40 shadow-sm"
+            className="gap-2 font-bold border-border/40 "
           >
             <Calendar className="h-4 w-4" /> Last 90 Days
           </Button>
-          <Button className="gap-2 font-bold shadow-md shadow-primary/20">
+          <Button className="gap-2 font-bold  ">
             <Download className="h-4 w-4" /> Export Insights
           </Button>
         </div>
@@ -177,7 +177,7 @@ export default function SuperAdminPlatformAnalysisPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05 }}
             >
-              <Card className="border-border/30 shadow-lg shadow-black/5 hover:shadow-xl transition-all duration-300 overflow-hidden group relative">
+              <Card className="border-border/30   hover: transition-all duration-300 overflow-hidden group relative">
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 px-4 pt-4 sm:px-6 sm:pt-6">
                   <CardTitle className="text-[11px] sm:text-[13px] font-bold text-muted-foreground uppercase tracking-wider truncate mr-2">
@@ -185,7 +185,7 @@ export default function SuperAdminPlatformAnalysisPage() {
                   </CardTitle>
                   <div
                     className={cn(
-                      "p-1.5 sm:p-2 rounded-xl flex-shrink-0",
+                      "p-1.5 sm:p-2 rounded-sm flex-shrink-0",
                       item.bgColor,
                     )}
                   >
@@ -225,7 +225,7 @@ export default function SuperAdminPlatformAnalysisPage() {
       </motion.div>
 
       {/* ─── Revenue Growth Line Chart ─── */}
-      <Card className="border-border/30 shadow-lg shadow-black/5 overflow-hidden">
+      <Card className="border-border/30   overflow-hidden">
         <CardHeader className="border-b border-border/20 bg-muted/10 px-4 py-4 sm:px-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
@@ -238,11 +238,11 @@ export default function SuperAdminPlatformAnalysisPage() {
             </div>
             <div className="flex items-center gap-4 text-[10px] sm:text-[11px] font-bold">
               <span className="flex items-center gap-1.5">
-                <span className="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-emerald-500" />{" "}
+                <span className="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-sm bg-emerald-500" />{" "}
                 Revenue
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-indigo-500" />{" "}
+                <span className="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-sm bg-indigo-500" />{" "}
                 Orders
               </span>
             </div>
@@ -251,7 +251,7 @@ export default function SuperAdminPlatformAnalysisPage() {
         <CardContent className="pt-6 px-2 sm:px-6">
           <div className="h-64 sm:h-80 w-full">
             {growthLoading ? (
-              <Skeleton className="h-full w-full rounded-xl" />
+              <Skeleton className="h-full w-full rounded-sm" />
             ) : (
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={chart}>
@@ -310,7 +310,7 @@ export default function SuperAdminPlatformAnalysisPage() {
       {/* ─── Distribution + Activity Row ─── */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Pie Chart — User Distribution */}
-        <Card className="border-border/30 shadow-lg shadow-black/5 overflow-hidden">
+        <Card className="border-border/30   overflow-hidden">
           <CardHeader className="border-b border-border/20 bg-muted/10 px-4 py-4 sm:px-6">
             <CardTitle className="text-base font-black">
               User & Vendor Distribution
@@ -322,7 +322,7 @@ export default function SuperAdminPlatformAnalysisPage() {
           <CardContent className="pt-6 px-2 sm:px-6">
             <div className="h-64 sm:h-72">
               {distLoading ? (
-                <Skeleton className="h-full w-full rounded-xl" />
+                <Skeleton className="h-full w-full rounded-sm" />
               ) : (
                 <ResponsiveContainer width="100%" height="100%">
                   <RePieChart>
@@ -363,7 +363,7 @@ export default function SuperAdminPlatformAnalysisPage() {
         </Card>
 
         {/* Bar Chart — Transaction Types */}
-        <Card className="border-border/30 shadow-lg shadow-black/5 overflow-hidden">
+        <Card className="border-border/30   overflow-hidden">
           <CardHeader className="border-b border-border/20 bg-muted/10 px-4 py-4 sm:px-6">
             <CardTitle className="text-base font-black">
               Transaction Types
@@ -375,7 +375,7 @@ export default function SuperAdminPlatformAnalysisPage() {
           <CardContent className="pt-6 px-2 sm:px-6">
             <div className="h-64 sm:h-72">
               {txBreakdownLoading ? (
-                <Skeleton className="h-full w-full rounded-xl" />
+                <Skeleton className="h-full w-full rounded-sm" />
               ) : (
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart
@@ -426,7 +426,7 @@ export default function SuperAdminPlatformAnalysisPage() {
       {/* ─── Top Stores + Signup Methods row ─── */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
         {/* Top Stores */}
-        <Card className="border-border/30 shadow-lg shadow-black/5 md:col-span-2 lg:col-span-3 overflow-hidden">
+        <Card className="border-border/30   md:col-span-2 lg:col-span-3 overflow-hidden">
           <CardHeader className="border-b border-border/20 bg-muted/10 px-4 py-4 sm:px-6">
             <CardTitle className="text-base font-black flex items-center gap-2">
               <Crown className="h-4 w-4 text-amber-500" /> Top Performing Stores
@@ -451,7 +451,7 @@ export default function SuperAdminPlatformAnalysisPage() {
                     <div className="flex items-center gap-3">
                       <span
                         className={cn(
-                          "h-7 w-7 rounded-lg flex items-center justify-center text-xs font-black text-white",
+                          "h-7 w-7 rounded-sm flex items-center justify-center text-xs font-black text-white",
                           i === 0
                             ? "bg-gradient-to-br from-amber-400 to-amber-600"
                             : i === 1
@@ -492,7 +492,7 @@ export default function SuperAdminPlatformAnalysisPage() {
         </Card>
 
         {/* Signup Methods + System Health */}
-        <Card className="border-border/30 shadow-lg shadow-black/5 lg:col-span-2 overflow-hidden">
+        <Card className="border-border/30   lg:col-span-2 overflow-hidden">
           <CardHeader className="border-b border-border/20 bg-muted/10">
             <CardTitle className="text-base font-black">
               Signup Methods
@@ -504,7 +504,7 @@ export default function SuperAdminPlatformAnalysisPage() {
           <CardContent className="pt-6">
             <div className="h-52">
               {signupMethodsLoading ? (
-                <Skeleton className="h-full w-full rounded-xl" />
+                <Skeleton className="h-full w-full rounded-sm" />
               ) : (
                 <ResponsiveContainer width="100%" height="100%">
                   <RePieChart>

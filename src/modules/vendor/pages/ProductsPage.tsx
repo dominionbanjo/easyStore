@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { SetupEnforcementModal } from "../components/modals/SetupEnforcementModal";
+import { WelcomeProductModal } from "../components/modals/WelcomeProductModal";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -47,7 +48,9 @@ const SEARCH_DEBOUNCE_MS = 400;
 export default function ProductsPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [showSetupModal, setShowSetupModal] = useState(false);
+  const [showWelcomeModal, setShowWelcomeModal] = useState(false);
 
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState(search);
@@ -73,6 +76,17 @@ export default function ProductsPage() {
     return () => clearTimeout(id);
   }, [search]);
 
+  /* ─── Check for first-time setup completion ─── */
+  useEffect(() => {
+    if (searchParams.get("setup") === "success") {
+      setShowWelcomeModal(true);
+      // Clean up the URL after showing the modal
+      const newParams = new URLSearchParams(searchParams);
+      newParams.delete("setup");
+      setSearchParams(newParams, { replace: true });
+    }
+  }, [searchParams, setSearchParams]);
+
   /* Reset page when filters change */
   useEffect(() => {
     setPage(1);
@@ -88,11 +102,27 @@ export default function ProductsPage() {
     status,
   });
 
+  const isActuallyLoading =
+    isLoading || isFetching || search.trim() !== debouncedSearch;
+  const items: IStoreProduct[] = data?.data.items ?? [];
+  const pagination = data?.data.pagination;
+
   const isSearching =
     debouncedSearch.length > 0 ||
     isOutOfStock !== undefined ||
     onSale !== undefined ||
     status !== undefined;
+
+  /* ─── Trigger welcome modal if empty store ─── */
+  useEffect(() => {
+    if (!isActuallyLoading && items.length === 0 && !isSearching && !isError) {
+      // Small delay to ensure smooth UX
+      const timer = setTimeout(() => {
+        setShowWelcomeModal(true);
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [isActuallyLoading, items.length, isSearching, isError]);
 
   /* ─── HANDLERS ─── */
   const clearFilters = () => {
@@ -100,6 +130,11 @@ export default function ProductsPage() {
     setIsOutOfStock(undefined);
     setOnSale(undefined);
     setStatus(undefined);
+  };
+
+  const handleAddNewProduct = () => {
+    dispatch(clearProductDraft());
+    navigate(getAppPath("/products/new"));
   };
 
   if (isError) {
@@ -120,10 +155,7 @@ export default function ProductsPage() {
     );
   }
 
-  const isActuallyLoading =
-    isLoading || isFetching || search.trim() !== debouncedSearch;
-  const items: IStoreProduct[] = data?.data.items ?? [];
-  const pagination = data?.data.pagination;
+  // definitions moved above for effects
 
   return (
     <section className="space-y-6 md:space-y-8 pb-10">
@@ -155,7 +187,7 @@ export default function ProductsPage() {
             Export
           </Button>
           <Button
-            className="bg-primary text-primary-foreground gap-2 rounded-xl shadow-lg shadow-primary/20"
+            className="bg-primary text-primary-foreground gap-2 rounded-sm  "
             onClick={() => {
               if (draftData) {
                 setShowRecoveryModal(true);
@@ -187,7 +219,7 @@ export default function ProductsPage() {
       </div>
 
       {/* ─── Toolbar (Search & Filters) ─── */}
-      <div className="flex flex-col gap-4 bg-card/50 backdrop-blur-sm p-2 sm:p-3 md:p-4 rounded-2xl border border-border/40 shadow-sm transition-all duration-300">
+      <div className="flex flex-col gap-4 bg-card/50 backdrop-blur-sm p-2 sm:p-3 md:p-4 rounded-sm border border-border/40  transition-all duration-300">
         <div className="flex flex-col sm:flex-row items-center gap-3 w-full">
           <div className="relative w-full sm:flex-1 group">
             <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
@@ -195,7 +227,7 @@ export default function ProductsPage() {
               placeholder="Find products by name, tag or category..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-9 h-10 bg-background/50 border-border/40 focus:bg-background transition-all rounded-xl"
+              className="pl-9 h-10 bg-background/50 border-border/40 focus:bg-background transition-all rounded-sm"
             />
             {search && (
               <button
@@ -213,7 +245,7 @@ export default function ProductsPage() {
               <PopoverTrigger asChild>
                 <Button
                   variant={status !== undefined ? "secondary" : "outline"}
-                  className="gap-2 h-10 border-dashed rounded-xl shrink-0"
+                  className="gap-2 h-10 border-dashed rounded-sm shrink-0"
                 >
                   <Filter className="h-3.5 w-3.5" />
                   <span className="text-xs uppercase tracking-wider font-bold">
@@ -223,7 +255,7 @@ export default function ProductsPage() {
                 </Button>
               </PopoverTrigger>
               <PopoverContent
-                className="w-48 p-1.5 rounded-xl border-border/40"
+                className="w-48 p-1.5 rounded-sm border-border/40"
                 align="end"
               >
                 <div className="space-y-1">
@@ -233,7 +265,7 @@ export default function ProductsPage() {
                       variant="ghost"
                       size="sm"
                       className={cn(
-                        "w-full justify-start font-medium rounded-lg",
+                        "w-full justify-start font-medium rounded-sm",
                         (status === undefined && s === "all") || status === s
                           ? "bg-muted text-foreground"
                           : "text-muted-foreground",
@@ -243,10 +275,10 @@ export default function ProductsPage() {
                       }
                     >
                       {s === "active" && (
-                        <span className="h-2 w-2 rounded-full bg-emerald-500 mr-2" />
+                        <span className="h-2 w-2 rounded-sm bg-emerald-500 mr-2" />
                       )}
                       {s === "inactive" && (
-                        <span className="h-2 w-2 rounded-full bg-slate-400 mr-2" />
+                        <span className="h-2 w-2 rounded-sm bg-slate-400 mr-2" />
                       )}
                       <span className="capitalize">
                         {s === "all" ? "All Visibilities" : s}
@@ -258,14 +290,14 @@ export default function ProductsPage() {
             </Popover>
 
             {/* Out of Stock Filter (Checkbox) */}
-            <div className="flex items-center gap-2 px-3 py-2 bg-background/50 border border-border/40 rounded-xl hover:bg-background transition-all duration-200 cursor-pointer group shrink-0">
+            <div className="flex items-center gap-2 px-3 py-2 bg-background/50 border border-border/40 rounded-sm hover:bg-background transition-all duration-200 cursor-pointer group shrink-0">
               <Checkbox
                 id="out_of_stock"
                 checked={isOutOfStock === true}
                 onCheckedChange={(checked) =>
                   setIsOutOfStock(checked === true ? true : undefined)
                 }
-                className="rounded-md border-border/60 data-[state=checked]:bg-red-500 data-[state=checked]:border-red-500"
+                className="rounded-sm border-border/60 data-[state=checked]:bg-red-500 data-[state=checked]:border-red-500"
               />
               <Label
                 htmlFor="out_of_stock"
@@ -276,14 +308,14 @@ export default function ProductsPage() {
             </div>
 
             {/* Sale Filter (Checkbox) */}
-            <div className="flex items-center gap-2 px-3 py-2 bg-background/50 border border-border/40 rounded-xl hover:bg-background transition-all duration-200 cursor-pointer group shrink-0">
+            <div className="flex items-center gap-2 px-3 py-2 bg-background/50 border border-border/40 rounded-sm hover:bg-background transition-all duration-200 cursor-pointer group shrink-0">
               <Checkbox
                 id="on_sale"
                 checked={onSale === true}
                 onCheckedChange={(checked) =>
                   setOnSale(checked === true ? true : undefined)
                 }
-                className="rounded-md border-border/60 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                className="rounded-sm border-border/60 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
               />
               <Label
                 htmlFor="on_sale"
@@ -312,10 +344,10 @@ export default function ProductsPage() {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="border-2 border-dashed border-border/60 rounded-[2.5rem] bg-card/10 p-6 sm:p-10 flex flex-col items-center justify-center text-center space-y-6 min-h-[400px] sm:min-h-[500px]"
+          className="border-2 border-dashed border-border/60 rounded-sm bg-card/10 p-6 sm:p-10 flex flex-col items-center justify-center text-center space-y-6 min-h-[400px] sm:min-h-[500px]"
         >
-          <div className="h-20 w-20 sm:h-24 sm:w-24 rounded-full bg-primary/10 flex items-center justify-center shadow-inner relative">
-            <div className="absolute inset-0 rounded-full bg-primary/20 animate-ping opacity-20" />
+          <div className="h-20 w-20 sm:h-24 sm:w-24 rounded-sm bg-primary/10 flex items-center justify-center  relative">
+            <div className="absolute inset-0 rounded-sm bg-primary/20 animate-ping opacity-20" />
             <Package className="h-10 w-10 sm:h-12 sm:w-12 text-primary relative z-10" />
           </div>
 
@@ -330,7 +362,7 @@ export default function ProductsPage() {
           </div>
 
           <Button
-            className="bg-primary hover:bg-primary/90 text-primary-foreground h-12 px-6 sm:px-8 rounded-full shadow-lg shadow-primary/20 gap-2 font-bold uppercase tracking-widest text-[10px] sm:text-xs"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground h-12 px-6 sm:px-8 rounded-sm   gap-2 font-bold uppercase tracking-widest text-[10px] sm:text-xs"
             onClick={() => {
               if (draftData) {
                 setShowRecoveryModal(true);
@@ -348,13 +380,13 @@ export default function ProductsPage() {
         <div className="w-full space-y-4">
           <div className="flex flex-row items-center justify-between px-1">
             <h3 className="text-lg font-bold">Inventory Overview</h3>
-            <div className="flex items-center gap-2 bg-muted/50 p-1 rounded-lg border border-border/40">
+            <div className="flex items-center gap-2 bg-muted/50 p-1 rounded-sm border border-border/40">
               <Button
                 variant="ghost"
                 size="icon"
                 className={cn(
-                  "h-8 w-8 rounded-md",
-                  viewMode === "table" && "bg-background shadow-sm",
+                  "h-8 w-8 rounded-sm",
+                  viewMode === "table" && "bg-background ",
                 )}
                 onClick={() => setViewMode("table")}
               >
@@ -364,8 +396,8 @@ export default function ProductsPage() {
                 variant="ghost"
                 size="icon"
                 className={cn(
-                  "h-8 w-8 rounded-md",
-                  viewMode === "grid" && "bg-background shadow-sm",
+                  "h-8 w-8 rounded-sm",
+                  viewMode === "grid" && "bg-background ",
                 )}
                 onClick={() => setViewMode("grid")}
               >
@@ -419,9 +451,9 @@ export default function ProductsPage() {
                   [...Array(8)].map((_, i) => (
                     <Card
                       key={i}
-                      className="p-2 rounded-2xl border-border/40 animate-pulse bg-card"
+                      className="p-2 rounded-sm border-border/40 animate-pulse bg-card"
                     >
-                      <div className="aspect-square bg-muted rounded-xl" />
+                      <div className="aspect-square bg-muted rounded-sm" />
                       <CardContent className="p-3 pt-4 space-y-3">
                         {" "}
                         <Skeleton className="h-4 w-3/4" />
@@ -436,7 +468,7 @@ export default function ProductsPage() {
                   items.map((product) => (
                     <Card
                       key={product.id}
-                      className="p-2 rounded-2xl border-border/40 hover:border-primary/40 transition-all group bg-card shadow-sm hover:shadow-md cursor-pointer"
+                      className="p-2 rounded-sm border-border/40 hover:border-primary/40 transition-all group bg-card  hover: cursor-pointer"
                       onClick={() => {
                         const path = getWebsitePath(`/product/${product.slug}`);
                         if (path?.startsWith("http")) {
@@ -446,7 +478,7 @@ export default function ProductsPage() {
                         }
                       }}
                     >
-                      <div className="aspect-square relative overflow-hidden rounded-xl bg-muted/20">
+                      <div className="aspect-square relative overflow-hidden rounded-sm bg-muted/20">
                         <img
                           src={product.image?.url}
                           alt={product.name}
@@ -479,7 +511,7 @@ export default function ProductsPage() {
                   ))
                 ) : (
                   <div className="col-span-full h-[400px] flex flex-col items-center justify-center gap-3">
-                    <div className="p-4 rounded-full bg-muted/50 text-muted-foreground/40">
+                    <div className="p-4 rounded-sm bg-muted/50 text-muted-foreground/40">
                       <SearchX className="h-10 w-10" />
                     </div>
                     <div className="text-center space-y-1">
@@ -501,6 +533,12 @@ export default function ProductsPage() {
       <SetupEnforcementModal
         open={showSetupModal}
         onOpenChange={setShowSetupModal}
+      />
+
+      <WelcomeProductModal
+        open={showWelcomeModal}
+        onOpenChange={setShowWelcomeModal}
+        onAddProduct={handleAddNewProduct}
       />
     </section>
   );

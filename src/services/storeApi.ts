@@ -194,7 +194,8 @@ export const storeApi = apiManager.injectEndpoints({
         method: "GET",
       }),
       transformResponse: (response: ApiResponse<ITemplate[]>) => response.data,
-      providesTags: ["Store"],
+      providesTags: ["Templates"] as any,
+      keepUnusedDataFor: 2147483647, // Indefinite caching
     }),
 
     getStoreTheme: builder.query<IStoreTheme, string>({

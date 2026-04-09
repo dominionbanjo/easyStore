@@ -49,7 +49,7 @@ export const getSubdomain = (): string | null => {
   }
   
   const p = normalized.split(".");
-  if (p.length === 2) return null; // e.g., easystore.com
+  if (p.length === 2) return null; // e.g., eazystore.com.ng
   
   const secondToLast = p[p.length - 2];
   const knownSLDs = ["com", "co", "org", "net", "edu", "gov", "mil"];
@@ -167,7 +167,7 @@ export const getAppPath = (path: string): string => {
 
 /**
  * Resolves a given route path into a public website path.
- * On live domains, this ensures the link points to the base domain (easystore.com).
+ * On live domains, this ensures the link points to the base domain (eazystore.com.ng).
  * On localhost, it ensures the path is root-level (no /vendor or /admin prefix).
  */
 export const getWebsitePath = (path: string): string | undefined => {

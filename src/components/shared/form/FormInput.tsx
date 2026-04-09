@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
-import { useFormContext } from "react-hook-form";
+import { useFormContext, type RegisterOptions } from "react-hook-form";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { Eye, EyeOff } from "lucide-react";
 
 interface FormFieldProps {
   label?: string;
@@ -13,6 +13,7 @@ interface FormFieldProps {
   className?: string; // Wrapper className
   inputClassName?: string; // Input className
   icon?: React.ReactNode;
+  rules?: RegisterOptions;
 }
 
 export function FormInput({
@@ -23,6 +24,7 @@ export function FormInput({
   className,
   inputClassName,
   icon,
+  rules,
 }: FormFieldProps) {
   const {
     register,
@@ -71,9 +73,9 @@ export function FormInput({
           placeholder={placeholder}
           aria-invalid={shouldShowError}
           min={type === "number" ? 0 : undefined}
-          {...register(name)}
+          {...register(name, rules)}
           className={cn(
-            "h-12 rounded-xl text-[15px] transition-all duration-200 bg-muted/20 border-muted-foreground/10 focus:bg-background",
+            "h-12 rounded-sm text-[15px] transition-all duration-200 bg-muted/20 border-muted-foreground/10 focus:bg-background",
             icon ? "pl-11" : "px-4",
             isPassword && "pr-10",
             shouldShowError &&

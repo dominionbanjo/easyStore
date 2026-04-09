@@ -85,7 +85,7 @@ export function OnboardingModal() {
     const isNew = now - createdAt < 5 * 60 * 1000; // 5 minutes threshold
 
     // 2. Check localStorage
-    const hasSeenOnboarding = localStorage.getItem("easyStore_onboarding_seen");
+    const hasSeenOnboarding = localStorage.getItem("eazyStore_onboarding_seen");
 
     // 3. If new and hasn't seen modal, show it
     if (isNew && !hasSeenOnboarding) {
@@ -143,7 +143,7 @@ export function OnboardingModal() {
 
   /* ───────── ACTIONS ───────── */
   const markAsSeen = () => {
-    localStorage.setItem("easyStore_onboarding_seen", "true");
+    localStorage.setItem("eazyStore_onboarding_seen", "true");
     setIsOpen(false);
     dispatch(setShowOnboardingModal({ show: false }));
   };
@@ -183,7 +183,7 @@ export function OnboardingModal() {
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && markAsSeen()}>
-      <DialogContent className="max-w-[95vw] sm:max-w-[550px] p-0 overflow-hidden rounded-[1.5rem] sm:rounded-[2.5rem] border-none shadow-2xl bg-background flex flex-col">
+      <DialogContent className="max-w-[95vw] sm:max-w-[550px] p-0 overflow-hidden rounded-sm sm:rounded-sm border-none  bg-background flex flex-col">
         <div className="overflow-y-auto custom-scrollbar flex-1">
           <div className="p-4 sm:p-10">
             <AnimatePresence mode="wait">
@@ -197,19 +197,19 @@ export function OnboardingModal() {
                 >
                   <DialogHeader className="mb-8">
                     <DialogTitle className="text-2xl sm:text-3xl font-black text-center uppercase tracking-tight">
-                      Welcome to EasyStore! 👋
+                      Welcome to EazyStore! 👋
                     </DialogTitle>
                     <DialogDescription className="text-center text-muted-foreground font-medium mt-2">
-                      How do you plan to use EasyStore today?
+                      How do you plan to use EazyStore today?
                     </DialogDescription>
                   </DialogHeader>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <button
                       onClick={() => handleRoleSelection("buy")}
-                      className="flex flex-col items-center justify-center gap-4 sm:gap-5 p-6 sm:p-8 rounded-[2rem] border-2 border-muted bg-muted/20 hover:bg-primary/5 hover:border-primary/40 transition-all duration-300 group text-center"
+                      className="flex flex-col items-center justify-center gap-4 sm:gap-5 p-6 sm:p-8 rounded-sm border-2 border-muted bg-muted/20 hover:bg-primary/5 hover:border-primary/40 transition-all duration-300 group text-center"
                     >
-                      <div className="h-16 w-16 rounded-2xl bg-white shadow-xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
+                      <div className="h-16 w-16 rounded-sm bg-white  flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
                         <User className="w-8 h-8 text-primary" />
                       </div>
                       <div>
@@ -224,9 +224,9 @@ export function OnboardingModal() {
 
                     <button
                       onClick={() => handleRoleSelection("sell")}
-                      className="flex flex-col items-center justify-center gap-4 sm:gap-5 p-6 sm:p-8 rounded-[2rem] border-2 border-muted bg-muted/20 hover:bg-primary/5 hover:border-primary/40 transition-all duration-300 group text-center"
+                      className="flex flex-col items-center justify-center gap-4 sm:gap-5 p-6 sm:p-8 rounded-sm border-2 border-muted bg-muted/20 hover:bg-primary/5 hover:border-primary/40 transition-all duration-300 group text-center"
                     >
-                      <div className="h-16 w-16 rounded-2xl bg-white shadow-xl flex items-center justify-center group-hover:scale-110 group-hover:-rotate-3 transition-all duration-500">
+                      <div className="h-16 w-16 rounded-sm bg-white  flex items-center justify-center group-hover:scale-110 group-hover:-rotate-3 transition-all duration-500">
                         <Store className="w-8 h-8 text-primary" />
                       </div>
                       <div>
@@ -283,7 +283,7 @@ export function OnboardingModal() {
                           <div className="absolute right-3 top-[38px] text-xs">
                             {storeNameStatus === "checking" && (
                               <span className="flex items-center gap-1 text-muted-foreground">
-                                <span className="h-3 w-3 animate-spin rounded-full border-2 border-primary/20 border-t-primary" />
+                                <span className="h-3 w-3 animate-spin rounded-sm border-2 border-primary/20 border-t-primary" />
                                 Checking...
                               </span>
                             )}
@@ -326,14 +326,14 @@ export function OnboardingModal() {
                         <Button
                           type="button"
                           variant="outline"
-                          className="h-12 rounded-full font-semibold text-sm border-muted-foreground/20"
+                          className="h-12 rounded-sm font-semibold text-sm border-muted-foreground/20"
                           onClick={() => setStep("role-selection")}
                         >
                           Back
                         </Button>
                         <Button
                           type="submit"
-                          className="h-12 rounded-full font-semibold text-sm shadow-lg shadow-primary/20"
+                          className="h-12 rounded-sm font-semibold text-sm  "
                           isLoading={isLoading}
                           disabled={
                             storeNameStatus === "taken" ||

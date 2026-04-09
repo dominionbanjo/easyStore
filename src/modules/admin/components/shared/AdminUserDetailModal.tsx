@@ -130,7 +130,7 @@ const InfoRow = ({
   value: React.ReactNode;
 }) => (
   <div className="flex items-start gap-3 py-2.5">
-    <div className="mt-0.5 p-1.5 rounded-md bg-muted/60 flex-shrink-0">
+    <div className="mt-0.5 p-1.5 rounded-sm bg-muted/60 flex-shrink-0">
       <Icon className="h-3.5 w-3.5 text-muted-foreground" />
     </div>
     <div className="flex-1 min-w-0">
@@ -216,14 +216,14 @@ export function AdminUserDetailModal({
           {loading ? (
             <div className="space-y-3 py-2">
               {[...Array(6)].map((_, i) => (
-                <Skeleton key={i} className="h-10 w-full rounded-lg" />
+                <Skeleton key={i} className="h-10 w-full rounded-sm" />
               ))}
             </div>
           ) : user ? (
             <div className="space-y-5 mt-1">
               {/* ── Profile header ── */}
-              <div className="flex items-start gap-4 p-4 rounded-xl bg-muted/40 border border-border/40">
-                <div className="flex-shrink-0 h-14 w-14 rounded-full overflow-hidden bg-primary/10 ring-2 ring-primary/20 flex items-center justify-center">
+              <div className="flex items-start gap-4 p-4 rounded-sm bg-muted/40 border border-border/40">
+                <div className="flex-shrink-0 h-14 w-14 rounded-sm overflow-hidden bg-primary/10 ring-2 ring-primary/20 flex items-center justify-center">
                   {user.avatar ? (
                     <img
                       src={user.avatar}
@@ -241,7 +241,7 @@ export function AdminUserDetailModal({
                     </h3>
                     <span
                       className={cn(
-                        "px-2 py-0.5 rounded-full text-xs font-semibold",
+                        "px-2 py-0.5 rounded-sm text-xs font-semibold",
                         statusColors[user.account_status] ||
                           statusColors.pending,
                       )}
@@ -263,7 +263,7 @@ export function AdminUserDetailModal({
                       </span>
                       <span
                         className={cn(
-                          "px-2 py-0.5 rounded-full text-[11px] font-bold",
+                          "px-2 py-0.5 rounded-sm text-[11px] font-bold",
                           statusColors[user.store.status || "pending"] ||
                             statusColors.pending,
                         )}
@@ -362,8 +362,8 @@ export function AdminUserDetailModal({
                     <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">
                       Store
                     </p>
-                    <div className="flex items-center gap-3 p-3 rounded-lg border border-border/40 bg-muted/20">
-                      <div className="h-10 w-10 rounded-lg overflow-hidden bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <div className="flex items-center gap-3 p-3 rounded-sm border border-border/40 bg-muted/20">
+                      <div className="h-10 w-10 rounded-sm overflow-hidden bg-primary/10 flex items-center justify-center flex-shrink-0">
                         {user.store.logo ? (
                           <img
                             src={user.store.logo}

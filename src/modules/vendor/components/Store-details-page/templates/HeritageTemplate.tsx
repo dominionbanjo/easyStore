@@ -28,7 +28,7 @@ export default function HeritageTemplate({
   // Heritage aesthetic:
   // - Earthy colors, warm background
   // - Elegant serif typography for headers
-  // - Rounded corners and wide spacing
+  // - rounded-sm corners and wide spacing
   // - Focus on craftsmanship and simplicity
 
   const establishedYear = new Date(
@@ -43,11 +43,11 @@ export default function HeritageTemplate({
         <div className="absolute top-8 right-8 z-10 flex items-center gap-3">
           <button
             onClick={onCartOpen}
-            className="group relative p-4 rounded-full bg-white dark:bg-[#2C2622] border border-[#EADDCE] dark:border-[#3D352B] shadow-sm hover:shadow-lg transition-all"
+            className="group relative p-4 rounded-sm bg-white dark:bg-[#2C2622] border border-[#EADDCE] dark:border-[#3D352B]  hover: transition-all"
           >
             <ShoppingCart className="w-5 h-5 text-[#3D352B] dark:text-[#EAE3DB]" />
             {cartItemsCount > 0 && (
-              <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-[var(--theme-primary)] text-white text-[10px] flex items-center justify-center font-bold ring-2 ring-white dark:ring-[#1E1B18] shadow-sm">
+              <span className="absolute -top-1 -right-1 h-5 w-5 rounded-sm bg-[var(--theme-primary)] text-white text-[10px] flex items-center justify-center font-bold ring-2 ring-white dark:ring-[#1E1B18] ">
                 {cartItemsCount}
               </span>
             )}
@@ -59,7 +59,7 @@ export default function HeritageTemplate({
           </button>
 
           <TemplateProfileDropdown
-            buttonClassName="p-4 rounded-full bg-white dark:bg-[#2C2622] border border-[#EADDCE] dark:border-[#3D352B] shadow-sm hover:shadow-lg transition-all"
+            buttonClassName="p-4 rounded-sm bg-white dark:bg-[#2C2622] border border-[#EADDCE] dark:border-[#3D352B]  hover: transition-all"
             iconClassName="w-5 h-5 text-[#3D352B] dark:text-[#EAE3DB]"
           />
         </div>
@@ -70,10 +70,10 @@ export default function HeritageTemplate({
           <img
             src={store.logo ?? undefined}
             alt={store.store_name}
-            className="w-24 h-24 rounded-full object-cover shadow-sm mb-6 border-4 border-white/50 dark:border-white/5"
+            className="w-24 h-24 rounded-sm object-cover  mb-6 border-4 border-white/50 dark:border-white/5"
           />
         ) : (
-          <div className="w-20 h-20 rounded-full bg-[#EADDCE] dark:bg-[#2C2622] flex items-center justify-center font-serif text-[#3D352B] dark:text-[#EAE3DB] text-2xl mb-6 shadow-sm">
+          <div className="w-20 h-20 rounded-sm bg-[#EADDCE] dark:bg-[#2C2622] flex items-center justify-center font-serif text-[#3D352B] dark:text-[#EAE3DB] text-2xl mb-6 ">
             {store?.store_name?.charAt(0) || "H"}
           </div>
         )}
@@ -130,7 +130,7 @@ export default function HeritageTemplate({
           <Input
             type="text"
             placeholder="Search our catalog..."
-            className="w-full pl-12 pr-12 py-6 bg-white dark:bg-[#2C2622] border-[#EADDCE] dark:border-[#3D352B] rounded-full focus-visible:ring-1 focus-visible:ring-[#3D352B] shadow-sm text-center placeholder:text-center text-base"
+            className="w-full pl-12 pr-12 py-6 bg-white dark:bg-[#2C2622] border-[#EADDCE] dark:border-[#3D352B] rounded-sm focus-visible:ring-1 focus-visible:ring-[#3D352B]  text-center placeholder:text-center text-base"
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
           />
@@ -158,16 +158,16 @@ export default function HeritageTemplate({
               ? Array.from({ length: 6 }).map((_, i) => (
                   <Skeleton
                     key={i}
-                    className="h-64 rounded-[2rem] bg-[#F4EDE4] dark:bg-[#3D352B]/20"
+                    className="h-64 rounded-sm bg-[#F4EDE4] dark:bg-[#3D352B]/20"
                   />
                 ))
               : categories?.map((cat) => (
                   <button
                     key={cat.id}
                     onClick={() => onCategorySelect(cat)}
-                    className="group flex flex-col items-center justify-center p-8 lg:p-12 bg-white dark:bg-[#2C2622] rounded-[2rem] border border-[#EADDCE] dark:border-[#3D352B] shadow-sm hover:shadow-xl transition-all hover:-translate-y-1 hover:border-[var(--theme-primary)]"
+                    className="group flex flex-col items-center justify-center p-8 lg:p-12 bg-white dark:bg-[#2C2622] rounded-sm border border-[#EADDCE] dark:border-[#3D352B]  hover: transition-all hover:-translate-y-1 hover:border-[var(--theme-primary)]"
                   >
-                    <div className="w-16 h-16 rounded-full bg-[#F4EDE4] dark:bg-[#3D352B]/50 text-[var(--theme-primary)] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <div className="w-16 h-16 rounded-sm bg-[#F4EDE4] dark:bg-[#3D352B]/50 text-[var(--theme-primary)] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                       <span className="font-serif text-2xl italic">
                         {cat.name.charAt(0)}
                       </span>

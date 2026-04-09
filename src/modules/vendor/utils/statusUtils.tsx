@@ -22,7 +22,7 @@ export const getStatusConfig = (
   type: StatusType,
 ): StatusConfig => {
   const base =
-    "inline-flex items-center justify-center gap-1.5 text-xs font-medium px-2 py-1 rounded-full border";
+    "inline-flex items-center justify-center gap-1.5 text-xs font-medium px-2 py-1 rounded-sm border";
 
   // Normalizing status string
   const normalizedStatus = status?.toLowerCase() || "";

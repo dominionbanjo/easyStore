@@ -69,7 +69,7 @@ export default function SuperAdminServerConfigPage() {
         ].map((item, i) => (
           <Card
             key={i}
-            className="border border-border/30 shadow-sm flex items-center gap-3 p-4"
+            className="border border-border/30  flex items-center gap-3 p-4"
           >
             <item.icon className="h-8 w-8 text-primary" />
             <div>
@@ -85,7 +85,7 @@ export default function SuperAdminServerConfigPage() {
       {/* ─── Configuration Panels ─── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Environment Settings */}
-        <Card className="border border-border/40 shadow-sm">
+        <Card className="border border-border/40 ">
           <CardHeader>
             <CardTitle>Environment Variables</CardTitle>
             <CardDescription>
@@ -104,7 +104,7 @@ export default function SuperAdminServerConfigPage() {
               <select
                 value={apiMode}
                 onChange={(e) => setApiMode(e.target.value)}
-                className="border rounded-md p-2 bg-muted text-sm"
+                className="border rounded-sm p-2 bg-muted text-sm"
               >
                 <option value="development">Development</option>
                 <option value="staging">Staging</option>
@@ -117,7 +117,7 @@ export default function SuperAdminServerConfigPage() {
             <div>
               <Label>Database URL</Label>
               <Input
-                placeholder="postgresql://user:pass@host:5432/easystore_db"
+                placeholder="postgresql://user:pass@host:5432/eazystore_db"
                 type="password"
               />
             </div>
@@ -141,7 +141,7 @@ export default function SuperAdminServerConfigPage() {
         </Card>
 
         {/* Maintenance + Backup */}
-        <Card className="border border-border/40 shadow-sm">
+        <Card className="border border-border/40 ">
           <CardHeader>
             <CardTitle>Maintenance & Backup</CardTitle>
             <CardDescription>
@@ -183,7 +183,7 @@ export default function SuperAdminServerConfigPage() {
         </Card>
 
         {/* Security Controls */}
-        <Card className="border border-border/40 shadow-sm lg:col-span-2">
+        <Card className="border border-border/40  lg:col-span-2">
           <CardHeader>
             <CardTitle>Security Configuration</CardTitle>
             <CardDescription>
@@ -227,7 +227,7 @@ export default function SuperAdminServerConfigPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
       >
-        <Card className="border-destructive/40 border shadow-sm bg-destructive/5">
+        <Card className="border-destructive/40 border  bg-destructive/5">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-destructive">
               <AlertTriangle className="h-5 w-5" /> Danger Zone

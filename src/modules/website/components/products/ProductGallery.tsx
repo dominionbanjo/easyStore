@@ -57,7 +57,7 @@ export default function ProductGallery({ images }: ProductGalleryProps) {
                 e.stopPropagation();
                 setIsFullScreen(false);
               }}
-              className="p-4 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all border border-white/20 shadow-2xl backdrop-blur-md active:scale-95 group pointer-events-auto"
+              className="p-4 rounded-sm bg-white/10 hover:bg-white/20 text-white transition-all border border-white/20  backdrop-blur-md active:scale-95 group pointer-events-auto"
             >
               <X className="w-8 h-8 transition-transform group-hover:rotate-90" />
             </button>
@@ -87,13 +87,13 @@ export default function ProductGallery({ images }: ProductGalleryProps) {
                   src={active}
                   controls
                   autoPlay
-                  className="max-w-full max-h-full object-contain rounded-xl shadow-2xl border border-white/5"
+                  className="max-w-full max-h-full object-contain rounded-sm  border border-white/5"
                 />
               ) : (
                 <img
                   src={active}
                   alt="Full view"
-                  className="max-w-full max-h-full object-contain rounded-xl md:rounded-3xl shadow-2xl select-none"
+                  className="max-w-full max-h-full object-contain rounded-sm md:rounded-sm  select-none"
                 />
               )}
             </motion.div>
@@ -107,7 +107,7 @@ export default function ProductGallery({ images }: ProductGalleryProps) {
                 }}
                 disabled={activeIndex === 0}
                 className={cn(
-                  "p-4 md:p-6 rounded-full bg-white/5 hover:bg-white/10 backdrop-blur-md text-white shadow-2xl transition-all pointer-events-auto border border-white/10 active:scale-90",
+                  "p-4 md:p-6 rounded-sm bg-white/5 hover:bg-white/10 backdrop-blur-md text-white  transition-all pointer-events-auto border border-white/10 active:scale-90",
                   activeIndex === 0 &&
                     "opacity-0 invisible pointer-events-none",
                 )}
@@ -121,7 +121,7 @@ export default function ProductGallery({ images }: ProductGalleryProps) {
                 }}
                 disabled={activeIndex === images.length - 1}
                 className={cn(
-                  "p-4 md:p-6 rounded-full bg-white/5 hover:bg-white/10 backdrop-blur-md text-white shadow-2xl transition-all pointer-events-auto border border-white/10 active:scale-90",
+                  "p-4 md:p-6 rounded-sm bg-white/5 hover:bg-white/10 backdrop-blur-md text-white  transition-all pointer-events-auto border border-white/10 active:scale-90",
                   activeIndex === images.length - 1 &&
                     "opacity-0 invisible pointer-events-none",
                 )}
@@ -133,7 +133,7 @@ export default function ProductGallery({ images }: ProductGalleryProps) {
 
           {/* Pagination / Status */}
           <div className="absolute bottom-10 flex flex-col items-center gap-4">
-            <div className="flex gap-2.5 p-2 rounded-full bg-white/5 backdrop-blur-md border border-white/10">
+            <div className="flex gap-2.5 p-2 rounded-sm bg-white/5 backdrop-blur-md border border-white/10">
               {images.map((_, i) => (
                 <button
                   key={i}
@@ -142,7 +142,7 @@ export default function ProductGallery({ images }: ProductGalleryProps) {
                     setActiveIndex(i);
                   }}
                   className={cn(
-                    "h-1.5 rounded-full transition-all duration-300",
+                    "h-1.5 rounded-sm transition-all duration-300",
                     i === activeIndex
                       ? "w-8 bg-white"
                       : "w-1.5 bg-white/20 hover:bg-white/40",
@@ -162,7 +162,7 @@ export default function ProductGallery({ images }: ProductGalleryProps) {
   return (
     <div className="flex flex-col gap-6 lg:sticky lg:top-10 h-fit w-full">
       {/* ─── Main Display ─── */}
-      <div className="group relative w-full aspect-square md:aspect-[4/5] rounded-[2rem] md:rounded-[3rem] overflow-hidden bg-muted/50 border border-border/60 shadow-2xl shadow-primary/5 touch-none">
+      <div className="group relative w-full aspect-square md:aspect-[4/5] rounded-sm md:rounded-sm overflow-hidden bg-muted/50 border border-border/60   touch-none">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeIndex}
@@ -187,13 +187,13 @@ export default function ProductGallery({ images }: ProductGalleryProps) {
                 muted
                 loop
                 playsInline
-                className="w-full h-full object-cover cursor-grab active:cursor-grabbing rounded-2xl md:rounded-3xl shadow-lg border border-white/20"
+                className="w-full h-full object-cover cursor-grab active:cursor-grabbing rounded-sm md:rounded-sm  border border-white/20"
               />
             ) : (
               <img
                 src={active}
                 alt="Product View"
-                className="w-full h-full object-cover select-none cursor-grab active:cursor-grabbing transition-transform duration-500 hover:scale-105 rounded-2xl md:rounded-3xl shadow-lg border border-white/20"
+                className="w-full h-full object-cover select-none cursor-grab active:cursor-grabbing transition-transform duration-500 hover:scale-105 rounded-sm md:rounded-sm  border border-white/20"
               />
             )}
           </motion.div>
@@ -204,7 +204,7 @@ export default function ProductGallery({ images }: ProductGalleryProps) {
           {activeIndex > 0 && (
             <button
               onClick={() => paginate(-1)}
-              className="absolute left-6 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/90 backdrop-blur-xl shadow-2xl text-zinc-900 hover:bg-white hover:scale-110 active:scale-95 transition-all opacity-0 group-hover:opacity-100 border border-white/50 ring-1 ring-black/5"
+              className="absolute left-6 top-1/2 -translate-y-1/2 p-3 rounded-sm bg-white/90 backdrop-blur-xl  text-zinc-900 hover:bg-white hover:scale-110 active:scale-95 transition-all opacity-0 group-hover:opacity-100 border border-white/50 ring-1 ring-black/5"
             >
               <ChevronLeft className="w-5 h-5 stroke-[2.5px]" />
             </button>
@@ -212,7 +212,7 @@ export default function ProductGallery({ images }: ProductGalleryProps) {
           {activeIndex < images.length - 1 && (
             <button
               onClick={() => paginate(1)}
-              className="absolute right-6 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/90 backdrop-blur-xl shadow-2xl text-zinc-900 hover:bg-white hover:scale-110 active:scale-95 transition-all opacity-0 group-hover:opacity-100 border border-white/50 ring-1 ring-black/5"
+              className="absolute right-6 top-1/2 -translate-y-1/2 p-3 rounded-sm bg-white/90 backdrop-blur-xl  text-zinc-900 hover:bg-white hover:scale-110 active:scale-95 transition-all opacity-0 group-hover:opacity-100 border border-white/50 ring-1 ring-black/5"
             >
               <ChevronRight className="w-5 h-5 stroke-[2.5px]" />
             </button>
@@ -223,20 +223,20 @@ export default function ProductGallery({ images }: ProductGalleryProps) {
         <div className="absolute top-6 right-6 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all duration-300 z-10">
           <button
             onClick={() => setIsFullScreen(true)}
-            className="p-3 rounded-2xl bg-white/90 backdrop-blur-xl shadow-2xl text-zinc-900 hover:bg-white hover:scale-110 active:scale-95 transition-all border border-white/50 ring-1 ring-black/5"
+            className="p-3 rounded-sm bg-white/90 backdrop-blur-xl  text-zinc-900 hover:bg-white hover:scale-110 active:scale-95 transition-all border border-white/50 ring-1 ring-black/5"
           >
             <Maximize2 className="w-4 h-4 stroke-[2.5px]" />
           </button>
         </div>
 
         {/* Progress Dots (Mobile) */}
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-1.5 p-2 rounded-full bg-black/40 backdrop-blur-md md:hidden border border-white/10">
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-1.5 p-2 rounded-sm bg-black/40 backdrop-blur-md md:hidden border border-white/10">
           {images.map((_, i) => (
             <button
               key={i}
               onClick={() => setActiveIndex(i)}
               className={cn(
-                "h-1.5 rounded-full transition-all duration-300 shadow-sm",
+                "h-1.5 rounded-sm transition-all duration-300 ",
                 i === activeIndex
                   ? "w-8 bg-white"
                   : "w-1.5 bg-white/40 hover:bg-white/60",
@@ -253,9 +253,9 @@ export default function ProductGallery({ images }: ProductGalleryProps) {
             key={i}
             onClick={() => setActiveIndex(i)}
             className={cn(
-              "relative flex-shrink-0 w-20 h-20 md:w-24 md:h-24 rounded-2xl overflow-hidden border-2 transition-all duration-300",
+              "relative flex-shrink-0 w-20 h-20 md:w-24 md:h-24 rounded-sm overflow-hidden border-2 transition-all duration-300",
               i === activeIndex
-                ? "border-primary shadow-lg shadow-primary/10 scale-95"
+                ? "border-primary   scale-95"
                 : "border-border/40 bg-muted/50 hover:border-primary/30",
             )}
           >

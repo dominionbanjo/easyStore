@@ -14,7 +14,7 @@ export function OrdersErrorState({ onRetry }: OrdersErrorStateProps) {
       className="flex flex-col items-center justify-center py-16 px-6 text-center"
     >
       {/* Error Icon */}
-      <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mb-6">
+      <div className="w-20 h-20 bg-red-50 rounded-sm flex items-center justify-center mb-6">
         <AlertCircle className="h-10 w-10 text-red-500" />
       </div>
 
@@ -30,7 +30,7 @@ export function OrdersErrorState({ onRetry }: OrdersErrorStateProps) {
       {/* Retry Button */}
       <Button
         onClick={onRetry}
-        className="rounded-full h-12 px-8 text-base font-bold bg-emerald-600 hover:bg-emerald-700 text-white flex items-center gap-2"
+        className="rounded-sm h-12 px-8 text-base font-bold bg-emerald-600 hover:bg-emerald-700 text-white flex items-center gap-2"
       >
         <RefreshCw className="h-4 w-4" />
         Try Again

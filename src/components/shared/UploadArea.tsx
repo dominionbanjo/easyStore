@@ -54,7 +54,7 @@ export default function UploadArea({
       <div
         className={cn(
           background ?? "bg-gray-50 hover:bg-gray-100",
-          "relative rounded-xl min-h-[200px] flex items-center justify-center border border-dashed border-gray-300 cursor-pointer transition"
+          "relative rounded-sm min-h-[200px] flex items-center justify-center border border-dashed border-gray-300 cursor-pointer transition"
         )}
       >
         <label

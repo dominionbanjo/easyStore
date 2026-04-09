@@ -67,7 +67,7 @@ export default function ProductDetailsTabs({
         <div className="flex justify-center mb-6 md:mb-10 lg:mb-12">
           <TabsList
             className={cn(
-              "inline-flex h-12 sm:h-14 w-auto max-w-full items-center justify-start sm:justify-center rounded-xl sm:rounded-2xl bg-muted/50 p-1 text-muted-foreground shadow-inner backdrop-blur-sm border border-border/50 overflow-x-auto no-scrollbar",
+              "inline-flex h-12 sm:h-14 w-auto max-w-full items-center justify-start sm:justify-center rounded-sm sm:rounded-sm bg-muted/50 p-1 text-muted-foreground  backdrop-blur-sm border border-border/50 overflow-x-auto no-scrollbar",
             )}
           >
             {tabs.map((tab) => (
@@ -75,8 +75,8 @@ export default function ProductDetailsTabs({
                 key={tab.value}
                 value={tab.value}
                 className={cn(
-                  "relative flex-1 sm:flex-none flex items-center justify-center gap-2 sm:gap-2.5 px-4 sm:px-8 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 whitespace-nowrap",
-                  "data-[state=active]:bg-background data-[state=active]:text-primary data-[state=active]:shadow-lg",
+                  "relative flex-1 sm:flex-none flex items-center justify-center gap-2 sm:gap-2.5 px-4 sm:px-8 py-2 sm:py-2.5 rounded-sm sm:rounded-sm text-xs sm:text-sm font-semibold transition-all duration-300 whitespace-nowrap",
+                  "data-[state=active]:bg-background data-[state=active]:text-primary data-[state=active]:",
                   "hover:text-foreground/80",
                 )}
               >
@@ -103,11 +103,11 @@ export default function ProductDetailsTabs({
                     ease: [0.23, 1, 0.32, 1],
                   }}
                 >
-                  <Card className="p-5 sm:p-8 md:p-12 rounded-3xl md:rounded-[2.5rem] border-border/40 bg-gradient-to-br from-background via-background to-primary/5 shadow-2xl shadow-primary/5">
+                  <Card className="p-5 sm:p-8 md:p-12 rounded-sm md:rounded-sm border-border/40 bg-gradient-to-br from-background via-background to-primary/5  ">
                     <div className="flex flex-col md:flex-row gap-6 md:gap-8">
                       {/* Left Accent Column */}
                       <div className="flex flex-row md:flex-col items-center gap-4 shrink-0">
-                        <div className="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-primary/10 text-primary shadow-inner">
+                        <div className="p-3 sm:p-4 rounded-sm sm:rounded-sm bg-primary/10 text-primary ">
                           <FileText className="w-6 h-6 sm:w-8 sm:h-8" />
                         </div>
                         <div className="md:hidden h-px flex-1 bg-gradient-to-r from-primary/30 to-transparent" />
@@ -120,7 +120,7 @@ export default function ProductDetailsTabs({
                           <h3 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight mb-2">
                             Product Description
                           </h3>
-                          <div className="h-1 w-12 bg-primary rounded-full" />
+                          <div className="h-1 w-12 bg-primary rounded-sm" />
                         </div>
 
                         <div className="relative">
@@ -148,9 +148,9 @@ export default function ProductDetailsTabs({
                     ease: [0.23, 1, 0.32, 1],
                   }}
                 >
-                  <Card className="p-5 sm:p-8 md:p-10 rounded-3xl border-border/40 bg-gradient-to-br from-background via-background to-secondary/5 shadow-xl shadow-primary/5">
+                  <Card className="p-5 sm:p-8 md:p-10 rounded-sm border-border/40 bg-gradient-to-br from-background via-background to-secondary/5  ">
                     <div className="flex items-start gap-4 mb-6 md:mb-8">
-                      <div className="p-3 rounded-xl bg-secondary/10 text-secondary-foreground">
+                      <div className="p-3 rounded-sm bg-secondary/10 text-secondary-foreground">
                         <Layers className="w-5 h-5 sm:w-6 sm:h-6" />
                       </div>
                       <div>
@@ -171,7 +171,7 @@ export default function ProductDetailsTabs({
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: index * 0.05 }}
                             key={key}
-                            className="flex items-center justify-between p-3 sm:p-4 rounded-xl bg-muted/30 border border-border/50 hover:bg-muted/50 transition-colors"
+                            className="flex items-center justify-between p-3 sm:p-4 rounded-sm bg-muted/30 border border-border/50 hover:bg-muted/50 transition-colors"
                           >
                             <div className="flex items-center gap-3">
                               <CheckCircle2 className="w-3.5 h-3.5 text-primary/60" />
@@ -204,9 +204,9 @@ export default function ProductDetailsTabs({
                     ease: [0.23, 1, 0.32, 1],
                   }}
                 >
-                  <Card className="p-5 sm:p-8 md:p-10 rounded-3xl border-border/40 bg-gradient-to-br from-background via-background to-accent/5 shadow-xl shadow-primary/5">
+                  <Card className="p-5 sm:p-8 md:p-10 rounded-sm border-border/40 bg-gradient-to-br from-background via-background to-accent/5  ">
                     <div className="flex items-start gap-4 mb-8 md:mb-10">
-                      <div className="p-3 rounded-xl bg-accent/10 text-accent-foreground">
+                      <div className="p-3 rounded-sm bg-accent/10 text-accent-foreground">
                         <Truck className="w-5 h-5 sm:w-6 sm:h-6" />
                       </div>
                       <div>
@@ -221,8 +221,8 @@ export default function ProductDetailsTabs({
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
                       {product.shipping?.delivery && (
-                        <div className="flex gap-4 p-4 sm:p-5 rounded-2xl bg-background border border-border/50 shadow-sm">
-                          <div className="shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-orange-50 dark:bg-orange-500/10 flex items-center justify-center text-orange-600 dark:text-orange-400">
+                        <div className="flex gap-4 p-4 sm:p-5 rounded-sm bg-background border border-border/50 ">
+                          <div className="shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-sm sm:rounded-sm bg-orange-50 dark:bg-orange-500/10 flex items-center justify-center text-orange-600 dark:text-orange-400">
                             <Truck className="w-5 h-5 sm:w-6 sm:h-6" />
                           </div>
                           <div>
@@ -237,8 +237,8 @@ export default function ProductDetailsTabs({
                       )}
 
                       {product.shipping?.returns && (
-                        <div className="flex gap-4 p-4 sm:p-5 rounded-2xl bg-background border border-border/50 shadow-sm">
-                          <div className="shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-primary/5 dark:bg-primary/10 flex items-center justify-center text-primary">
+                        <div className="flex gap-4 p-4 sm:p-5 rounded-sm bg-background border border-border/50 ">
+                          <div className="shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-sm sm:rounded-sm bg-primary/5 dark:bg-primary/10 flex items-center justify-center text-primary">
                             <RotateCcw className="w-5 h-5 sm:w-6 sm:h-6" />
                           </div>
                           <div>
@@ -253,8 +253,8 @@ export default function ProductDetailsTabs({
                       )}
 
                       {product.shipping?.location && (
-                        <div className="flex gap-4 p-4 sm:p-5 rounded-2xl bg-background border border-border/50 shadow-sm">
-                          <div className="shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-green-50 dark:bg-green-500/10 flex items-center justify-center text-green-600 dark:text-green-400">
+                        <div className="flex gap-4 p-4 sm:p-5 rounded-sm bg-background border border-border/50 ">
+                          <div className="shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-sm sm:rounded-sm bg-green-50 dark:bg-green-500/10 flex items-center justify-center text-green-600 dark:text-green-400">
                             <MapPin className="w-5 h-5 sm:w-6 sm:h-6" />
                           </div>
                           <div>
@@ -269,8 +269,8 @@ export default function ProductDetailsTabs({
                       )}
 
                       {product.shipping?.shippingCost && (
-                        <div className="flex gap-4 p-4 sm:p-5 rounded-2xl bg-background border border-border/50 shadow-sm">
-                          <div className="shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-purple-50 dark:bg-purple-500/10 flex items-center justify-center text-purple-600 dark:text-purple-400">
+                        <div className="flex gap-4 p-4 sm:p-5 rounded-sm bg-background border border-border/50 ">
+                          <div className="shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-sm sm:rounded-sm bg-purple-50 dark:bg-purple-500/10 flex items-center justify-center text-purple-600 dark:text-purple-400">
                             <Wallet className="w-5 h-5 sm:w-6 sm:h-6" />
                           </div>
                           <div>

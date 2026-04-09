@@ -128,6 +128,17 @@ export interface CreateOnlineOrderArgs {
   order_items: CreateOrderItemDto[];
 }
 
+export interface RecordVendorOfflineSaleArgs {
+  items: {
+    product_id: string;
+    variant_id?: string;
+    quantity: number;
+  }[];
+  customer_name?: string;
+  customer_email?: string;
+  notes?: string;
+}
+
 export interface UpdateOrderStatusArgs {
   id: string;
   status: OrderStatus;
@@ -343,6 +354,19 @@ export const ordersApi = apiManager.injectEndpoints({
       invalidatesTags: ["User", "Store"],
     }),
 
+    /* ───────── RECORD MANUAL OFFLINE SALE ───────── */
+    recordVendorOfflineSale: builder.mutation<
+      { status: string; data: { success: boolean; order: IOrder } },
+      RecordVendorOfflineSaleArgs
+    >({
+      query: (body) => ({
+        url: "orders/vendor/offline-sale",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Store"], // Refetch analytics & dashboard
+    }),
+
     /* ───────── OFFLINE FULFILLMENT (SELLER) ───────── */
 
     fulfillOfflineOrder: builder.mutation<any, string>({
@@ -364,6 +388,21 @@ export const ordersApi = apiManager.injectEndpoints({
       }),
       invalidatesTags: ["Store"],
     }),
+
+    /* ───────── RECEIPT ───────── */
+    getOrderReceipt: builder.mutation<
+      {
+        status: string;
+        message: string;
+        data: { status: string; data: string; filename: string };
+      },
+      string
+    >({
+      query: (id) => ({
+        url: `orders/${id}/receipt`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -379,6 +418,8 @@ export const {
   useGetOrderByIdQuery,
   useUpdateOrderStatusMutation,
   useCancelOrderMutation,
+  useRecordVendorOfflineSaleMutation,
   useFulfillOfflineOrderMutation,
   useUpdateDeliveryStatusMutation,
+  useGetOrderReceiptMutation,
 } = ordersApi;

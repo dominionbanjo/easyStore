@@ -19,7 +19,7 @@ export default function FeaturedBrands() {
           </h3>
           <p className="text-muted-foreground text-sm md:text-base max-w-2xl mx-auto">
             From fashion and beauty to food and lifestyle, these businesses
-            trust EasyStore to scale their digital presence.
+            trust EazyStore to scale their digital presence.
           </p>
         </div>
 
@@ -31,7 +31,7 @@ export default function FeaturedBrands() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
               viewport={{ once: true }}
-              className="flex items-center gap-3 px-6 py-3 bg-card dark:bg-neutral-900 border border-border/60 dark:border-white/5 rounded-2xl shadow-sm hover:shadow-md hover:border-primary/30 transition-all group"
+              className="flex items-center gap-3 px-6 py-3 bg-card dark:bg-neutral-900 border border-border/60 dark:border-white/5 rounded-sm  hover: hover:border-primary/30 transition-all group"
             >
               <span className="text-2xl group-hover:scale-125 transition-transform">
                 {brand.icon}

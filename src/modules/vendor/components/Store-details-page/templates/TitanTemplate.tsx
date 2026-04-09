@@ -43,7 +43,7 @@ export default function TitanTemplate({
     <div className="min-h-screen bg-black text-zinc-400 font-sans selection:bg-[var(--theme-primary)] selection:text-black">
       <div className="max-w-[1600px] mx-auto px-4 py-8 md:py-12 space-y-8">
         {/* ─── TITAN HEADER ─── */}
-        <header className="w-full border border-zinc-800 bg-zinc-950/80 backdrop-blur-md rounded-xl p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden">
+        <header className="w-full border border-zinc-800 bg-zinc-950/80 backdrop-blur-md rounded-sm p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden">
           {/* Subtle Grid Background Pattern */}
           <div
             className="absolute inset-0 opacity-10 pointer-events-none"
@@ -59,10 +59,10 @@ export default function TitanTemplate({
               <img
                 src={store.logo ?? undefined}
                 alt={store.store_name}
-                className="w-16 h-16 rounded-md object-cover border border-zinc-700 bg-black p-1"
+                className="w-16 h-16 rounded-sm object-cover border border-zinc-700 bg-black p-1"
               />
             ) : (
-              <div className="w-16 h-16 rounded-md bg-zinc-900 border border-zinc-800 flex items-center justify-center font-mono font-bold text-2xl text-[var(--theme-primary)]">
+              <div className="w-16 h-16 rounded-sm bg-zinc-900 border border-zinc-800 flex items-center justify-center font-mono font-bold text-2xl text-[var(--theme-primary)]">
                 {store?.store_name?.substring(0, 2).toUpperCase() || "TT"}
               </div>
             )}
@@ -75,9 +75,9 @@ export default function TitanTemplate({
                   SYS_INIT:{" "}
                   {new Date(store?.created_at || Date.now()).getFullYear()}
                 </span>
-                <span className="w-1 h-1 rounded-full bg-zinc-700"></span>
+                <span className="w-1 h-1 rounded-sm bg-zinc-700"></span>
                 <span className="flex items-center gap-1 text-[var(--theme-primary)]">
-                  <div className="w-2 h-2 rounded-full bg-[var(--theme-primary)] animate-pulse" />{" "}
+                  <div className="w-2 h-2 rounded-sm bg-[var(--theme-primary)] animate-pulse" />{" "}
                   ONLINE
                 </span>
               </div>
@@ -86,18 +86,18 @@ export default function TitanTemplate({
             <div className="flex md:hidden items-center gap-2">
               <button
                 onClick={onCartOpen}
-                className="relative p-3 border border-zinc-800 bg-black text-[var(--theme-primary)] rounded-md hover:bg-[var(--theme-primary)]/10 transition-all group overflow-hidden"
+                className="relative p-3 border border-zinc-800 bg-black text-[var(--theme-primary)] rounded-sm hover:bg-[var(--theme-primary)]/10 transition-all group overflow-hidden"
               >
                 <ShoppingCart className="w-5 h-5" />
                 {cartItemsCount > 0 && (
-                  <span className="absolute -top-1 -right-1 h-5 w-5 bg-[var(--theme-primary)] text-black text-[10px] flex items-center justify-center font-black rounded-sm ring-1 ring-black shadow-[0_0_10px_var(--theme-primary)]">
+                  <span className="absolute -top-1 -right-1 h-5 w-5 bg-[var(--theme-primary)] text-black text-[10px] flex items-center justify-center font-black rounded-sm ring-1 ring-black -[0_0_10px_var(--theme-primary)]">
                     {cartItemsCount}
                   </span>
                 )}
               </button>
 
               <TemplateProfileDropdown
-                buttonClassName="p-3 border border-zinc-800 bg-black text-[var(--theme-primary)] rounded-md hover:bg-[var(--theme-primary)]/10 transition-all"
+                buttonClassName="p-3 border border-zinc-800 bg-black text-[var(--theme-primary)] rounded-sm hover:bg-[var(--theme-primary)]/10 transition-all"
                 iconClassName="w-5 h-5"
               />
             </div>
@@ -111,7 +111,7 @@ export default function TitanTemplate({
               <Input
                 type="text"
                 placeholder="EXECUTE SEARCH..."
-                className="w-full pl-10 pr-10 py-5 bg-black border-zinc-800 focus-visible:bg-zinc-900 focus-visible:border-[var(--theme-primary)] focus-visible:ring-1 focus-visible:ring-[var(--theme-primary)] rounded-md font-mono text-sm uppercase placeholder:text-zinc-700 transition-all text-white"
+                className="w-full pl-10 pr-10 py-5 bg-black border-zinc-800 focus-visible:bg-zinc-900 focus-visible:border-[var(--theme-primary)] focus-visible:ring-1 focus-visible:ring-[var(--theme-primary)] rounded-sm font-mono text-sm uppercase placeholder:text-zinc-700 transition-all text-white"
                 value={searchQuery}
                 onChange={(e) => onSearchChange(e.target.value)}
               />
@@ -134,19 +134,19 @@ export default function TitanTemplate({
           <div className="hidden md:flex items-center gap-2 relative z-10 font-mono">
             <button
               onClick={onCartOpen}
-              className="relative p-3 border border-zinc-800 bg-black text-[var(--theme-primary)] rounded-md hover:bg-[var(--theme-primary)]/10 transition-all group overflow-hidden"
+              className="relative p-3 border border-zinc-800 bg-black text-[var(--theme-primary)] rounded-sm hover:bg-[var(--theme-primary)]/10 transition-all group overflow-hidden"
             >
               <div className="absolute inset-x-0 bottom-0 h-[1px] bg-[var(--theme-primary)] scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
               <ShoppingCart className="w-5 h-5" />
               {cartItemsCount > 0 && (
-                <span className="absolute -top-1 -right-1 h-5 w-5 bg-[var(--theme-primary)] text-black text-[10px] flex items-center justify-center font-black rounded-sm ring-1 ring-black shadow-[0_0_10px_var(--theme-primary)]">
+                <span className="absolute -top-1 -right-1 h-5 w-5 bg-[var(--theme-primary)] text-black text-[10px] flex items-center justify-center font-black rounded-sm ring-1 ring-black -[0_0_10px_var(--theme-primary)]">
                   {cartItemsCount}
                 </span>
               )}
             </button>
 
             <TemplateProfileDropdown
-              buttonClassName="p-3 border border-zinc-800 bg-black text-[var(--theme-primary)] rounded-md hover:bg-[var(--theme-primary)]/10 transition-all"
+              buttonClassName="p-3 border border-zinc-800 bg-black text-[var(--theme-primary)] rounded-sm hover:bg-[var(--theme-primary)]/10 transition-all"
               iconClassName="w-5 h-5"
             />
           </div>
@@ -154,7 +154,7 @@ export default function TitanTemplate({
 
         {/* ─── TITAN HERO SYSTEM ─── */}
         {!searchQuery && !selectedCategory && activeTab === "products" && (
-          <section className="relative w-full min-h-[400px] md:min-h-[500px] rounded-2xl border border-zinc-800 bg-zinc-950 overflow-hidden flex flex-col justify-end p-8 md:p-16 group">
+          <section className="relative w-full min-h-[400px] md:min-h-[500px] rounded-sm border border-zinc-800 bg-zinc-950 overflow-hidden flex flex-col justify-end p-8 md:p-16 group">
             {/* Background Layer */}
             {store.cover_image ? (
               <>
@@ -185,7 +185,7 @@ export default function TitanTemplate({
             <div className="relative z-10 space-y-8">
               <div className="space-y-4">
                 <div className="inline-flex items-center gap-3 px-3 py-1 bg-black border border-zinc-700 rounded-sm">
-                  <div className="w-2 h-2 rounded-full bg-[var(--theme-primary)] animate-pulse shadow-[0_0_8px_var(--theme-primary)]" />
+                  <div className="w-2 h-2 rounded-sm bg-[var(--theme-primary)] animate-pulse -[0_0_8px_var(--theme-primary)]" />
                   <span className="text-[10px] font-mono font-bold text-zinc-400 uppercase tracking-[0.2em]">
                     System_Active // v2.0.4
                   </span>
@@ -248,15 +248,15 @@ export default function TitanTemplate({
           {/* Main Content Area */}
           <div className="lg:col-span-12 space-y-6">
             {/* Nav Tabs Bento Unit */}
-            <div className="p-1.5 bg-zinc-900/50 border border-zinc-800 rounded-xl flex items-center gap-2 w-fit">
+            <div className="p-1.5 bg-zinc-900/50 border border-zinc-800 rounded-sm flex items-center gap-2 w-fit">
               <button
                 onClick={() => {
                   onTabChange("products");
                   onCategorySelect(null);
                 }}
-                className={`px-6 py-2.5 rounded-lg text-xs font-mono font-bold uppercase tracking-wider transition-all ${
+                className={`px-6 py-2.5 rounded-sm text-xs font-mono font-bold uppercase tracking-wider transition-all ${
                   activeTab === "products" && !selectedCategory
-                    ? "bg-[var(--theme-primary)] text-black shadow-[0_0_15px_var(--theme-primary)]/30"
+                    ? "bg-[var(--theme-primary)] text-black -[0_0_15px_var(--theme-primary)]/30"
                     : "text-zinc-500 hover:text-zinc-300"
                 }`}
               >
@@ -264,9 +264,9 @@ export default function TitanTemplate({
               </button>
               <button
                 onClick={() => onTabChange("categories")}
-                className={`px-6 py-2.5 rounded-lg text-xs font-mono font-bold uppercase tracking-wider transition-all ${
+                className={`px-6 py-2.5 rounded-sm text-xs font-mono font-bold uppercase tracking-wider transition-all ${
                   activeTab === "categories" || selectedCategory
-                    ? "bg-[var(--theme-primary)] text-black shadow-[0_0_15px_var(--theme-primary)]/30"
+                    ? "bg-[var(--theme-primary)] text-black -[0_0_15px_var(--theme-primary)]/30"
                     : "text-zinc-500 hover:text-zinc-300"
                 }`}
               >
@@ -275,7 +275,7 @@ export default function TitanTemplate({
             </div>
 
             {/* Content View Unit */}
-            <div className="bg-zinc-950/40 border border-zinc-800 rounded-xl p-8 min-h-[600px]">
+            <div className="bg-zinc-950/40 border border-zinc-800 rounded-sm p-8 min-h-[600px]">
               {/* CATEGORIES VIEW */}
               {activeTab === "categories" && !selectedCategory && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
@@ -283,14 +283,14 @@ export default function TitanTemplate({
                     ? Array.from({ length: 8 }).map((_, i) => (
                         <Skeleton
                           key={i}
-                          className="h-48 rounded-lg bg-zinc-900/50 border border-zinc-800"
+                          className="h-48 rounded-sm bg-zinc-900/50 border border-zinc-800"
                         />
                       ))
                     : categories?.map((cat) => (
                         <button
                           key={cat.id}
                           onClick={() => onCategorySelect(cat)}
-                          className="group relative h-48 rounded-lg bg-zinc-900/30 border border-zinc-800 hover:border-[var(--theme-primary)] p-6 text-left transition-all hover:bg-zinc-900/60 overflow-hidden"
+                          className="group relative h-48 rounded-sm bg-zinc-900/30 border border-zinc-800 hover:border-[var(--theme-primary)] p-6 text-left transition-all hover:bg-zinc-900/60 overflow-hidden"
                         >
                           <div className="absolute top-0 right-0 p-2 text-[var(--theme-primary)]/20 font-mono text-[10px]">
                             ID_{cat.id.substring(0, 6).toUpperCase()}
@@ -328,7 +328,7 @@ export default function TitanTemplate({
                         </button>
                       )}
                     </div>
-                    <div className="text-xs font-mono text-zinc-600 uppercase bg-black px-3 py-1 border border-zinc-800 rounded">
+                    <div className="text-xs font-mono text-zinc-600 uppercase bg-black px-3 py-1 border border-zinc-800 rounded-sm">
                       BLOCK_COUNT: {pagination?.total || 0}
                     </div>
                   </div>
@@ -352,7 +352,7 @@ export default function TitanTemplate({
         </div>
 
         {/* ─── TITAN FOOTER ─── */}
-        <footer className="border border-zinc-800 bg-zinc-950/80 rounded-xl p-10 mt-12 overflow-hidden relative">
+        <footer className="border border-zinc-800 bg-zinc-950/80 rounded-sm p-10 mt-12 overflow-hidden relative">
           <div className="relative z-10 grid grid-cols-1 md:grid-cols-4 gap-12">
             <div className="md:col-span-2">
               <div className="flex items-center gap-4 mb-6">
@@ -405,7 +405,7 @@ export default function TitanTemplate({
                       href={link as string}
                       target="_blank"
                       rel="noreferrer"
-                      className="p-3 border border-zinc-800 bg-black text-zinc-500 hover:text-[var(--theme-primary)] hover:border-[var(--theme-primary)] transition-all rounded"
+                      className="p-3 border border-zinc-800 bg-black text-zinc-500 hover:text-[var(--theme-primary)] hover:border-[var(--theme-primary)] transition-all rounded-sm"
                     >
                       <span className="font-mono text-[10px] uppercase">
                         {platform.substring(0, 3)}
@@ -421,7 +421,7 @@ export default function TitanTemplate({
               STATUS: STABLE // © {new Date().getFullYear()} CORE_INTEGRITY
             </span>
             <span className="text-[var(--theme-primary)]/50">
-              POWERED BY EASYSTORE_SYS
+              POWERED BY EAZYSTORE_SYS
             </span>
           </div>
         </footer>

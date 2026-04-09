@@ -127,7 +127,7 @@ export default function SuperAdminAccessControlPage() {
       </motion.div>
 
       {/* ─── Roles Table ─── */}
-      <Card className="border border-border/40 shadow-sm">
+      <Card className="border border-border/40 ">
         <CardHeader>
           <CardTitle>Roles & Permissions</CardTitle>
           <CardDescription>
@@ -136,7 +136,7 @@ export default function SuperAdminAccessControlPage() {
         </CardHeader>
 
         <CardContent>
-          <div className="overflow-x-auto rounded-md border border-border/20">
+          <div className="overflow-x-auto rounded-sm border border-border/20">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -234,7 +234,7 @@ export default function SuperAdminAccessControlPage() {
         ].map((item, i) => (
           <Card
             key={i}
-            className="border border-border/30 shadow-sm flex items-center gap-4 p-4 sm:p-5"
+            className="border border-border/30  flex items-center gap-4 p-4 sm:p-5"
           >
             <item.icon className="h-7 w-7 sm:h-8 sm:w-8 text-primary shrink-0" />
             <div className="min-w-0">

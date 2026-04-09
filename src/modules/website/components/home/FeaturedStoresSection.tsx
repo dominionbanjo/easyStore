@@ -46,7 +46,7 @@ export default function FeaturedStoresSection({
             <p className="text-muted-foreground text-base md:text-lg max-w-xl">
               Discover top-rated sellers with exceptional products and service.
             </p>
-            <div className="h-1.5 w-20 bg-primary rounded-full" />
+            <div className="h-1.5 w-20 bg-primary rounded-sm" />
           </motion.div>
 
           <motion.div
@@ -71,7 +71,7 @@ export default function FeaturedStoresSection({
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {Array.from({ length: 4 }).map((_, i) => (
               <div key={i} className="space-y-4">
-                <Skeleton className="h-[280px] w-full rounded-3xl" />
+                <Skeleton className="h-[280px] w-full rounded-sm" />
               </div>
             ))}
           </div>
@@ -80,7 +80,7 @@ export default function FeaturedStoresSection({
             icon={StoreIcon}
             title="No Stores Found"
             description="We're currently onboarding new sellers. Check back soon!"
-            className="bg-muted/30 rounded-[3rem]"
+            className="bg-muted/30 rounded-sm"
           />
         ) : (
           <motion.div

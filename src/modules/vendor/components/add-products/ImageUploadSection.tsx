@@ -185,7 +185,7 @@ export default function ImageUploadSection({
       {/* ─── MAIN IMAGE ─── */}
       <div className="space-y-4">
         <div className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+          <div className="h-8 w-8 rounded-sm bg-primary/10 flex items-center justify-center">
             <ImageIcon className="h-4 w-4 text-primary" />
           </div>
           <Label className="text-sm font-black uppercase tracking-widest text-muted-foreground/80">
@@ -195,7 +195,7 @@ export default function ImageUploadSection({
 
         <label
           className={cn(
-            "group relative flex flex-col items-center justify-center overflow-hidden transition-all duration-500 cursor-pointer rounded-[2.5rem] border-2 border-dashed",
+            "group relative flex flex-col items-center justify-center overflow-hidden transition-all duration-500 cursor-pointer rounded-sm border-2 border-dashed",
             image
               ? "h-80 border-transparent bg-muted/20"
               : "h-64 border-muted-foreground/20 hover:border-primary/40 hover:bg-primary/5",
@@ -219,7 +219,7 @@ export default function ImageUploadSection({
                   </span>
                 </div>
                 <div className="w-full space-y-2">
-                  <Progress value={mainProgress} className="h-2 rounded-full" />
+                  <Progress value={mainProgress} className="h-2 rounded-sm" />
                   <p className="text-[10px] text-center uppercase tracking-widest font-black text-primary">
                     Uploading Cover...
                   </p>
@@ -264,11 +264,11 @@ export default function ImageUploadSection({
                       type="button"
                       onClick={removeMainImage}
                       disabled={deletingId !== null}
-                      className="h-12 w-12 rounded-2xl bg-white/20 hover:bg-destructive text-white flex items-center justify-center transition-all duration-300 border border-white/20 hover:border-destructive shadow-xl backdrop-blur-md"
+                      className="h-12 w-12 rounded-sm bg-white/20 hover:bg-destructive text-white flex items-center justify-center transition-all duration-300 border border-white/20 hover:border-destructive  backdrop-blur-md"
                     >
                       <X className="h-6 w-6" />
                     </button>
-                    <div className="h-12 px-6 rounded-2xl bg-white text-black flex items-center gap-2 font-black uppercase tracking-widest text-[10px] shadow-xl">
+                    <div className="h-12 px-6 rounded-sm bg-white text-black flex items-center gap-2 font-black uppercase tracking-widest text-[10px] ">
                       <CheckCircle2 className="h-4 w-4 text-emerald-500" />
                       Cover Uploaded
                     </div>
@@ -296,14 +296,14 @@ export default function ImageUploadSection({
                             e.stopPropagation();
                             setConfirmDeleteId(null);
                           }}
-                          className="flex-1 h-10 rounded-xl bg-white/20 hover:bg-white/30 text-white font-bold text-[10px] uppercase tracking-widest transition-all"
+                          className="flex-1 h-10 rounded-sm bg-white/20 hover:bg-white/30 text-white font-bold text-[10px] uppercase tracking-widest transition-all"
                         >
                           Cancel
                         </button>
                         <button
                           type="button"
                           onClick={removeMainImage}
-                          className="flex-1 h-10 rounded-xl bg-white text-red-600 hover:bg-white/90 font-bold text-[10px] uppercase tracking-widest transition-all shadow-xl"
+                          className="flex-1 h-10 rounded-sm bg-white text-red-600 hover:bg-white/90 font-bold text-[10px] uppercase tracking-widest transition-all "
                         >
                           Confirm
                         </button>
@@ -319,7 +319,7 @@ export default function ImageUploadSection({
                 animate={{ opacity: 1, y: 0 }}
                 className="flex flex-col items-center gap-4 py-8"
               >
-                <div className="h-20 w-20 rounded-[2rem] bg-background flex items-center justify-center shadow-2xl border border-muted-foreground/10 group-hover:scale-110 group-hover:bg-primary transition-all duration-500">
+                <div className="h-20 w-20 rounded-sm bg-background flex items-center justify-center  border border-muted-foreground/10 group-hover:scale-110 group-hover:bg-primary transition-all duration-500">
                   <Upload className="h-8 w-8 text-primary group-hover:text-white transition-colors" />
                 </div>
                 <div className="text-center space-y-1">
@@ -350,7 +350,7 @@ export default function ImageUploadSection({
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+            <div className="h-8 w-8 rounded-sm bg-primary/10 flex items-center justify-center">
               <ImagePlus className="h-4 w-4 text-primary" />
             </div>
             <Label className="text-sm font-black uppercase tracking-widest text-muted-foreground/80">
@@ -371,7 +371,7 @@ export default function ImageUploadSection({
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.8 }}
-                className="relative aspect-square group rounded-3xl overflow-hidden border border-muted-foreground/10 bg-muted/20"
+                className="relative aspect-square group rounded-sm overflow-hidden border border-muted-foreground/10 bg-muted/20"
               >
                 <img
                   src={g.url}
@@ -401,7 +401,7 @@ export default function ImageUploadSection({
                     type="button"
                     onClick={(e) => removeGalleryImage(i, e)}
                     disabled={deletingId !== null}
-                    className="h-10 w-10 rounded-xl bg-white/20 hover:bg-destructive text-white flex items-center justify-center transition-all duration-300 border border-white/20 hover:border-destructive shadow-xl backdrop-blur-md"
+                    className="h-10 w-10 rounded-sm bg-white/20 hover:bg-destructive text-white flex items-center justify-center transition-all duration-300 border border-white/20 hover:border-destructive  backdrop-blur-md"
                   >
                     <X className="h-5 w-5" />
                   </button>
@@ -427,14 +427,14 @@ export default function ImageUploadSection({
                              e.stopPropagation();
                              setConfirmDeleteId(null);
                            }}
-                           className="h-8 rounded-lg bg-white/20 text-white text-[9px] font-bold uppercase transition-all hover:bg-white/30"
+                           className="h-8 rounded-sm bg-white/20 text-white text-[9px] font-bold uppercase transition-all hover:bg-white/30"
                          >
                            No
                          </button>
                          <button
                            type="button"
                            onClick={(e) => removeGalleryImage(i, e)}
-                           className="h-8 rounded-lg bg-white text-red-600 text-[9px] font-bold uppercase shadow-lg transition-all hover:bg-white/90"
+                           className="h-8 rounded-sm bg-white text-red-600 text-[9px] font-bold uppercase  transition-all hover:bg-white/90"
                          >
                            Yes
                          </button>
@@ -450,7 +450,7 @@ export default function ImageUploadSection({
                 key={u.id}
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="relative aspect-square rounded-3xl overflow-hidden border-2 border-primary/20 bg-primary/5 flex flex-col items-center justify-center p-4 gap-3"
+                className="relative aspect-square rounded-sm overflow-hidden border-2 border-primary/20 bg-primary/5 flex flex-col items-center justify-center p-4 gap-3"
               >
                 <Loader2 className="h-6 w-6 text-primary animate-spin" />
                 <div className="w-full space-y-1">
@@ -465,11 +465,11 @@ export default function ImageUploadSection({
             <motion.label
               layout
               className={cn(
-                "aspect-square rounded-3xl border-2 border-dashed border-muted-foreground/20 hover:border-primary/40 hover:bg-primary/5 flex flex-col items-center justify-center cursor-pointer transition-all duration-300 gap-3 group",
+                "aspect-square rounded-sm border-2 border-dashed border-muted-foreground/20 hover:border-primary/40 hover:bg-primary/5 flex flex-col items-center justify-center cursor-pointer transition-all duration-300 gap-3 group",
                 signing && "opacity-50 cursor-not-allowed",
               )}
             >
-              <div className="h-12 w-12 rounded-2xl bg-background flex items-center justify-center shadow-lg border border-border group-hover:scale-110 group-hover:bg-primary transition-all duration-500">
+              <div className="h-12 w-12 rounded-sm bg-background flex items-center justify-center  border border-border group-hover:scale-110 group-hover:bg-primary transition-all duration-500">
                 <Plus className="h-6 w-6 text-primary group-hover:text-white transition-colors" />
               </div>
               <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground group-hover:text-primary">

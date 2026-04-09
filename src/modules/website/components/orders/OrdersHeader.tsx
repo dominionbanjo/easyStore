@@ -13,38 +13,40 @@ export function OrdersHeader({
   isLoading,
 }: OrdersHeaderProps) {
   return (
-    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-      <div className="space-y-1">
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/20">
-            <Package className="h-6 w-6 text-white" />
+    <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-border/40 pb-8 px-1">
+      <div className="space-y-4">
+        <div className="flex items-center gap-4">
+          <div className="w-10 h-10 rounded-sm bg-gradient-to-br from-emerald-500/10 to-emerald-600/10 flex items-center justify-center border border-emerald-500/20">
+            <Package className="h-5 w-5 text-emerald-600" />
           </div>
-          <div>
-            <h1 className="text-3xl font-black text-foreground tracking-tight">
+          <div className="flex flex-col -space-y-1">
+            <h1 className="text-4xl sm:text-5xl font-black text-foreground tracking-tighter uppercase font-outfit">
               My Orders
             </h1>
             {!isLoading && (
-              <p className="text-sm text-muted-foreground font-medium">
-                {totalOrders} {totalOrders === 1 ? "order" : "orders"} in total
-              </p>
+              <div className="flex items-center gap-2 pt-1 opacity-70">
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Order Volume</span>
+                <span className="text-[10px] font-black uppercase py-0.5 px-2 bg-muted/50 rounded-sm border border-border/40 text-foreground">
+                  {totalOrders} {totalOrders === 1 ? "REC" : "RECS"}
+                </span>
+              </div>
             )}
           </div>
         </div>
-        <p className="text-muted-foreground text-sm mt-2 max-w-2xl leading-relaxed">
-          Track your purchases, manage deliveries, and view order history all in
-          one place
+        <p className="text-muted-foreground text-[11px] font-bold uppercase tracking-widest max-w-2xl leading-relaxed opacity-60">
+          Track purchases, manage deliveries, and view history from your unified dashboard.
         </p>
       </div>
 
       <SmartLink to={WEBSITE_ROUTES.HOME}>
         <Button
-          size="lg"
-          className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20 rounded-2xl h-12 px-6 font-bold shrink-0 flex items-center gap-2"
+          className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-xl shadow-emerald-600/20 rounded-sm h-11 px-6 font-black uppercase tracking-widest text-[10px] shrink-0 flex items-center gap-2 group transition-all active:scale-[0.98]"
         >
-          <ShoppingBag className="h-4 w-4" />
+          <ShoppingBag className="h-3.5 w-3.5 group-hover:scale-110 transition-transform" />
           Continue Shopping
         </Button>
       </SmartLink>
     </div>
+
   );
 }

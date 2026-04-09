@@ -22,7 +22,7 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
   return (
     <motion.div
       whileHover={{ y: -5 }}
-      className="w-[380px] flex-shrink-0 bg-white dark:bg-neutral-900 border border-border/50 dark:border-white/5 rounded-[2.5rem] p-8 shadow-sm hover:shadow-xl hover:border-primary/20 transition-all duration-300 flex flex-col justify-between group"
+      className="w-[380px] flex-shrink-0 bg-white dark:bg-neutral-900 border border-border/50 dark:border-white/5 rounded-sm p-8  hover: hover:border-primary/20 transition-all duration-300 flex flex-col justify-between group"
     >
       <div className="space-y-6">
         <div className="flex items-center justify-between">
@@ -78,7 +78,7 @@ export default function TestimonialsCarousel() {
       rating: 5,
       avatar: "https://i.pravatar.cc/150?u=1",
       comment:
-        "Since launching our store on EasyStore, sales have doubled and managing inventory is now stress-free. The platform made it easy to scale without technical headaches.",
+        "Since launching our store on EazyStore, sales have doubled and managing inventory is now stress-free. The platform made it easy to scale without technical headaches.",
     },
     {
       id: "2",
@@ -88,7 +88,7 @@ export default function TestimonialsCarousel() {
       rating: 5,
       avatar: "https://i.pravatar.cc/150?u=2",
       comment:
-        "EasyStore helped us reach more customers online and streamline order processing. What used to take hours now takes minutes.",
+        "EazyStore helped us reach more customers online and streamline order processing. What used to take hours now takes minutes.",
     },
     {
       id: "3",
@@ -98,7 +98,7 @@ export default function TestimonialsCarousel() {
       rating: 5,
       avatar: "https://i.pravatar.cc/150?u=3",
       comment:
-        "Moving our business online with EasyStore transformed how we sell. We now track sales, manage deliveries, and grow faster with confidence.",
+        "Moving our business online with EazyStore transformed how we sell. We now track sales, manage deliveries, and grow faster with confidence.",
     },
     {
       id: "4",
@@ -127,7 +127,7 @@ export default function TestimonialsCarousel() {
               Trusted by 40,000+ <br />
               <span className="text-primary italic">Growing Businesses</span>
             </h3>
-            <div className="h-1.5 w-20 bg-primary rounded-full" />
+            <div className="h-1.5 w-20 bg-primary rounded-sm" />
           </div>
           <p className="text-muted-foreground text-lg max-w-sm">
             Discover how entrepreneurs are transforming their reach and
@@ -160,8 +160,8 @@ export default function TestimonialsCarousel() {
       </div>
 
       <div className="mt-16 flex justify-center">
-        <div className="px-6 py-3 bg-muted/30 rounded-full border border-border/50 text-sm font-medium text-muted-foreground flex items-center gap-2">
-          <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+        <div className="px-6 py-3 bg-muted/30 rounded-sm border border-border/50 text-sm font-medium text-muted-foreground flex items-center gap-2">
+          <span className="flex h-2 w-2 rounded-sm bg-emerald-500 animate-pulse" />
           Active community of vendors and shoppers
         </div>
       </div>

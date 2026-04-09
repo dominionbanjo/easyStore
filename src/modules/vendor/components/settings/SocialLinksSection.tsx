@@ -78,12 +78,12 @@ export function SocialLinksSection({
             Add links to your social media platforms.
           </p>
         </div>
-        <Badge variant="secondary" className="rounded-full px-3">
+        <Badge variant="secondary" className="rounded-sm px-3">
           {Object.keys(socialLinks).length} Linked
         </Badge>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <AnimatePresence>
           {Object.entries(socialLinks).map(([platform, url]) => {
             const config = SOCIAL_PLATFORMS.find((p) => p.id === platform);
@@ -94,31 +94,31 @@ export function SocialLinksSection({
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className="flex items-center gap-3 p-3 rounded-2xl bg-card border border-border/50 group hover:border-primary/30 transition-all shadow-sm"
+                className="flex items-center gap-3 p-3 rounded-sm border border-border/40 group hover:border-primary/40 transition-all bg-muted/5"
               >
                 <div
                   className={cn(
-                    "h-10 w-10 rounded-xl bg-muted flex items-center justify-center shrink-0",
+                    "h-9 w-9 rounded-sm bg-muted flex items-center justify-center shrink-0",
                     config?.color,
                   )}
                 >
-                  <Icon className="w-5 h-5" />
+                  <Icon className="w-4.5 h-4.5" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                     {config?.label || platform}
                   </p>
-                  <p className="text-xs font-semibold truncate text-foreground/80">
+                  <p className="text-[11px] font-medium truncate text-foreground/70">
                     {url}
                   </p>
                 </div>
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-8 w-8 rounded-full text-muted-foreground hover:text-destructive hover:bg-destructive/5 opacity-0 group-hover:opacity-100 transition-opacity"
+                  className="h-8 w-8 rounded-sm text-muted-foreground hover:text-destructive hover:bg-destructive/5 opacity-0 group-hover:opacity-100 transition-opacity"
                   onClick={() => handleRemove(platform)}
                 >
-                  <Trash2 className="w-4 h-4" />
+                  <Trash2 className="w-3.5 h-3.5" />
                 </Button>
               </motion.div>
             );
@@ -126,11 +126,12 @@ export function SocialLinksSection({
         </AnimatePresence>
       </div>
 
-      <div className="p-5 rounded-3xl bg-muted/30 border border-dashed border-border/60 space-y-4">
-        <div className="grid grid-cols-1 sm:grid-cols-12 gap-3">
-          <div className="sm:col-span-4">
+      <div className="pt-6 border-t border-dashed">
+        <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end">
+          <div className="sm:col-span-4 space-y-1.5">
+            <Label className="text-[10px] uppercase font-bold text-muted-foreground ml-1">Select Platform</Label>
             <Select value={newPlatform} onValueChange={setNewPlatform}>
-              <SelectTrigger className="h-11 rounded-xl bg-background border-none shadow-sm">
+              <SelectTrigger className="h-11 rounded-sm bg-muted/20 border-border/40 focus:ring-1">
                 <SelectValue placeholder="Platform" />
               </SelectTrigger>
               <SelectContent>
@@ -149,17 +150,18 @@ export function SocialLinksSection({
               </SelectContent>
             </Select>
           </div>
-          <div className="sm:col-span-6">
+          <div className="sm:col-span-6 space-y-1.5">
+            <Label className="text-[10px] uppercase font-bold text-muted-foreground ml-1">Profile URL / Handle</Label>
             <Input
               value={newUrl}
               onChange={(e) => setNewUrl(e.target.value)}
-              placeholder="Paste profile link or @username"
-              className="h-11 rounded-xl border-none shadow-sm"
+              placeholder="e.g. dominion_gadgets"
+              className="h-11 rounded-sm bg-muted/20 border-border/40 focus:ring-1"
             />
           </div>
           <div className="sm:col-span-2">
             <Button
-              className="w-full h-11 rounded-xl shadow-lg shadow-primary/10"
+              className="w-full h-11 rounded-sm  "
               onClick={handleAdd}
               disabled={!newPlatform || !newUrl}
             >

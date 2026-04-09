@@ -15,7 +15,7 @@ export function CartSkeleton() {
           <div className="space-y-5">
             {Array.from({ length: 3 }).map((_, i) => (
               <div key={i} className="flex flex-col sm:flex-row gap-6 p-4">
-                <Skeleton className="h-28 w-28 rounded-md" />
+                <Skeleton className="h-28 w-28 rounded-sm" />
 
                 <div className="flex-1 space-y-4 py-2">
                   <Skeleton className="h-6 w-3/4" />
@@ -23,12 +23,12 @@ export function CartSkeleton() {
                   <Skeleton className="h-5 w-24" />
 
                   <div className="flex items-center gap-4 mt-4">
-                    <Skeleton className="h-10 w-32 rounded-xl" />
+                    <Skeleton className="h-10 w-32 rounded-sm" />
                   </div>
                 </div>
 
                 <div className="flex flex-col justify-between items-end py-2">
-                  <Skeleton className="h-8 w-8 rounded-full" />
+                  <Skeleton className="h-8 w-8 rounded-sm" />
                   <Skeleton className="h-6 w-24" />
                 </div>
               </div>
@@ -37,7 +37,7 @@ export function CartSkeleton() {
 
           {/* Summary */}
           <div>
-            <div className="bg-white dark:bg-neutral-900 rounded-[2rem] p-8 space-y-6 border border-gray-100 dark:border-white/5 sticky top-24">
+            <div className="bg-white dark:bg-neutral-900 rounded-sm p-8 space-y-6 border border-gray-100 dark:border-white/5 sticky top-24">
               <Skeleton className="h-8 w-40" />
 
               <div className="space-y-4">
@@ -48,8 +48,8 @@ export function CartSkeleton() {
               </div>
 
               <div className="space-y-3 pt-4">
-                <Skeleton className="h-12 w-full rounded-2xl" />
-                <Skeleton className="h-12 w-full rounded-2xl" />
+                <Skeleton className="h-12 w-full rounded-sm" />
+                <Skeleton className="h-12 w-full rounded-sm" />
               </div>
             </div>
           </div>

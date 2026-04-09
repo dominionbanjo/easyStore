@@ -93,7 +93,7 @@ export default function SuperAdminHeader({
             <PopoverTrigger asChild>
               <Button
                 variant="ghost"
-                className="relative h-10 w-10 rounded-full p-0"
+                className="relative h-10 w-10 rounded-sm p-0"
               >
                 <Avatar className="h-10 w-10 border border-border/50">
                   <AvatarImage
@@ -125,7 +125,7 @@ export default function SuperAdminHeader({
                         : "Admin User"}
                     </p>
                     <p className="text-xs text-muted-foreground truncate max-w-[140px]">
-                      {user?.email || "admin@easystore.com"}
+                      {user?.email || "admin@eazystore.com.ng"}
                     </p>
                   </div>
                 </div>

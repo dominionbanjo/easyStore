@@ -196,7 +196,7 @@ export function EditProfileModal({
             variant="ghost"
             size="icon"
             onClick={onClose}
-            className="rounded-full h-8 w-8"
+            className="rounded-sm h-8 w-8"
           >
             <X className="h-4 w-4" />
           </Button>
@@ -208,7 +208,7 @@ export function EditProfileModal({
               {/* Profile Photo Section */}
               <div className="flex flex-col items-center gap-4 py-2">
                 <div className="relative group">
-                  <div className="h-32 w-32 rounded-full overflow-hidden border-4 border-background ring-2 ring-primary/20 bg-muted flex items-center justify-center transition-all group-hover:ring-primary/40 shadow-lg">
+                  <div className="h-32 w-32 rounded-sm overflow-hidden border-4 border-background ring-2 ring-primary/20 bg-muted flex items-center justify-center transition-all group-hover:ring-primary/40 ">
                     {avatarPreview ? (
                       <img
                         src={avatarPreview}
@@ -221,7 +221,7 @@ export function EditProfileModal({
                   </div>
                   <label
                     htmlFor="avatar-upload"
-                    className="absolute bottom-0 right-0 h-10 w-10 bg-primary text-primary-foreground rounded-full border-4 border-background flex items-center justify-center cursor-pointer hover:bg-primary/90 transition-colors shadow-md"
+                    className="absolute bottom-0 right-0 h-10 w-10 bg-primary text-primary-foreground rounded-sm border-4 border-background flex items-center justify-center cursor-pointer hover:bg-primary/90 transition-colors "
                   >
                     <Camera className="h-5 w-5" />
                     <input
@@ -324,7 +324,7 @@ export function EditProfileModal({
                   type="button"
                   variant="outline"
                   onClick={onClose}
-                  className="rounded-xl px-6"
+                  className="rounded-sm px-6"
                 >
                   Cancel
                 </Button>
@@ -332,7 +332,7 @@ export function EditProfileModal({
                   type="submit"
                   isLoading={isLoading}
                   loadingText="Saving Changes..."
-                  className="rounded-xl px-8 bg-primary hover:bg-primary/90"
+                  className="rounded-sm px-8 bg-primary hover:bg-primary/90"
                 >
                   Save Changes
                 </Button>

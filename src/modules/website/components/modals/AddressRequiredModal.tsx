@@ -162,7 +162,7 @@ export function AddressRequiredModal({
       <Dialog.Portal>
         {/* Adjusted Z-Index to 40/50 to play nice with other portals like Select (z-50) */}
         <Dialog.Overlay className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 transition-all" />
-        <Dialog.Content className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[95vw] max-w-4xl max-h-[90vh] z-50 overflow-y-auto md:overflow-hidden rounded-[1.5rem] sm:rounded-[2.5rem] border-none shadow-2xl bg-background outline-none flex flex-col md:flex-row custom-scrollbar">
+        <Dialog.Content className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[95vw] max-w-4xl max-h-[90vh] z-50 overflow-y-auto md:overflow-hidden rounded-sm sm:rounded-sm border-none  bg-background outline-none flex flex-col md:flex-row custom-scrollbar">
           {/* Left Panel - Visual & Context */}
           <div className="w-full md:w-1/3 bg-gradient-to-br from-emerald-500 to-teal-600 p-6 sm:p-8 text-white relative flex flex-col justify-between overflow-hidden shrink-0 min-h-[260px] md:min-h-0">
             <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
@@ -170,7 +170,7 @@ export function AddressRequiredModal({
             </div>
 
             <div className="relative z-10">
-              <div className="h-12 w-12 sm:h-16 sm:w-16 rounded-xl sm:rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center mb-6 sm:mb-8 shadow-xl shadow-black/10">
+              <div className="h-12 w-12 sm:h-16 sm:w-16 rounded-sm sm:rounded-sm bg-white/20 backdrop-blur-md flex items-center justify-center mb-6 sm:mb-8  ">
                 <Navigation className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
               </div>
               <h2 className="text-2xl sm:text-3xl font-black tracking-tight leading-none mb-3 sm:mb-4 uppercase">
@@ -183,7 +183,7 @@ export function AddressRequiredModal({
             </div>
 
             <div className="relative z-10 pt-6 md:pt-0">
-              <div className="p-4 rounded-xl sm:rounded-2xl bg-white/10 backdrop-blur-sm border border-white/10 space-y-3">
+              <div className="p-4 rounded-sm sm:rounded-sm bg-white/10 backdrop-blur-sm border border-white/10 space-y-3">
                 <div className="flex items-center gap-3">
                   <ShieldCheck className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-200" />
                   <p className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest">
@@ -209,7 +209,7 @@ export function AddressRequiredModal({
                 </p>
               </div>
               <Dialog.Close asChild>
-                <button className="h-10 w-10 rounded-xl bg-muted/50 hover:bg-muted transition-colors flex items-center justify-center text-muted-foreground">
+                <button className="h-10 w-10 rounded-sm bg-muted/50 hover:bg-muted transition-colors flex items-center justify-center text-muted-foreground">
                   <X className="h-5 w-5" />
                 </button>
               </Dialog.Close>
@@ -271,7 +271,7 @@ export function AddressRequiredModal({
                 <div className="flex flex-col gap-4 pt-4 shrink-0">
                   <Button
                     type="submit"
-                    className="h-14 w-full rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-black uppercase tracking-[0.2em] text-xs shadow-xl shadow-emerald-500/20 transition-all hover:scale-[1.01] active:scale-[0.99]"
+                    className="h-14 w-full rounded-sm bg-emerald-500 hover:bg-emerald-600 text-white font-black uppercase tracking-[0.2em] text-xs  -emerald-500/20 transition-all hover:scale-[1.01] active:scale-[0.99]"
                     disabled={isLoading}
                   >
                     {isLoading ? (

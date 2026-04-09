@@ -62,7 +62,7 @@ export default function ResetPasswordPage() {
   if (!email || !token) {
     return (
       <div className="fixed inset-0 flex items-center justify-center p-4 bg-background">
-        <Card className="w-full max-w-md bg-white/95 rounded-2xl shadow-xl text-center p-8">
+        <Card className="w-full max-w-md bg-white/95 rounded-sm  text-center p-8">
           <CardTitle className="text-xl font-semibold mb-2 text-destructive">
             Invalid Reset Link
           </CardTitle>
@@ -71,7 +71,7 @@ export default function ResetPasswordPage() {
           </CardDescription>
 
           <Button
-            className="mt-6 w-full rounded-full"
+            className="mt-6 w-full rounded-sm"
             onClick={() => navigate(AUTH_ROUTES.FORGOT_PASSWORD)}
           >
             Request a New Link
@@ -103,7 +103,7 @@ export default function ResetPasswordPage() {
             type="submit"
             isLoading={isLoading}
             loadingText="Resetting..."
-            className="w-full h-11 rounded-full text-base font-semibold shadow-md active:scale-95 transition-all"
+            className="w-full h-11 rounded-sm text-base font-semibold  active:scale-95 transition-all"
           >
             Reset Password
           </Button>

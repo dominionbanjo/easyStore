@@ -28,10 +28,10 @@ export function SupportForm() {
   };
 
   return (
-    <Card className="border-none shadow-2xl bg-card overflow-hidden h-full">
+    <Card className="border-none  bg-card overflow-hidden h-full">
       <CardHeader className="p-8 border-b border-border/50 bg-muted/20">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
+          <div className="w-12 h-12 rounded-sm bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
             <Headphones className="w-6 h-6 text-blue-500" />
           </div>
           <div>
@@ -53,7 +53,7 @@ export function SupportForm() {
               </label>
               <Input
                 placeholder="John Doe"
-                className="h-12 rounded-xl bg-muted/50 border-border/50 focus:bg-card transition-all"
+                className="h-12 rounded-sm bg-muted/50 border-border/50 focus:bg-card transition-all"
                 required
               />
             </div>
@@ -64,7 +64,7 @@ export function SupportForm() {
               <Input
                 type="email"
                 placeholder="john@storename.com"
-                className="h-12 rounded-xl bg-muted/50 border-border/50 focus:bg-card transition-all"
+                className="h-12 rounded-sm bg-muted/50 border-border/50 focus:bg-card transition-all"
                 required
               />
             </div>
@@ -74,7 +74,7 @@ export function SupportForm() {
             <label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">
               Category
             </label>
-            <select className="w-full h-12 rounded-xl bg-muted/50 border border-border/50 px-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all">
+            <select className="w-full h-12 rounded-sm bg-muted/50 border border-border/50 px-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all">
               <option>Payment & Payouts</option>
               <option>Technical Issue</option>
               <option>Account Access</option>
@@ -90,7 +90,7 @@ export function SupportForm() {
             <textarea
               placeholder="Describe your issue in detail..."
               rows={4}
-              className="w-full rounded-xl bg-muted/50 border border-border/50 p-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-card transition-all resize-none"
+              className="w-full rounded-sm bg-muted/50 border border-border/50 p-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-card transition-all resize-none"
               required
             />
           </div>
@@ -98,11 +98,11 @@ export function SupportForm() {
           <Button
             type="submit"
             disabled={loading}
-            className="w-full h-14 rounded-2xl shadow-xl shadow-primary/20 font-black tracking-tight gap-2 text-base transition-transform active:scale-[0.98]"
+            className="w-full h-14 rounded-sm   font-black tracking-tight gap-2 text-base transition-transform active:scale-[0.98]"
           >
             {loading ? (
               <span className="flex items-center gap-2">
-                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-sm animate-spin" />
                 Processing...
               </span>
             ) : (

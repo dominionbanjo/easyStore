@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useProductActions } from "../../../hooks/useProductActions";
 import ProductDetailsTabs from "@/modules/website/components/products/ProductDetailsTabs";
-import ReviewsSection from "@/modules/website/components/products/ReviewsSection";
+import { StoreProductReviews } from "../StoreProductReviews";
 import RelatedProductsGrid from "@/modules/website/components/products/RelatedProductsGrid";
 import type { ProductTemplateProps } from "./ProductTemplateProps";
 import { adaptProductToUI } from "../../../utils/productAdapter";
+import { GoBackButton } from "@/components/shared/GoBackButton";
 
 // Editorial Components
 import { EditorialHeader } from "./editorial/EditorialHeader";
@@ -50,6 +51,10 @@ export default function EditorialProductTemplate({
         setSearchOpen={setSearchOpen}
       />
 
+      <div className="max-w-7xl mx-auto px-6 pt-8">
+        <GoBackButton />
+      </div>
+
       <EditorialNarrative
         uiProduct={uiProduct}
         quantity={quantity}
@@ -80,7 +85,7 @@ export default function EditorialProductTemplate({
           <h3 className="text-xl uppercase tracking-[0.3em] opacity-50 mb-12">
             Critique & Reflections
           </h3>
-          <ReviewsSection
+          <StoreProductReviews
             productId={product.id}
             reviews={reviews}
             ratingAverage={uiProduct.rating}

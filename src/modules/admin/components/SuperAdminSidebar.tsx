@@ -65,7 +65,7 @@ export default function SuperAdminSidebar({ open, onToggle }: Props) {
                 end
                 className={({ isActive }: { isActive: boolean }) =>
                   cn(
-                    "flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors",
+                    "flex items-center gap-3 px-3 py-2 rounded-sm text-sm transition-colors",
                     "text-muted-foreground hover:text-foreground hover:bg-muted/50",
                     isActive && "bg-muted text-foreground font-medium"
                   )
@@ -121,7 +121,7 @@ export default function SuperAdminSidebar({ open, onToggle }: Props) {
                       onClick={onToggle}
                       className={({ isActive }: { isActive: boolean }) =>
                         cn(
-                          "flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors",
+                          "flex items-center gap-3 px-3 py-2 rounded-sm text-sm transition-colors",
                           "text-muted-foreground hover:text-foreground hover:bg-muted/50",
                           isActive && "bg-muted text-foreground font-medium"
                         )

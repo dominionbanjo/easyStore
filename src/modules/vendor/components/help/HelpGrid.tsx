@@ -59,9 +59,9 @@ export function HelpGrid() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: idx * 0.05 }}
         >
-          <Card className="group relative border-none shadow-xl bg-card hover:ring-2 hover:ring-emerald-500/20 transition-all duration-300 cursor-pointer overflow-hidden p-6">
+          <Card className="group relative border-none  bg-card hover:ring-2 hover:ring-emerald-500/20 transition-all duration-300 cursor-pointer overflow-hidden p-6">
             <div
-              className={`w-12 h-12 rounded-2xl bg-${cat.color}-500/10 border border-${cat.color}-500/20 flex items-center justify-center mb-4 transition-transform group-hover:scale-110 duration-500`}
+              className={`w-12 h-12 rounded-sm bg-${cat.color}-500/10 border border-${cat.color}-500/20 flex items-center justify-center mb-4 transition-transform group-hover:scale-110 duration-500`}
             >
               <cat.icon className={`w-6 h-6 text-${cat.color}-500`} />
             </div>
@@ -81,7 +81,7 @@ export function HelpGrid() {
 
             {/* Subtle background decoration */}
             <div
-              className={`absolute -bottom-8 -right-8 w-24 h-24 bg-${cat.color}-500/5 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700`}
+              className={`absolute -bottom-8 -right-8 w-24 h-24 bg-${cat.color}-500/5 rounded-sm blur-2xl group-hover:scale-150 transition-transform duration-700`}
             />
           </Card>
         </motion.div>

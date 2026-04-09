@@ -182,7 +182,7 @@ export default function SignupPage() {
       google.accounts.id.renderButton(googleButtonRef.current, {
         theme: "outline",
         size: "large",
-        shape: "pill",
+        shape: "rectangular",
         width: getGoogleButtonWidth(),
       });
     };
@@ -195,11 +195,11 @@ export default function SignupPage() {
   return (
     <AuthLayout
       title="Create your account"
-      subtitle="Join EasyStore and start your journey today."
+      subtitle="Join EazyStore and start your journey today."
     >
-      <div className="relative p-1.5 bg-muted/50 rounded-2xl mb-8 flex items-center border border-border/50">
+      <div className="relative p-1.5 bg-muted/50 rounded-sm mb-8 flex items-center border border-border/50">
         <div
-          className="absolute h-[calc(100%-12px)] top-1.5 transition-all duration-300 ease-in-out bg-white rounded-xl shadow-sm z-0 border border-border/20"
+          className="absolute h-[calc(100%-12px)] top-1.5 transition-all duration-300 ease-in-out bg-white rounded-sm  z-0 border border-border/20"
           style={{
             width: "calc(50% - 12px)",
             left: accountType === "user" ? "6px" : "calc(50% + 6px)",
@@ -210,7 +210,7 @@ export default function SignupPage() {
           type="button"
           onClick={() => setValue("account_type", "user")}
           className={cn(
-            "flex-1 relative z-10 flex items-center justify-center gap-2.5 py-2.5 rounded-xl text-sm font-semibold transition-colors duration-200",
+            "flex-1 relative z-10 flex items-center justify-center gap-2.5 py-2.5 rounded-sm text-sm font-semibold transition-colors duration-200",
             accountType === "user"
               ? "text-primary"
               : "text-muted-foreground hover:text-foreground",
@@ -229,7 +229,7 @@ export default function SignupPage() {
           type="button"
           onClick={() => setValue("account_type", "vendor")}
           className={cn(
-            "flex-1 relative z-10 flex items-center justify-center gap-2.5 py-2.5 rounded-xl text-sm font-semibold transition-colors duration-200",
+            "flex-1 relative z-10 flex items-center justify-center gap-2.5 py-2.5 rounded-sm text-sm font-semibold transition-colors duration-200",
             accountType === "vendor"
               ? "text-primary"
               : "text-muted-foreground hover:text-foreground",
@@ -290,9 +290,9 @@ export default function SignupPage() {
           </div>
 
           {accountType === "vendor" && (
-            <div className="space-y-4 rounded-xl border border-border/50 bg-muted/30 p-5 mt-2 animate-in slide-in-from-top-2">
+            <div className="space-y-4 rounded-sm border border-border/50 bg-muted/30 p-5 mt-2 animate-in slide-in-from-top-2">
               <div className="flex items-center gap-2 mb-2">
-                <div className="h-6 w-1 bg-primary rounded-full" />
+                <div className="h-6 w-1 bg-primary rounded-sm" />
                 <p className="text-sm font-semibold text-foreground">
                   Store Details
                 </p>
@@ -311,7 +311,7 @@ export default function SignupPage() {
                   <div className="absolute right-3 top-[38px] text-xs">
                     {storeNameStatus === "checking" && (
                       <span className="flex items-center gap-1 text-muted-foreground">
-                        <span className="h-3 w-3 animate-spin rounded-full border-2 border-primary/20 border-t-primary" />
+                        <span className="h-3 w-3 animate-spin rounded-sm border-2 border-primary/20 border-t-primary" />
                         Checking...
                       </span>
                     )}
@@ -382,7 +382,7 @@ export default function SignupPage() {
               isLoading={isLoading}
               loadingText="Creating account..."
               className={cn(
-                "w-full h-12 rounded-full text-base font-semibold shadow-lg hover:shadow-primary/25 disabled:opacity-50",
+                "w-full h-12 rounded-sm text-base font-semibold  hover: disabled:opacity-50",
               )}
             >
               Create Account

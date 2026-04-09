@@ -102,7 +102,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div ref={containerRef} className={cn("space-y-4", className)}>
-      <div className="rounded-none border-x-0 border-y sm:rounded-xl sm:border border-border/40 bg-background overflow-hidden">
+      <div className="rounded-none border-x-0 border-y sm:rounded-sm sm:border border-border/40 bg-background overflow-hidden">
         <Table containerClassName="custom-scrollbar">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -112,7 +112,7 @@ export function DataTable<TData, TValue>({
                     key={header.id}
                     className={cn(
                       "px-2 sm:px-4 h-11 text-xs sm:text-sm whitespace-nowrap",
-                      index === 0 && "sticky left-0 z-20 bg-background shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)] border-r border-border/10",
+                      index === 0 && "sticky left-0 z-20 bg-background -[2px_0_5px_-2px_rgba(0,0,0,0.1)] border-r border-border/10",
                     )}
                   >
                     {header.isPlaceholder
@@ -135,7 +135,7 @@ export function DataTable<TData, TValue>({
                     <TableCell
                       key={j}
                       className={cn(
-                        j === 0 && "sticky left-0 z-10 bg-background shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]",
+                        j === 0 && "sticky left-0 z-10 bg-background -[2px_0_5px_-2px_rgba(0,0,0,0.1)]",
                       )}
                     >
                       <Skeleton className="h-4 w-full" />
@@ -151,7 +151,7 @@ export function DataTable<TData, TValue>({
                       key={cell.id}
                       className={cn(
                         "px-2 sm:px-4 py-3 sm:py-4",
-                        index === 0 && "sticky left-0 z-10 bg-background shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)] border-r border-border/10",
+                        index === 0 && "sticky left-0 z-10 bg-background -[2px_0_5px_-2px_rgba(0,0,0,0.1)] border-r border-border/10",
                       )}
                     >
                       {flexRender(
@@ -169,7 +169,7 @@ export function DataTable<TData, TValue>({
                   className="h-[400px] text-center"
                 >
                   <div className="flex flex-col items-center justify-center gap-3 animate-in fade-in zoom-in duration-300">
-                    <div className="p-4 rounded-full bg-muted/50 text-muted-foreground/40">
+                    <div className="p-4 rounded-sm bg-muted/50 text-muted-foreground/40">
                       <SearchX className="h-10 w-10" />
                     </div>
                     <div className="space-y-1">

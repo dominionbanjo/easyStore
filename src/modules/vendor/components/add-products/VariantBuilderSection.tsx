@@ -193,7 +193,7 @@ export function VariantBuilderSection() {
             variant="outline"
             size="sm"
             onClick={addOption}
-            className="rounded-full shadow-sm text-xs h-8 px-3 border-dashed border-primary/40 text-primary"
+            className="rounded-sm  text-xs h-8 px-3 border-dashed border-primary/40 text-primary"
           >
             <Plus className="h-3 w-3 mr-1" /> Add Option
           </Button>
@@ -208,13 +208,13 @@ export function VariantBuilderSection() {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className="p-3 md:p-5 rounded-[2rem] border border-border/40 bg-muted/5 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden"
+                className="p-3 md:p-5 rounded-sm border border-border/40 bg-muted/5  hover: transition- relative overflow-hidden"
               >
                 <div className="flex flex-col gap-6">
                   {/* Header */}
                   <div className="flex items-center justify-between border-b border-border/10 p-3 md:p-6">
                     <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-2xl bg-primary/10 flex items-center justify-center shadow-inner">
+                      <div className="h-10 w-10 rounded-sm bg-primary/10 flex items-center justify-center ">
                         <span className="text-sm font-black text-primary">
                           V{index + 1}
                         </span>
@@ -228,7 +228,7 @@ export function VariantBuilderSection() {
                       variant="ghost"
                       size="sm"
                       onClick={() => removeOption(index)}
-                      className="h-8 px-3 rounded-full text-destructive hover:bg-destructive/10 hover:text-destructive transition-colors gap-2"
+                      className="h-8 px-3 rounded-sm text-destructive hover:bg-destructive/10 hover:text-destructive transition-colors gap-2"
                     >
                       <Trash2 className="h-3.5 w-3.5" />
                       <span className="text-[10px] font-bold uppercase">
@@ -258,7 +258,7 @@ export function VariantBuilderSection() {
                                   <Input
                                     autoFocus
                                     placeholder="Enter custom name..."
-                                    className="h-12 md:h-14 rounded-2xl bg-background border-primary/20 focus:ring-primary/20 transition-all font-bold text-base md:text-lg pr-12"
+                                    className="h-12 md:h-14 rounded-sm bg-background border-primary/20 focus:ring-primary/20 transition-all font-bold text-base md:text-lg pr-12"
                                     defaultValue={options[index]?.name || ""}
                                     onKeyDown={(e) => {
                                       if (e.key === "Enter") {
@@ -306,7 +306,7 @@ export function VariantBuilderSection() {
                                         return next;
                                       });
                                     }}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 h-8 w-8 rounded-xl bg-muted hover:bg-muted-foreground/10 flex items-center justify-center transition-colors"
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 h-8 w-8 rounded-sm bg-muted hover:bg-muted-foreground/10 flex items-center justify-center transition-colors"
                                   >
                                     <RotateCcw className="h-4 w-4 text-muted-foreground" />
                                   </button>
@@ -321,7 +321,7 @@ export function VariantBuilderSection() {
                                   name={`options.${index}.name`}
                                   options={OPTION_NAME_SUGGESTIONS}
                                   placeholder="Select Option (e.g. Size)"
-                                  className="[&_button]:h-12 md:[&_button]:h-14 [&_button]:rounded-2xl"
+                                  className="[&_button]:h-12 md:[&_button]:h-14 [&_button]:rounded-sm"
                                   onValueChange={(val) => {
                                     if (val && val !== "custom") {
                                       const currentValues =
@@ -340,7 +340,7 @@ export function VariantBuilderSection() {
                                   <Button
                                     type="button"
                                     variant="outline"
-                                    className="w-full h-12 rounded-xl border-dashed"
+                                    className="w-full h-12 rounded-sm border-dashed"
                                     onClick={() =>
                                       setCustomNames((prev) => ({
                                         ...prev,
@@ -356,7 +356,7 @@ export function VariantBuilderSection() {
                                   editingNameIndex === index && (
                                     <Button
                                       type="button"
-                                      className="w-full h-12 rounded-xl"
+                                      className="w-full h-12 rounded-sm"
                                       onClick={() => setEditingNameIndex(null)}
                                     >
                                       Confirm Selection
@@ -367,7 +367,7 @@ export function VariantBuilderSection() {
                           </div>
                         ) : (
                           <div className="group relative">
-                            <div className="h-14 md:h-16 rounded-[1.5rem] bg-primary/5 border border-primary/20 flex items-center justify-between px-4 md:px-6 transition-all group-hover:bg-primary/10">
+                            <div className="h-14 md:h-16 rounded-sm bg-primary/5 border border-primary/20 flex items-center justify-between px-4 md:px-6 transition-all group-hover:bg-primary/10">
                               <span className="text-lg md:text-xl font-black text-primary capitalize tracking-tight">
                                 {options[index]?.name}
                               </span>
@@ -376,7 +376,7 @@ export function VariantBuilderSection() {
                                 variant="ghost"
                                 size="icon"
                                 onClick={() => setEditingNameIndex(index)}
-                                className="h-10 w-10 rounded-xl bg-background shadow-sm hover:bg-primary hover:text-white transition-all scale-90 group-hover:scale-100"
+                                className="h-10 w-10 rounded-sm bg-background  hover:bg-primary hover:text-white transition-all scale-90 group-hover:scale-100"
                               >
                                 <Edit2 className="h-4 w-4" />
                               </Button>
@@ -400,7 +400,7 @@ export function VariantBuilderSection() {
                         "color" ? (
                           <div className="space-y-4">
                             <div className="flex items-center gap-2 mb-4">
-                              <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                              <div className="h-8 w-8 rounded-sm bg-primary/10 flex items-center justify-center">
                                 <Palette className="h-4 w-4 text-primary" />
                               </div>
                               <Label className="text-sm font-black uppercase tracking-widest text-muted-foreground/80">
@@ -419,18 +419,18 @@ export function VariantBuilderSection() {
                                 });
                               }}
                             />
-                            <div className="flex flex-wrap gap-2 mt-4 p-5 rounded-[2rem] bg-muted/5 border border-border/40 min-h-[120px] border-dashed">
+                            <div className="flex flex-wrap gap-2 mt-4 p-5 rounded-sm bg-muted/5 border border-border/40 min-h-[120px] border-dashed">
                               {(options[index]?.values || []).length > 0 ? (
                                 (options[index]?.values || []).map((v) => (
                                   <Badge
                                     key={v}
                                     variant="secondary"
-                                    className="bg-primary/10 text-primary border-none rounded-2xl h-8 md:h-10 px-3 md:px-4 text-[10px] md:text-sm font-bold flex items-center gap-2 shadow-sm"
+                                    className="bg-primary/10 text-primary border-none rounded-sm h-8 md:h-10 px-3 md:px-4 text-[10px] md:text-sm font-bold flex items-center gap-2 "
                                   >
                                     {v}
                                     <button
                                       type="button"
-                                      className="p-1 hover:bg-primary/20 rounded-lg transition-colors"
+                                      className="p-1 hover:bg-primary/20 rounded-sm transition-colors"
                                       onClick={() => {
                                         const currentOpt = getValues(
                                           `options.${index}`,
@@ -498,10 +498,10 @@ export function VariantBuilderSection() {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="p-12 text-center border-2 border-dashed rounded-[3rem] bg-muted/5 border-border/40 flex flex-col items-center gap-4 group hover:bg-muted/10 hover:border-primary/20 transition-all cursor-pointer"
+              className="p-12 text-center border-2 border-dashed rounded-sm bg-muted/5 border-border/40 flex flex-col items-center gap-4 group hover:bg-muted/10 hover:border-primary/20 transition-all cursor-pointer"
               onClick={addOption}
             >
-              <div className="h-16 w-16 rounded-full bg-primary/5 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
+              <div className="h-16 w-16 rounded-sm bg-primary/5 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
                 <Settings2 className="h-8 w-8 text-primary/40 group-hover:text-primary/60 transition-colors" />
               </div>
               <div className="space-y-1">
@@ -516,7 +516,7 @@ export function VariantBuilderSection() {
               <Button
                 type="button"
                 variant="outline"
-                className="rounded-full h-10 px-6 border-primary/20 text-primary"
+                className="rounded-sm h-10 px-6 border-primary/20 text-primary"
               >
                 Create First Option
               </Button>
@@ -540,7 +540,7 @@ export function VariantBuilderSection() {
             </div>
 
             {/* Bulk Edit Bar */}
-            <div className="flex items-center gap-2 p-2 bg-muted/10 rounded-3xl border border-border/40 shadow-inner overflow-x-auto whitespace-nowrap">
+            <div className="flex items-center gap-2 p-2 bg-muted/10 rounded-sm border border-border/40  overflow-x-auto whitespace-nowrap">
               <div className="flex items-center gap-2 px-3 border-r border-border/20 mr-1">
                 <Zap className="h-3.5 w-3.5 text-amber-500 fill-amber-500" />
                 <span className="text-[10px] font-black uppercase tracking-wider text-muted-foreground">
@@ -553,7 +553,7 @@ export function VariantBuilderSection() {
                   <Input
                     type="number"
                     placeholder="Price"
-                    className="h-8 w-20 text-[10px] rounded-full bg-background border-none focus-visible:ring-primary/20 pr-6"
+                    className="h-8 w-20 text-[10px] rounded-sm bg-background border-none focus-visible:ring-primary/20 pr-6"
                     value={bulkValues.price}
                     onChange={(e) =>
                       setBulkValues((prev) => ({
@@ -565,7 +565,7 @@ export function VariantBuilderSection() {
                   <Button
                     type="button"
                     size="icon"
-                    className="h-6 w-6 absolute right-1 top-1 rounded-full bg-primary/10 hover:bg-primary text-primary hover:text-white transition-all scale-75 group-hover:scale-100"
+                    className="h-6 w-6 absolute right-1 top-1 rounded-sm bg-primary/10 hover:bg-primary text-primary hover:text-white transition-all scale-75 group-hover:scale-100"
                     onClick={() => applyBulkEdit("price")}
                   >
                     <ArrowDown className="h-3 w-3" />
@@ -576,7 +576,7 @@ export function VariantBuilderSection() {
                   <Input
                     type="number"
                     placeholder="Stock"
-                    className="h-8 w-20 text-[10px] rounded-full bg-background border-none focus-visible:ring-primary/20 pr-6"
+                    className="h-8 w-20 text-[10px] rounded-sm bg-background border-none focus-visible:ring-primary/20 pr-6"
                     value={bulkValues.stock}
                     onChange={(e) =>
                       setBulkValues((prev) => ({
@@ -588,7 +588,7 @@ export function VariantBuilderSection() {
                   <Button
                     type="button"
                     size="icon"
-                    className="h-6 w-6 absolute right-1 top-1 rounded-full bg-emerald-500/10 hover:bg-emerald-500 text-emerald-500 hover:text-white transition-all scale-75 group-hover:scale-100"
+                    className="h-6 w-6 absolute right-1 top-1 rounded-sm bg-emerald-500/10 hover:bg-emerald-500 text-emerald-500 hover:text-white transition-all scale-75 group-hover:scale-100"
                     onClick={() => applyBulkEdit("stock")}
                   >
                     <ArrowDown className="h-3 w-3" />
@@ -622,7 +622,7 @@ export function VariantBuilderSection() {
                       initial={{ opacity: 0, scale: 0.98 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.95 }}
-                      className="flex flex-col md:grid md:grid-cols-[1fr_110px_110px_110px_110px] gap-3 p-4 rounded-3xl border border-border/40 bg-background/50 hover:bg-white dark:hover:bg-neutral-900 transition-all duration-300 shadow-sm hover:shadow-md group"
+                      className="flex flex-col md:grid md:grid-cols-[1fr_110px_110px_110px_110px] gap-3 p-4 rounded-sm border border-border/40 bg-background/50 hover:bg-white dark:hover:bg-neutral-900 transition-all duration-300  hover: group"
                     >
                       {/* Combination Tags */}
                       <div className="flex items-center flex-wrap gap-2 w-full">
@@ -630,7 +630,7 @@ export function VariantBuilderSection() {
                           <Badge
                             key={i}
                             variant="secondary"
-                            className="font-black text-[11px] h-7 px-3 bg-primary/10 text-primary border-none rounded-full shadow-inner"
+                            className="font-black text-[11px] h-7 px-3 bg-primary/10 text-primary border-none rounded-sm "
                           >
                             {String(v)}
                           </Badge>
@@ -648,7 +648,7 @@ export function VariantBuilderSection() {
                             name={`variants.${index}.sku`}
                             placeholder="SKU-123"
                             className="space-y-0"
-                            inputClassName="h-10 text-xs rounded-2xl bg-muted/20 border-transparent focus:border-primary/20 focus:bg-background transition-all"
+                            inputClassName="h-10 text-xs rounded-sm bg-muted/20 border-transparent focus:border-primary/20 focus:bg-background transition-all"
                           />
                         </div>
 
@@ -661,7 +661,7 @@ export function VariantBuilderSection() {
                             name={`variants.${index}.price`}
                             placeholder="0.00"
                             className="space-y-0"
-                            inputClassName="h-10 text-xs pl-8 rounded-2xl bg-muted/20 border-transparent focus:border-primary/20 focus:bg-background transition-all"
+                            inputClassName="h-10 text-xs pl-8 rounded-sm bg-muted/20 border-transparent focus:border-primary/20 focus:bg-background transition-all"
                             icon={
                               <Tag className="h-3 w-3 text-muted-foreground/60" />
                             }
@@ -677,7 +677,7 @@ export function VariantBuilderSection() {
                             name={`variants.${index}.discount_price`}
                             placeholder="Opt"
                             className="space-y-0"
-                            inputClassName="h-10 text-xs pl-8 rounded-2xl bg-muted/20 border-transparent focus:border-primary/20 focus:bg-background transition-all"
+                            inputClassName="h-10 text-xs pl-8 rounded-sm bg-muted/20 border-transparent focus:border-primary/20 focus:bg-background transition-all"
                             icon={
                               <Percent className="h-3 w-3 text-muted-foreground/60" />
                             }
@@ -694,7 +694,7 @@ export function VariantBuilderSection() {
                             type="number"
                             placeholder="0"
                             className="space-y-0"
-                            inputClassName="h-10 text-xs pl-8 rounded-2xl bg-muted/20 border-transparent focus:border-primary/20 focus:bg-background transition-all"
+                            inputClassName="h-10 text-xs pl-8 rounded-sm bg-muted/20 border-transparent focus:border-primary/20 focus:bg-background transition-all"
                             icon={
                               <Box className="h-3 w-3 text-muted-foreground/60" />
                             }

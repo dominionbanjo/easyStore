@@ -67,10 +67,10 @@ export default function VerifyPaymentPage() {
   if (isLoading) {
     return (
       <section className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-emerald-50/30 dark:from-neutral-950 dark:via-neutral-900 dark:to-emerald-950/10 flex items-center justify-center px-4 transition-colors duration-300">
-        <Card className="w-full max-w-md text-center rounded-[2.5rem] border-2 border-emerald-100 dark:border-emerald-950/20 shadow-xl overflow-hidden bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl">
+        <Card className="w-full max-w-md text-center rounded-sm border-2 border-emerald-100 dark:border-emerald-950/20  overflow-hidden bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl">
           <CardContent className="py-16 space-y-6">
             <div className="relative">
-              <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full" />
+              <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-sm" />
               <Loader2 className="h-14 w-14 animate-spin text-primary mx-auto relative z-10" />
             </div>
             <div className="space-y-2">
@@ -82,7 +82,7 @@ export default function VerifyPaymentPage() {
               </p>
             </div>
 
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-muted/50 dark:bg-neutral-800 text-xs font-mono font-bold text-muted-foreground">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-sm bg-muted/50 dark:bg-neutral-800 text-xs font-mono font-bold text-muted-foreground">
               Ref: {reference}
             </div>
           </CardContent>
@@ -112,7 +112,7 @@ export default function VerifyPaymentPage() {
           <CardContent className="space-y-4">
             <p className="text-sm text-muted-foreground">{errorMessage}</p>
 
-            <div className="rounded-md bg-muted p-3 text-xs font-mono">
+            <div className="rounded-sm bg-muted p-3 text-xs font-mono">
               Reference: {reference}
             </div>
 
@@ -148,11 +148,11 @@ export default function VerifyPaymentPage() {
   if (isSuccess) {
     return (
       <section className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-emerald-50/30 dark:from-neutral-950 dark:via-neutral-900 dark:to-emerald-950/10 flex items-center justify-center px-4 transition-colors duration-300">
-        <Card className="w-full max-w-md text-center rounded-[3rem] border-2 border-emerald-100 dark:border-emerald-950/20 shadow-2xl overflow-hidden bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl">
+        <Card className="w-full max-w-md text-center rounded-sm border-2 border-emerald-100 dark:border-emerald-950/20  overflow-hidden bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl">
           <CardContent className="py-16 space-y-8">
             <div className="relative">
-              <div className="absolute inset-0 bg-emerald-500/20 blur-3xl rounded-full" />
-              <div className="w-24 h-24 bg-emerald-50 dark:bg-emerald-950/30 rounded-full flex items-center justify-center mx-auto relative z-10">
+              <div className="absolute inset-0 bg-emerald-500/20 blur-3xl rounded-sm" />
+              <div className="w-24 h-24 bg-emerald-50 dark:bg-emerald-950/30 rounded-sm flex items-center justify-center mx-auto relative z-10">
                 <CheckCircle className="h-14 w-14 text-emerald-600 dark:text-emerald-500" />
               </div>
             </div>
@@ -166,12 +166,12 @@ export default function VerifyPaymentPage() {
               </p>
             </div>
 
-            <div className="px-4 py-2 rounded-full bg-emerald-50 dark:bg-emerald-950/20 text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400">
+            <div className="px-4 py-2 rounded-sm bg-emerald-50 dark:bg-emerald-950/20 text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400">
               Ref: {reference}
             </div>
 
             <SmartLink to={ACCOUNT_ROUTES.ORDERS} className="w-full block">
-              <Button className="w-full h-14 rounded-2xl text-lg font-bold shadow-xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all">
+              <Button className="w-full h-14 rounded-sm text-lg font-bold   hover:scale-105 active:scale-95 transition-all">
                 <CreditCard className="mr-2 h-5 w-5" />
                 View My Orders
               </Button>
@@ -198,7 +198,7 @@ export default function VerifyPaymentPage() {
             We haven’t confirmed this payment yet. Please try again shortly.
           </p>
 
-          <div className="rounded-md bg-muted p-3 text-xs font-mono">
+          <div className="rounded-sm bg-muted p-3 text-xs font-mono">
             Reference: {reference}
           </div>
 

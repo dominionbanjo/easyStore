@@ -107,7 +107,7 @@ export default function OrdersPage() {
   };
 
   return (
-    <section className="space-y-6 md:space-y-8 pb-10">
+    <section className="space-y-4 md:space-y-6 pb-10">
       {/* ─── Header ─── */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <motion.div
@@ -139,7 +139,7 @@ export default function OrdersPage() {
       </div>
 
       {/* ─── Toolbar (Search & Filters) ─── */}
-      <div className="flex flex-col gap-4 bg-card/50 backdrop-blur-sm p-2 sm:p-3 md:p-4 rounded-2xl border border-border/40 shadow-sm transition-all duration-300">
+      <div className="flex flex-col gap-4 bg-card/50 backdrop-blur-sm p-2 sm:p-3 md:p-4 rounded-sm border border-border/40  transition-all duration-300">
         <div className="flex flex-col sm:flex-row items-center gap-3 w-full">
           <div className="relative w-full sm:flex-1 group">
             <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
@@ -147,7 +147,7 @@ export default function OrdersPage() {
               placeholder="Search by order ID or reference..."
               value={search}
               onChange={(e) => handleSearchChange(e.target.value)}
-              className="pl-9 h-10 bg-background/50 border-border/40 focus:bg-background transition-all rounded-xl"
+              className="pl-9 h-10 bg-background/50 border-border/40 focus:bg-background transition-all rounded-sm"
             />
             {search && (
               <button
@@ -165,7 +165,7 @@ export default function OrdersPage() {
               <PopoverTrigger asChild>
                 <Button
                   variant={status !== undefined ? "secondary" : "outline"}
-                  className="gap-2 h-10 border-dashed rounded-xl shrink-0"
+                  className="gap-2 h-10 border-dashed rounded-sm shrink-0"
                 >
                   <Filter className="h-3.5 w-3.5" />
                   <span className="text-xs uppercase tracking-wider font-bold">
@@ -177,7 +177,7 @@ export default function OrdersPage() {
                 </Button>
               </PopoverTrigger>
               <PopoverContent
-                className="w-48 p-1.5 rounded-xl border-border/40"
+                className="w-48 p-1.5 rounded-sm border-border/40"
                 align="end"
               >
                 <div className="space-y-1">
@@ -202,7 +202,7 @@ export default function OrdersPage() {
                 variant="ghost"
                 size="sm"
                 onClick={clearFilters}
-                className="gap-2 h-10 rounded-xl shrink-0"
+                className="gap-2 h-10 rounded-sm shrink-0"
               >
                 <X className="h-3.5 w-3.5" />
                 Clear

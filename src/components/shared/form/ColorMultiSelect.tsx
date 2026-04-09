@@ -96,10 +96,10 @@ export function ColorMultiSelect({
                     <Badge
                       key={c.id}
                       variant="secondary"
-                      className="pl-1.5 pr-1 py-1 gap-2 rounded-xl group bg-muted/30 border-muted-foreground/10 hover:bg-muted/50 transition-all"
+                      className="pl-1.5 pr-1 py-1 gap-2 rounded-sm group bg-muted/30 border-muted-foreground/10 hover:bg-muted/50 transition-all"
                     >
                       <span
-                        className="h-5 w-5 rounded-lg border border-black/10 shadow-sm"
+                        className="h-5 w-5 rounded-sm border border-black/10 "
                         style={{ backgroundColor: c.hex }}
                       />
                       <span className="text-xs font-bold">{c.name}</span>
@@ -110,14 +110,14 @@ export function ColorMultiSelect({
                             selected.filter((x: DraftColor) => x.id !== c.id),
                           )
                         }
-                        className="p-1 hover:bg-destructive/10 hover:text-destructive rounded-md transition-colors"
+                        className="p-1 hover:bg-destructive/10 hover:text-destructive rounded-sm transition-colors"
                       >
                         <X className="h-3 w-3" />
                       </button>
                     </Badge>
                   ))
                 ) : (
-                  <div className="w-full py-2 bg-muted/10 rounded-2xl border border-dashed border-muted-foreground/20 flex items-center justify-center">
+                  <div className="w-full py-2 bg-muted/10 rounded-sm border border-dashed border-muted-foreground/20 flex items-center justify-center">
                     <p className="text-[10px] uppercase tracking-widest font-black text-muted-foreground/60">
                       No colors selected
                     </p>
@@ -130,11 +130,11 @@ export function ColorMultiSelect({
                 <button
                   type="button"
                   className={cn(
-                    "w-full h-10 rounded-xl border px-3 flex items-center gap-3 text-left text-sm transition-all duration-200 bg-muted/20 border-muted-foreground/10 hover:border-primary/30 group",
+                    "w-full h-10 rounded-sm border px-3 flex items-center gap-3 text-left text-sm transition-all duration-200 bg-muted/20 border-muted-foreground/10 hover:border-primary/30 group",
                     selected.length === 0 && "text-muted-foreground",
                   )}
                 >
-                  <div className="h-6 w-6 rounded-lg bg-background flex items-center justify-center shadow-sm text-muted-foreground group-hover:text-primary transition-colors">
+                  <div className="h-6 w-6 rounded-sm bg-background flex items-center justify-center  text-muted-foreground group-hover:text-primary transition-colors">
                     {icon || <Palette className="h-3.5 w-3.5" />}
                   </div>
                   <span className="flex-1 font-bold">
@@ -148,11 +148,11 @@ export function ColorMultiSelect({
 
               <DialogContent
                 showCloseButton={false}
-                className="max-w-xl p-0 overflow-hidden rounded-[2.5rem] border-none shadow-2xl max-h-[85vh] flex flex-col"
+                className="max-w-xl p-0 overflow-hidden rounded-sm border-none  max-h-[85vh] flex flex-col"
               >
                 <DialogHeader className="p-8 pb-4 shrink-0 flex flex-row items-center justify-between space-y-0">
                   <DialogTitle className="text-2xl font-black uppercase tracking-tight flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-2xl bg-primary/10 flex items-center justify-center">
+                    <div className="h-10 w-10 rounded-sm bg-primary/10 flex items-center justify-center">
                       <Palette className="h-5 w-5 text-primary" />
                     </div>
                     Select Colors
@@ -162,7 +162,7 @@ export function ColorMultiSelect({
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="rounded-xl h-9 px-4 font-black uppercase tracking-widest text-[10px] bg-muted/30 hover:bg-muted/50 border border-muted-foreground/10 flex items-center gap-2 group transition-all"
+                      className="rounded-sm h-9 px-4 font-black uppercase tracking-widest text-[10px] bg-muted/30 hover:bg-muted/50 border border-muted-foreground/10 flex items-center gap-2 group transition-all"
                     >
                       <X className="h-3 w-3 text-muted-foreground group-hover:text-foreground transition-colors" />
                       Close
@@ -178,7 +178,7 @@ export function ColorMultiSelect({
                       value={search}
                       onChange={(e) => setSearch(e.target.value)}
                       placeholder="Search available colors..."
-                      className="pl-11 h-12 rounded-2xl bg-muted/20 border-muted-foreground/10 focus-visible:ring-primary/20 transition-all font-medium"
+                      className="pl-11 h-12 rounded-sm bg-muted/20 border-muted-foreground/10 focus-visible:ring-primary/20 transition-all font-medium"
                     />
                   </div>
                 </div>
@@ -188,7 +188,7 @@ export function ColorMultiSelect({
                   {isLoading ? (
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                       {Array.from({ length: 9 }).map((_, i) => (
-                        <Skeleton key={i} className="h-14 w-full rounded-2xl" />
+                        <Skeleton key={i} className="h-14 w-full rounded-sm" />
                       ))}
                     </div>
                   ) : (
@@ -204,14 +204,14 @@ export function ColorMultiSelect({
                               toggleColor(c, selected, field.onChange)
                             }
                             className={cn(
-                              "flex items-center gap-3 p-3 rounded-2xl border transition-all duration-300 text-left relative overflow-hidden group",
+                              "flex items-center gap-3 p-3 rounded-sm border transition-all duration-300 text-left relative overflow-hidden group",
                               isSelected
-                                ? "bg-primary/5 border-primary shadow-sm"
+                                ? "bg-primary/5 border-primary "
                                 : "bg-muted/5 border-muted-foreground/10 hover:border-primary/30",
                             )}
                           >
                             <span
-                              className="h-7 w-7 rounded-xl border border-black/10 shadow-inner shrink-0"
+                              className="h-7 w-7 rounded-sm border border-black/10  shrink-0"
                               style={{ backgroundColor: c.hex }}
                             />
                             <div className="flex flex-col min-w-0">
@@ -233,7 +233,7 @@ export function ColorMultiSelect({
                             {isSelected && (
                               <motion.div
                                 layoutId="check-indicator"
-                                className="absolute top-2 right-2 h-4 w-4 bg-primary text-white rounded-full flex items-center justify-center"
+                                className="absolute top-2 right-2 h-4 w-4 bg-primary text-white rounded-sm flex items-center justify-center"
                               >
                                 <Check className="h-2.5 w-2.5 stroke-[4]" />
                               </motion.div>
@@ -252,7 +252,7 @@ export function ColorMultiSelect({
                   </p>
                   <Button
                     type="button"
-                    className="rounded-xl px-8 font-black uppercase tracking-widest text-xs h-11"
+                    className="rounded-sm px-8 font-black uppercase tracking-widest text-xs h-11"
                     onClick={() => setOpen(false)}
                   >
                     Done

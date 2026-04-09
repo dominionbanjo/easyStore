@@ -18,10 +18,10 @@ export function BuyNowButton({
       className="
         relative flex items-center justify-between
         pl-6 pr-12 py-3 text-sm font-semibold text-white bg-neutral-900
-        rounded-full overflow-hidden
+        rounded-sm overflow-hidden
         transition-all duration-300 ease-[cubic-bezier(0.23,1,0.32,1)]
-        hover:shadow-lg hover:scale-105
-        disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:hover:scale-100
+        hover: hover:scale-105
+        disabled:opacity-50 disabled:cursor-not-allowed disabled:hover: disabled:hover:scale-100
         group
         min-w-[140px]
       "
@@ -30,7 +30,7 @@ export function BuyNowButton({
       <span
         className="
           absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
-          w-0 h-0 bg-neutral-800 rounded-full 
+          w-0 h-0 bg-neutral-800 rounded-sm 
           transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]
           group-hover:w-[300px] group-hover:h-[300px]
           group-disabled:w-0 group-disabled:h-0

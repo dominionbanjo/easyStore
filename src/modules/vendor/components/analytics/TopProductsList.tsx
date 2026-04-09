@@ -29,7 +29,7 @@ interface TopProductsListProps {
 
 export function TopProductsList({ products }: TopProductsListProps) {
   return (
-    <Card className="border-none shadow-xl bg-card flex flex-col h-full overflow-hidden">
+    <Card className="border-none  bg-card flex flex-col h-full overflow-hidden">
       <CardHeader className="border-b border-border/50 bg-muted/20">
         <CardTitle className="text-xl font-black flex items-center gap-2">
           <Trophy className="w-5 h-5 text-orange-500" /> Top Selling
@@ -59,7 +59,7 @@ export function TopProductsList({ products }: TopProductsListProps) {
                   className="p-4 flex items-center gap-4 hover:bg-muted/30 transition-colors group cursor-pointer"
                 >
                   <div className="relative shrink-0">
-                    <div className="w-14 h-14 rounded-xl overflow-hidden border border-border/50 bg-muted">
+                    <div className="w-14 h-14 rounded-sm overflow-hidden border border-border/50 bg-muted">
                       {imageUrl ? (
                         <img
                           src={imageUrl}
@@ -73,7 +73,7 @@ export function TopProductsList({ products }: TopProductsListProps) {
                       )}
                     </div>
                     {idx < 3 && (
-                      <div className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-orange-500 text-white text-[10px] font-black flex items-center justify-center border-2 border-background shadow-lg">
+                      <div className="absolute -top-2 -right-2 w-6 h-6 rounded-sm bg-orange-500 text-white text-[10px] font-black flex items-center justify-center border-2 border-background ">
                         {idx + 1}
                       </div>
                     )}
@@ -90,7 +90,7 @@ export function TopProductsList({ products }: TopProductsListProps) {
                         </span>{" "}
                         units
                       </p>
-                      <div className="w-1 h-1 rounded-full bg-border" />
+                      <div className="w-1 h-1 rounded-sm bg-border" />
                       <p className="text-xs text-emerald-500 font-black">
                         ₦{Number(product.total_revenue).toLocaleString()}
                       </p>

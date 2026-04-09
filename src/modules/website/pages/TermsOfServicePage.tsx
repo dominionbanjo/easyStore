@@ -33,7 +33,7 @@ export default function TermsOfServicePage() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-20"
         >
-          <div className="inline-flex items-center justify-center p-5 bg-primary/10 dark:bg-emerald-500/10 rounded-[2rem] mb-8 ring-8 ring-primary/5 dark:ring-emerald-500/5 transition-all">
+          <div className="inline-flex items-center justify-center p-5 bg-primary/10 dark:bg-emerald-500/10 rounded-sm mb-8 ring-8 ring-primary/5 dark:ring-emerald-500/5 transition-all">
             <Scale className="w-12 h-12 text-primary dark:text-emerald-400" />
           </div>
           <h1 className="text-5xl md:text-7xl font-black text-foreground mb-8 tracking-tighter leading-none italic">
@@ -44,7 +44,7 @@ export default function TermsOfServicePage() {
             contain important information about your legal rights and
             obligations.
           </p>
-          <div className="mt-8 inline-flex items-center justify-center gap-3 text-xs font-black uppercase tracking-widest text-muted-foreground bg-white/50 dark:bg-neutral-900/40 backdrop-blur-xl px-6 py-3 rounded-2xl shadow-sm border border-zinc-200 dark:border-white/5 mx-auto">
+          <div className="mt-8 inline-flex items-center justify-center gap-3 text-xs font-black uppercase tracking-widest text-muted-foreground bg-white/50 dark:bg-neutral-900/40 backdrop-blur-xl px-6 py-3 rounded-sm  border border-zinc-200 dark:border-white/5 mx-auto">
             <CheckCircle2 className="w-4 h-4 text-emerald-500" />
             Last updated: February 7, 2026
           </div>
@@ -55,27 +55,27 @@ export default function TermsOfServicePage() {
           variants={container}
           initial="hidden"
           animate="show"
-          className="bg-white/50 dark:bg-neutral-900/40 backdrop-blur-3xl rounded-[3rem] shadow-2xl shadow-primary/5 dark:shadow-emerald-500/5 border border-zinc-200 dark:border-white/5 p-8 sm:p-12 md:p-20 relative overflow-hidden"
+          className="bg-white/50 dark:bg-neutral-900/40 backdrop-blur-3xl rounded-sm   dark:-emerald-500/5 border border-zinc-200 dark:border-white/5 p-8 sm:p-12 md:p-20 relative overflow-hidden"
         >
           {/* Decorative background element */}
-          <div className="absolute top-0 left-0 w-96 h-96 bg-primary/5 dark:bg-emerald-500/10 rounded-full blur-3xl -z-0 -translate-x-1/2 -translate-y-1/2 opacity-50" />
+          <div className="absolute top-0 left-0 w-96 h-96 bg-primary/5 dark:bg-emerald-500/10 rounded-sm blur-3xl -z-0 -translate-x-1/2 -translate-y-1/2 opacity-50" />
 
           <div className="relative z-10 space-y-16">
             <motion.div variants={item}>
               <PolicySection title="1. Acceptance of Terms">
                 <p>
-                  By accessing or using the EasyStore platform, you agree to be
+                  By accessing or using the EazyStore platform, you agree to be
                   bound by these Terms of Service and all applicable laws and
                   regulations. If you do not agree with any of these terms, you
                   are prohibited from using or accessing this site.
                 </p>
-                <div className="mt-6 p-6 bg-emerald-500/5 dark:bg-emerald-500/10 rounded-[2rem] border border-emerald-500/10 dark:border-emerald-500/20 text-sm text-emerald-700 dark:text-emerald-400 flex gap-4">
+                <div className="mt-6 p-6 bg-emerald-500/5 dark:bg-emerald-500/10 rounded-sm border border-emerald-500/10 dark:border-emerald-500/20 text-sm text-emerald-700 dark:text-emerald-400 flex gap-4">
                   <div className="shrink-0 mt-0.5">
                     <FileCheck className="w-6 h-6" />
                   </div>
                   <p className="font-bold leading-relaxed">
                     These terms constitute a legally binding agreement between
-                    you and EasyStore regarding your use of the Service.
+                    you and EazyStore regarding your use of the Service.
                   </p>
                 </div>
               </PolicySection>
@@ -91,8 +91,8 @@ export default function TermsOfServicePage() {
                   our Service.
                 </p>
                 <div className="grid gap-6 mt-8">
-                  <div className="flex gap-6 items-start p-6 bg-white/50 dark:bg-neutral-950/50 border border-zinc-200 dark:border-white/5 hover:border-emerald-500/30 transition-all rounded-[2rem] group">
-                    <div className="p-3 bg-primary/10 dark:bg-emerald-500/10 text-primary dark:text-emerald-400 rounded-2xl shrink-0 group-hover:scale-110 transition-transform">
+                  <div className="flex gap-6 items-start p-6 bg-white/50 dark:bg-neutral-950/50 border border-zinc-200 dark:border-white/5 hover:border-emerald-500/30 transition-all rounded-sm group">
+                    <div className="p-3 bg-primary/10 dark:bg-emerald-500/10 text-primary dark:text-emerald-400 rounded-sm shrink-0 group-hover:scale-110 transition-transform">
                       <AlertCircle className="w-6 h-6" />
                     </div>
                     <div>
@@ -120,7 +120,7 @@ export default function TermsOfServicePage() {
                 </p>
                 <ul className="list-none space-y-4 mt-6">
                   <li className="flex gap-4 items-start font-medium text-muted-foreground">
-                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-2.5 shrink-0" />
+                    <div className="w-1.5 h-1.5 rounded-sm bg-emerald-500 mt-2.5 shrink-0" />
                     <span className="leading-relaxed">
                       <strong className="text-foreground font-black">
                         For Buyers:
@@ -130,7 +130,7 @@ export default function TermsOfServicePage() {
                     </span>
                   </li>
                   <li className="flex gap-4 items-start font-medium text-muted-foreground">
-                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-2.5 shrink-0" />
+                    <div className="w-1.5 h-1.5 rounded-sm bg-emerald-500 mt-2.5 shrink-0" />
                     <span className="leading-relaxed">
                       <strong className="text-foreground font-black">
                         For Sellers:
@@ -161,9 +161,9 @@ export default function TermsOfServicePage() {
                   ].map((act, i) => (
                     <div
                       key={i}
-                      className="flex items-center gap-3 p-4 bg-rose-500/5 dark:bg-rose-500/10 border border-rose-500/10 rounded-2xl text-sm font-bold text-rose-600 dark:text-rose-400"
+                      className="flex items-center gap-3 p-4 bg-rose-500/5 dark:bg-rose-500/10 border border-rose-500/10 rounded-sm text-sm font-bold text-rose-600 dark:text-rose-400"
                     >
-                      <span className="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span>
+                      <span className="w-2 h-2 rounded-sm bg-rose-500 shrink-0"></span>
                       {act}
                     </div>
                   ))}
@@ -176,7 +176,7 @@ export default function TermsOfServicePage() {
                 <p>
                   The Service and its original content (excluding Content
                   provided by users), features and functionality are and will
-                  remain the exclusive property of EasyStore and its licensors.
+                  remain the exclusive property of EazyStore and its licensors.
                   The Service is protected by copyright, trademark, and other
                   laws.
                 </p>
@@ -197,9 +197,9 @@ export default function TermsOfServicePage() {
 
             <motion.div variants={item}>
               <PolicySection title="7. Contact & Support">
-                <div className="bg-emerald-500/5 dark:bg-emerald-500/10 rounded-[2.5rem] p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8 border border-emerald-500/10 dark:border-emerald-500/20">
+                <div className="bg-emerald-500/5 dark:bg-emerald-500/10 rounded-sm p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8 border border-emerald-500/10 dark:border-emerald-500/20">
                   <div className="flex gap-6 items-center">
-                    <div className="p-4 bg-white dark:bg-neutral-900 rounded-2xl shadow-sm border border-zinc-100 dark:border-white/5">
+                    <div className="p-4 bg-white dark:bg-neutral-900 rounded-sm  border border-zinc-100 dark:border-white/5">
                       <HelpCircle className="w-8 h-8 text-primary dark:text-emerald-400" />
                     </div>
                     <div>
@@ -212,8 +212,8 @@ export default function TermsOfServicePage() {
                     </div>
                   </div>
                   <a
-                    href="mailto:legal@easystore.com"
-                    className="inline-flex items-center justify-center px-10 py-5 border border-transparent text-sm font-black uppercase tracking-[0.2em] rounded-2xl text-white dark:text-neutral-950 bg-primary dark:bg-emerald-500 hover:scale-105 transition-all active:scale-95 whitespace-nowrap shadow-xl shadow-primary/20 dark:shadow-emerald-500/20"
+                    href="mailto:legal@eazystore.com.ng"
+                    className="inline-flex items-center justify-center px-10 py-5 border border-transparent text-sm font-black uppercase tracking-[0.2em] rounded-sm text-white dark:text-neutral-950 bg-primary dark:bg-emerald-500 hover:scale-105 transition-all active:scale-95 whitespace-nowrap   dark:-emerald-500/20"
                   >
                     Contact Legal Team
                   </a>

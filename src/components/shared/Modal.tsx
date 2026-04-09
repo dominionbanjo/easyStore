@@ -36,11 +36,9 @@ export function Modal({
       >
         <DialogHeader className="px-6 py-4 border-b flex flex-row items-center justify-between space-y-0 sticky top-0 bg-background z-10">
           <div className="flex flex-col gap-1">
-            {title && (
-              <DialogTitle className="text-lg font-semibold">
-                {title}
-              </DialogTitle>
-            )}
+            <DialogTitle className={cn("text-lg font-semibold", !title && "sr-only")}>
+              {title || "Modal Dialog"}
+            </DialogTitle>
             {description && (
               <p className="text-sm text-muted-foreground">{description}</p>
             )}
@@ -48,7 +46,7 @@ export function Modal({
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8 rounded-full shrink-0 text-muted-foreground hover:bg-muted"
+            className="h-8 w-8 rounded-sm shrink-0 text-muted-foreground hover:bg-muted"
             onClick={() => {
               if (onClose) {
                 onClose();

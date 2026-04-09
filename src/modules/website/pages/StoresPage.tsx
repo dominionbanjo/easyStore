@@ -165,7 +165,7 @@ export default function StoresPage() {
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {Array.from({ length: 8 }).map((_, i) => (
               <div key={i} className="space-y-4">
-                <Skeleton className="h-[200px] w-full rounded-3xl" />
+                <Skeleton className="h-[200px] w-full rounded-sm" />
                 <div className="space-y-2 p-2">
                   <Skeleton className="h-4 w-2/3" />
                   <Skeleton className="h-3 w-1/2" />
@@ -229,9 +229,9 @@ export default function StoresPage() {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="flex flex-col items-center justify-center py-32 text-center max-w-2xl mx-auto bg-white/50 dark:bg-neutral-900/40 backdrop-blur-xl rounded-[3rem] border border-zinc-200 dark:border-white/5 shadow-sm px-8"
+            className="flex flex-col items-center justify-center py-32 text-center max-w-2xl mx-auto bg-white/50 dark:bg-neutral-900/40 backdrop-blur-xl rounded-sm border border-zinc-200 dark:border-white/5  px-8"
           >
-            <div className="w-24 h-24 bg-primary/10 dark:bg-emerald-500/10 rounded-full flex items-center justify-center mb-8 ring-8 ring-primary/5 dark:ring-emerald-500/5">
+            <div className="w-24 h-24 bg-primary/10 dark:bg-emerald-500/10 rounded-sm flex items-center justify-center mb-8 ring-8 ring-primary/5 dark:ring-emerald-500/5">
               <SearchX className="h-12 w-12 text-primary dark:text-emerald-400" />
             </div>
             <h3 className="text-3xl font-black text-foreground mb-3 tracking-tight">
@@ -246,7 +246,7 @@ export default function StoresPage() {
                 methods.setValue("search", "");
                 methods.setValue("state", "");
               }}
-              className="px-8 py-3 bg-primary dark:bg-emerald-500 text-white dark:text-neutral-950 font-black rounded-full shadow-xl shadow-primary/20 dark:shadow-emerald-500/20 hover:scale-105 transition-all active:scale-95 uppercase tracking-widest text-xs"
+              className="px-8 py-3 bg-primary dark:bg-emerald-500 text-white dark:text-neutral-950 font-black rounded-sm   dark:-emerald-500/20 hover:scale-105 transition-all active:scale-95 uppercase tracking-widest text-xs"
             >
               Clear all filters
             </button>

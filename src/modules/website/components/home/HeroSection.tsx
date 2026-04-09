@@ -68,7 +68,7 @@ export default function HeroSection() {
               transition={{ delay: 0.1 }}
               className="mt-6 max-w-2xl mx-auto lg:mx-0 text-lg sm:text-xl leading-relaxed text-muted-foreground"
             >
-              EasyStore gives you everything you need to sell online. Create
+              EazyStore gives you everything you need to sell online. Create
               your professional storefront in minutes, showcase your products to
               millions, and manage your entire business from one simple
               dashboard.
@@ -88,9 +88,9 @@ export default function HeroSection() {
                 >
                   <Button
                     size="lg"
-                    className="group relative bg-primary hover:bg-emerald-500 dark:bg-emerald-500 dark:hover:bg-emerald-400 text-white dark:text-neutral-950 rounded-xl h-14 px-10 text-lg font-bold hover:scale-[1.05] active:scale-95 transition-all shadow-xl shadow-emerald-500/20 hover:shadow-emerald-500/40 w-full"
+                    className="group relative bg-primary hover:bg-emerald-500 dark:bg-emerald-500 dark:hover:bg-emerald-400 text-white dark:text-neutral-950 rounded-sm h-14 px-10 text-lg font-bold hover:scale-[1.05] active:scale-95 transition-all  -emerald-500/20 hover:-emerald-500/40 w-full"
                   >
-                    <div className="absolute inset-0 bg-emerald-400/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity rounded-xl" />
+                    <div className="absolute inset-0 bg-emerald-400/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity rounded-sm" />
                     <span className="relative flex items-center gap-2">
                       Start Selling Now
                       <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
@@ -108,9 +108,9 @@ export default function HeroSection() {
                       }),
                     )
                   }
-                  className="group relative bg-primary hover:bg-emerald-500 dark:bg-emerald-500 dark:hover:bg-emerald-400 text-white dark:text-neutral-950 rounded-xl h-14 px-10 text-lg font-bold hover:scale-[1.05] active:scale-95 transition-all shadow-xl shadow-emerald-500/20 hover:shadow-emerald-500/40"
+                  className="group relative bg-primary hover:bg-emerald-500 dark:bg-emerald-500 dark:hover:bg-emerald-400 text-white dark:text-neutral-950 rounded-sm h-14 px-10 text-lg font-bold hover:scale-[1.05] active:scale-95 transition-all  -emerald-500/20 hover:-emerald-500/40"
                 >
-                  <div className="absolute inset-0 bg-emerald-400/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity rounded-xl" />
+                  <div className="absolute inset-0 bg-emerald-400/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity rounded-sm" />
                   <span className="relative flex items-center gap-2">
                     Start Selling Now
                     <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
@@ -139,8 +139,8 @@ export default function HeroSection() {
             transition={{ delay: 0.5 }}
             className="flex-1 w-full max-w-2xl"
           >
-            <div className="relative group p-2 bg-white dark:bg-neutral-800 rounded-[2.5rem] shadow-2xl border border-border/50 dark:border-white/5 overflow-hidden transform hover:-rotate-1 transition-transform duration-700">
-              <div className="relative aspect-[4/3] rounded-[2rem] overflow-hidden bg-muted">
+            <div className="relative group p-2 bg-white dark:bg-neutral-800 rounded-sm  border border-border/50 dark:border-white/5 overflow-hidden transform hover:-rotate-1 transition-transform duration-700">
+              <div className="relative aspect-[4/3] rounded-sm overflow-hidden bg-muted">
                 <video
                   className="w-full h-full object-cover"
                   src="/videos/campaign5.mp4"
@@ -151,9 +151,9 @@ export default function HeroSection() {
                 />
 
                 {/* Floating Elements for "Story" feel */}
-                <div className="absolute top-6 right-6 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-xl px-4 py-3 rounded-2xl shadow-2xl border border-white/20 dark:border-white/5 flex items-center gap-3 animate-bounce">
-                  <div className="w-10 h-10 bg-emerald-500 dark:bg-emerald-600 rounded-full flex items-center justify-center text-white shadow-lg shadow-emerald-500/20">
-                    <div className="bg-white/20 p-1 rounded-full">
+                <div className="absolute top-6 right-6 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-xl px-4 py-3 rounded-sm  border border-white/20 dark:border-white/5 flex items-center gap-3 animate-bounce">
+                  <div className="w-10 h-10 bg-emerald-500 dark:bg-emerald-600 rounded-sm flex items-center justify-center text-white  -emerald-500/20">
+                    <div className="bg-white/20 p-1 rounded-sm">
                       <ArrowRight className="h-4 w-4 rotate-[-45deg]" />
                     </div>
                   </div>

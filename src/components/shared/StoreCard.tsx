@@ -51,7 +51,7 @@ export default function StoreCard({
       className={cn("h-full group", className)}
     >
       <Link to={`/stores/${slug}`} className="block h-full">
-        <Card className="relative h-full overflow-hidden border-border/40 bg-card p-0 shadow-sm hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 rounded-[1.5rem]">
+        <Card className="relative h-full overflow-hidden border-border/40 bg-card p-0  hover: hover: transition-all duration-300 rounded-sm">
           {/* ─── BANNER AREA ─── */}
           <div
             className="h-24 w-full bg-cover bg-center transition-all duration-500 group-hover:scale-105"
@@ -61,19 +61,19 @@ export default function StoreCard({
           {/* ─── LOGO (FLOATING) ─── */}
           <div className="absolute top-12 left-5 z-10">
             <div className="relative">
-              <Avatar className="h-20 w-20 border-4 border-card shadow-lg rounded-2xl ring-1 ring-border/10 transition-transform duration-300 group-hover:scale-105 bg-background">
+              <Avatar className="h-20 w-20 border-4 border-card  rounded-sm ring-1 ring-border/10 transition-transform duration-300 group-hover:scale-105 bg-background">
                 <AvatarImage
                   src={logo || ""}
                   alt={name}
                   className="object-cover"
                 />
-                <AvatarFallback className="bg-primary/5 text-primary text-2xl font-black rounded-2xl">
+                <AvatarFallback className="bg-primary/5 text-primary text-2xl font-black rounded-sm">
                   {name.charAt(0).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
               {rating >= 4.5 && (
                 <div
-                  className="absolute -bottom-1 -right-1 bg-yellow-400 text-white p-1 rounded-full shadow-sm border-2 border-card"
+                  className="absolute -bottom-1 -right-1 bg-yellow-400 text-white p-1 rounded-sm  border-2 border-card"
                   title="Top Rated"
                 >
                   <Star className="w-3 h-3 fill-current" />
@@ -118,7 +118,7 @@ export default function StoreCard({
             {/* ─── FOOTER META ─── */}
             <div className="mt-6 pt-4 border-t border-border/40 flex items-center justify-between">
               <div className="flex gap-4">
-                <div className="flex items-center gap-1.5 bg-secondary/30 px-2 py-1 rounded-lg">
+                <div className="flex items-center gap-1.5 bg-secondary/30 px-2 py-1 rounded-sm">
                   <Package className="h-3.5 w-3.5 text-primary" />
                   <span className="text-xs font-semibold text-foreground/80">
                     {totalProducts}{" "}
@@ -128,7 +128,7 @@ export default function StoreCard({
                   </span>
                 </div>
 
-                <div className="flex items-center gap-1.5 bg-yellow-500/10 px-2 py-1 rounded-lg">
+                <div className="flex items-center gap-1.5 bg-yellow-500/10 px-2 py-1 rounded-sm">
                   <Star className="h-3.5 w-3.5 fill-yellow-500 text-yellow-500" />
                   <span className="text-xs font-bold text-yellow-700 dark:text-yellow-500">
                     {rating.toFixed(1)}
@@ -136,7 +136,7 @@ export default function StoreCard({
                 </div>
               </div>
 
-              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0 transition-all duration-300">
+              <div className="flex items-center justify-center w-8 h-8 rounded-sm bg-primary/10 text-primary opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0 transition-all duration-300">
                 <ArrowRight className="h-4 w-4" />
               </div>
             </div>

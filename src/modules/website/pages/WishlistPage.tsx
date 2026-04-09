@@ -93,7 +93,7 @@ export default function WishlistPage() {
               placeholder="Search wishlist…"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-9 rounded-full bg-zinc-50 dark:bg-neutral-900 border-zinc-200 dark:border-white/10"
+              className="pl-9 rounded-sm bg-zinc-50 dark:bg-neutral-900 border-zinc-200 dark:border-white/10"
             />
           </div>
         </div>
@@ -108,7 +108,7 @@ export default function WishlistPage() {
             <p className="text-zinc-500 dark:text-zinc-400 text-sm mb-6 text-center">
               Start exploring and save products you love.
             </p>
-            <Button asChild className="rounded-full bg-primary text-white px-6">
+            <Button asChild className="rounded-sm bg-primary text-white px-6">
               <SmartLink to={WEBSITE_ROUTES.DISCOVERY}>
                 Discover Products
               </SmartLink>
@@ -161,7 +161,7 @@ export default function WishlistPage() {
 
         {/* ─── Summary ─── */}
         {wishlist.length > 0 && (
-          <Card className="p-6 flex flex-col sm:flex-row justify-between items-center mt-10 rounded-2xl bg-zinc-50 dark:bg-neutral-900 border-zinc-100 dark:border-white/5">
+          <Card className="p-6 flex flex-col sm:flex-row justify-between items-center mt-10 rounded-sm bg-zinc-50 dark:bg-neutral-900 border-zinc-100 dark:border-white/5">
             <div className="text-sm text-zinc-600 dark:text-zinc-400">
               You have <strong>{wishlist.length}</strong> item
               {wishlist.length !== 1 ? "s" : ""} in your wishlist.
@@ -170,7 +170,7 @@ export default function WishlistPage() {
             <Button
               onClick={handleMoveAllToCart}
               disabled={isMoving}
-              className="mt-4 sm:mt-0 bg-primary text-white rounded-full px-6 min-w-[160px]"
+              className="mt-4 sm:mt-0 bg-primary text-white rounded-sm px-6 min-w-[160px]"
             >
               {isMoving ? (
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />

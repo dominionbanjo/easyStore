@@ -3,8 +3,8 @@ import { cn } from "@/lib/utils";
 
 /**
  * 🧩 Card — Soft Elevated Style
- * - Rounded corners
- * - Gentle shadow for distinction
+ * - rounded-sm corners
+ * - Gentle  for distinction
  * - Clean white surface with smooth hover animation
  */
 
@@ -13,7 +13,7 @@ function Card({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="card"
       className={cn(
-        "bg-card text-card-foreground flex flex-col gap-4 rounded-2xl px-6 py-8 shadow-sm hover:shadow-md transition-shadow duration-300",
+        "bg-card text-card-foreground flex flex-col gap-3 rounded-sm p-4  hover: shadow-sm transition-all duration-300",
         className
       )}
       {...props}

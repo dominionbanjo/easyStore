@@ -25,7 +25,7 @@ export default function NotFoundPage() {
               <h2 className="text-4xl md:text-5xl font-black text-foreground tracking-tight">
                 Lost in Space?
               </h2>
-              <div className="h-1 w-20 bg-primary mx-auto rounded-full" />
+              <div className="h-1 w-20 bg-primary mx-auto rounded-sm" />
             </div>
           </div>
         </div>
@@ -41,7 +41,7 @@ export default function NotFoundPage() {
             <SmartLink to="/">
               <Button
                 size="lg"
-                className="h-14 px-10 rounded-full bg-primary dark:bg-emerald-500 text-white dark:text-neutral-950 font-black shadow-xl shadow-primary/20 dark:shadow-emerald-500/20 hover:scale-105 transition-all group"
+                className="h-14 px-10 rounded-sm bg-primary dark:bg-emerald-500 text-white dark:text-neutral-950 font-black   dark:-emerald-500/20 hover:scale-105 transition-all group"
               >
                 <Home className="w-5 h-5 mr-3 group-hover:-translate-y-0.5 transition-transform" />
                 Go Home
@@ -51,7 +51,7 @@ export default function NotFoundPage() {
               variant="outline"
               size="lg"
               onClick={() => window.history.back()}
-              className="h-14 px-10 rounded-full border-2 border-zinc-200 dark:border-white/10 font-bold hover:bg-zinc-50 dark:hover:bg-white/5 transition-all group"
+              className="h-14 px-10 rounded-sm border-2 border-zinc-200 dark:border-white/10 font-bold hover:bg-zinc-50 dark:hover:bg-white/5 transition-all group"
             >
               <ArrowLeft className="w-5 h-5 mr-3 group-hover:-translate-x-1 transition-transform" />
               Go Back

@@ -9,12 +9,12 @@ export function ProductDetailsSkeleton() {
         {/* Gallery */}
         <div className="space-y-4">
           {/* Main image */}
-          <Skeleton className="w-full aspect-square md:aspect-[4/5] rounded-2xl" />
+          <Skeleton className="w-full aspect-square md:aspect-[4/5] rounded-sm" />
 
           {/* Thumbnails */}
           <div className="flex gap-3 overflow-x-auto no-scrollbar">
             {Array.from({ length: 4 }).map((_, i) => (
-              <Skeleton key={i} className="h-20 w-20 shrink-0 rounded-xl" />
+              <Skeleton key={i} className="h-20 w-20 shrink-0 rounded-sm" />
             ))}
           </div>
         </div>
@@ -27,7 +27,7 @@ export function ProductDetailsSkeleton() {
           <Skeleton className="h-8 w-1/3" />
 
           {/* Price / CTA */}
-          <Skeleton className="h-12 w-full rounded-xl" />
+          <Skeleton className="h-12 w-full rounded-sm" />
 
           {/* Meta rows */}
           <div className="space-y-3 pt-2">

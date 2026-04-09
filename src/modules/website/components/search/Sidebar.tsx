@@ -74,11 +74,11 @@ export function SearchFiltersSidebar({
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
-        className="bg-card/50 backdrop-blur-md border rounded-[2rem] shadow-2xl shadow-primary/5 overflow-hidden sticky top-24"
+        className="bg-card/50 backdrop-blur-md border rounded-sm   overflow-hidden sticky top-24"
       >
         <div className="p-6 bg-primary/[0.03] border-b border-primary/5 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-primary/10">
+            <div className="p-2 rounded-sm bg-primary/10">
               <FilterIcon className="h-4 w-4 text-primary" />
             </div>
             <h3 className="font-extrabold text-base tracking-tight text-foreground">
@@ -122,7 +122,7 @@ export function MobileSearchFilters({
         <Button
           variant="outline"
           size="sm"
-          className="w-full h-12 md:h-11 gap-3 lg:hidden rounded-2xl border-zinc-200 dark:border-emerald-500/20 bg-white dark:bg-neutral-900 backdrop-blur-xl hover:bg-zinc-50 dark:hover:bg-neutral-800 transition-all font-black text-xs shadow-sm justify-center group uppercase tracking-[0.15em] active:scale-95 text-zinc-900 dark:text-white relative overflow-hidden"
+          className="w-full h-12 md:h-11 gap-3 lg:hidden rounded-sm border-zinc-200 dark:border-emerald-500/20 bg-white dark:bg-neutral-900 backdrop-blur-xl hover:bg-zinc-50 dark:hover:bg-neutral-800 transition-all font-black text-xs  justify-center group uppercase tracking-[0.15em] active:scale-95 text-zinc-900 dark:text-white relative overflow-hidden"
         >
           <div className="absolute inset-0 bg-gradient-to-tr from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
           <FilterIcon className="h-4 w-4 text-emerald-500 dark:text-emerald-400 group-hover:rotate-12 transition-transform relative z-10" />
@@ -130,15 +130,15 @@ export function MobileSearchFilters({
           {activeCount > 0 && (
             <Badge
               variant="default"
-              className="px-2 h-5 min-w-5 flex items-center justify-center rounded-lg text-[10px] ml-0.5 bg-emerald-500 text-white dark:text-neutral-950 border-none shadow-md shadow-emerald-500/30 dark:shadow-emerald-500/20 relative z-10"
+              className="px-2 h-5 min-w-5 flex items-center justify-center rounded-sm text-[10px] ml-0.5 bg-emerald-500 text-white dark:text-neutral-950 border-none  -emerald-500/30 dark:-emerald-500/20 relative z-10"
             >
               {activeCount}
             </Badge>
           )}
         </Button>
       </DrawerTrigger>
-      <DrawerContent className="max-h-[92vh] rounded-t-[3rem] border-t-0 shadow-2xl bg-card/95 backdrop-blur-xl">
-        <div className="mx-auto w-12 h-1.5 rounded-full bg-muted/30 mt-3" />
+      <DrawerContent className="max-h-[92vh] rounded-t-sm border-t-0  bg-card/95 backdrop-blur-xl">
+        <div className="mx-auto w-12 h-1.5 rounded-sm bg-muted/30 mt-3" />
         <DrawerHeader className="text-left px-8 pt-6 pb-6 border-b border-primary/5">
           <div className="flex items-center justify-between w-full">
             <div>
@@ -153,7 +153,7 @@ export function MobileSearchFilters({
               <Button
                 variant="ghost"
                 size="icon"
-                className="rounded-full h-10 w-10 bg-muted/20"
+                className="rounded-sm h-10 w-10 bg-muted/20"
               >
                 <X size={18} />
               </Button>
@@ -173,10 +173,10 @@ export function MobileSearchFilters({
           <div className="flex gap-4">
             <ResetButton
               onReset={() => setIsOpen(false)}
-              className="flex-1 h-14 rounded-2xl text-sm font-black border-2 border-muted hover:bg-muted/50 transition-all uppercase tracking-widest"
+              className="flex-1 h-14 rounded-sm text-sm font-black border-2 border-muted hover:bg-muted/50 transition-all uppercase tracking-widest"
             />
             <DrawerClose asChild>
-              <Button className="flex-[1.5] h-14 rounded-2xl shadow-2xl shadow-primary/30 font-black tracking-widest uppercase transition-all hover:scale-[1.02] active:scale-[0.98] text-white">
+              <Button className="flex-[1.5] h-14 rounded-sm   font-black tracking-widest uppercase transition-all hover:scale-[1.02] active:scale-[0.98] text-white">
                 Show {products.length} Items
               </Button>
             </DrawerClose>
@@ -406,7 +406,7 @@ function FilterContent({
               </div>
 
               <Button
-                className="w-full h-10 rounded-xl font-semibold bg-primary text-white shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all text-xs"
+                className="w-full h-10 rounded-sm font-semibold bg-primary text-white   hover: transition-all text-xs"
                 onClick={() =>
                   handlePriceCommit([watchedMinPrice, watchedMaxPrice])
                 }
@@ -468,9 +468,9 @@ function FilterContent({
                       updateParam("rating", isSelected ? undefined : String(r))
                     }
                     className={cn(
-                      "flex items-center justify-center gap-1.5 p-2 rounded-xl border transition-all text-xs font-bold",
+                      "flex items-center justify-center gap-1.5 p-2 rounded-sm border transition-all text-xs font-bold",
                       isSelected
-                        ? "bg-primary text-white border-primary shadow-lg shadow-primary/20 py-2"
+                        ? "bg-primary text-white border-primary   py-2"
                         : "bg-white text-muted-foreground border-border/50 hover:bg-muted/30",
                     )}
                   >
@@ -515,9 +515,9 @@ function FilterContent({
                       toggleArrayItem("sizes", size, selectedSizes)
                     }
                     className={cn(
-                      "cursor-pointer text-[10px] font-black uppercase border rounded-xl h-10 min-w-[44px] px-3 flex items-center justify-center transition-all",
+                      "cursor-pointer text-[10px] font-black uppercase border rounded-sm h-10 min-w-[44px] px-3 flex items-center justify-center transition-all",
                       isSelected
-                        ? "bg-primary text-white border-primary shadow-lg shadow-primary/20"
+                        ? "bg-primary text-white border-primary  "
                         : "bg-white text-muted-foreground border-border/50 hover:border-primary/30 hover:bg-primary/[0.02]",
                     )}
                   >
@@ -558,9 +558,9 @@ function FilterContent({
                   >
                     <div
                       className={cn(
-                        "w-9 h-9 rounded-full border-2 border-transparent shadow-sm flex items-center justify-center transition-all group-hover:scale-110",
+                        "w-9 h-9 rounded-sm border-2 border-transparent  flex items-center justify-center transition-all group-hover:scale-110",
                         isSelected
-                          ? "border-primary scale-110 shadow-lg shadow-primary/20"
+                          ? "border-primary scale-110  "
                           : "border-border/50",
                       )}
                       style={{ backgroundColor: color.hex }}
@@ -618,9 +618,9 @@ function FilterContent({
                         );
                       }}
                       className={cn(
-                        "cursor-pointer text-[10px] font-black uppercase border rounded-xl h-10 min-w-[44px] px-3 flex items-center justify-center transition-all",
+                        "cursor-pointer text-[10px] font-black uppercase border rounded-sm h-10 min-w-[44px] px-3 flex items-center justify-center transition-all",
                         active
-                          ? "bg-primary text-white border-primary shadow-lg shadow-primary/20"
+                          ? "bg-primary text-white border-primary  "
                           : "bg-white text-muted-foreground border-border/50 hover:border-primary/30 hover:bg-primary/[0.02]",
                       )}
                     >
@@ -686,7 +686,7 @@ function Section({
           </h4>
           <div
             className={cn(
-              "h-1.5 w-1.5 rounded-full bg-primary transition-all duration-500",
+              "h-1.5 w-1.5 rounded-sm bg-primary transition-all duration-500",
               isActive ? "opacity-100 scale-100" : "opacity-0 scale-0",
             )}
           />
@@ -699,7 +699,7 @@ function Section({
                 e.stopPropagation();
                 onClear();
               }}
-              className="text-[9px] font-black uppercase tracking-tighter text-primary hover:text-primary/70 transition-colors bg-primary/10 px-2 py-1 rounded-lg"
+              className="text-[9px] font-black uppercase tracking-tighter text-primary hover:text-primary/70 transition-colors bg-primary/10 px-2 py-1 rounded-sm"
             >
               Clear
             </button>
@@ -707,7 +707,7 @@ function Section({
           <div
             onClick={() => setIsOpen(!isOpen)}
             className={cn(
-              "p-1.5 rounded-xl text-muted-foreground/30 group-hover:bg-primary/10 group-hover:text-primary transition-all duration-300",
+              "p-1.5 rounded-sm text-muted-foreground/30 group-hover:bg-primary/10 group-hover:text-primary transition-all duration-300",
               isOpen ? "rotate-180" : "",
             )}
           >

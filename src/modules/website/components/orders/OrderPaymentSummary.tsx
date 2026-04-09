@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { CreditCard, Check, Copy, ShoppingBag } from "lucide-react";
+import { CreditCard, ShoppingBag } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
@@ -16,11 +16,7 @@ interface OrderPaymentSummaryProps {
   isCopied: boolean;
 }
 
-export function OrderPaymentSummary({
-  order,
-  handleCopy,
-  isCopied,
-}: OrderPaymentSummaryProps) {
+export function OrderPaymentSummary({ order }: OrderPaymentSummaryProps) {
   const [isReordering, setIsReordering] = useState(false);
   const [addItemToCart] = useAddItemToCartMutation();
   const navigate = useNavigate();
@@ -60,129 +56,98 @@ export function OrderPaymentSummary({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.2 }}
     >
-      <Card className="overflow-hidden rounded-2xl border-2 border-gray-100 dark:border-white/5 bg-white dark:bg-neutral-900/50">
-        <div className="bg-gradient-to-r from-emerald-50 to-white dark:from-emerald-500/10 dark:to-transparent px-6 py-4 border-b-2 border-gray-100 dark:border-white/5">
-          <h2 className="text-lg font-black text-foreground flex items-center gap-2">
-            <CreditCard className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-            Payment Summary
+      <Card className="overflow-hidden rounded-sm border border-border/40 bg-card/50 backdrop-blur-sm">
+        <div className="bg-muted/30 px-4 py-3 border-b border-border/40">
+          <h2 className="text-sm font-black text-foreground flex items-center gap-2 uppercase tracking-widest font-outfit">
+            <CreditCard className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+            Payment
           </h2>
         </div>
-        <div className="p-6 space-y-3">
-          <div className="flex justify-between text-gray-700">
+        <div className="p-3 sm:p-5 space-y-3">
+          <div className="flex justify-between text-muted-foreground text-[10px] font-black uppercase tracking-widest">
             <span>Subtotal</span>
-            <span className="font-semibold">
+            <span className="text-foreground font-black font-outfit">
               ₦{(Number(order.subtotal) / 100).toLocaleString()}
             </span>
           </div>
 
           {order.shipping_fee != null && Number(order.shipping_fee) > 0 && (
-            <div className="flex justify-between text-gray-700">
-              <span>Shipping Fee</span>
-              <span className="font-semibold">
+            <div className="flex justify-between text-muted-foreground text-[10px] font-black uppercase tracking-widest">
+              <span>Shipping</span>
+              <span className="text-foreground font-black font-outfit">
                 ₦{(Number(order.shipping_fee) / 100).toLocaleString()}
               </span>
             </div>
           )}
 
           {order.platform_fee != null && Number(order.platform_fee) > 0 && (
-            <div className="flex justify-between text-gray-700">
-              <span>Platform Fee (2%)</span>
-              <span className="font-semibold">
+            <div className="flex justify-between text-muted-foreground text-[10px] font-black uppercase tracking-widest">
+              <span>Fee (2%)</span>
+              <span className="text-foreground font-black font-outfit">
                 ₦{(Number(order.platform_fee) / 100).toLocaleString()}
               </span>
             </div>
           )}
 
-          {order.tax != null && Number(order.tax) > 0 && (
-            <div className="flex justify-between text-gray-700">
-              <span>Tax</span>
-              <span className="font-semibold">
-                ₦{(Number(order.tax) / 100).toLocaleString()}
-              </span>
-            </div>
-          )}
-          <Separator />
-          <div className="flex justify-between text-gray-900 text-lg">
-            <span className="font-black">Total</span>
-            <span className="font-black text-emerald-600">
+          <Separator className="bg-border/40" />
+          <div className="flex justify-between items-baseline">
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
+              Total
+            </span>
+            <span className="text-2xl font-black text-emerald-600 dark:text-emerald-400 font-outfit tracking-tighter">
               ₦{(Number(order.total) / 100).toLocaleString()}
             </span>
           </div>
-          <Separator className="dark:bg-white/5" />
-          <div className="space-y-2 text-sm">
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Payment Method</span>
-              <span className="font-semibold text-foreground capitalize">
+          <Separator className="bg-border/40" />
+
+          <div className="space-y-2.5">
+            <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-wider">
+              <span className="text-muted-foreground">Method</span>
+              <span className="text-foreground px-2 py-0.5 rounded-sm bg-muted/30 border border-border/40">
                 {order.payment_method}
               </span>
             </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Payment Status</span>
+            <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-wider">
+              <span className="text-muted-foreground">Status</span>
               <span
                 className={cn(
-                  "font-bold capitalize",
+                  "px-2 py-0.5 rounded-sm border",
                   order.payment_status === "success"
-                    ? "text-emerald-600"
+                    ? "text-emerald-600 border-emerald-600/20 bg-emerald-600/10"
                     : order.payment_status === "failed"
-                      ? "text-red-600"
-                      : "text-amber-600",
+                      ? "text-red-600 border-red-600/20 bg-red-600/10"
+                      : "text-amber-600 border-amber-600/20 bg-amber-600/10",
                 )}
               >
                 {order.payment_status}
               </span>
             </div>
-            {order.payment_reference && (
-              <div className="flex justify-between items-center group/ref">
-                <span className="text-muted-foreground">Reference</span>
-                <div className="flex items-center gap-2">
-                  <span className="font-mono text-xs font-semibold text-foreground line-clamp-1 max-w-[150px]">
-                    {order.payment_reference}
-                  </span>
-                  <button
-                    onClick={handleCopy}
-                    className="p-1 hover:bg-gray-100 dark:hover:bg-neutral-800 rounded-md transition-colors text-gray-400 hover:text-gray-600 dark:hover:text-zinc-300"
-                    title="Copy Full Reference"
-                  >
-                    {isCopied ? (
-                      <Check className="h-3 w-3 text-emerald-600 dark:text-emerald-400" />
-                    ) : (
-                      <Copy className="h-3 w-3" />
-                    )}
-                  </button>
-                </div>
-              </div>
-            )}
           </div>
 
           {/* Action Buttons */}
-          <div className="flex flex-col gap-3 mt-4">
-            {order.payment_method === "online" &&
-              order.payment_status !== "success" &&
-              order.payment_url && (
-                <Button
-                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-6 rounded-xl shadow-lg shadow-emerald-600/20 active:scale-[0.98] transition-all group/pay"
-                  onClick={() => (window.location.href = order.payment_url!)}
-                >
-                  <CreditCard className="mr-2 h-5 w-5 group-hover/pay:scale-110 transition-transform" />
-                  Retry Payment
-                </Button>
-              )}
+          <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-border/20">
+            {order.payment_status === "pending" && order.payment_url && (
+              <Button
+                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black h-11 rounded-sm uppercase tracking-widest text-[10px] shadow-lg shadow-emerald-600/20 active:scale-[0.98] transition-all"
+                onClick={() => (window.location.href = order.payment_url!)}
+              >
+                <CreditCard className="mr-2 h-4 w-4" />
+                Retry Payment
+              </Button>
+            )}
 
             <Button
               variant="outline"
-              className="w-full font-black py-6 rounded-xl border-2 hover:bg-emerald-50 dark:hover:bg-emerald-900/10 hover:text-emerald-700 dark:hover:text-emerald-400 hover:border-emerald-200 dark:hover:border-emerald-800/30 transition-all group/reorder"
+              className="w-full font-black h-11 rounded-sm border border-border/40 hover:bg-muted/50 uppercase tracking-widest text-[10px] transition-all group/reorder"
               onClick={handleReorder}
               disabled={isReordering}
             >
               {isReordering ? (
-                <span className="flex items-center gap-2">
-                  <div className="h-4 w-4 rounded-full border-2 border-current border-t-transparent animate-spin" />
-                  Reordering...
-                </span>
+                <div className="h-3.5 w-3.5 rounded-sm border-2 border-current border-t-transparent animate-spin" />
               ) : (
                 <>
-                  <ShoppingBag className="mr-2 h-5 w-5 group-hover/reorder:scale-110 transition-transform" />
-                  Reorder Items
+                  <ShoppingBag className="mr-2 h-4 w-4 group-hover/reorder:scale-110 transition-transform" />
+                  Reorder Item
                 </>
               )}
             </Button>

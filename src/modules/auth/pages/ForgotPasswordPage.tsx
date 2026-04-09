@@ -57,7 +57,7 @@ export default function ForgotPasswordPage() {
             type="submit"
             isLoading={isLoading}
             loadingText="Sending..."
-            className="w-full h-11 rounded-full text-base font-semibold shadow-md active:scale-95 transition-all"
+            className="w-full h-11 rounded-sm text-base font-semibold  active:scale-95 transition-all"
           >
             Send Reset Link
           </Button>

@@ -27,7 +27,7 @@ export default function ProductGridCard({
       category={data.category || "General"}
       rating={data.rating_average || 0}
       stock={data.stock}
-      vendor={data.store_name || "EasyStore"}
+      vendor={data.store_name || "EazyStore"}
       storeSlug={data.store_slug}
       colors={data.colors}
       sizes={data.sizes}

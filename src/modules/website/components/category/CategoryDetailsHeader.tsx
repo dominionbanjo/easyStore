@@ -15,8 +15,8 @@ export function CategoryDetailsHeader({
   return (
     <div className="relative overflow-hidden bg-white dark:bg-neutral-950 border-b border-zinc-200 dark:border-white/10 transition-colors duration-300">
       {/* Decorative background elements */}
-      <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-96 h-96 bg-primary/5 dark:bg-emerald-500/10 rounded-full blur-3xl opacity-60" />
-      <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/4 w-72 h-72 bg-primary/5 dark:bg-emerald-500/10 rounded-full blur-3xl opacity-60" />
+      <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-96 h-96 bg-primary/5 dark:bg-emerald-500/10 rounded-sm blur-3xl opacity-60" />
+      <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/4 w-72 h-72 bg-primary/5 dark:bg-emerald-500/10 rounded-sm blur-3xl opacity-60" />
 
       <div className="max-w-7xl mx-auto px-4 py-16 md:py-24 relative z-10">
         <SmartLink to={WEBSITE_ROUTES.CATEGORIES} className="block mb-12">
@@ -57,7 +57,7 @@ export function CategoryDetailsHeader({
             animate={{ opacity: 1, scale: 1 }}
             className="flex-shrink-0"
           >
-            <div className="bg-white/50 dark:bg-neutral-900/40 backdrop-blur-xl border border-zinc-200 dark:border-emerald-500/20 rounded-[2.5rem] px-10 py-8 flex flex-col items-center justify-center shadow-xl shadow-primary/5 dark:shadow-emerald-500/5 group hover:scale-105 transition-transform duration-500">
+            <div className="bg-white/50 dark:bg-neutral-900/40 backdrop-blur-xl border border-zinc-200 dark:border-emerald-500/20 rounded-sm px-10 py-8 flex flex-col items-center justify-center   dark:-emerald-500/5 group hover:scale-105 transition-transform duration-500">
               <span className="text-5xl font-black text-primary dark:text-emerald-400 leading-none mb-2 tabular-nums">
                 {count}
               </span>

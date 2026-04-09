@@ -106,6 +106,10 @@ export interface IStoreDetails {
     account_status?: "active" | "pending" | "restricted" | "banned";
   };
   created_at: string;
+  theme?: {
+    template: ITemplate;
+    custom_config: ThemeConfig;
+  };
 }
 
 export interface IStoreCategory {

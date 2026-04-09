@@ -88,7 +88,7 @@ export default function VerifyOtpPage() {
   if (!email) {
     return (
       <div className="fixed inset-0 flex items-center justify-center p-4 bg-background">
-        <Card className="w-full max-w-md bg-white/95 rounded-2xl shadow-xl overflow-hidden">
+        <Card className="w-full max-w-md bg-white/95 rounded-sm  overflow-hidden">
           <CardHeader className="text-center space-y-2">
             <CardTitle className="text-2xl font-bold">
               Invalid Verification Link
@@ -100,7 +100,7 @@ export default function VerifyOtpPage() {
 
           <CardContent className="px-6 pb-8 space-y-4">
             <Button
-              className="w-full rounded-full py-2"
+              className="w-full rounded-sm py-2"
               onClick={() =>
                 navigate(
                   `${AUTH_ROUTES.LOGIN}?redirect=${encodeURIComponent(
@@ -114,7 +114,7 @@ export default function VerifyOtpPage() {
 
             <Button
               variant="outline"
-              className="w-full rounded-full py-2"
+              className="w-full rounded-sm py-2"
               onClick={() => navigate(AUTH_ROUTES.FORGOT_PASSWORD)}
             >
               Request New Code
@@ -142,7 +142,7 @@ export default function VerifyOtpPage() {
             <input
               {...props}
               className={cn(
-                "w-12 h-12 sm:w-14 sm:h-14 rounded-xl border border-border bg-background text-foreground text-xl font-semibold text-center focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all shadow-sm",
+                "w-12 h-12 sm:w-14 sm:h-14 rounded-sm border border-border bg-background text-foreground text-xl font-semibold text-center focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all ",
                 props.className,
               )}
               style={{}} // Override default styles if any
@@ -155,7 +155,7 @@ export default function VerifyOtpPage() {
           type="submit"
           isLoading={isLoading}
           loadingText="Verifying..."
-          className="w-full h-11 rounded-full text-base font-semibold shadow-md active:scale-95 transition-all"
+          className="w-full h-11 rounded-sm text-base font-semibold  active:scale-95 transition-all"
         >
           Verify Account
         </Button>

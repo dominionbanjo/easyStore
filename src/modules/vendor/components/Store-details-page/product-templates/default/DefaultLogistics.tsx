@@ -7,9 +7,9 @@ interface DefaultLogisticsProps {
 
 export function DefaultLogistics({ uiProduct }: DefaultLogisticsProps) {
   return (
-    <div className="mt-10 bg-zinc-50 dark:bg-zinc-900/50 rounded-2xl p-6 border border-zinc-200 dark:border-zinc-800 space-y-4">
+    <div className="mt-10 bg-zinc-50 dark:bg-zinc-900/50 rounded-sm p-6 border border-zinc-200 dark:border-zinc-800 space-y-4">
       <div className="flex items-center gap-4 text-zinc-700 dark:text-zinc-300">
-        <div className="w-10 h-10 rounded-full bg-white dark:bg-zinc-800 flex items-center justify-center shadow-sm shrink-0">
+        <div className="w-10 h-10 rounded-sm bg-white dark:bg-zinc-800 flex items-center justify-center  shrink-0">
           <ShieldCheck className="w-5 h-5 text-[var(--theme-primary)]" />
         </div>
         <div>
@@ -22,7 +22,7 @@ export function DefaultLogistics({ uiProduct }: DefaultLogisticsProps) {
         </div>
       </div>
       <div className="flex items-center gap-4 text-zinc-700 dark:text-zinc-300">
-        <div className="w-10 h-10 rounded-full bg-white dark:bg-zinc-800 flex items-center justify-center shadow-sm shrink-0">
+        <div className="w-10 h-10 rounded-sm bg-white dark:bg-zinc-800 flex items-center justify-center  shrink-0">
           <Truck className="w-5 h-5 text-[var(--theme-primary)]" />
         </div>
         <div>
@@ -35,7 +35,7 @@ export function DefaultLogistics({ uiProduct }: DefaultLogisticsProps) {
         </div>
       </div>
       <div className="flex items-center gap-4 text-zinc-700 dark:text-zinc-300">
-        <div className="w-10 h-10 rounded-full bg-white dark:bg-zinc-800 flex items-center justify-center shadow-sm shrink-0">
+        <div className="w-10 h-10 rounded-sm bg-white dark:bg-zinc-800 flex items-center justify-center  shrink-0">
           <RotateCcw className="w-5 h-5 text-[var(--theme-primary)]" />
         </div>
         <div>

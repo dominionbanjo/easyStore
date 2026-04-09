@@ -46,7 +46,7 @@ export default function DefaultTemplate({
   return (
     <div className="bg-white dark:bg-zinc-950 min-h-screen font-sans text-zinc-900 dark:text-zinc-100 selection:bg-[var(--theme-primary)] selection:text-white">
       {/* ─── HEADER ─── */}
-      <header className="sticky top-0 z-40 w-full bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800 shadow-sm">
+      <header className="sticky top-0 z-40 w-full bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800 ">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4 md:gap-8">
           {/* Logo & Name */}
           <div className="flex items-center gap-3 md:gap-4 shrink-0">
@@ -54,7 +54,7 @@ export default function DefaultTemplate({
               <img
                 src={store.logo ?? undefined}
                 alt={store.store_name}
-                className="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover border border-zinc-200 dark:border-zinc-800"
+                className="w-10 h-10 md:w-12 md:h-12 rounded-sm object-cover border border-zinc-200 dark:border-zinc-800"
               />
             )}
             <h1 className="text-xl md:text-2xl font-bold tracking-tight text-zinc-900 dark:text-white truncate max-w-[120px] md:max-w-xs">
@@ -89,7 +89,7 @@ export default function DefaultTemplate({
             <Input
               type="text"
               placeholder="Search products..."
-              className="w-full bg-zinc-100 dark:bg-zinc-900 border-transparent focus-visible:bg-white dark:focus-visible:bg-zinc-950 focus-visible:border-[var(--theme-primary)] focus-visible:ring-2 focus-visible:ring-[var(--theme-primary)]/20 rounded-full pl-12 pr-12 py-6 transition-all text-base font-medium shadow-inner"
+              className="w-full bg-zinc-100 dark:bg-zinc-900 border-transparent focus-visible:bg-white dark:focus-visible:bg-zinc-950 focus-visible:border-[var(--theme-primary)] focus-visible:ring-2 focus-visible:ring-[var(--theme-primary)]/20 rounded-sm pl-12 pr-12 py-6 transition-all text-base font-medium "
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
             />
@@ -100,7 +100,7 @@ export default function DefaultTemplate({
               {searchQuery && (
                 <button
                   onClick={() => onSearchChange("")}
-                  className="text-zinc-400 hover:text-zinc-900 dark:hover:text-white bg-zinc-200 dark:bg-zinc-800 rounded-full p-1 transition-colors"
+                  className="text-zinc-400 hover:text-zinc-900 dark:hover:text-white bg-zinc-200 dark:bg-zinc-800 rounded-sm p-1 transition-colors"
                 >
                   <X className="w-3 h-3" />
                 </button>
@@ -112,18 +112,18 @@ export default function DefaultTemplate({
           <div className="flex items-center gap-2 md:gap-4">
             <button
               onClick={onCartOpen}
-              className="relative p-2.5 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-900 text-zinc-600 dark:text-zinc-400 transition-all hover:scale-110"
+              className="relative p-2.5 rounded-sm hover:bg-zinc-100 dark:hover:bg-zinc-900 text-zinc-600 dark:text-zinc-400 transition-all hover:scale-110"
             >
               <ShoppingCart className="w-5 h-5" />
               {cartItemsCount > 0 && (
-                <span className="absolute top-0 right-0 h-4 w-4 rounded-full bg-[var(--theme-primary)] text-white text-[10px] flex items-center justify-center font-bold ring-2 ring-white dark:ring-zinc-950 shadow-sm">
+                <span className="absolute top-0 right-0 h-4 w-4 rounded-sm bg-[var(--theme-primary)] text-white text-[10px] flex items-center justify-center font-bold ring-2 ring-white dark:ring-zinc-950 ">
                   {cartItemsCount}
                 </span>
               )}
             </button>
 
             <TemplateProfileDropdown
-              buttonClassName="relative p-2.5 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-900 text-zinc-600 dark:text-zinc-400 transition-all hover:scale-110"
+              buttonClassName="relative p-2.5 rounded-sm hover:bg-zinc-100 dark:hover:bg-zinc-900 text-zinc-600 dark:text-zinc-400 transition-all hover:scale-110"
               iconClassName="w-5 h-5"
             />
 
@@ -132,7 +132,7 @@ export default function DefaultTemplate({
             {store.email && (
               <a
                 href={`mailto:${store.email}`}
-                className="hidden sm:flex hover:text-[var(--theme-primary)] transition-colors p-2 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-full text-zinc-500"
+                className="hidden sm:flex hover:text-[var(--theme-primary)] transition-colors p-2 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-sm text-zinc-500"
               >
                 <Mail className="w-5 h-5" />
               </a>
@@ -149,7 +149,7 @@ export default function DefaultTemplate({
             <Input
               type="text"
               placeholder="Search products..."
-              className="w-full bg-zinc-100 dark:bg-zinc-900 border-transparent focus-visible:bg-white dark:focus-visible:bg-zinc-950 focus-visible:ring-1 focus-visible:ring-[var(--theme-primary)] rounded-full pl-10 pr-10 py-5 transition-all shadow-inner"
+              className="w-full bg-zinc-100 dark:bg-zinc-900 border-transparent focus-visible:bg-white dark:focus-visible:bg-zinc-950 focus-visible:ring-1 focus-visible:ring-[var(--theme-primary)] rounded-sm pl-10 pr-10 py-5 transition-all "
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
             />
@@ -166,9 +166,9 @@ export default function DefaultTemplate({
                 onTabChange("products");
                 onCategorySelect(null);
               }}
-              className={`text-xs font-bold uppercase tracking-widest whitespace-nowrap transition-all px-4 py-2 rounded-full ${
+              className={`text-xs font-bold uppercase tracking-widest whitespace-nowrap transition-all px-4 py-2 rounded-sm ${
                 activeTab === "products" && !selectedCategory
-                  ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 shadow-lg"
+                  ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 "
                   : "text-zinc-500 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-900"
               }`}
             >
@@ -179,9 +179,9 @@ export default function DefaultTemplate({
               <button
                 key={cat.id}
                 onClick={() => onCategorySelect(cat)}
-                className={`text-xs font-bold uppercase tracking-widest whitespace-nowrap transition-all px-4 py-2 rounded-full ${
+                className={`text-xs font-bold uppercase tracking-widest whitespace-nowrap transition-all px-4 py-2 rounded-sm ${
                   selectedCategory?.id === cat.id
-                    ? "bg-[var(--theme-primary)] text-white shadow-lg"
+                    ? "bg-[var(--theme-primary)] text-white "
                     : "text-zinc-500 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-900"
                 }`}
               >
@@ -213,19 +213,19 @@ export default function DefaultTemplate({
               <img
                 src={store.logo ?? undefined}
                 alt="Store logo"
-                className="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover border-4 border-white/20 mb-8 shadow-2xl backdrop-blur-md bg-white/10"
+                className="w-24 h-24 md:w-32 md:h-32 rounded-sm object-cover border-4 border-white/20 mb-8  backdrop-blur-md bg-white/10"
               />
             )}
-            <h2 className="text-5xl md:text-8xl font-black tracking-tight mb-6 text-white drop-shadow-lg leading-none">
+            <h2 className="text-5xl md:text-8xl font-black tracking-tight mb-6 text-white drop- leading-none">
               {store.store_name}
             </h2>
-            <p className="text-lg md:text-2xl font-medium mb-10 text-zinc-200 drop-shadow-md max-w-2xl leading-relaxed opacity-90">
+            <p className="text-lg md:text-2xl font-medium mb-10 text-zinc-200 drop- max-w-2xl leading-relaxed opacity-90">
               {store.description ||
                 "Discover premium products tailored to your lifestyle. Shop the latest collections today."}
             </p>
 
             <div className="flex flex-wrap items-center justify-center gap-4 text-sm font-semibold mb-10">
-              <div className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/10 text-white backdrop-blur-xl border border-white/10 shadow-lg">
+              <div className="flex items-center gap-2 px-5 py-2.5 rounded-sm bg-white/10 text-white backdrop-blur-xl border border-white/10 ">
                 <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
                 <span className="text-base">
                   {Number(store.rating_average ?? 0).toFixed(1)}
@@ -235,7 +235,7 @@ export default function DefaultTemplate({
                 </span>
               </div>
               {storeLocation && (
-                <div className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/10 text-white backdrop-blur-xl border border-white/10 shadow-lg">
+                <div className="flex items-center gap-2 px-5 py-2.5 rounded-sm bg-white/10 text-white backdrop-blur-xl border border-white/10 ">
                   <MapPin className="w-4 h-4 text-zinc-300" />
                   <span className="text-base">{storeLocation}</span>
                 </div>
@@ -247,7 +247,7 @@ export default function DefaultTemplate({
                 const target = document.getElementById("main-grid");
                 target?.scrollIntoView({ behavior: "smooth", block: "start" });
               }}
-              className="bg-[var(--theme-primary)] text-white px-12 py-5 rounded-full font-bold text-lg hover:bg-[var(--theme-primary)]/90 transition-all shadow-xl shadow-[var(--theme-primary)]/20 hover:shadow-[var(--theme-primary)]/40 hover:-translate-y-1 active:scale-95"
+              className="bg-[var(--theme-primary)] text-white px-12 py-5 rounded-sm font-bold text-lg hover:bg-[var(--theme-primary)]/90 transition-all  -[var(--theme-primary)]/20 hover:-[var(--theme-primary)]/40 hover:-translate-y-1 active:scale-95"
             >
               Explore Collection
             </button>
@@ -300,19 +300,19 @@ export default function DefaultTemplate({
                 ? Array.from({ length: 8 }).map((_, i) => (
                     <Skeleton
                       key={i}
-                      className="h-72 rounded-[2.5rem] bg-zinc-200 dark:bg-zinc-900 shadow-sm"
+                      className="h-72 rounded-sm bg-zinc-200 dark:bg-zinc-900 "
                     />
                   ))
                 : categories?.map((cat) => (
                     <button
                       key={cat.id}
                       onClick={() => onCategorySelect(cat)}
-                      className="group relative overflow-hidden rounded-[2.5rem] bg-zinc-100 dark:bg-zinc-900 text-left shadow-sm hover:shadow-2xl transition-all duration-500 h-80 flex flex-col justify-end p-8 border border-zinc-200 dark:border-zinc-800"
+                      className="group relative overflow-hidden rounded-sm bg-zinc-100 dark:bg-zinc-900 text-left  hover: transition-all duration-500 h-80 flex flex-col justify-end p-8 border border-zinc-200 dark:border-zinc-800"
                     >
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10 opacity-70 group-hover:opacity-90 transition-opacity" />
 
                       {/* Decorative Element */}
-                      <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--theme-primary)]/10 rounded-full blur-3xl -mr-16 -mt-16 transition-transform duration-700 group-hover:scale-150 group-hover:bg-[var(--theme-primary)]/20" />
+                      <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--theme-primary)]/10 rounded-sm blur-3xl -mr-16 -mt-16 transition-transform duration-700 group-hover:scale-150 group-hover:bg-[var(--theme-primary)]/20" />
 
                       <div className="relative z-20 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
                         <h3 className="text-3xl font-bold text-white mb-4 group-hover:text-[var(--theme-primary)] transition-colors line-clamp-2">
@@ -376,10 +376,10 @@ export default function DefaultTemplate({
               <img
                 src={store.logo ?? undefined}
                 alt="Logo"
-                className="w-20 h-20 grayscale opacity-40 hover:grayscale-0 hover:opacity-100 transition-all rounded-full border-2 border-transparent hover:border-[var(--theme-primary)] p-0.5"
+                className="w-20 h-20 grayscale opacity-40 hover:grayscale-0 hover:opacity-100 transition-all rounded-sm border-2 border-transparent hover:border-[var(--theme-primary)] p-0.5"
               />
             ) : (
-              <div className="w-20 h-20 bg-zinc-200 dark:bg-zinc-800 rounded-full flex items-center justify-center font-bold text-3xl text-zinc-400">
+              <div className="w-20 h-20 bg-zinc-200 dark:bg-zinc-800 rounded-sm flex items-center justify-center font-bold text-3xl text-zinc-400">
                 {store.store_name?.charAt(0)}
               </div>
             )}
