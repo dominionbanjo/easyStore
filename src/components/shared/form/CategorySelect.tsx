@@ -218,7 +218,10 @@ export function CategorySelect({
               </button>
             </DialogTrigger>
 
-            <DialogContent className="max-w-5xl p-0 overflow-hidden sm:rounded-sm border-none  h-full sm:h-[85vh] sm:min-h-[600px] flex flex-col bg-background/95 backdrop-blur-xl">
+            <DialogContent 
+              showCloseButton={false}
+              className="max-w-5xl p-0 overflow-hidden sm:rounded-sm border-none  h-full sm:h-[85vh] sm:min-h-[600px] flex flex-col bg-background/95 backdrop-blur-xl"
+            >
               {/* Header */}
               <div className="p-5 sm:p-8 pb-4 shrink-0 flex flex-row items-center justify-between">
                 <DialogTitle className="text-xl sm:text-3xl font-black uppercase tracking-tighter flex items-center gap-3 sm:gap-4">

@@ -187,7 +187,10 @@ export function EditProfileModal({
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
-      <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto custom-scrollbar p-0 gap-0">
+      <DialogContent 
+        showCloseButton={false}
+        className="sm:max-w-2xl max-h-[90vh] overflow-y-auto custom-scrollbar p-0 gap-0"
+      >
         <DialogHeader className="p-6 pb-0 border-b flex-row items-center justify-between space-y-0">
           <DialogTitle className="text-xl font-semibold">
             Edit Profile

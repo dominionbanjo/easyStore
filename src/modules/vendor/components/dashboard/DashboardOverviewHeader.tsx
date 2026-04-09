@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { clearProductDraft } from "@/features/productDraftSlice";
 
 import { useGetMyStoreQuery } from "@/services/storeApi";
-import { getBaseDomain } from "@/utils/subdomain";
+import { getBaseDomain, getAppPath } from "@/utils/subdomain";
 import { RecordOfflineSaleModal } from "./RecordOfflineSaleModal";
 import { useState } from "react";
 
@@ -95,7 +95,7 @@ export function DashboardOverviewHeader() {
           className="gap-2  "
           onClick={() => {
             dispatch(clearProductDraft());
-            navigate("/products/new");
+            navigate(getAppPath("/products/new"));
           }}
         >
           <Plus className="h-4 w-4" />

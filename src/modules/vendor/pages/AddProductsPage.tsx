@@ -214,7 +214,7 @@ export default function AddProductPage() {
     <FormProvider {...methods}>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="max-w-6xl mx-auto space-y-8 pb-20 pt-4"
+        className="max-w-6xl mx-auto space-y-6 md:space-y-8 pb-20 pt-2 md:pt-4"
       >
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 px-2">
@@ -287,24 +287,24 @@ export default function AddProductPage() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-8 max-w-4xl mx-auto">
+        <div className="flex flex-col gap-6 md:gap-8 w-full md:max-w-4xl mx-auto">
           {/* Identity Card */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
             <Card className="border-border/40  overflow-hidden rounded-sm">
-              <CardHeader className="bg-muted/30 p-6 md:p-8 border-b border-border/40">
+              <CardHeader className="bg-muted/30 p-4 md:p-8 border-b border-border/40">
                 <div className="flex items-center gap-4">
                   <div className="h-9 w-9 rounded-sm bg-background flex items-center justify-center ">
                     <Settings className="h-5 w-5 text-primary" />
                   </div>
-                  <CardTitle className="text-lg font-black uppercase tracking-tight">
+                  <CardTitle className="text-base md:text-lg font-black uppercase tracking-tight">
                     Product Identity
                   </CardTitle>
                 </div>
               </CardHeader>
-              <CardContent className="p-5 sm:p-8 space-y-8">
+              <CardContent className="p-4 sm:p-8 space-y-6 md:space-y-8">
                 <BasicInfoSection
                   highlights={extras.highlights}
                   setHighlights={extras.setHighlights}
@@ -320,17 +320,17 @@ export default function AddProductPage() {
             transition={{ delay: 0.1 }}
           >
             <Card className="border-border/40  overflow-hidden rounded-sm">
-              <CardHeader className="bg-muted/30 p-6 md:p-8 border-b border-border/40">
+              <CardHeader className="bg-muted/30 p-4 md:p-8 border-b border-border/40">
                 <div className="flex items-center gap-4">
                   <div className="h-9 w-9 rounded-sm bg-background flex items-center justify-center ">
                     <ImageIcon className="h-5 w-5 text-primary" />
                   </div>
-                  <CardTitle className="text-lg font-black uppercase tracking-tight">
+                  <CardTitle className="text-base md:text-lg font-black uppercase tracking-tight">
                     Product Visuals
                   </CardTitle>
                 </div>
               </CardHeader>
-              <CardContent className="p-5 sm:p-8">
+              <CardContent className="p-4 sm:p-8">
                 <ImageSection {...extras} />
               </CardContent>
             </Card>
@@ -343,17 +343,17 @@ export default function AddProductPage() {
             transition={{ delay: 0.2 }}
           >
             <Card className="border-border/40  overflow-hidden rounded-sm">
-              <CardHeader className="bg-muted/30 p-6 md:p-8 border-b border-border/40">
+              <CardHeader className="bg-muted/30 p-4 md:p-8 border-b border-border/40">
                 <div className="flex items-center gap-4">
                   <div className="h-9 w-9 rounded-sm bg-background flex items-center justify-center ">
                     <Tag className="h-5 w-5 text-primary" />
                   </div>
-                  <CardTitle className="text-lg font-black uppercase tracking-tight">
+                  <CardTitle className="text-base md:text-lg font-black uppercase tracking-tight">
                     Pricing & Stock
                   </CardTitle>
                 </div>
               </CardHeader>
-              <CardContent className="p-5 sm:p-8">
+              <CardContent className="p-4 sm:p-8">
                 <PricingSectionWrapper />
               </CardContent>
             </Card>
@@ -366,22 +366,22 @@ export default function AddProductPage() {
             transition={{ delay: 0.3 }}
           >
             <Card className="border-border/40  overflow-hidden rounded-sm">
-              <CardHeader className="bg-muted/30 p-6 md:p-8 border-b border-border/40">
+              <CardHeader className="bg-muted/30 p-4 md:p-8 border-b border-border/40">
                 <div className="flex items-center gap-4">
                   <div className="h-9 w-9 rounded-sm bg-background flex items-center justify-center ">
                     <Layers className="h-5 w-5 text-primary" />
                   </div>
                   <div className="flex items-center gap-2">
-                    <CardTitle className="text-lg font-black uppercase tracking-tight">
+                    <CardTitle className="text-base md:text-lg font-black uppercase tracking-tight">
                       Specifications
                     </CardTitle>
-                    <span className="text-xs font-medium text-muted-foreground bg-muted px-2 py-0.5 rounded-sm">
+                    <span className="text-[10px] font-bold text-muted-foreground bg-muted px-2 py-0.5 rounded-sm uppercase">
                       Optional
                     </span>
                   </div>
                 </div>
               </CardHeader>
-              <CardContent className="p-5 sm:p-8 space-y-10">
+              <CardContent className="p-4 sm:p-8 space-y-8 md:space-y-10">
                 <SpecsSection {...extras} />
                 <Separator className="bg-border/40" />
                 <ChipsSection {...extras} />
@@ -396,22 +396,22 @@ export default function AddProductPage() {
             transition={{ delay: 0.4 }}
           >
             <Card className="border-border/40  overflow-hidden rounded-sm">
-              <CardHeader className="bg-muted/30 p-6 md:p-8 border-b border-border/40">
+              <CardHeader className="bg-muted/30 p-4 md:p-8 border-b border-border/40">
                 <div className="flex items-center gap-4">
                   <div className="h-9 w-9 rounded-sm bg-background flex items-center justify-center ">
                     <Truck className="h-5 w-5 text-primary" />
                   </div>
                   <div className="flex items-center gap-2">
-                    <CardTitle className="text-lg font-black uppercase tracking-tight">
+                    <CardTitle className="text-base md:text-lg font-black uppercase tracking-tight">
                       Logistics
                     </CardTitle>
-                    <span className="text-xs font-medium text-muted-foreground bg-muted px-2 py-0.5 rounded-sm">
+                    <span className="text-[10px] font-bold text-muted-foreground bg-muted px-2 py-0.5 rounded-sm uppercase">
                       Optional
                     </span>
                   </div>
                 </div>
               </CardHeader>
-              <CardContent className="p-5 sm:p-8">
+              <CardContent className="p-4 sm:p-8">
                 <ShippingSection />
               </CardContent>
             </Card>

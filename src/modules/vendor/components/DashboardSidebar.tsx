@@ -16,7 +16,7 @@ import { NavLink } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { StoreSetupTracker } from "./shared/StoreSetupTracker";
-import { areSubdomainsDisabled } from "@/utils/subdomain";
+import { areSubdomainsDisabled, getAppPath } from "@/utils/subdomain";
 
 const menuItems = [
   { label: "Dashboard", icon: LayoutDashboard, to: "/", exact: true },
@@ -81,8 +81,7 @@ export default function DashboardSidebar({
 
         <nav className="flex flex-col gap-1 px-2 mt-4">
           {menuItems.map(({ label, icon: Icon, to, exact }) => {
-            const pathPrefix = areSubdomainsDisabled() ? "/vendor" : "";
-            const finalPath = to === "/" ? (pathPrefix || "/") : `${pathPrefix}${to}`;
+            const finalPath = getAppPath(to);
 
             return (
               <NavLink
@@ -153,8 +152,7 @@ export default function DashboardSidebar({
 
               <nav className="flex flex-col gap-1 px-2 mt-4">
                 {menuItems.map(({ label, icon: Icon, to, exact }) => {
-                  const pathPrefix = areSubdomainsDisabled() ? "/vendor" : "";
-                  const finalPath = to === "/" ? (pathPrefix || "/") : `${pathPrefix}${to}`;
+                  const finalPath = getAppPath(to);
 
                   return (
                     <NavLink

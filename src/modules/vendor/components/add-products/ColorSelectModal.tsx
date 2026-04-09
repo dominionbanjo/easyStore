@@ -128,9 +128,9 @@ export function ColorSelectModal({
           <Button
             type="button"
             variant="outline"
-            className="rounded-sm border-2 border-dashed border-primary/30 hover:border-primary/60 text-primary gap-3 h-14 px-8 font-black uppercase tracking-widest text-xs transition-all hover:bg-primary/[0.02]"
+            className="rounded-sm border-2 border-dashed border-primary/30 hover:border-primary/60 text-primary gap-2 h-11 px-6 font-black uppercase tracking-widest text-[10px] transition-all hover:bg-primary/[0.02]"
           >
-            <Palette className="h-4 w-4" /> Pick Variant Colors
+            <Palette className="h-3.5 w-3.5" /> Pick Variant Colors
           </Button>
         )}
       </DialogTrigger>

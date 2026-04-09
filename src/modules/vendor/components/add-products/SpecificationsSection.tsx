@@ -35,14 +35,19 @@ export default function SpecificationsSection({
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-sm bg-primary/10 flex items-center justify-center">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-primary/[0.02] p-3 rounded-sm border border-border/40">
+        <div className="flex items-center gap-3">
+          <div className="h-8 w-8 rounded-sm bg-primary/10 flex items-center justify-center shrink-0">
             <Settings2 className="h-4 w-4 text-primary" />
           </div>
-          <Label className="text-sm font-black uppercase tracking-widest text-muted-foreground/80">
-            Technical Specs
-          </Label>
+          <div className="flex flex-col">
+            <Label className="text-sm font-black uppercase tracking-tighter">
+              Technical Specs
+            </Label>
+            <span className="text-[9px] font-bold text-muted-foreground/60 uppercase tracking-widest">
+              Additional Details
+            </span>
+          </div>
         </div>
 
         <Button
@@ -50,7 +55,7 @@ export default function SpecificationsSection({
           variant="outline"
           size="sm"
           onClick={onAdd}
-          className="rounded-sm border-primary/20 hover:bg-primary/5 hover:text-primary transition-all font-bold px-4"
+          className="rounded-sm border-2 border-dashed border-primary/20 hover:bg-primary/5 hover:text-primary transition-all font-black text-[10px] uppercase h-9 px-4"
         >
           <Plus className="h-4 w-4 mr-2" />
           Add Specification
@@ -68,7 +73,7 @@ export default function SpecificationsSection({
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className="group relative grid grid-cols-1 md:grid-cols-[1fr_1.5fr_auto] gap-4 p-4 rounded-sm bg-muted/20 border border-muted-foreground/10 hover:border-primary/30 transition-all duration-300"
+                className="group relative grid grid-cols-1 md:grid-cols-[1fr_1.5fr_auto] gap-3 p-3 md:p-4 rounded-sm bg-muted/20 border border-muted-foreground/10 hover:border-primary/30 transition-all duration-300"
               >
                 {/* Key */}
                 <div className="relative">

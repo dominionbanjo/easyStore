@@ -208,37 +208,34 @@ export function VariantBuilderSection() {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className="p-3 md:p-5 rounded-sm border border-border/40 bg-muted/5  hover: transition- relative overflow-hidden"
+                className="rounded-sm border border-border/40 bg-muted/5 transition-all relative overflow-hidden"
               >
                 <div className="flex flex-col gap-6">
                   {/* Header */}
-                  <div className="flex items-center justify-between border-b border-border/10 p-3 md:p-6">
-                    <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-sm bg-primary/10 flex items-center justify-center ">
-                        <span className="text-sm font-black text-primary">
+                  <div className="flex items-center justify-between border-b border-border/10 p-4 md:p-5 bg-muted/20">
+                    <div className="flex items-center gap-2">
+                      <div className="h-8 w-8 rounded-sm bg-primary/10 flex items-center justify-center ">
+                        <span className="text-xs font-black text-primary">
                           V{index + 1}
                         </span>
                       </div>
-                      <span className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground/60">
-                        Variant Option Axis
+                      <span className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground/60">
+                        Option Axis
                       </span>
                     </div>
                     <Button
                       type="button"
                       variant="ghost"
-                      size="sm"
+                      size="icon"
                       onClick={() => removeOption(index)}
-                      className="h-8 px-3 rounded-sm text-destructive hover:bg-destructive/10 hover:text-destructive transition-colors gap-2"
+                      className="h-8 w-8 rounded-sm text-destructive hover:bg-destructive/10 hover:text-destructive transition-colors"
                     >
-                      <Trash2 className="h-3.5 w-3.5" />
-                      <span className="text-[10px] font-bold uppercase">
-                        Remove Opt
-                      </span>
+                      <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
 
                   {/* Body */}
-                  <div className="p-4 md:p-8">
+                  <div className="p-4 md:p-6">
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 items-start">
                       <div className="md:col-span-4 space-y-4">
                         <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/80 ml-1 flex items-center gap-2">
@@ -368,7 +365,7 @@ export function VariantBuilderSection() {
                         ) : (
                           <div className="group relative">
                             <div className="h-14 md:h-16 rounded-sm bg-primary/5 border border-primary/20 flex items-center justify-between px-4 md:px-6 transition-all group-hover:bg-primary/10">
-                              <span className="text-lg md:text-xl font-black text-primary capitalize tracking-tight">
+                              <span className="text-base md:text-lg font-black text-primary capitalize tracking-tighter">
                                 {options[index]?.name}
                               </span>
                               <Button
@@ -425,7 +422,7 @@ export function VariantBuilderSection() {
                                   <Badge
                                     key={v}
                                     variant="secondary"
-                                    className="bg-primary/10 text-primary border-none rounded-sm h-8 md:h-10 px-3 md:px-4 text-[10px] md:text-sm font-bold flex items-center gap-2 "
+                                    className="bg-primary/10 text-primary border-none rounded-sm h-7 md:h-9 px-3 text-[9px] md:text-xs font-black flex items-center gap-2"
                                   >
                                     {v}
                                     <button
@@ -540,10 +537,10 @@ export function VariantBuilderSection() {
             </div>
 
             {/* Bulk Edit Bar */}
-            <div className="flex items-center gap-2 p-2 bg-muted/10 rounded-sm border border-border/40  overflow-x-auto whitespace-nowrap">
-              <div className="flex items-center gap-2 px-3 border-r border-border/20 mr-1">
-                <Zap className="h-3.5 w-3.5 text-amber-500 fill-amber-500" />
-                <span className="text-[10px] font-black uppercase tracking-wider text-muted-foreground">
+            <div className="flex items-center gap-1.5 p-1 bg-muted/10 rounded-sm border border-border/40 overflow-x-auto whitespace-nowrap no-scrollbar">
+              <div className="flex items-center gap-1.5 px-2 border-r border-border/20 mr-1">
+                <Zap className="h-3 w-3 text-amber-500 fill-amber-500" />
+                <span className="text-[9px] font-black uppercase tracking-wider text-muted-foreground">
                   Bulk
                 </span>
               </div>
@@ -565,7 +562,7 @@ export function VariantBuilderSection() {
                   <Button
                     type="button"
                     size="icon"
-                    className="h-6 w-6 absolute right-1 top-1 rounded-sm bg-primary/10 hover:bg-primary text-primary hover:text-white transition-all scale-75 group-hover:scale-100"
+                    className="h-6 w-6 absolute right-0.5 top-0.5 rounded-sm bg-primary/10 hover:bg-primary text-primary hover:text-white transition-all scale-75 group-hover:scale-90"
                     onClick={() => applyBulkEdit("price")}
                   >
                     <ArrowDown className="h-3 w-3" />
@@ -588,7 +585,7 @@ export function VariantBuilderSection() {
                   <Button
                     type="button"
                     size="icon"
-                    className="h-6 w-6 absolute right-1 top-1 rounded-sm bg-emerald-500/10 hover:bg-emerald-500 text-emerald-500 hover:text-white transition-all scale-75 group-hover:scale-100"
+                    className="h-6 w-6 absolute right-0.5 top-0.5 rounded-sm bg-emerald-500/10 hover:bg-emerald-500 text-emerald-500 hover:text-white transition-all scale-75 group-hover:scale-90"
                     onClick={() => applyBulkEdit("stock")}
                   >
                     <ArrowDown className="h-3 w-3" />
@@ -622,7 +619,7 @@ export function VariantBuilderSection() {
                       initial={{ opacity: 0, scale: 0.98 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.95 }}
-                      className="flex flex-col md:grid md:grid-cols-[1fr_110px_110px_110px_110px] gap-3 p-4 rounded-sm border border-border/40 bg-background/50 hover:bg-white dark:hover:bg-neutral-900 transition-all duration-300  hover: group"
+                      className="flex flex-col md:grid md:grid-cols-[1fr_110px_110px_110px_110px] gap-2 md:gap-3 p-3 md:p-4 rounded-sm border border-border/40 bg-background/50 hover:bg-white dark:hover:bg-neutral-900 transition-all duration-300 relative group"
                     >
                       {/* Combination Tags */}
                       <div className="flex items-center flex-wrap gap-2 w-full">
@@ -630,7 +627,7 @@ export function VariantBuilderSection() {
                           <Badge
                             key={i}
                             variant="secondary"
-                            className="font-black text-[11px] h-7 px-3 bg-primary/10 text-primary border-none rounded-sm "
+                            className="font-black text-[10px] h-6 px-2.5 bg-primary/10 text-primary border-none rounded-sm "
                           >
                             {String(v)}
                           </Badge>
@@ -644,11 +641,11 @@ export function VariantBuilderSection() {
                           <span className="md:hidden text-[9px] font-black text-muted-foreground/60 uppercase ml-1">
                             SKU
                           </span>
-                          <FormInput
+                           <FormInput
                             name={`variants.${index}.sku`}
                             placeholder="SKU-123"
                             className="space-y-0"
-                            inputClassName="h-10 text-xs rounded-sm bg-muted/20 border-transparent focus:border-primary/20 focus:bg-background transition-all"
+                            inputClassName="h-9 text-[11px] rounded-sm bg-muted/20 border-transparent focus:border-primary/20 focus:bg-background transition-all"
                           />
                         </div>
 
@@ -657,11 +654,11 @@ export function VariantBuilderSection() {
                           <span className="md:hidden text-[9px] font-black text-muted-foreground/60 uppercase ml-1">
                             Price
                           </span>
-                          <FormPriceInput
+                           <FormPriceInput
                             name={`variants.${index}.price`}
                             placeholder="0.00"
                             className="space-y-0"
-                            inputClassName="h-10 text-xs pl-8 rounded-sm bg-muted/20 border-transparent focus:border-primary/20 focus:bg-background transition-all"
+                            inputClassName="h-9 text-[11px] pl-7 rounded-sm bg-muted/20 border-transparent focus:border-primary/20 focus:bg-background transition-all"
                             icon={
                               <Tag className="h-3 w-3 text-muted-foreground/60" />
                             }
@@ -673,11 +670,11 @@ export function VariantBuilderSection() {
                           <span className="md:hidden text-[9px] font-black text-muted-foreground/60 uppercase ml-1">
                             Discount
                           </span>
-                          <FormPriceInput
+                           <FormPriceInput
                             name={`variants.${index}.discount_price`}
                             placeholder="Opt"
                             className="space-y-0"
-                            inputClassName="h-10 text-xs pl-8 rounded-sm bg-muted/20 border-transparent focus:border-primary/20 focus:bg-background transition-all"
+                            inputClassName="h-9 text-[11px] pl-7 rounded-sm bg-muted/20 border-transparent focus:border-primary/20 focus:bg-background transition-all"
                             icon={
                               <Percent className="h-3 w-3 text-muted-foreground/60" />
                             }
@@ -689,12 +686,12 @@ export function VariantBuilderSection() {
                           <span className="md:hidden text-[9px] font-black text-muted-foreground/60 uppercase ml-1">
                             Stock
                           </span>
-                          <FormInput
+                           <FormInput
                             name={`variants.${index}.stock`}
                             type="number"
                             placeholder="0"
                             className="space-y-0"
-                            inputClassName="h-10 text-xs pl-8 rounded-sm bg-muted/20 border-transparent focus:border-primary/20 focus:bg-background transition-all"
+                            inputClassName="h-9 text-[11px] pl-7 rounded-sm bg-muted/20 border-transparent focus:border-primary/20 focus:bg-background transition-all"
                             icon={
                               <Box className="h-3 w-3 text-muted-foreground/60" />
                             }
