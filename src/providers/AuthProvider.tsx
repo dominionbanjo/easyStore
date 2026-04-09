@@ -8,7 +8,7 @@ import { useGoogleLoginMutation } from "@/services/authApi";
 import type { RootState } from "@/store";
 
 import { useNavigate } from "react-router-dom";
-import { handleRoleRedirect } from "@/utils/subdomain";
+import { handleRoleRedirect, getSubdomain } from "@/utils/subdomain";
 
 export default function AuthProvider({
   children,
@@ -37,7 +37,9 @@ export default function AuthProvider({
 
   useEffect(() => {
     // If already logged in (token exists) or already initialized, skip.
-    if (token || initializedRef.current) return;
+    // Also skip if we are on a subdomain (individual store or vendor dashboard)
+    const subdomain = getSubdomain();
+    if (token || initializedRef.current || subdomain) return;
 
     const timerId = setInterval(() => {
       if (window.google?.accounts?.id) {

@@ -10,10 +10,7 @@ import {
   PlayCircle,
   Lock,
 } from "lucide-react";
-import {
-  useAppDispatch,
-  useAppSelector,
-} from "@/hooks";
+import { useAppDispatch, useAppSelector } from "@/hooks";
 import {
   selectCurrentUser,
   setShowOnboardingModal,
@@ -150,7 +147,7 @@ export default function HeroSection() {
               initial="hidden"
               animate="visible"
               transition={{ delay: 0.2 }}
-              className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-left max-w-2xl mx-auto xl:mx-0"
+              className="grid grid-cols-1 sm:grid-cols-2 gap-5 text-left max-w-sm sm:max-w-2xl ml-2 sm:ml-0"
             >
               <div className="flex items-start gap-3">
                 <div className="p-2.5 bg-primary/10 rounded-sm shrink-0">
