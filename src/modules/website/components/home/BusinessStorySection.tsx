@@ -95,7 +95,7 @@ export default function BusinessStorySection() {
             viewport={{ once: true }}
             className="relative"
           >
-            <div className="aspect-square rounded-sm bg-gradient-to-tr from-primary/20 to-secondary/20 relative overflow-hidden flex items-center justify-center p-8">
+            <div className="aspect-square rounded-sm bg-gradient-to-tr from-primary/20 to-secondary/20 relative flex items-center justify-center p-8">
               <img
                 src="/images/progress.png"
                 alt="Business Story"
@@ -103,7 +103,7 @@ export default function BusinessStorySection() {
               />
 
               {/* Overlay Badges */}
-              <div className="absolute bottom-12 -left-6 sm:-left-8 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl p-5 rounded-sm -[0_20px_50px_rgba(0,0,0,0.15)] dark:-[0_20px_50px_rgba(0,0,0,0.3)] border border-white/20 dark:border-white/5 flex items-center gap-5 animate-float group/badge">
+              <div className="absolute bottom-12 left-2 sm:left-4 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl p-5 rounded-sm -[0_20px_50px_rgba(0,0,0,0.15)] dark:-[0_20px_50px_rgba(0,0,0,0.3)] border border-white/20 dark:border-white/5 flex items-center gap-5 animate-float group/badge transition-all">
                 <div className="w-14 h-14 bg-gradient-to-br from-primary/20 to-primary/5 dark:from-primary/30 dark:to-primary/10 rounded-sm flex items-center justify-center text-2xl  transform group-hover/badge:scale-110 transition-all duration-500">
                   📦
                 </div>
@@ -118,7 +118,7 @@ export default function BusinessStorySection() {
                 <div className="absolute -top-2 -right-2 bg-emerald-500 w-5 h-5 rounded-sm border-4 border-white dark:border-neutral-900 animate-pulse" />
               </div>
 
-              <div className="absolute top-12 -right-6 sm:-right-8 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl p-5 rounded-sm -[0_20px_50px_rgba(0,0,0,0.15)] dark:-[0_20px_50px_rgba(0,0,0,0.3)] border border-white/20 dark:border-white/5 flex items-center gap-5 animate-float-delayed group/badge2">
+              <div className="absolute top-12 right-2 sm:right-4 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl p-5 rounded-sm -[0_20px_50px_rgba(0,0,0,0.15)] dark:-[0_20px_50px_rgba(0,0,0,0.3)] border border-white/20 dark:border-white/5 flex items-center gap-5 animate-float-delayed group/badge2 transition-all">
                 <div className="w-14 h-14 bg-gradient-to-br from-emerald-500/20 to-emerald-500/5 dark:from-emerald-500/30 dark:to-emerald-500/10 rounded-sm flex items-center justify-center text-2xl  transform group-hover/badge2:scale-110 transition-all duration-500">
                   💰
                 </div>
