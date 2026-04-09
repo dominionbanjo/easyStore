@@ -65,17 +65,17 @@ export default function HeroSection() {
   const user = useAppSelector(selectCurrentUser);
 
   return (
-    <section className="relative isolate pt-6 pb-12 sm:py-20 dark:from-neutral-950 dark:via-neutral-900 dark:to-neutral-950 transition-colors duration-300 overflow-hidden">
-      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+    <section className="relative isolate pt-2 pb-12 sm:py-20 dark:from-neutral-950 dark:via-neutral-900 dark:to-neutral-950 transition-colors duration-300 overflow-hidden">
+      <div className="w-full mx-auto px-1 sm:px-6 lg:px-8 max-w-7xl">
         <div className="flex flex-col xl:flex-row items-center justify-between gap-16">
           {/* LEFT SIDE */}
-          <div className="flex-1 text-center xl:text-left space-y-8 max-w-3xl mx-auto xl:mx-0">
+          <div className="flex-1 text-center xl:text-left space-y-8 w-full max-w-full xl:max-w-3xl mx-auto xl:mx-0">
             {/* Catchy TAG */}
             <motion.h1
               variants={transitionVariants}
               initial="hidden"
               animate="visible"
-              className="text-3xl sm:text-5xl md:text-5xl lg:text-[54px] font-extrabold tracking-tight md:text-balance leading-[1.1] px-1 sm:px-0"
+              className="text-[32px] sm:text-5xl md:text-5xl lg:text-[54px] font-extrabold tracking-tight md:text-balance leading-[1.05] px-0 sm:px-0"
             >
               <HeroTitle />
             </motion.h1>
@@ -85,7 +85,7 @@ export default function HeroSection() {
               initial="hidden"
               animate="visible"
               transition={{ delay: 0.1 }}
-              className="mt-6 max-w-2xl mx-auto xl:mx-0 text-lg sm:text-xl leading-relaxed text-muted-foreground font-medium px-2 sm:px-0"
+              className="mt-4 w-full text-base sm:text-xl leading-relaxed text-muted-foreground font-medium px-2 sm:px-0"
             >
               Build a professional online business without stress. EazyStore
               gives you{" "}
