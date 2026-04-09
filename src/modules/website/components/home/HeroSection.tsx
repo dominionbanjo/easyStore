@@ -1,4 +1,5 @@
-import { motion, type Variants } from "framer-motion";
+import { motion, type Variants, AnimatePresence } from "framer-motion";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   ArrowRight,
@@ -9,14 +10,17 @@ import {
   PlayCircle,
   Lock,
 } from "lucide-react";
-import SocialProofBadge from "./SocialProofBadge";
-import { useAppDispatch, useAppSelector } from "@/hooks";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "@/hooks";
 import {
   selectCurrentUser,
   setShowOnboardingModal,
 } from "@/features/userSlice";
 import { AUTH_ROUTES } from "@/routes/index";
-import SmartLink from "@/components/shared/SmartLink";
+import { getBaseDomain, areSubdomainsDisabled } from "@/utils/subdomain";
+import { useNavigate } from "react-router-dom";
 
 // Hero main fade-in animation
 const transitionVariants: Variants = {
@@ -31,6 +35,13 @@ const transitionVariants: Variants = {
     },
   },
 };
+
+const heroImages = [
+  "/images/hero/hero_branding.png",
+  "/images/hero/hero_setup.png",
+  "/images/hero/hero_security.png",
+  "/images/hero/hero_growth.png",
+];
 
 export function HeroTitle() {
   return (
@@ -62,14 +73,51 @@ export function HeroTitle() {
 
 export default function HeroSection() {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const user = useAppSelector(selectCurrentUser);
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % heroImages.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const handleGetStarted = () => {
+    if (!user) {
+      navigate(`${AUTH_ROUTES.SIGNUP}?role=vendor`);
+      return;
+    }
+
+    if (user.account_type === "vendor" || user.account_type === "admin") {
+      const baseDomain = getBaseDomain();
+      const subdomainsDisabled = areSubdomainsDisabled();
+      const target = user.account_type === "vendor" ? "vendor" : "admin";
+
+      if (subdomainsDisabled) {
+        navigate(`/${target}`);
+      } else {
+        window.location.href = `${window.location.protocol}//${target}.${baseDomain}/`;
+      }
+      return;
+    }
+
+    // If regular user, show onboarding to create store
+    dispatch(
+      setShowOnboardingModal({
+        show: true,
+        step: "store-form",
+      }),
+    );
+  };
 
   return (
     <section className="relative isolate pt-2 pb-12 sm:py-20 dark:from-neutral-950 dark:via-neutral-900 dark:to-neutral-950 transition-colors duration-300 overflow-hidden">
-      <div className="w-full mx-auto px-1 sm:px-6 lg:px-8 max-w-7xl">
+      <div className="w-full mx-auto px-1.5 sm:px-6 lg:px-8 max-w-7xl">
         <div className="flex flex-col xl:flex-row items-center justify-between gap-16">
           {/* LEFT SIDE */}
-          <div className="flex-1 text-center xl:text-left space-y-8 w-full max-w-full xl:max-w-3xl mx-auto xl:mx-0">
+          <div className="flex-1 text-center xl:text-left space-y-8 w-full max-w-full xl:max-w-3xl mx-auto xl:mx-0 px-0">
             {/* Catchy TAG */}
             <motion.h1
               variants={transitionVariants}
@@ -85,7 +133,7 @@ export default function HeroSection() {
               initial="hidden"
               animate="visible"
               transition={{ delay: 0.1 }}
-              className="mt-4 w-full text-base sm:text-xl leading-relaxed text-muted-foreground font-medium px-2 sm:px-0"
+              className="mt-4 w-full text-[15px] sm:text-xl leading-relaxed text-muted-foreground font-medium px-0 sm:px-0"
             >
               Build a professional online business without stress. EazyStore
               gives you{" "}
@@ -160,40 +208,16 @@ export default function HeroSection() {
               className="mt-10 flex flex-col items-center xl:items-start gap-4"
             >
               <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-                {!user || user.account_type === "vendor" ? (
-                  <SmartLink
-                    to={!user ? `${AUTH_ROUTES.SIGNUP}?role=vendor` : "/vendor"}
-                    className="w-full sm:w-auto"
-                  >
-                    <Button
-                      size="lg"
-                      className="group relative bg-primary hover:bg-emerald-600 dark:bg-emerald-500 dark:hover:bg-emerald-400 text-white rounded-sm h-14 px-8 text-lg font-bold hover:scale-[1.02] active:scale-95 transition-all w-full shadow-lg shadow-emerald-500/20"
-                    >
-                      <span className="relative flex items-center gap-2">
-                        Start Selling Now — It's Free
-                        <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
-                      </span>
-                    </Button>
-                  </SmartLink>
-                ) : (
-                  <Button
-                    size="lg"
-                    onClick={() =>
-                      dispatch(
-                        setShowOnboardingModal({
-                          show: true,
-                          step: "store-form",
-                        }),
-                      )
-                    }
-                    className="group relative bg-primary hover:bg-emerald-600 dark:bg-emerald-500 dark:hover:bg-emerald-400 text-white rounded-sm h-14 px-8 text-lg font-bold hover:scale-[1.02] active:scale-95 transition-all w-full shadow-lg shadow-emerald-500/20"
-                  >
-                    <span className="relative flex items-center gap-2">
-                      Start Selling Now — It's Free
-                      <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
-                    </span>
-                  </Button>
-                )}
+                <Button
+                  size="lg"
+                  onClick={handleGetStarted}
+                  className="group relative bg-primary hover:bg-emerald-600 dark:bg-emerald-500 dark:hover:bg-emerald-400 text-white rounded-sm h-14 px-8 text-lg font-bold hover:scale-[1.02] active:scale-95 transition-all w-full shadow-lg shadow-emerald-500/20"
+                >
+                  <span className="relative flex items-center gap-2">
+                    Start Selling Now — It's Free
+                    <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+                  </span>
+                </Button>
 
                 <Button
                   variant="outline"
@@ -202,27 +226,6 @@ export default function HeroSection() {
                 >
                   <PlayCircle className="w-5 h-5 mr-2" /> See How It Works
                 </Button>
-              </div>
-
-              <div className="flex items-center flex-wrap justify-center xl:justify-start gap-3 mt-4">
-                <SocialProofBadge
-                  users={[
-                    { src: "/images/fash4.png", alt: "@user1", fallback: "U1" },
-                    { src: "/images/fash0.png", alt: "@user2", fallback: "U2" },
-                    { src: "/images/fash1.png", alt: "@user3", fallback: "U3" },
-                  ]}
-                  rating={4.9}
-                  totalUsers={150}
-                  maxAvatars={3}
-                />
-                <div className="w-px h-6 bg-border hidden sm:block" />
-                <div className="flex flex-wrap justify-center gap-2 text-xs sm:text-sm text-muted-foreground font-medium text-center xl:text-left">
-                  <span>No tech skills needed</span>
-                  <span className="hidden sm:inline-block">•</span>
-                  <span>No upfront cost</span>
-                  <span className="hidden sm:inline-block">•</span>
-                  <span>Trusted by growing businesses</span>
-                </div>
               </div>
             </motion.div>
           </div>
@@ -255,15 +258,19 @@ export default function HeroSection() {
               </div>
 
               {/* Main Visual */}
-              <div className="relative aspect-[4/3] bg-muted overflow-hidden rounded-b-sm">
-                <video
-                  className="w-full h-full object-cover"
-                  src="/videos/campaign5.mp4"
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                />
+              <div className="aspect-[16/10] sm:aspect-[16/9] w-full relative overflow-hidden bg-neutral-900 group">
+                <AnimatePresence mode="wait">
+                  <motion.img
+                    key={currentSlide}
+                    src={heroImages[currentSlide]}
+                    alt="EasyStore Hero"
+                    initial={{ opacity: 0, scale: 1.05 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.8, ease: "easeInOut" }}
+                    className="w-full h-full object-cover"
+                  />
+                </AnimatePresence>
 
                 {/* Overlays / Trust badges */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />

@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { Star, MapPin, Package, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 
 interface Address {
@@ -58,32 +57,8 @@ export default function StoreCard({
             style={{ backgroundImage: `url(${bannerImage})` }}
           />
 
-          {/* ─── LOGO (FLOATING) ─── */}
-          <div className="absolute top-12 left-5 z-10">
-            <div className="relative">
-              <Avatar className="h-20 w-20 border-4 border-card  rounded-sm ring-1 ring-border/10 transition-transform duration-300 group-hover:scale-105 bg-background">
-                <AvatarImage
-                  src={logo || ""}
-                  alt={name}
-                  className="object-cover"
-                />
-                <AvatarFallback className="bg-primary/5 text-primary text-2xl font-black rounded-sm">
-                  {name.charAt(0).toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
-              {rating >= 4.5 && (
-                <div
-                  className="absolute -bottom-1 -right-1 bg-yellow-400 text-white p-1 rounded-sm  border-2 border-card"
-                  title="Top Rated"
-                >
-                  <Star className="w-3 h-3 fill-current" />
-                </div>
-              )}
-            </div>
-          </div>
-
           {/* ─── CONTENT ─── */}
-          <div className="px-5 pt-12 pb-5 flex flex-col h-[calc(100%-96px)]">
+          <div className="px-5 pt-6 pb-5 flex flex-col h-[calc(100%-96px)]">
             <div className="flex-1 space-y-3">
               {/* Name & Badge */}
               <div className="space-y-1">

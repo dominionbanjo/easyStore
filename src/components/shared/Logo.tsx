@@ -55,15 +55,25 @@ export function LogoIcon({ className, size = "md" }: { className?: string; size?
   };
 
   return (
-    <div className={cn(
-      "flex items-center justify-center rounded-sm bg-primary shadow-md relative overflow-hidden",
-      iconSizes[size],
-      className
-    )}>
-       <div className="absolute inset-x-1.5 top-2.5 h-1 bg-white rounded-full opacity-40" />
-       <div className="absolute inset-x-1.5 top-5 h-1 bg-white rounded-full opacity-70" />
-       <div className="absolute inset-x-1.5 top-7.5 h-1 bg-white rounded-full opacity-100" />
-       <div className="absolute left-1.5 top-2.5 bottom-2.5 w-1 bg-white rounded-full opacity-90" />
+    <div
+      className={cn(
+        "flex items-center justify-center rounded-sm bg-primary shadow-lg shadow-primary/20 relative overflow-hidden group/logo-icon",
+        iconSizes[size],
+        className
+      )}
+    >
+      <motion.span
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        className={cn(
+          "font-black text-white leading-none tracking-tighter select-none font-outfit uppercase",
+          size === "sm" ? "text-xs" : size === "md" ? "text-lg" : "text-2xl"
+        )}
+      >
+        EZ
+      </motion.span>
+      <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent pointer-events-none" />
+      <div className="absolute -inset-2 opacity-0 group-hover/logo-icon:opacity-20 transition-opacity duration-300 bg-white blur-xl" />
     </div>
   );
 }
