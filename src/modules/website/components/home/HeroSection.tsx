@@ -256,16 +256,28 @@ export default function HeroSection() {
               {/* Main Visual */}
               <div className="aspect-[16/11] sm:aspect-[16/9] w-full relative overflow-hidden bg-neutral-900 group">
                 <AnimatePresence mode="wait">
-                  <motion.img
-                    key={currentSlide}
-                    src={heroImages[currentSlide]}
-                    alt="EasyStore Hero"
-                    initial={{ opacity: 0, scale: 1.05 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ duration: 0.8, ease: "easeInOut" }}
-                    className="w-full h-full object-cover object-top"
-                  />
+                  {currentSlide === 0 ? (
+                    // Slide 0: native img with fetchpriority for best LCP performance
+                    <img
+                      key="slide-0"
+                      src={heroImages[0]}
+                      alt="EazyStore — Launch your store in minutes"
+                      fetchPriority="high"
+                      decoding="async"
+                      className="w-full h-full object-cover object-top"
+                    />
+                  ) : (
+                    <motion.img
+                      key={currentSlide}
+                      src={heroImages[currentSlide]}
+                      alt="EasyStore Hero"
+                      initial={{ opacity: 0, scale: 1.05 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      transition={{ duration: 0.8, ease: "easeInOut" }}
+                      className="w-full h-full object-cover object-top"
+                    />
+                  )}
                 </AnimatePresence>
 
                 {/* Overlays / Trust badges */}
