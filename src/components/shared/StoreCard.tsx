@@ -29,7 +29,6 @@ export default function StoreCard({
   name,
   slug,
   description,
-  logo,
   rating,
   totalProducts,
   address,
