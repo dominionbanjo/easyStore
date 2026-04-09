@@ -16,7 +16,7 @@ import { NavLink } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { StoreSetupTracker } from "./shared/StoreSetupTracker";
-import { areSubdomainsDisabled, getAppPath } from "@/utils/subdomain";
+import { getAppPath } from "@/utils/subdomain";
 
 const menuItems = [
   { label: "Dashboard", icon: LayoutDashboard, to: "/", exact: true },
