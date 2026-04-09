@@ -133,6 +133,21 @@ export const productApi = apiManager.injectEndpoints({
       },
     }),
 
+    /* ───────── VENDOR SINGLE PRODUCT (For Editing) ───────── */
+    getVendorSingleProduct: builder.query<GetSingleProductResponse, string>({
+      query: (slug) => ({
+        url: `vendor/products/${slug}`,
+        method: "GET",
+      }),
+      providesTags: (result) => {
+        const id = result?.data?.product?.id;
+        return id
+          ? [{ type: "Product", id }]
+          : [{ type: "Product", id: "SINGLE_VENDOR" }];
+      },
+    }),
+
+
     /* ───────── CREATE ───────── */
     createProduct: builder.mutation<any, CreateProductArgs>({
       query: ({ data }) => ({
@@ -364,6 +379,7 @@ export const {
   useGetMyStoreProductsQuery,
   useSearchProductsQuery,
   useGetSingleProductQuery,
+  useGetVendorSingleProductQuery,
 
   useCreateProductMutation,
   useCreateManyProductsMutation,

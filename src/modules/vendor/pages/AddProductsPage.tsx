@@ -32,7 +32,7 @@ import {
 } from "@/features/productDraftSlice";
 import {
   useCreateProductWithCloudinaryMutation,
-  useGetSingleProductQuery,
+  useGetVendorSingleProductQuery,
   useUpdateProductWithCloudinaryMutation,
 } from "@/services/productApi";
 import { buildSpecsObject } from "../utils/addProduct.helpers";
@@ -84,7 +84,7 @@ export default function AddProductPage() {
 
   /* ───────── API ───────── */
   const { data: productData, isLoading: loadingProduct } =
-    useGetSingleProductQuery(slug!, { skip: !isEditMode });
+    useGetVendorSingleProductQuery(slug!, { skip: !isEditMode });
 
   const productId = productData?.data?.product?.id;
 
