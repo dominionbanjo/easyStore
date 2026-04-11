@@ -30,9 +30,9 @@ export default function LandingPage() {
       <HeroSection />
 
       <Suspense fallback={null}>
-        <DiscoveryHero />
-        <BusinessStorySection />
-        <div className="space-y-0">
+        <div className="px-1.5 md:px-14 xl:px-16 w-full space-y-0">
+          <DiscoveryHero />
+          <BusinessStorySection />
           <FeaturedStoresSection />
           <TopCategoriesSection />
           <FeaturedProductsSection />

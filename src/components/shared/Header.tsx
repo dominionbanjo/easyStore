@@ -234,8 +234,8 @@ export default function Header() {
             : "max-w-[94%] sm:max-w-full bg-white/30 dark:bg-neutral-900/30 sm:top-2 border border-transparent",
         )}
       >
-        {/* ---------- LEFT: Logo + Desktop Nav ---------- */}
-        <div className="flex items-center lg:gap-6 flex-shrink-0">
+        {/* ---------- LEFT: Logo ---------- */}
+        <div className="flex items-center flex-shrink-0">
           <Sheet open={isMobileMenuOpen} onOpenChange={setMenuOpen}>
             <SheetContent
               side="right"
@@ -433,9 +433,11 @@ export default function Header() {
               <Logo size="lg" />
             </SmartLink>
           )}
+        </div>
 
-          {/* Desktop Nav */}
-          <nav className="hidden lg:flex items-center gap-5 xl:gap-6 text-sm font-medium whitespace-nowrap">
+        {/* ---------- MIDDLE: Desktop Nav ---------- */}
+        <div className="hidden lg:flex flex-1 justify-center px-4">
+          <nav className="flex items-center gap-8 text-sm font-medium whitespace-nowrap">
             {navItems.slice(0, 4).map((item) =>
               item.isExternal ? (
                 <a
@@ -464,6 +466,7 @@ export default function Header() {
             )}
           </nav>
         </div>
+
 
         {/* ---------- MIDDLE: Search ---------- */}
         <div className="hidden md:flex flex-1 justify-center px-4 lg:px-6 max-w-[600px] mx-auto">
