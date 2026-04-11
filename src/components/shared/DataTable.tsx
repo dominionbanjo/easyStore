@@ -37,6 +37,9 @@ type DataTableProps<TData, TValue> = {
 
   /** Optional pagination (server-side friendly) */
   pagination?: PaginationState;
+
+  /** Optional row click handler */
+  onRowClick?: (row: TData) => void;
 };
 
 export function DataTable<TData, TValue>({
@@ -46,6 +49,7 @@ export function DataTable<TData, TValue>({
   emptyMessage = "No data found.",
   className,
   pagination,
+  onRowClick,
 }: DataTableProps<TData, TValue>) {
   const containerRef = useRef<HTMLDivElement>(null);
   const prevPageRef = useRef<number | undefined>(undefined);
@@ -112,7 +116,8 @@ export function DataTable<TData, TValue>({
                     key={header.id}
                     className={cn(
                       "px-2 sm:px-4 h-11 text-xs sm:text-sm whitespace-nowrap",
-                      index === 0 && "sticky left-0 z-20 bg-background -[2px_0_5px_-2px_rgba(0,0,0,0.1)] border-r border-border/10",
+                      index === 0 &&
+                        "sticky left-0 z-20 bg-background -[2px_0_5px_-2px_rgba(0,0,0,0.1)] border-r border-border/10",
                     )}
                   >
                     {header.isPlaceholder
@@ -135,7 +140,8 @@ export function DataTable<TData, TValue>({
                     <TableCell
                       key={j}
                       className={cn(
-                        j === 0 && "sticky left-0 z-10 bg-background -[2px_0_5px_-2px_rgba(0,0,0,0.1)]",
+                        j === 0 &&
+                          "sticky left-0 z-10 bg-background -[2px_0_5px_-2px_rgba(0,0,0,0.1)]",
                       )}
                     >
                       <Skeleton className="h-4 w-full" />
@@ -145,13 +151,18 @@ export function DataTable<TData, TValue>({
               ))
             ) : table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
+                <TableRow
+                  key={row.id}
+                  onClick={() => onRowClick?.(row.original)}
+                  className={cn(onRowClick && "cursor-pointer hover:bg-muted/80")}
+                >
                   {row.getVisibleCells().map((cell, index) => (
                     <TableCell
                       key={cell.id}
                       className={cn(
                         "px-2 sm:px-4 py-3 sm:py-4",
-                        index === 0 && "sticky left-0 z-10 bg-background -[2px_0_5px_-2px_rgba(0,0,0,0.1)] border-r border-border/10",
+                        index === 0 &&
+                          "sticky left-0 z-10 bg-background -[2px_0_5px_-2px_rgba(0,0,0,0.1)] border-r border-border/10",
                       )}
                     >
                       {flexRender(

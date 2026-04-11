@@ -14,17 +14,37 @@ export default function ProductGallery({ images }: ProductGalleryProps) {
   const [isFullScreen, setIsFullScreen] = useState(false);
   const active = images[activeIndex];
 
-  // 🔒 Lock scroll when full screen
+  // 🔒 Handle Back Button to Close FullScreen
   useEffect(() => {
-    if (isFullScreen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
+    if (!isFullScreen) return;
+
+    // Push a dummy state so 'back' can be intercepted
+    window.history.pushState({ modal: "gallery-fullscreen" }, "");
+
+    const handlePopState = () => {
+      setIsFullScreen(false);
+    };
+
+    window.addEventListener("popstate", handlePopState);
+    
+    // Lock scroll
+    document.body.style.overflow = "hidden";
+
     return () => {
+      window.removeEventListener("popstate", handlePopState);
       document.body.style.overflow = "unset";
     };
   }, [isFullScreen]);
+
+  const closeFullScreen = () => {
+    if (isFullScreen) {
+      // If we're closing via UI, and the state is still ours, go back
+      if (window.history.state?.modal === "gallery-fullscreen") {
+        window.history.back();
+      }
+      setIsFullScreen(false);
+    }
+  };
 
   if (!images?.length) return null;
 
@@ -48,14 +68,14 @@ export default function ProductGallery({ images }: ProductGalleryProps) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           className="fixed inset-0 z-[1000000] flex flex-col items-center justify-center h-[100dvh] w-screen overflow-hidden touch-none bg-black"
-          onClick={() => setIsFullScreen(false)}
+          onClick={closeFullScreen}
         >
           {/* Close Button - Centered at top */}
           <div className="absolute top-0 left-0 w-full p-8 flex justify-center z-[1000001] pointer-events-none">
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                setIsFullScreen(false);
+                closeFullScreen();
               }}
               className="p-4 rounded-sm bg-white/10 hover:bg-white/20 text-white transition-all border border-white/20  backdrop-blur-md active:scale-95 group pointer-events-auto"
             >
@@ -162,7 +182,10 @@ export default function ProductGallery({ images }: ProductGalleryProps) {
   return (
     <div className="flex flex-col gap-6 lg:sticky lg:top-10 h-fit w-full">
       {/* ─── Main Display ─── */}
-      <div className="group relative w-full aspect-square md:aspect-[4/5] rounded-sm md:rounded-sm overflow-hidden bg-muted/50 border border-border/60   touch-none">
+      <div 
+        className="group relative w-full aspect-square md:aspect-[4/5] rounded-sm md:rounded-sm overflow-hidden bg-muted/50 border border-border/60 touch-none cursor-pointer"
+        onClick={() => setIsFullScreen(true)}
+      >
         <AnimatePresence mode="wait">
           <motion.div
             key={activeIndex}

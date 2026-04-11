@@ -508,7 +508,7 @@ export default function Header() {
             <Button
               variant="ghost"
               size="icon"
-              className="relative p-2 flex-shrink-0"
+              className="hidden md:flex relative p-2 flex-shrink-0"
               onClick={() => setIsCartOpen(true)}
             >
               <ShoppingBag className="h-5 w-5 text-foreground" />
@@ -523,7 +523,7 @@ export default function Header() {
               variant="ghost"
               size="icon"
               onClick={toggleTheme}
-              className="hidden sm:flex p-2 flex-shrink-0"
+              className="p-2 flex-shrink-0"
             >
               {theme === "dark" ? (
                 <Sun className="h-5 w-5 text-neutral-200" />

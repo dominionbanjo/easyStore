@@ -1,15 +1,14 @@
-import { motion, type Variants, AnimatePresence } from "framer-motion";
-import { useState, useEffect } from "react";
+import { motion, type Variants } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import {
   ArrowRight,
-  Globe,
-  Zap,
-  ShieldCheck,
-  MapPin,
+  Global,
+  Flash,
+  ShieldTick,
+  Location,
   PlayCircle,
-  Lock,
-} from "lucide-react";
+  Lock1,
+} from "iconsax-react";
 import { useAppDispatch, useAppSelector } from "@/hooks";
 import {
   selectCurrentUser,
@@ -33,12 +32,8 @@ const transitionVariants: Variants = {
   },
 };
 
-const heroImages = [
-  "/images/hero/hero_branding.png",
-  "/images/hero/hero_setup.png",
-  "/images/hero/hero_security.png",
-  "/images/hero/hero_growth.png",
-];
+// Campaign video path
+const CAMPAIGN_VIDEO = "https://res.cloudinary.com/dcmg4skhv/video/upload/v1775865849/campaign_h8etwo.mp4";
 
 export function HeroTitle() {
   return (
@@ -72,14 +67,6 @@ export default function HeroSection() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const user = useAppSelector(selectCurrentUser);
-  const [currentSlide, setCurrentSlide] = useState(0);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % heroImages.length);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, []);
 
   const handleGetStarted = () => {
     if (!user) {
@@ -132,7 +119,7 @@ export default function HeroSection() {
               transition={{ delay: 0.1 }}
               className="mt-4 w-full text-[15px] sm:text-xl leading-relaxed text-muted-foreground font-medium px-0 sm:px-0"
             >
-              Build a professional online business without stress. EazyStore
+              Give your business the professional edge it deserves. EazyStore
               gives you{" "}
               <strong>
                 your own website, professional store link, and secure escrow
@@ -140,6 +127,34 @@ export default function HeroSection() {
               </strong>{" "}
               — so you can sell with confidence.
             </motion.p>
+
+            {/* Custom Link Preview - MOVED HERE */}
+            <motion.div
+              variants={transitionVariants}
+              initial="hidden"
+              animate="visible"
+              transition={{ delay: 0.15 }}
+              className="flex justify-center xl:justify-start"
+            >
+              <div className="flex bg-white dark:bg-neutral-900 rounded-sm min-h-[40px] h-10 items-center justify-center px-4 gap-3 border border-border shadow-sm">
+                <div className="flex items-center gap-2 border-r border-border pr-3">
+                  <Lock1
+                    variant="Bold"
+                    color="var(--color-primary, #10b981)"
+                    size={16}
+                  />
+                  <span className="text-muted-foreground font-bold uppercase tracking-[0.15em] text-[9px] sm:text-[10px] whitespace-nowrap">
+                    Your custom link:
+                  </span>
+                </div>
+                <span className="text-[11px] sm:text-sm font-black tracking-tight text-foreground">
+                  <span className="text-emerald-500 underline decoration-emerald-500/30 underline-offset-4">
+                    gameshop
+                  </span>
+                  .eazystore.com.ng
+                </span>
+              </div>
+            </motion.div>
 
             {/* Core Value Pillars */}
             <motion.div
@@ -149,9 +164,13 @@ export default function HeroSection() {
               transition={{ delay: 0.2 }}
               className="grid grid-cols-1 sm:grid-cols-2 gap-5 text-left max-w-sm sm:max-w-2xl ml-2 sm:ml-0"
             >
-              <div className="flex items-start gap-3">
+              <div className="flex items-start gap-4">
                 <div className="p-2.5 bg-primary/10 rounded-sm shrink-0">
-                  <Globe className="w-5 h-5 text-primary" />
+                  <Global
+                    variant="Bold"
+                    color="var(--color-primary, #10b981)"
+                    size={22}
+                  />
                 </div>
                 <div>
                   <h3 className="font-bold text-foreground">Your Store Link</h3>
@@ -160,9 +179,9 @@ export default function HeroSection() {
                   </p>
                 </div>
               </div>
-              <div className="flex items-start gap-3">
+              <div className="flex items-start gap-4">
                 <div className="p-2.5 bg-amber-500/10 rounded-sm shrink-0">
-                  <Zap className="w-5 h-5 text-amber-500" />
+                  <Flash variant="Bold" color="#f59e0b" size={22} />
                 </div>
                 <div>
                   <h3 className="font-bold text-foreground">Instant Setup</h3>
@@ -171,9 +190,9 @@ export default function HeroSection() {
                   </p>
                 </div>
               </div>
-              <div className="flex items-start gap-3">
+              <div className="flex items-start gap-4">
                 <div className="p-2.5 bg-emerald-500/10 rounded-sm shrink-0">
-                  <ShieldCheck className="w-5 h-5 text-emerald-500" />
+                  <ShieldTick variant="Bold" color="#10b981" size={22} />
                 </div>
                 <div>
                   <h3 className="font-bold text-foreground">Secure Escrow</h3>
@@ -182,9 +201,9 @@ export default function HeroSection() {
                   </p>
                 </div>
               </div>
-              <div className="flex items-start gap-3">
+              <div className="flex items-start gap-4">
                 <div className="p-2.5 bg-blue-500/10 rounded-sm shrink-0">
-                  <MapPin className="w-5 h-5 text-blue-500" />
+                  <Location variant="Bold" color="#3b82f6" size={22} />
                 </div>
                 <div>
                   <h3 className="font-bold text-foreground">
@@ -212,7 +231,12 @@ export default function HeroSection() {
                 >
                   <span className="relative flex items-center gap-2">
                     Start Selling Now — It's Free
-                    <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+                    <ArrowRight
+                      variant="Outline"
+                      color="white"
+                      size={20}
+                      className="transition-transform group-hover:translate-x-1"
+                    />
                   </span>
                 </Button>
 
@@ -221,7 +245,13 @@ export default function HeroSection() {
                   size="lg"
                   className="h-14 px-8 font-bold rounded-sm border-2 w-full sm:w-auto hover:bg-muted text-foreground"
                 >
-                  <PlayCircle className="w-5 h-5 mr-2" /> See How It Works
+                  <PlayCircle
+                    variant="Bold"
+                    color="currentColor"
+                    size={22}
+                    className="mr-2"
+                  />{" "}
+                  See How It Works
                 </Button>
               </div>
             </motion.div>
@@ -233,55 +263,35 @@ export default function HeroSection() {
             initial="hidden"
             animate="visible"
             transition={{ delay: 0.5 }}
-            className="flex-1 w-full max-w-[600px] xl:max-w-[550px] relative mt-10 xl:mt-0"
+            className="flex-1 w-full max-w-[800px] xl:flex-[1.4] relative mt-10 xl:mt-0"
           >
             {/* Background elements */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 via-transparent to-emerald-500/10 blur-[80px] rounded-full -z-10" />
+            <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 via-transparent to-emerald-500/10 blur-[100px] rounded-full -z-10" />
 
-            <div className="relative p-2 bg-white dark:bg-neutral-800 rounded-sm border border-border shadow-2xl">
-              {/* Browser/Domain Bar Frame */}
-              <div className="bg-muted/50 rounded-t-sm p-2 px-4 border-b border-border/50 flex items-center justify-center">
+            <div className="relative p-2 bg-white/50 dark:bg-neutral-800/50 backdrop-blur-sm rounded-sm border border-border/50 shadow-2xl overflow-hidden">
+              {/* Main Visual: Premium Video Frame */}
+              <div className="aspect-[16/10] sm:aspect-video w-full relative overflow-hidden bg-neutral-900 rounded-[2px] transform transition-transform duration-700 hover:scale-[1.01] shadow-inner">
+                <video
+                  src={CAMPAIGN_VIDEO}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="w-full h-full object-cover"
+                />
 
-                <div className="flex-1 bg-white dark:bg-neutral-900 rounded-sm min-h-[32px] sm:h-8 flex flex-col sm:flex-row items-center justify-center px-3 py-1 sm:py-0 gap-0.5 sm:gap-2 border border-border/50">
-                  <div className="flex items-center gap-1.5">
-                    <Lock className="w-3 h-3 text-emerald-500" />
-                    <span className="text-muted-foreground font-bold uppercase tracking-widest text-[8px] sm:text-[10px] whitespace-nowrap">Get your custom link e.g.</span>
+                {/* Overlays / Premium Gradient */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+
+                {/* Subtle Play indicator for context */}
+                <div className="absolute bottom-6 left-6 flex items-center gap-3">
+                  <div className="w-8 h-1 bg-white/30 rounded-full overflow-hidden">
+                    <div className="w-2/3 h-full bg-primary animate-[shimmer_2s_infinite]" />
                   </div>
-                  <span className="text-[11px] sm:text-xs font-black tracking-tight text-foreground">
-                    <span className="text-emerald-500 underline decoration-emerald-500/30 underline-offset-2">gameshop</span>.eazystore.com.ng
+                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/80">
+                    Touring EazyStore
                   </span>
                 </div>
-              </div>
-
-              {/* Main Visual */}
-              <div className="aspect-[16/11] sm:aspect-[16/9] w-full relative overflow-hidden bg-neutral-900 group">
-                <AnimatePresence mode="wait">
-                  {currentSlide === 0 ? (
-                    // Slide 0: native img with fetchpriority for best LCP performance
-                    <img
-                      key="slide-0"
-                      src={heroImages[0]}
-                      alt="EazyStore — Launch your store in minutes"
-                      fetchPriority="high"
-                      decoding="async"
-                      className="w-full h-full object-cover object-top"
-                    />
-                  ) : (
-                    <motion.img
-                      key={currentSlide}
-                      src={heroImages[currentSlide]}
-                      alt="EasyStore Hero"
-                      initial={{ opacity: 0, scale: 1.05 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.95 }}
-                      transition={{ duration: 0.8, ease: "easeInOut" }}
-                      className="w-full h-full object-cover object-top"
-                    />
-                  )}
-                </AnimatePresence>
-
-                {/* Overlays / Trust badges */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
               </div>
             </div>
           </motion.div>

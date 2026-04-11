@@ -1,18 +1,13 @@
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/store";
-import { Home, Compass, ShoppingBag, User, Briefcase } from "lucide-react";
+import { Home, Discover, ShoppingBag, User, Briefcase } from "iconsax-react";
 import { cn } from "@/lib/utils";
-import {
-  WEBSITE_ROUTES,
-  ACCOUNT_ROUTES as USER_ROUTES,
-  AUTH_ROUTES,
-} from "@/routes";
+import { WEBSITE_ROUTES, AUTH_ROUTES } from "@/routes";
 import { motion } from "framer-motion";
 
 import {
   preloadDiscoveryPage,
-  preloadOrdersPage,
   preloadUserProfilePage,
   preloadSettingsPage,
   preloadWishlistPage,
@@ -20,6 +15,8 @@ import {
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { setMobileMenuOpen } from "@/features/uiSlice";
+import { useGetCartQuery } from "@/services/cartApi";
+
 
 export function BottomNav() {
   const dispatch = useDispatch();
@@ -29,6 +26,15 @@ export function BottomNav() {
     (state: RootState) => state.user.isAuthenticated,
   );
   const user = useSelector((state: RootState) => state.user.currentUser);
+  const localCart = useSelector((state: RootState) => state.cart);
+
+  const { data: cartData } = useGetCartQuery(undefined, {
+    skip: !isAuthenticated,
+  });
+
+  const cartItemsCount = isAuthenticated
+    ? cartData?.data?.cart?.items?.length || 0
+    : localCart.localItems.length;
 
   const handleMoreClick = () => {
     if (isAuthenticated) {
@@ -45,7 +51,7 @@ export function BottomNav() {
         // Preload primary and secondary mobile destinations
         await Promise.allSettled([
           preloadDiscoveryPage(),
-          preloadOrdersPage(),
+          // preloadOrdersPage(), // Replaced by Cart
           preloadUserProfilePage(),
           preloadSettingsPage(),
           preloadWishlistPage(),
@@ -61,8 +67,8 @@ export function BottomNav() {
 
   const navItems = [
     { name: "Home", path: WEBSITE_ROUTES.HOME, icon: Home },
-    { name: "Discover", path: WEBSITE_ROUTES.DISCOVERY, icon: Compass },
-    { name: "Orders", path: USER_ROUTES.ORDERS, icon: ShoppingBag },
+    { name: "Discover", path: WEBSITE_ROUTES.DISCOVERY, icon: Discover },
+    { name: "Cart", path: WEBSITE_ROUTES.CART, icon: ShoppingBag },
   ];
 
   return (
@@ -87,11 +93,20 @@ export function BottomNav() {
               <motion.div
                 whileTap={{ scale: 0.9 }}
                 className={cn(
-                  "p-1.5 rounded-sm transition-colors",
+                  "p-1.5 rounded-sm transition-colors relative",
                   isActive && "bg-primary/10",
                 )}
               >
-                <Icon className="h-5 w-5" />
+                <Icon
+                  variant={isActive ? "Bold" : "Outline"}
+                  color="currentColor"
+                  size={20}
+                />
+                {item.name === "Cart" && cartItemsCount > 0 && (
+                  <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-sm bg-primary text-[10px] font-black text-white ring-2 ring-white dark:ring-neutral-900 tabular-nums transition-transform animate-in zoom-in-50 duration-300">
+                    {cartItemsCount}
+                  </span>
+                )}
               </motion.div>
               <span className="text-[10px] font-bold uppercase tracking-widest">
                 {item.name}
@@ -123,9 +138,9 @@ export function BottomNav() {
             ) : isAuthenticated &&
               (user?.account_type === "vendor" ||
                 user?.account_type === "admin") ? (
-              <Briefcase className="h-5 w-5" />
+              <Briefcase variant="Outline" color="currentColor" size={20} />
             ) : (
-              <User className="h-5 w-5" />
+              <User variant="Outline" color="currentColor" size={20} />
             )}
           </motion.div>
           <span className="text-[10px] font-bold uppercase tracking-widest">

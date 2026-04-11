@@ -39,6 +39,23 @@ import { clearProductDraft } from "@/features/productDraftSlice";
 import { getAppPath, getWebsitePath } from "@/utils/subdomain";
 import { DraftRecoveryModal } from "../components/modals/DraftRecoveryModal";
 import type { RootState } from "@/store";
+import { Modal } from "@/components/shared/Modal";
+import {
+  Eye,
+  Edit,
+  Trash,
+  Slash,
+  TickCircle,
+  Tag2,
+} from "iconsax-react";
+import {
+  useDeleteProductMutation,
+  useUpdateProductOnSaleMutation,
+  useUpdateProductStatusMutation,
+} from "@/services/productApi";
+import { ProductShareAction } from "../components/dashboard/ProductShareAction";
+import { ConfirmDeleteDialog } from "../components/ConfirmDeleteDialog";
+import { toast } from "sonner";
 
 /* ───────────────── CONSTANTS ───────────────── */
 const PAGE_SIZE = 10;
@@ -65,6 +82,17 @@ export default function ProductsPage() {
   const [viewMode, setViewMode] = useState<"table" | "grid">("table");
 
   const [showRecoveryModal, setShowRecoveryModal] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<IStoreProduct | null>(
+    null,
+  );
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  const [deleteProduct, { isLoading: deleting }] = useDeleteProductMutation();
+  const [updateStatus, { isLoading: updatingStatus }] =
+    useUpdateProductStatusMutation();
+  const [updateOnSale, { isLoading: updatingOnSale }] =
+    useUpdateProductOnSaleMutation();
+
   const draftData = useSelector((state: RootState) => state.productDraft.data);
 
   /* ─── Debounce search input ─── */
@@ -418,6 +446,7 @@ export default function ProductsPage() {
                   columns={productColumns}
                   data={items}
                   isLoading={isActuallyLoading}
+                  onRowClick={(product) => setSelectedProduct(product)}
                   className="border-none"
                   emptyMessage={
                     isSearching
@@ -540,6 +569,260 @@ export default function ProductsPage() {
         onOpenChange={setShowWelcomeModal}
         onAddProduct={handleAddNewProduct}
       />
+
+      {/* ─── Product Quick View Modal ─── */}
+      <Modal
+        open={!!selectedProduct}
+        onOpenChange={(open) => !open && setSelectedProduct(null)}
+        className="sm:max-w-md"
+        contentClassName="p-0"
+      >
+        {selectedProduct && (
+          <div className="flex flex-col">
+            {/* Modal Header Image */}
+            <div className="relative h-48 w-full overflow-hidden">
+              <img
+                src={selectedProduct.image?.url}
+                alt={selectedProduct.name}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+              <div className="absolute bottom-4 left-6 right-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-xl font-bold text-white">
+                      {selectedProduct.name}
+                    </h3>
+                    <p className="text-white/80 text-xs font-medium uppercase tracking-widest mt-1">
+                      {selectedProduct.category_ref?.name}
+                    </p>
+                  </div>
+                  <Badge
+                    variant={
+                      selectedProduct.status === "active"
+                        ? "default"
+                        : "secondary"
+                    }
+                    className={cn(
+                      "bg-white/20 backdrop-blur-md text-white border-white/20",
+                      selectedProduct.status === "active"
+                        ? "bg-emerald-500/80"
+                        : "bg-zinc-500/80",
+                    )}
+                  >
+                    {selectedProduct.status}
+                  </Badge>
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Content */}
+            <div className="p-6 space-y-6">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                    Price
+                  </p>
+                  <p className="text-base font-bold text-primary">
+                    {selectedProduct.on_sale && selectedProduct.discount_price ? (
+                      <span className="flex items-center gap-2">
+                        ₦{Number(selectedProduct.discount_price).toLocaleString()}
+                        <span className="text-xs font-medium text-muted-foreground line-through decoration-rose-500/30">
+                          ₦{Number(selectedProduct.price).toLocaleString()}
+                        </span>
+                      </span>
+                    ) : (
+                      `₦${Number(selectedProduct.price).toLocaleString()}`
+                    )}
+                  </p>
+                </div>
+                <div className="space-y-1 text-right">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                    Stock Availability
+                  </p>
+                  <p
+                    className={cn(
+                      "text-base font-bold",
+                      selectedProduct.is_out_of_stock
+                        ? "text-red-500"
+                        : "text-emerald-500",
+                    )}
+                  >
+                    {selectedProduct.is_out_of_stock
+                      ? "Out of Stock"
+                      : `${selectedProduct.stock} pcs`}
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
+                {/* PRIMARY ACTIONS */}
+                <Button
+                  className="h-11 justify-start gap-3 rounded-sm font-bold bg-primary hover:bg-primary/90 text-xs"
+                  onClick={() => {
+                    const path = getWebsitePath(
+                      `/product/${selectedProduct.slug}`,
+                    );
+                    if (path?.startsWith("http")) {
+                      window.location.href = path;
+                    } else if (path) {
+                      navigate(path);
+                    }
+                  }}
+                >
+                  <Eye variant="Bold" color="white" size={18} />
+                  View
+                </Button>
+
+                <Button
+                  variant="outline"
+                  className="h-11 justify-start gap-3 rounded-sm font-bold border-border/60 text-xs"
+                  onClick={() => {
+                    dispatch(clearProductDraft());
+                    navigate(
+                      getAppPath(`/products/${selectedProduct.slug}/edit`),
+                    );
+                  }}
+                >
+                  <Edit variant="Bold" color="#10b981" size={18} />
+                  Edit
+                </Button>
+
+                {/* SECONDARY ACTIONS */}
+                <Button
+                  variant="outline"
+                  className={cn(
+                    "h-11 justify-start gap-3 rounded-sm font-bold border-border/60 text-xs",
+                    selectedProduct.status === "active"
+                      ? "text-red-500"
+                      : "text-emerald-500",
+                  )}
+                  disabled={updatingStatus}
+                  onClick={async () => {
+                    try {
+                      await updateStatus({
+                        id: selectedProduct.id,
+                        status:
+                          selectedProduct.status === "active"
+                            ? "inactive"
+                            : "active",
+                      }).unwrap();
+                      setSelectedProduct((prev) =>
+                        prev
+                          ? {
+                              ...prev,
+                              status:
+                                prev.status === "active"
+                                  ? "inactive"
+                                  : "active",
+                            }
+                          : null,
+                      );
+                      toast.success("Status updated successfully");
+                    } catch {
+                      toast.error("Failed to update status");
+                    }
+                  }}
+                >
+                  {selectedProduct.status === "active" ? (
+                    <>
+                      <Slash variant="Bold" color="currentColor" size={18} />
+                      Hide
+                    </>
+                  ) : (
+                    <>
+                      <TickCircle
+                        variant="Bold"
+                        color="currentColor"
+                        size={18}
+                      />
+                      Activate
+                    </>
+                  )}
+                </Button>
+
+                <Button
+                  variant="outline"
+                  className={cn(
+                    "h-11 justify-start gap-3 rounded-sm font-bold border-border/60 text-xs",
+                    selectedProduct.on_sale ? "text-amber-600" : "text-blue-500",
+                  )}
+                  disabled={
+                    updatingOnSale ||
+                    (!selectedProduct.discount_price && !selectedProduct.on_sale)
+                  }
+                  onClick={async () => {
+                    try {
+                      await updateOnSale({
+                        id: selectedProduct.id,
+                        on_sale: !selectedProduct.on_sale,
+                      }).unwrap();
+                      setSelectedProduct((prev) =>
+                        prev ? { ...prev, on_sale: !prev.on_sale } : null,
+                      );
+                      toast.success(
+                        selectedProduct.on_sale
+                          ? "Removed from sale"
+                          : "Marked as on sale",
+                      );
+                    } catch {
+                      toast.error("Failed to update sale status");
+                    }
+                  }}
+                >
+                  <Tag2 variant="Bold" color="currentColor" size={18} />
+                  {selectedProduct.on_sale ? "Remove Sale" : "Mark Sale"}
+                </Button>
+              </div>
+
+              <div className="flex gap-2">
+                <div className="flex-1">
+                  <ProductShareAction
+                    product={selectedProduct}
+                    className="w-full h-11 justify-start gap-4 rounded-sm font-bold border-border/60"
+                  />
+                </div>
+                <Button
+                  variant="ghost"
+                  className="h-11 w-11 rounded-sm text-destructive hover:bg-destructive/10 shrink-0"
+                  onClick={() => setIsDeleteModalOpen(true)}
+                >
+                  <Trash variant="Bold" color="currentColor" size={18} />
+                </Button>
+              </div>
+
+              <Button
+                variant="ghost"
+                className="w-full h-10 rounded-sm font-bold text-muted-foreground hover:bg-muted/50 text-[10px] uppercase tracking-[0.2em]"
+                onClick={() => setSelectedProduct(null)}
+              >
+                Close Overview
+              </Button>
+            </div>
+          </div>
+        )}
+      </Modal>
+
+      {/* ❗ CONFIRM DELETE */}
+      {selectedProduct && (
+        <ConfirmDeleteDialog
+          open={isDeleteModalOpen}
+          loading={deleting}
+          title="Delete product"
+          description={`Are you sure you want to delete "${selectedProduct.name}"? This action cannot be undone.`}
+          onConfirm={async () => {
+            try {
+              await deleteProduct(selectedProduct.id).unwrap();
+              setIsDeleteModalOpen(false);
+              setSelectedProduct(null);
+              toast.success("Product deleted successfully");
+            } catch {
+              toast.error("Failed to delete product");
+            }
+          }}
+          onClose={() => setIsDeleteModalOpen(false)}
+        />
+      )}
     </section>
   );
 }
