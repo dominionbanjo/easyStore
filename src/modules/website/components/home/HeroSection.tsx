@@ -101,13 +101,17 @@ export default function HeroSection() {
       {/* IMMERSIVE BACKGROUND (Top half only - Full Bleed) */}
       <div className="absolute inset-x-0 top-0 h-[780px] sm:h-[750px] lg:h-[900px] z-0 pointer-events-none overflow-hidden">
         <img
-          src="/images/african_shopping_mobile.png"
+          src="https://res.cloudinary.com/dcmg4skhv/image/upload/f_auto,q_auto/v1775869586/african_shopping_mobile_uksxfx.jpg"
           alt=""
+          loading="eager"
+          fetchPriority="high"
           className="sm:hidden w-full h-full object-cover"
         />
         <img
-          src="/images/african_shopping_desktop.png"
+          src="https://res.cloudinary.com/dcmg4skhv/image/upload/f_auto,q_auto/v1775869586/african_shopping_desktop_hfodrq.jpg"
           alt=""
+          loading="eager"
+          fetchPriority="high"
           className="hidden sm:block w-full h-full object-[center_20%] object-cover"
         />
         {/* Uniform Cinematic Overlays (Locked Dark for high-contrast consistency) */}
