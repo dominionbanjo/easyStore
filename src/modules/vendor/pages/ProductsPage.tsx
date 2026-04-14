@@ -53,6 +53,7 @@ import {
   useUpdateProductOnSaleMutation,
   useUpdateProductStatusMutation,
 } from "@/services/productApi";
+import { useGetMyStoreQuery } from "@/services/storeApi";
 import { ProductShareAction } from "../components/dashboard/ProductShareAction";
 import { ConfirmDeleteDialog } from "../components/ConfirmDeleteDialog";
 import { toast } from "sonner";
@@ -129,6 +130,7 @@ export default function ProductsPage() {
     onSale: onSale === undefined ? undefined : String(onSale),
     status,
   });
+  const { data: storeData } = useGetMyStoreQuery();
 
   const isActuallyLoading =
     isLoading || isFetching || search.trim() !== debouncedSearch;
@@ -779,6 +781,7 @@ export default function ProductsPage() {
                 <div className="flex-1">
                   <ProductShareAction
                     product={selectedProduct}
+                    store={storeData}
                     className="w-full h-11 justify-start gap-4 rounded-sm font-bold border-border/60"
                   />
                 </div>

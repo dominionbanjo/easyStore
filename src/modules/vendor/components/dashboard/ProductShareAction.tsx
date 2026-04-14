@@ -18,10 +18,14 @@ interface ProductShareActionProps {
     store_slug?: string;
     on_sale?: boolean;
   };
+  store?: {
+    slug: string;
+    store_name?: string;
+  };
   className?: string;
 }
 
-export function ProductShareAction({ product, className }: ProductShareActionProps) {
+export function ProductShareAction({ product, store, className }: ProductShareActionProps) {
   const [isSharing, setIsSharing] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -49,12 +53,13 @@ export function ProductShareAction({ product, className }: ProductShareActionPro
 
       // 3. Construct shareable URL
       const baseDomain = getBaseDomain();
-      const storeSlug = product.store_slug || "market";
-      const productUrl = `${window.location.protocol}//${storeSlug}.${baseDomain}/product/${product.slug}`;
-      const shareTitle = `Check out ${product.name} on ${product.store_name || "EazyStore"}`;
+      const storeSlug = store?.slug || product.store_slug || "market";
+      const pathPrefix = store ? "products" : "product";
+      const productUrl = `${window.location.protocol}//${storeSlug}.${baseDomain}/${pathPrefix}/${product.slug}`;
+      const shareTitle = `Check out ${product.name} on ${store?.store_name || product.store_name || "EazyStore"}`;
 
       const displayPriceText = isSale ? product.discount_price : product.price;
-      const shareText = `Visit my site to view this amazing find! ${product.name} for ₦${Number(displayPriceText).toLocaleString()} at ${product.store_name || "EazyStore"}.\n\nView here: ${productUrl}`;
+      const shareText = `Visit my site to view this amazing find! ${product.name} for ₦${Number(displayPriceText).toLocaleString()} at ${store?.store_name || product.store_name || "EazyStore"}.\n\nView here: ${productUrl}`;
 
       // 4. Use Web Share API if available
       if (navigator.canShare && navigator.canShare({ files: [file] })) {
