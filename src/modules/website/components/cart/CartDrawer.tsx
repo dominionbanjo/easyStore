@@ -179,18 +179,28 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                     exit={{ opacity: 0, x: -20 }}
                     className="flex gap-4 group"
                   >
-                    <div className="w-20 h-24 rounded-sm overflow-hidden bg-muted flex-shrink-0 border border-border/40">
+                    <SmartLink
+                      to={`/product/${item.slug}`}
+                      className="w-20 h-24 rounded-sm overflow-hidden bg-muted flex-shrink-0 border border-border/40"
+                      onClick={onClose}
+                    >
                       <img
                         src={item.image ?? "/placeholder.png"}
                         alt={item.name}
                         className="w-full h-full object-cover transition-transform group-hover:scale-110"
                       />
-                    </div>
+                    </SmartLink>
                     <div className="flex-1 min-w-0 space-y-1">
                       <div className="flex justify-between gap-2">
-                        <h4 className="text-sm font-bold truncate pr-2">
-                          {item.name}
-                        </h4>
+                        <SmartLink
+                          to={`/product/${item.slug}`}
+                          onClick={onClose}
+                          className="hover:text-primary transition-colors truncate pr-2"
+                        >
+                          <h4 className="text-sm font-bold truncate">
+                            {item.name}
+                          </h4>
+                        </SmartLink>
                         <button
                           onClick={() =>
                             handleRemove(

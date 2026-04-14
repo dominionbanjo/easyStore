@@ -103,30 +103,30 @@ export default function BusinessStorySection() {
               />
 
               {/* Overlay Badges */}
-              <div className="absolute bottom-12 left-2 sm:left-4 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl p-5 rounded-sm -[0_20px_50px_rgba(0,0,0,0.15)] dark:-[0_20px_50px_rgba(0,0,0,0.3)] border border-white/20 dark:border-white/5 flex items-center gap-5 animate-float group/badge transition-all">
-                <div className="w-14 h-14 bg-gradient-to-br from-primary/20 to-primary/5 dark:from-primary/30 dark:to-primary/10 rounded-sm flex items-center justify-center text-2xl  transform group-hover/badge:scale-110 transition-all duration-500">
+              <div className="absolute bottom-6 sm:bottom-12 left-2 sm:left-4 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl p-3 sm:p-5 rounded-sm shadow-xl border border-white/20 dark:border-white/5 flex items-center gap-3 sm:gap-5 animate-float group/badge transition-all">
+                <div className="w-10 h-10 sm:w-14 sm:h-14 bg-gradient-to-br from-primary/20 to-primary/5 dark:from-primary/30 dark:to-primary/10 rounded-sm flex items-center justify-center text-xl sm:text-2xl transform group-hover/badge:scale-110 transition-all duration-500">
                   📦
                 </div>
                 <div>
-                  <p className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-1">
+                  <p className="text-[8px] sm:text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-0.5 sm:mb-1">
                     Orders Today
                   </p>
-                  <p className="text-2xl font-black text-foreground tabular-nums tracking-tight">
+                  <p className="text-lg sm:text-2xl font-black text-foreground tabular-nums tracking-tight">
                     128+
                   </p>
                 </div>
-                <div className="absolute -top-2 -right-2 bg-emerald-500 w-5 h-5 rounded-sm border-4 border-white dark:border-neutral-900 animate-pulse" />
+                <div className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 bg-emerald-500 w-3 h-3 sm:w-5 sm:h-5 rounded-sm border-2 sm:border-4 border-white dark:border-neutral-900 animate-pulse" />
               </div>
 
-              <div className="absolute top-12 right-2 sm:right-4 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl p-5 rounded-sm -[0_20px_50px_rgba(0,0,0,0.15)] dark:-[0_20px_50px_rgba(0,0,0,0.3)] border border-white/20 dark:border-white/5 flex items-center gap-5 animate-float-delayed group/badge2 transition-all">
-                <div className="w-14 h-14 bg-gradient-to-br from-emerald-500/20 to-emerald-500/5 dark:from-emerald-500/30 dark:to-emerald-500/10 rounded-sm flex items-center justify-center text-2xl  transform group-hover/badge2:scale-110 transition-all duration-500">
+              <div className="absolute top-6 sm:top-12 right-2 sm:right-4 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl p-3 sm:p-5 rounded-sm shadow-xl border border-white/20 dark:border-white/5 flex items-center gap-3 sm:gap-5 animate-float-delayed group/badge2 transition-all">
+                <div className="w-10 h-10 sm:w-14 sm:h-14 bg-gradient-to-br from-emerald-500/20 to-emerald-500/5 dark:from-emerald-500/30 dark:to-emerald-500/10 rounded-sm flex items-center justify-center text-xl sm:text-2xl transform group-hover/badge2:scale-110 transition-all duration-500">
                   💰
                 </div>
                 <div>
-                  <p className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-1">
+                  <p className="text-[8px] sm:text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-0.5 sm:mb-1">
                     Total Earnings
                   </p>
-                  <p className="text-2xl font-black text-foreground tabular-nums tracking-tight">
+                  <p className="text-lg sm:text-2xl font-black text-foreground tabular-nums tracking-tight">
                     ₦1.2M
                   </p>
                 </div>

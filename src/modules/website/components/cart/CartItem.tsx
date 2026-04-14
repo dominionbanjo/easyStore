@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import type { ICartItem } from "@/types/cart/cartTypes";
+import SmartLink from "@/components/shared/SmartLink";
 
 interface CartItemProps {
   item: ICartItem;
@@ -35,21 +36,26 @@ export function CartItem({
     <motion.div layout>
       <Card className="group flex flex-col sm:flex-row gap-4 p-4 sm:p-5 rounded-sm border sm:border  sm: bg-white dark:bg-zinc-900 border-zinc-100 dark:border-white/5 relative overflow-hidden transition-all hover:">
         {/* Image */}
-        <div className="relative h-48 sm:h-32 w-full sm:w-32 shrink-0 rounded-sm overflow-hidden bg-gray-100 dark:bg-zinc-800">
+        <SmartLink
+          to={`/product/${item.slug}`}
+          className="relative h-48 sm:h-32 w-full sm:w-32 shrink-0 rounded-sm overflow-hidden bg-gray-100 dark:bg-zinc-800"
+        >
           <img
             src={item.image ?? "/placeholder.png"}
             alt={item.name}
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
           />
-        </div>
+        </SmartLink>
 
         {/* Content */}
         <div className="flex-1 flex flex-col min-w-0">
           <div className="flex justify-between items-start gap-4">
             <div className="space-y-1 flex-1">
-              <h3 className="text-base sm:text-lg font-black leading-tight text-foreground line-clamp-2">
-                {item.name}
-              </h3>
+              <SmartLink to={`/product/${item.slug}`}>
+                <h3 className="text-base sm:text-lg font-black leading-tight text-foreground hover:text-primary transition-colors line-clamp-2">
+                  {item.name}
+                </h3>
+              </SmartLink>
 
               <div className="flex flex-wrap gap-2 pt-1">
                 {item.variant_options ? (

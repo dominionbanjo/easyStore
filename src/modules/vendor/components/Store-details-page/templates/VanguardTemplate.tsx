@@ -1,9 +1,14 @@
 import type { StoreTemplateProps } from "./StoreTemplateProps";
 import { Search, X, Loader2, ShoppingCart } from "lucide-react";
+import {
+  InfoCircle,
+} from "iconsax-react";
 import { Input } from "@/components/ui/input";
 import { StoreProductsGrid } from "../StoreProductsGrid";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TemplateProfileDropdown } from "@/components/shared/TemplateProfileDropdown";
+import { StoreContactModal } from "../StoreContactModal";
+import { useState } from "react";
 
 export default function VanguardTemplate({
   store,
@@ -25,6 +30,7 @@ export default function VanguardTemplate({
   onCartOpen,
   cartItemsCount,
 }: StoreTemplateProps) {
+  const [contactOpen, setContactOpen] = useState(false);
   // Vanguard aesthetic:
   // - Large oversized banner image acting as background
   // - Centered logo and text overlapping banner
@@ -32,8 +38,17 @@ export default function VanguardTemplate({
   // - Borderless product grid
 
   return (
-    <div className="min-h-screen bg-white dark:bg-black text-zinc-900 dark:text-zinc-100 font-serif pb-24">
+    <>
+      <div className="min-h-screen bg-white dark:bg-black text-zinc-900 dark:text-zinc-100 font-serif pb-24">
       <div className="fixed top-0 right-0 z-[60] p-3 sm:p-6 md:p-10 flex items-center gap-2 sm:gap-4 pointer-events-none">
+        <button
+          onClick={() => setContactOpen(true)}
+          className="pointer-events-auto relative text-zinc-900 dark:text-zinc-100 hover:scale-110 active:scale-95 group transition-all"
+          aria-label="Store info"
+        >
+          <InfoCircle variant="Bold" color="currentColor" className="w-5 h-5 sm:w-6 sm:h-6" />
+        </button>
+
         <button
           onClick={onCartOpen}
           className="pointer-events-auto relative p-3 sm:p-4 bg-white/10 dark:bg-black/20 backdrop-blur-3xl border border-white/20 dark:border-white/10 rounded-sm text-zinc-900 dark:text-zinc-100  hover:scale-110 active:scale-95 transition-all group"
@@ -164,5 +179,12 @@ export default function VanguardTemplate({
         </div>
       </div>
     </div>
+
+      <StoreContactModal
+        store={store}
+        open={contactOpen}
+        onClose={() => setContactOpen(false)}
+      />
+    </>
   );
 }

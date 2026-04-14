@@ -81,7 +81,7 @@ export function adaptProductToUI(
       }),
       shippingCost: product.shipping_cost
         ? `₦${Number(product.shipping_cost).toLocaleString()}`
-        : "Calculated at checkout",
+        : "Contact vendor for shipping fees",
     },
 
     options: product.options ?? null,

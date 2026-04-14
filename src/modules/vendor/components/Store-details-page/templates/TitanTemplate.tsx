@@ -8,11 +8,21 @@ import {
   ShoppingCart,
   Star,
   MapPin,
+  TwitterIcon,
 } from "lucide-react";
+import {
+  Instagram,
+  Facebook,
+  Youtube,
+  Global,
+  InfoCircle,
+} from "iconsax-react";
 import { Input } from "@/components/ui/input";
 import { StoreProductsGrid } from "../StoreProductsGrid";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TemplateProfileDropdown } from "@/components/shared/TemplateProfileDropdown";
+import { StoreContactModal } from "../StoreContactModal";
+import { useState } from "react";
 
 export default function TitanTemplate({
   store,
@@ -34,17 +44,13 @@ export default function TitanTemplate({
   onCartOpen,
   cartItemsCount,
 }: StoreTemplateProps) {
-  // Titan aesthetic:
-  // - Dark tech, bento-box grid layouts
-  // - High-contrast neon accents (using --theme-primary)
-  // - Monospaced utility accents
+  const [contactOpen, setContactOpen] = useState(false);
 
   return (
     <div className="w-full bg-black text-zinc-300 font-mono min-h-screen selection:bg-[var(--theme-primary)] selection:text-black pb-24 border-x border-zinc-900 mx-auto max-w-[1600px]">
       <div className="px-1.5 sm:px-4 py-6 md:py-12 space-y-6 md:space-y-8">
         {/* ─── TITAN HEADER ─── */}
         <header className="w-full border border-zinc-800 bg-zinc-950/80 backdrop-blur-md rounded-sm px-2.5 py-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden">
-          {/* Subtle Grid Background Pattern */}
           <div
             className="absolute inset-0 opacity-10 pointer-events-none"
             style={{
@@ -155,7 +161,14 @@ export default function TitanTemplate({
         {/* ─── TITAN HERO SYSTEM ─── */}
         {!searchQuery && !selectedCategory && activeTab === "products" && (
           <section className="relative w-full min-h-[400px] md:min-h-[500px] rounded-sm border border-zinc-800 bg-zinc-950 overflow-hidden flex flex-col justify-end p-4 sm:p-8 md:p-16 group">
-            {/* Background Layer */}
+            <button
+              onClick={() => setContactOpen(true)}
+              className="absolute top-4 right-4 z-30 text-[var(--theme-primary)] hover:scale-110 active:scale-95 group/btn transition-all drop-shadow-[0_0_10px_rgba(var(--theme-primary-rgb),0.3)]"
+              aria-label="Store contact information"
+            >
+              <InfoCircle variant="Bold" color="var(--theme-primary)" className="w-5 h-5" />
+            </button>
+
             {store.cover_image ? (
               <>
                 <img
@@ -169,7 +182,6 @@ export default function TitanTemplate({
               <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 to-black" />
             )}
 
-            {/* Grid Overlay */}
             <div
               className="absolute inset-0 opacity-10 pointer-events-none"
               style={{
@@ -179,7 +191,6 @@ export default function TitanTemplate({
               }}
             />
 
-            {/* Scanline Effect */}
             <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_2px,3px_100%]" />
 
             <div className="relative z-10 space-y-8">
@@ -235,7 +246,6 @@ export default function TitanTemplate({
               </div>
             </div>
 
-            {/* Aesthetic Corner Accents */}
             <div className="absolute top-8 right-8 flex gap-2">
               <div className="w-12 h-1 bg-zinc-800" />
               <div className="w-4 h-4 border-t-2 border-r-2 border-zinc-800" />
@@ -243,12 +253,9 @@ export default function TitanTemplate({
           </section>
         )}
 
-        {/* ─── BENTO BOX LAYOUT ─── */}
         <main className="px-1.5 py-6 sm:p-6 lg:p-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-            {/* Main Content Area */}
             <div className="lg:col-span-12 space-y-6">
-              {/* Nav Tabs Bento Unit */}
               <div className="p-1.5 bg-zinc-900/50 border border-zinc-800 rounded-sm flex items-center gap-2 w-fit">
                 <button
                   onClick={() => {
@@ -275,9 +282,7 @@ export default function TitanTemplate({
                 </button>
               </div>
 
-              {/* Content View Unit */}
               <div className="bg-zinc-950/40 border border-zinc-800 rounded-sm px-1.5 py-6 sm:p-8 min-h-[600px]">
-                {/* CATEGORIES VIEW */}
                 {activeTab === "categories" && !selectedCategory && (
                   <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
                     {isCategoriesLoading
@@ -310,7 +315,6 @@ export default function TitanTemplate({
                   </div>
                 )}
 
-                {/* PRODUCTS VIEW */}
                 {(activeTab === "products" || selectedCategory) && (
                   <div className="space-y-8 animate-in fade-in duration-500">
                     <div className="flex flex-col md:flex-row md:items-end justify-between p-4 border-l-2 border-[var(--theme-primary)] bg-zinc-900/20 gap-4">
@@ -353,7 +357,6 @@ export default function TitanTemplate({
           </div>
         </main>
 
-        {/* ─── TITAN FOOTER ─── */}
         <footer className="border border-zinc-800 bg-zinc-950/80 rounded-sm p-10 mt-12 overflow-hidden relative">
           <div className="relative z-10 grid grid-cols-1 md:grid-cols-4 gap-12">
             <div className="md:col-span-2">
@@ -399,21 +402,33 @@ export default function TitanTemplate({
               <h5 className="text-[10px] font-mono font-bold text-zinc-600 mb-6 uppercase tracking-[0.3em]">
                 SYS_RELAY
               </h5>
-              <div className="flex flex-wrap gap-4">
+              <div className="flex flex-wrap gap-3">
                 {store?.social_links &&
-                  Object.entries(store.social_links).map(([platform, link]) => (
-                    <a
-                      key={platform}
-                      href={link as string}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="p-3 border border-zinc-800 bg-black text-zinc-500 hover:text-[var(--theme-primary)] hover:border-[var(--theme-primary)] transition-all rounded-sm"
-                    >
-                      <span className="font-mono text-[10px] uppercase">
-                        {platform.substring(0, 3)}
-                      </span>
-                    </a>
-                  ))}
+                  Object.entries(store.social_links).map(([platform, link]) => {
+                    const key = platform.toLowerCase();
+                    let Icon = Global;
+                    if (key.includes("instagram")) Icon = Instagram;
+                    else if (key.includes("facebook")) Icon = Facebook;
+                    else if (key.includes("twitter") || key.includes("x")) Icon = TwitterIcon;
+                    else if (key.includes("youtube")) Icon = Youtube;
+                    const isLucide = Icon === TwitterIcon;
+                    return (
+                      <a
+                        key={platform}
+                        href={link as string}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="p-3 border border-zinc-800 bg-black text-zinc-500 hover:text-[var(--theme-primary)] hover:border-[var(--theme-primary)] transition-all rounded-sm"
+                        aria-label={platform}
+                      >
+                        {isLucide ? (
+                          <Icon className="w-5 h-5" />
+                        ) : (
+                          <Icon variant="Bold" color="currentColor" className="w-5 h-5" />
+                        )}
+                      </a>
+                    );
+                  })}
               </div>
             </div>
           </div>
@@ -428,6 +443,12 @@ export default function TitanTemplate({
           </div>
         </footer>
       </div>
+
+      <StoreContactModal
+        store={store}
+        open={contactOpen}
+        onClose={() => setContactOpen(false)}
+      />
     </div>
   );
 }

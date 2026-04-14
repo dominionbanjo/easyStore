@@ -33,14 +33,12 @@ const transitionVariants: Variants = {
 };
 
 // Campaign video path
-const CAMPAIGN_VIDEO = "https://res.cloudinary.com/dcmg4skhv/video/upload/v1775865849/campaign_h8etwo.mp4";
+const CAMPAIGN_VIDEO =
+  "https://res.cloudinary.com/dcmg4skhv/video/upload/v1775865849/campaign_h8etwo.mp4";
 
 export function HeroTitle() {
   return (
     <>
-      <span className="block text-xl md:text-3xl text-neutral-50 font-black mb-6 tracking-tight drop-shadow-[0_2px_30px_rgba(0,0,0,0.8)]">
-        Stop struggling to sell online.
-      </span>
       Launch your store, own your link, and get paid securely{" "}
       <span className="relative inline-block mt-2">
         <span className="relative z-10 text-primary">
@@ -97,67 +95,62 @@ export default function HeroSection() {
   };
 
   return (
-    <section className="relative isolate pt-2 pb-12 sm:py-20 overflow-hidden">
-      {/* IMMERSIVE BACKGROUND (Top half only - Full Bleed) */}
-      <div className="absolute inset-x-0 top-0 h-[780px] sm:h-[750px] lg:h-[900px] z-0 pointer-events-none overflow-hidden">
-        <img
-          src="https://res.cloudinary.com/dcmg4skhv/image/upload/f_auto,q_auto/v1775869586/african_shopping_mobile_uksxfx.jpg"
-          alt=""
-          loading="eager"
-          fetchPriority="high"
-          className="sm:hidden w-full h-full object-cover"
-        />
-        <img
-          src="https://res.cloudinary.com/dcmg4skhv/image/upload/f_auto,q_auto/v1775869586/african_shopping_desktop_hfodrq.jpg"
-          alt=""
-          loading="eager"
-          fetchPriority="high"
-          className="hidden sm:block w-full h-full object-[center_20%] object-cover"
-        />
-        {/* Uniform Cinematic Overlays (Locked Dark for high-contrast consistency) */}
-        <div className="absolute inset-0 bg-black/50" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-transparent to-neutral-950" />
-        <div className="absolute inset-0 bg-gradient-to-r from-neutral-950/20 via-transparent to-neutral-950/20" />
-      </div>
+    <>
+      <section className="relative isolate pt-20 sm:pt-40 pb-12 sm:pb-20 overflow-hidden">
+        {/* IMMERSIVE BACKGROUND (Top half only - Full Bleed) */}
+        <div className="absolute inset-x-0 top-0 h-[1050px] sm:h-[900px] lg:h-[950px] z-0 pointer-events-none overflow-hidden">
+          <img
+            src="https://res.cloudinary.com/dcmg4skhv/image/upload/f_auto,q_auto/v1775869586/african_shopping_mobile_uksxfx.jpg"
+            alt=""
+            loading="eager"
+            fetchPriority="high"
+            className="sm:hidden w-full h-full object-cover"
+          />
+          <img
+            src="https://res.cloudinary.com/dcmg4skhv/image/upload/f_auto,q_auto/v1775869586/african_shopping_desktop_hfodrq.jpg"
+            alt=""
+            loading="eager"
+            fetchPriority="high"
+            className="hidden sm:block w-full h-full object-[center_20%] object-cover"
+          />
+          {/* Uniform Cinematic Overlays (Locked Dark for high-contrast consistency) */}
+          <div className="absolute inset-0 bg-black/50" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-transparent to-neutral-950" />
+          <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-neutral-950 via-neutral-950/80 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-neutral-950/20 via-transparent to-neutral-950/20" />
+        </div>
 
-      <div className="relative z-10 w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-        <div className="flex flex-col items-center justify-center gap-12 sm:gap-20">
-          {/* CONTENT SECTION (Centered & Glass-Enhanced) */}
-          <div className="w-full max-w-6xl mx-auto text-center space-y-10 sm:pt-10">
-            <div className="space-y-6">
-              <motion.h1
-                variants={transitionVariants}
-                initial="hidden"
-                animate="visible"
-                className="text-[40px] sm:text-7xl md:text-8xl lg:text-[100px] font-black tracking-tighter leading-[0.85] text-white lg:max-w-[95%] mx-auto drop-shadow-[0_4px_40px_rgba(0,0,0,0.8)]"
-              >
-                <HeroTitle />
-              </motion.h1>
+        <div className="relative z-10 w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+          <div className="flex flex-col items-center justify-center gap-12 sm:gap-20">
+            {/* CONTENT SECTION (Centered & Glass-Enhanced) */}
+            <div className="w-full max-w-6xl mx-auto text-center space-y-10">
+              <div className="space-y-6">
+                <motion.h1
+                  variants={transitionVariants}
+                  initial="hidden"
+                  animate="visible"
+                  className="text-[40px] sm:text-7xl md:text-8xl lg:text-[100px] font-black tracking-tighter leading-[0.85] text-white lg:max-w-[95%] mx-auto drop-shadow-[0_4px_40px_rgba(0,0,0,0.8)]"
+                >
+                  <HeroTitle />
+                </motion.h1>
 
-              <motion.p
-                variants={transitionVariants}
-                initial="hidden"
-                animate="visible"
-                transition={{ delay: 0.1 }}
-                className="w-full text-[17px] sm:text-xl lg:text-2xl leading-relaxed text-neutral-100 font-black max-w-4xl mx-auto text-center drop-shadow-[0_4px_40px_rgba(0,0,0,0.8)]"
-              >
-                Give your business the professional edge it deserves. EazyStore
-                gives you{" "}
-                <span className="text-emerald-400 font-black underline decoration-primary/50 underline-offset-8">
-                  your own website, professional store link, and secure escrow
-                  payments
-                </span>{" "}
-                — so you can sell with confidence.
-              </motion.p>
+                <motion.p
+                  variants={transitionVariants}
+                  initial="hidden"
+                  animate="visible"
+                  transition={{ delay: 0.1 }}
+                  className="w-full text-[17px] sm:text-xl lg:text-2xl leading-relaxed text-neutral-100 font-black max-w-4xl mx-auto text-center drop-shadow-[0_4px_40px_rgba(0,0,0,0.8)]"
+                >
+                  Give your business the professional edge it deserves. — so you
+                  can sell with confidence.
+                </motion.p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="relative z-10 w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl mt-12 sm:mt-20">
-        <div className="flex flex-col items-center justify-center gap-12 sm:gap-16 w-full">
-
-
+        <div className="relative z-10 w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl mt-12 sm:mt-24">
+          <div className="flex flex-col items-center justify-center gap-12 sm:gap-16 w-full">
             {/* Custom Link Preview */}
             <motion.div
               variants={transitionVariants}
@@ -168,11 +161,7 @@ export default function HeroSection() {
             >
               <div className="flex bg-neutral-900/80 backdrop-blur-md rounded-sm min-h-[40px] h-10 items-center justify-center px-4 gap-3 border border-white/10 shadow-xl">
                 <div className="flex items-center gap-2 border-r border-white/10 pr-3">
-                  <Lock1
-                    variant="Bold"
-                    color="#10b981"
-                    size={16}
-                  />
+                  <Lock1 variant="Bold" color="#10b981" size={16} />
                   <span className="text-neutral-400 font-bold uppercase tracking-[0.15em] text-[9px] sm:text-[10px] whitespace-nowrap">
                     Your custom link:
                   </span>
@@ -196,15 +185,11 @@ export default function HeroSection() {
             >
               <div className="flex items-start gap-4">
                 <div className="p-2.5 bg-white/5 backdrop-blur-sm rounded-sm shrink-0 border border-white/10">
-                  <Global
-                    variant="Bold"
-                    color="#10b981"
-                    size={22}
-                  />
+                  <Global variant="Bold" color="#10b981" size={22} />
                 </div>
                 <div>
                   <h3 className="font-bold text-white">Your Store Link</h3>
-                  <p className="text-sm text-neutral-400 mt-0.5">
+                  <p className="text-sm text-neutral-200 mt-0.5 drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
                     Not a marketplace profile — a real brand.
                   </p>
                 </div>
@@ -215,7 +200,7 @@ export default function HeroSection() {
                 </div>
                 <div>
                   <h3 className="font-bold text-white">Instant Setup</h3>
-                  <p className="text-sm text-neutral-400 mt-0.5">
+                  <p className="text-sm text-neutral-200 mt-0.5 drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
                     No coding, no stress. Go live in minutes.
                   </p>
                 </div>
@@ -226,7 +211,7 @@ export default function HeroSection() {
                 </div>
                 <div>
                   <h3 className="font-bold text-white">Secure Escrow</h3>
-                  <p className="text-sm text-neutral-400 mt-0.5">
+                  <p className="text-sm text-neutral-200 mt-0.5 drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
                     Get paid safely. Buyers trust you more.
                   </p>
                 </div>
@@ -236,97 +221,93 @@ export default function HeroSection() {
                   <Location variant="Bold" color="#3b82f6" size={22} />
                 </div>
                 <div>
-                  <h3 className="font-bold text-white">
-                    Built for Nigeria
-                  </h3>
-                  <p className="text-sm text-neutral-400 mt-0.5">
+                  <h3 className="font-bold text-white">Built for Nigeria</h3>
+                  <p className="text-sm text-neutral-200 mt-0.5 drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
                     Works with local payment realities.
                   </p>
                 </div>
               </div>
             </motion.div>
-
-            {/* PREMIUM CAMPAIGN VIDEO (Centerpiece) */}
-            <motion.div
-              variants={transitionVariants}
-              initial="hidden"
-              animate="visible"
-              transition={{ delay: 0.25 }}
-              className="w-full max-w-[1100px] mx-auto relative mt-10 sm:mt-20"
-            >
-              {/* Background elements */}
-              <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 via-transparent to-emerald-500/10 blur-[100px] rounded-full -z-10" />
-
-              <div className="relative p-1.5 sm:p-2 bg-white/50 dark:bg-neutral-800/50 backdrop-blur-sm rounded-sm border border-border/50 shadow-2xl overflow-hidden">
-                {/* Main Visual: Premium Video Frame */}
-                <div className="aspect-[16/10] sm:aspect-video w-full relative overflow-hidden bg-neutral-900 rounded-[2px] transform transition-transform duration-700 hover:scale-[1.005] shadow-inner">
-                  <video
-                    src={CAMPAIGN_VIDEO}
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className="w-full h-full object-cover"
-                  />
-
-                  {/* Overlays / Premium Gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
-
-                  {/* Subtle Play indicator for context */}
-                  <div className="absolute bottom-6 left-6 flex items-center gap-3">
-                    <div className="w-8 h-1 bg-white/30 rounded-full overflow-hidden">
-                      <div className="w-2/3 h-full bg-primary animate-[shimmer_2s_infinite]" />
-                    </div>
-                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/80">
-                      Touring EazyStore
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* CTAs */}
-            <motion.div
-              variants={transitionVariants}
-              initial="hidden"
-              animate="visible"
-              transition={{ delay: 0.3 }}
-              className="mt-6 flex flex-col items-center gap-4"
-            >
-              <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-                <Button
-                  size="lg"
-                  onClick={handleGetStarted}
-                  className="group relative bg-primary hover:bg-emerald-600 dark:bg-emerald-500 dark:hover:bg-emerald-400 text-white rounded-sm h-14 px-8 text-lg font-bold hover:scale-[1.02] active:scale-95 transition-all w-full sm:min-w-[280px] shadow-lg shadow-emerald-500/20"
-                >
-                  <span className="relative flex items-center gap-2">
-                    Start Selling Now — It's Free
-                    <ArrowRight
-                      variant="Outline"
-                      color="white"
-                      size={20}
-                      className="transition-transform group-hover:translate-x-1"
-                    />
-                  </span>
-                </Button>
-
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="h-14 px-8 font-bold rounded-sm border-2 w-full sm:w-auto hover:bg-muted text-foreground"
-                >
-                  <PlayCircle
-                    variant="Bold"
-                    color="currentColor"
-                    size={22}
-                    className="mr-2"
-                  />{" "}
-                  See How It Works
-                </Button>
-              </div>
-            </motion.div>
           </div>
         </div>
       </section>
+
+      {/* Video & CTAs Section */}
+      <div className="relative z-10 w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl py-12 sm:py-24 animate-in fade-in slide-in-from-bottom-10 duration-1000">
+        <div className="flex flex-col items-center justify-center gap-12 sm:gap-20 w-full">
+          {/* PREMIUM CAMPAIGN VIDEO (Centerpiece) */}
+          <motion.div
+            variants={transitionVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="w-full max-w-[1100px] mx-auto relative px-4"
+          >
+            {/* Background elements */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 via-transparent to-emerald-500/10 blur-[100px] rounded-full -z-10" />
+
+            <div className="relative p-1.5 sm:p-2 bg-white/50 dark:bg-neutral-800/50 backdrop-blur-sm rounded-sm border border-border/50 shadow-2xl overflow-hidden">
+              {/* Main Visual: Premium Video Frame */}
+              <div className="aspect-[16/10] sm:aspect-video w-full relative overflow-hidden bg-neutral-900 rounded-[2px] transform transition-transform duration-700 hover:scale-[1.005] shadow-inner">
+                <video
+                  src={CAMPAIGN_VIDEO}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="w-full h-full object-cover"
+                />
+
+                {/* Overlays / Premium Gradient */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+              </div>
+            </div>
+          </motion.div>
+
+          {/* CTAs */}
+          <motion.div
+            variants={transitionVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="flex flex-col items-center gap-4 w-full"
+          >
+            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto px-4">
+              <Button
+                size="lg"
+                onClick={handleGetStarted}
+                className="group relative bg-primary hover:bg-emerald-600 dark:bg-emerald-500 dark:hover:bg-emerald-400 text-white rounded-sm h-14 px-8 text-lg font-bold hover:scale-[1.02] active:scale-95 transition-all w-full sm:min-w-[280px] shadow-lg shadow-emerald-500/20"
+              >
+                <span className="relative flex items-center gap-2">
+                  Start Selling Now — It's Free
+                  <ArrowRight
+                    variant="Outline"
+                    color="white"
+                    size={20}
+                    className="transition-transform group-hover:translate-x-1"
+                  />
+                </span>
+              </Button>
+
+              <Button
+                variant="outline"
+                size="lg"
+                className="h-14 px-8 font-bold rounded-sm border-2 w-full sm:w-auto hover:bg-muted text-foreground"
+              >
+                <PlayCircle
+                  variant="Bold"
+                  color="currentColor"
+                  size={22}
+                  className="mr-2"
+                />{" "}
+                See How It Works
+              </Button>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </>
   );
 }

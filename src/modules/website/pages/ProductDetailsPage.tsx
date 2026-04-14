@@ -95,7 +95,7 @@ function ProductDetailsInner({ id }: { id: string }) {
       }),
       shippingCost: product.shipping_cost
         ? `₦${Number(product.shipping_cost).toLocaleString()}`
-        : "Calculated at checkout",
+        : "Contact vendor for shipping fee to your location",
     },
 
     options: product.options ?? null,

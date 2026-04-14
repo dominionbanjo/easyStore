@@ -7,12 +7,23 @@ import {
   Mail,
   ChevronRight,
   ShoppingCart,
+  TwitterIcon,
 } from "lucide-react";
+import {
+  Instagram,
+  Facebook,
+  Youtube,
+  Global,
+  InfoCircle,
+  Call,
+} from "iconsax-react";
 import { Input } from "@/components/ui/input";
 import { StoreProductsGrid } from "../StoreProductsGrid";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { StoreTemplateProps } from "./StoreTemplateProps";
 import { TemplateProfileDropdown } from "@/components/shared/TemplateProfileDropdown";
+import { StoreContactModal } from "../StoreContactModal";
+import { useState } from "react";
 
 export default function DefaultTemplate({
   store,
@@ -34,6 +45,7 @@ export default function DefaultTemplate({
   onCartOpen,
   cartItemsCount,
 }: StoreTemplateProps) {
+  const [contactOpen, setContactOpen] = useState(false);
   const hasBanner = !!store.cover_image;
   const storeLocation = [
     store.address_city,
@@ -208,6 +220,14 @@ export default function DefaultTemplate({
             <div className="absolute inset-0 bg-gradient-to-br from-[var(--theme-primary)]/40 to-black" />
           )}
 
+          <button
+            onClick={() => setContactOpen(true)}
+            className="absolute top-4 right-4 z-20 text-white hover:scale-110 active:scale-95 group transition-all drop-shadow-lg"
+            aria-label="Store contact information"
+          >
+            <InfoCircle variant="Bold" color="white" className="w-5 h-5" />
+          </button>
+
           <div className="relative z-10 text-center px-6 max-w-4xl flex flex-col items-center">
             {store.logo && (
               <img
@@ -242,15 +262,20 @@ export default function DefaultTemplate({
               )}
             </div>
 
-            <button
-              onClick={() => {
-                const target = document.getElementById("main-grid");
-                target?.scrollIntoView({ behavior: "smooth", block: "start" });
-              }}
-              className="bg-[var(--theme-primary)] text-white px-12 py-5 rounded-sm font-bold text-lg hover:bg-[var(--theme-primary)]/90 transition-all  -[var(--theme-primary)]/20 hover:-[var(--theme-primary)]/40 hover:-translate-y-1 active:scale-95"
-            >
-              Explore Collection
-            </button>
+            <div className="flex flex-wrap gap-4 justify-center">
+              <button
+                onClick={() => {
+                  const target = document.getElementById("main-grid");
+                  target?.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                  });
+                }}
+                className="bg-[var(--theme-primary)] text-white px-12 py-5 rounded-sm font-bold text-lg hover:bg-[var(--theme-primary)]/90 transition-all hover:-translate-y-1 active:scale-95"
+              >
+                Explore Collection
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -396,20 +421,55 @@ export default function DefaultTemplate({
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-8 mb-12">
-            {store.social_links &&
-              Object.entries(store.social_links).map(([platform, link]) => (
-                <a
-                  key={platform}
-                  href={link as string}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-zinc-400 hover:text-[var(--theme-primary)] transition-colors capitalize text-sm font-bold tracking-[0.15em]"
-                >
-                  {platform}
-                </a>
-              ))}
-          </div>
+          {/* Social Links */}
+          {store.social_links && Object.keys(store.social_links).length > 0 && (
+            <div className="flex flex-wrap items-center justify-center gap-3 mb-8">
+              {Object.entries(store.social_links).map(([platform, link]) => {
+                const key = platform.toLowerCase();
+                let Icon = Global;
+                if (key.includes("instagram")) Icon = Instagram;
+                else if (key.includes("facebook")) Icon = Facebook;
+                else if (key.includes("twitter") || key.includes("x"))
+                  Icon = TwitterIcon;
+                else if (key.includes("youtube")) Icon = Youtube;
+                const isLucide = Icon === TwitterIcon;
+                return (
+                  <a
+                    key={platform}
+                    href={link as string}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="w-11 h-11 flex items-center justify-center rounded-sm bg-zinc-100 dark:bg-zinc-800 hover:bg-[var(--theme-primary)]/10 hover:border-[var(--theme-primary)]/50 border border-zinc-200 dark:border-zinc-700 transition-all group"
+                    aria-label={platform}
+                  >
+                    {isLucide ? (
+                      <Icon className="w-5 h-5 text-[var(--theme-primary)]" />
+                    ) : (
+                      <Icon
+                        variant="Bold"
+                        color="var(--theme-primary)"
+                        className="w-5 h-5"
+                      />
+                    )}
+                  </a>
+                );
+              })}
+            </div>
+          )}
+          {/* Phone */}
+          {store.phone_number && (
+            <a
+              href={`tel:${store.phone_number}`}
+              className="flex items-center gap-2 justify-center text-sm font-semibold text-zinc-500 hover:text-[var(--theme-primary)] transition-colors mb-12"
+            >
+              <Call
+                variant="Bold"
+                color="var(--theme-primary)"
+                className="w-4 h-4"
+              />
+              {store.phone_number}
+            </a>
+          )}
 
           <div className="w-24 h-px bg-zinc-200 dark:bg-zinc-800 mb-10" />
 
@@ -418,6 +478,12 @@ export default function DefaultTemplate({
               © {new Date().getFullYear()} {store.store_name}
             </span>
           </div>
+
+          <StoreContactModal
+            store={store}
+            open={contactOpen}
+            onClose={() => setContactOpen(false)}
+          />
         </div>
       </footer>
     </div>

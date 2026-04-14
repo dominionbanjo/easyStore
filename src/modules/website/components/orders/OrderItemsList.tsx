@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Package } from "lucide-react";
+import SmartLink from "@/components/shared/SmartLink";
 import { Card } from "@/components/ui/card";
 import type { IOrder } from "@/services/ordersApi";
 
@@ -28,25 +29,30 @@ export function OrderItemsList({ order }: { order: IOrder }) {
               className="flex gap-4 pb-4 border-b border-border/40 last:border-0 last:pb-0"
             >
               {/* Product Image */}
-              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-muted/20 rounded-sm overflow-hidden border border-border/10 flex-shrink-0">
+              <SmartLink
+                to={`/product/${item.slug}`}
+                className="w-16 h-16 sm:w-20 sm:h-20 bg-muted/20 rounded-sm overflow-hidden border border-border/10 flex-shrink-0"
+              >
                 {item.image ? (
                   <img
                     src={item.image}
                     alt={item.name}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                   />
                 ) : (
                   <div className="flex items-center justify-center h-full text-muted-foreground/30">
                     <Package className="h-6 w-6" />
                   </div>
                 )}
-              </div>
+              </SmartLink>
 
               {/* Product Info */}
               <div className="flex-1 min-w-0 flex flex-col justify-center">
-                <h3 className="font-black text-foreground text-sm uppercase font-outfit leading-tight mb-1 truncate">
-                  {item.name}
-                </h3>
+                <SmartLink to={`/product/${item.slug}`}>
+                  <h3 className="font-black text-foreground text-sm uppercase font-outfit leading-tight mb-1 truncate hover:text-primary transition-colors">
+                    {item.name}
+                  </h3>
+                </SmartLink>
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] font-bold text-muted-foreground uppercase tracking-wide mb-2 opacity-70">
                   <span>Qty: {item.quantity}</span>
                   {item.variant_options ? (

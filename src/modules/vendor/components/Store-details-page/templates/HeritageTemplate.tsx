@@ -1,9 +1,19 @@
 import type { StoreTemplateProps } from "./StoreTemplateProps";
-import { Search, X, Loader2, ShoppingCart } from "lucide-react";
+import { Search, X, Loader2, ShoppingCart, TwitterIcon } from "lucide-react";
+import {
+  Call,
+  Instagram,
+  Facebook,
+  Youtube,
+  Global,
+  InfoCircle,
+} from "iconsax-react";
 import { Input } from "@/components/ui/input";
 import { StoreProductsGrid } from "../StoreProductsGrid";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TemplateProfileDropdown } from "@/components/shared/TemplateProfileDropdown";
+import { StoreContactModal } from "../StoreContactModal";
+import { useState } from "react";
 
 export default function HeritageTemplate({
   store,
@@ -31,6 +41,8 @@ export default function HeritageTemplate({
   // - rounded-sm corners and wide spacing
   // - Focus on craftsmanship and simplicity
 
+  const [contactOpen, setContactOpen] = useState(false);
+
   const establishedYear = new Date(
     store?.created_at || Date.now(),
   ).getFullYear();
@@ -41,6 +53,14 @@ export default function HeritageTemplate({
       <header className="relative w-full pt-16 pb-12 px-2 sm:px-6 flex flex-col items-center justify-center text-center border-b border-[#3D352B]/10 dark:border-[#EAE3DB]/10 overflow-hidden">
         {/* Cart Icon (Absolute Positioned for Elegance) */}
         <div className="absolute top-4 sm:top-8 right-2 sm:right-8 z-10 flex items-center gap-2 sm:gap-3">
+          <button
+            onClick={() => setContactOpen(true)}
+            className="relative text-[#3D352B] dark:text-[#EAE3DB] hover:scale-110 active:scale-95 group transition-all"
+            aria-label="Store contact info"
+          >
+            <InfoCircle variant="Bold" color="currentColor" className="w-5 h-5" />
+          </button>
+
           <button
             onClick={onCartOpen}
             className="group relative p-4 rounded-sm bg-white dark:bg-[#2C2622] border border-[#EADDCE] dark:border-[#3D352B]  hover: transition-all"
@@ -224,13 +244,62 @@ export default function HeritageTemplate({
         <p className="font-serif italic text-lg opacity-80 mb-6">
           Thank you for visiting {store?.store_name}.
         </p>
+
+        {/* Social links */}
+        {store?.social_links && Object.keys(store.social_links).length > 0 && (
+          <div className="flex justify-center gap-3 mb-6">
+            {Object.entries(store.social_links).map(([platform, link]) => {
+              const key = platform.toLowerCase();
+              let Icon = Global;
+              if (key.includes("instagram")) Icon = Instagram;
+              else if (key.includes("facebook")) Icon = Facebook;
+              else if (key.includes("twitter") || key.includes("x")) Icon = TwitterIcon;
+              else if (key.includes("youtube")) Icon = Youtube;
+              const isLucide = Icon === TwitterIcon;
+              return (
+                <a
+                  key={platform}
+                  href={link as string}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="w-10 h-10 flex items-center justify-center rounded-sm bg-[#EADDCE] dark:bg-[#2C2622] hover:bg-[var(--theme-primary)]/10 border border-[#EADDCE] dark:border-[#3D352B] hover:border-[var(--theme-primary)]/40 transition-all text-[var(--theme-primary)]"
+                  aria-label={platform}
+                >
+                  {isLucide ? (
+                    <Icon className="w-4 h-4" />
+                  ) : (
+                    <Icon variant="Bold" color="currentColor" className="w-4 h-4" />
+                  )}
+                </a>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Phone */}
+        {store?.phone_number && (
+          <a
+            href={`tel:${store.phone_number}`}
+            className="inline-flex items-center gap-2 text-sm font-medium opacity-70 hover:opacity-100 hover:text-[var(--theme-primary)] transition-all mb-6"
+          >
+            <Call variant="Bold" color="var(--theme-primary)" className="w-4 h-4" />
+            {store.phone_number}
+          </a>
+        )}
+
         <button
-          className="text-xs uppercase tracking-[0.2em] font-medium opacity-60 hover:opacity-100 transition-opacity"
+          className="block mx-auto text-xs uppercase tracking-[0.2em] font-medium opacity-60 hover:opacity-100 transition-opacity"
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
         >
           Return to top
         </button>
       </footer>
+
+      <StoreContactModal
+        store={store}
+        open={contactOpen}
+        onClose={() => setContactOpen(false)}
+      />
     </div>
   );
 }

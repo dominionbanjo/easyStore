@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { Outlet, useParams } from "react-router-dom";
 import { getSubdomain } from "@/utils/subdomain";
 import { useGetStoreDetailsQuery } from "@/services/storeApi";
@@ -29,7 +30,9 @@ export default function StorefrontLayout() {
     <StoreThemeProvider themeData={themeData as any}>
       {/* 🧭 Main Storefront Content Area */}
       <main className="flex flex-col w-full bg-white dark:bg-neutral-950 text-foreground transition-colors duration-300 min-h-screen">
-        <Outlet />
+        <Suspense fallback={<StoreSkeleton />}>
+          <Outlet />
+        </Suspense>
       </main>
       <HomeFloater />
     </StoreThemeProvider>
