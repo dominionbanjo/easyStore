@@ -185,22 +185,24 @@ export function DefaultInfo({
             </button>
           </div>
 
-          <button
-            disabled={currentStock <= 0 || addingToCart}
-            onClick={handleAddToCart}
-            className="flex-1 h-16 bg-[var(--theme-primary)] text-white font-bold text-lg rounded-sm  -[var(--theme-primary)]/20 hover:-[var(--theme-primary)]/40 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:bg-zinc-100 dark:disabled:bg-zinc-800 disabled:text-zinc-400 disabled:translate-y-0 disabled:"
-          >
-            {addingToCart ? (
-              <div className="h-5 w-5 border-2 border-white/30 border-t-white rounded-sm animate-spin" />
-            ) : currentStock <= 0 ? (
-              "Out of Stock"
-            ) : (
-              <>
-                <ShoppingCart className="w-5 h-5" />
-                Add to Cart
-              </>
-            )}
-          </button>
+          <div className="flex-1 border-2 border-zinc-200 dark:border-zinc-800 rounded-sm bg-zinc-50 dark:bg-zinc-950 p-1">
+            <button
+              disabled={currentStock <= 0 || addingToCart}
+              onClick={handleAddToCart}
+              className="w-full h-12 bg-[var(--theme-primary)] text-white font-bold text-lg rounded-sm hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:bg-zinc-100 dark:disabled:bg-zinc-800 disabled:text-zinc-400 disabled:translate-y-0 disabled:"
+            >
+              {addingToCart ? (
+                <div className="h-5 w-5 border-2 border-white/30 border-t-white rounded-sm animate-spin" />
+              ) : currentStock <= 0 ? (
+                "Out of Stock"
+              ) : (
+                <>
+                  <ShoppingCart className="w-5 h-5" />
+                  Add to Cart
+                </>
+              )}
+            </button>
+          </div>
         </div>
 
         <div className="flex items-center justify-center sm:justify-start gap-4 pt-2">

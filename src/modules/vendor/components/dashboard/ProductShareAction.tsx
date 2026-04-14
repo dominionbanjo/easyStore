@@ -120,17 +120,13 @@ export function ProductShareAction({ product, store, className }: ProductShareAc
           {/* Top Branding */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-               <div className="w-8 h-8 bg-black rounded-sm flex items-center justify-center">
-                  <span className="text-white font-black text-xs">ES</span>
-               </div>
                <span className="font-black text-2xl tracking-tighter text-black uppercase">
-                 EazyStore
+                 {store?.store_name || product.store_name || "Official Store"}
                </span>
             </div>
             <div className="flex items-center gap-2 bg-zinc-100 px-4 py-2 rounded-sm border border-zinc-200">
-               <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                <span className="text-xs font-black uppercase tracking-widest text-zinc-600">
-                 {product.store_name || "Official Store"}
+                 EazyStore
                </span>
             </div>
           </div>
