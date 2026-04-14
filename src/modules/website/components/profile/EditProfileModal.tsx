@@ -205,7 +205,7 @@ export function EditProfileModal({
           </Button>
         </DialogHeader>
 
-        <div className="p-6">
+        <div className="p-6 pb-24 sm:pb-6">
           <FormProvider {...form}>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
               {/* Profile Photo Section */}
