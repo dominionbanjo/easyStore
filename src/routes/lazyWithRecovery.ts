@@ -46,6 +46,13 @@ async function importWithRecovery<T extends ComponentType<any>>(
 
     if (typeof window !== "undefined") {
       sessionStorage.removeItem(getRetryStorageKey(moduleKey));
+
+      const url = new URL(window.location.href);
+      if (url.searchParams.has(RETRY_PARAM)) {
+        url.searchParams.delete(RETRY_PARAM);
+        // Clean up the URL without triggering a page reload
+        window.history.replaceState({}, "", url.toString());
+      }
     }
 
     return module;
