@@ -54,7 +54,7 @@ export default function EditorialTemplate({
         {/* ─── MAGAZINE HEADER ─── */}
         <header className="sticky top-0 z-50 bg-white dark:bg-neutral-950 border-b-4 border-[var(--theme-primary)] ">
           <div className="max-w-7xl mx-auto px-2 sm:px-4 h-20 md:h-24 flex items-center justify-between gap-4 md:gap-6">
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 min-w-0">
               <h1 className="text-2xl md:text-3xl font-black tracking-tighter lowercase">
                 {store?.store_name ?? "Editorial"}
               </h1>

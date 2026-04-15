@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { useSearchProductsQuery } from "@/services/productApi";
 import { SearchResultsGrid } from "../components/search/SearchResultsGrid";
 import { SearchResultsHeader } from "../components/search/SearchResultsHeader";
-import { SearchFiltersSidebar } from "../components/search/Sidebar";
+import { SearchFiltersSidebar, MobileSearchFilters } from "../components/search/Sidebar";
 
 function useDebouncedValue<T>(value: T, delay = 400): T {
   const [debounced, setDebounced] = useState(value);
@@ -21,27 +21,36 @@ export default function SearchResultsPage() {
 
   /* ───────────────── QUERY PARAMS ───────────────── */
   const rawQueryArgs = useMemo(() => {
+    const params: Record<string, any> = {};
+
+    // Map all search params to the query object
+    searchParams.forEach((value, key) => {
+      // Ignore livereload or known cache busters
+      if (key === "_lr") return;
+
+      // Known numerical parameters
+      if (["minPrice", "maxPrice", "page", "rating"].includes(key)) {
+        params[key] = Number(value);
+      } 
+      // Known single-value strings
+      else if (["q", "sort", "state"].includes(key)) {
+        params[key] = value;
+      }
+      // Everything else is treated as a dynamic filter
+      else {
+        // Collect dynamic options into the unified 'filter' query string
+        // format: Option:Value1,Value2|Option2:Value
+        const filterStr = params.filter ? `${params.filter}|` : '';
+        params.filter = `${filterStr}${key}:${value}`;
+      }
+    });
+
     return {
-      q: searchParams.get("q") ?? "",
-      page: Number(searchParams.get("page") ?? 1),
+      q: params.q ?? "",
+      page: params.page ?? 1,
       limit: 15,
-      sort: searchParams.get("sort") ?? undefined,
-      minPrice: searchParams.get("minPrice")
-        ? Number(searchParams.get("minPrice"))
-        : undefined,
-      maxPrice: searchParams.get("maxPrice")
-        ? Number(searchParams.get("maxPrice"))
-        : undefined,
-      state: searchParams.get("state") ?? undefined,
-      rating: searchParams.get("rating")
-        ? Number(searchParams.get("rating"))
-        : undefined,
-      colors: searchParams.get("colors")
-        ? searchParams.get("colors")!.split(",")
-        : undefined,
-      sizes: searchParams.get("sizes")
-        ? searchParams.get("sizes")!.split(",")
-        : undefined,
+      sort: params.sort ?? undefined,
+      ...params,
     };
   }, [searchParams]);
 
@@ -49,6 +58,7 @@ export default function SearchResultsPage() {
   const debouncedQuery = useDebouncedValue(rawQueryArgs.q, 500);
 
   const queryArgs = { ...rawQueryArgs, q: debouncedQuery };
+  console.log("[SearchResultsPage] Final API queryArgs:", queryArgs);
 
   /* ───────────────── API ───────────────── */
   const { data, isLoading, isFetching, isError } = useSearchProductsQuery(
@@ -68,7 +78,12 @@ export default function SearchResultsPage() {
       <SearchResultsHeader
         totalResults={pagination?.total}
         products={products}
+        filters={filters}
       />
+
+      <div className="lg:hidden mt-4 p-1 bg-zinc-100/50 dark:bg-white/5 rounded-full flex items-center">
+        <MobileSearchFilters products={products} filters={filters} />
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-8 mt-6">
         {/* Sidebar */}

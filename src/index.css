@@ -246,62 +246,66 @@
 html,
 body,
 .custom-scrollbar {
-  scrollbar-width: thin;
-  scrollbar-color: color-mix(in srgb, var(--primary) 20%, transparent)
-    transparent;
+  scrollbar-width: auto;
+  scrollbar-color: color-mix(in srgb, var(--primary) 40%, transparent)
+    rgba(0, 0, 0, 0.05);
 }
 
 html::-webkit-scrollbar,
 body::-webkit-scrollbar,
 .custom-scrollbar::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
 }
 
 html::-webkit-scrollbar-track,
 body::-webkit-scrollbar-track,
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 100px;
 }
 
 html::-webkit-scrollbar-thumb,
 body::-webkit-scrollbar-thumb,
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: color-mix(in srgb, var(--primary) 20%, transparent);
+  background: color-mix(in srgb, var(--primary) 40%, transparent);
   border-radius: 100px;
-  border: 2px solid transparent;
-  background-clip: content-box;
+  border: 1px solid transparent;
+  background-clip: padding-box;
 }
 
 html::-webkit-scrollbar-thumb:hover,
 body::-webkit-scrollbar-thumb:hover,
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: color-mix(in srgb, var(--primary) 40%, transparent);
-  border: 2px solid transparent;
-  background-clip: content-box;
+  background: color-mix(in srgb, var(--primary) 60%, transparent);
+  background-clip: padding-box;
 }
 
 .dark html,
 .dark body,
 .dark .custom-scrollbar {
-  scrollbar-color: color-mix(in srgb, var(--foreground) 10%, transparent)
-    transparent;
+  scrollbar-color: color-mix(in srgb, var(--foreground) 30%, transparent)
+    rgba(255, 255, 255, 0.05);
+}
+
+.dark html::-webkit-scrollbar-track,
+.dark body::-webkit-scrollbar-track,
+.dark .custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .dark html::-webkit-scrollbar-thumb,
 .dark body::-webkit-scrollbar-thumb,
 .dark .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: color-mix(in srgb, var(--foreground) 10%, transparent);
-  border: 2px solid transparent;
-  background-clip: content-box;
+  background: color-mix(in srgb, var(--foreground) 30%, transparent);
+  background-clip: padding-box;
 }
 
 .dark html::-webkit-scrollbar-thumb:hover,
 .dark body::-webkit-scrollbar-thumb:hover,
 .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: color-mix(in srgb, var(--foreground) 20%, transparent);
-  border: 2px solid transparent;
-  background-clip: content-box;
+  background: color-mix(in srgb, var(--foreground) 50%, transparent);
+  background-clip: padding-box;
 }
 /* Sonner Toast Customization */
 [data-sonner-toast] {

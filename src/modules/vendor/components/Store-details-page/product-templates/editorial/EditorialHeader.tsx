@@ -23,11 +23,11 @@ export function EditorialHeader({
       <div className="w-full flex justify-between items-center">
         <Link
           to={`/stores/${store.slug}`}
-          className="text-xl sm:text-2xl font-bold tracking-widest uppercase"
+          className="text-xl sm:text-2xl font-bold tracking-widest uppercase truncate max-w-[150px] sm:max-w-[300px]"
         >
           {store.store_name}
         </Link>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 min-w-0">
           <button
             onClick={() => setSearchOpen(!searchOpen)}
             className="p-2 hover:opacity-70 transition-opacity"

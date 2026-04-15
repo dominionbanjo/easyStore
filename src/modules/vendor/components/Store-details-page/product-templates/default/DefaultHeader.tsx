@@ -22,10 +22,10 @@ export function DefaultHeader({
     <>
       <header className="bg-white/80 dark:bg-black/80 py-6 px-4 sm:px-6 lg:px-8 sticky top-0 md:static z-40 backdrop-blur-xl md:backdrop-blur-none md:bg-transparent border-b border-zinc-200/50 md:border-none transition-colors">
         <div className="max-w-7xl mx-auto flex flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2 text-sm text-zinc-500 font-medium overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
+          <div className="flex items-center gap-2 text-sm text-zinc-500 font-medium overflow-hidden flex-1 min-w-0 pb-2 md:pb-0 scrollbar-hide flex-1 min-w-0">
             <Link
               to={`/stores/${store.slug}`}
-              className="hover:text-[var(--theme-primary)] transition-colors whitespace-nowrap"
+              className="hover:text-[var(--theme-primary)] transition-colors truncate max-w-[80px] sm:max-w-[150px] inline-block align-bottom"
             >
               Store Home
             </Link>
@@ -33,17 +33,17 @@ export function DefaultHeader({
             {uiProduct.categoryId ? (
               <Link
                 to={`/stores/${store.slug}?category=${uiProduct.categoryId}`}
-                className="hover:text-[var(--theme-primary)] transition-colors whitespace-nowrap"
+                className="hover:text-[var(--theme-primary)] transition-colors truncate max-w-[80px] sm:max-w-[150px] inline-block align-bottom"
               >
                 {uiProduct.category}
               </Link>
             ) : (
-              <span className="text-zinc-400 whitespace-nowrap">
+              <span className="text-zinc-400 truncate max-w-[80px] sm:max-w-[150px] inline-block align-bottom">
                 {uiProduct.category}
               </span>
             )}
             <ChevronRight className="w-4 h-4 shrink-0" />
-            <span className="text-zinc-900 dark:text-white font-semibold truncate max-w-[100px] sm:max-w-[200px] md:max-w-[300px]">
+            <span className="text-zinc-900 dark:text-white font-semibold flex-1 min-w-0 truncate max-w-[100px] sm:max-w-none">
               {uiProduct.name}
             </span>
           </div>

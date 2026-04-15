@@ -26,7 +26,7 @@ export function HeritageHeader({
       <div className="flex items-center justify-between w-full px-1 sm:px-0">
         <Link
           to={`/stores/${store.slug}`}
-          className="flex items-center gap-4 group"
+          className="flex items-center gap-4 group min-w-0"
         >
           {store.logo && (
             <img
@@ -35,7 +35,7 @@ export function HeritageHeader({
               className="w-10 h-10 sm:w-12 sm:h-12 rounded-sm object-cover border-2 border-[#EADDCE] group-hover:border-[#8C7A6B] transition-colors"
             />
           )}
-          <span className="text-xl sm:text-2xl font-bold tracking-tight text-[#2C2622] dark:text-white group-hover:text-[var(--theme-primary)] transition-colors">
+          <span className="text-xl sm:text-2xl font-bold tracking-tight text-[#2C2622] dark:text-white group-hover:text-[var(--theme-primary)] transition-colors truncate">
             {store.store_name}
           </span>
         </Link>
@@ -67,7 +67,7 @@ export function HeritageHeader({
           <div className="hidden lg:flex items-center gap-2 text-sm italic text-[#8C7A6B] dark:text-[#A89F91] ml-4">
             <span>Found in</span>
             <span className="mx-2">—</span>
-            <span className="capitalize">{uiProduct.category}</span>
+            <span className="capitalize truncate max-w-[150px]">{uiProduct.category}</span>
           </div>
         </div>
       </div>

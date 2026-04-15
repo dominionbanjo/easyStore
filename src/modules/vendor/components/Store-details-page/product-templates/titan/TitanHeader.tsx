@@ -25,7 +25,7 @@ export function TitanHeader({
   return (
     <header className="border-b border-zinc-800 p-4 md:p-6 sticky top-0 bg-black/80 backdrop-blur-md z-50 flex flex-col gap-4">
       <div className="flex items-center justify-between w-full">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 min-w-0">
           <Link
             to={`/stores/${store.slug}`}
             className="text-xl md:text-2xl font-bold tracking-tight text-white uppercase flex flex-col"

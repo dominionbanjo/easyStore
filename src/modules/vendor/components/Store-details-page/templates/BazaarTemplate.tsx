@@ -52,7 +52,7 @@ export default function BazaarTemplate({
       {/* ─── BAZAAR HEADER ─── */}
       <header className="sticky top-0 z-50 w-full bg-white/80 dark:bg-black/80 backdrop-blur-md border-b-4 border-slate-100 dark:border-neutral-900 px-1.5 sm:px-4 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 min-w-0">
             {store.logo ? (
               <img
                 src={store.logo}

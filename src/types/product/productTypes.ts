@@ -197,8 +197,7 @@ export interface SearchProductsArgs extends PaginationArgs {
   state?: string;
   rating?: number;
   inStock?: boolean;
-  colors?: string[];
-  sizes?: string[];
+  filter?: string;
 }
 
 export interface ProductsByCategoryArgs extends PaginationArgs {
@@ -395,9 +394,7 @@ export interface VendorProductSearchParams {
   isOutOfStock?: boolean | string;
   onSale?: boolean | string;
   status?: string;
-
-  colors?: string[];
-  sizes?: string[];
+  filter?: string;
 }
 
 /* ───────────────── BASE UI PRODUCT ───────────────── */

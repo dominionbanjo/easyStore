@@ -37,7 +37,7 @@ export function VanguardHeader({
 
         <Link
           to={`/stores/${store.slug}`}
-          className="text-xl sm:text-2xl md:text-3xl tracking-[0.2em] uppercase font-light text-zinc-900 dark:text-white"
+          className="text-xl sm:text-2xl md:text-3xl tracking-[0.2em] uppercase font-light text-zinc-900 dark:text-white truncate max-w-[150px] sm:max-w-[300px]"
         >
           {store.store_name}
         </Link>
