@@ -1,16 +1,16 @@
 import { motion } from "framer-motion";
-import { Plus, Download, Filter, Share2 } from "lucide-react";
+import { Plus, Download, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "@/store";
-import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { clearProductDraft } from "@/features/productDraftSlice";
 
 import { useGetMyStoreQuery } from "@/services/storeApi";
-import { getBaseDomain, getAppPath } from "@/utils/subdomain";
+import { getAppPath } from "@/utils/subdomain";
 import { RecordOfflineSaleModal } from "./RecordOfflineSaleModal";
 import { useState } from "react";
+import { StoreShareAction } from "./StoreShareAction";
 
 export function DashboardOverviewHeader() {
   const dispatch = useDispatch();
@@ -18,22 +18,6 @@ export function DashboardOverviewHeader() {
   const { currentUser } = useSelector((state: RootState) => state.user);
   const { data: store } = useGetMyStoreQuery();
   const [offlineModalOpen, setOfflineModalOpen] = useState(false);
-
-  const handleShareStore = () => {
-    const baseDomain = getBaseDomain();
-    const slug = store?.slug; 
-    
-    let storeUrl = "";
-    if (slug) {
-      storeUrl = `${window.location.protocol}//${slug}.${baseDomain}`;
-    } else {
-      const identifier = store?.id || currentUser?.id;
-      storeUrl = `${window.location.protocol}//${baseDomain}/stores/${identifier}`;
-    }
-
-    navigator.clipboard.writeText(storeUrl);
-    toast.success("Store link copied to clipboard! 🚀");
-  };
 
   return (
     <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-8">
@@ -72,15 +56,7 @@ export function DashboardOverviewHeader() {
           <Filter className="h-4 w-4" />
           Filters
         </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          className="flex gap-2 border-border/60"
-          onClick={handleShareStore}
-        >
-          <Share2 className="h-4 w-4" />
-          <span className="hidden sm:inline">Share Store</span>
-        </Button>
+        <StoreShareAction store={store} />
         <Button
           variant="outline"
           size="sm"
@@ -104,7 +80,10 @@ export function DashboardOverviewHeader() {
         </Button>
       </motion.div>
 
-      <RecordOfflineSaleModal open={offlineModalOpen} onOpenChange={setOfflineModalOpen} />
+      <RecordOfflineSaleModal
+        open={offlineModalOpen}
+        onOpenChange={setOfflineModalOpen}
+      />
     </div>
   );
 }
