@@ -34,7 +34,7 @@ const transitionVariants: Variants = {
 
 // Campaign video path
 const CAMPAIGN_VIDEO =
-  "https://res.cloudinary.com/dcmg4skhv/video/upload/v1775865849/campaign_h8etwo.mp4";
+  "https://res.cloudinary.com/dcmg4skhv/video/upload/v1776268865/campaign2_gstecn.mp4";
 
 export function HeroTitle() {
   return (
@@ -96,9 +96,9 @@ export default function HeroSection() {
 
   return (
     <>
-      <section className="relative isolate pt-20 sm:pt-40 pb-12 sm:pb-20 overflow-hidden">
+      <section className="relative isolate pt-20 sm:pt-40 pb-20 sm:pb-32 overflow-hidden">
         {/* IMMERSIVE BACKGROUND (Top half only - Full Bleed) */}
-        <div className="absolute inset-x-0 top-0 h-[1050px] sm:h-[900px] lg:h-[950px] z-0 pointer-events-none overflow-hidden">
+        <div className="absolute inset-x-0 top-0 h-[1050px] sm:h-[950px] lg:h-[1200px] z-0 pointer-events-none overflow-hidden">
           <img
             src="https://res.cloudinary.com/dcmg4skhv/image/upload/f_auto,q_auto/v1775869586/african_shopping_mobile_uksxfx.jpg"
             alt=""
@@ -116,7 +116,7 @@ export default function HeroSection() {
           {/* Uniform Cinematic Overlays (Locked Dark for high-contrast consistency) */}
           <div className="absolute inset-0 bg-black/50" />
           <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-transparent to-neutral-950" />
-          <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-neutral-950 via-neutral-950/80 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-96 bg-gradient-to-t from-neutral-950 via-neutral-950/80 to-transparent" />
           <div className="absolute inset-0 bg-gradient-to-r from-neutral-950/20 via-transparent to-neutral-950/20" />
         </div>
 
@@ -151,6 +151,47 @@ export default function HeroSection() {
 
         <div className="relative z-10 w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl mt-12 sm:mt-24">
           <div className="flex flex-col items-center justify-center gap-12 sm:gap-16 w-full">
+            {/* CTAs */}
+            <motion.div
+              variants={transitionVariants}
+              initial="hidden"
+              animate="visible"
+              transition={{ delay: 0.2 }}
+              className="flex flex-col items-center gap-4 w-full"
+            >
+              <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto px-4">
+                <Button
+                  size="lg"
+                  onClick={handleGetStarted}
+                  className="group relative bg-primary hover:bg-emerald-600 dark:bg-emerald-500 dark:hover:bg-emerald-400 text-white rounded-sm h-14 px-8 text-lg font-bold hover:scale-[1.02] active:scale-95 transition-all w-full sm:min-w-[280px] shadow-lg shadow-emerald-500/20"
+                >
+                  <span className="relative flex items-center gap-2">
+                    Start Selling Now — It's Free
+                    <ArrowRight
+                      variant="Outline"
+                      color="white"
+                      size={20}
+                      className="transition-transform group-hover:translate-x-1"
+                    />
+                  </span>
+                </Button>
+
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="h-14 px-8 font-bold rounded-sm border-2 w-full sm:w-auto hover:bg-muted text-foreground"
+                >
+                  <PlayCircle
+                    variant="Bold"
+                    color="currentColor"
+                    size={22}
+                    className="mr-2"
+                  />{" "}
+                  See How It Works
+                </Button>
+              </div>
+            </motion.div>
+
             {/* Custom Link Preview */}
             <motion.div
               variants={transitionVariants}
@@ -265,47 +306,7 @@ export default function HeroSection() {
             </div>
           </motion.div>
 
-          {/* CTAs */}
-          <motion.div
-            variants={transitionVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="flex flex-col items-center gap-4 w-full"
-          >
-            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto px-4">
-              <Button
-                size="lg"
-                onClick={handleGetStarted}
-                className="group relative bg-primary hover:bg-emerald-600 dark:bg-emerald-500 dark:hover:bg-emerald-400 text-white rounded-sm h-14 px-8 text-lg font-bold hover:scale-[1.02] active:scale-95 transition-all w-full sm:min-w-[280px] shadow-lg shadow-emerald-500/20"
-              >
-                <span className="relative flex items-center gap-2">
-                  Start Selling Now — It's Free
-                  <ArrowRight
-                    variant="Outline"
-                    color="white"
-                    size={20}
-                    className="transition-transform group-hover:translate-x-1"
-                  />
-                </span>
-              </Button>
-
-              <Button
-                variant="outline"
-                size="lg"
-                className="h-14 px-8 font-bold rounded-sm border-2 w-full sm:w-auto hover:bg-muted text-foreground"
-              >
-                <PlayCircle
-                  variant="Bold"
-                  color="currentColor"
-                  size={22}
-                  className="mr-2"
-                />{" "}
-                See How It Works
-              </Button>
-            </div>
-          </motion.div>
+          {/* CTAs removed from here */}
         </div>
       </div>
     </>
