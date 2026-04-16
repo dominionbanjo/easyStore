@@ -1,6 +1,6 @@
 import { FormInput } from "@/components/shared/form/FormInput";
 import { FormPriceInput } from "@/components/shared/form/FormPriceInput";
-import { Tag, Percent, Box } from "lucide-react";
+import { Tag, Box } from "lucide-react";
 
 export function PricingSection() {
   return (
@@ -16,8 +16,7 @@ export function PricingSection() {
         <FormPriceInput
           name="discount_price"
           label="Sale Price (Optional)"
-          placeholder="30,000"
-          icon={<Percent className="h-4 w-4" />}
+          icon={<Tag className="h-4 w-4" />}
         />
       </div>
 

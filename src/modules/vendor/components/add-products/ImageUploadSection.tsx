@@ -337,7 +337,7 @@ export default function ImageUploadSection({
           <input
             hidden
             type="file"
-            accept="image/*"
+            accept="image/png, image/jpeg, image/webp, image/jpg"
             disabled={!canUpload || mainProgress !== null}
             onChange={(e) =>
               e.target.files && uploadMain(e.target.files[0], e.target)
@@ -479,7 +479,7 @@ export default function ImageUploadSection({
               <input
                 hidden
                 type="file"
-                accept="image/*"
+                accept="image/png, image/jpeg, image/webp, image/jpg"
                 multiple
                 disabled={!canUpload}
                 onChange={(e) =>

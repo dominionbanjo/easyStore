@@ -104,9 +104,11 @@ export function ColorSelectModal({
         hex: newHex,
       }).unwrap();
 
-      if (res && res.color && res.color.name) {
+      const colorData = res?.data?.color;
+
+      if (colorData?.name) {
         toast.success("Color added successfully!");
-        toggleColor(res.color.name);
+        toggleColor(colorData.name);
         setNewName("");
         setNewHex("#000000");
         setShowAdd(false);

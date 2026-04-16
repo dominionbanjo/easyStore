@@ -14,6 +14,8 @@ import {
   AlertCircle,
 } from "lucide-react";
 
+import { FormSelect } from "./FormSelect";
+
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -111,6 +113,7 @@ export function CategorySelect({
         selectCategory(res.data.id);
         setNewCatName("");
         setNewCatParentId(null);
+        setValue("__quickAddParentId", "none");
         setShowQuickAdd(false);
         loadCategories({}); // Refresh list
       } else {
@@ -449,7 +452,12 @@ export function CategorySelect({
                               variant="ghost"
                               size="sm"
                               className="h-8 rounded-sm text-muted-foreground hover:text-foreground"
-                              onClick={() => setShowQuickAdd(false)}
+                              onClick={() => {
+                                setShowQuickAdd(false);
+                                setNewCatName("");
+                                setNewCatParentId(null);
+                                setValue("__quickAddParentId", "none");
+                              }}
                             >
                               Cancel
                             </Button>
@@ -471,20 +479,21 @@ export function CategorySelect({
                               <label className="text-[10px] font-bold text-muted-foreground uppercase ml-1">
                                 Parent (Optional)
                               </label>
-                              <select
-                                className="w-full h-12 rounded-sm border border-border bg-background px-3 text-sm font-semibold outline-none focus:ring-2 focus:ring-primary/10"
-                                value={newCatParentId || ""}
-                                onChange={(e) =>
-                                  setNewCatParentId(e.target.value || null)
+                              <FormSelect
+                                name="__quickAddParentId"
+                                placeholder="None (Top Level)"
+                                options={[
+                                  { label: "None (Top Level)", value: "none" },
+                                  ...categories.map((c) => ({
+                                    label: c.name,
+                                    value: c.id,
+                                  })),
+                                ]}
+                                onValueChange={(val) =>
+                                  setNewCatParentId(val === "none" ? null : val)
                                 }
-                              >
-                                <option value="">None (Top Level)</option>
-                                {categories.map((c) => (
-                                  <option key={c.id} value={c.id}>
-                                    {c.name}
-                                  </option>
-                                ))}
-                              </select>
+                                isSearchable
+                              />
                             </div>
                           </div>
 

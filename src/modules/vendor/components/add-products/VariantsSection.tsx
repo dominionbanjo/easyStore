@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useFormContext, useFieldArray } from "react-hook-form";
-import { Tag, Box, Percent } from "lucide-react";
+import { Tag, Box } from "lucide-react";
 import { FormPriceInput } from "@/components/shared/form/FormPriceInput";
 import { FormInput } from "@/components/shared/form/FormInput";
 import { Badge } from "@/components/ui/badge";
@@ -115,9 +115,7 @@ export function VariantsSection({ sizes }: VariantsSectionProps) {
                   <FormPriceInput
                     name={`variants.${index}.discount_price`}
                     placeholder="Optional"
-                    className="space-y-0"
-                    inputClassName="h-11"
-                    icon={<Percent className="h-3.5 w-3.5" />}
+                    icon={<Tag className="h-3.5 w-3.5" />}
                   />
                 </div>
 

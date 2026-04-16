@@ -11,7 +11,7 @@ import { getSubdomain } from "@/utils/subdomain";
 import { motion } from "framer-motion";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "@/store";
-import { Heart, Star, ShoppingCart, Eye, Check, Loader2 } from "lucide-react";
+import { Heart, Star, ShoppingCart, Check, Loader2 } from "lucide-react";
 import SmartLink from "./SmartLink";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -716,16 +716,6 @@ const Image = () => {
         className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110 group-hover:rotate-1"
         loading="lazy"
       />
-
-      {/* 👁️ Quick Action Overlay */}
-      <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none z-20">
-        <div className="flex gap-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] items-center pointer-events-auto">
-          <div className="p-3 bg-white/95 text-zinc-900 rounded-sm  backdrop-blur-md flex items-center gap-2 font-medium text-xs hover:bg-emerald-500 hover:text-white transition-colors cursor-pointer">
-            <Eye className="w-4 h-4" />
-            <span>Quick View</span>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };

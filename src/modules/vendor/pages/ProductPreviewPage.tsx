@@ -43,12 +43,18 @@ export default function ProductPreviewPage() {
     vendor: "Your Store",
     storeSlug: "preview", // Mock for preview
 
-    price: draft.discount_price ?? draft.price ?? 0,
-    originalPrice: draft.discount_price ? draft.price : null,
+    price:
+      draft.variants?.[0]
+        ? (draft.variants[0].discount_price ?? draft.variants[0].price)
+        : (draft.discount_price ?? draft.price ?? 0),
+    originalPrice:
+      draft.variants?.[0]
+        ? (draft.variants[0].discount_price ? draft.variants[0].price : null)
+        : (draft.discount_price ? draft.price : null),
     category: "",
 
     rating: 0,
-    stock: draft.stock ?? 0,
+    stock: draft.variants?.[0] ? draft.variants[0].stock : (draft.stock ?? 0),
 
     image: primaryImage, // ✅ REQUIRED by ProductInfoSidebar
     images,
@@ -67,6 +73,16 @@ export default function ProductPreviewPage() {
     },
 
     sizes: draft.sizes ?? [],
+
+    /* ✅ NEW: Options & Variants support for Preview */
+    options: draft.options ?? [],
+    variants:
+      draft.variants?.map((v, idx) => ({
+        ...v,
+        id: v.id || `v-${idx}`,
+        combinations: v.combinations || {},
+        discount_price: v.discount_price ?? undefined, // Convert null to undefined for TS
+      })) ?? [],
 
     // ✅ FIXED COLORS (FULL OBJECT, NOT HEX ARRAY)
     colors:

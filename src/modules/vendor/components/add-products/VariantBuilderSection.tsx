@@ -5,7 +5,6 @@ import {
   Trash2,
   Tag,
   Box,
-  Percent,
   Settings2,
   Zap,
   ArrowDown,
@@ -676,7 +675,7 @@ export function VariantBuilderSection() {
                             className="space-y-0"
                             inputClassName="h-9 text-[11px] pl-7 rounded-sm bg-muted/20 border-transparent focus:border-primary/20 focus:bg-background transition-all"
                             icon={
-                              <Percent className="h-3 w-3 text-muted-foreground/60" />
+                              <Tag className="h-3 w-3 text-muted-foreground/60" />
                             }
                           />
                         </div>

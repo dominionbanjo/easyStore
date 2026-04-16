@@ -96,19 +96,14 @@ export default function AddProductPage() {
 
   const { image, gallery, specs: specItems, tags, highlights } = extras;
 
-  /* ───────── CLEAR DRAFT WHEN SLUG CHANGES (or on unmount) ───────── */
+  /* ───────── CLEAR STALE DRAFT ───────── */
   useEffect(() => {
-    // When entering edit mode for a new slug, wipe any stale draft first.
-    // clearProductDraft() is also dispatched from the product table's Edit
-    // button, but this covers direct URL navigation and back-button scenarios.
-    dispatch(clearProductDraft());
-
-    return () => {
-      // Also clear on unmount so leaving the page never leaves stale data
-      // that could pollute the create-new or next-edit flow.
+    // If we're creating a new product but the draft belongs to an edit session, clear it.
+    if (!isEditMode && draft?.id) {
       dispatch(clearProductDraft());
-    };
-  }, [slug, dispatch]);
+    }
+    // We intentionally don't clear on unmount so data persists for previews and reloads.
+  }, [isEditMode, draft?.id, dispatch]);
 
   /* ───────── HYDRATE EDIT MODE ───────── */
   useEffect(() => {

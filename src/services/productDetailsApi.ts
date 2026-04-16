@@ -47,7 +47,7 @@ export const productDetailsApi = apiManager.injectEndpoints({
 
     /* ───────── CREATE COLOR ───────── */
     createColor: builder.mutation<
-      { color: { id: string; name: string; hex: string } },
+      { data: { color: { id: string; name: string; hex: string } } },
       { name: string; hex: string }
     >({
       query: (body) => ({
