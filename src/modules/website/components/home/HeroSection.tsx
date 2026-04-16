@@ -141,8 +141,8 @@ export default function HeroSection() {
                   transition={{ delay: 0.1 }}
                   className="w-full text-[17px] sm:text-xl lg:text-2xl leading-relaxed text-neutral-100 font-black max-w-4xl mx-auto text-center drop-shadow-[0_4px_40px_rgba(0,0,0,0.8)]"
                 >
-                  Give your business the professional edge it deserves. — so you
-                  can sell with confidence.
+                  Give your business the professional edge it deserves. Build trust,
+                  own your brand, and sell with confidence.
                 </motion.p>
               </div>
             </div>
@@ -179,12 +179,12 @@ export default function HeroSection() {
                 <Button
                   variant="outline"
                   size="lg"
-                  className="h-14 px-8 font-bold rounded-sm border-2 w-full sm:w-auto hover:bg-muted text-foreground"
+                  className="h-11 px-8 sm:h-14 sm:px-8 text-sm sm:text-lg font-bold rounded-sm border-2 w-fit mx-auto sm:w-auto hover:bg-muted text-foreground transition-all"
                 >
                   <PlayCircle
                     variant="Bold"
                     color="currentColor"
-                    size={22}
+                    size={20}
                     className="mr-2"
                   />{" "}
                   See How It Works
