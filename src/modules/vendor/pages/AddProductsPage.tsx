@@ -51,6 +51,7 @@ import { ShippingSection } from "../components/add-products/ShippingSection";
 import { SpecsSection } from "../components/add-products/SpecsSection";
 import { Wrapper as PricingSectionWrapper } from "@/modules/vendor/components/add-products/PricingSectionWrapper";
 import { cn } from "@/lib/utils";
+import { SectionTooltip } from "@/components/shared/SectionTooltip";
 
 export default function AddProductPage() {
   const dispatch = useDispatch();
@@ -294,9 +295,12 @@ export default function AddProductPage() {
                   <div className="h-9 w-9 rounded-sm bg-background flex items-center justify-center ">
                     <Settings className="h-5 w-5 text-primary" />
                   </div>
-                  <CardTitle className="text-base md:text-lg font-black uppercase tracking-tight">
-                    Product Identity
-                  </CardTitle>
+                  <div className="flex items-center gap-2">
+                    <CardTitle className="text-base md:text-lg font-black uppercase tracking-tight">
+                      Product Identity
+                    </CardTitle>
+                    <SectionTooltip content="Define the core identity of your product, including its name, category, and a compelling description to attract buyers." />
+                  </div>
                 </div>
               </CardHeader>
               <CardContent className="p-4 sm:p-8 space-y-6 md:space-y-8">
@@ -320,9 +324,12 @@ export default function AddProductPage() {
                   <div className="h-9 w-9 rounded-sm bg-background flex items-center justify-center ">
                     <ImageIcon className="h-5 w-5 text-primary" />
                   </div>
-                  <CardTitle className="text-base md:text-lg font-black uppercase tracking-tight">
-                    Product Visuals
-                  </CardTitle>
+                  <div className="flex items-center gap-2">
+                    <CardTitle className="text-base md:text-lg font-black uppercase tracking-tight">
+                      Product Visuals
+                    </CardTitle>
+                    <SectionTooltip content="Upload high-quality images. The main image is the first thing buyers see, while gallery images provide different angles or features." />
+                  </div>
                 </div>
               </CardHeader>
               <CardContent className="p-4 sm:p-8">
@@ -343,9 +350,12 @@ export default function AddProductPage() {
                   <div className="h-9 w-9 rounded-sm bg-background flex items-center justify-center ">
                     <Tag className="h-5 w-5 text-primary" />
                   </div>
-                  <CardTitle className="text-base md:text-lg font-black uppercase tracking-tight">
-                    Pricing & Stock
-                  </CardTitle>
+                  <div className="flex items-center gap-2">
+                    <CardTitle className="text-base md:text-lg font-black uppercase tracking-tight">
+                      Pricing & Stock
+                    </CardTitle>
+                    <SectionTooltip content="Set your base price and available inventory. If your product has variations (like size or color), you can set individual prices below." />
+                  </div>
                 </div>
               </CardHeader>
               <CardContent className="p-4 sm:p-8">
@@ -370,6 +380,7 @@ export default function AddProductPage() {
                     <CardTitle className="text-base md:text-lg font-black uppercase tracking-tight">
                       Specifications
                     </CardTitle>
+                    <SectionTooltip content="Add technical details, features, and searchable tags to help buyers understand your product better." />
                     <span className="text-[10px] font-bold text-muted-foreground bg-muted px-2 py-0.5 rounded-sm uppercase">
                       Optional
                     </span>
@@ -400,6 +411,7 @@ export default function AddProductPage() {
                     <CardTitle className="text-base md:text-lg font-black uppercase tracking-tight">
                       Logistics
                     </CardTitle>
+                    <SectionTooltip content="Configure shipping costs and return policies to set clear expectations for delivery." />
                     <span className="text-[10px] font-bold text-muted-foreground bg-muted px-2 py-0.5 rounded-sm uppercase">
                       Optional
                     </span>

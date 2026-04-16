@@ -98,7 +98,7 @@ export default function DashboardSidebar({
       {/* ─── Desktop Sidebar ─── */}
       <aside
         className={cn(
-          "hidden md:flex flex-col border-r border-border/30 bg-card text-card-foreground transition-all duration-300",
+          "hidden lg:flex flex-col border-r border-border/30 bg-card text-card-foreground transition-all duration-300",
           "fixed top-0 left-0 h-screen z-30",
           isCollapsed ? "w-[80px]" : "w-[260px]",
         )}
@@ -184,7 +184,7 @@ export default function DashboardSidebar({
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
               onClick={onToggle}
-              className="fixed inset-0 bg-black/70 z-40 md:hidden"
+              className="fixed inset-0 bg-black/70 z-40 lg:hidden"
             />
 
             {/* Drawer */}
@@ -194,7 +194,7 @@ export default function DashboardSidebar({
               exit={{ x: "-100%" }}
               transition={{ type: "tween", duration: 0.3 }}
               className={cn(
-                "fixed left-0 top-0 h-screen w-[260px] z-50 md:hidden",
+                "fixed left-0 top-0 h-screen w-[260px] z-50 lg:hidden",
                 "flex flex-col border-r border-border/30 bg-card text-card-foreground",
               )}
             >

@@ -63,7 +63,7 @@ export default function DashboardHeader({
         <Button
           variant="ghost"
           size="icon"
-          className="md:hidden h-9 w-9"
+          className="lg:hidden h-9 w-9"
           onClick={onMenuToggle}
         >
           <Menu className="h-5 w-5" />

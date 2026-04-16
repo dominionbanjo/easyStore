@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useFormContext, useFieldArray } from "react-hook-form";
+import { useEffect, useState, useMemo } from "react";
+import { useFormContext, useFieldArray, useWatch } from "react-hook-form";
 import {
   Plus,
   Trash2,
@@ -7,7 +7,6 @@ import {
   Box,
   Settings2,
   Zap,
-  ArrowDown,
   X,
   Palette,
   Edit2,
@@ -24,6 +23,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import ChipSection from "./ChipSection";
 import { ColorSelectModal } from "./ColorSelectModal";
+import { SectionTooltip } from "@/components/shared/SectionTooltip";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 /* ───────────────── TYPES ───────────────── */
 
@@ -73,87 +80,93 @@ export function VariantBuilderSection() {
     name: "variants",
   });
 
-  const options = (watch("options") as Option[]) || [];
+  const options = (useWatch({ control, name: "options" }) as Option[]) || [];
 
-  // Generate combinations
+  // Generate combinations (Debounced)
   useEffect(() => {
-    // Skip generation if options or some options are missing names
-    const processedOptions = options.filter(
-      (o) => o.name && o.name.trim().length > 0,
-    );
+    const timer = setTimeout(() => {
+      // Skip generation if options or some options are missing names
+      const processedOptions = options.filter(
+        (o) => o.name && o.name.trim().length > 0,
+      );
 
-    if (processedOptions.length === 0) {
-      if ((getValues("variants") || []).length > 0) {
-        replaceVariants([]);
+      if (processedOptions.length === 0) {
+        if ((getValues("variants") || []).length > 0) {
+          replaceVariants([]);
+        }
+        return;
       }
-      return;
-    }
 
-    // If any option has no values yet, skip generation entirely.
-    // This prevents placeholder combinations from overwriting real data
-    // that was loaded from the backend during edit-mode hydration.
-    const anyOptionEmpty = processedOptions.some(
-      (o) => !o.values || o.values.length === 0,
-    );
-    if (anyOptionEmpty) return;
+      // If any option has no values yet, skip generation entirely.
+      // This prevents placeholder combinations from overwriting real data
+      // that was loaded from the backend during edit-mode hydration.
+      const anyOptionEmpty = processedOptions.some(
+        (o) => !o.values || o.values.length === 0,
+      );
+      if (anyOptionEmpty) return;
 
-    const generateCombinations = (
-      opts: Option[],
-      current: Record<string, string> = {},
-      index = 0,
-    ): Record<string, string>[] => {
-      if (index === opts.length) return [current];
-      const result: Record<string, string>[] = [];
-      const option = opts[index];
-      const values = option.values;
+      const generateCombinations = (
+        opts: Option[],
+        current: Record<string, string> = {},
+        index = 0,
+      ): Record<string, string>[] => {
+        if (index === opts.length) return [current];
+        const result: Record<string, string>[] = [];
+        const option = opts[index];
+        const values = option.values;
 
-      for (const val of values) {
-        result.push(
-          ...generateCombinations(
-            opts,
-            { ...current, [option.name]: val },
-            index + 1,
-          ),
-        );
+        for (const val of values) {
+          result.push(
+            ...generateCombinations(
+              opts,
+              { ...current, [option.name]: val },
+              index + 1,
+            ),
+          );
+        }
+        return result;
+      };
+
+      const combinations = generateCombinations(processedOptions);
+      const hydratedVariants = getValues("variants") || [];
+
+      // Optimize lookup with Hash Map O(N) instead of O(N*M)
+      const getStableKey = (obj: Record<string, string>) =>
+        JSON.stringify(Object.entries(obj).sort());
+      const existingMap = new Map();
+      for (const v of hydratedVariants as VariantField[]) {
+        if (v.combinations) {
+          existingMap.set(getStableKey(v.combinations), v);
+        }
       }
-      return result;
-    };
 
-    const combinations = generateCombinations(processedOptions);
-    const hydratedVariants = getValues("variants") || [];
+      const nextVariants = combinations.map((combo) => {
+        const existing = existingMap.get(getStableKey(combo));
 
-    const nextVariants = combinations.map((combo) => {
-      const existing = (hydratedVariants as VariantField[]).find((v) => {
-        if (!v.combinations) return false;
-        const keys1 = Object.keys(combo);
-        const keys2 = Object.keys(v.combinations);
-        if (keys1.length !== keys2.length) return false;
-
-        // Exact match for keys and values
-        return keys1.every((k) => combo[k] === v.combinations[k]);
+        return existing
+          ? { ...existing }
+          : {
+              combinations: combo,
+              price: null as unknown as number,
+              stock: null as unknown as number,
+              discount_price: null,
+              sku: "",
+            };
       });
 
-      return existing
-        ? { ...existing }
-        : {
-            combinations: combo,
-            price: 0,
-            stock: 0,
-            discount_price: null,
-            sku: "",
-          };
-    });
+      const currentSerialized = JSON.stringify(
+        (hydratedVariants as VariantField[]).map((v) => v.combinations),
+      );
+      const nextSerialized = JSON.stringify(
+        nextVariants.map((v) => v.combinations),
+      );
 
-    const currentSerialized = JSON.stringify(
-      (hydratedVariants as VariantField[]).map((v) => v.combinations),
-    );
-    const nextSerialized = JSON.stringify(
-      nextVariants.map((v) => v.combinations),
-    );
+      if (currentSerialized !== nextSerialized) {
+        replaceVariants(nextVariants);
+      }
+    }, 500); // 500ms debounce
 
-    if (currentSerialized !== nextSerialized) {
-      replaceVariants(nextVariants);
-    }
+    return () => clearTimeout(timer);
   }, [JSON.stringify(options)]);
 
   const addOption = () => {
@@ -164,19 +177,54 @@ export function VariantBuilderSection() {
   const [bulkValues, setBulkValues] = useState({
     price: "",
     stock: "",
-    sku: "",
+    discount_price: "",
   });
+  const [bulkTarget, setBulkTarget] = useState("all");
 
-  const applyBulkEdit = (field: "price" | "stock" | "sku") => {
-    const value = bulkValues[field];
-    if (value === "" && field !== "sku") return;
+  const targetOptions = useMemo(() => {
+    const opts = Array.from(
+      new Set(
+        options.flatMap((opt) =>
+          opt.name && opt.values?.length
+            ? opt.values.map((v) => `${opt.name}: ${v}`)
+            : [],
+        ),
+      ),
+    ).map((val) => ({ label: val, value: val }));
 
-    variantFields.forEach((_, index) => {
-      setValue(
-        `variants.${index}.${field}`,
-        field === "sku" ? value : Number(value),
-      );
+    opts.unshift({ label: "All Variants", value: "all" });
+    return opts;
+  }, [options]);
+
+  const applyBulkEdit = () => {
+    const p = bulkValues.price;
+    const s = bulkValues.stock;
+    const d = bulkValues.discount_price;
+
+    if (p === "" && s === "" && d === "") return;
+
+    const priceNum = p === "" ? null : Number(p);
+    const stockNum = s === "" ? null : Number(s);
+    const discountNum = d === "" ? null : Number(d);
+
+    variantFields.forEach((_v, index) => {
+      const variantItem = getValues(`variants.${index}`) as VariantField;
+      if (!variantItem || !variantItem.combinations) return;
+
+      const matches =
+        bulkTarget === "all" ||
+        (bulkTarget.includes(": ") &&
+          variantItem.combinations[bulkTarget.split(": ")[0]] ===
+            bulkTarget.split(": ")[1]);
+
+      if (matches) {
+        if (p !== "") setValue(`variants.${index}.price`, priceNum);
+        if (s !== "") setValue(`variants.${index}.stock`, stockNum);
+        if (d !== "") setValue(`variants.${index}.discount_price`, discountNum);
+      }
     });
+
+    setBulkValues({ price: "", stock: "", discount_price: "" });
   };
 
   return (
@@ -184,9 +232,12 @@ export function VariantBuilderSection() {
       {/* Options Builder */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <Label className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
-            Product Options
-          </Label>
+          <div className="flex items-center gap-2">
+            <Label className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
+              Product Options
+            </Label>
+            <SectionTooltip content="Create options like Size or Color. Your choices here automatically generate the Variant Matrix below." />
+          </div>
           <Button
             type="button"
             variant="outline"
@@ -526,30 +577,55 @@ export function VariantBuilderSection() {
         <div className="space-y-6 pt-8 border-t border-border/10">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="space-y-1">
-              <Label className="text-sm font-black uppercase tracking-widest text-primary flex items-center gap-2">
-                <Box className="h-4 w-4" />
-                Variant Matrix
-              </Label>
+              <div className="flex items-center gap-2">
+                <Label className="text-sm font-black uppercase tracking-widest text-primary flex items-center gap-2">
+                  <Box className="h-4 w-4" />
+                  Variant Matrix
+                </Label>
+                <SectionTooltip content="Set the individual prices and stock limits for each unique combination of your options." />
+              </div>
               <p className="text-[10px] text-muted-foreground font-medium">
                 Set individual price & stock for generated combinations.
               </p>
             </div>
 
-            {/* Bulk Edit Bar */}
-            <div className="flex items-center gap-1.5 p-1 bg-muted/10 rounded-sm border border-border/40 overflow-x-auto whitespace-nowrap no-scrollbar">
-              <div className="flex items-center gap-1.5 px-2 border-r border-border/20 mr-1">
-                <Zap className="h-3 w-3 text-amber-500 fill-amber-500" />
-                <span className="text-[9px] font-black uppercase tracking-wider text-muted-foreground">
-                  Bulk
+            {/* Advanced Bulk Edit Bar */}
+            <div className="flex flex-col gap-4 p-4 bg-muted/10 rounded-sm border border-border/40 mt-3 md:mt-0 w-full md:max-w-xl md:ml-auto">
+              <div className="flex items-center gap-2 mb-1">
+                <Zap className="h-4 w-4 text-amber-500 fill-amber-500" />
+                <span className="text-sm font-black uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+                  Bulk Edit Setup
+                  <SectionTooltip content="Quickly apply price, stock, or discount to all variants or target specific groups (e.g. all 'Large' sizes)." />
                 </span>
               </div>
 
-              <div className="flex items-center gap-2">
-                <div className="relative group">
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
+                <div className="space-y-1 md:col-span-4">
+                  <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/80">
+                    Apply To
+                  </Label>
+                  <Select value={bulkTarget} onValueChange={setBulkTarget}>
+                    <SelectTrigger className="h-9 rounded-sm bg-background border-muted-foreground/20 text-xs">
+                      <SelectValue placeholder="Target Options" />
+                    </SelectTrigger>
+                    <SelectContent
+                      position="popper"
+                      className="max-h-[300px] overflow-y-auto w-full"
+                    >
+                      {targetOptions.map((opt) => (
+                        <SelectItem key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="md:col-span-8 flex items-center gap-2">
                   <Input
                     type="number"
                     placeholder="Price"
-                    className="h-8 w-20 text-[10px] rounded-sm bg-background border-none focus-visible:ring-primary/20 pr-6"
+                    className="h-9 w-full text-xs rounded-sm bg-background border-muted-foreground/20 focus-visible:ring-primary/20"
                     value={bulkValues.price}
                     onChange={(e) =>
                       setBulkValues((prev) => ({
@@ -558,21 +634,22 @@ export function VariantBuilderSection() {
                       }))
                     }
                   />
-                  <Button
-                    type="button"
-                    size="icon"
-                    className="h-6 w-6 absolute right-0.5 top-0.5 rounded-sm bg-primary/10 hover:bg-primary text-primary hover:text-white transition-all scale-75 group-hover:scale-90"
-                    onClick={() => applyBulkEdit("price")}
-                  >
-                    <ArrowDown className="h-3 w-3" />
-                  </Button>
-                </div>
-
-                <div className="relative group">
+                  <Input
+                    type="number"
+                    placeholder="Discount"
+                    className="h-9 w-full text-xs rounded-sm bg-background border-muted-foreground/20 focus-visible:ring-primary/20"
+                    value={bulkValues.discount_price}
+                    onChange={(e) =>
+                      setBulkValues((prev) => ({
+                        ...prev,
+                        discount_price: e.target.value,
+                      }))
+                    }
+                  />
                   <Input
                     type="number"
                     placeholder="Stock"
-                    className="h-8 w-20 text-[10px] rounded-sm bg-background border-none focus-visible:ring-primary/20 pr-6"
+                    className="h-9 w-full text-xs rounded-sm bg-background border-muted-foreground/20 focus-visible:ring-primary/20"
                     value={bulkValues.stock}
                     onChange={(e) =>
                       setBulkValues((prev) => ({
@@ -583,11 +660,15 @@ export function VariantBuilderSection() {
                   />
                   <Button
                     type="button"
-                    size="icon"
-                    className="h-6 w-6 absolute right-0.5 top-0.5 rounded-sm bg-emerald-500/10 hover:bg-emerald-500 text-emerald-500 hover:text-white transition-all scale-75 group-hover:scale-90"
-                    onClick={() => applyBulkEdit("stock")}
+                    className="h-9 px-4 rounded-sm bg-primary hover:bg-primary/90 text-white font-bold text-xs shadow-md transition-all active:scale-95"
+                    onClick={applyBulkEdit}
+                    disabled={
+                      !bulkValues.price &&
+                      !bulkValues.stock &&
+                      !bulkValues.discount_price
+                    }
                   >
-                    <ArrowDown className="h-3 w-3" />
+                    Apply
                   </Button>
                 </div>
               </div>
@@ -614,7 +695,6 @@ export function VariantBuilderSection() {
                   return (
                     <motion.div
                       key={field.id}
-                      layout
                       initial={{ opacity: 0, scale: 0.98 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.95 }}
@@ -640,7 +720,7 @@ export function VariantBuilderSection() {
                           <span className="md:hidden text-[9px] font-black text-muted-foreground/60 uppercase ml-1">
                             SKU
                           </span>
-                           <FormInput
+                          <FormInput
                             name={`variants.${index}.sku`}
                             placeholder="SKU-123"
                             className="space-y-0"
@@ -653,7 +733,7 @@ export function VariantBuilderSection() {
                           <span className="md:hidden text-[9px] font-black text-muted-foreground/60 uppercase ml-1">
                             Price
                           </span>
-                           <FormPriceInput
+                          <FormPriceInput
                             name={`variants.${index}.price`}
                             placeholder="0.00"
                             className="space-y-0"
@@ -669,7 +749,7 @@ export function VariantBuilderSection() {
                           <span className="md:hidden text-[9px] font-black text-muted-foreground/60 uppercase ml-1">
                             Discount
                           </span>
-                           <FormPriceInput
+                          <FormPriceInput
                             name={`variants.${index}.discount_price`}
                             placeholder="Opt"
                             className="space-y-0"
@@ -685,7 +765,7 @@ export function VariantBuilderSection() {
                           <span className="md:hidden text-[9px] font-black text-muted-foreground/60 uppercase ml-1">
                             Stock
                           </span>
-                           <FormInput
+                          <FormInput
                             name={`variants.${index}.stock`}
                             type="number"
                             placeholder="0"

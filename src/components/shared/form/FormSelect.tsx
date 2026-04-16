@@ -184,7 +184,7 @@ export function FormSelect({
                   )}
                   <SelectValue placeholder={placeholder} />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent position="popper" className="max-h-[300px] overflow-y-auto">
                   {options.map((opt) => (
                     <SelectItem key={opt.value} value={opt.value}>
                       {opt.label}

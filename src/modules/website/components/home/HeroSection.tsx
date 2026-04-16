@@ -97,8 +97,8 @@ export default function HeroSection() {
   return (
     <>
       <section className="relative isolate pt-20 sm:pt-40 pb-20 sm:pb-32 overflow-hidden">
-        {/* IMMERSIVE BACKGROUND (Top half only - Full Bleed) */}
-        <div className="absolute inset-x-0 top-0 h-[1050px] sm:h-[950px] lg:h-[1200px] z-0 pointer-events-none overflow-hidden">
+        {/* IMMERSIVE BACKGROUND (Full Section Coverage) */}
+        <div className="absolute inset-x-0 top-0 bottom-0 z-0 pointer-events-none overflow-hidden min-h-[900px]">
           <img
             src="https://res.cloudinary.com/dcmg4skhv/image/upload/f_auto,q_auto/v1775869586/african_shopping_mobile_uksxfx.jpg"
             alt=""

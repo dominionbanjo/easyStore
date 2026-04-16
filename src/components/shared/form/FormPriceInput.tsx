@@ -13,8 +13,8 @@ interface FormPriceInputProps {
   icon?: React.ReactNode;
 }
 
-const formatWithCommas = (value: number | string | undefined): string => {
-  if (value === undefined || value === "") return "";
+const formatWithCommas = (value: number | string | undefined | null): string => {
+  if (value === undefined || value === null || value === "") return "";
   const num =
     typeof value === "string" ? parseFloat(value.replace(/,/g, "")) : value;
   if (isNaN(num)) return "";
@@ -53,8 +53,9 @@ export function FormPriceInput({
     // Only allow digits and commas
     const cleanedValue = rawValue.replace(/[^\d]/g, "");
 
-    // If empty, set to 0 or leave empty? Price range usually needs a number.
-    const numericValue = cleanedValue === "" ? 0 : parseInt(cleanedValue, 10);
+    // If empty, set to null so the input stays empty and placeholder shows
+    const numericValue =
+      cleanedValue === "" ? null : parseInt(cleanedValue, 10);
 
     // Update display state (formatted)
     setDisplayValue(formatWithCommas(numericValue));

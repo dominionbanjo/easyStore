@@ -34,7 +34,7 @@ export function VariantsSection({ sizes }: VariantsSectionProps) {
       const existing = currentVariants.find((v: Variant) => v.size === size);
       return existing
         ? { ...existing }
-        : { size, price: 0, stock: 0, discount_price: null };
+        : { size, price: null as unknown as number, stock: null as unknown as number, discount_price: null };
     });
 
     // Only update if the structure has changed (to avoid unnecessary re-renders)

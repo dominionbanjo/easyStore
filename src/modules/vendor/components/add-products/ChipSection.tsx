@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { X, Plus, Hash, Sparkles, Ruler } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -39,8 +39,16 @@ export default function ChipSection({
     }
     onAdd(v);
     setInput("");
-    inputRef.current?.focus();
   }
+
+  // Robust focus return: whenever values array grows, return focus to this input
+  const prevCount = useRef(values.length);
+  useEffect(() => {
+    if (values.length > prevCount.current) {
+      inputRef.current?.focus();
+    }
+    prevCount.current = values.length;
+  }, [values.length]);
 
   return (
     <div className="space-y-4">

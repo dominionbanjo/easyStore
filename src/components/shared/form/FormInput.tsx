@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useFormContext, type RegisterOptions } from "react-hook-form";
+import { useFormContext, useController, type RegisterOptions } from "react-hook-form";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -27,9 +27,17 @@ export function FormInput({
   rules,
 }: FormFieldProps) {
   const {
-    register,
+    control,
     formState: { errors, touchedFields, submitCount },
   } = useFormContext();
+
+  const {
+    field: { value, onChange, onBlur, ref },
+  } = useController({
+    name,
+    control,
+    rules,
+  });
 
   const [showPassword, setShowPassword] = useState(false);
   const isPassword = type === "password";
@@ -46,6 +54,9 @@ export function FormInput({
   const error = errorObj?.message as string | undefined;
   const shouldShowError =
     !!error && (getNestedError(touchedFields, name) || submitCount > 0);
+
+  // Map null/undefined to empty string for the native input
+  const displayValue = value === null || value === undefined ? "" : value;
 
   return (
     <div className={cn("space-y-1.5", className)}>
@@ -69,11 +80,26 @@ export function FormInput({
         )}
         <Input
           id={name}
+          ref={ref}
+          name={name}
           type={inputType}
+          value={displayValue}
+          onBlur={onBlur}
+          onChange={(e) => {
+            const val = e.target.value;
+            if (type === "number") {
+              onChange(val === "" ? null : Number(val));
+            } else {
+              onChange(val);
+            }
+          }}
+          onFocus={(e) => {
+            // Select text on focus for easier editing of existing values
+            if (type === "number") e.target.select();
+          }}
           placeholder={placeholder}
           aria-invalid={shouldShowError}
           min={type === "number" ? 0 : undefined}
-          {...register(name, rules)}
           className={cn(
             "h-12 rounded-sm text-[15px] transition-all duration-200 bg-muted/20 border-muted-foreground/10 focus:bg-background",
             icon ? "pl-11" : "px-4",

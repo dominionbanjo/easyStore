@@ -10,6 +10,7 @@ import { ThemeProvider } from "./components/shared/ThemeContext.tsx";
 import { Toaster } from "./components/shared/Toaster.tsx";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 import { BrowserRouter as Router } from "react-router-dom";
 
@@ -20,11 +21,13 @@ createRoot(document.getElementById("root")!).render(
         <ThemeProvider>
           <Router>
             <Toaster />
-            <AuthProvider>
-              <App />
-              <Analytics />
-              <SpeedInsights />
-            </AuthProvider>
+            <TooltipProvider delayDuration={150}>
+              <AuthProvider>
+                <App />
+                <Analytics />
+                <SpeedInsights />
+              </AuthProvider>
+            </TooltipProvider>
           </Router>
         </ThemeProvider>
       </PersistGate>
