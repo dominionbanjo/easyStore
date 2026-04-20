@@ -15,6 +15,7 @@ interface ModalProps extends React.ComponentProps<typeof Dialog> {
   description?: string;
   className?: string;
   contentClassName?: string;
+  footer?: React.ReactNode;
   children: React.ReactNode;
   onClose?: () => void;
 }
@@ -24,6 +25,7 @@ export function Modal({
   description,
   className,
   contentClassName,
+  footer,
   children,
   onClose,
   ...props
@@ -72,6 +74,13 @@ export function Modal({
             {children}
           </div>
         </div>
+
+        {/* Sticky footer — always visible, never scrolls */}
+        {footer && (
+          <div className="shrink-0 border-t bg-background">
+            {footer}
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   );

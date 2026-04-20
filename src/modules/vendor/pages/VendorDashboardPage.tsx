@@ -9,7 +9,11 @@ import {
   Calendar,
   AlertCircle,
   CheckCircle2,
+  Rocket,
 } from "lucide-react";
+
+import { useStoreSetup } from "../hooks/useStoreSetup";
+import { ReviewStatusBanner } from "../components/dashboard/ReviewStatusBanner";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -45,10 +49,10 @@ const MONTH_NAMES = [
   "Nov",
   "Dec",
 ];
-
 export default function VendorDashboardPage() {
   const user = useAppSelector(selectCurrentUser);
   const { data, isLoading, isError } = useGetMyStoreAnalyticsQuery();
+  const { isReady, missingSteps } = useStoreSetup();
 
   const summary = data?.summary;
   const trends = data?.trends;
@@ -114,27 +118,8 @@ export default function VendorDashboardPage() {
       <DashboardOverviewHeader />
 
       {/* ─── Status Banners ─── */}
-      {!isLoading && storeStatus === "pending" && (
-        <Alert
-          variant="default"
-          className="mt-4 mb-2 bg-yellow-50 dark:bg-yellow-900/10 border-yellow-200 dark:border-yellow-900"
-        >
-          <AlertCircle className="h-4 w-4 text-yellow-600 dark:text-yellow-500" />
-          <AlertTitle className="text-yellow-800 dark:text-yellow-500 font-bold">
-            Store Pending Approval
-          </AlertTitle>
-          <AlertDescription className="text-yellow-700 dark:text-yellow-400">
-            Your store is currently under review by our team. You can continue
-            setting it up and adding products, but your store won't be visible
-            to the public until it is approved.{" "}
-            <a
-              href="mailto:support@eazystore.com.ng"
-              className="font-semibold underline underline-offset-2"
-            >
-              Contact Support
-            </a>
-          </AlertDescription>
-        </Alert>
+      {!isLoading && storeStatus === "pending" && isReady && (
+        <ReviewStatusBanner />
       )}
 
       {!isLoading && storeStatus === "restricted" && (
@@ -176,30 +161,81 @@ export default function VendorDashboardPage() {
         </Alert>
       )}
 
-      {/* ─── Setup Progress Call to Action ─── */}
-      <div className="mb-8 mt-4">
-        <Suspense fallback={<div className="h-24 rounded-sm bg-muted/40 animate-pulse" />}>
-          <StoreSetupTracker />
-        </Suspense>
-      </div>
+      {/* ─── Content Section ─── */}
+      {!isReady ? (
+        /* ─── Setup Priority View ─── */
+        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+          <div className="bg-primary/5 rounded-sm p-8 border border-primary/10 relative overflow-hidden">
+            <div className="relative z-10 max-w-2xl">
+              <h2 className="text-3xl font-black uppercase tracking-tight text-foreground mb-4">
+                Let&apos;s get your store ready 🚀
+              </h2>
+              <p className="text-muted-foreground font-medium text-lg leading-relaxed mb-6">
+                You&apos;re just a few steps away from launching your online business. 
+                Finish your store setup to submit it for review and start receiving orders.
+              </p>
+              <div className="flex items-center gap-2">
+                 <div className="flex -space-x-1">
+                  {missingSteps.slice(0, 3).map((_, i) => (
+                    <Rocket key={i} className="w-4 h-4 text-primary shrink-0" />
+                  ))}
+                </div>
+                <p className="text-sm font-bold text-primary">
+                  {missingSteps.length} tasks remaining to reach 100%
+                </p>
+              </div>
+            </div>
+            
+            {/* Background pattern */}
+            <div className="absolute -top-12 -right-12 w-64 h-64 bg-primary/10 rounded-sm blur-3xl" />
+          </div>
 
-      {/* ─── Stats Overview ─── */}
-      {isLoading ? (
-        <DashboardStatsLoader />
-      ) : (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {stats.map((s, i) => (
-            <StatCard
-              key={i}
-              title={s.title}
-              value={s.value}
-              icon={s.icon}
-              color={s.color}
-              trend={s.trend}
-              delay={s.delay}
-            />
-          ))}
+          <StoreSetupTracker />
+
+          <div className="grid gap-6 sm:grid-cols-2">
+            <div className="p-6 rounded-sm border border-border/50 bg-card">
+              <h4 className="font-black uppercase tracking-tight mb-2">Why finish setup?</h4>
+              <p className="text-sm text-muted-foreground">
+                Stores with complete profiles and payout details are approved 3x faster and see 40% more trust from initial customers.
+              </p>
+            </div>
+            <div className="p-6 rounded-sm border border-border/50 bg-card">
+              <h4 className="font-black uppercase tracking-tight mb-2">Next Milestone</h4>
+              <p className="text-sm text-muted-foreground">
+                Once you hit 100%, our team will automatically begin reviewing your store for public launch.
+              </p>
+            </div>
+          </div>
         </div>
+      ) : (
+        /* ─── Full Dashboard View (Only visible if setup is complete) ─── */
+        <>
+          {/* Setup Progress (optional/compact if finished) */}
+          <div className="mb-8 mt-4">
+            <Suspense fallback={<div className="h-24 rounded-sm bg-muted/40 animate-pulse" />}>
+              <StoreSetupTracker variant="compact" />
+            </Suspense>
+          </div>
+
+          {/* Analytics Stats */}
+          {isLoading ? (
+            <DashboardStatsLoader />
+          ) : (
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {stats.map((s, i) => (
+                <StatCard
+                  key={i}
+                  title={s.title}
+                  value={s.value}
+                  icon={s.icon}
+                  color={s.color}
+                  trend={s.trend}
+                  delay={s.delay}
+                />
+              ))}
+            </div>
+          )}
+        </>
       )}
 
       <div className="grid gap-8 lg:grid-cols-3 mt-8">

@@ -100,7 +100,7 @@ export default function SignupPage() {
     "idle" | "checking" | "available" | "taken"
   >("idle");
 
-  // Effect 1: Handle "Checking..." status immediately
+  // Effect 1: Handle "Checking..." status immediately as user types
   useEffect(() => {
     if (accountType !== "vendor") return;
 
@@ -109,6 +109,8 @@ export default function SignupPage() {
       return;
     }
 
+    // Set checking status if value is different from currently debounced value
+    // This provides immediate visual feedback
     if (storeName !== debouncedStoreName) {
       setStoreNameStatus("checking");
     }

@@ -107,7 +107,7 @@ export function OnboardingModal() {
       return;
     }
 
-    // Set checking status as soon as we have enough characters and they are different from debounced
+    // Set checking status immediately if the current input differs from the debounced value
     if (storeName !== debouncedStoreName) {
       setStoreNameStatus("checking");
     }

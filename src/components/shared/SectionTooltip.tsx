@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { InfoCircle } from "iconsax-react";
 import {
   Tooltip,
@@ -10,12 +11,22 @@ interface SectionTooltipProps {
 }
 
 export function SectionTooltip({ content }: SectionTooltipProps) {
+  const [open, setOpen] = useState(false);
+
   return (
-    <Tooltip>
+    <Tooltip open={open} onOpenChange={setOpen}>
       <TooltipTrigger asChild>
         <button
           type="button"
           className="rounded-full flex items-center justify-center text-muted-foreground hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20"
+          // Toggle on click/tap (works on mobile)
+          onClick={(e) => {
+            e.stopPropagation();
+            setOpen((prev) => !prev);
+          }}
+          // Also support hover on desktop
+          onMouseEnter={() => setOpen(true)}
+          onMouseLeave={() => setOpen(false)}
         >
           <InfoCircle className="h-4 w-4" variant="Bulk" color="currentColor" />
         </button>
