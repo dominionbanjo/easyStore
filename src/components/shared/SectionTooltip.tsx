@@ -14,19 +14,23 @@ export function SectionTooltip({ content }: SectionTooltipProps) {
   const [open, setOpen] = useState(false);
 
   return (
-    <Tooltip open={open} onOpenChange={setOpen}>
+    <Tooltip open={open} onOpenChange={setOpen} delayDuration={0}>
       <TooltipTrigger asChild>
         <button
           type="button"
           className="rounded-full flex items-center justify-center text-muted-foreground hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20"
-          // Toggle on click/tap (works on mobile)
+          // Toggle on click/tap
           onClick={(e) => {
             e.stopPropagation();
             setOpen((prev) => !prev);
           }}
-          // Also support hover on desktop
-          onMouseEnter={() => setOpen(true)}
-          onMouseLeave={() => setOpen(false)}
+          // Hover support - only for actual mouse pointers
+          onPointerEnter={(e) => {
+            if (e.pointerType === "mouse") setOpen(true);
+          }}
+          onPointerLeave={(e) => {
+            if (e.pointerType === "mouse") setOpen(false);
+          }}
         >
           <InfoCircle className="h-4 w-4" variant="Bulk" color="currentColor" />
         </button>
