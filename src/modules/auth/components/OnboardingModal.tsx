@@ -8,13 +8,7 @@ import { toast } from "sonner";
 import { Store, User, FileText, LayoutGrid } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
+import { Modal } from "@/components/shared/Modal";
 import { Button } from "@/components/ui/button";
 import { FormInput } from "@/components/shared/form/FormInput";
 import { FormSelect } from "@/components/shared/form/FormSelect";
@@ -182,175 +176,178 @@ export function OnboardingModal() {
   if (!isOpen || isVendor) return null;
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && markAsSeen()}>
-      <DialogContent className="max-w-[95vw] sm:max-w-[550px] p-0 overflow-hidden rounded-sm sm:rounded-sm border-none  bg-background flex flex-col">
-        <div className="overflow-y-auto custom-scrollbar flex-1">
-          <div className="p-4 sm:p-10">
-            <AnimatePresence mode="wait">
-              {step === "role-selection" ? (
-                <motion.div
-                  key="role-selection"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 20 }}
-                  transition={{ duration: 0.3 }}
+    <Modal
+      open={isOpen}
+      onOpenChange={(open) => !open && markAsSeen()}
+      className="max-w-[95vw] sm:max-w-[550px]"
+      contentClassName="p-0"
+    >
+      <div className="p-0">
+        <AnimatePresence mode="wait">
+          {step === "role-selection" ? (
+            <motion.div
+              key="role-selection"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              transition={{ duration: 0.3 }}
+              className="p-6 sm:p-10"
+            >
+              <div className="mb-8">
+                <h2 className="text-2xl sm:text-3xl font-black text-center uppercase tracking-tight">
+                  Welcome to EazyStore! 👋
+                </h2>
+                <p className="text-center text-muted-foreground font-medium mt-2">
+                  How do you plan to use EazyStore today?
+                </p>
+              </div>
+
+              <div className="flex flex-col gap-3">
+                <button
+                  onClick={() => handleRoleSelection("sell")}
+                  className="flex items-center gap-4 p-4 rounded-sm border-2 border-muted bg-muted/20 hover:bg-primary/5 hover:border-primary/40 transition-all duration-300 group text-left"
                 >
-                  <DialogHeader className="mb-8">
-                    <DialogTitle className="text-2xl sm:text-3xl font-black text-center uppercase tracking-tight">
-                      Welcome to EazyStore! 👋
-                    </DialogTitle>
-                    <DialogDescription className="text-center text-muted-foreground font-medium mt-2">
-                      How do you plan to use EazyStore today?
-                    </DialogDescription>
-                  </DialogHeader>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <button
-                      onClick={() => handleRoleSelection("buy")}
-                      className="flex flex-col items-center justify-center gap-4 sm:gap-5 p-6 sm:p-8 rounded-sm border-2 border-muted bg-muted/20 hover:bg-primary/5 hover:border-primary/40 transition-all duration-300 group text-center"
-                    >
-                      <div className="h-16 w-16 rounded-sm bg-white  flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
-                        <User className="w-8 h-8 text-primary" />
-                      </div>
-                      <div>
-                        <h3 className="font-black uppercase tracking-tight text-lg mb-1">
-                          I want to Buy
-                        </h3>
-                        <p className="text-xs text-muted-foreground font-medium leading-relaxed">
-                          Discover amazing products from verified vendors
-                        </p>
-                      </div>
-                    </button>
-
-                    <button
-                      onClick={() => handleRoleSelection("sell")}
-                      className="flex flex-col items-center justify-center gap-4 sm:gap-5 p-6 sm:p-8 rounded-sm border-2 border-muted bg-muted/20 hover:bg-primary/5 hover:border-primary/40 transition-all duration-300 group text-center"
-                    >
-                      <div className="h-16 w-16 rounded-sm bg-white  flex items-center justify-center group-hover:scale-110 group-hover:-rotate-3 transition-all duration-500">
-                        <Store className="w-8 h-8 text-primary" />
-                      </div>
-                      <div>
-                        <h3 className="font-black uppercase tracking-tight text-lg mb-1">
-                          I want to Sell
-                        </h3>
-                        <p className="text-xs text-muted-foreground font-medium leading-relaxed">
-                          Create your store and start selling in minutes
-                        </p>
-                      </div>
-                    </button>
+                  <div className="h-12 w-12 rounded-sm bg-white shrink-0 flex items-center justify-center group-hover:scale-110 group-hover:-rotate-3 transition-all duration-500 shadow-sm">
+                    <Store className="w-6 h-6 text-primary" />
                   </div>
-
-                  <div className="mt-8 pt-6 border-t border-border/50 text-center">
-                    <Button
-                      variant="ghost"
-                      onClick={() => markAsSeen()}
-                      className="text-muted-foreground font-bold uppercase tracking-widest text-[10px]"
-                    >
-                      Skip for now
-                    </Button>
+                  <div>
+                    <h3 className="font-black uppercase tracking-tight text-base mb-0.5">
+                      I want to Sell
+                    </h3>
+                    <p className="text-[10px] text-muted-foreground font-medium leading-tight">
+                      Create your store and start selling in minutes
+                    </p>
                   </div>
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="store-form"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  transition={{ duration: 0.3 }}
+                </button>
+
+                <button
+                  onClick={() => handleRoleSelection("buy")}
+                  className="flex items-center gap-4 p-4 rounded-sm border-2 border-muted bg-muted/20 hover:bg-primary/5 hover:border-primary/40 transition-all duration-300 group text-left"
                 >
-                  <DialogHeader className="mb-8">
-                    <DialogTitle className="text-2xl sm:text-3xl font-black text-center uppercase tracking-tight">
-                      Setup your Store 🏪
-                    </DialogTitle>
-                    <DialogDescription className="text-center text-muted-foreground font-medium mt-2">
-                      Tell us about your business to get started.
-                    </DialogDescription>
-                  </DialogHeader>
+                  <div className="h-12 w-12 rounded-sm bg-white shrink-0 flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-sm">
+                    <User className="w-6 h-6 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="font-black uppercase tracking-tight text-base mb-0.5">
+                      I want to Buy
+                    </h3>
+                    <p className="text-[10px] text-muted-foreground font-medium leading-tight">
+                      Discover amazing products from verified vendors
+                    </p>
+                  </div>
+                </button>
+              </div>
 
-                  <FormProvider {...form}>
-                    <form
-                      onSubmit={handleSubmit(onSubmit)}
-                      className="space-y-5"
-                    >
-                      <div className="relative">
-                        <FormInput
-                          label="Store Name"
-                          name="store_name"
-                          placeholder="e.g. Dominion Gadgets"
-                          icon={<Store className="w-5 h-5" />}
-                        />
-                        {storeNameStatus !== "idle" && (
-                          <div className="absolute right-3 top-[38px] text-xs">
-                            {storeNameStatus === "checking" && (
-                              <span className="flex items-center gap-1 text-muted-foreground">
-                                <span className="h-3 w-3 animate-spin rounded-sm border-2 border-primary/20 border-t-primary" />
-                                Checking...
-                              </span>
-                            )}
-                            {storeNameStatus === "available" && (
-                              <span className="text-green-600 font-bold flex items-center gap-1">
-                                Available
-                              </span>
-                            )}
-                            {storeNameStatus === "taken" && (
-                              <span className="text-destructive font-bold">
-                                Taken
-                              </span>
-                            )}
-                          </div>
+              <div className="mt-8 pt-6 border-t border-border/50 text-center">
+                <Button
+                  variant="ghost"
+                  onClick={() => markAsSeen()}
+                  className="text-muted-foreground font-bold uppercase tracking-widest text-[10px]"
+                >
+                  Skip for now
+                </Button>
+              </div>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="store-form"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+              className="p-6 sm:p-10"
+            >
+              <div className="mb-8">
+                <h2 className="text-2xl sm:text-3xl font-black text-center uppercase tracking-tight">
+                  Setup your Store 🏪
+                </h2>
+                <p className="text-center text-muted-foreground font-medium mt-2">
+                  Tell us about your business to get started.
+                </p>
+              </div>
+
+              <FormProvider {...form}>
+                <form
+                  onSubmit={handleSubmit(onSubmit)}
+                  className="space-y-5"
+                >
+                  <div className="relative">
+                    <FormInput
+                      label="Store Name"
+                      name="store_name"
+                      placeholder="e.g. Dominion Gadgets"
+                      icon={<Store className="w-5 h-5" />}
+                    />
+                    {storeNameStatus !== "idle" && (
+                      <div className="absolute right-3 top-[38px] text-xs">
+                        {storeNameStatus === "checking" && (
+                          <span className="flex items-center gap-1 text-muted-foreground">
+                            <span className="h-3 w-3 animate-spin rounded-sm border-2 border-primary/20 border-t-primary" />
+                            Checking...
+                          </span>
+                        )}
+                        {storeNameStatus === "available" && (
+                          <span className="text-green-600 font-bold flex items-center gap-1">
+                            Available
+                          </span>
+                        )}
+                        {storeNameStatus === "taken" && (
+                          <span className="text-destructive font-bold">
+                            Taken
+                          </span>
                         )}
                       </div>
+                    )}
+                  </div>
 
-                      <FormInput
-                        label="Store Description"
-                        name="description"
-                        placeholder="Tell your customers what you sell..."
-                        icon={<FileText className="w-5 h-5" />}
-                      />
+                  <FormInput
+                    label="Store Description"
+                    name="description"
+                    placeholder="Tell your customers what you sell..."
+                    icon={<FileText className="w-5 h-5" />}
+                  />
 
-                      <FormSelect
-                        name="current_sales_channel"
-                        label="Current Sales Channel"
-                        placeholder="Where do you sell mostly?"
-                        icon={<LayoutGrid className="w-5 h-5" />}
-                        options={[
-                          { label: "WhatsApp", value: "whatsapp" },
-                          { label: "Instagram", value: "instagram" },
-                          { label: "Facebook", value: "facebook" },
-                          { label: "TikTok", value: "tiktok" },
-                          { label: "Other Marketplace", value: "other" },
-                        ]}
-                      />
+                  <FormSelect
+                    name="current_sales_channel"
+                    label="Current Sales Channel"
+                    placeholder="Where do you sell mostly?"
+                    icon={<LayoutGrid className="w-5 h-5" />}
+                    options={[
+                      { label: "WhatsApp", value: "whatsapp" },
+                      { label: "Instagram", value: "instagram" },
+                      { label: "Facebook", value: "facebook" },
+                      { label: "TikTok", value: "tiktok" },
+                      { label: "Other Marketplace", value: "other" },
+                    ]}
+                  />
 
-                      <div className="pt-6 grid grid-cols-2 gap-4">
-                        <Button
-                          type="button"
-                          variant="outline"
-                          className="h-12 rounded-sm font-semibold text-sm border-muted-foreground/20"
-                          onClick={() => setStep("role-selection")}
-                        >
-                          Back
-                        </Button>
-                        <Button
-                          type="submit"
-                          className="h-12 rounded-sm font-semibold text-sm  "
-                          isLoading={isLoading}
-                          disabled={
-                            storeNameStatus === "taken" ||
-                            storeNameStatus === "checking"
-                          }
-                        >
-                          Create Store
-                        </Button>
-                      </div>
-                    </form>
-                  </FormProvider>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        </div>
-      </DialogContent>
-    </Dialog>
+                  <div className="pt-6 grid grid-cols-2 gap-4">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="h-12 rounded-sm font-semibold text-sm border-muted-foreground/20"
+                      onClick={() => setStep("role-selection")}
+                    >
+                      Back
+                    </Button>
+                    <Button
+                      type="submit"
+                      className="h-12 rounded-sm font-semibold text-sm  "
+                      isLoading={isLoading}
+                      disabled={
+                        storeNameStatus === "taken" ||
+                        storeNameStatus === "checking"
+                      }
+                    >
+                      Create Store
+                    </Button>
+                  </div>
+                </form>
+              </FormProvider>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </Modal>
   );
 }

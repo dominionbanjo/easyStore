@@ -32,7 +32,12 @@ export function Modal({
     <Dialog {...props}>
       <DialogContent
         showCloseButton={false}
-        className={cn("sm:max-w-[425px] overflow-hidden p-0 gap-0", className)}
+        className={cn(
+          "z-[200] sm:max-w-[425px] overflow-hidden p-0 gap-0 flex flex-col",
+          // Mobile: Position above BottomNav with gaps
+          "max-sm:fixed max-sm:bottom-[90px] max-sm:top-auto max-sm:left-[4vw] max-sm:translate-x-0 max-sm:translate-y-0 max-sm:w-[92vw] max-sm:max-h-[calc(100dvh-180px)] max-sm:rounded-sm",
+          className
+        )}
       >
         <DialogHeader className="px-6 py-4 border-b flex flex-row items-center justify-between space-y-0 sticky top-0 bg-background z-10">
           <div className="flex flex-col gap-1">
@@ -43,17 +48,15 @@ export function Modal({
               <p className="text-sm text-muted-foreground">{description}</p>
             )}
           </div>
+          {/* Default Close Button in Header */}
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8 rounded-sm shrink-0 text-muted-foreground hover:bg-muted"
+            className="h-8 w-8 rounded-sm shrink-0 text-muted-foreground hover:bg-muted flex"
             onClick={() => {
               if (onClose) {
                 onClose();
               } else {
-                // The Dialog primitive handles internal state if controlled,
-                // but if we are just using the props.onOpenChange we rely on that.
-                // However, we want to ensure clicking this triggers closure.
                 props.onOpenChange?.(false);
               }
             }}
@@ -62,7 +65,13 @@ export function Modal({
             <span className="sr-only">Close</span>
           </Button>
         </DialogHeader>
-        <div className={cn("p-6", contentClassName)}>{children}</div>
+
+
+        <div className={cn("flex-1 overflow-y-auto custom-scrollbar min-h-0", contentClassName)}>
+          <div className="flex flex-col min-h-full">
+            {children}
+          </div>
+        </div>
       </DialogContent>
     </Dialog>
   );

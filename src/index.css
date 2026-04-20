@@ -247,7 +247,7 @@ html,
 body,
 .custom-scrollbar {
   scrollbar-width: auto;
-  scrollbar-color: color-mix(in srgb, var(--primary) 40%, transparent)
+  scrollbar-color: color-mix(in srgb, var(--primary) 70%, transparent)
     rgba(0, 0, 0, 0.05);
 }
 
@@ -268,7 +268,7 @@ body::-webkit-scrollbar-track,
 html::-webkit-scrollbar-thumb,
 body::-webkit-scrollbar-thumb,
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: color-mix(in srgb, var(--primary) 40%, transparent);
+  background: color-mix(in srgb, var(--primary) 70%, transparent);
   border-radius: 100px;
   border: 1px solid transparent;
   background-clip: padding-box;
@@ -284,7 +284,7 @@ body::-webkit-scrollbar-thumb:hover,
 .dark html,
 .dark body,
 .dark .custom-scrollbar {
-  scrollbar-color: color-mix(in srgb, var(--foreground) 30%, transparent)
+  scrollbar-color: color-mix(in srgb, var(--foreground) 60%, transparent)
     rgba(255, 255, 255, 0.05);
 }
 
@@ -297,7 +297,7 @@ body::-webkit-scrollbar-thumb:hover,
 .dark html::-webkit-scrollbar-thumb,
 .dark body::-webkit-scrollbar-thumb,
 .dark .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: color-mix(in srgb, var(--foreground) 30%, transparent);
+  background: color-mix(in srgb, var(--foreground) 60%, transparent);
   background-clip: padding-box;
 }
 

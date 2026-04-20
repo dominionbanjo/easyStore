@@ -35,6 +35,9 @@ import { AuthLayout } from "../components/AuthLayout";
 import { PasswordStrengthMeter } from "../components/PasswordStrengthMeter";
 import { useGoogleLoginMutation } from "@/services/authApi";
 import { areSubdomainsDisabled, handleRoleRedirect } from "@/utils/subdomain";
+import { Modal } from "@/components/shared/Modal";
+import { TermsOfServiceContent } from "@/components/shared/TermsOfServiceContent";
+import { PrivacyPolicyContent } from "@/components/shared/PrivacyPolicyContent";
 
 /* -------------------- Google button width helper -------------------- */
 const getGoogleButtonWidth = () => {
@@ -62,6 +65,9 @@ export default function SignupPage() {
   // Only show Google button when subdomains ARE enabled (i.e. production)
   // Google OAuth blocks localhost origins, so we hide it there.
   const showGoogleButton = !areSubdomainsDisabled();
+
+  const [showTermsModal, setShowTermsModal] = useState(false);
+  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
 
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(SignupSchema),
@@ -363,15 +369,16 @@ export default function SignupPage() {
               />
               <Label
                 htmlFor="terms"
-                className="text-sm font-normal text-muted-foreground leading-normal peer-disabled:cursor-not-allowed peer-disabled:opacity-70 mt-0.5 flex-1 cursor-pointer"
+                className="text-sm font-medium text-muted-foreground leading-relaxed peer-disabled:cursor-not-allowed peer-disabled:opacity-70 mt-0.5 flex-1 cursor-pointer"
               >
                 I agree to the{" "}
-                <Link
-                  to="/terms"
-                  className="text-primary hover:underline whitespace-nowrap"
+                <button
+                  type="button"
+                  onClick={() => setShowTermsModal(true)}
+                  className="inline text-primary hover:underline font-bold transition-all p-0 h-auto bg-transparent border-none align-baseline whitespace-nowrap"
                 >
                   Terms of Service
-                </Link>
+                </button>
               </Label>
             </div>
 
@@ -415,6 +422,27 @@ export default function SignupPage() {
           Log in
         </Link>
       </div>
+
+      {/* Policy Modals */}
+      <Modal
+        open={showTermsModal}
+        onOpenChange={setShowTermsModal}
+        className="max-w-[95vw] sm:max-w-[800px] h-[80vh]"
+      >
+        <div className="p-4 sm:p-10 pt-16">
+          <TermsOfServiceContent />
+        </div>
+      </Modal>
+
+      <Modal
+        open={showPrivacyModal}
+        onOpenChange={setShowPrivacyModal}
+        className="max-w-[95vw] sm:max-w-[800px] h-[80vh]"
+      >
+        <div className="p-4 sm:p-10 pt-16">
+          <PrivacyPolicyContent />
+        </div>
+      </Modal>
     </AuthLayout>
   );
 }

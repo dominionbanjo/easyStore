@@ -91,7 +91,7 @@ export function AuthLayout({
       </div>
 
       {/* RIGHT SIDE: FORM */}
-      <div className="relative z-10 flex flex-col items-center justify-start py-8 px-6 sm:px-10 lg:bg-background bg-background/95 backdrop-blur-md lg:backdrop-blur-none h-full lg:h-screen overflow-y-auto no-scrollbar">
+      <div className="relative z-10 flex flex-col items-center justify-start py-8 px-6 sm:px-10 lg:bg-background bg-background/95 backdrop-blur-md lg:backdrop-blur-none h-full lg:h-screen overflow-y-auto custom-scrollbar">
         <div className="w-full max-w-md">
           {/* Navigation Header */}
           <div className="w-full flex items-center justify-between mb-5 animate-in fade-in slide-in-from-top-4 duration-700">
