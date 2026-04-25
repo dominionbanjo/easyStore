@@ -219,8 +219,8 @@ export default function CartPage() {
 
   /* ───────── UI ───────── */
   return (
-    <section className="min-h-screen bg-neutral-50/50 dark:bg-neutral-950 py-24 px-4 sm:px-8 transition-colors duration-300">
-      <div className="w-full mx-auto px-0 sm:px-4 py-8 sm:py-12 space-y-8 sm:space-y-12">
+    <section className="min-h-screen bg-neutral-50/50 dark:bg-neutral-950 pt-14 pb-12 px-4 sm:px-8 transition-colors duration-300">
+      <div className="w-full mx-auto px-0 sm:px-4 pt-2 pb-8 sm:pb-12 space-y-8 sm:space-y-12">
         {/* Page Header */}
         <div className="px-4 sm:px-0 flex items-end justify-between">
           <div>

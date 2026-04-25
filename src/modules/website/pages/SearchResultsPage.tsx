@@ -3,7 +3,10 @@ import { useSearchParams } from "react-router-dom";
 import { useSearchProductsQuery } from "@/services/productApi";
 import { SearchResultsGrid } from "../components/search/SearchResultsGrid";
 import { SearchResultsHeader } from "../components/search/SearchResultsHeader";
-import { SearchFiltersSidebar, MobileSearchFilters } from "../components/search/Sidebar";
+import {
+  SearchFiltersSidebar,
+  MobileSearchFilters,
+} from "../components/search/Sidebar";
 
 function useDebouncedValue<T>(value: T, delay = 400): T {
   const [debounced, setDebounced] = useState(value);
@@ -31,7 +34,7 @@ export default function SearchResultsPage() {
       // Known numerical parameters
       if (["minPrice", "maxPrice", "page", "rating"].includes(key)) {
         params[key] = Number(value);
-      } 
+      }
       // Known single-value strings
       else if (["q", "sort", "state"].includes(key)) {
         params[key] = value;
@@ -40,7 +43,7 @@ export default function SearchResultsPage() {
       else {
         // Collect dynamic options into the unified 'filter' query string
         // format: Option:Value1,Value2|Option2:Value
-        const filterStr = params.filter ? `${params.filter}|` : '';
+        const filterStr = params.filter ? `${params.filter}|` : "";
         params.filter = `${filterStr}${key}:${value}`;
       }
     });
@@ -73,7 +76,7 @@ export default function SearchResultsPage() {
   const filters = data?.data.filters ?? {};
 
   return (
-    <section className="mx-auto px-4 py-8 bg-white dark:bg-neutral-950 transition-colors duration-300 min-h-screen">
+    <section className="mx-auto px-4 pt-16 pb-8 bg-white dark:bg-neutral-950 transition-colors duration-300 min-h-screen">
       {/* Header */}
       <SearchResultsHeader
         totalResults={pagination?.total}

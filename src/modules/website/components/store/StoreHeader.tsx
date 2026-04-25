@@ -12,7 +12,7 @@ export default function StoreHeader() {
   const selectedState = watch("state");
 
   return (
-    <section className="relative overflow-hidden bg-white dark:bg-neutral-900 border-b border-border/40 dark:border-white/5 transition-colors duration-300">
+    <section className="relative overflow-hidden bg-white dark:bg-neutral-900 border-b border-border/40 dark:border-white/5 transition-colors duration-300 pt-16 md:pt-20">
       {/* Decorative Background Elements */}
       <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#333_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-40 pointer-events-none" />
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/5 rounded-sm blur-[100px] -translate-y-1/2 translate-x-1/2 pointer-events-none" />
