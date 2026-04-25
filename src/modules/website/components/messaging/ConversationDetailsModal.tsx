@@ -94,40 +94,42 @@ export const ConversationDetailsModal: React.FC<
         </div>
 
         {/* Store Access Section */}
-        <div className="space-y-3">
-          <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground block px-1">
-            Vendor Actions
-          </span>
-          <button
-            onClick={() => {
-              const slug = participant.store_slug || (participant as any).storeSlug || participant.username;
-              if (areSubdomainsDisabled()) {
-                navigate(buildRoute.storeDetails(slug));
-              } else {
-                // If it's a vendor, we should use the store slug for the subdomain if available
-                const finalSubdomain = participant.store_slug || (participant as any).storeSlug || participant.username;
-                window.location.href = `${window.location.protocol}//${finalSubdomain}.${getBaseDomain()}`;
-              }
-              onClose();
-            }}
-            className="group flex items-center justify-between p-4 bg-white dark:bg-neutral-900 border-2 border-primary/20 hover:border-primary rounded-sm transition-all shadow-sm w-full text-left"
-          >
-            <div className="flex items-center gap-4">
-              <div className="h-10 w-10 bg-primary rounded-sm flex items-center justify-center text-white">
-                <Globe className="h-5 w-5" />
+        {participant.store_slug && (
+          <div className="space-y-3">
+            <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground block px-1">
+              Vendor Actions
+            </span>
+            <button
+              onClick={() => {
+                const slug = participant.store_slug as string;
+                if (areSubdomainsDisabled()) {
+                  navigate(buildRoute.storeDetails(slug));
+                } else {
+                  // If it's a vendor, we should use the store slug for the subdomain
+                  const finalSubdomain = participant.store_slug;
+                  window.location.href = `${window.location.protocol}//${finalSubdomain}.${getBaseDomain()}`;
+                }
+                onClose();
+              }}
+              className="group flex items-center justify-between p-4 bg-white dark:bg-neutral-900 border-2 border-primary/20 hover:border-primary rounded-sm transition-all shadow-sm w-full text-left"
+            >
+              <div className="flex items-center gap-4">
+                <div className="h-10 w-10 bg-primary rounded-sm flex items-center justify-center text-white">
+                  <Globe className="h-5 w-5" />
+                </div>
+                <div>
+                  <p className="text-sm font-black group-hover:text-primary transition-colors">
+                    Visit Official Store
+                  </p>
+                  <p className="text-[10px] font-medium text-muted-foreground">
+                    View products, menus, and more
+                  </p>
+                </div>
               </div>
-              <div>
-                <p className="text-sm font-black group-hover:text-primary transition-colors">
-                  Visit Official Store
-                </p>
-                <p className="text-[10px] font-medium text-muted-foreground">
-                  View products, menus, and more
-                </p>
-              </div>
-            </div>
-            <ChevronRight className="h-5 w-5 text-primary/40 group-hover:text-primary transition-colors" />
-          </button>
-        </div>
+              <ChevronRight className="h-5 w-5 text-primary/40 group-hover:text-primary transition-colors" />
+            </button>
+          </div>
+        )}
 
         {/* Quick Info */}
         <div className="space-y-2 px-1">
