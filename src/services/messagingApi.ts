@@ -9,6 +9,7 @@ export interface IParticipant {
   avatar: string | null;
   account_type: string;
   store_name?: string | null;
+  store_slug?: string | null;
   created_at?: string;
 }
 

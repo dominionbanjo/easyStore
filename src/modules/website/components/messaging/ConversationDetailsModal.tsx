@@ -100,7 +100,7 @@ export const ConversationDetailsModal: React.FC<
           </span>
           <button
             onClick={() => {
-              const slug = participant.username;
+              const slug = participant.store_slug || participant.username;
               if (areSubdomainsDisabled()) {
                 navigate(buildRoute.storeDetails(slug));
               } else {
