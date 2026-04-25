@@ -21,26 +21,26 @@ import { useEffect } from "react";
 
 // Inline dynamic imports — avoids circular dependency with lazyPages → VendorDashboardLayout → DashboardSidebar
 const preloadMap: Record<string, () => void> = {
-  "/": () => { import("@/modules/vendor/pages/VendorDashboardPage"); },
-  "/products": () => { import("@/modules/vendor/pages/ProductsPage"); },
-  "/orders": () => { import("@/modules/vendor/pages/OrdersPage"); },
-  "/customers": () => { import("@/modules/vendor/pages/CustomersPage"); },
-  "/templates": () => { import("@/modules/vendor/pages/VendorTemplatesPage"); },
-  "/settings": () => { import("@/modules/vendor/pages/StoreSettingsPage"); },
-  "/analytics": () => { import("@/modules/vendor/pages/AnalyticsPage"); },
-  "/help": () => { import("@/modules/vendor/pages/HelpPage"); },
+  "/": () => { import("@/app/(dashboard)/vendor/page"); },
+  "/products": () => { import("@/app/(dashboard)/vendor/products/page"); },
+  "/orders": () => { import("@/app/(dashboard)/vendor/orders/page"); },
+  "/customers": () => { import("@/app/(dashboard)/vendor/customers/page"); },
+  "/templates": () => { import("@/app/(dashboard)/vendor/templates/page"); },
+  "/settings": () => { import("@/app/(dashboard)/vendor/settings/page"); },
+  "/analytics": () => { import("@/app/(dashboard)/vendor/analytics/page"); },
+  "/help": () => { import("@/app/(dashboard)/vendor/help/page"); },
 };
 
 const allVendorPreloaders: Array<() => void> = [
-  () => { import("@/modules/vendor/pages/VendorDashboardPage"); },
-  () => { import("@/modules/vendor/pages/ProductsPage"); },
-  () => { import("@/modules/vendor/pages/OrdersPage"); },
-  () => { import("@/modules/vendor/pages/CustomersPage"); },
-  () => { import("@/modules/vendor/pages/VendorTemplatesPage"); },
-  () => { import("@/modules/vendor/pages/StoreSettingsPage"); },
-  () => { import("@/modules/vendor/pages/AnalyticsPage"); },
-  () => { import("@/modules/vendor/pages/HelpPage"); },
-  () => { import("@/modules/vendor/pages/AddProductsPage"); },
+  () => { import("@/app/(dashboard)/vendor/page"); },
+  () => { import("@/app/(dashboard)/vendor/products/page"); },
+  () => { import("@/app/(dashboard)/vendor/orders/page"); },
+  () => { import("@/app/(dashboard)/vendor/customers/page"); },
+  () => { import("@/app/(dashboard)/vendor/templates/page"); },
+  () => { import("@/app/(dashboard)/vendor/settings/page"); },
+  () => { import("@/app/(dashboard)/vendor/analytics/page"); },
+  () => { import("@/app/(dashboard)/vendor/help/page"); },
+  () => { import("@/app/(dashboard)/vendor/products/new/page"); },
 ];
 
 const menuItems = [

@@ -1,0 +1,447 @@
+import { useEffect, useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import {
+  ArrowLeft,
+  ShieldCheck,
+  Heart,
+  Sparkles,
+  Navigation,
+  Loader2,
+  AlertCircle,
+  ShoppingBag,
+} from "lucide-react";
+import { useGetCartQuery } from "@/services/cartApi";
+import { useGetUserProfileQuery } from "@/services/userApi";
+import {
+  useCreateOnlineOrderDirectMutation,
+  useGetCheckoutSummaryMutation,
+} from "@/services/ordersApi";
+import type { ICheckoutSummaryVendor } from "@/services/ordersApi";
+import { toast } from "sonner";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+
+import { AddressRequiredModal } from "@/modules/website/components/modals/AddressRequiredModal";
+import { BankAccountModal } from "@/modules/website/components/modals/BankAccountModal";
+import { DeliveryInfo } from "@/modules/website/components/checkout/DeliveryInfo";
+import { CheckoutSummary } from "@/modules/website/components/checkout/CheckoutSummary";
+import { motion } from "framer-motion";
+
+type RequiredModal = "address" | "bank" | null;
+
+export default function CheckoutPage() {
+  const navigate = useNavigate();
+  const { data: cartData, isLoading: isCartLoading } = useGetCartQuery();
+  const cart = cartData?.data?.cart;
+
+  const { data: userProfile, isLoading: isUserLoading } =
+    useGetUserProfileQuery();
+  const user = userProfile?.data?.user;
+
+  const [requiredModal, setRequiredModal] = useState<RequiredModal>(null);
+
+  // APIs
+  const [getSummary, { data: summaryResponse, isLoading: isSummaryLoading }] =
+    useGetCheckoutSummaryMutation();
+  const [createOrder, { isLoading: isCreatingOrder }] =
+    useCreateOnlineOrderDirectMutation();
+
+  // State
+  const [selectedRates, setSelectedRates] = useState<Record<string, string>>(
+    {},
+  );
+  const [activeVendorId, setActiveVendorId] = useState<string | null>(null);
+
+  /* ───────── FETCH SUMMARY ───────── */
+  useEffect(() => {
+    if (cart && cart.items.length > 0) {
+      const orderItems = cart.items.map((item) => ({
+        product_id: item.product_id,
+        variant_id: item.variant_id ?? undefined,
+        quantity: item.quantity,
+        size: item.size ?? undefined,
+        color: item.color ?? undefined,
+      }));
+      getSummary({ order_items: orderItems });
+    }
+  }, [cart, getSummary]);
+
+  const summaryData: ICheckoutSummaryVendor[] = useMemo(() => {
+    // Standard NestJS response structure: { status, message, data: { success, data: [] } }
+    const rawData =
+      (summaryResponse as any)?.data?.data || summaryResponse?.data || [];
+    return Array.isArray(rawData) ? rawData : [];
+  }, [summaryResponse]);
+
+  useEffect(() => {
+    // Default open first accordion item if available
+    if (summaryData.length > 0 && !activeVendorId) {
+      setActiveVendorId(summaryData[0].vendor_id);
+    }
+  }, [summaryData, activeVendorId]);
+
+  /* ───────── MODAL SEQUENCING & REFETCHING ───────── */
+  useEffect(() => {
+    if (isUserLoading || !user) return;
+
+    if (!user.address) {
+      setRequiredModal("address");
+    } else if (!user.payout_verified) {
+      setRequiredModal("bank");
+    } else {
+      setRequiredModal((prev) => (prev ? null : prev));
+    }
+  }, [user, isUserLoading]);
+
+  const handleModalClose = () => setRequiredModal(null);
+
+  /* ───────── CALCULATIONS ───────── */
+  const hasAddress = Boolean(user?.address);
+  const isBankVerified = user?.payout_verified ?? false;
+
+  const fullName =
+    user?.first_name || user?.last_name
+      ? `${user?.first_name ?? ""} ${user?.last_name ?? ""}`.trim()
+      : "No name provided";
+  const phone = user?.phone_number ?? "No phone provided";
+  const street = user?.address?.street ?? "";
+  const state = user?.address?.state ?? "";
+  const postalCode = user?.address?.postal_code ?? "";
+  const city = user?.address?.city ?? "";
+
+  const isCheckoutDisabled = !hasAddress || !isBankVerified;
+
+  /* ───────── HANDLE CHECKOUT PER VENDOR ───────── */
+  const handleCheckoutVendor = async (vendor: ICheckoutSummaryVendor) => {
+    if (isCheckoutDisabled) {
+      if (!hasAddress) setRequiredModal("address");
+      else if (!isBankVerified) setRequiredModal("bank");
+      return;
+    }
+
+    if (!user) return;
+
+    const selectedRateId = selectedRates[vendor.vendor_id];
+    if (!selectedRateId && vendor.delivery_options.length > 0) {
+      toast.error(`Please select a delivery region for ${vendor.store_name}`);
+      // Ensure the accordion is open for them
+      setActiveVendorId(vendor.vendor_id);
+      return;
+    }
+
+    try {
+      const orderItems = vendor.items.map((item) => ({
+        product_id: item.product_id,
+        variant_id: item.variant_id ?? undefined,
+        quantity: item.quantity,
+        size: item.size ?? undefined,
+        color: item.color ?? undefined,
+      }));
+
+      const result = await createOrder({
+        email: user.email,
+        order_items: orderItems,
+        delivery_rate_id: selectedRateId || undefined,
+      }).unwrap();
+
+      const data = result.data || result;
+
+      if (data.success && data.payment_url) {
+        window.location.href = data.payment_url;
+      }
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Failed to create order");
+    }
+  };
+
+  if (isCartLoading || !cart) return null;
+
+  const handleRateSelection = (vendorId: string, rateId: string) => {
+    setSelectedRates((prev) => ({ ...prev, [vendorId]: rateId }));
+  };
+
+  return (
+    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#020617] pb-20 sm:pb-32 transition-colors duration-500 relative overflow-hidden">
+      {/* Background Decorative Elements */}
+      <div className="absolute top-0 left-0 w-full h-[600px] bg-gradient-to-b from-primary/5 to-transparent pointer-events-none" />
+      <div className="absolute -top-[10%] -right-[5%] w-[40%] h-[40%] bg-primary/5 blur-[120px] rounded-sm pointer-events-none" />
+      <div className="absolute top-[20%] -left-[10%] w-[30%] h-[30%] bg-emerald-500/5 blur-[100px] rounded-sm pointer-events-none" />
+
+      {/* ───────── MODALS ───────── */}
+      <AddressRequiredModal
+        open={requiredModal === "address"}
+        onClose={handleModalClose}
+        mode={user?.address ? "edit" : "create"}
+      />
+
+      <BankAccountModal
+        open={requiredModal === "bank"}
+        onClose={handleModalClose}
+      />
+
+      {/* ───────── PAGE CONTENT ───────── */}
+      <div className="w-full mx-auto px-2 sm:px-6 py-8 sm:py-20 relative z-10">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="space-y-10 sm:space-y-16"
+        >
+          {/* Header Section */}
+          <div className="flex px-3 flex-col md:flex-row md:items-end justify-between gap-6 sm:gap-8">
+            <div className="space-y-6">
+              <Button
+                variant="ghost"
+                onClick={() => navigate(-1)}
+                className="group rounded-sm h-10 px-5 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-md border border-border/40 hover:bg-white dark:hover:bg-zinc-800 transition-all font-black text-[10px] tracking-widest uppercase"
+              >
+                <ArrowLeft className="h-4 w-4 mr-2 transition-transform group-hover:-translate-x-1" />
+                Return to Shopping
+              </Button>
+              <div className="space-y-2">
+                <div className="flex items-center gap-3">
+                  <div className="h-1.5 w-10 bg-primary rounded-sm" />
+                  <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">
+                    Final Stage
+                  </p>
+                </div>
+                <h1 className="text-4xl sm:text-7xl font-black tracking-tighter text-foreground leading-[1] sm:leading-[0.9]">
+                  Checkout <br />
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/60">
+                    Succession
+                  </span>
+                </h1>
+              </div>
+            </div>
+
+            <div className="flex lg:flex items-center gap-6 sm:gap-8 pb-2">
+              <div className="text-left md:text-right">
+                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">
+                  Items In Cart
+                </p>
+                <p className="text-xl sm:text-2xl font-black text-foreground">
+                  {cart.items.length}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-[1.8fr_1fr] gap-4 sm:gap-12 items-start">
+            {/* Left Column: Information */}
+            <div className="space-y-8 sm:space-y-10">
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2 }}
+              >
+                <DeliveryInfo
+                  fullName={fullName}
+                  phone={phone}
+                  street={street}
+                  state={state}
+                  postalCode={postalCode}
+                  city={city}
+                  hasAddress={hasAddress}
+                  onEditAddress={() => setRequiredModal("address")}
+                />
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="p-6 sm:p-8 rounded-sm sm:rounded-sm bg-background border border-border/40  overflow-hidden relative group"
+              >
+                <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:scale-110 transition-transform duration-700">
+                  <ShieldCheck className="h-32 w-32 rotate-12" />
+                </div>
+                <div className="flex flex-col sm:flex-row gap-6 sm:gap-8 relative z-10">
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 bg-primary/10 rounded-sm sm:rounded-sm flex items-center justify-center shrink-0 ">
+                    <ShieldCheck className="h-7 w-7 sm:h-8 sm:w-8 text-primary" />
+                  </div>
+                  <div className="space-y-3">
+                    <h3 className="text-lg sm:text-xl font-black uppercase tracking-tight text-foreground">
+                      Security First Checkout
+                    </h3>
+                    <p className="text-sm text-muted-foreground font-medium leading-relaxed max-w-xl">
+                      We prioritize your security. Currently, we utilize{" "}
+                      <span className="text-primary font-bold">Paystack's</span>{" "}
+                      industry-leading encrypted tunnel for all transactions.
+                      Direct escrow and crypto integrations are undergoing audit
+                      and will be active shortly.
+                    </p>
+                    <div className="flex items-center gap-2 pt-1">
+                      <div className="h-1.5 w-1.5 rounded-sm bg-emerald-500 animate-pulse" />
+                      <span className="text-[10px] font-black uppercase tracking-widest text-emerald-600">
+                        Encrypted Tunnel Active
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-6 sm:gap-8 opacity-40 grayscale group-hover:grayscale-0 transition-all duration-700">
+                <div className="flex items-center gap-2">
+                  <Heart className="h-3.5 w-3.5" />
+                  <span className="text-[10px] font-black uppercase tracking-widest">
+                    Global Shipping
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Sparkles className="h-3.5 w-3.5" />
+                  <span className="text-[10px] font-black uppercase tracking-widest">
+                    Premium Quality
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Navigation className="h-3.5 w-3.5" />
+                  <span className="text-[10px] font-black uppercase tracking-widest">
+                    Real-time Tracking
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column: Order Summary with Stepper/Accordion */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.4 }}
+              className="lg:sticky lg:top-12 mt-4 lg:mt-0"
+            >
+              {isSummaryLoading ? (
+                <div className="h-64 flex flex-col items-center justify-center border border-border/40 bg-muted/20 rounded-sm">
+                  <Loader2 className="w-8 h-8 text-primary animate-spin mb-4" />
+                  <p className="text-sm font-bold animate-pulse text-muted-foreground text-center">
+                    Generating Vendor Split Checkout...
+                  </p>
+                </div>
+              ) : summaryData.length === 0 ? (
+                <div className="h-64 flex flex-col items-center justify-center border border-border/40 bg-muted/20 text-center rounded-sm p-6">
+                  <ShoppingBag className="w-8 h-8 text-muted-foreground opacity-50 mb-4" />
+                  <p className="text-sm font-bold text-muted-foreground">
+                    Your basket is empty or invalid.
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {summaryData.length > 1 && (
+                    <div className="p-3.5 rounded-sm bg-blue-500/10 border border-blue-500/20 flex flex-col sm:flex-row items-start justify-between gap-3 mb-4">
+                      <div className="flex items-center gap-3">
+                        <AlertCircle className="h-6 w-6 text-blue-500 shrink-0" />
+                        <div>
+                          <p className="text-[11px] sm:text-xs font-bold text-blue-600 uppercase tracking-wide">
+                            Multi-Vendor Split
+                          </p>
+                          <p className="text-[9px] sm:text-[10px] text-blue-600/80 font-medium leading-tight">
+                            Your basket contains items from multiple sellers. We
+                            process them sequentially. Please select your
+                            delivery zone & pay for each seller individually to
+                            secure stock.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  <Accordion
+                    type="single"
+                    collapsible
+                    value={activeVendorId || undefined}
+                    onValueChange={(val) => val && setActiveVendorId(val)}
+                  >
+                    {summaryData.map((vendor, index) => {
+                      // We must map items properly & calculate dynamic totals
+                      const selectedRateId = selectedRates[vendor.vendor_id];
+                      const selectedRate = vendor.delivery_options.find(
+                        (r) => r.id === selectedRateId,
+                      );
+
+                      // Math Logic matched with backend implementation
+                      const rawSubtotal = vendor.subtotal;
+
+                      // Calculate shipping
+                      let shippingFee = 0;
+                      if (selectedRate) {
+                        shippingFee = Number(selectedRate.fee) * 100;
+                      }
+
+                      // Platform fee: 1% capped at NGN 2000 (200,000 kobo)
+                      const platformFee = Math.min(
+                        Math.round(rawSubtotal * 0.01),
+                        200000,
+                      );
+
+                      const grandTotal =
+                        rawSubtotal + shippingFee + platformFee;
+
+                      return (
+                        <AccordionItem
+                          key={vendor.vendor_id}
+                          value={vendor.vendor_id}
+                          className="border-none mb-4"
+                        >
+                          <AccordionTrigger
+                            className={`px-4 py-3 rounded-sm border hover:bg-muted/30 transition-colors [&[data-state=open]]:rounded-b-none ${
+                              activeVendorId === vendor.vendor_id
+                                ? "bg-muted/50 border-primary/20"
+                                : "bg-card border-border/40"
+                            }`}
+                          >
+                            <div className="flex items-center gap-3 text-left">
+                              <div className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-[10px] font-black shrink-0">
+                                {index + 1}
+                              </div>
+                              <div>
+                                <span className="block text-sm font-black uppercase tracking-tight text-foreground">
+                                  {vendor.store_name}
+                                </span>
+                                <span className="block text-[10px] text-muted-foreground font-medium">
+                                  {vendor.items.length} Items • ₦
+                                  {(grandTotal / 100).toLocaleString()}
+                                </span>
+                              </div>
+                            </div>
+                          </AccordionTrigger>
+                          <AccordionContent className="p-0 border border-t-0 border-border/40 rounded-b-sm bg-card">
+                            <CheckoutSummary
+                              storeName={vendor.store_name}
+                              items={vendor.items}
+                              subtotal={rawSubtotal / 100}
+                              shipping={shippingFee / 100}
+                              serviceCharge={platformFee / 100}
+                              total={grandTotal / 100}
+                              isProcessing={
+                                isCreatingOrder &&
+                                activeVendorId === vendor.vendor_id
+                              }
+                              disabled={!hasAddress || !isBankVerified}
+                              missingAddress={!hasAddress}
+                              missingBankVerification={!isBankVerified}
+                              deliveryOptions={vendor.delivery_options}
+                              selectedDeliveryRateId={selectedRateId}
+                              onSelectDeliveryRate={(rateId: string) =>
+                                handleRateSelection(vendor.vendor_id, rateId)
+                              }
+                              onCheckout={() => handleCheckoutVendor(vendor)}
+                              onAddAddress={() => setRequiredModal("address")}
+                              onVerifyBank={() => setRequiredModal("bank")}
+                            />
+                          </AccordionContent>
+                        </AccordionItem>
+                      );
+                    })}
+                  </Accordion>
+                </div>
+              )}
+            </motion.div>
+          </div>
+        </motion.div>
+      </div>
+    </div>
+  );
+}

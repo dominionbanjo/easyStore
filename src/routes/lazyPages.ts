@@ -6,7 +6,7 @@ import AccountsLayout from "@/modules/website/layout/AccountsLayout";
 import VendorDashboardLayout from "@/modules/vendor/layout/VendorDashboardLayout";
 import SuperAdminDashboardLayout from "@/modules/admin/layout/SuperAdminDashboardLayout";
 import StorefrontLayout from "@/modules/vendor/layout/StorefrontLayout";
-import LandingPage from "@/modules/website/pages/LandingPage";
+import LandingPage from "@/app/page";
 
 export {
   HomepageLayout,
@@ -20,198 +20,184 @@ export {
 /* ───────────────── WEBSITE PAGES ───────────────── */
 export const preloadLandingPage = () => Promise.resolve();
 
-const AboutPageImport = () => import("@/modules/website/pages/AboutPage");
+const AboutPageImport = () => import("@/app/about/page");
 export const AboutPage = lazy(AboutPageImport);
 export const preloadAboutPage = AboutPageImport;
 
-const StoresPageImport = () => import("@/modules/website/pages/StoresPage");
+const StoresPageImport = () => import("@/app/stores/page");
 export const StoresPage = lazy(StoresPageImport);
 export const preloadStoresPage = StoresPageImport;
 
-const StoreDetailsPageImport = () =>
-  import("@/modules/vendor/pages/storeDetailsPage");
+const StoreDetailsPageImport = () => import("@/app/stores/[slug]/page");
 export const StoreDetailsPage = lazy(StoreDetailsPageImport);
 export const preloadStoreDetailsPage = StoreDetailsPageImport;
 
 const StoreProductDetailsPageImport = () =>
-  import("@/modules/vendor/pages/StoreProductDetailsPage");
+  import("@/app/stores/[slug]/products/[productSlug]/page");
 export const StoreProductDetailsPage = lazy(StoreProductDetailsPageImport);
 export const preloadStoreProductDetailsPage = StoreProductDetailsPageImport;
 
-const CategoriesPageImport = () => import("@/modules/website/pages/Categories");
+const CategoriesPageImport = () => import("@/app/categories/page");
 export const CategoriesPage = lazy(CategoriesPageImport);
 export const preloadCategoriesPage = CategoriesPageImport;
 
-const CategoryDetailsPageImport = () =>
-  import("@/modules/website/pages/SingleCategoryPage");
+const CategoryDetailsPageImport = () => import("@/app/categories/[slug]/page");
 export const CategoryDetailsPage = lazy(CategoryDetailsPageImport);
 export const preloadCategoryDetailsPage = CategoryDetailsPageImport;
 
-const ProductDetailPageImport = () =>
-  import("@/modules/website/pages/ProductDetailsPage");
+const ProductDetailPageImport = () => import("@/app/product/[slug]/page");
 export const ProductDetailPage = lazy(ProductDetailPageImport);
 export const preloadProductDetailPage = ProductDetailPageImport;
 
-const OrdersPageImport = () => import("@/modules/website/pages/OrdersPage");
+const OrdersPageImport = () => import("@/app/account/orders/page");
 export const OrdersPage = lazy(OrdersPageImport);
 export const preloadOrdersPage = OrdersPageImport;
-const OrderDetailsPageImport = () =>
-  import("@/modules/website/pages/OrderDetailsPage");
+const OrderDetailsPageImport = () => import("@/app/account/orders/[id]/page");
 export const OrderDetailsPage = lazy(OrderDetailsPageImport);
 export const preloadOrderDetailsPage = OrderDetailsPageImport;
 
-const WishlistPageImport = () => import("@/modules/website/pages/WishlistPage");
+const WishlistPageImport = () => import("@/app/account/wishlist/page");
 export const WishlistPage = lazy(WishlistPageImport);
 export const preloadWishlistPage = WishlistPageImport;
 
-const CartPageImport = () => import("@/modules/website/pages/CartPage");
+const CartPageImport = () => import("@/app/cart/page");
 export const CartPage = lazy(CartPageImport);
 export const preloadCartPage = CartPageImport;
 
-const CheckoutPageImport = () => import("@/modules/website/pages/CheckoutPage");
+const CheckoutPageImport = () => import("@/app/cart/preview/page");
 export const CheckoutPage = lazy(CheckoutPageImport);
 export const preloadCheckoutPage = CheckoutPageImport;
 
 const VerifyPaymentPageImport = () =>
-  import("@/modules/website/pages/VerifyPayment");
+  import("@/app/account/verify-payment/page");
 export const VerifyPaymentPage = lazy(VerifyPaymentPageImport);
 export const preloadVerifyPaymentPage = VerifyPaymentPageImport;
 
-const SettingsPageImport = () => import("@/modules/website/pages/SettingsPage");
+const SettingsPageImport = () => import("@/app/account/settings/page");
 export const SettingsPage = lazy(SettingsPageImport);
 export const preloadSettingsPage = SettingsPageImport;
 
-const UserProfilePageImport = () =>
-  import("@/modules/website/pages/ProfilePage");
+const UserProfilePageImport = () => import("@/app/account/profile/page");
 export const UserProfilePage = lazy(UserProfilePageImport);
 export const preloadUserProfilePage = UserProfilePageImport;
 
-const SearchResultsPageImport = () =>
-  import("@/modules/website/pages/SearchResultsPage");
+const SearchResultsPageImport = () => import("@/app/s/page");
 export const SearchResultsPage = lazy(SearchResultsPageImport);
 export const preloadSearchResultsPage = SearchResultsPageImport;
-export const NotFoundPage = lazy(
-  () => import("@/modules/website/pages/NotFoundPage"),
-);
+export const NotFoundPage = lazy(() => import("@/app/not-found/page"));
 export const PrivacyPolicyPage = lazy(
-  () => import("@/modules/website/pages/PrivacyPolicyPage"),
+  () => import("@/app/privacy-policy/page"),
 );
 export const TermsOfServicePage = lazy(
-  () => import("@/modules/website/pages/TermsOfServicePage"),
+  () => import("@/app/terms-of-service/page"),
 );
-export const CareersPage = lazy(
-  () => import("@/modules/website/pages/CareersPage"),
-);
-const DiscoveryPageImport = () =>
-  import("@/modules/website/pages/DiscoveryPage");
+export const CareersPage = lazy(() => import("@/app/careers/page"));
+const DiscoveryPageImport = () => import("@/app/discovery/page");
 export const DiscoveryPage = lazy(DiscoveryPageImport);
 export const preloadDiscoveryPage = DiscoveryPageImport;
 export const FeaturedStoresPage = lazy(
-  () => import("@/modules/website/pages/FeaturedStoresPage"),
+  () => import("@/app/featured-stores/page"),
 );
-const FeaturedProductsPageImport = () =>
-  import("@/modules/website/pages/FeaturedProductsPage");
+const FeaturedProductsPageImport = () => import("@/app/featured/page");
 export const FeaturedProductsPage = lazy(FeaturedProductsPageImport);
 export const preloadFeaturedProductsPage = FeaturedProductsPageImport;
-const TrendingProductsPageImport = () =>
-  import("@/modules/website/pages/TrendingProductsPage");
+const TrendingProductsPageImport = () => import("@/app/trending/page");
 export const TrendingProductsPage = lazy(TrendingProductsPageImport);
 export const preloadTrendingProductsPage = TrendingProductsPageImport;
-const NewArrivalsPageImport = () =>
-  import("@/modules/website/pages/NewArrivalsPage");
+const NewArrivalsPageImport = () => import("@/app/new-arrivals/page");
 export const NewArrivalsPage = lazy(NewArrivalsPageImport);
 export const preloadNewArrivalsPage = NewArrivalsPageImport;
 
 /* ───────────────── AUTH PAGES ───────────────── */
-const LoginPageImport = () => import("@/modules/auth/pages/Login");
+const LoginPageImport = () => import("@/app/(auth)/login/page");
 export const LoginPage = lazy(LoginPageImport);
 export const preloadLoginPage = LoginPageImport;
 
-const SignupPageImport = () => import("@/modules/auth/pages/Register");
+const SignupPageImport = () => import("@/app/(auth)/signup/page");
 export const SignupPage = lazy(SignupPageImport);
 export const preloadSignupPage = SignupPageImport;
 
-const VerifyOtpPageImport = () => import("@/modules/auth/pages/VerifyOtp");
+const VerifyOtpPageImport = () => import("@/app/(auth)/verify-otp/page");
 export const VerifyOtpPage = lazy(VerifyOtpPageImport);
 export const preloadVerifyOtpPage = VerifyOtpPageImport;
 
 const ForgotPasswordPageImport = () =>
-  import("@/modules/auth/pages/ForgotPasswordPage");
+  import("@/app/(auth)/forgot-password/page");
 export const ForgotPasswordPage = lazy(ForgotPasswordPageImport);
 export const preloadForgotPasswordPage = ForgotPasswordPageImport;
 
 const ResetPasswordPageImport = () =>
-  import("@/modules/auth/pages/ResetPasswordPage");
+  import("@/app/(auth)/reset-password/page");
 export const ResetPasswordPage = lazy(ResetPasswordPageImport);
 export const preloadResetPasswordPage = ResetPasswordPageImport;
 
 /* ───────────────── VENDOR PAGES ───────────────── */
-const VendorDashboardPageImport = () =>
-  import("@/modules/vendor/pages/VendorDashboardPage");
+const VendorDashboardPageImport = () => import("@/app/(dashboard)/vendor/page");
 export const VendorDashboardPage = lazy(VendorDashboardPageImport);
 export const preloadVendorDashboardPage = VendorDashboardPageImport;
 
 const CustomersPageImport = () =>
-  import("@/modules/vendor/pages/CustomersPage");
+  import("@/app/(dashboard)/vendor/customers/page");
 export const CustomersPage = lazy(CustomersPageImport);
 export const preloadCustomersPage = CustomersPageImport;
 
 const VendorOrdersPageImport = () =>
-  import("@/modules/vendor/pages/OrdersPage");
+  import("@/app/(dashboard)/vendor/orders/page");
 export const VendorOrdersPage = lazy(VendorOrdersPageImport);
 export const preloadVendorOrdersPage = VendorOrdersPageImport;
 
-const ProductsPageImport = () => import("@/modules/vendor/pages/ProductsPage");
+const ProductsPageImport = () =>
+  import("@/app/(dashboard)/vendor/products/page");
 export const ProductsPage = lazy(ProductsPageImport);
 export const preloadProductsPage = ProductsPageImport;
 
 const AddProductPageImport = () =>
-  import("@/modules/vendor/pages/AddProductsPage");
+  import("@/app/(dashboard)/vendor/products/new/page");
 export const AddProductPage = lazy(AddProductPageImport);
 export const preloadAddProductPage = AddProductPageImport;
 
 const ProductPreviewPageImport = () =>
-  import("@/modules/vendor/pages/ProductPreviewPage");
+  import("@/app/(dashboard)/vendor/products/preview/page");
 export const ProductPreviewPage = lazy(ProductPreviewPageImport);
 export const preloadProductPreviewPage = ProductPreviewPageImport;
 
 const VendorSettingsPageImport = () =>
-  import("@/modules/vendor/pages/StoreSettingsPage");
+  import("@/app/(dashboard)/vendor/settings/page");
 export const VendorSettingsPage = lazy(VendorSettingsPageImport);
 export const preloadVendorSettingsPage = VendorSettingsPageImport;
 
-const HelpPageImport = () => import("@/modules/vendor/pages/HelpPage");
+const HelpPageImport = () => import("@/app/(dashboard)/vendor/help/page");
 export const HelpPage = lazy(HelpPageImport);
 export const preloadHelpPage = HelpPageImport;
 
 const AnalyticsPageImport = () =>
-  import("@/modules/vendor/pages/AnalyticsPage");
+  import("@/app/(dashboard)/vendor/analytics/page");
 export const AnalyticsPage = lazy(AnalyticsPageImport);
 export const preloadAnalyticsPage = AnalyticsPageImport;
 
 const VendorTemplatesPageImport = () =>
-  import("@/modules/vendor/pages/VendorTemplatesPage");
+  import("@/app/(dashboard)/vendor/templates/page");
 export const VendorTemplatesPage = lazy(VendorTemplatesPageImport);
 export const preloadVendorTemplatesPage = VendorTemplatesPageImport;
 
 /* ───────────────── ADMIN PAGES ───────────────── */
 const SuperAdminOverviewPageImport = () =>
-  import("@/modules/admin/pages/SuperAdminOverviewPage");
+  import("@/app/(dashboard)/admin/page");
 export const SuperAdminOverviewPage = lazy(SuperAdminOverviewPageImport);
 export const preloadSuperAdminOverviewPage = SuperAdminOverviewPageImport;
 
 const SuperAdminVendorsPageImport = () =>
-  import("@/modules/admin/pages/SuperAdminVendorsPage");
+  import("@/app/(dashboard)/admin/vendors/page");
 export const SuperAdminVendorsPage = lazy(SuperAdminVendorsPageImport);
 export const preloadSuperAdminVendorsPage = SuperAdminVendorsPageImport;
 
 const SuperAdminUsersPageImport = () =>
-  import("@/modules/admin/pages/SuperAdminUsersPage");
+  import("@/app/(dashboard)/admin/users/page");
 export const SuperAdminUsersPage = lazy(SuperAdminUsersPageImport);
 export const preloadSuperAdminUsersPage = SuperAdminUsersPageImport;
 
 const SuperAdminTransactionsPageImport = () =>
-  import("@/modules/admin/pages/SuperAdminTransactionsPage");
+  import("@/app/(dashboard)/admin/transactions/page");
 export const SuperAdminTransactionsPage = lazy(
   SuperAdminTransactionsPageImport,
 );
@@ -219,17 +205,17 @@ export const preloadSuperAdminTransactionsPage =
   SuperAdminTransactionsPageImport;
 
 const SuperAdminReportsPageImport = () =>
-  import("@/modules/admin/pages/SuperAdminReportsPage");
+  import("@/app/(dashboard)/admin/reports/page");
 export const SuperAdminReportsPage = lazy(SuperAdminReportsPageImport);
 export const preloadSuperAdminReportsPage = SuperAdminReportsPageImport;
 
 const SuperAdminLogsPageImport = () =>
-  import("@/modules/admin/pages/SuperAdminLogsPage");
+  import("@/app/(dashboard)/admin/logs-page/page");
 export const SuperAdminLogsPage = lazy(SuperAdminLogsPageImport);
 export const preloadSuperAdminLogsPage = SuperAdminLogsPageImport;
 
 const SuperAdminNotificationsPageImport = () =>
-  import("@/modules/admin/pages/SuperAdminNotificationsPage");
+  import("@/app/(dashboard)/admin/notifications/page");
 export const SuperAdminNotificationsPage = lazy(
   SuperAdminNotificationsPageImport,
 );
@@ -237,7 +223,7 @@ export const preloadSuperAdminNotificationsPage =
   SuperAdminNotificationsPageImport;
 
 const SuperAdminPlatformAnalysisPageImport = () =>
-  import("@/modules/admin/pages/SuperAdminPlatformAnalysisPage");
+  import("@/app/(dashboard)/admin/analytics/page");
 export const SuperAdminPlatformAnalysisPage = lazy(
   SuperAdminPlatformAnalysisPageImport,
 );
@@ -245,7 +231,7 @@ export const preloadSuperAdminPlatformAnalysisPage =
   SuperAdminPlatformAnalysisPageImport;
 
 const SuperAdminAccessControlPageImport = () =>
-  import("@/modules/admin/pages/SuperAdminAccessControlPage");
+  import("@/app/(dashboard)/admin/access-control/page");
 export const SuperAdminAccessControlPage = lazy(
   SuperAdminAccessControlPageImport,
 );
@@ -253,12 +239,12 @@ export const preloadSuperAdminAccessControlPage =
   SuperAdminAccessControlPageImport;
 
 const SuperAdminSettingsPageImport = () =>
-  import("@/modules/admin/pages/SuperAdminSettingsPage");
+  import("@/app/(dashboard)/admin/settings/page");
 export const SuperAdminSettingsPage = lazy(SuperAdminSettingsPageImport);
 export const preloadSuperAdminSettingsPage = SuperAdminSettingsPageImport;
 
 const SuperAdminServerConfigPageImport = () =>
-  import("@/modules/admin/pages/SuperAdminServerConfigPage");
+  import("@/app/(dashboard)/admin/system/page");
 export const SuperAdminServerConfigPage = lazy(
   SuperAdminServerConfigPageImport,
 );
