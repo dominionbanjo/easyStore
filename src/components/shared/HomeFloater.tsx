@@ -7,7 +7,7 @@ export function HomeFloater() {
   const homeUrl = `${window.location.protocol}//${baseDomain}`;
 
   return (
-    <div className="fixed bottom-24 lg:bottom-10 right-8 z-[100]">
+    <div className="fixed bottom-24 lg:bottom-10 right-2 z-[100]">
       <motion.a
         href={homeUrl}
         title="Back to EazyStore Home"

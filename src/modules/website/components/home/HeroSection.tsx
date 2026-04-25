@@ -231,11 +231,7 @@ export default function HeroSection() {
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
         {floatingIcons.map(
           ({ Icon, top, left, size, color, isLucide }, index) => (
-            <div
-              key={index}
-              className="absolute"
-              style={{ top, left }}
-            >
+            <div key={index} className="absolute" style={{ top, left }}>
               <Icon
                 {...(isLucide ? {} : { variant: "Bold" })}
                 color={color}
