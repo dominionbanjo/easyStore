@@ -121,7 +121,7 @@ function ProductDetailsInner({ id }: { id: string }) {
   /* ───────── RENDER ───────── */
 
   return (
-    <section className="w-full px-4 md:px-6 lg:px-8 pt-16 pb-8 md:pt-20 md:pb-12 space-y-12 md:space-y-16 bg-white dark:bg-neutral-950 transition-colors duration-300">
+    <section className="w-full px-4 md:px-6 lg:px-8 pt-0 md:pt-8 pb-8 md:pb-12 space-y-6 md:space-y-16 bg-white dark:bg-neutral-950 transition-colors duration-300">
       <GoBackButton className="mb-2" />
       {/* Gallery + Sidebar Container */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 xl:gap-24 items-start">
