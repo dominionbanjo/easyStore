@@ -47,6 +47,7 @@ export default function App() {
       "/trending",
       "/new-arrivals",
       "/cart",
+      "/account",
     ];
 
     if (subdomain) {
@@ -107,6 +108,7 @@ export default function App() {
                   <Route path="products/:slug/edit" element={<Pages.AddProductPage />} />
                   <Route path="products/preview" element={<Pages.ProductPreviewPage />} />
                   <Route path="analytics" element={<Pages.AnalyticsPage />} />
+                  <Route path="messages/:id?" element={<Pages.VendorMessagesPage />} />
                   <Route path="templates" element={<Pages.VendorTemplatesPage />} />
                   <Route path="settings" element={<Pages.VendorSettingsPage />} />
                   <Route path="help" element={<Pages.HelpPage />} />
@@ -143,6 +145,7 @@ export default function App() {
                 <Route path="products/:slug/edit" element={<Pages.AddProductPage />} />
                 <Route path="products/preview" element={<Pages.ProductPreviewPage />} />
                 <Route path="analytics" element={<Pages.AnalyticsPage />} />
+                <Route path="messages/:id?" element={<Pages.VendorMessagesPage />} />
                 <Route path="templates" element={<Pages.VendorTemplatesPage />} />
                 <Route path="settings" element={<Pages.VendorSettingsPage />} />
                 <Route path="help" element={<Pages.HelpPage />} />
@@ -228,7 +231,7 @@ export default function App() {
               />
               <Route path="orders" element={<Pages.OrdersPage />} />
               <Route path="orders/:id" element={<Pages.OrderDetailsPage />} />
-              <Route path="messages" element={<Pages.MessagesPage />} />
+              <Route path="messages/:id?" element={<Pages.MessagesPage />} />
             </Route>
 
             {/* ─── AUTH (all) ─── */}

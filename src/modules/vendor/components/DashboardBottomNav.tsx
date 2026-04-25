@@ -11,7 +11,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Palette, Settings, BarChart2, HelpCircle, LogOut } from "lucide-react";
+import { Palette, Settings, BarChart2, HelpCircle, LogOut, MessageSquare } from "lucide-react";
 import { useLogoutMutation } from "@/services/authApi";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
@@ -40,6 +40,7 @@ export function DashboardBottomNav() {
   ];
 
   const moreItems = [
+    { name: "Messages", path: "/messages", icon: MessageSquare },
     { name: "Templates", path: "/templates", icon: Palette },
     { name: "Analytics", path: "/analytics", icon: BarChart2 },
     { name: "Settings", path: "/settings", icon: Settings },

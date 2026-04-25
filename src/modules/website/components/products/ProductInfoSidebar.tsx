@@ -4,7 +4,12 @@ import { useNavigate } from "react-router-dom";
 import SmartLink from "@/components/shared/SmartLink";
 import type { RootState } from "@/store";
 import { motion, AnimatePresence } from "framer-motion";
-import { buildRoute, ACCOUNT_ROUTES } from "@/routes/index";
+import { ACCOUNT_ROUTES, buildRoute } from "@/routes/index";
+import {
+  getBaseDomain,
+  getSubdomain,
+  areSubdomainsDisabled,
+} from "@/utils/subdomain";
 import { useStartConversationMutation, useSendDirectMessageMutation } from "@/services/messagingApi";
 
 import { Button } from "@/components/ui/button";
@@ -129,7 +134,17 @@ export default function ProductInfoSidebar({
       }).unwrap();
 
       toast.success("Initial message sent to vendor!");
-      navigate(ACCOUNT_ROUTES.MESSAGES);
+      
+      if (areSubdomainsDisabled()) {
+        navigate(ACCOUNT_ROUTES.MESSAGES);
+      } else {
+        const subdomain = getSubdomain();
+        if (subdomain && subdomain !== "vendor" && subdomain !== "admin") {
+          window.location.href = `${window.location.protocol}//${getBaseDomain()}${ACCOUNT_ROUTES.MESSAGES}`;
+        } else {
+          navigate(ACCOUNT_ROUTES.MESSAGES);
+        }
+      }
     } catch (err: any) {
       toast.error(err?.data?.message || "Failed to contact vendor");
     } finally {

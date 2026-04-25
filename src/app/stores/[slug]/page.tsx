@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
-import { getSubdomain, getBaseDomain } from "@/utils/subdomain";
+import { getSubdomain, getBaseDomain, areSubdomainsDisabled } from "@/utils/subdomain";
 import { Store, ArrowLeft, Search } from "lucide-react";
 import {
   useGetStoreDetailsQuery,
@@ -273,8 +273,19 @@ export default function StoreDetailsPage() {
         const conversationId = conversationResponse.data.id;
         
         // Use messagingApi utility to send the initial message if needed
-        // Assuming we want to navigate to the messages page
-        navigate(`${ACCOUNT_ROUTES.MESSAGES}/${conversationId}?prefill=${encodeURIComponent("Hi Im viewing your store any information i should note")}`);
+        const prefill = encodeURIComponent("Hi Im viewing your store any information i should note");
+        const targetPath = `${ACCOUNT_ROUTES.MESSAGES}/${conversationId}?prefill=${prefill}`;
+
+        if (areSubdomainsDisabled()) {
+          navigate(targetPath);
+        } else {
+          const subdomain = getSubdomain();
+          if (subdomain && subdomain !== "vendor" && subdomain !== "admin") {
+            window.location.href = `${window.location.protocol}//${getBaseDomain()}${targetPath}`;
+          } else {
+            navigate(targetPath);
+          }
+        }
       } catch (err: any) {
         toast.error(err?.data?.message || "Failed to start conversation");
       }

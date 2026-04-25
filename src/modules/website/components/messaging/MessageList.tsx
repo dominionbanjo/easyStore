@@ -124,7 +124,9 @@ export const MessageList: React.FC<MessageListProps> = ({
             <span className="h-1.5 w-1.5 bg-muted-foreground/40 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
             <span className="h-1.5 w-1.5 bg-muted-foreground/40 rounded-full animate-bounce"></span>
           </div>
-          {typingUsers.length === 1 ? "Someone is typing..." : "Multiple people are typing..."}
+          {isChatroom && (
+            typingUsers.length === 1 ? "Someone is typing..." : "Multiple people are typing..."
+          )}
         </div>
       )}
     </div>

@@ -62,6 +62,8 @@ export const VENDOR_ROUTES = {
 
   // Customers
   CUSTOMERS: "/customers",
+  MESSAGES: "/messages",
+  TEMPLATES: "/templates",
 
   // Settings
   SETTINGS: "/settings",
@@ -92,6 +94,7 @@ export const buildRoute = {
   orderDetails: (id: string) => `/account/orders/${id}`,
   vendorOrderDetails: (id: string) => `/orders/${id}`,
   editProduct: (slug: string) => `/products/${slug}/edit`,
+  messages: (id: string) => `/account/messages/${id}`,
 } as const;
 
 // Export all routes as a single object for convenience

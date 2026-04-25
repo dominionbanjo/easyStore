@@ -11,6 +11,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Palette,
+  MessageSquare,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -29,6 +30,7 @@ const preloadMap: Record<string, () => void> = {
   "/settings": () => { import("@/app/(dashboard)/vendor/settings/page"); },
   "/analytics": () => { import("@/app/(dashboard)/vendor/analytics/page"); },
   "/help": () => { import("@/app/(dashboard)/vendor/help/page"); },
+  "/messages": () => { import("@/app/(dashboard)/vendor/messages/page"); },
 };
 
 const allVendorPreloaders: Array<() => void> = [
@@ -40,6 +42,7 @@ const allVendorPreloaders: Array<() => void> = [
   () => { import("@/app/(dashboard)/vendor/settings/page"); },
   () => { import("@/app/(dashboard)/vendor/analytics/page"); },
   () => { import("@/app/(dashboard)/vendor/help/page"); },
+  () => { import("@/app/(dashboard)/vendor/messages/page"); },
   () => { import("@/app/(dashboard)/vendor/products/new/page"); },
 ];
 
@@ -49,6 +52,7 @@ const menuItems = [
   { label: "Orders", icon: ShoppingCart, to: "/orders" },
   { label: "Customers", icon: Users, to: "/customers" },
   { label: "Templates", icon: Palette, to: "/templates" },
+  { label: "Messages", icon: MessageSquare, to: "/messages" },
   { label: "Store Settings", icon: Settings, to: "/settings" },
   { label: "Analytics", icon: BarChart2, to: "/analytics" },
   { label: "Help", icon: HelpCircle, to: "/help" },

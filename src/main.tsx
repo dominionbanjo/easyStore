@@ -11,6 +11,7 @@ import { Toaster } from "./components/shared/Toaster.tsx";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { MessagingProvider } from "./services/MessagingContext.tsx";
 
 import { BrowserRouter as Router } from "react-router-dom";
 
@@ -23,9 +24,11 @@ createRoot(document.getElementById("root")!).render(
             <Toaster />
             <TooltipProvider delayDuration={150}>
               <AuthProvider>
-                <App />
-                <Analytics />
-                <SpeedInsights />
+                <MessagingProvider>
+                  <App />
+                  <Analytics />
+                  <SpeedInsights />
+                </MessagingProvider>
               </AuthProvider>
             </TooltipProvider>
           </Router>

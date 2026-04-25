@@ -120,9 +120,14 @@ export const messagingApi = apiManager.injectEndpoints({
           dispatch(
             messagingApi.util.updateQueryData("getChatroomMessages", {}, (draft) => {
               if (draft?.data?.items) {
-                const index = draft.data.items.findIndex((m) => m.id === tempId);
+                const index = draft.data.items.findIndex(m => 
+                  m.id === tempId || (args.local_id && m.localId === args.local_id)
+                );
                 if (index !== -1) {
-                  draft.data.items[index] = { ...realMessage, status: "sent" };
+                  draft.data.items[index] = { ...realMessage, status: "sent", localId: args.local_id };
+                } else {
+                  const exists = draft.data.items.find(m => m.id === realMessage.id);
+                  if (!exists) draft.data.items.push({ ...realMessage, status: "sent" });
                 }
               }
             })
@@ -133,7 +138,10 @@ export const messagingApi = apiManager.injectEndpoints({
           dispatch(
             messagingApi.util.updateQueryData("getChatroomMessages", {}, (draft) => {
               if (draft?.data?.items) {
-                draft.data.items.push({ ...optimisticMessage, status: "failed" });
+                const exists = draft.data.items.find(m => m.id === tempId);
+                if (!exists) {
+                   draft.data.items.push({ ...optimisticMessage, status: "failed" });
+                }
               }
             })
           );
@@ -201,7 +209,22 @@ export const messagingApi = apiManager.injectEndpoints({
         const patchResult = dispatch(
           messagingApi.util.updateQueryData("getConversationMessages", { id }, (draft) => {
             if (draft?.data?.items) {
-              draft.data.items.push(optimisticMessage);
+              // Check if it already exists (maybe from socket)
+              const exists = draft.data.items.find(m => m.id === tempId || (args.local_id && m.localId === args.local_id));
+              if (!exists) {
+                draft.data.items.push(optimisticMessage);
+              }
+            }
+          })
+        );
+
+        // Also update conversations list for last message preview
+        const listPatch = dispatch(
+          messagingApi.util.updateQueryData("getUserConversations", undefined, (draft) => {
+            const conv = draft?.data?.find(c => c.id === id);
+            if (conv) {
+              conv.last_message_preview = args.content;
+              conv.last_message_at = optimisticMessage.created_at;
             }
           })
         );
@@ -213,19 +236,33 @@ export const messagingApi = apiManager.injectEndpoints({
           dispatch(
             messagingApi.util.updateQueryData("getConversationMessages", { id }, (draft) => {
               if (draft?.data?.items) {
-                const index = draft.data.items.findIndex((m) => m.id === tempId);
+                const index = draft.data.items.findIndex(m => 
+                  m.id === tempId || (args.local_id && m.localId === args.local_id)
+                );
                 if (index !== -1) {
-                  draft.data.items[index] = { ...realMessage, status: "sent" };
+                  draft.data.items[index] = { ...realMessage, status: "sent", localId: args.local_id };
+                } else {
+                  const exists = draft.data.items.find(m => m.id === realMessage.id);
+                  if (!exists) draft.data.items.push({ ...realMessage, status: "sent" });
                 }
               }
             })
           );
         } catch {
           patchResult.undo();
+          listPatch.undo();
+          dispatch(messagingApi.util.invalidateTags(["Messaging"]));
+          
           dispatch(
             messagingApi.util.updateQueryData("getConversationMessages", { id }, (draft) => {
               if (draft?.data?.items) {
-                draft.data.items.push({ ...optimisticMessage, status: "failed" });
+                // Remove the optimistic one and add the failed one (or just update status if still there)
+                const index = draft.data.items.findIndex(m => m.id === tempId);
+                if (index !== -1) {
+                  draft.data.items[index] = { ...optimisticMessage, status: "failed" };
+                } else {
+                  draft.data.items.push({ ...optimisticMessage, status: "failed" });
+                }
               }
             })
           );
@@ -237,7 +274,7 @@ export const messagingApi = apiManager.injectEndpoints({
         url: `messaging/conversations/${id}/read`,
         method: "PATCH",
       }),
-      invalidatesTags: (_result, _error, id) => [{ type: "Messaging", id }],
+      invalidatesTags: (_result, _error, id) => [{ type: "Messaging", id }, "Messaging"],
     }),
     getMessageById: builder.query<{ data: IMessage }, string>({
       query: (id) => `messaging/messages/${id}`,

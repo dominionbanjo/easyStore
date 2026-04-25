@@ -1,7 +1,13 @@
 import { useLocation, Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Bell, Sun, Moon, LogOut, Home, Settings } from "lucide-react";
-import { getBaseDomain, getAppPath } from "@/utils/subdomain";
+import { Messages3 } from "iconsax-react";
+import {
+  getBaseDomain,
+  getAppPath,
+  areSubdomainsDisabled,
+} from "@/utils/subdomain";
+import { useGetUserConversationsQuery } from "@/services/messagingApi";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -18,6 +24,7 @@ import type { RootState } from "@/store";
 import { toast } from "sonner";
 import NavigationProgressBar from "@/components/shared/NavigationProgressBar";
 import { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
 
 interface DashboardHeaderProps {
   onMenuToggle: () => void;
@@ -27,7 +34,18 @@ export default function DashboardHeader({}: DashboardHeaderProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const [logoutUser] = useLogoutMutation();
-  const { currentUser } = useSelector((state: RootState) => state.user);
+  const { currentUser, isAuthenticated } = useSelector(
+    (state: RootState) => state.user,
+  );
+
+  const { data: convData } = useGetUserConversationsQuery(undefined, {
+    skip: !isAuthenticated,
+  });
+
+  const unreadMessagesCount = (convData?.data || []).reduce(
+    (sum, conv) => sum + (conv.unread_count || 0),
+    0,
+  );
 
   // ─── Dynamic Title Logic ───
   const getPageTitle = () => {
@@ -85,6 +103,36 @@ export default function DashboardHeader({}: DashboardHeaderProps) {
           className="text-muted-foreground hover:text-foreground"
         >
           <Bell className="h-5 w-5" />
+        </Button>
+
+        {/* Messages */}
+        <Button
+          variant="ghost"
+          size="icon"
+          className="text-muted-foreground hover:text-foreground relative group"
+          onClick={() => {
+            if (areSubdomainsDisabled()) {
+              navigate("/vendor/messages");
+            } else {
+              navigate("/messages");
+            }
+          }}
+        >
+          <Messages3
+            variant={unreadMessagesCount > 0 ? "Bold" : "Linear"}
+            color="currentColor"
+            className={cn(
+              "h-5 w-5 transition-colors group-hover:text-primary",
+              unreadMessagesCount > 0
+                ? "text-primary"
+                : "text-muted-foreground",
+            )}
+          />
+          {unreadMessagesCount > 0 && (
+            <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-sm bg-red-500 text-[10px] font-black text-white ring-2 ring-white dark:ring-neutral-900 tabular-nums">
+              {unreadMessagesCount > 9 ? "9+" : unreadMessagesCount}
+            </span>
+          )}
         </Button>
 
         {/* Theme Toggle */}

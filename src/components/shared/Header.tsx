@@ -60,6 +60,8 @@ import { CartDrawer } from "@/modules/website/components/cart/CartDrawer";
 import { useGetCartQuery, useAddItemToCartMutation } from "@/services/cartApi";
 import * as Pages from "@/routes/lazyPages";
 import NavigationProgressBar from "./NavigationProgressBar";
+import { Messages3 } from "iconsax-react";
+import { useGetUserConversationsQuery } from "@/services/messagingApi";
 import { setMobileMenuOpen, setCartOpen } from "@/features/uiSlice";
 import { Logo } from "./Logo";
 
@@ -93,6 +95,14 @@ export default function Header() {
 
   const dispatch = useDispatch();
   const [addItemToCart] = useAddItemToCartMutation();
+
+  const { data: convData } = useGetUserConversationsQuery(undefined, {
+    skip: !isAuthenticated,
+  });
+  
+  const unreadMessagesCount = useMemo(() => 
+    convData?.data?.reduce((sum, conv) => sum + (conv.unread_count || 0), 0) || 0
+  , [convData]);
 
   // Sync local cart to backend API when user logs in
   useEffect(() => {
@@ -227,7 +237,7 @@ export default function Header() {
     >
       <nav
         className={cn(
-          "flex w-full items-center justify-between backdrop-blur-md transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] px-6 md:px-14 xl:px-16 py-3",
+          "flex w-full items-center justify-between backdrop-blur-md transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] px-4 sm:px-14 xl:px-16 py-3",
           "fixed top-0 left-0 right-0",
           "will-change-[transform,background-color,border-color,box-shadow]",
           isScrolled
@@ -508,7 +518,7 @@ export default function Header() {
         </div>
 
         {/* ---------- RIGHT: Auth / Cart / Mobile Search ---------- */}
-        <div className="flex items-center justify-end gap-2 sm:gap-3 flex-shrink-0">
+        <div className="flex items-center justify-end gap-1.5 sm:gap-5 flex-shrink-0">
           {/* Mobile Search Trigger */}
           <Button
             variant="ghost"
@@ -519,7 +529,7 @@ export default function Header() {
             <Search className="h-5 w-5" />
           </Button>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 sm:gap-3">
             <Button
               variant="ghost"
               size="icon"
@@ -548,18 +558,44 @@ export default function Header() {
             </Button>
 
             {isAuthenticated && (
-              <SmartLink to={ACCOUNT_ROUTES.MESSAGES}>
-                <Button variant="ghost" size="icon" className="p-2 flex-shrink-0 relative">
-                  <MessageSquare className="h-5 w-5 text-foreground" />
+              <button
+                onClick={() => {
+                  if (areSubdomainsDisabled()) {
+                    navigate(ACCOUNT_ROUTES.MESSAGES);
+                  } else {
+                    const subdomain = getSubdomain();
+                    if (subdomain && subdomain !== "vendor" && subdomain !== "admin") {
+                      window.location.href = `${window.location.protocol}//${getBaseDomain()}${ACCOUNT_ROUTES.MESSAGES}`;
+                    } else {
+                      navigate(ACCOUNT_ROUTES.MESSAGES);
+                    }
+                  }
+                }}
+                className="relative group p-0"
+              >
+                <Button variant="ghost" size="icon" className="p-1.5 sm:p-2 flex-shrink-0 relative group">
+                  <Messages3 
+                    variant={unreadMessagesCount > 0 ? "Bold" : "Linear"} 
+                    color="currentColor" 
+                    className={cn(
+                      "h-5 w-5 transition-colors group-hover:text-primary",
+                      unreadMessagesCount > 0 ? "text-primary" : "text-foreground"
+                    )} 
+                  />
+                  {unreadMessagesCount > 0 && (
+                    <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-sm bg-red-500 text-[10px] font-black text-white ring-2 ring-white dark:ring-neutral-900 tabular-nums animate-in zoom-in-50 duration-300">
+                      {unreadMessagesCount > 9 ? "9+" : unreadMessagesCount}
+                    </span>
+                  )}
                 </Button>
-              </SmartLink>
+              </button>
             )}
 
             {/* Profile/Login */}
             {isAuthenticated && user ? (
               <Popover open={profileOpen} onOpenChange={setProfileOpen}>
                 <PopoverTrigger asChild>
-                  <button className="flex items-center justify-center rounded-sm border border-zinc-200 dark:border-white/10 hover:bg-zinc-50 dark:hover:bg-white/5 transition-all p-1 flex-shrink-0 group">
+                  <button className="flex items-center justify-center rounded-sm border border-zinc-200 dark:border-white/10 hover:bg-zinc-50 dark:hover:bg-white/5 transition-all p-0.5 sm:p-1 flex-shrink-0 group mr-1 sm:mr-0">
                     {user.avatar ? (
                       <img
                         src={user.avatar}

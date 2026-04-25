@@ -183,6 +183,10 @@ const VendorTemplatesPageImport = () =>
 export const VendorTemplatesPage = lazy(VendorTemplatesPageImport);
 export const preloadVendorTemplatesPage = VendorTemplatesPageImport;
 
+const VendorMessagesPageImport = () => import("@/app/(dashboard)/vendor/messages/page");
+export const VendorMessagesPage = lazy(VendorMessagesPageImport);
+export const preloadVendorMessagesPage = VendorMessagesPageImport;
+
 /* ───────────────── ADMIN PAGES ───────────────── */
 const SuperAdminOverviewPageImport = () =>
   import("@/app/(dashboard)/admin/page");
