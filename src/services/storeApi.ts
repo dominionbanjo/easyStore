@@ -16,6 +16,7 @@ import type {
   ITemplate,
   IStoreTheme,
   IStorePagination,
+  IStoreDeliveryRate,
 } from "@/types/Store/storeTypes";
 
 import { apiManager } from "./apiManager";
@@ -222,6 +223,52 @@ export const storeApi = apiManager.injectEndpoints({
       }),
       invalidatesTags: ["Store"],
     }),
+
+    /* ───────── DELIVERY RATES ───────── */
+    getStoreDeliveryRates: builder.query<IStoreDeliveryRate[], string>({
+      query: (storeId) => ({
+        url: `store-delivery-rates/store/${storeId}`,
+        method: "GET",
+      }),
+      transformResponse: (response: ApiResponse<IStoreDeliveryRate[]>) =>
+        response.data,
+      providesTags: ["Store"],
+    }),
+
+    addStoreDeliveryRate: builder.mutation<
+      ApiResponse<IStoreDeliveryRate>,
+      { storeId: string; data: Partial<IStoreDeliveryRate> }
+    >({
+      query: ({ storeId, data }) => ({
+        url: `store-delivery-rates/store/${storeId}`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Store"],
+    }),
+
+    updateStoreDeliveryRate: builder.mutation<
+      ApiResponse<IStoreDeliveryRate>,
+      { rateId: string; data: Partial<IStoreDeliveryRate> }
+    >({
+      query: ({ rateId, data }) => ({
+        url: `store-delivery-rates/${rateId}`,
+        method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags: ["Store"],
+    }),
+
+    deleteStoreDeliveryRate: builder.mutation<
+      ApiResponse<null>,
+      string
+    >({
+      query: (rateId) => ({
+        url: `store-delivery-rates/${rateId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Store"],
+    }),
   }),
 });
 
@@ -256,4 +303,9 @@ export const {
   useGetTemplatesQuery,
   useGetStoreThemeQuery,
   useUpdateStoreThemeMutation,
+
+  useGetStoreDeliveryRatesQuery,
+  useAddStoreDeliveryRateMutation,
+  useUpdateStoreDeliveryRateMutation,
+  useDeleteStoreDeliveryRateMutation,
 } = storeApi;

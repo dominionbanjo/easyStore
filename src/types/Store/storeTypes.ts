@@ -248,6 +248,18 @@ export interface IStoreTheme {
 
 /* ───────── ANALYTICS ───────── */
 
+export interface IStoreDeliveryRate {
+  id: string;
+  store_id: string;
+  state: string;
+  location: string;
+  fee: number;
+  duration: string | null;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface IStoreAnalytics {
   summary: {
     total_sales: number;

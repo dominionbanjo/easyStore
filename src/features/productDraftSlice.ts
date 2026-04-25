@@ -18,7 +18,6 @@ export interface ProductDraftData {
   price?: number | null;
   discount_price?: number | null;
   stock?: number | null;
-  shipping_cost?: number | null;
   shipping_note?: string | null;
   returns_note?: string | null;
 

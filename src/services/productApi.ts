@@ -243,7 +243,6 @@ export const productApi = apiManager.injectEndpoints({
               ? Number(item.discount_price)
               : null,
             rating_average: Number(item.rating_average),
-            shipping_cost: Number(item.shipping_cost),
 
             // 🔧 normalize mismatched fields
             specs: item.specs as Record<string, any> | null,

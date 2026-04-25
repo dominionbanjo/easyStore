@@ -19,7 +19,6 @@ export interface UIProduct extends ProductActionProps {
     delivery: string;
     returns: string;
     location: string;
-    shippingCost: string;
   };
   images: string[];
   colors: { id: string; name: string; hex: string }[];
@@ -79,9 +78,6 @@ export function adaptProductToUI(
         country: store.address_country,
         postalCode: store.address_postal_code,
       }),
-      shippingCost: product.shipping_cost
-        ? `₦${Number(product.shipping_cost).toLocaleString()}`
-        : "Contact vendor for shipping fees",
     },
 
     options: product.options ?? null,

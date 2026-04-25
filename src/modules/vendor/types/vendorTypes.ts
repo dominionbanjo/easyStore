@@ -43,7 +43,6 @@ export interface FormValues {
   country?: string;
   state?: string;
   city?: string;
-  shipping_cost?: number;
   shipping_note?: string;
   returns_note?: string;
 

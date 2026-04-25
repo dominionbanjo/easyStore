@@ -33,11 +33,7 @@ export const addProductSchema = z
       .optional()
       .nullable(),
 
-    /* ───────── SHIPPING (REQUIRED) ───────── */
-    shipping_cost: safeNum(
-      z.number().nonnegative("Shipping cost cannot be negative"),
-    ).optional(),
-
+    /* ───────── SHIPPING (OPTIONAL) ───────── */
     shipping_note: z.string().optional(),
 
     returns_note: z.string().optional(),

@@ -18,7 +18,7 @@ export function TitanLogistics({ uiProduct }: TitanLogisticsProps) {
             Dispatch Details
           </span>
           <span className="text-zinc-500">
-            {uiProduct.shipping.shippingCost} from {uiProduct.shipping.location}
+            Global shipping from {uiProduct.shipping.location}
           </span>
         </div>
       </div>

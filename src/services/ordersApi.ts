@@ -1,3 +1,4 @@
+import type { ICartItem } from "@/types/cart/cartTypes";
 import { apiManager } from "./apiManager";
 
 /* ───────────────── TYPES ───────────────── */
@@ -26,7 +27,6 @@ export interface IOrderItem {
   color?: string | null;
   variant_id?: string | null;
   variant_options?: Record<string, string> | null;
-  shipping_cost?: number | null;
 }
 
 export interface IOrder {
@@ -126,6 +126,7 @@ export interface CreateOfflineOrderArgs {
 export interface CreateOnlineOrderArgs {
   email: string;
   order_items: CreateOrderItemDto[];
+  delivery_rate_id?: string;
 }
 
 export interface RecordVendorOfflineSaleArgs {
@@ -137,6 +138,26 @@ export interface RecordVendorOfflineSaleArgs {
   customer_name?: string;
   customer_email?: string;
   notes?: string;
+}
+
+export interface ICheckoutSummaryVendor {
+  vendor_id: string;
+  store_name: string;
+  items: ICartItem[];
+  subtotal: number;
+  delivery_options: {
+    id: string;
+    state: string;
+    location: string;
+    fee: number;
+    duration: string | null;
+    notes: string | null;
+  }[];
+}
+
+export interface CheckoutSummaryResponse {
+  success: boolean;
+  data: ICheckoutSummaryVendor[];
 }
 
 export interface UpdateOrderStatusArgs {
@@ -190,6 +211,18 @@ export interface OnlineOrderResponse {
 
 export const ordersApi = apiManager.injectEndpoints({
   endpoints: (builder) => ({
+    /* ───────── CHECKOUT ───────── */
+    getCheckoutSummary: builder.mutation<
+      CheckoutSummaryResponse,
+      { order_items: CreateOrderItemDto[] }
+    >({
+      query: (body) => ({
+        url: "orders/summary",
+        method: "POST",
+        body,
+      }),
+    }),
+
     /* ───────── CREATE ───────── */
 
     createOfflineOrder: builder.mutation<OrderResponse, CreateOfflineOrderArgs>(
@@ -409,6 +442,7 @@ export const ordersApi = apiManager.injectEndpoints({
 /* ───────────────── HOOK EXPORTS ───────────────── */
 
 export const {
+  useGetCheckoutSummaryMutation,
   useCreateOfflineOrderMutation,
   useCreateOnlineOrderMutation,
   useCreateOnlineOrderDirectMutation,

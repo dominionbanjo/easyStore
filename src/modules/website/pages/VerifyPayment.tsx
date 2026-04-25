@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,26 +11,34 @@ import {
   Clock,
   CreditCard,
   ArrowLeft,
+  ShoppingBag,
 } from "lucide-react";
 import { useVerifyPaymentMutation } from "@/services/ordersApi";
+import { useGetCartQuery } from "@/services/cartApi";
 import { ACCOUNT_ROUTES } from "@/routes";
 import SmartLink from "@/components/shared/SmartLink";
+import { motion } from "framer-motion";
 
 export default function VerifyPaymentPage() {
   const [searchParams] = useSearchParams();
-
   const reference = searchParams.get("reference");
 
-  const [verifyPayment, { data, isLoading, isError, error, reset }] =
+  const [verifyPayment, { data, isLoading, isError, error }] =
     useVerifyPaymentMutation();
+
+  const { data: cartData } = useGetCartQuery();
+
+  const hasVerifiedRef = useRef(false);
 
   /* ───────────────── AUTO VERIFY ───────────────── */
   useEffect(() => {
-    if (reference) {
+    if (reference && !hasVerifiedRef.current) {
+      hasVerifiedRef.current = true;
       verifyPayment(reference);
     }
-
-    return () => reset();
+    
+    // Do not reset the mutation on unmount to preserve the final loaded state 
+    // unless strictly needed.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reference]);
 
@@ -138,11 +146,14 @@ export default function VerifyPaymentPage() {
 
   // Check if payment was successful by looking at the orders
   // Show success if at least one order has been confirmed (webhook may process asynchronously)
+  // Success check
   const orders = data?.data?.orders;
   const isSuccess =
     orders &&
     orders.length > 0 &&
     orders.some((order: any) => order.payment_status === "success");
+
+  const remainingItemsCount = cartData?.data?.cart?.items?.length || 0;
 
   /* ───────────────── SUCCESS ───────────────── */
   if (isSuccess) {
@@ -162,20 +173,58 @@ export default function VerifyPaymentPage() {
                 Payment Successful
               </h1>
               <p className="text-muted-foreground font-medium max-w-xs mx-auto">
-                Your payment has been verified. We're now processing your order.
+                {remainingItemsCount > 0
+                  ? "Order confirmed! You still have items from other vendors in your cart."
+                  : "Your payment has been verified. We're now processing your order."}
               </p>
             </div>
+
+            {remainingItemsCount > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="p-4 rounded-sm bg-primary/5 border border-primary/20 flex flex-col items-center gap-3"
+              >
+                <div className="flex items-center gap-2 text-primary">
+                  <ShoppingBag className="h-4 w-4" />
+                  <span className="text-[10px] font-black uppercase tracking-[0.2em]">
+                    Orders Remaining ({remainingItemsCount} Items)
+                  </span>
+                </div>
+                <SmartLink to="/cart/preview" className="w-full">
+                  <Button
+                    variant="outline"
+                    className="w-full border-primary/40 text-primary hover:bg-primary/10 rounded-sm h-12 text-xs font-black uppercase tracking-widest"
+                  >
+                    Pay for Next Order
+                  </Button>
+                </SmartLink>
+              </motion.div>
+            )}
 
             <div className="px-4 py-2 rounded-sm bg-emerald-50 dark:bg-emerald-950/20 text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400">
               Ref: {reference}
             </div>
 
-            <SmartLink to={ACCOUNT_ROUTES.ORDERS} className="w-full block">
-              <Button className="w-full h-14 rounded-sm text-lg font-bold   hover:scale-105 active:scale-95 transition-all">
-                <CreditCard className="mr-2 h-5 w-5" />
-                View My Orders
-              </Button>
-            </SmartLink>
+            <div className="space-y-3">
+              <SmartLink to={ACCOUNT_ROUTES.ORDERS} className="w-full block">
+                <Button className="w-full h-14 rounded-sm text-lg font-bold   hover:scale-105 active:scale-95 transition-all">
+                  <CreditCard className="mr-2 h-5 w-5" />
+                  View My Orders
+                </Button>
+              </SmartLink>
+
+              {remainingItemsCount === 0 && (
+                <SmartLink to="/" className="w-full block">
+                  <Button
+                    variant="ghost"
+                    className="w-full h-12 text-muted-foreground font-bold"
+                  >
+                    Back to Shopping
+                  </Button>
+                </SmartLink>
+              )}
+            </div>
           </CardContent>
         </Card>
       </section>

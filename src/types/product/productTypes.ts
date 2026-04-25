@@ -89,8 +89,6 @@ export interface IProductDetails extends IProduct {
   shipping_note?: string | null;
   returns_note?: string | null;
 
-  shipping_cost?: number | null;
-
   rating_count?: number;
   review_count?: number;
   total_sold?: number;
@@ -306,8 +304,6 @@ export interface IStoreProduct {
   returns_note: string | null;
   status?: "active" | "inactive";
 
-  shipping_cost: number;
-
   rating_average: number;
   rating_count: number;
   review_count: number;
@@ -373,7 +369,6 @@ export type CreateProductCloudinaryArgs = {
   specs?: Record<string, string> | null;
 
   /* ───────── SHIPPING ───────── */
-  shipping_cost?: number | null;
   shipping_note?: string | null;
   returns_note?: string | null;
   /* ───────── MEDIA ───────── */
@@ -467,7 +462,6 @@ export interface VendorProductSearchItem {
   returns_note: string | null;
 
   status: "active" | "inactive";
-  shipping_cost: string;
   rating_average: string;
   rating_count: number;
   review_count: number;

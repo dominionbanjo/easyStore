@@ -84,19 +84,16 @@ function ProductDetailsInner({ id }: { id: string }) {
     highlights: product.highlights ?? [],
     specs: product.specs ?? {},
 
-    shipping: {
-      delivery: product.shipping_note ?? "",
-      returns: product.returns_note ?? "",
-      location: formatLocation({
-        city: store.address_city,
-        state: store.address_state,
-        country: store.address_country,
-        postalCode: store.address_postal_code,
-      }),
-      shippingCost: product.shipping_cost
-        ? `₦${Number(product.shipping_cost).toLocaleString()}`
-        : "Contact vendor for shipping fee to your location",
-    },
+      shipping: {
+        delivery: product.shipping_note ?? "",
+        returns: product.returns_note ?? "",
+        location: formatLocation({
+          city: store.address_city,
+          state: store.address_state,
+          country: store.address_country,
+          postalCode: store.address_postal_code,
+        }),
+      },
 
     options: product.options ?? null,
     variants:

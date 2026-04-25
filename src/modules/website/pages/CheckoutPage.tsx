@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
@@ -7,11 +7,24 @@ import {
   Heart,
   Sparkles,
   Navigation,
+  Loader2,
+  AlertCircle,
+  ShoppingBag,
 } from "lucide-react";
 import { useGetCartQuery } from "@/services/cartApi";
 import { useGetUserProfileQuery } from "@/services/userApi";
-import { useCreateOnlineOrderDirectMutation } from "@/services/ordersApi";
+import {
+  useCreateOnlineOrderDirectMutation,
+  useGetCheckoutSummaryMutation,
+} from "@/services/ordersApi";
+import type { ICheckoutSummaryVendor } from "@/services/ordersApi";
 import { toast } from "sonner";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 import { AddressRequiredModal } from "../components/modals/AddressRequiredModal";
 import { BankAccountModal } from "../components/modals/BankAccountModal";
@@ -24,23 +37,57 @@ type RequiredModal = "address" | "bank" | null;
 export default function CheckoutPage() {
   const navigate = useNavigate();
   const { data: cartData, isLoading: isCartLoading } = useGetCartQuery();
-  const cart = cartData?.data.cart;
+  const cart = cartData?.data?.cart;
 
-  // Use single source of truth from API
   const { data: userProfile, isLoading: isUserLoading } =
     useGetUserProfileQuery();
   const user = userProfile?.data?.user;
 
   const [requiredModal, setRequiredModal] = useState<RequiredModal>(null);
+
+  // APIs
+  const [getSummary, { data: summaryResponse, isLoading: isSummaryLoading }] =
+    useGetCheckoutSummaryMutation();
   const [createOrder, { isLoading: isCreatingOrder }] =
     useCreateOnlineOrderDirectMutation();
 
+  // State
+  const [selectedRates, setSelectedRates] = useState<Record<string, string>>(
+    {}
+  );
+  const [activeVendorId, setActiveVendorId] = useState<string | null>(null);
+
+  /* ───────── FETCH SUMMARY ───────── */
+  useEffect(() => {
+    if (cart && cart.items.length > 0) {
+      const orderItems = cart.items.map((item) => ({
+        product_id: item.product_id,
+        variant_id: item.variant_id ?? undefined,
+        quantity: item.quantity,
+        size: item.size ?? undefined,
+        color: item.color ?? undefined,
+      }));
+      getSummary({ order_items: orderItems });
+    }
+  }, [cart, getSummary]);
+
+  const summaryData: ICheckoutSummaryVendor[] = useMemo(() => {
+    // Standard NestJS response structure: { status, message, data: { success, data: [] } }
+    const rawData = (summaryResponse as any)?.data?.data || summaryResponse?.data || [];
+    return Array.isArray(rawData) ? rawData : [];
+  }, [summaryResponse]);
+
+  useEffect(() => {
+    // Default open first accordion item if available
+    if (summaryData.length > 0 && !activeVendorId) {
+      setActiveVendorId(summaryData[0].vendor_id);
+    }
+  }, [summaryData, activeVendorId]);
+
   /* ───────── MODAL SEQUENCING & REFETCHING ───────── */
   useEffect(() => {
-    // Wait for initial load
     if (isUserLoading || !user) return;
 
-    // Strict validation sequence
     if (!user.address) {
       setRequiredModal("address");
     } else if (!user.payout_verified) {
@@ -50,12 +97,7 @@ export default function CheckoutPage() {
     }
   }, [user, isUserLoading]);
 
-  const handleModalClose = () => {
-    // When a modal closes, we temporarily clear the state.
-    // The useEffect above will re-evaluate the user data (which should be refreshing/refreshed)
-    // and re-open the correct modal if requirements are still strict.
-    setRequiredModal(null);
-  };
+  const handleModalClose = () => setRequiredModal(null);
 
   /* ───────── CALCULATIONS ───────── */
   const hasAddress = Boolean(user?.address);
@@ -73,19 +115,26 @@ export default function CheckoutPage() {
 
   const isCheckoutDisabled = !hasAddress || !isBankVerified;
 
-  /* ───────── HANDLE CHECKOUT ───────── */
-  const handleCheckout = async () => {
+  /* ───────── HANDLE CHECKOUT PER VENDOR ───────── */
+  const handleCheckoutVendor = async (vendor: ICheckoutSummaryVendor) => {
     if (isCheckoutDisabled) {
-      // Re-trigger checks
       if (!hasAddress) setRequiredModal("address");
       else if (!isBankVerified) setRequiredModal("bank");
       return;
     }
 
-    if (!cart || !user) return;
+    if (!user) return;
+
+    const selectedRateId = selectedRates[vendor.vendor_id];
+    if (!selectedRateId && vendor.delivery_options.length > 0) {
+      toast.error(`Please select a delivery region for ${vendor.store_name}`);
+      // Ensure the accordion is open for them
+      setActiveVendorId(vendor.vendor_id);
+      return;
+    }
 
     try {
-      const orderItems = cart.items.map((item) => ({
+      const orderItems = vendor.items.map((item) => ({
         product_id: item.product_id,
         variant_id: item.variant_id ?? undefined,
         quantity: item.quantity,
@@ -96,6 +145,7 @@ export default function CheckoutPage() {
       const result = await createOrder({
         email: user.email,
         order_items: orderItems,
+        delivery_rate_id: selectedRateId || undefined,
       }).unwrap();
 
       const data = result.data || result;
@@ -109,6 +159,10 @@ export default function CheckoutPage() {
   };
 
   if (isCartLoading || !cart) return null;
+
+  const handleRateSelection = (vendorId: string, rateId: string) => {
+    setSelectedRates((prev) => ({ ...prev, [vendorId]: rateId }));
+  };
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#020617] pb-20 sm:pb-32 transition-colors duration-500 relative overflow-hidden">
@@ -172,22 +226,12 @@ export default function CheckoutPage() {
                   {cart.items.length}
                 </p>
               </div>
-              <div className="h-10 w-px bg-border/40" />
-              <div className="text-left md:text-right">
-                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">
-                  Basket Value
-                </p>
-                <p className="text-xl sm:text-2xl font-black text-primary">
-                  ₦{(cart?.total ?? 0).toLocaleString()}
-                </p>
-              </div>
             </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-[1.8fr_1fr] gap-4 sm:gap-12 items-start">
             {/* Left Column: Information */}
             <div className="space-y-8 sm:space-y-10">
-              {/* Delivery Info Component with entrance animation */}
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -205,7 +249,6 @@ export default function CheckoutPage() {
                 />
               </motion.div>
 
-              {/* Note about direct payment */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -240,7 +283,6 @@ export default function CheckoutPage() {
                 </div>
               </motion.div>
 
-              {/* Footer Trust Segment */}
               <div className="flex flex-wrap items-center justify-center sm:justify-start gap-6 sm:gap-8 opacity-40 grayscale group-hover:grayscale-0 transition-all duration-700">
                 <div className="flex items-center gap-2">
                   <Heart className="h-3.5 w-3.5" />
@@ -263,27 +305,135 @@ export default function CheckoutPage() {
               </div>
             </div>
 
-            {/* Right Column: Order Summary with scroll follow */}
+            {/* Right Column: Order Summary with Stepper/Accordion */}
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.4 }}
               className="lg:sticky lg:top-12 mt-4 lg:mt-0"
             >
-              <CheckoutSummary
-                items={cart.items}
-                subtotal={cart?.subtotal ?? 0}
-                shipping={cart?.shipping ?? 0}
-                serviceCharge={cart?.platform_fee ?? 0}
-                total={cart?.total ?? 0}
-                isProcessing={isCreatingOrder}
-                disabled={!hasAddress || !isBankVerified}
-                missingAddress={!hasAddress}
-                missingBankVerification={!isBankVerified}
-                onCheckout={handleCheckout}
-                onAddAddress={() => setRequiredModal("address")}
-                onVerifyBank={() => setRequiredModal("bank")}
-              />
+              {isSummaryLoading ? (
+                <div className="h-64 flex flex-col items-center justify-center border border-border/40 bg-muted/20 rounded-sm">
+                  <Loader2 className="w-8 h-8 text-primary animate-spin mb-4" />
+                  <p className="text-sm font-bold animate-pulse text-muted-foreground text-center">
+                    Generating Vendor Split Checkout...
+                  </p>
+                </div>
+              ) : summaryData.length === 0 ? (
+                <div className="h-64 flex flex-col items-center justify-center border border-border/40 bg-muted/20 text-center rounded-sm p-6">
+                  <ShoppingBag className="w-8 h-8 text-muted-foreground opacity-50 mb-4" />
+                  <p className="text-sm font-bold text-muted-foreground">
+                    Your basket is empty or invalid.
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {summaryData.length > 1 && (
+                    <div className="p-3.5 rounded-sm bg-blue-500/10 border border-blue-500/20 flex flex-col sm:flex-row items-start justify-between gap-3 mb-4">
+                      <div className="flex items-center gap-3">
+                        <AlertCircle className="h-6 w-6 text-blue-500 shrink-0" />
+                        <div>
+                          <p className="text-[11px] sm:text-xs font-bold text-blue-600 uppercase tracking-wide">
+                            Multi-Vendor Split
+                          </p>
+                          <p className="text-[9px] sm:text-[10px] text-blue-600/80 font-medium leading-tight">
+                            Your basket contains items from multiple sellers. We process them sequentially. Please select your delivery zone & pay for each seller individually to secure stock.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  <Accordion
+                    type="single"
+                    collapsible
+                    value={activeVendorId || undefined}
+                    onValueChange={(val) => val && setActiveVendorId(val)}
+                  >
+                    {summaryData.map((vendor, index) => {
+                      // We must map items properly & calculate dynamic totals
+                      const selectedRateId = selectedRates[vendor.vendor_id];
+                      const selectedRate = vendor.delivery_options.find(
+                        (r) => r.id === selectedRateId
+                      );
+
+                      // Math Logic matched with backend implementation
+                      const rawSubtotal = vendor.subtotal;
+                      
+                      // Calculate shipping
+                      let shippingFee = 0;
+                      if (selectedRate) {
+                        shippingFee = Number(selectedRate.fee) * 100;
+                      } 
+
+
+                      // Platform fee: 1% capped at NGN 2000 (200,000 kobo)
+                      const platformFee = Math.min(
+                        Math.round(rawSubtotal * 0.01),
+                        200000
+                      );
+
+                      const grandTotal = rawSubtotal + shippingFee + platformFee;
+
+                      return (
+                        <AccordionItem
+                          key={vendor.vendor_id}
+                          value={vendor.vendor_id}
+                          className="border-none mb-4"
+                        >
+                          <AccordionTrigger
+                            className={`px-4 py-3 rounded-sm border hover:bg-muted/30 transition-colors [&[data-state=open]]:rounded-b-none ${
+                              activeVendorId === vendor.vendor_id
+                                ? "bg-muted/50 border-primary/20"
+                                : "bg-card border-border/40"
+                            }`}
+                          >
+                            <div className="flex items-center gap-3 text-left">
+                              <div className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-[10px] font-black shrink-0">
+                                {index + 1}
+                              </div>
+                              <div>
+                                <span className="block text-sm font-black uppercase tracking-tight text-foreground">
+                                  {vendor.store_name}
+                                </span>
+                                <span className="block text-[10px] text-muted-foreground font-medium">
+                                  {vendor.items.length} Items • ₦
+                                  {(grandTotal / 100).toLocaleString()}
+                                </span>
+                              </div>
+                            </div>
+                          </AccordionTrigger>
+                          <AccordionContent className="p-0 border border-t-0 border-border/40 rounded-b-sm bg-card">
+                            <CheckoutSummary
+                              storeName={vendor.store_name}
+                              items={vendor.items}
+                              subtotal={rawSubtotal / 100}
+                              shipping={shippingFee / 100}
+                              serviceCharge={platformFee / 100}
+                              total={grandTotal / 100}
+                              isProcessing={
+                                isCreatingOrder &&
+                                activeVendorId === vendor.vendor_id
+                              }
+                              disabled={!hasAddress || !isBankVerified}
+                              missingAddress={!hasAddress}
+                              missingBankVerification={!isBankVerified}
+                              deliveryOptions={vendor.delivery_options}
+                              selectedDeliveryRateId={selectedRateId}
+                              onSelectDeliveryRate={(rateId) =>
+                                handleRateSelection(vendor.vendor_id, rateId)
+                              }
+                              onCheckout={() => handleCheckoutVendor(vendor)}
+                              onAddAddress={() => setRequiredModal("address")}
+                              onVerifyBank={() => setRequiredModal("bank")}
+                            />
+                          </AccordionContent>
+                        </AccordionItem>
+                      );
+                    })}
+                  </Accordion>
+                </div>
+              )}
             </motion.div>
           </div>
         </motion.div>

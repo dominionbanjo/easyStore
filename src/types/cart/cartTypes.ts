@@ -18,7 +18,6 @@ export interface ICartItem {
   variant_id?: string | null;
   variant_options?: Record<string, string> | null;
 
-  shipping_cost?: number | null;
 }
 
 export interface ICart {

@@ -1,17 +1,9 @@
 import { FormTextarea } from "@/components/shared/form/FormTextarea";
-import { FormPriceInput } from "@/components/shared/form/FormPriceInput";
-import { Truck, Info, ShieldCheck } from "lucide-react";
+import { Info, ShieldCheck } from "lucide-react";
 
 export function ShippingSection() {
   return (
     <div className="space-y-6">
-      <FormPriceInput
-        name="shipping_cost"
-        label="Shipping Cost"
-        placeholder="1,500"
-        icon={<Truck className="h-4 w-4" />}
-      />
-
       <div className="flex flex-col gap-6">
         <FormTextarea
           name="shipping_note"

@@ -41,7 +41,7 @@ export function BazaarBuyBox({
           <Truck className="w-5 h-5 text-slate-400 shrink-0" />
           <div>
             <span className="font-bold text-green-700 dark:text-green-500 block">
-              {uiProduct.shipping.shippingCost}
+              Shipping calculated at checkout
             </span>
             <span className="text-slate-500 block">
               Delivery outside {uiProduct.shipping.location} may vary.

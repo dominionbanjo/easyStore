@@ -3,7 +3,7 @@ import { useForm, FormProvider } from "react-hook-form";
 import { useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Loader2 } from "lucide-react";
-import { Location, Card as CardIcon, Save2, Shop } from "iconsax-react";
+import { Location, Card as CardIcon, Save2, Shop, TruckFast } from "iconsax-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
@@ -27,6 +27,7 @@ import {
   useGetNigerianBanksQuery,
 } from "@/services/userApi";
 import type { IStoreDetails } from "@/types/Store/storeTypes";
+import { DeliveryLocationsSettings } from "./DeliveryLocationsSettings";
 
 interface StoreSettingsCompleteViewProps {
   store: IStoreDetails;
@@ -53,6 +54,7 @@ interface BankDetails {
 const TABS = [
   { id: "general", label: "General", icon: Shop },
   { id: "location", label: "Location", icon: Location },
+  { id: "delivery", label: "Delivery", icon: TruckFast },
   { id: "payout", label: "Payout", icon: CardIcon },
 ];
 
@@ -285,6 +287,18 @@ export function StoreSettingsCompleteView({
                 </CardContent>
               </Card>
             </FormProvider>
+          </motion.div>
+        )}
+
+        {activeTab === "delivery" && (
+          <motion.div
+            key="delivery"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+          >
+            <DeliveryLocationsSettings storeId={store?.id} />
           </motion.div>
         )}
 

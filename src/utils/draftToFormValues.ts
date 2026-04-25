@@ -13,7 +13,6 @@ export type BuildCreatePayloadArgs = {
     discount_price?: number | null;
     stock?: number | null;
 
-    shipping_cost?: number | null;
     shipping_note?: string | null;
     returns_note?: string | null;
   };
@@ -55,7 +54,6 @@ export function buildCreateProductPayload(
 
     specs: buildSpecsObject(specItems),
 
-    shipping_cost: values.shipping_cost,
     shipping_note: values.shipping_note,
     returns_note: values.returns_note,
 

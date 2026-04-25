@@ -67,9 +67,6 @@ export default function ProductPreviewPage() {
       delivery: draft.shipping_note ?? "",
       returns: draft.returns_note ?? "",
       location: "Ships from your store location",
-      shippingCost: draft.shipping_cost
-        ? `₦${Number(draft.shipping_cost).toLocaleString()}`
-        : "Calculated at checkout",
     },
 
     sizes: draft.sizes ?? [],

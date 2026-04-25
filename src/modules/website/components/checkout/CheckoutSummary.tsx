@@ -15,9 +15,14 @@ import {
   ShoppingBag,
 } from "lucide-react";
 import type { ICartItem } from "@/types/cart/cartTypes";
+import * as React from "react";
 import { motion } from "framer-motion";
+import { FormProvider, useForm } from "react-hook-form";
+import { FormSelect } from "@/components/shared/form/FormSelect";
+import { Truck } from "lucide-react";
 
 interface CheckoutSummaryProps {
+  storeName?: string;
   items: ICartItem[];
   subtotal: number;
   shipping: number;
@@ -27,12 +32,22 @@ interface CheckoutSummaryProps {
   disabled: boolean;
   missingAddress?: boolean;
   missingBankVerification?: boolean;
+  deliveryOptions?: {
+    id: string;
+    state: string;
+    location: string;
+    fee: number;
+    duration: string | null;
+  }[];
+  selectedDeliveryRateId?: string;
+  onSelectDeliveryRate?: (rateId: string) => void;
   onCheckout: () => void;
   onAddAddress: () => void;
   onVerifyBank: () => void;
 }
 
 export function CheckoutSummary({
+  storeName,
   items,
   subtotal,
   shipping,
@@ -42,11 +57,27 @@ export function CheckoutSummary({
   disabled,
   missingAddress,
   missingBankVerification,
+  deliveryOptions,
+  selectedDeliveryRateId,
+  onSelectDeliveryRate,
   onCheckout,
   onAddAddress,
   onVerifyBank,
 }: CheckoutSummaryProps) {
-  const isBlocked = missingAddress || missingBankVerification;
+  const isBlocked = missingAddress || missingBankVerification || (!selectedDeliveryRateId && deliveryOptions && deliveryOptions.length > 0);
+
+  const methods = useForm({
+    defaultValues: {
+      delivery_rate_id: selectedDeliveryRateId || "",
+    },
+  });
+
+  // Sync internal form state with parent prop if it changes
+  React.useEffect(() => {
+    if (selectedDeliveryRateId) {
+      methods.setValue("delivery_rate_id", selectedDeliveryRateId);
+    }
+  }, [selectedDeliveryRateId, methods]);
 
   return (
     <Card className="h-fit rounded-sm sm:rounded-sm border-border/40   bg-background border overflow-hidden">
@@ -54,7 +85,7 @@ export function CheckoutSummary({
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg sm:text-xl font-black uppercase tracking-tight text-foreground flex items-center gap-3">
             <ShoppingBag className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
-            Order Basket
+            {storeName ? `${storeName} Basket` : "Order Basket"}
           </CardTitle>
           <span className="bg-primary/10 text-primary text-[10px] font-black px-3 py-1 rounded-sm uppercase tracking-widest">
             {items.reduce((acc, item) => acc + item.quantity, 0)} Items
@@ -152,11 +183,31 @@ export function CheckoutSummary({
                 ₦{(subtotal ?? 0).toLocaleString()}
               </span>
             </div>
+            {deliveryOptions && deliveryOptions.length > 0 && (
+              <div className="py-2">
+                <FormProvider {...methods}>
+                  <FormSelect
+                    name="delivery_rate_id"
+                    label="Delivery Region *"
+                    placeholder="Select delivery region"
+                    isSearchable
+                    icon={<Truck className="h-4 w-4" />}
+                    options={deliveryOptions.map((opt) => ({
+                      value: opt.id,
+                      label: `${opt.state} (${opt.location}) — ₦${Number(opt.fee).toLocaleString()}`,
+                    }))}
+                    onValueChange={onSelectDeliveryRate}
+                    className="[&>label]:text-[10px] [&>label]:font-black [&>label]:uppercase [&>label]:tracking-widest [&>label]:text-muted-foreground/60"
+                  />
+                </FormProvider>
+              </div>
+            )}
+
             <div className="flex justify-between items-center text-xs sm:text-sm font-medium text-emerald-600">
               <div className="flex items-center gap-2">
                 <span className="text-muted-foreground">Logistics Fee</span>
                 <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider bg-emerald-500/10 px-2 py-0.5 rounded-sm">
-                  Standard
+                  {selectedDeliveryRateId ? "Selected" : "Standard"}
                 </span>
               </div>
               <span className="font-black">

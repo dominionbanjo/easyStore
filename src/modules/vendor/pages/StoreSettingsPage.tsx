@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { useForm, FormProvider } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { Loader2, Store, Globe, CreditCard } from "lucide-react";
+import { Loader2, Store, Globe, CreditCard, Truck } from "lucide-react";
 import { toast } from "sonner";
 
 import {
@@ -27,6 +26,7 @@ import { HorizontalStepper } from "../components/settings/HorizontalStepper";
 import { StoreIdentityStep } from "../components/settings/StoreIdentityStep";
 import { ContactLocationStep } from "../components/settings/ContactLocationStep";
 import { PayoutSetupStep } from "../components/settings/PayoutSetupStep";
+import { DeliverySetupStep } from "../components/settings/DeliverySetupStep";
 import { AddressModal } from "../components/settings/AddressModal";
 import { useStoreSetup } from "../hooks/useStoreSetup";
 import { StoreSettingsCompleteView } from "../components/settings/StoreSettingsCompleteView";
@@ -35,10 +35,10 @@ const STEPS = [
   { id: 1, title: "Store Identity", icon: Store },
   { id: 2, title: "Contact Details", icon: Globe },
   { id: 3, title: "Payout Setup", icon: CreditCard },
+  { id: 4, title: "Delivery Rates", icon: Truck },
 ];
 
 export default function SettingsPage() {
-  const navigate = useNavigate();
   const {
     store,
     isLoading: isLoadingStore,
@@ -99,7 +99,7 @@ export default function SettingsPage() {
 
   // Define setup stage logic early so handlers can use it
   const setupStage = store?.setup_stage || 1;
-  const isSetupComplete = setupStage >= 4;
+  const isSetupComplete = setupStage >= 5;
 
   // Subscriptions for internal handlers
   const bankData = {
@@ -132,7 +132,7 @@ export default function SettingsPage() {
 
   useEffect(() => {
     const stage = store?.setup_stage || 1;
-    if (stage < 4) {
+    if (stage <= 4) {
       setActiveStep(stage);
     }
   }, [store]);
@@ -278,8 +278,8 @@ export default function SettingsPage() {
         account_number: bankData.account_number,
       }).unwrap();
       toast.success("Bank account registered successfully!");
-      // Redirect to products with success flag for guided onboarding
-      navigate("/products?setup=success");
+      // Proceed to delivery setup
+      setActiveStep(4);
     } catch (error: unknown) {
       const err = error as { data?: { message?: string } };
       toast.error(err.data?.message || "Failed to register bank account");
@@ -391,6 +391,18 @@ export default function SettingsPage() {
                   onVerify={handleVerifyBank}
                   onRegister={handleRegisterBank}
                 />
+              </motion.div>
+            )}
+
+            {activeStep === 4 && (
+              <motion.div
+                key="step4"
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.98 }}
+                transition={{ duration: 0.2 }}
+              >
+                <DeliverySetupStep storeId={store.id} />
               </motion.div>
             )}
           </AnimatePresence>

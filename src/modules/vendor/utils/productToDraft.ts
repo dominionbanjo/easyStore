@@ -29,10 +29,6 @@ export function productToDraft(product: IProductDetails) {
           ? Number(product.stock)
           : 0,
 
-      shipping_cost:
-        product.shipping_cost !== undefined && product.shipping_cost !== null
-          ? Number(product.shipping_cost)
-          : 0,
       shipping_note: product.shipping_note || "",
       returns_note: product.returns_note || "",
     },
