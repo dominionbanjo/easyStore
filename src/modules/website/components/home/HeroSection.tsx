@@ -211,34 +211,18 @@ export default function HeroSection() {
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none select-none blur-[6px] opacity-70">
         <GrowthIllustration
           className="absolute -left-20 top-[10%] w-[500px] md:w-[700px] opacity-[0.12] dark:opacity-[0.2]"
-          initial={{ x: -20, opacity: 0 }}
-          animate={{ x: 0, opacity: 0.12, y: [0, -15, 0] }}
-          transition={{
-            opacity: { duration: 1 },
-            y: { duration: 6, repeat: Infinity, ease: "easeInOut" },
-          }}
           primaryColor="var(--color-primary, #10b981)"
         />
         <SocialIllustration
           className="absolute -right-20 top-[20%] w-[500px] md:w-[750px] opacity-[0.12] dark:opacity-[0.2]"
-          initial={{ x: 20, opacity: 0 }}
-          animate={{ x: 0, opacity: 0.12, y: [0, 15, 0] }}
-          transition={{
-            opacity: { duration: 1, delay: 0.2 },
-            y: { duration: 7, repeat: Infinity, ease: "easeInOut" },
-          }}
           primaryColor="var(--color-primary, #10b981)"
         />
         <TeamIllustration
           className="absolute right-[10%] bottom-[0%] w-[450px] opacity-[0.08] dark:opacity-[0.15] hidden xl:block"
-          animate={{ y: [0, -20, 0] }}
-          transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
           primaryColor="var(--color-primary, #10b981)"
         />
         <GrowthIllustration
           className="absolute left-1/3 bottom-[-10%] w-[400px] opacity-[0.08] dark:opacity-[0.15] hidden xl:block"
-          animate={{ y: [0, -10, 0], rotate: [0, 2, 0] }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
           primaryColor="var(--color-primary, #10b981)"
         />
       </div>
@@ -246,22 +230,11 @@ export default function HeroSection() {
       {/* Floating commerce icons — now visible on mobile with adjusted scale */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
         {floatingIcons.map(
-          ({ Icon, top, left, delay, size, color, isLucide }, index) => (
-            <motion.div
+          ({ Icon, top, left, size, color, isLucide }, index) => (
+            <div
               key={index}
               className="absolute"
               style={{ top, left }}
-              initial={{ y: 0, opacity: 0 }}
-              animate={{ y: [0, -18, 0], opacity: 1 }}
-              transition={{
-                y: {
-                  duration: 4 + index * 0.3,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay,
-                },
-                opacity: { duration: 0.6, delay: delay + 0.2 },
-              }}
             >
               <Icon
                 {...(isLucide ? {} : { variant: "Bold" })}
@@ -269,7 +242,7 @@ export default function HeroSection() {
                 size={size}
                 className="opacity-20 sm:opacity-30 drop-shadow-sm scale-75 sm:scale-100"
               />
-            </motion.div>
+            </div>
           ),
         )}
       </div>
@@ -395,7 +368,7 @@ export default function HeroSection() {
           </div>
 
           <div className="self-end mr-6 bg-white/80 dark:bg-primary/20 backdrop-blur-md border border-neutral-200 dark:border-primary/30 px-3 py-1.5 rounded-sm flex items-center gap-2 shadow-sm">
-            <div className="w-2 h-2 bg-primary rounded-full animate-pulse" />
+            <div className="w-2 h-2 bg-primary rounded-full" />
             <span className="text-[10px] font-black text-primary uppercase tracking-wider">
               Live Preview
             </span>
@@ -441,7 +414,7 @@ export default function HeroSection() {
           ].map((feature, idx) => (
             <div key={idx} className="group flex items-start gap-5 text-left">
               <div
-                className={`w-12 h-12 shrink-0 rounded-sm ${feature.bg} flex items-center justify-center transition-all group-hover:scale-110 shadow-sm`}
+                className={`w-12 h-12 shrink-0 rounded-sm ${feature.bg} flex items-center justify-center shadow-sm`}
               >
                 <feature.Icon variant="Bold" color={feature.color} size={24} />
               </div>
