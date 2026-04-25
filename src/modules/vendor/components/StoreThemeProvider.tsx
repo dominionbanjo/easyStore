@@ -38,9 +38,7 @@ export function StoreThemeProvider({
 
   // Map specific config values to CSS variables
   const styleContext: CSSProperties & { [key: string]: string } = {
-    ...(activeConfig.primary_color && {
-      "--theme-primary": activeConfig.primary_color,
-    }),
+    "--theme-primary": activeConfig.primary_color || "var(--primary)",
     ...(activeConfig.font_family && {
       "--theme-font": activeConfig.font_family,
     }),
