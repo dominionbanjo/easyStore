@@ -22,10 +22,7 @@ export default function DiscoveryHero() {
   };
 
   return (
-    <div className="pb-12 bg-transparent relative overflow-hidden transition-colors duration-300">
-      {/* Local lighting effect */}
-      <div className="absolute top-1/4 -right-40 w-[600px] h-[600px] bg-primary/5 dark:bg-primary/10 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-0 -left-20 w-[500px] h-[500px] bg-emerald-500/5 dark:bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none" />
+    <div className="pb-12 bg-white dark:bg-neutral-950 transition-colors duration-300">
       {/* Hero Header */}
       <section className="relative overflow-hidden pt-20 pb-12 px-4">
         <div className="absolute top-0 center w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent dark:from-emerald-900/20" />

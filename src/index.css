@@ -1,19 +1,17 @@
-@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-sans:
-    "Outfit", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
-    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --radius-sm: 0.38rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 0.7rem;
-  --radius-xl: 1rem;
-  --radius-2xl: 1.25rem;
-  --radius-3xl: 1.5rem;
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --radius-sm: 0.3rem;
+  --radius-md: 0.4rem;
+  --radius-lg: 0.6rem;
+  --radius-xl: 0.8rem;
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.25rem;
   --radius-full: 9999px;
 
   --: none;
@@ -58,7 +56,7 @@
 }
 
 :root {
-  --radius: 0.5rem;
+  --radius: 0.4rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.141 0.005 285.823);
   --card: oklch(1 0 0);
