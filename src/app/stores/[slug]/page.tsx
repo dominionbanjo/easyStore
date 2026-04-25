@@ -62,7 +62,7 @@ export default function StoreDetailsPage() {
     ? cartData?.data?.cart?.items?.length || 0
     : cartState.localItems?.length || 0;
 
-  const [startConversation] = useStartConversationMutation();
+  const [startConversation, { isLoading: isStartingConversation }] = useStartConversationMutation();
   const { templateName: activeTemplateName } = useStoreTheme();
 
   // Debounce search
@@ -259,6 +259,7 @@ export default function StoreDetailsPage() {
     },
     onCartOpen: () => setIsCartOpen(true),
     cartItemsCount,
+    isMessagingLoading: isStartingConversation,
     onMessageVendor: async () => {
       if (!isAuthenticated) {
         toast.error("Please login to message the vendor");
@@ -272,7 +273,6 @@ export default function StoreDetailsPage() {
         const conversationResponse = await startConversation({ recipient_id: store.user_id }).unwrap();
         const conversationId = conversationResponse.data.id;
         
-        // Use messagingApi utility to send the initial message if needed
         const prefill = encodeURIComponent("Hi Im viewing your store any information i should note");
         const targetPath = `${ACCOUNT_ROUTES.MESSAGES}/${conversationId}?prefill=${prefill}`;
 

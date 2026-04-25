@@ -20,6 +20,7 @@ interface BazaarProductInfoProps {
   selectedOptions: Record<string, string>;
   selectOption: (name: string, value: string) => void;
   onMessageVendor?: () => void;
+  isMessagingLoading?: boolean;
 }
 
 export function BazaarProductInfo({
@@ -34,6 +35,7 @@ export function BazaarProductInfo({
   selectedOptions,
   selectOption,
   onMessageVendor,
+  isMessagingLoading,
 }: BazaarProductInfoProps) {
   return (
     <div className="bg-white dark:bg-neutral-900 rounded-[32px] border border-slate-200/50 dark:border-neutral-800/50 px-4 py-8 sm:p-10 flex flex-col md:flex-row gap-8 md:gap-12 shadow-sm animate-in fade-in slide-in-from-left-4 duration-700">
@@ -57,11 +59,16 @@ export function BazaarProductInfo({
         {onMessageVendor && (
           <Button
             onClick={onMessageVendor}
+            disabled={isMessagingLoading}
             variant="outline"
-            className="rounded-2xl gap-2 font-bold border-slate-200 dark:border-neutral-800"
+            className="rounded-2xl gap-2 font-bold border-slate-200 dark:border-neutral-800 disabled:opacity-50"
           >
-            <Messages3 variant="Bold" color="currentColor" className="w-5 h-5" />
-            Message Store
+            {isMessagingLoading ? (
+              <div className="h-5 w-5 border-2 border-[var(--theme-primary)] border-t-transparent rounded-full animate-spin" />
+            ) : (
+              <Messages3 variant="Bold" color="currentColor" className="w-5 h-5" />
+            )}
+            {isMessagingLoading ? "Connecting..." : "Message Store"}
           </Button>
         )}
         

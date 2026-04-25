@@ -19,6 +19,8 @@ export default function DefaultProductTemplate({
   relatedProducts,
   onCartOpen,
   cartItemsCount,
+  onMessageVendor,
+  isMessagingLoading,
 }: ProductTemplateProps) {
   const uiProduct = adaptProductToUI(product, store, reviews);
 
@@ -47,6 +49,8 @@ export default function DefaultProductTemplate({
         uiProduct={uiProduct}
         onCartOpen={onCartOpen}
         cartItemsCount={cartItemsCount}
+        onMessageVendor={onMessageVendor}
+        isMessagingLoading={isMessagingLoading}
       />
 
       {/* ─── PRODUCT MAIN ─── */}
@@ -74,6 +78,8 @@ export default function DefaultProductTemplate({
                 selectOption={selectOption}
                 handleAddToCart={handleAddToCart}
                 toggleWishlist={toggleWishlist}
+                onMessageVendor={onMessageVendor}
+                isMessagingLoading={isMessagingLoading}
               />
 
               <div className="px-2 sm:px-10 lg:px-12 pb-12">

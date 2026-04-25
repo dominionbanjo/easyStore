@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import { Search, ShoppingBag } from "lucide-react";
+import { Search, ShoppingBag, Loader2 } from "lucide-react";
+import { Messages3 } from "iconsax-react";
 import { TemplateProfileDropdown } from "@/components/shared/TemplateProfileDropdown";
 import type { IProductStore } from "@/types/product/productTypes";
 import type { UIProduct } from "@/modules/vendor/utils/productAdapter";
@@ -11,6 +12,8 @@ interface HeritageHeaderProps {
   cartItemsCount: number;
   searchOpen: boolean;
   setSearchOpen: (open: boolean) => void;
+  onMessageVendor?: () => void;
+  isMessagingLoading?: boolean;
 }
 
 export function HeritageHeader({
@@ -20,6 +23,8 @@ export function HeritageHeader({
   cartItemsCount,
   searchOpen,
   setSearchOpen,
+  onMessageVendor,
+  isMessagingLoading,
 }: HeritageHeaderProps) {
   return (
     <header className="py-3 px-1.5 md:px-12 flex flex-col gap-4 border-b border-[#EADDCE] dark:border-[#3D352B] bg-[#FAF7F2] dark:bg-[#1E1A17] sticky top-0 z-50  transition-all duration-300">
@@ -57,6 +62,18 @@ export function HeritageHeader({
               <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-sm bg-[var(--theme-primary)] text-[10px] font-bold text-white ">
                 {cartItemsCount}
               </span>
+            )}
+          </button>
+
+          <button
+            onClick={onMessageVendor}
+            disabled={isMessagingLoading}
+            className="p-2.5 rounded-sm hover:bg-[#EADDCE] dark:hover:bg-[#3D352B] text-[#5C5042] dark:text-[#A89F91] transition-colors disabled:opacity-50"
+          >
+            {isMessagingLoading ? (
+              <Loader2 className="h-5 w-5 animate-spin" />
+            ) : (
+              <Messages3 className="h-5 w-5" variant="Bold" color="currentColor" />
             )}
           </button>
 

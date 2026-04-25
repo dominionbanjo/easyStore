@@ -1,7 +1,8 @@
 import React, { useEffect, useRef } from "react";
 import type { IMessage } from "@/services/messagingApi";
+import { MessageSkeleton } from "./MessageSkeleton";
 import { MessageItem } from "./MessageItem";
-import { Loader2, MessageSquare, Calendar } from "lucide-react";
+import { MessageSquare, Calendar } from "lucide-react";
 import { useSelector } from "react-redux";
 import { format, isToday, isYesterday, startOfDay } from "date-fns";
 import type { RootState } from "@/store";
@@ -28,35 +29,25 @@ export const MessageList: React.FC<MessageListProps> = ({
 
   const lastMessagesLengthRef = useRef(0);
 
+  // Immediate scroll to bottom on mount/messages change
   useEffect(() => {
     const container = scrollRef.current;
     if (!container) return;
 
     const isInitialLoad = lastMessagesLengthRef.current === 0 && messages.length > 0;
-    
-    // Only auto-scroll if user is near bottom (within 150px)
-    // or if they just sent a new message, OR if it's the first time messages loaded
-    const isNearBottom = container.scrollHeight - container.scrollTop <= container.clientHeight + 200;
-    
+    const isNearBottom = container.scrollHeight - container.scrollTop <= container.clientHeight + 300;
     const lastMessage = messages[messages.length - 1];
     const sentByMe = lastMessage?.sender_id === user?.id;
 
     if (isInitialLoad || isNearBottom || sentByMe) {
-      container.scrollTo({
-        top: container.scrollHeight,
-        behavior: isInitialLoad ? "auto" : "smooth"
-      });
+      container.scrollTop = container.scrollHeight;
     }
 
     lastMessagesLengthRef.current = messages.length;
   }, [messages, typingUsers, user?.id]);
 
   if (isLoading && messages.length === 0) {
-    return (
-      <div className="flex-1 flex items-center justify-center">
-        <Loader2 className="h-8 w-8 text-primary animate-spin" />
-      </div>
-    );
+    return <MessageSkeleton />;
   }
 
   return (

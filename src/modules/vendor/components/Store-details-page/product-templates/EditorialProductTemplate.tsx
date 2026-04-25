@@ -18,6 +18,8 @@ export default function EditorialProductTemplate({
   relatedProducts,
   onCartOpen,
   cartItemsCount,
+  onMessageVendor,
+  isMessagingLoading,
 }: ProductTemplateProps) {
   const uiProduct = adaptProductToUI(product, store, reviews);
 
@@ -49,6 +51,8 @@ export default function EditorialProductTemplate({
         cartItemsCount={cartItemsCount}
         searchOpen={searchOpen}
         setSearchOpen={setSearchOpen}
+        onMessageVendor={onMessageVendor}
+        isMessagingLoading={isMessagingLoading}
       />
 
       <div className="max-w-7xl mx-auto px-2 sm:px-6 pt-6 sm:pt-8">
@@ -72,6 +76,8 @@ export default function EditorialProductTemplate({
         selectOption={selectOption}
         handleAddToCart={handleAddToCart}
         toggleWishlist={toggleWishlist}
+        onMessageVendor={onMessageVendor}
+        isMessagingLoading={isMessagingLoading}
       />
 
       {/* ─── APPENDICES ─── */}

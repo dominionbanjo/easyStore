@@ -22,6 +22,8 @@ interface HeritageShowcaseProps {
   selectOption: (name: string, value: string) => void;
   handleAddToCart: () => void;
   toggleWishlist: () => void;
+  onMessageVendor?: () => void;
+  isMessagingLoading?: boolean;
 }
 
 export function HeritageShowcase({
@@ -41,6 +43,8 @@ export function HeritageShowcase({
   selectOption,
   handleAddToCart,
   toggleWishlist,
+  onMessageVendor,
+  isMessagingLoading,
 }: HeritageShowcaseProps) {
   return (
     <div className="bg-white dark:bg-[#1E1A17] rounded-sm md:rounded-sm px-1 py-6 md:p-12 lg:p-16 -[#3D352B]/5 border border-[#EADDCE] dark:border-[#3D352B]">
@@ -205,6 +209,18 @@ export function HeritageShowcase({
                 )}
               </button>
             </div>
+
+            <button
+              onClick={onMessageVendor}
+              disabled={isMessagingLoading}
+              className="w-full py-4 border-2 border-[#EADDCE] dark:border-[#5C5042] text-[#2C2622] dark:text-[#EAE3DB] font-bold rounded-sm font-sans tracking-wide uppercase hover:border-[#8C7A6B] transition-all flex items-center justify-center gap-2 disabled:opacity-40"
+            >
+              {isMessagingLoading ? (
+                <div className="h-5 w-5 border-2 border-[var(--theme-primary)] border-t-transparent rounded-sm animate-spin" />
+              ) : (
+                <span className="italic font-serif normal-case">Send Inquiry to Vendor</span>
+              )}
+            </button>
 
             <button
               onClick={toggleWishlist}

@@ -43,6 +43,7 @@ export default function EditorialTemplate({
   onCartOpen,
   cartItemsCount,
   onMessageVendor,
+  isMessagingLoading,
 }: StoreTemplateProps) {
   const [contactOpen, setContactOpen] = useState(false);
   // Editorial aesthetic:
@@ -106,10 +107,15 @@ export default function EditorialTemplate({
                 {onMessageVendor && (
                   <button
                     onClick={onMessageVendor}
-                    className="p-2.5 sm:p-3.5 rounded-sm bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 hover:scale-110 active:scale-95 transition-all"
+                    disabled={isMessagingLoading}
+                    className="p-2.5 sm:p-3.5 rounded-sm bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 hover:scale-110 active:scale-95 transition-all disabled:opacity-50"
                     title="Message Vendor"
                   >
-                    <Messages3 variant="Bold" color="currentColor" className="w-5 h-5 sm:w-6 sm:h-6" />
+                    {isMessagingLoading ? (
+                       <Loader2 className="w-5 h-5 sm:w-6 sm:h-6 animate-spin" />
+                    ) : (
+                      <Messages3 variant="Bold" color="currentColor" className="w-5 h-5 sm:w-6 sm:h-6" />
+                    )}
                   </button>
                 )}
               </div>

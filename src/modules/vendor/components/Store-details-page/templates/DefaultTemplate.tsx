@@ -8,7 +8,6 @@ import {
   ChevronRight,
   ShoppingCart,
   TwitterIcon,
-  MessageSquare,
 } from "lucide-react";
 import {
   Instagram,
@@ -17,6 +16,7 @@ import {
   Global,
   InfoCircle,
   Call,
+  Messages3,
 } from "iconsax-react";
 import { Input } from "@/components/ui/input";
 import { StoreProductsGrid } from "../StoreProductsGrid";
@@ -46,6 +46,7 @@ export default function DefaultTemplate({
   onCartOpen,
   cartItemsCount,
   onMessageVendor,
+  isMessagingLoading,
 }: StoreTemplateProps) {
   const [contactOpen, setContactOpen] = useState(false);
   const hasBanner = !!store.cover_image;
@@ -155,10 +156,15 @@ export default function DefaultTemplate({
             {onMessageVendor && (
               <button
                 onClick={onMessageVendor}
-                 className="relative p-2.5 rounded-sm hover:bg-zinc-100 dark:hover:bg-zinc-900 text-zinc-600 dark:text-zinc-400 transition-all hover:scale-110"
+                disabled={isMessagingLoading}
+                className="relative p-2.5 rounded-sm hover:bg-zinc-100 dark:hover:bg-zinc-900 text-zinc-600 dark:text-zinc-400 transition-all hover:scale-110 disabled:opacity-50"
                 title="Message Vendor"
               >
-                <MessageSquare className="w-5 h-5" />
+                {isMessagingLoading ? (
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                ) : (
+                  <Messages3 variant="Bold" color="currentColor" className="w-5 h-5" />
+                )}
               </button>
             )}
           </div>
@@ -291,9 +297,14 @@ export default function DefaultTemplate({
               {onMessageVendor && (
                 <button
                   onClick={onMessageVendor}
-                  className="bg-white/10 backdrop-blur-md text-white border border-white/20 px-8 py-3.5 rounded-sm font-bold text-base hover:bg-white/20 transition-all hover:-translate-y-1 active:scale-95 flex items-center gap-2"
+                  disabled={isMessagingLoading}
+                  className="bg-white/10 backdrop-blur-md text-white border border-white/20 px-8 py-3.5 rounded-sm font-bold text-base hover:bg-white/20 transition-all hover:-translate-y-1 active:scale-95 flex items-center gap-2 disabled:opacity-50"
                 >
-                  <MessageSquare className="w-5 h-5" />
+                  {isMessagingLoading ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : (
+                    <Messages3 variant="Bold" color="currentColor" className="w-5 h-5" />
+                  )}
                   Message Vendor
                 </button>
               )}

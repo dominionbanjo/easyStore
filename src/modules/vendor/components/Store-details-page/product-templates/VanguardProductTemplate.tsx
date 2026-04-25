@@ -17,6 +17,8 @@ export default function VanguardProductTemplate({
   relatedProducts,
   onCartOpen,
   cartItemsCount,
+  onMessageVendor,
+  isMessagingLoading,
 }: ProductTemplateProps) {
   const uiProduct = adaptProductToUI(product, store, reviews);
 
@@ -47,6 +49,8 @@ export default function VanguardProductTemplate({
         cartItemsCount={cartItemsCount}
         searchOpen={searchOpen}
         setSearchOpen={setSearchOpen}
+        onMessageVendor={onMessageVendor}
+        isMessagingLoading={isMessagingLoading}
       />
 
       <div className="max-w-[1400px] mx-auto px-1.5 sm:px-6 pt-6 sm:pt-8">
@@ -69,6 +73,8 @@ export default function VanguardProductTemplate({
         selectOption={selectOption}
         handleAddToCart={handleAddToCart}
         toggleWishlist={toggleWishlist}
+        onMessageVendor={onMessageVendor}
+        isMessagingLoading={isMessagingLoading}
       />
 
       {/* ─── REVIEWS ─── */}

@@ -13,4 +13,5 @@ export interface ProductTemplateProps {
   onCartOpen: () => void;
   cartItemsCount: number;
   onMessageVendor?: () => void;
+  isMessagingLoading?: boolean;
 }

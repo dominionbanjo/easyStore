@@ -20,6 +20,8 @@ export default function TitanProductTemplate({
   relatedProducts,
   onCartOpen,
   cartItemsCount,
+  onMessageVendor,
+  isMessagingLoading,
 }: ProductTemplateProps) {
   const uiProduct = adaptProductToUI(product, store, reviews);
 
@@ -52,6 +54,8 @@ export default function TitanProductTemplate({
         cartItemsCount={cartItemsCount}
         searchOpen={searchOpen}
         setSearchOpen={setSearchOpen}
+        onMessageVendor={onMessageVendor}
+        isMessagingLoading={isMessagingLoading}
       />
 
       {/* ─── DATA GRID (MAIN CONTENT) ─── */}
@@ -79,6 +83,8 @@ export default function TitanProductTemplate({
               selectOption={selectOption}
               handleAddToCart={handleAddToCart}
               toggleWishlist={toggleWishlist}
+              onMessageVendor={onMessageVendor}
+              isMessagingLoading={isMessagingLoading}
             />
 
             <TitanLogistics uiProduct={uiProduct} />

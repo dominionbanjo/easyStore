@@ -15,6 +15,8 @@ interface BazaarBuyBoxProps {
   toggleWishlist: () => void;
   liked: boolean;
   addingToCart: boolean;
+  onMessageVendor?: () => void;
+  isMessagingLoading?: boolean;
 }
 
 export function BazaarBuyBox({
@@ -28,6 +30,8 @@ export function BazaarBuyBox({
   toggleWishlist,
   liked,
   addingToCart,
+  onMessageVendor,
+  isMessagingLoading,
 }: BazaarBuyBoxProps) {
   return (
     <div className="w-full lg:w-[380px] xl:w-[420px] border border-slate-200/50 dark:border-neutral-800/50 rounded-[32px] px-6 py-8 bg-white/50 dark:bg-neutral-900/50 backdrop-blur-xl sticky top-28 space-y-8 flex-shrink-0 shadow-sm animate-in fade-in slide-in-from-right-4 duration-700">
@@ -112,6 +116,18 @@ export function BazaarBuyBox({
           className="w-full py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-black rounded-2xl transition-all text-base shadow-lg active:scale-[0.98] disabled:opacity-50"
         >
           BUY IT NOW
+        </button>
+
+        <button
+          onClick={onMessageVendor}
+          disabled={isMessagingLoading}
+          className="w-full py-4 border-2 border-slate-200 dark:border-neutral-800 hover:border-indigo-600 text-slate-800 dark:text-white font-black rounded-2xl transition-all text-base active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2"
+        >
+          {isMessagingLoading ? (
+             <div className="h-5 w-5 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin" />
+          ) : (
+            "MESSAGE VENDOR"
+          )}
         </button>
       </div>
 

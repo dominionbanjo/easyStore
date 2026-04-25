@@ -24,6 +24,7 @@ import {
   MessageSquare,
   ChevronLeft,
   ChevronDown,
+  X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useSelector } from "react-redux";
@@ -39,7 +40,7 @@ export const MessagingView = ({ basePath, containerClassName }: MessagingViewPro
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const currentUser = useSelector((state: RootState) => state.user.currentUser);
-  
+
   const [activeTab, setActiveTab] = useState<string | "chatroom" | null>(
     id && !id.startsWith(":") ? id : null,
   );
@@ -83,14 +84,21 @@ export const MessagingView = ({ basePath, containerClassName }: MessagingViewPro
     }
   }, [id, navigate, basePath]);
 
-  const { data: convData } = useGetUserConversationsQuery();
+  // ─── Data Fetching ────────────────────────────────────────────────────────
+  const {
+    data: convData,
+    isFetching: isFetchingConversations,
+  } = useGetUserConversationsQuery();
+
   const { data: chatroomData, isFetching: isFetchingChatroom } =
     useGetChatroomMessagesQuery({}, { skip: activeTab !== "chatroom" });
-    
-  const { 
-    data: directData, 
+
+  // RTK Query caches per-arg: each unique `id` gets its own cache entry.
+  // `isFetching` is true only while the first request for a given id is in flight —
+  // subsequent visits to the same id use the cache instantly (isFetching = false).
+  const {
     isFetching: isFetchingDirect,
-    originalArgs: directArgs
+    currentData: directCurrentData, // currentData is undefined while fetching a NEW id
   } = useGetConversationMessagesQuery(
     { id: activeTab as string },
     { skip: !activeTab || activeTab === "chatroom" },
@@ -102,16 +110,17 @@ export const MessagingView = ({ basePath, containerClassName }: MessagingViewPro
 
   const socket = useMessagingSocket(activeTab || undefined);
 
-  const isLoadingMessages = activeTab === "chatroom" ? isFetchingChatroom : isFetchingDirect;
-  const isDataStale = activeTab !== "chatroom" && directArgs?.id !== activeTab;
-
+  // ─── Derived State ────────────────────────────────────────────────────────
   const conversations = convData?.data || [];
-  const apiMessages =
-    (activeTab === "chatroom"
-      ? chatroomData?.data?.items
-      : !isDataStale ? directData?.data?.items : []) || [];
 
-  const activeConversation = conversations.find((c) => c.id === activeTab);
+  // `currentData` is only populated when data belongs to the CURRENT arg (id).
+  // While switching to a new conversation, directCurrentData is undefined → we show skeletons.
+  // Once the data for the new id arrives (or is served from cache), it's set immediately.
+  const apiMessages = useMemo(() => {
+    if (activeTab === "chatroom") return chatroomData?.data?.items || [];
+    // Use currentData (not data) — this ensures we never show messages from a previous id
+    return directCurrentData?.data?.items || [];
+  }, [activeTab, chatroomData, directCurrentData]);
 
   const currentContextFailed = useMemo(
     () =>
@@ -131,6 +140,19 @@ export const MessagingView = ({ basePath, containerClassName }: MessagingViewPro
     return combined;
   }, [apiMessages, currentContextFailed]);
 
+  const activeConversation = useMemo(() =>
+    conversations.find((c) => c.id === activeTab),
+  [conversations, activeTab]);
+
+  // Show skeleton loaders:
+  // - For chatroom: only on first load (no cached data yet)
+  // - For direct: when currentData is undefined (fetch in flight for a new id, or truly no cache)
+  const isLoadingMessages =
+    activeTab === "chatroom"
+      ? isFetchingChatroom && !chatroomData
+      : isFetchingDirect && !directCurrentData;
+
+  // ─── Socket & Effects ─────────────────────────────────────────────────────
   useEffect(() => {
     if (id !== activeTab) {
       setActiveTab(id || null);
@@ -143,10 +165,18 @@ export const MessagingView = ({ basePath, containerClassName }: MessagingViewPro
       return () => socket.leaveChatroom();
     } else {
       socket.joinConversation(activeTab);
-      markRead(activeTab);
+
+      // Only mark as read if there are actually unread messages.
+      // Calling markRead unconditionally invalidates the "Messaging" tag
+      // every time you switch chats, causing unnecessary refetches.
+      const conv = conversations.find((c) => c.id === activeTab);
+      if (conv && conv.unread_count > 0) {
+        markRead(activeTab);
+      }
+
       return () => socket.leaveConversation(activeTab);
     }
-  }, [activeTab, id]);
+  }, [activeTab, id, markRead, conversations]);
 
   useEffect(() => {
     const prefill = searchParams.get("prefill");
@@ -156,10 +186,12 @@ export const MessagingView = ({ basePath, containerClassName }: MessagingViewPro
       const newParams = new URLSearchParams(searchParams);
       newParams.delete("prefill");
       const targetUrl = id ? `${basePath}/${id}` : basePath;
-      navigate(`${targetUrl}${newParams.toString() ? "?" + newParams.toString() : ""}`, { replace: true });
+      const queryStr = newParams.toString();
+      navigate(`${targetUrl}${queryStr ? "?" + queryStr : ""}`, { replace: true });
     }
   }, [searchParams, activeTab, id, navigate, basePath]);
 
+  // ─── Handlers ─────────────────────────────────────────────────────────────
   const handleSendMessage = async (content: string, product?: IProduct | null) => {
     const tempId = `temp-${Date.now()}`;
     const payload: any = { content, local_id: tempId };
@@ -226,9 +258,11 @@ export const MessagingView = ({ basePath, containerClassName }: MessagingViewPro
     socket.stopTyping(activeTab === "chatroom" ? { chatroom: true } : { conversation_id: activeTab });
   };
 
+  // ─── Render ──────────────────────────────────────────────────────────────
   return (
     <div className={cn("flex bg-slate-50/50 dark:bg-black/20 min-h-[calc(100vh-64px)]", containerClassName)}>
       <div className="container mx-auto px-4 py-8 flex gap-6 h-[calc(100vh-128px)]">
+        {/* Sidebar */}
         <div className={cn("w-full lg:w-80 shadow-sm rounded-sm overflow-hidden border border-border bg-white dark:bg-neutral-950", activeTab && "hidden lg:block")}>
           <ChatSidebar
             conversations={conversations}
@@ -240,12 +274,53 @@ export const MessagingView = ({ basePath, containerClassName }: MessagingViewPro
               setSelectedConversation(conv);
               setIsConvDetailsModalOpen(true);
             }}
+            isLoading={isFetchingConversations && conversations.length === 0}
           />
         </div>
 
+        {/* Chat Area */}
         <div className={cn("flex-1 flex flex-col bg-white dark:bg-neutral-950 shadow-sm rounded-sm overflow-hidden border border-border", !activeTab && "hidden lg:flex")}>
           {activeTab ? (
             <>
+              {/* Desktop Header */}
+              <div className="hidden lg:flex items-center justify-between p-4 border-b border-border bg-white dark:bg-neutral-950">
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-sm bg-primary/10 flex items-center justify-center text-primary font-bold uppercase">
+                    {activeTab === "chatroom" ? "#" : activeConversation?.other_participant?.first_name?.[0] || "?"}
+                  </div>
+                  <div className="flex flex-col">
+                    <h3 className="font-bold text-sm leading-tight">
+                      {activeTab === "chatroom" ? "Public Chatroom" : activeConversation ? `${activeConversation.other_participant.first_name} ${activeConversation.other_participant.last_name}` : "Conversation"}
+                    </h3>
+                    <div className="flex items-center gap-1.5 mt-0.5">
+                      <div className={cn("h-1.5 w-1.5 rounded-full", (activeTab === "chatroom" || socket.onlineUsers.has(activeConversation?.other_participant?.id || "")) ? "bg-emerald-500 shadow-[0_0_8px_#10b981]" : "bg-zinc-300")} />
+                      <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+                        {activeTab === "chatroom" ? `${socket.chatroomUserCount} Online` : socket.onlineUsers.has(activeConversation?.other_participant?.id || "") ? "Active Now" : "Offline"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  {activeTab !== "chatroom" && activeConversation && (
+                    <button
+                      onClick={() => { setSelectedConversation(activeConversation); setIsConvDetailsModalOpen(true); }}
+                      className="p-2 hover:bg-muted rounded-sm transition-colors text-muted-foreground"
+                      title="Conversation Info"
+                    >
+                      <Info className="h-5 w-5" />
+                    </button>
+                  )}
+                  <button
+                    onClick={() => navigate(basePath)}
+                    className="p-2 hover:bg-rose-500/10 hover:text-rose-500 rounded-sm transition-colors text-muted-foreground"
+                    title="Close Chat"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Mobile Header */}
               <div className="lg:hidden flex items-center gap-3 p-4 border-b border-border bg-white dark:bg-neutral-950 sticky top-0 z-10">
                 <button onClick={() => navigate(basePath)} className="p-1 -ml-1 hover:bg-muted rounded-sm transition-colors text-foreground">
                   <ChevronLeft className="h-6 w-6" />
@@ -272,14 +347,16 @@ export const MessagingView = ({ basePath, containerClassName }: MessagingViewPro
                 )}
               </div>
 
-              <div className="bg-muted/30 p-2 text-center border-b border-border">
+              {/* Warning Banner */}
+              <div className="bg-muted/10 p-1.5 text-center border-b border-border shadow-inner">
                 {activeTab === "chatroom" ? (
-                  <div className="flex items-center justify-center gap-2"><Info className="h-3.5 w-3.5 text-primary" /><span className="text-xs font-medium">Public community chat. Please be respectful.</span></div>
+                  <div className="flex items-center justify-center gap-2"><Info className="h-3 w-3 text-primary" /><span className="text-[10px] font-bold uppercase tracking-tight opacity-70">Public community chat. Please be respectful.</span></div>
                 ) : (
-                  <div className="flex items-center justify-center gap-2"><ShieldAlert className="h-3.5 w-3.5 text-emerald-500" /><span className="text-xs font-medium text-emerald-600">Safe Payment Warning: Never pay outside of Eazystore.</span></div>
+                  <div className="flex items-center justify-center gap-2"><ShieldAlert className="h-3 w-3 text-emerald-500" /><span className="text-[10px] font-bold uppercase tracking-tight text-emerald-600/70">Safe Payment Warning: Never pay outside of Eazystore.</span></div>
                 )}
               </div>
 
+              {/* Message List — key=activeTab forces a full remount on conversation change */}
               <MessageList
                 key={activeTab}
                 messages={activeMessages}

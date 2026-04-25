@@ -19,6 +19,8 @@ export default function HeritageProductTemplate({
   relatedProducts,
   onCartOpen,
   cartItemsCount,
+  onMessageVendor,
+  isMessagingLoading,
 }: ProductTemplateProps) {
   const uiProduct = adaptProductToUI(product, store, reviews);
 
@@ -51,6 +53,8 @@ export default function HeritageProductTemplate({
         cartItemsCount={cartItemsCount}
         searchOpen={searchOpen}
         setSearchOpen={setSearchOpen}
+        onMessageVendor={onMessageVendor}
+        isMessagingLoading={isMessagingLoading}
       />
 
       {/* ─── SHOWCASE MAIN ─── */}
@@ -73,6 +77,8 @@ export default function HeritageProductTemplate({
           selectOption={selectOption}
           handleAddToCart={handleAddToCart}
           toggleWishlist={toggleWishlist}
+          onMessageVendor={onMessageVendor}
+          isMessagingLoading={isMessagingLoading}
         />
 
         {/* ─── TABS ─── */}

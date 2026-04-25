@@ -1,5 +1,5 @@
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
-import { getSubdomain, getBaseDomain } from "@/utils/subdomain";
+import { getSubdomain, getBaseDomain, areSubdomainsDisabled } from "@/utils/subdomain";
 import { PackageSearch, ArrowLeft, ShoppingBag } from "lucide-react";
 import { useGetStoreDetailsQuery } from "@/services/storeApi";
 import { useGetSingleProductQuery } from "@/services/productApi";
@@ -18,6 +18,9 @@ import { useSelector } from "react-redux";
 import type { RootState } from "@/store";
 import { useGetCartQuery } from "@/services/cartApi";
 import { CartDrawer } from "@/modules/website/components/cart/CartDrawer";
+import { useStartConversationMutation } from "@/services/messagingApi";
+import { toast } from "sonner";
+import { ACCOUNT_ROUTES } from "@/routes";
 
 export default function StoreProductDetailsPage() {
   let { slug, productSlug } = useParams<{ slug: string; productSlug: string }>();
@@ -29,6 +32,7 @@ export default function StoreProductDetailsPage() {
   const navigate = useNavigate();
   const previewTemplate = searchParams.get("preview_template");
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [startConversation, { isLoading: isMessagingLoading }] = useStartConversationMutation();
 
   // Cart state
   const { isAuthenticated } = useSelector((state: RootState) => state.user);
@@ -131,6 +135,26 @@ export default function StoreProductDetailsPage() {
     themeConfig: theme,
     onCartOpen: () => setIsCartOpen(true),
     cartItemsCount,
+    isMessagingLoading,
+    onMessageVendor: async () => {
+      if (!isAuthenticated) return toast.error("Please login to message the vendor");
+      if (!store?.user_id) return toast.error("Vendor info missing");
+
+      try {
+        const resp = await startConversation({ recipient_id: store.user_id }).unwrap();
+        const convId = resp.data.id;
+        const prefill = encodeURIComponent(`Hi, I'm interested in ${productData.product.name}. Can you provide more details?`);
+        const targetPath = `${ACCOUNT_ROUTES.MESSAGES}/${convId}?prefill=${prefill}`;
+
+        if (areSubdomainsDisabled()) {
+          navigate(targetPath);
+        } else {
+          window.location.href = `${window.location.protocol}//${getBaseDomain()}${targetPath}`;
+        }
+      } catch (err: any) {
+        toast.error(err?.data?.message || "Failed to start conversation");
+      }
+    },
   };
 
   return (

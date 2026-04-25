@@ -12,17 +12,13 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { LayoutGrid } from "lucide-react";
+import { Modal } from "@/components/shared/Modal";
 
 export default function DiscoveryPage() {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
+  const [isDiscoveryOpen, setIsDiscoveryOpen] = useState(false);
 
   const { data: featuredProducts, isLoading: isFeaturedLoading } =
     useGetFeaturedProductsQuery(
@@ -110,39 +106,41 @@ export default function DiscoveryPage() {
         </div>
       </section>
 
-      {/* Quick Navigation Dropdown */}
+      {/* Quick Navigation Trigger */}
       <div className="w-full mx-auto px-4 mb-20 flex justify-center">
         <div className="relative group max-w-sm w-full">
           <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/50 to-emerald-500/50 rounded-sm blur opacity-25 group-hover:opacity-50 transition duration-300" />
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                className="relative w-full h-16 px-6 bg-white dark:bg-neutral-900 border-zinc-200 dark:border-white/10 rounded-sm flex items-center justify-between group hover:border-primary/50 transition-all"
-              >
-                <div className="flex items-center gap-4 text-left">
-                  <div className="p-2.5 rounded-sm bg-primary/10 text-primary">
-                    <LayoutGrid className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <div className="text-xs font-bold text-muted-foreground uppercase tracking-widest leading-none mb-1">
-                      Explore Path
-                    </div>
-                    <div className="text-xl font-black text-foreground">
-                      Choose Discovery
-                    </div>
-                  </div>
+          <Button
+            variant="outline"
+            onClick={() => setIsDiscoveryOpen(true)}
+            className="relative w-full h-16 px-6 bg-white dark:bg-neutral-900 border-zinc-200 dark:border-white/10 rounded-sm flex items-center justify-between group hover:border-primary/50 transition-all"
+          >
+            <div className="flex items-center gap-4 text-left">
+              <div className="p-2.5 rounded-sm bg-primary/10 text-primary">
+                <LayoutGrid className="w-6 h-6" />
+              </div>
+              <div>
+                <div className="text-xs font-bold text-muted-foreground uppercase tracking-widest leading-none mb-1">
+                  Explore Path
                 </div>
-                <div className="p-1 rounded-sm bg-zinc-100 dark:bg-neutral-800 text-muted-foreground group-hover:text-primary transition-colors">
-                  <ArrowRight className="w-5 h-5 rotate-90" />
+                <div className="text-xl font-black text-foreground">
+                  Choose Discovery
                 </div>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="center"
-              className="w-[var(--radix-dropdown-menu-trigger-width)] p-2 rounded-sm"
-              sideOffset={12}
-            >
+              </div>
+            </div>
+            <div className="p-1 rounded-sm bg-zinc-100 dark:bg-neutral-800 text-muted-foreground group-hover:text-primary transition-colors">
+              <ArrowRight className="w-5 h-5 rotate-90" />
+            </div>
+          </Button>
+
+          <Modal
+            open={isDiscoveryOpen}
+            onOpenChange={setIsDiscoveryOpen}
+            title="Choose Discovery Path"
+            description="Select your preferred way to explore our collections."
+            className="sm:max-w-md p-0"
+          >
+            <div className="p-2 space-y-1">
               {[
                 {
                   title: "Trending",
@@ -173,27 +171,30 @@ export default function DiscoveryPage() {
                   color: "text-emerald-500 bg-emerald-500/10",
                 },
               ].map((link) => (
-                <DropdownMenuItem
+                <button
                   key={link.title}
-                  onClick={() => navigate(link.href)}
-                  className="p-3 rounded-sm flex items-center gap-4 cursor-pointer focus:bg-primary/5 group"
+                  onClick={() => {
+                    navigate(link.href);
+                    setIsDiscoveryOpen(false);
+                  }}
+                  className="w-full p-4 rounded-sm flex items-center gap-4 cursor-pointer hover:bg-primary/5 transition-all group text-left border border-transparent hover:border-primary/20"
                 >
-                  <div className={cn("p-2 rounded-sm", link.color)}>
-                    <link.icon className="w-5 h-5" />
+                  <div className={cn("p-3 rounded-sm scale-110 transition-transform group-hover:scale-125", link.color)}>
+                    <link.icon className="w-6 h-6" />
                   </div>
                   <div className="flex-1">
-                    <div className="font-bold text-base group-hover:text-primary transition-colors">
+                    <div className="font-black text-lg group-hover:text-primary transition-colors tracking-tight">
                       {link.title}
                     </div>
-                    <div className="text-xs text-muted-foreground">
+                    <div className="text-xs text-muted-foreground font-medium">
                       {link.subtext}
                     </div>
                   </div>
-                  <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
-                </DropdownMenuItem>
+                  <ArrowRight className="w-5 h-5 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all text-primary" />
+                </button>
               ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+            </div>
+          </Modal>
         </div>
       </div>
 

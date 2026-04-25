@@ -1,4 +1,4 @@
-import { ShoppingCart, Heart, Share2 } from "lucide-react";
+import { ShoppingCart, Heart, Share2, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { UIProduct } from "@/modules/vendor/utils/productAdapter";
 
@@ -19,6 +19,8 @@ interface VanguardMainProps {
   selectOption: (name: string, value: string) => void;
   handleAddToCart: () => void;
   toggleWishlist: () => void;
+  onMessageVendor?: () => void;
+  isMessagingLoading?: boolean;
 }
 
 export function VanguardMain({
@@ -36,6 +38,8 @@ export function VanguardMain({
   selectOption,
   handleAddToCart,
   toggleWishlist,
+  onMessageVendor,
+  isMessagingLoading,
 }: VanguardMainProps) {
   return (
     <main className="max-w-[1400px] mx-auto px-1.5 sm:px-6 pt-6 sm:pt-8 md:px-12 pb-16 font-sans">
@@ -173,6 +177,17 @@ export function VanguardMain({
                   <ShoppingCart className="w-4 h-4" />
                   Add to Cart — ₦{displayPrice?.toLocaleString()}
                 </>
+              )}
+            </button>
+            <button
+              onClick={onMessageVendor}
+              disabled={isMessagingLoading}
+              className="w-full py-4 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors uppercase tracking-[0.2em] text-sm font-medium flex items-center justify-center gap-2 disabled:opacity-50"
+            >
+              {isMessagingLoading ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                "Message Vendor"
               )}
             </button>
             <div className="flex items-center justify-between mt-4 border-t border-zinc-100 dark:border-zinc-900 pt-6">

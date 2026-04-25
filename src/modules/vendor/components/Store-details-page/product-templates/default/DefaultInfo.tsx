@@ -22,6 +22,8 @@ interface DefaultInfoProps {
   selectOption: (name: string, value: string) => void;
   handleAddToCart: () => void;
   toggleWishlist: () => void;
+  onMessageVendor?: () => void;
+  isMessagingLoading?: boolean;
 }
 
 export function DefaultInfo({
@@ -41,6 +43,8 @@ export function DefaultInfo({
   selectOption,
   handleAddToCart,
   toggleWishlist,
+  onMessageVendor,
+  isMessagingLoading,
 }: DefaultInfoProps) {
   return (
     <div className="w-full px-1.5 py-6 md:p-10 lg:p-12 flex flex-col justify-center">
@@ -204,6 +208,18 @@ export function DefaultInfo({
             </button>
           </div>
         </div>
+
+        <button
+          onClick={onMessageVendor}
+          disabled={isMessagingLoading}
+          className="w-full h-12 border-2 border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white font-bold rounded-sm hover:border-[var(--theme-primary)] transition-all flex items-center justify-center gap-2 disabled:opacity-40"
+        >
+          {isMessagingLoading ? (
+            <div className="h-5 w-5 border-2 border-[var(--theme-primary)] border-t-transparent rounded-sm animate-spin" />
+          ) : (
+            "Message Vendor"
+          )}
+        </button>
 
         <div className="flex items-center justify-center sm:justify-start gap-4 pt-2">
           <button

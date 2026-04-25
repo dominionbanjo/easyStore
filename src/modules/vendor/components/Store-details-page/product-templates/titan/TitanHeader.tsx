@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import { Search, ShoppingBag } from "lucide-react";
+import { Search, ShoppingBag, Loader2 } from "lucide-react";
+import { Messages3 } from "iconsax-react";
 import { Button } from "@/components/ui/button";
 import { TemplateProfileDropdown } from "@/components/shared/TemplateProfileDropdown";
 import type { IProductStore } from "@/types/product/productTypes";
@@ -12,6 +13,8 @@ interface TitanHeaderProps {
   cartItemsCount: number;
   searchOpen: boolean;
   setSearchOpen: (open: boolean) => void;
+  onMessageVendor?: () => void;
+  isMessagingLoading?: boolean;
 }
 
 export function TitanHeader({
@@ -21,6 +24,8 @@ export function TitanHeader({
   cartItemsCount,
   searchOpen,
   setSearchOpen,
+  onMessageVendor,
+  isMessagingLoading,
 }: TitanHeaderProps) {
   return (
     <header className="border-b border-zinc-800 p-4 md:p-6 sticky top-0 bg-black/80 backdrop-blur-md z-50 flex flex-col gap-4">
@@ -58,6 +63,20 @@ export function TitanHeader({
               <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-sm bg-[var(--theme-primary)] text-[10px] font-black text-black ring-2 ring-black ">
                 {cartItemsCount}
               </span>
+            )}
+          </Button>
+
+          <Button
+            variant="ghost"
+            size="icon"
+            className="p-2 flex-shrink-0 hover:bg-zinc-800 text-zinc-500 hover:text-[var(--theme-primary)] disabled:opacity-50"
+            onClick={onMessageVendor}
+            disabled={isMessagingLoading}
+          >
+            {isMessagingLoading ? (
+              <Loader2 className="h-5 w-5 animate-spin" />
+            ) : (
+              <Messages3 className="h-5 w-5" variant="Bold" color="currentColor" />
             )}
           </Button>
 

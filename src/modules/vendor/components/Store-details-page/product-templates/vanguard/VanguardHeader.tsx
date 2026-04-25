@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Search, ShoppingBag } from "lucide-react";
+import { Messages3 } from "iconsax-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { TemplateProfileDropdown } from "@/components/shared/TemplateProfileDropdown";
@@ -13,6 +14,8 @@ interface VanguardHeaderProps {
   cartItemsCount: number;
   searchOpen: boolean;
   setSearchOpen: (open: boolean) => void;
+  onMessageVendor?: () => void;
+  isMessagingLoading?: boolean;
 }
 
 export function VanguardHeader({
@@ -22,6 +25,8 @@ export function VanguardHeader({
   cartItemsCount,
   searchOpen,
   setSearchOpen,
+  onMessageVendor,
+  isMessagingLoading,
 }: VanguardHeaderProps) {
   return (
     <header className="py-4 px-2 md:px-12 flex flex-col items-center justify-center border-b border-zinc-100 dark:border-zinc-900 sticky top-0 bg-white/80 dark:bg-black/80 backdrop-blur-xl z-50">
@@ -55,6 +60,16 @@ export function VanguardHeader({
                 {cartItemsCount}
               </span>
             )}
+          </Button>
+          
+          <Button
+            variant="ghost"
+            size="icon"
+            className="text-zinc-400 hover:text-zinc-900 dark:hover:text-white disabled:opacity-50"
+            onClick={onMessageVendor}
+            disabled={isMessagingLoading}
+          >
+            <Messages3 className="h-5 w-5" variant={isMessagingLoading ? "Outline" : "Bold"} color="currentColor" />
           </Button>
 
           <TemplateProfileDropdown

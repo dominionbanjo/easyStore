@@ -45,6 +45,7 @@ export default function TitanTemplate({
   onCartOpen,
   cartItemsCount,
   onMessageVendor,
+  isMessagingLoading,
 }: StoreTemplateProps) {
   const [contactOpen, setContactOpen] = useState(false);
 
@@ -112,10 +113,15 @@ export default function TitanTemplate({
               {onMessageVendor && (
                 <button
                   onClick={onMessageVendor}
-                  className="p-3 border border-zinc-800 bg-black text-indigo-600 rounded-sm hover:bg-indigo-600/10 transition-all"
+                  disabled={isMessagingLoading}
+                  className="p-3 border border-zinc-800 bg-black text-indigo-600 rounded-sm hover:bg-indigo-600/10 transition-all disabled:opacity-50"
                   title="Message Vendor"
                 >
-                  <Messages3 variant="Bold" color="currentColor" className="w-5 h-5" />
+                  {isMessagingLoading ? (
+                    <Loader2 className="w-5 h-5 animate-spin text-[var(--theme-primary)]" />
+                  ) : (
+                    <Messages3 variant="Bold" color="currentColor" className="w-5 h-5" />
+                  )}
                 </button>
               )}
             </div>
@@ -171,10 +177,15 @@ export default function TitanTemplate({
             {onMessageVendor && (
               <button
                 onClick={onMessageVendor}
-                className="p-3 border border-zinc-800 bg-black text-indigo-600 rounded-sm hover:bg-indigo-600/10 transition-all"
+                disabled={isMessagingLoading}
+                className="p-3 border border-zinc-800 bg-black text-indigo-600 rounded-sm hover:bg-indigo-600/10 transition-all disabled:opacity-50"
                 title="Message Vendor"
               >
-                <Messages3 variant="Bold" color="currentColor" className="w-5 h-5" />
+                {isMessagingLoading ? (
+                  <Loader2 className="w-5 h-5 animate-spin text-[var(--theme-primary)]" />
+                ) : (
+                  <Messages3 variant="Bold" color="currentColor" className="w-5 h-5" />
+                )}
               </button>
             )}
           </div>

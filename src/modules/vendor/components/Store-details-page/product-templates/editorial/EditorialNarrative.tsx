@@ -21,6 +21,8 @@ interface EditorialNarrativeProps {
   selectOption: (name: string, value: string) => void;
   handleAddToCart: () => void;
   toggleWishlist: () => void;
+  onMessageVendor?: () => void;
+  isMessagingLoading?: boolean;
 }
 
 export function EditorialNarrative({
@@ -40,6 +42,8 @@ export function EditorialNarrative({
   selectOption,
   handleAddToCart,
   toggleWishlist,
+  onMessageVendor,
+  isMessagingLoading,
 }: EditorialNarrativeProps) {
   return (
     <main className="w-full flex flex-col min-h-screen">
@@ -213,6 +217,17 @@ export function EditorialNarrative({
                 )}
               </button>
             </div>
+            <button
+               onClick={onMessageVendor}
+               disabled={isMessagingLoading}
+               className="w-full py-4 border border-[#2C2C2C]/20 dark:border-[#EAEAEA]/20 font-sans font-medium uppercase tracking-[0.2em] text-sm hover:border-[#2C2C2C] dark:hover:border-[#EAEAEA] transition-all flex items-center justify-center gap-2 disabled:opacity-40"
+            >
+              {isMessagingLoading ? (
+                 <div className="h-4 w-4 border-2 border-current border-t-transparent rounded-sm animate-spin" />
+              ) : (
+                "Consult Vendor"
+              )}
+            </button>
             <div className="flex justify-center gap-8 font-sans text-xs uppercase tracking-[0.2em] opacity-60">
               <button
                 onClick={toggleWishlist}

@@ -100,11 +100,13 @@ export const ConversationDetailsModal: React.FC<
           </span>
           <button
             onClick={() => {
-              const slug = participant.store_slug || participant.username;
+              const slug = participant.store_slug || (participant as any).storeSlug || participant.username;
               if (areSubdomainsDisabled()) {
                 navigate(buildRoute.storeDetails(slug));
               } else {
-                window.location.href = `${window.location.protocol}//${slug}.${getBaseDomain()}`;
+                // If it's a vendor, we should use the store slug for the subdomain if available
+                const finalSubdomain = participant.store_slug || (participant as any).storeSlug || participant.username;
+                window.location.href = `${window.location.protocol}//${finalSubdomain}.${getBaseDomain()}`;
               }
               onClose();
             }}

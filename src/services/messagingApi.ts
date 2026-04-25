@@ -275,7 +275,25 @@ export const messagingApi = apiManager.injectEndpoints({
         url: `messaging/conversations/${id}/read`,
         method: "PATCH",
       }),
-      invalidatesTags: (_result, _error, id) => [{ type: "Messaging", id }, "Messaging"],
+      // Only update the unread badge on the conversation list.
+      // Do NOT invalidate { type: "Messaging", id } (the messages query) —
+      // that would re-fetch all messages every time you open a chat.
+      // Instead, optimistically zero-out the unread_count directly without refetching.
+      async onQueryStarted(id, { dispatch, queryFulfilled }) {
+        const patch = dispatch(
+          messagingApi.util.updateQueryData("getUserConversations", undefined, (draft) => {
+            const conv = draft?.data?.find((c) => c.id === id);
+            if (conv) {
+              conv.unread_count = 0;
+            }
+          })
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          patch.undo();
+        }
+      },
     }),
     getMessageById: builder.query<{ data: IMessage }, string>({
       query: (id) => `messaging/messages/${id}`,

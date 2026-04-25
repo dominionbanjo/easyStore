@@ -32,4 +32,5 @@ export interface StoreTemplateProps {
   onSearchChange: (query: string) => void;
   onPageChange: (page: number) => void;
   onMessageVendor?: () => void;
+  isMessagingLoading?: boolean;
 }

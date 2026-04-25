@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import { ChevronRight, ShoppingBag } from "lucide-react";
+import { ChevronRight, ShoppingBag, Loader2 } from "lucide-react";
+import { Messages3 } from "iconsax-react";
 import { Button } from "@/components/ui/button";
 import { TemplateProfileDropdown } from "@/components/shared/TemplateProfileDropdown";
 import type { IProductStore } from "@/types/product/productTypes";
@@ -10,6 +11,8 @@ interface DefaultHeaderProps {
   uiProduct: UIProduct;
   onCartOpen: () => void;
   cartItemsCount: number;
+  onMessageVendor?: () => void;
+  isMessagingLoading?: boolean;
 }
 
 export function DefaultHeader({
@@ -17,6 +20,8 @@ export function DefaultHeader({
   uiProduct,
   onCartOpen,
   cartItemsCount,
+  onMessageVendor,
+  isMessagingLoading,
 }: DefaultHeaderProps) {
   return (
     <>
@@ -60,6 +65,20 @@ export function DefaultHeader({
                 <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-sm bg-[var(--theme-primary)] text-[10px] font-black text-white ring-2 ring-white dark:ring-black  tabular-nums">
                   {cartItemsCount}
                 </span>
+              )}
+            </Button>
+
+            <Button
+              variant="ghost"
+              size="icon"
+              className="p-2 flex-shrink-0 hover:bg-[var(--theme-primary)]/10 text-zinc-900 dark:text-white disabled:opacity-50"
+              onClick={onMessageVendor}
+              disabled={isMessagingLoading}
+            >
+              {isMessagingLoading ? (
+                <Loader2 className="h-5 w-5 animate-spin" />
+              ) : (
+                <Messages3 variant="Bold" color="currentColor" className="h-5 w-5" />
               )}
             </Button>
 

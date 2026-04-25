@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { cn } from "@/lib/utils";
 import { Search, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,6 +14,7 @@ interface BazaarHeaderProps {
   searchOpen: boolean;
   setSearchOpen: (open: boolean) => void;
   onMessageVendor?: () => void;
+  isMessagingLoading?: boolean;
 }
 
 export function BazaarHeader({
@@ -22,6 +24,7 @@ export function BazaarHeader({
   searchOpen,
   setSearchOpen,
   onMessageVendor,
+  isMessagingLoading,
 }: BazaarHeaderProps) {
   return (
     <header className="bg-white/70 dark:bg-black/70 backdrop-blur-xl border-b border-slate-200/50 dark:border-neutral-800/50 sticky top-0 z-50 transition-colors px-2 sm:px-6 py-3">
@@ -71,10 +74,15 @@ export function BazaarHeader({
           <Button
             variant="ghost"
             size="icon"
-            className="p-2.5 md:p-3.5 bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-2xl hover:border-indigo-600 hover:text-indigo-600 transition-all shadow-sm active:scale-95 group"
+            className="p-2.5 md:p-3.5 bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-2xl hover:border-indigo-600 hover:text-indigo-600 transition-all shadow-sm active:scale-95 group disabled:opacity-50"
             onClick={onMessageVendor}
+            disabled={isMessagingLoading}
           >
-            <Messages3 variant="Bold" color="currentColor" className="w-5 h-5 md:w-6 md:h-6" />
+            <Messages3 
+              variant={isMessagingLoading ? "Outline" : "Bold"} 
+              color="currentColor" 
+              className={cn("w-5 h-5 md:w-6 md:h-6", isMessagingLoading && "animate-spin")} 
+            />
           </Button>
 
           <Button

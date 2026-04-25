@@ -44,6 +44,7 @@ export default function BazaarTemplate({
   onCartOpen,
   cartItemsCount,
   onMessageVendor,
+  isMessagingLoading,
 }: StoreTemplateProps) {
   const [contactOpen, setContactOpen] = useState(false);
   const hasBanner = !!store.cover_image;
@@ -79,10 +80,15 @@ export default function BazaarTemplate({
           <div className="flex items-center gap-2 md:gap-3">
              <button
               onClick={onMessageVendor}
-              className="p-2.5 md:p-3.5 bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-2xl hover:border-[var(--theme-primary)] hover:text-[var(--theme-primary)] transition-all shadow-sm active:scale-95 group"
+              disabled={isMessagingLoading}
+              className="p-2.5 md:p-3.5 bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-2xl hover:border-[var(--theme-primary)] hover:text-[var(--theme-primary)] transition-all shadow-sm active:scale-95 group disabled:opacity-50 disabled:cursor-not-allowed"
               aria-label="Message store"
             >
-              <Messages3 variant="Bold" color="currentColor" className="w-5 h-5 md:w-6 md:h-6" />
+              {isMessagingLoading ? (
+                <Loader2 className="w-5 h-5 md:w-6 md:h-6 animate-spin text-[var(--theme-primary)]" />
+              ) : (
+                <Messages3 variant="Bold" color="currentColor" className="w-5 h-5 md:w-6 md:h-6" />
+              )}
             </button>
 
             <button

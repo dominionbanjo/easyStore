@@ -21,6 +21,8 @@ interface TitanInfoProps {
   selectOption: (name: string, value: string) => void;
   handleAddToCart: () => void;
   toggleWishlist: () => void;
+  onMessageVendor?: () => void;
+  isMessagingLoading?: boolean;
 }
 
 export function TitanInfo({
@@ -40,6 +42,8 @@ export function TitanInfo({
   selectOption,
   handleAddToCart,
   toggleWishlist,
+  onMessageVendor,
+  isMessagingLoading,
 }: TitanInfoProps) {
   return (
     <div className="border border-zinc-800 bg-zinc-900/40 px-2.5 py-6 sm:p-6 rounded-sm relative overflow-hidden group">
@@ -191,6 +195,20 @@ export function TitanInfo({
               <span className="group-hover:translate-x-1 transition-transform">
                 →
               </span>
+            </>
+          )}
+        </button>
+
+        <button
+          onClick={onMessageVendor}
+          disabled={isMessagingLoading}
+          className="w-full py-3 border border-zinc-800 text-[10px] font-mono tracking-[0.2em] uppercase hover:bg-zinc-800/50 hover:border-[var(--theme-primary)] transition-all flex items-center justify-center gap-2 group disabled:opacity-50"
+        >
+          {isMessagingLoading ? (
+             <div className="h-4 w-4 border-2 border-[var(--theme-primary)] border-t-transparent rounded-sm animate-spin" />
+          ) : (
+            <>
+              <span>COMMS_INITIATE: MESSAGE VENDOR</span>
             </>
           )}
         </button>

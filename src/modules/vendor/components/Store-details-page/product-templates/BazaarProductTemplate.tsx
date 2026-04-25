@@ -20,6 +20,7 @@ export default function BazaarProductTemplate({
   onCartOpen,
   cartItemsCount,
   onMessageVendor,
+  isMessagingLoading,
 }: ProductTemplateProps) {
   const uiProduct = adaptProductToUI(product, store, reviews);
 
@@ -52,6 +53,7 @@ export default function BazaarProductTemplate({
         searchOpen={searchOpen}
         setSearchOpen={setSearchOpen}
         onMessageVendor={onMessageVendor}
+        isMessagingLoading={isMessagingLoading}
       />
 
       {/* ─── MAIN CONTENT ─── */}
@@ -88,6 +90,8 @@ export default function BazaarProductTemplate({
               toggleWishlist={toggleWishlist}
               liked={liked}
               addingToCart={addingToCart}
+              onMessageVendor={onMessageVendor}
+              isMessagingLoading={isMessagingLoading}
             />
           </div>
 

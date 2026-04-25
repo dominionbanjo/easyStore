@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import { Search, MessageSquare, Users, ChevronDown } from "lucide-react";
 import type { IConversation } from "@/services/messagingApi";
 import { formatDistanceToNow } from "date-fns";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface ChatSidebarProps {
   conversations: IConversation[];
@@ -11,7 +12,24 @@ interface ChatSidebarProps {
   onlineUsers: Set<string>;
   chatroomUserCount: number;
   onShowConversationDetails: (conv: IConversation) => void;
+  isLoading?: boolean;
 }
+
+const ConversationSkeletonItem = () => (
+  <div className="p-4 border-b border-border/50 border-l-4 border-l-transparent">
+    <div className="flex items-center gap-3">
+      <Skeleton className="h-12 w-12 rounded-sm flex-shrink-0" />
+      <div className="flex-1 min-w-0 space-y-2">
+        <div className="flex items-center justify-between">
+          <Skeleton className="h-3.5 w-28 rounded-sm" />
+          <Skeleton className="h-3 w-12 rounded-sm" />
+        </div>
+        <Skeleton className="h-2.5 w-16 rounded-sm" />
+        <Skeleton className="h-3 w-40 rounded-sm" />
+      </div>
+    </div>
+  </div>
+);
 
 export const ChatSidebar: React.FC<ChatSidebarProps> = ({
   conversations,
@@ -20,6 +38,7 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
   onlineUsers,
   chatroomUserCount,
   onShowConversationDetails,
+  isLoading = false,
 }) => {
   return (
     <div className="flex flex-col h-full bg-white dark:bg-neutral-950 border-r border-border w-full lg:min-w-[300px] lg:max-w-[350px]">
@@ -72,7 +91,15 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
           Direct Messages
         </div>
 
-        {conversations.length === 0 ? (
+        {isLoading ? (
+          <>
+            <ConversationSkeletonItem />
+            <ConversationSkeletonItem />
+            <ConversationSkeletonItem />
+            <ConversationSkeletonItem />
+            <ConversationSkeletonItem />
+          </>
+        ) : conversations.length === 0 ? (
           <div className="p-8 text-center text-sm text-muted-foreground">
             No conversations yet
           </div>
@@ -133,7 +160,7 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
                         </span>
                       )}
                       {activeConversationId === conv.id && (
-                        <button 
+                        <button
                           onClick={(e) => {
                             e.stopPropagation();
                             onShowConversationDetails(conv);

@@ -36,6 +36,7 @@ export default function HeritageTemplate({
   onCartOpen,
   cartItemsCount,
   onMessageVendor,
+  isMessagingLoading,
 }: StoreTemplateProps) {
   // Heritage aesthetic:
   // - Earthy colors, warm background
@@ -88,10 +89,15 @@ export default function HeritageTemplate({
           {onMessageVendor && (
             <button
               onClick={onMessageVendor}
-              className="p-4 rounded-sm bg-[#3D352B] dark:bg-[#EAE3DB] text-white dark:text-[#1E1B18] border border-[#3D352B] dark:border-[#EAE3DB] hover:scale-110 active:scale-95 transition-all text-indigo-600"
+              disabled={isMessagingLoading}
+              className="p-4 rounded-sm bg-[#3D352B] dark:bg-[#EAE3DB] text-white dark:text-[#1E1B18] border border-[#3D352B] dark:border-[#EAE3DB] hover:scale-110 active:scale-95 transition-all text-indigo-600 disabled:opacity-50"
               title="Message Vendor"
             >
-              <Messages3 variant="Bold" color="currentColor" className="w-5 h-5" />
+              {isMessagingLoading ? (
+                 <Loader2 className="w-5 h-5 animate-spin" />
+              ) : (
+                <Messages3 variant="Bold" color="currentColor" className="w-5 h-5" />
+              )}
             </button>
           )}
         </div>

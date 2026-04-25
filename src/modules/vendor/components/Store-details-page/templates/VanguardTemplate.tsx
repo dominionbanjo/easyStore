@@ -30,6 +30,7 @@ export default function VanguardTemplate({
   onCartOpen,
   cartItemsCount,
   onMessageVendor,
+  isMessagingLoading,
 }: StoreTemplateProps) {
   const [contactOpen, setContactOpen] = useState(false);
   // Vanguard aesthetic:
@@ -37,6 +38,7 @@ export default function VanguardTemplate({
   // - Centered logo and text overlapping banner
   // - Minimalist tabs mapping
   // - Borderless product grid
+  // - Global fixed action floating buttons
 
   return (
     <>
@@ -65,10 +67,15 @@ export default function VanguardTemplate({
         {onMessageVendor && (
           <button
             onClick={onMessageVendor}
-            className="pointer-events-auto relative p-3 sm:p-4 bg-white/10 dark:bg-black/20 backdrop-blur-3xl border border-white/20 dark:border-white/10 rounded-sm text-zinc-900 dark:text-zinc-100  hover:scale-110 active:scale-95 transition-all group"
+            disabled={isMessagingLoading}
+            className="pointer-events-auto relative p-3 sm:p-4 bg-white/10 dark:bg-black/20 backdrop-blur-3xl border border-white/20 dark:border-white/10 rounded-sm text-zinc-900 dark:text-zinc-100  hover:scale-110 active:scale-95 transition-all group disabled:opacity-50"
             title="Message Vendor"
           >
-            <MessageSquare className="w-5 h-5 sm:w-6 sm:h-6" />
+            {isMessagingLoading ? (
+               <Loader2 className="w-5 h-5 sm:w-6 sm:h-6 animate-spin" />
+            ) : (
+               <MessageSquare className="w-5 h-5 sm:w-6 sm:h-6" />
+            )}
           </button>
         )}
 

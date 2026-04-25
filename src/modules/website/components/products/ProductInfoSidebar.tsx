@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import SmartLink from "@/components/shared/SmartLink";
 import type { RootState } from "@/store";
 import { motion, AnimatePresence } from "framer-motion";
-import { ACCOUNT_ROUTES, buildRoute } from "@/routes/index";
+import { buildRoute } from "@/routes/index";
 import {
   getBaseDomain,
   getSubdomain,
@@ -135,14 +135,15 @@ export default function ProductInfoSidebar({
 
       toast.success("Initial message sent to vendor!");
       
+      const conversationPath = buildRoute.messages(conversationId);
       if (areSubdomainsDisabled()) {
-        navigate(ACCOUNT_ROUTES.MESSAGES);
+        navigate(conversationPath);
       } else {
         const subdomain = getSubdomain();
         if (subdomain && subdomain !== "vendor" && subdomain !== "admin") {
-          window.location.href = `${window.location.protocol}//${getBaseDomain()}${ACCOUNT_ROUTES.MESSAGES}`;
+          window.location.href = `${window.location.protocol}//${getBaseDomain()}${conversationPath}`;
         } else {
-          navigate(ACCOUNT_ROUTES.MESSAGES);
+          navigate(conversationPath);
         }
       }
     } catch (err: any) {
