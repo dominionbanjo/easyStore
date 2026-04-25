@@ -30,6 +30,10 @@ class ChunkLoadBoundary extends Component<
     if (import.meta.env.DEV) {
       console.error("[ChunkLoadBoundary]", error, errorInfo);
     }
+
+    if (isChunkLoadLikeError(error)) {
+      this.handleReload();
+    }
   }
 
   handleReload = () => {
@@ -46,17 +50,9 @@ class ChunkLoadBoundary extends Component<
         <div className="flex min-h-[40vh] items-center justify-center p-6 text-center">
           <div className="max-w-md space-y-3">
             <h2 className="text-xl font-semibold">Refreshing application...</h2>
-            <p className="text-sm text-muted-foreground">
-              We detected an app update while this tab was open. Reload to fetch
-              the latest files.
+            <p className="text-sm text-muted-foreground animate-pulse">
+              Updating to the latest version. Please wait...
             </p>
-            <button
-              type="button"
-              onClick={this.handleReload}
-              className="inline-flex items-center rounded-sm border px-4 py-2 text-sm font-medium"
-            >
-              Reload now
-            </button>
           </div>
         </div>
       );
