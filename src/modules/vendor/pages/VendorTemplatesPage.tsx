@@ -71,10 +71,7 @@ export default function VendorTemplatesPage() {
   return (
     <div className="space-y-6">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold tracking-tight">
-          Storefront Templates
-        </h1>
-        <p className="text-muted-foreground mt-1">
+        <p className="text-muted-foreground font-medium">
           Choose a design that perfectly matches your brand identity.
         </p>
       </div>

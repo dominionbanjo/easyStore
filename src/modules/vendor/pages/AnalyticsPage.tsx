@@ -1,9 +1,6 @@
 import { motion } from "framer-motion";
 import { Loader2, RefreshCw, AlertCircle } from "lucide-react";
-import {
-  useGetMyStoreAnalyticsQuery,
-  useGetMyStoreQuery,
-} from "@/services/storeApi";
+import { useGetMyStoreAnalyticsQuery } from "@/services/storeApi";
 import { Button } from "@/components/ui/button";
 
 // Sub-components
@@ -20,8 +17,6 @@ export default function AnalyticsPage() {
     isError,
     refetch,
   } = useGetMyStoreAnalyticsQuery();
-
-  const { data: store } = useGetMyStoreQuery();
 
   if (isLoading) {
     return (
@@ -76,7 +71,7 @@ export default function AnalyticsPage() {
       animate={{ opacity: 1 }}
       className="max-w-[1400px] mx-auto space-y-10 pb-20 px-4 md:px-0"
     >
-      <AnalyticsHeader storeName={store?.store_name} />
+      <AnalyticsHeader />
 
       <StatsCards summary={analyticsData?.summary} />
 

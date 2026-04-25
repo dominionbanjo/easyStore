@@ -1,7 +1,6 @@
-import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { Menu, Bell, Sun, Moon, LogOut, Home, Settings } from "lucide-react";
+import { Bell, Sun, Moon, LogOut, Home, Settings } from "lucide-react";
 import { getBaseDomain, getAppPath } from "@/utils/subdomain";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -18,17 +17,30 @@ import { useLogoutMutation } from "@/services/authApi";
 import type { RootState } from "@/store";
 import { toast } from "sonner";
 import NavigationProgressBar from "@/components/shared/NavigationProgressBar";
+import { useEffect, useState } from "react";
 
 interface DashboardHeaderProps {
   onMenuToggle: () => void;
 }
 
-export default function DashboardHeader({
-  onMenuToggle,
-}: DashboardHeaderProps) {
+export default function DashboardHeader({}: DashboardHeaderProps) {
   const navigate = useNavigate();
+  const location = useLocation();
   const [logoutUser] = useLogoutMutation();
   const { currentUser } = useSelector((state: RootState) => state.user);
+
+  // ─── Dynamic Title Logic ───
+  const getPageTitle = () => {
+    const path = location.pathname;
+    if (path.includes("/products")) return "Products";
+    if (path.includes("/orders")) return "Orders";
+    if (path.includes("/customers")) return "Customers";
+    if (path.includes("/settings")) return "Settings";
+    if (path.includes("/analytics")) return "Analytics";
+    if (path.includes("/templates")) return "Templates";
+    if (path.includes("/help")) return "Help";
+    return "Overview";
+  };
 
   // 🌗 Local theme management
   const [theme, setTheme] = useState<"light" | "dark">("light");
@@ -58,18 +70,10 @@ export default function DashboardHeader({
   };
 
   return (
-    <header className="flex items-center justify-between px-3 sm:px-6 py-4 border-b border-border/40 bg-background/95 backdrop-blur-sm sticky top-0 z-30">
-      <div className="flex items-center gap-2 sm:gap-4">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="lg:hidden h-9 w-9"
-          onClick={onMenuToggle}
-        >
-          <Menu className="h-5 w-5" />
-        </Button>
-        <h2 className="font-semibold text-lg sm:text-xl tracking-tight truncate max-w-[120px] sm:max-w-none">
-          Dashboard
+    <header className="flex items-center justify-between px-3 sm:px-6 py-5 border-b border-border/40 bg-background/95 backdrop-blur-sm sticky top-0 z-30">
+      <div className="flex flex-col">
+        <h2 className="font-black text-2xl sm:text-3xl tracking-tight text-foreground uppercase">
+          {getPageTitle()}
         </h2>
       </div>
 
@@ -125,7 +129,9 @@ export default function DashboardHeader({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              onClick={() => (window.location.href = `${window.location.protocol}//${getBaseDomain()}`)}
+              onClick={() =>
+                (window.location.href = `${window.location.protocol}//${getBaseDomain()}`)
+              }
               className="cursor-pointer font-medium"
             >
               <Home className="mr-2 h-4 w-4" />

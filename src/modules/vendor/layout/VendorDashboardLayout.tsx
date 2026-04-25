@@ -10,6 +10,7 @@ import { getBaseDomain, areSubdomainsDisabled } from "@/utils/subdomain";
 
 import DashboardSidebar from "../components/DashboardSidebar";
 import DashboardHeader from "../components/DashboardHeader";
+import { DashboardBottomNav } from "../components/DashboardBottomNav";
 import LoadingScreen from "@/Loading";
 
 export default function VendorDashboardLayout() {
@@ -62,8 +63,8 @@ export default function VendorDashboardLayout() {
   }
 
   return (
-    <section className="flex min-h-screen bg-background text-foreground">
-      {/* Sidebar */}
+    <section className="flex min-h-screen bg-background text-foreground pb-20 lg:pb-0">
+      {/* Sidebar - Visible only on desktop */}
       <DashboardSidebar
         open={sidebarOpen}
         onToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -84,6 +85,9 @@ export default function VendorDashboardLayout() {
           <Outlet />
         </main>
       </div>
+
+      {/* Mobile Bottom Navigation */}
+      <DashboardBottomNav />
     </section>
   );
 }

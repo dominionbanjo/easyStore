@@ -26,11 +26,8 @@ export function DashboardOverviewHeader() {
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h1 className="text-3xl font-bold tracking-tight text-foreground">
-          Welcome back, {currentUser?.first_name || "Merchant"} 🪄
-        </h1>
-        <p className="text-muted-foreground mt-1">
-          Here's what's happening with your store today.
+        <p className="text-muted-foreground font-medium">
+          Welcome back, {currentUser?.first_name || "Merchant"} 🪄. Here's what's happening today.
         </p>
       </motion.div>
 

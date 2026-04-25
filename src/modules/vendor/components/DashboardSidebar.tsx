@@ -13,7 +13,7 @@ import {
   Palette,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { StoreSetupTracker } from "./shared/StoreSetupTracker";
 import { getAppPath } from "@/utils/subdomain";
@@ -63,7 +63,6 @@ interface DashboardSidebarProps {
 
 export default function DashboardSidebar({
   open,
-  onToggle,
   isCollapsed,
   onCollapse,
 }: DashboardSidebarProps) {
@@ -173,70 +172,6 @@ export default function DashboardSidebar({
         )}
       </aside>
 
-      {/* ─── Mobile Sidebar ─── */}
-      <AnimatePresence>
-        {open && (
-          <>
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.4 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              onClick={onToggle}
-              className="fixed inset-0 bg-black/70 z-40 lg:hidden"
-            />
-
-            {/* Drawer */}
-            <motion.aside
-              initial={{ x: "-100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "-100%" }}
-              transition={{ type: "tween", duration: 0.3 }}
-              className={cn(
-                "fixed left-0 top-0 h-screen w-[260px] z-50 lg:hidden",
-                "flex flex-col border-r border-border/30 bg-card text-card-foreground",
-              )}
-            >
-              <div className="flex items-center gap-2 px-4 py-5 border-b border-border/20">
-                <Store className="h-6 w-6 text-primary" />
-                <span className="font-semibold text-lg">My Store</span>
-              </div>
-
-              <nav className="flex flex-col gap-1 px-2 mt-4">
-                {menuItems.map(({ label, icon: Icon, to, exact }) => {
-                  const finalPath = getAppPath(to);
-
-                  return (
-                    <NavLink
-                      key={label}
-                      to={finalPath}
-                      end={exact}
-                      onClick={onToggle}
-                      onMouseEnter={() => handlePreload(to)}
-                      onFocus={() => handlePreload(to)}
-                      className={({ isActive }) =>
-                        cn(
-                          "flex items-center gap-3 px-3 py-2 rounded-sm text-sm transition-colors",
-                          "text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                          isActive && "bg-muted text-foreground font-medium",
-                        )
-                      }
-                    >
-                      <Icon className="h-5 w-5 shrink-0" />
-                      <span>{label}</span>
-                    </NavLink>
-                  );
-                })}
-              </nav>
-
-              <div className="mt-auto p-4 border-t border-border/20">
-                <StoreSetupTracker variant="minimal" />
-              </div>
-            </motion.aside>
-          </>
-        )}
-      </AnimatePresence>
     </>
   );
 }

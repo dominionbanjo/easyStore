@@ -195,10 +195,7 @@ export default function ProductsPage() {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
         >
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">
-            Products
-          </h1>
-          <p className="text-muted-foreground text-sm mt-1">
+          <p className="text-muted-foreground text-sm font-medium">
             Manage your inventory and product listings in one place.
           </p>
         </motion.div>

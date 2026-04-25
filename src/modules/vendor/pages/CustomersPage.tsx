@@ -52,10 +52,7 @@ export default function CustomersPage() {
     return (
       <section className="space-y-6 md:space-y-8 pb-10">
         <div className="flex flex-col gap-4">
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">
-            Customers
-          </h1>
-          <Card className="border-destructive/50">
+          <Card className="border-destructive/50 mt-4">
             <CardContent className="pt-6">
               <p className="text-destructive">
                 Failed to load customers. Please try again.
@@ -108,10 +105,7 @@ export default function CustomersPage() {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
         >
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">
-            Customers
-          </h1>
-          <p className="text-muted-foreground text-sm mt-1">
+          <p className="text-muted-foreground text-sm font-medium">
             Build and manage relationship with your store customers.
           </p>
         </motion.div>

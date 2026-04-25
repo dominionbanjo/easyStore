@@ -63,10 +63,7 @@ export default function OrdersPage() {
     return (
       <section className="space-y-6 md:space-y-8 pb-10">
         <div className="flex flex-col gap-4">
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">
-            Orders
-          </h1>
-          <Card className="border-destructive/50">
+          <Card className="border-destructive/50 mt-4">
             <CardContent className="pt-6">
               <p className="text-destructive">
                 Failed to load orders. Please try again.
@@ -114,10 +111,7 @@ export default function OrdersPage() {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
         >
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">
-            Orders
-          </h1>
-          <p className="text-muted-foreground text-sm mt-1">
+          <p className="text-muted-foreground text-sm font-medium">
             Manage all orders and their fulfillment statuses.
           </p>
         </motion.div>
