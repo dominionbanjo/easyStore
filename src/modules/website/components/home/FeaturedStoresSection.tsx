@@ -29,38 +29,30 @@ export default function FeaturedStoresSection({
   return (
     <section
       ref={containerRef}
-      className={`py-12 md:py-24 px-1 sm:px-6 overflow-hidden bg-slate-50/50 dark:bg-neutral-950 transition-colors duration-300 ${className}`}
+      className={`pt-8 md:pt-16 pb-8 md:pb-24 px-1 sm:px-6 overflow-hidden bg-slate-50/50 dark:bg-neutral-950 transition-colors duration-300 ${className}`}
     >
-      <div className="w-full mx-auto space-y-12">
-        {/* Header Section */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 px-1">
+      <div className="w-full mx-auto space-y-6">
+        <div className="flex flex-col gap-4 px-1">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="space-y-4 text-left"
+            className="space-y-3 text-left"
           >
             <h2 className="text-3xl md:text-4xl font-black text-foreground tracking-tight">
               Trending Stores
             </h2>
-            <p className="text-muted-foreground text-base md:text-lg max-w-xl">
+            <p className="text-muted-foreground text-sm md:text-base max-w-xl">
               Discover top-rated sellers with exceptional products and service.
             </p>
-            <div className="h-1.5 w-20 bg-primary rounded-sm" />
-          </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-          >
             <SmartLink to="/stores">
               <Button
                 variant="ghost"
-                className="group text-primary hover:text-primary hover:bg-primary/5"
+                className="group text-primary hover:text-primary hover:bg-primary/5 p-0 h-auto font-bold text-base"
               >
                 View All Stores
-                <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Button>
             </SmartLink>
           </motion.div>

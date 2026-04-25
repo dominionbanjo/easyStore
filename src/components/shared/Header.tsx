@@ -226,12 +226,12 @@ export default function Header() {
     >
       <nav
         className={cn(
-          "flex w-full items-center justify-between backdrop-blur-md transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] px-1.5 md:px-14 xl:px-16 py-1.5",
-          "fixed top-0 left-1/2 -translate-x-1/2",
-          "will-change-[transform,background-color,border-color,box-]",
+          "flex w-full items-center justify-between backdrop-blur-md transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] px-6 md:px-14 xl:px-16 py-3",
+          "fixed top-0 left-0 right-0",
+          "will-change-[transform,background-color,border-color,box-shadow]",
           isScrolled
-            ? "max-w-[94%] sm:max-w-[98%] bg-white/80 dark:bg-neutral-900/80 rounded-sm sm:top-4 border border-border/20"
-            : "max-w-[94%] sm:max-w-full bg-white/30 dark:bg-neutral-900/30 sm:top-2 border border-transparent",
+            ? "max-w-full bg-white/95 dark:bg-neutral-950/95 border-b border-border/20 shadow-sm"
+            : "max-w-full bg-white/70 dark:bg-neutral-950/70 border-b border-transparent",
         )}
       >
         {/* ---------- LEFT: Logo ---------- */}

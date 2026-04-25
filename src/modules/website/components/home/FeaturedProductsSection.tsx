@@ -30,10 +30,10 @@ export default function FeaturedProductsSection() {
         <SmartLink to="/stores">
           <Button
             variant="ghost"
-            className="group text-primary hover:text-primary hover:bg-primary/5"
+            className="group text-primary hover:text-primary hover:bg-primary/5 p-0 h-auto font-bold text-base"
           >
-            Discover Stores
-            <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            Discover More
+            <ArrowRight className="ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Button>
         </SmartLink>
       }

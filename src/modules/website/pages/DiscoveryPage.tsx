@@ -11,6 +11,14 @@ import ProductGridCard from "@/components/shared/ProductGridCard";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useState } from "react";
+import { cn } from "@/lib/utils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { LayoutGrid } from "lucide-react";
 
 export default function DiscoveryPage() {
   const navigate = useNavigate();
@@ -62,7 +70,7 @@ export default function DiscoveryPage() {
   return (
     <div className="min-h-screen bg-white dark:bg-neutral-950 transition-colors duration-300 pb-24">
       {/* Hero Header */}
-      <section className="relative overflow-hidden pt-20 md:pt-28 pb-16 md:pb-24 px-4 mb-12">
+      <section className="relative overflow-hidden pt-0 md:pt-8 pb-8 md:pb-16 px-4 mb-8">
         <div className="absolute top-0 center w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent dark:from-emerald-900/20" />
 
         <div className="w-full mx-auto text-center relative z-10">
@@ -102,65 +110,112 @@ export default function DiscoveryPage() {
         </div>
       </section>
 
-      {/* Quick Links */}
-      <div className="w-full mx-auto px-4 mb-24">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {[
-            {
-              title: "Trending",
-              icon: TrendingUp,
-              href: WEBSITE_ROUTES.TRENDING,
-              color: "bg-orange-500",
-            },
-            {
-              title: "New Arrivals",
-              icon: Zap,
-              href: WEBSITE_ROUTES.NEW_ARRIVALS,
-              color: "bg-blue-500",
-            },
-            {
-              title: "Featured",
-              icon: Sparkles,
-              href: WEBSITE_ROUTES.FEATURED,
-              color: "bg-purple-500",
-            },
-            {
-              title: "Top Stores",
-              icon: Sparkles,
-              href: WEBSITE_ROUTES.STORES,
-              color: "bg-emerald-500",
-            },
-          ].map((link) => (
-            <SmartLink
-              to={link.href}
-              key={link.title}
-              className="group relative overflow-hidden h-32 rounded-sm bg-zinc-50 dark:bg-neutral-900 border border-zinc-200 dark:border-white/5 flex flex-col items-center justify-center gap-3 hover:bg-white dark:hover:bg-neutral-800 transition-colors  hover:"
-            >
-              <div
-                className={`p-3 rounded-sm ${link.color}/10 text-${link.color.split("-")[1]}-500 group-hover:scale-110 transition-transform`}
+      {/* Quick Navigation Dropdown */}
+      <div className="w-full mx-auto px-4 mb-20 flex justify-center">
+        <div className="relative group max-w-sm w-full">
+          <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/50 to-emerald-500/50 rounded-sm blur opacity-25 group-hover:opacity-50 transition duration-300" />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                className="relative w-full h-16 px-6 bg-white dark:bg-neutral-900 border-zinc-200 dark:border-white/10 rounded-sm flex items-center justify-between group hover:border-primary/50 transition-all"
               >
-                <link.icon className="w-6 h-6" />
-              </div>
-              <span className="font-bold text-foreground">{link.title}</span>
-            </SmartLink>
-          ))}
+                <div className="flex items-center gap-4 text-left">
+                  <div className="p-2.5 rounded-sm bg-primary/10 text-primary">
+                    <LayoutGrid className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <div className="text-xs font-bold text-muted-foreground uppercase tracking-widest leading-none mb-1">
+                      Explore Path
+                    </div>
+                    <div className="text-xl font-black text-foreground">
+                      Choose Discovery
+                    </div>
+                  </div>
+                </div>
+                <div className="p-1 rounded-sm bg-zinc-100 dark:bg-neutral-800 text-muted-foreground group-hover:text-primary transition-colors">
+                  <ArrowRight className="w-5 h-5 rotate-90" />
+                </div>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="center"
+              className="w-[var(--radix-dropdown-menu-trigger-width)] p-2 rounded-sm"
+              sideOffset={12}
+            >
+              {[
+                {
+                  title: "Trending",
+                  subtext: "Popular items this week",
+                  icon: TrendingUp,
+                  href: WEBSITE_ROUTES.TRENDING,
+                  color: "text-orange-500 bg-orange-500/10",
+                },
+                {
+                  title: "New Arrivals",
+                  subtext: "Freshly added products",
+                  icon: Zap,
+                  href: WEBSITE_ROUTES.NEW_ARRIVALS,
+                  color: "text-blue-500 bg-blue-500/10",
+                },
+                {
+                  title: "Featured",
+                  subtext: "Editor's top picks",
+                  icon: Sparkles,
+                  href: WEBSITE_ROUTES.FEATURED,
+                  color: "text-purple-500 bg-purple-500/10",
+                },
+                {
+                  title: "Top Stores",
+                  subtext: "Best sellers in Nigeria",
+                  icon: Sparkles,
+                  href: WEBSITE_ROUTES.STORES,
+                  color: "text-emerald-500 bg-emerald-500/10",
+                },
+              ].map((link) => (
+                <DropdownMenuItem
+                  key={link.title}
+                  onClick={() => navigate(link.href)}
+                  className="p-3 rounded-sm flex items-center gap-4 cursor-pointer focus:bg-primary/5 group"
+                >
+                  <div className={cn("p-2 rounded-sm", link.color)}>
+                    <link.icon className="w-5 h-5" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="font-bold text-base group-hover:text-primary transition-colors">
+                      {link.title}
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      {link.subtext}
+                    </div>
+                  </div>
+                  <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 
       {/* Featured Section */}
-      <section className="w-full mx-auto px-4 mb-24">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-10 lg:px-1">
-          <h2 className="text-2xl sm:text-3xl font-black tracking-tight flex items-center gap-2">
-            <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
+      <section className="w-full mx-auto px-4 mb-16 md:mb-24">
+        <div className="flex flex-col px-1 gap-3 mb-8">
+          <h2 className="text-2xl sm:text-4xl font-black tracking-tight flex items-center gap-2">
+            <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
             Featured
           </h2>
-          <div className="flex items-center">
-            <SmartLink to={WEBSITE_ROUTES.FEATURED}>
-              <Button variant="ghost" className="gap-2 -ml-3 sm:ml-0 h-9 sm:h-11">
-                View All <ArrowRight className="w-4 h-4" />
-              </Button>
-            </SmartLink>
-          </div>
+          <p className="text-muted-foreground text-sm sm:text-base max-w-xl">
+            Our top handpicked premium selections across all categories, updated
+            daily.
+          </p>
+          <SmartLink to={WEBSITE_ROUTES.FEATURED}>
+            <Button
+              variant="ghost"
+              className="p-0 h-auto gap-1 text-primary hover:text-primary font-bold hover:bg-transparent"
+            >
+              View All <ArrowRight className="w-4 h-4" />
+            </Button>
+          </SmartLink>
         </div>
         <motion.div
           key={isFeaturedLoading ? "loading" : "loaded"}
@@ -189,19 +244,24 @@ export default function DiscoveryPage() {
       </section>
 
       {/* Trending Section */}
-      <section className="w-full mx-auto px-4 mb-24">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-10 lg:px-1">
-          <h2 className="text-2xl sm:text-3xl font-black tracking-tight flex items-center gap-2">
-            <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-orange-500" />
+      <section className="w-full mx-auto px-4 mb-16 md:mb-24">
+        <div className="flex flex-col px-1 gap-3 mb-8">
+          <h2 className="text-2xl sm:text-4xl font-black tracking-tight flex items-center gap-2">
+            <TrendingUp className="w-6 h-6 sm:w-8 sm:h-8 text-orange-500" />
             Trending Now
           </h2>
-          <div className="flex items-center">
-            <SmartLink to={WEBSITE_ROUTES.TRENDING}>
-              <Button variant="ghost" className="gap-2 -ml-3 sm:ml-0 h-9 sm:h-11">
-                View All <ArrowRight className="w-4 h-4" />
-              </Button>
-            </SmartLink>
-          </div>
+          <p className="text-muted-foreground text-sm sm:text-base max-w-xl">
+            See what everyone is talking about. These are the most popular
+            products right now.
+          </p>
+          <SmartLink to={WEBSITE_ROUTES.TRENDING}>
+            <Button
+              variant="ghost"
+              className="p-0 h-auto gap-1 text-primary hover:text-primary font-bold hover:bg-transparent"
+            >
+              View All <ArrowRight className="w-4 h-4" />
+            </Button>
+          </SmartLink>
         </div>
         <motion.div
           key={isTrendingLoading ? "loading" : "loaded"}
@@ -230,19 +290,24 @@ export default function DiscoveryPage() {
       </section>
 
       {/* New Arrivals Section */}
-      <section className="w-full mx-auto px-4 mb-24">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-10 lg:px-1">
-          <h2 className="text-2xl sm:text-3xl font-black tracking-tight flex items-center gap-2">
-            <Zap className="w-5 h-5 sm:w-6 sm:h-6 text-blue-500" />
+      <section className="w-full mx-auto px-4 mb-16 md:mb-24">
+        <div className="flex flex-col px-1 gap-3 mb-8">
+          <h2 className="text-2xl sm:text-4xl font-black tracking-tight flex items-center gap-2">
+            <Zap className="w-6 h-6 sm:w-8 sm:h-8 text-blue-500" />
             New Arrivals
           </h2>
-          <div className="flex items-center">
-            <SmartLink to={WEBSITE_ROUTES.NEW_ARRIVALS}>
-              <Button variant="ghost" className="gap-2 -ml-3 sm:ml-0 h-9 sm:h-11">
-                View All <ArrowRight className="w-4 h-4" />
-              </Button>
-            </SmartLink>
-          </div>
+          <p className="text-muted-foreground text-sm sm:text-base max-w-xl">
+            Fresh from our vendors. Be the first to discover and own the latest
+            additions.
+          </p>
+          <SmartLink to={WEBSITE_ROUTES.NEW_ARRIVALS}>
+            <Button
+              variant="ghost"
+              className="p-0 h-auto gap-1 text-primary hover:text-primary font-bold hover:bg-transparent"
+            >
+              View All <ArrowRight className="w-4 h-4" />
+            </Button>
+          </SmartLink>
         </div>
         <motion.div
           key={isNewArrivalsLoading ? "loading" : "loaded"}

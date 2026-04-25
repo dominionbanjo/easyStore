@@ -40,33 +40,28 @@ export function ProductSection({
       className={`py-12 md:py-24 px-1 sm:px-6 overflow-hidden bg-white dark:bg-neutral-950 transition-colors duration-300 ${className}`}
     >
       <div className="w-full mx-auto space-y-12">
-        {/* Header Section */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 px-1">
+        <div className="flex flex-col gap-4 px-1">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="space-y-4 text-left"
+            className="space-y-3 text-left"
           >
             <h2 className="text-3xl md:text-4xl font-black text-foreground tracking-tight">
               {title}
             </h2>
             {subtitle && (
-              <p className="text-muted-foreground text-base md:text-lg max-w-xl">
+              <p className="text-muted-foreground text-sm md:text-base max-w-xl">
                 {subtitle}
               </p>
             )}
-            <div className="h-1.5 w-20 bg-primary rounded-sm" />
+
+            {headerAction && (
+              <div className="pt-1">
+                {headerAction}
+              </div>
+            )}
           </motion.div>
-          {headerAction && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-            >
-              {headerAction}
-            </motion.div>
-          )}
         </div>
 
         {/* Content Section */}

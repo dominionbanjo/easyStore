@@ -34,7 +34,7 @@ const steps = [
 
 export default function BusinessStorySection() {
   return (
-    <section className="py-24 px-4 bg-background dark:bg-neutral-950 overflow-hidden transition-colors duration-300">
+    <section className="pt-12 md:pt-24 pb-12 md:pb-24 px-4 bg-background dark:bg-neutral-950 overflow-hidden transition-colors duration-300">
       <div className="w-full mx-auto">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Left: Text & Story */}

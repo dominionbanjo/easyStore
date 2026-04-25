@@ -22,9 +22,9 @@ export default function DiscoveryHero() {
   };
 
   return (
-    <div className="pb-12 bg-white dark:bg-neutral-950 transition-colors duration-300">
+    <div className="pb-4 bg-white dark:bg-neutral-950 transition-colors duration-300">
       {/* Hero Header */}
-      <section className="relative overflow-hidden pt-20 pb-12 px-4">
+      <section className="relative overflow-hidden pt-8 md:pt-12 pb-12 px-4">
         <div className="absolute top-0 center w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent dark:from-emerald-900/20" />
 
         <div className="w-full mx-auto text-center relative z-10">

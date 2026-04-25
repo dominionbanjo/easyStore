@@ -45,31 +45,25 @@ export default function TopCategoriesSection({
     >
       <div className="w-full mx-auto space-y-10">
         {/* Header Section */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 px-1">
+        <div className="flex flex-col gap-4 px-1">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="space-y-3 text-left"
+            className="space-y-4 text-left"
           >
             <h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight flex items-center gap-2">
               <LayoutGrid className="h-6 w-6 text-primary" />
               Browse by Category
             </h2>
-            <p className="text-muted-foreground text-base max-w-xl">
+            <p className="text-muted-foreground text-sm md:text-base max-w-xl">
               Explore our wide range of collections and find exactly what you
               need.
             </p>
-          </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-          >
             <SmartLink
               to="/categories"
-              className="group flex items-center gap-1 text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
+              className="group flex items-center gap-1 text-base font-bold text-primary hover:text-primary/80 transition-colors"
             >
               View All Categories
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
