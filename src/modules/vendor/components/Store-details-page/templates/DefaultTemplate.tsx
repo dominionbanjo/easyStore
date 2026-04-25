@@ -8,6 +8,7 @@ import {
   ChevronRight,
   ShoppingCart,
   TwitterIcon,
+  MessageSquare,
 } from "lucide-react";
 import {
   Instagram,
@@ -44,6 +45,7 @@ export default function DefaultTemplate({
   onPageChange,
   onCartOpen,
   cartItemsCount,
+  onMessageVendor,
 }: StoreTemplateProps) {
   const [contactOpen, setContactOpen] = useState(false);
   const hasBanner = !!store.cover_image;
@@ -59,7 +61,7 @@ export default function DefaultTemplate({
     <div className="bg-white dark:bg-zinc-950 min-h-screen font-sans text-zinc-900 dark:text-zinc-100 selection:bg-[var(--theme-primary)] selection:text-white">
       {/* ─── HEADER ─── */}
       <header className="sticky top-0 z-40 w-full bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800 ">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4 md:gap-8">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4 md:gap-8">
           {/* Logo & Name */}
           <div className="flex items-center gap-3 md:gap-4 shrink-0 min-w-0">
             {store.logo && (
@@ -149,6 +151,16 @@ export default function DefaultTemplate({
                 <Mail className="w-5 h-5" />
               </a>
             )}
+
+            {onMessageVendor && (
+              <button
+                onClick={onMessageVendor}
+                 className="relative p-2.5 rounded-sm hover:bg-zinc-100 dark:hover:bg-zinc-900 text-zinc-600 dark:text-zinc-400 transition-all hover:scale-110"
+                title="Message Vendor"
+              >
+                <MessageSquare className="w-5 h-5" />
+              </button>
+            )}
           </div>
         </div>
 
@@ -171,7 +183,7 @@ export default function DefaultTemplate({
 
       {/* ─── CATEGORY NAVIGATION BAR ─── */}
       <div className="bg-white/80 dark:bg-zinc-950/80 border-b border-zinc-100 dark:border-zinc-900 sticky top-20 z-30 hidden md:block backdrop-blur-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-6 py-4 overflow-x-auto custom-scrollbar">
             <button
               onClick={() => {
@@ -275,6 +287,16 @@ export default function DefaultTemplate({
               >
                 Explore Collection
               </button>
+              
+              {onMessageVendor && (
+                <button
+                  onClick={onMessageVendor}
+                  className="bg-white/10 backdrop-blur-md text-white border border-white/20 px-8 py-3.5 rounded-sm font-bold text-base hover:bg-white/20 transition-all hover:-translate-y-1 active:scale-95 flex items-center gap-2"
+                >
+                  <MessageSquare className="w-5 h-5" />
+                  Message Vendor
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -283,7 +305,7 @@ export default function DefaultTemplate({
       {/* ─── MAIN CONTENT ─── */}
       <main
         id="main-grid"
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24"
+        className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24"
       >
         {/* Mobile Navigation Tabs */}
         <div className="flex md:hidden mb-10 border-b border-zinc-200 dark:border-zinc-800 pb-2 overflow-x-auto custom-scrollbar gap-8">
@@ -395,7 +417,7 @@ export default function DefaultTemplate({
 
       {/* ─── ENHANCED FOOTER ─── */}
       <footer className="w-full bg-zinc-50 dark:bg-zinc-950 py-24 mt-12 border-t border-zinc-200 dark:border-zinc-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center">
           <div className="flex justify-center mb-10">
             {store.logo ? (
               <img

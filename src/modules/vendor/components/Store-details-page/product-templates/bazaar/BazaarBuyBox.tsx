@@ -1,5 +1,4 @@
 import { Truck, Info, Minus, Plus, ShoppingCart, Heart } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import type { IProductStore } from "@/types/product/productTypes";
 import type { UIProduct } from "@/modules/vendor/utils/productAdapter";
@@ -31,54 +30,61 @@ export function BazaarBuyBox({
   addingToCart,
 }: BazaarBuyBoxProps) {
   return (
-    <div className="w-full lg:w-[360px] xl:w-[400px] border border-slate-200 dark:border-zinc-800 rounded-sm px-2.5 py-5 sm:p-5 bg-white dark:bg-zinc-900 sticky top-[100px] space-y-5 flex-shrink-0">
-      <div className="text-2xl font-black text-slate-900 dark:text-white">
-        ₦{displayPrice?.toLocaleString()}
+    <div className="w-full lg:w-[380px] xl:w-[420px] border border-slate-200/50 dark:border-neutral-800/50 rounded-[32px] px-6 py-8 bg-white/50 dark:bg-neutral-900/50 backdrop-blur-xl sticky top-28 space-y-8 flex-shrink-0 shadow-sm animate-in fade-in slide-in-from-right-4 duration-700">
+      <div className="space-y-1">
+         <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Secure Purchase</span>
+        <div className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter">
+          ₦{displayPrice?.toLocaleString()}
+        </div>
       </div>
 
-      <div className="space-y-3 text-sm">
-        <div className="flex gap-2">
-          <Truck className="w-5 h-5 text-slate-400 shrink-0" />
-          <div>
-            <span className="font-bold text-green-700 dark:text-green-500 block">
-              Shipping calculated at checkout
+      <div className="space-y-4">
+        <div className="flex gap-4 p-4 bg-indigo-50 dark:bg-indigo-900/10 rounded-2xl border border-indigo-100 dark:border-indigo-900/20">
+          <Truck className="w-6 h-6 text-indigo-600 dark:text-indigo-400 shrink-0" />
+          <div className="space-y-1">
+            <span className="text-sm font-black text-indigo-700 dark:text-indigo-400 block uppercase tracking-wide">
+              Priority Shipping
             </span>
-            <span className="text-slate-500 block">
-              Delivery outside {uiProduct.shipping.location} may vary.
+            <span className="text-xs text-indigo-600/80 dark:text-indigo-400/60 block font-bold">
+              Dispatching from {uiProduct.shipping.location}.
             </span>
           </div>
         </div>
-        <div className="flex gap-2">
-          <Info className="w-5 h-5 text-slate-400 shrink-0" />
-          <div>
+        
+        <div className="flex gap-4 p-4 bg-slate-50 dark:bg-neutral-800/50 rounded-2xl border border-slate-100 dark:border-neutral-800/50">
+          <Info className="w-6 h-6 text-slate-400 shrink-0" />
+          <div className="space-y-1">
             <span
               className={cn(
-                "font-medium",
+                "text-sm font-black uppercase tracking-wide block",
                 currentStock > 0
                   ? "text-slate-900 dark:text-white"
-                  : "text-red-600 dark:text-red-400 font-bold",
+                  : "text-red-500",
               )}
             >
-              {currentStock > 0 ? "In Stock." : "Currently Out of Stock."}
+              {currentStock > 0 ? "Stock Available" : "Out of Stock"}
+            </span>
+             <span className="text-xs text-slate-400 block font-bold">
+              {currentStock > 0 ? `Currently ${currentStock} units left.` : "Check back later for restock."}
             </span>
           </div>
         </div>
       </div>
 
-      <div className="space-y-3 pt-3">
-        <div className="flex items-center justify-between border border-slate-300 dark:border-zinc-700 rounded-sm p-1 bg-slate-50 dark:bg-zinc-800">
+      <div className="space-y-4 pt-2">
+        <div className="flex items-center justify-between bg-slate-100 dark:bg-neutral-800 rounded-2xl p-1.5 border border-slate-200 dark:border-neutral-800">
           <button
             onClick={() => setQuantity(Math.max(1, quantity - 1))}
-            className="px-4 py-2 hover:bg-slate-200 dark:hover:bg-zinc-700 rounded-sm font-bold"
+            className="w-12 h-12 flex items-center justify-center hover:bg-white dark:hover:bg-neutral-700 rounded-xl transition-all shadow-sm active:scale-95"
           >
             <Minus className="w-4 h-4" />
           </button>
-          <span className="font-bold w-12 text-center">{quantity}</span>
+          <span className="font-black text-lg w-12 text-center">{quantity}</span>
           <button
             onClick={() =>
               setQuantity(Math.min(currentStock || 1, quantity + 1))
             }
-            className="px-4 py-2 hover:bg-slate-200 dark:hover:bg-zinc-700 rounded-sm font-bold"
+            className="w-12 h-12 flex items-center justify-center hover:bg-white dark:hover:bg-neutral-700 rounded-xl transition-all shadow-sm active:scale-95"
           >
             <Plus className="w-4 h-4" />
           </button>
@@ -87,60 +93,50 @@ export function BazaarBuyBox({
         <button
           disabled={currentStock <= 0 || addingToCart}
           onClick={handleAddToCart}
-          className="w-full py-3.5 bg-yellow-400 hover:bg-yellow-500 text-slate-900 font-bold rounded-sm  transition-colors text-[15px] disabled:opacity-50 disabled:bg-slate-100 dark:disabled:bg-zinc-800 disabled:text-slate-400 flex items-center justify-center gap-2"
+          className="w-full py-4 bg-indigo-600 hover:opacity-90 text-white font-black rounded-2xl transition-all text-base shadow-lg shadow-indigo-600/20 active:scale-[0.98] disabled:opacity-50 disabled:bg-slate-200 dark:disabled:bg-neutral-800 disabled:text-slate-400 flex items-center justify-center gap-3"
         >
           {addingToCart ? (
-            <div className="h-4 w-4 border-2 border-slate-900 border-t-transparent rounded-sm animate-spin" />
+            <div className="h-5 w-5 border-3 border-white border-t-transparent rounded-full animate-spin" />
           ) : currentStock <= 0 ? (
-            "Out of Stock"
+            "OUT OF STOCK"
           ) : (
             <>
-              <ShoppingCart className="w-4 h-4" />
-              Add to Cart
+              <ShoppingCart className="w-5 h-5" />
+              ADD TO CART
             </>
           )}
         </button>
+        
         <button
           disabled={currentStock <= 0}
-          className="w-full py-3.5 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-sm  transition-colors text-[15px] disabled:opacity-50"
+          className="w-full py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-black rounded-2xl transition-all text-base shadow-lg active:scale-[0.98] disabled:opacity-50"
         >
-          Buy Now
+          BUY IT NOW
         </button>
       </div>
 
-      <div className="text-xs text-slate-500 space-y-2 pt-4 border-t border-slate-200 dark:border-zinc-800">
-        <div className="grid grid-cols-2 gap-2">
-          <span className="text-slate-400">Ships from</span>
-          <span className="font-medium text-slate-700 dark:text-slate-300 truncate">
-            {store.store_name} LLC
-          </span>
-        </div>
-        <div className="grid grid-cols-2 gap-2">
+      <div className="space-y-4 pt-6 border-t border-slate-100 dark:border-neutral-800">
+        <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
           <span className="text-slate-400">Sold by</span>
-          <span className="font-medium text-[var(--theme-primary)] truncate">
-            {store.store_name}
-          </span>
+          <span className="text-indigo-600">{store.store_name}</span>
         </div>
-        <div className="grid grid-cols-2 gap-2">
+         <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
           <span className="text-slate-400">Returns</span>
-          <span className="font-medium text-[var(--theme-primary)] truncate">
-            {uiProduct.shipping.returns || "Eligible"}
-          </span>
+          <span className="text-slate-700 dark:text-neutral-300">{uiProduct.shipping.returns || "30-Day Policy"}</span>
         </div>
       </div>
 
-      <Separator />
       <button
         onClick={toggleWishlist}
         className={cn(
-          "w-full py-2 border border-slate-300 dark:border-zinc-700 rounded-sm text-sm font-medium transition-colors flex items-center justify-center gap-2",
+          "w-full py-3 border rounded-2xl text-xs font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2 active:scale-95",
           liked
-            ? "bg-[var(--theme-primary)]/10 text-[var(--theme-primary)] border-[var(--theme-primary)]"
-            : "hover:bg-slate-50 dark:hover:bg-zinc-800",
+            ? "bg-indigo-600/10 text-indigo-600 border-indigo-600/30"
+            : "border-slate-200 dark:border-neutral-800 hover:bg-slate-50 dark:hover:bg-neutral-800 text-slate-500",
         )}
       >
         <Heart className={cn("w-4 h-4", liked && "fill-current")} />{" "}
-        {liked ? "Saved to List" : "Add to List"}
+        {liked ? "Saved to Collection" : "Save for Later"}
       </button>
     </div>
   );

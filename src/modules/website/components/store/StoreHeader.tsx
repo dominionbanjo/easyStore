@@ -12,9 +12,13 @@ export default function StoreHeader() {
   const selectedState = watch("state");
 
   return (
-    <section className="relative overflow-hidden bg-white dark:bg-neutral-900 border-b border-border/40 dark:border-white/5 transition-colors duration-300 pt-16 md:pt-20">
+    <section className="relative overflow-hidden bg-white dark:bg-neutral-950 border-b border-border/40 dark:border-white/5 transition-colors duration-300 pt-16 md:pt-20">
       {/* Decorative Background Elements */}
-      <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#333_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-40 pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(#6366f1_0.5px,transparent_0.5px)] dark:bg-[radial-gradient(#4f46e5_0.5px,transparent_0.5px)] [background-size:24px_24px] opacity-20 pointer-events-none" />
+      
+      {/* Vibrant Gradients */}
+      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-[120px] -translate-y-1/2 pointer-events-none" />
+      <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-purple-500/10 rounded-full blur-[120px] translate-y-1/2 pointer-events-none" />
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/5 rounded-sm blur-[100px] -translate-y-1/2 translate-x-1/2 pointer-events-none" />
 
       <div className="w-full mx-auto px-6 py-12 md:py-16 relative z-10">
@@ -79,19 +83,16 @@ export default function StoreHeader() {
               <div className="md:w-px md:h-8 md:my-auto md:bg-border/60" />
 
               <div className="w-full md:w-[240px] flex gap-2">
-                <div className="flex-1 relative group">
-                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground z-10">
-                    <MapPin className="w-4 h-4" />
-                  </div>
-                  <FormSelect
-                    name="state"
-                    placeholder="Filter by State"
-                    options={NigeriaData.getStates().map((s) => ({
-                      label: s.name,
-                      value: s.name,
-                    }))}
-                  />
-                </div>
+                <FormSelect
+                  name="state"
+                  placeholder="Filter by State"
+                  icon={<MapPin className="w-4 h-4" />}
+                  className="flex-1"
+                  options={NigeriaData.getStates().map((s) => ({
+                    label: s.name,
+                    value: s.name,
+                  }))}
+                />
 
                 {selectedState && (
                   <Button

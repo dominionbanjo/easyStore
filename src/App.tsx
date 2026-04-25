@@ -228,6 +228,7 @@ export default function App() {
               />
               <Route path="orders" element={<Pages.OrdersPage />} />
               <Route path="orders/:id" element={<Pages.OrderDetailsPage />} />
+              <Route path="messages" element={<Pages.MessagesPage />} />
             </Route>
 
             {/* ─── AUTH (all) ─── */}

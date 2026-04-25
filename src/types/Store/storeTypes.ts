@@ -72,6 +72,7 @@ export interface ISearchStoresResponse {
 export interface IStoreDetails {
   id: string;
   user_id: string;
+  vendor_id: string;
   store_name: string;
   slug: string;
   category: string | null;

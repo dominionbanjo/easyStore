@@ -3,12 +3,10 @@ import {
   Search,
   X,
   Loader2,
-  Mail,
   Phone,
   ShoppingCart,
   Star,
   MapPin,
-  TwitterIcon,
 } from "lucide-react";
 import {
   Instagram,
@@ -16,6 +14,8 @@ import {
   Youtube,
   Global,
   InfoCircle,
+  Messages3,
+  User,
 } from "iconsax-react";
 import { Input } from "@/components/ui/input";
 import { StoreProductsGrid } from "../StoreProductsGrid";
@@ -43,48 +43,63 @@ export default function BazaarTemplate({
   onPageChange,
   onCartOpen,
   cartItemsCount,
+  onMessageVendor,
 }: StoreTemplateProps) {
   const [contactOpen, setContactOpen] = useState(false);
   const hasBanner = !!store.cover_image;
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA] dark:bg-black text-slate-900 dark:text-white font-sans pb-24">
+    <div className="min-h-screen bg-[#fafafa] dark:bg-[#050505] text-slate-900 dark:text-white font-sans pb-24">
       {/* ─── BAZAAR HEADER ─── */}
-      <header className="sticky top-0 z-50 w-full bg-white/80 dark:bg-black/80 backdrop-blur-md border-b-4 border-slate-100 dark:border-neutral-900 px-1.5 sm:px-4 py-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
-          <div className="flex items-center gap-4 min-w-0">
+      <header className="sticky top-0 z-50 w-full bg-white/70 dark:bg-black/70 backdrop-blur-xl border-b border-slate-200/50 dark:border-neutral-800/50 px-2 sm:px-6 py-3">
+        <div className="max-w-[1600px] mx-auto flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3 md:gap-5 min-w-0">
             {store.logo ? (
               <img
                 src={store.logo}
                 alt={store.store_name}
-                className="w-10 h-10 md:w-12 md:h-12 rounded-sm object-cover border-2 border-slate-200 dark:border-neutral-800"
+                className="w-10 h-10 md:w-14 md:h-14 rounded-2xl object-cover border border-slate-200 dark:border-neutral-800 shadow-sm"
               />
             ) : (
-              <div className="w-10 h-10 md:w-12 md:h-12 rounded-sm bg-[var(--theme-primary)] flex items-center justify-center font-black text-white text-xl">
+              <div className="w-10 h-10 md:w-14 md:h-14 rounded-2xl bg-gradient-to-br from-[var(--theme-primary)] to-[var(--theme-primary)]/80 flex items-center justify-center font-black text-white text-xl shadow-lg">
                 {store.store_name?.charAt(0)}
               </div>
             )}
-            <h1 className="text-xl md:text-2xl font-[1000] italic tracking-tighter uppercase text-slate-900 dark:text-white truncate max-w-[150px] md:max-w-none">
-              {store.store_name}
-            </h1>
+            <div className="flex flex-col min-w-0">
+              <h1 className="text-lg md:text-2xl font-black tracking-tight text-slate-900 dark:text-white truncate max-w-[120px] md:max-w-none">
+                {store.store_name}
+              </h1>
+              <div className="hidden md:flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Online Now</span>
+              </div>
+            </div>
           </div>
 
-          <div className="flex items-center gap-2 sm:gap-4">
+          <div className="flex items-center gap-2 md:gap-3">
+             <button
+              onClick={onMessageVendor}
+              className="p-2.5 md:p-3.5 bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-2xl hover:border-[var(--theme-primary)] hover:text-[var(--theme-primary)] transition-all shadow-sm active:scale-95 group"
+              aria-label="Message store"
+            >
+              <Messages3 variant="Bold" color="currentColor" className="w-5 h-5 md:w-6 md:h-6" />
+            </button>
+
             <button
               onClick={onCartOpen}
-              className="relative p-2.5 sm:p-4 bg-slate-100 dark:bg-neutral-900 rounded-sm hover:bg-[var(--theme-primary)] hover:text-white transition-all group"
+              className="relative p-2.5 md:p-3.5 bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-2xl hover:border-[var(--theme-primary)] hover:text-[var(--theme-primary)] transition-all shadow-sm active:scale-95 group"
             >
-              <ShoppingCart className="w-5 h-5 sm:w-6 sm:h-6" />
+              <ShoppingCart className="w-5 h-5 md:w-6 md:h-6" />
               {cartItemsCount > 0 && (
-                <span className="absolute -top-1 -right-1 h-5 w-5 sm:h-6 sm:w-6 rounded-sm bg-black dark:bg-white text-white dark:text-black text-[10px] sm:text-[11px] flex items-center justify-center font-black ring-2 ring-white dark:ring-black">
+                <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-[var(--theme-primary)] text-white text-[10px] flex items-center justify-center font-black ring-2 ring-white dark:ring-black">
                   {cartItemsCount}
                 </span>
               )}
             </button>
 
             <TemplateProfileDropdown
-              buttonClassName="p-2.5 sm:p-4 bg-slate-100 dark:bg-neutral-900 rounded-sm hover:bg-[var(--theme-primary)] hover:text-white transition-all"
-              iconClassName="w-5 h-5 sm:w-6 sm:h-6"
+              buttonClassName="p-2.5 md:p-3.5 bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-2xl hover:border-[var(--theme-primary)] hover:text-[var(--theme-primary)] transition-all shadow-sm active:scale-95"
+              iconClassName="w-5 h-5 md:w-6 md:h-6"
             />
           </div>
         </div>
@@ -92,73 +107,76 @@ export default function BazaarTemplate({
 
       {/* ─── BAZAAR HERO ─── */}
       {!searchQuery && !selectedCategory && activeTab === "products" && (
-        <section className="relative w-full h-[60vh] md:h-[70vh] bg-black overflow-hidden group">
+        <section className="relative w-full h-[450px] md:h-[600px] overflow-hidden bg-slate-900">
           {hasBanner ? (
             <>
               <img
                 src={store.cover_image ?? undefined}
                 alt={store.store_name}
-                className="absolute inset-0 w-full h-full object-cover opacity-60 grayscale hover:grayscale-0 transition-all duration-700"
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
             </>
           ) : (
-            <div className="absolute inset-0 bg-neutral-900">
-              <div className="absolute top-0 right-0 w-1/2 h-full bg-[var(--theme-primary)]/10 skew-x-12 transform translate-x-32" />
+            <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-black">
+              <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_var(--theme-primary)_0%,_transparent_70%)]" />
             </div>
           )}
 
           <button
             onClick={() => setContactOpen(true)}
-            className="absolute top-4 right-4 z-20 text-white hover:scale-110 active:scale-95 group transition-all drop-shadow-lg"
+            className="absolute top-6 right-6 z-20 bg-white/10 backdrop-blur-md p-3 rounded-2xl text-white hover:bg-white/20 transition-all border border-white/20"
             aria-label="Store contact information"
           >
-            <InfoCircle variant="Bold" color="white" className="w-5 h-5" />
+            <InfoCircle variant="Bold" color="currentColor" className="w-6 h-6" />
           </button>
 
-          <div className="relative z-10 max-w-7xl mx-auto px-2 sm:px-4 py-12 md:py-20 w-full">
-            <div className="max-w-3xl">
-              <div className="inline-flex items-center gap-3 flex-wrap">
-                <div className="inline-flex items-center gap-2 px-3 py-1 bg-[var(--theme-primary)] text-white text-[10px] font-black uppercase tracking-[0.3em] rounded-sm">
-                  Verified Merchant
+          <div className="relative z-10 max-w-[1600px] mx-auto px-4 h-full flex flex-col justify-center">
+            <div className="max-w-3xl space-y-6">
+                <div className="flex items-center gap-3">
+                  <div className="bg-indigo-600 text-white px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-lg shadow-indigo-600/20">
+                    Verified Premium Merchant
+                  </div>
+                  <div className="bg-white/10 backdrop-blur-md text-white/90 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] border border-white/10">
+                    {store.address_city || "Lagos, Nigeria"}
+                  </div>
                 </div>
-              </div>
-              <h2 className="text-6xl md:text-8xl font-[1000] text-white tracking-tighter leading-[0.8] mb-8 uppercase italic">
+              <h2 className="text-5xl md:text-8xl font-[1000] text-white tracking-tight leading-[0.9] drop-shadow-2xl">
                 {store.store_name}
               </h2>
-              <p className="text-xl md:text-2xl font-bold text-zinc-300 mb-10 max-w-xl leading-snug">
+              <p className="text-lg md:text-2xl font-medium text-white/80 max-w-2xl leading-relaxed drop-shadow-md">
                 {store.description ||
-                  "Quality goods for the modern shopper. Discover premium gear and daily deals."}
+                  "Discover our curated collection of premium goods and exclusive deals."}
               </p>
 
-              <div className="flex flex-wrap gap-6 items-center">
-                <div className="flex flex-col">
-                  <span className="text-[10px] font-black uppercase text-zinc-500 tracking-widest mb-1">
+              <div className="flex flex-wrap gap-4 md:gap-8 pt-4">
+                <div className="bg-white/10 backdrop-blur-md border border-white/10 px-6 py-4 rounded-3xl">
+                  <span className="text-[10px] font-black uppercase text-white/50 tracking-[0.2em] mb-2 block">
                     Market Rating
                   </span>
-                  <div className="flex items-center gap-2">
-                    <div className="flex gap-0.5">
+                  <div className="flex items-center gap-3">
+                    <div className="flex gap-1">
                       {Array.from({ length: 5 }).map((_, i) => (
                         <Star
                           key={i}
-                          className={`w-4 h-4 ${i < Math.floor(Number(store.rating_average || 0)) ? "fill-[var(--theme-primary)] text-[var(--theme-primary)]" : "text-zinc-700"}`}
+                          className={`w-4 h-4 ${i < Math.floor(Number(store.rating_average || 0)) ? "fill-yellow-400 text-yellow-400" : "text-white/20"}`}
                         />
                       ))}
                     </div>
-                    <span className="text-white font-black text-lg">
+                    <span className="text-white font-black text-2xl">
                       {Number(store.rating_average || 0).toFixed(1)}
                     </span>
                   </div>
                 </div>
 
                 {(store.address_city || store.address_country) && (
-                  <div className="flex flex-col border-l-2 border-zinc-800 pl-6">
-                    <span className="text-[10px] font-black uppercase text-zinc-500 tracking-widest mb-1">
-                      Located In
+                  <div className="bg-white/10 backdrop-blur-md border border-white/10 px-6 py-4 rounded-3xl">
+                    <span className="text-[10px] font-black uppercase text-white/50 tracking-[0.2em] mb-2 block">
+                      Base Location
                     </span>
-                    <div className="flex items-center gap-2 text-white font-black text-lg italic uppercase">
-                      <MapPin className="w-4 h-4 text-[var(--theme-primary)]" />
-                      {store.address_city || store.address_country}
+                    <div className="flex items-center gap-3 text-white font-black text-2xl">
+                      <MapPin className="w-5 h-5 text-indigo-600" />
+                      <span className="uppercase">{store.address_city || store.address_country}</span>
                     </div>
                   </div>
                 )}
@@ -168,84 +186,91 @@ export default function BazaarTemplate({
         </section>
       )}
 
-      <main className="max-w-7xl mx-auto px-1.5 sm:px-4 py-8 md:py-12 flex-1 w-full">
-        {/* TAB NAVIGATION */}
-        <div className="flex gap-4 mb-12">
-          <button
-            onClick={() => {
-              onTabChange("products");
-              onCategorySelect(null);
-            }}
-            className={`px-5 py-3 md:px-8 md:py-4 rounded-sm font-black tracking-tighter text-sm md:text-lg transition-all ${
-              activeTab === "products" && !selectedCategory
-                ? "bg-[var(--theme-primary)] text-white translate-y-[-2px]"
-                : "bg-white dark:bg-neutral-800 text-slate-600 dark:text-neutral-400 border-b-4 border-slate-200 dark:border-neutral-950 hover:border-[var(--theme-primary)]"
-            }`}
-          >
-            ALL PRODUCTS
-          </button>
-          <button
-            onClick={() => onTabChange("categories")}
-            className={`px-5 py-3 md:px-8 md:py-4 rounded-sm font-black tracking-tighter text-sm md:text-lg transition-all ${
-              activeTab === "categories" || selectedCategory
-                ? "bg-[var(--theme-primary)] text-white translate-y-[-2px]"
-                : "bg-white dark:bg-neutral-800 text-slate-600 dark:text-neutral-400 border-b-4 border-slate-200 dark:border-neutral-950 hover:border-[var(--theme-primary)]"
-            }`}
-          >
-            COLLECTIONS
-          </button>
-        </div>
+      <main className="max-w-[1600px] mx-auto px-4 py-8 md:py-20 w-full space-y-12">
+        {/* NAV & SEARCH SECTION */}
+        <div className="flex flex-col lg:flex-row gap-8 items-start lg:items-center justify-between">
+          <div className="flex p-1.5 bg-slate-100 dark:bg-neutral-900 rounded-[28px] border border-slate-200/50 dark:border-neutral-800/50 w-full lg:w-auto">
+            <button
+              onClick={() => {
+                onTabChange("products");
+                onCategorySelect(null);
+              }}
+              className={`flex-1 lg:flex-none px-6 py-3.5 rounded-[22px] font-bold text-sm md:text-base transition-all ${
+                activeTab === "products" && !selectedCategory
+                  ? "bg-white dark:bg-black text-indigo-600 shadow-sm"
+                  : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
+              }`}
+            >
+              All Products
+            </button>
+            <button
+              onClick={() => onTabChange("categories")}
+              className={`flex-1 lg:flex-none px-6 py-3.5 rounded-[22px] font-bold text-sm md:text-base transition-all ${
+                activeTab === "categories" || selectedCategory
+                  ? "bg-white dark:bg-black text-indigo-600 shadow-sm"
+                  : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
+              }`}
+            >
+              Collections
+            </button>
+          </div>
 
-        {/* SEARCH BAR (FIXED POSITION OR FLOATING) */}
-        <div className="max-w-4xl mx-auto mb-16 relative group">
-          <span className="absolute left-6 top-1/2 -translate-y-1/2 text-[var(--theme-primary)]">
-            <Search className="w-6 h-6 " />
-          </span>
-          <Input
-            type="text"
-            placeholder="Search bazaar..."
-            className="w-full h-16 md:h-20 bg-white dark:bg-neutral-900 border-4 border-slate-100 dark:border-neutral-900 focus-visible:border-[var(--theme-primary)] focus-visible:ring-0 rounded-sm pl-16 pr-10 text-xl font-black italic tracking-tight transition-all text-slate-900 dark:text-white"
-            value={searchQuery}
-            onChange={(e) => onSearchChange(e.target.value)}
-          />
-          <div className="absolute right-6 top-1/2 -translate-y-1/2 flex items-center gap-4">
-            {isSearching && (
-              <Loader2 className="w-6 h-6 animate-spin text-[var(--theme-primary)]" />
-            )}
-            {searchQuery && (
-              <button
-                onClick={() => onSearchChange("")}
-                className="p-2 hover:bg-slate-100 dark:hover:bg-neutral-800 transition-colors"
-              >
-                <X className="w-6 h-6" />
-              </button>
-            )}
+          <div className="relative group w-full max-w-2xl">
+            <span className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-600 transition-colors">
+              <Search className="w-5 h-5" />
+            </span>
+            <Input
+              type="text"
+              placeholder={`Search in ${store.store_name}...`}
+              className="w-full h-14 md:h-16 bg-white dark:bg-neutral-900 border-2 border-slate-200 dark:border-neutral-800 focus-visible:border-indigo-600 focus-visible:ring-0 rounded-3xl pl-14 pr-12 text-lg font-medium transition-all shadow-sm"
+              value={searchQuery}
+              onChange={(e) => onSearchChange(e.target.value)}
+            />
+            <div className="absolute right-6 top-1/2 -translate-y-1/2 flex items-center gap-3">
+              {isSearching && (
+                <Loader2 className="w-5 h-5 animate-spin text-indigo-600" />
+              )}
+              {searchQuery && (
+                <button
+                  onClick={() => onSearchChange("")}
+                  className="p-1.5 bg-slate-100 dark:bg-neutral-800 rounded-full hover:bg-slate-200 dark:hover:bg-neutral-700 transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
         {/* CATEGORIES VIEW */}
         {activeTab === "categories" && !selectedCategory && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {isCategoriesLoading
-              ? Array.from({ length: 6 }).map((_, i) => (
+              ? Array.from({ length: 8 }).map((_, i) => (
                   <Skeleton
                     key={i}
-                    className="h-64 rounded-sm bg-slate-200 dark:bg-neutral-800"
+                    className="h-[300px] rounded-3xl bg-slate-200 dark:bg-neutral-800"
                   />
                 ))
               : categories?.map((cat) => (
                   <button
                     key={cat.id}
                     onClick={() => onCategorySelect(cat)}
-                    className="group relative h-64 rounded-sm overflow-hidden bg-white dark:bg-neutral-800 border-4 border-slate-100 dark:border-neutral-800 hover:border-[var(--theme-primary)] transition-all flex items-center justify-center p-8 text-center"
+                    className="group relative h-[300px] rounded-3xl overflow-hidden bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 hover:border-indigo-600 transition-all flex flex-col p-8 text-left shadow-sm hover:shadow-xl hover:shadow-indigo-600/5"
                   >
-                    <div className="relative z-10">
-                      <h3 className="text-3xl font-black text-slate-900 dark:text-white uppercase tracking-tighter group-hover:scale-110 transition-transform">
-                        {cat.name}
-                      </h3>
-                      <p className="mt-2 text-xs font-black text-[var(--theme-primary)] opacity-0 group-hover:opacity-100 transition-opacity uppercase tracking-widest">
-                        View Goods
-                      </p>
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-600/5 rounded-bl-full group-hover:w-full group-hover:h-full group-hover:rounded-none transition-all duration-500" />
+                    <div className="relative z-10 h-full flex flex-col justify-between">
+                      <div className="w-14 h-14 bg-slate-50 dark:bg-neutral-800 rounded-2xl flex items-center justify-center text-indigo-600 font-black text-xl mb-4 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                        {cat.name.charAt(0)}
+                      </div>
+                      <div>
+                        <h3 className="text-2xl font-black text-slate-900 dark:text-white uppercase tracking-tight mb-2">
+                          {cat.name}
+                        </h3>
+                        <p className="text-sm font-bold text-slate-400 group-hover:text-indigo-600 transition-colors uppercase tracking-[0.2em]">
+                          Explore Collection →
+                        </p>
+                      </div>
                     </div>
                   </button>
                 ))}
@@ -254,85 +279,112 @@ export default function BazaarTemplate({
 
         {/* PRODUCTS VIEW */}
         {(activeTab === "products" || selectedCategory) && (
-          <StoreProductsGrid
-            key={productsKey}
-            products={products}
-            pagination={pagination}
-            isLoading={isProductsLoading}
-            isFetching={isProductsFetching}
-            selectedCategory={selectedCategory}
-            onBackToCategories={() => onCategorySelect(null)}
-            onPageChange={onPageChange}
-          />
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <StoreProductsGrid
+              key={productsKey}
+              products={products}
+              pagination={pagination}
+              isLoading={isProductsLoading}
+              isFetching={isProductsFetching}
+              selectedCategory={selectedCategory}
+              onBackToCategories={() => onCategorySelect(null)}
+              onPageChange={onPageChange}
+            />
+          </div>
         )}
       </main>
 
       {/* ─── BAZAAR FOOTER ─── */}
-      <footer className="w-full bg-slate-50 dark:bg-neutral-900 border-t-8 border-slate-100 dark:border-neutral-800 py-16 md:py-24">
-        <div className="max-w-7xl mx-auto px-1.5 sm:px-4 grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-8">
-          <div className="flex flex-col items-center md:items-start text-center md:text-left">
-            <h4 className="text-3xl font-black italic tracking-tighter uppercase mb-6 text-slate-900 dark:text-white">
-              {store.store_name}
-            </h4>
-            <div className="w-20 h-2 bg-[var(--theme-primary)] mb-6" />
-          </div>
+      <footer className="w-full bg-white dark:bg-neutral-950 border-t border-slate-200 dark:border-neutral-800 pt-20 pb-10 mt-20">
+        <div className="max-w-[1600px] mx-auto px-4">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-16 mb-20">
+            <div className="lg:col-span-2 space-y-8">
+              <div className="flex items-center gap-4">
+                 {store.logo ? (
+                  <img src={store.logo} alt="" className="w-12 h-12 rounded-xl object-cover" />
+                ) : (
+                  <div className="w-12 h-12 rounded-xl bg-indigo-600" />
+                )}
+                <h4 className="text-3xl font-black tracking-tighter uppercase text-slate-900 dark:text-white">
+                  {store.store_name}
+                </h4>
+              </div>
+              <p className="text-slate-500 dark:text-neutral-400 text-lg leading-relaxed max-w-md">
+                {store.description || "Your destination for high-quality goods and exceptional service."}
+              </p>
+              <div className="flex gap-4">
+                {store?.social_links &&
+                  Object.entries(store.social_links).map(([platform, link]) => {
+                    const key = platform.toLowerCase();
+                    let Icon = Global;
+                    if (key.includes("instagram")) Icon = Instagram;
+                    else if (key.includes("facebook")) Icon = Facebook;
+                    else if (key.includes("twitter") || key.includes("x")) Icon = User;
+                    else if (key.includes("youtube")) Icon = Youtube;
+                    
+                    return (
+                      <a
+                        key={platform}
+                        href={link as string}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-neutral-900 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-all shadow-sm"
+                        aria-label={platform}
+                      >
+                        <Icon variant="Bold" color="currentColor" className="w-6 h-6" />
+                      </a>
+                    );
+                  })}
+              </div>
+            </div>
 
-          <div className="flex flex-col items-center">
-            <div className="space-y-4">
-              {store?.email && (
-                <a
-                  href={`mailto:${store.email}`}
-                  className="flex items-center gap-3 font-bold hover:text-[var(--theme-primary)] transition-colors"
-                >
-                  <Mail className="w-5 h-5 text-[var(--theme-primary)]" />
-                  <span>{store.email}</span>
-                </a>
-              )}
-              {store?.phone_number && (
-                <a
-                  href={`tel:${store.phone_number}`}
-                  className="flex items-center gap-3 font-bold hover:text-[var(--theme-primary)] transition-colors"
-                >
-                  <Phone className="w-5 h-5 text-[var(--theme-primary)]" />
-                  <span>{store.phone_number}</span>
-                </a>
-              )}
+            <div className="space-y-6">
+              <h5 className="text-sm font-black uppercase tracking-widest text-slate-900 dark:text-white">Contact Us</h5>
+              <div className="space-y-4">
+                {store?.email && (
+                  <a href={`mailto:${store.email}`} className="flex items-center gap-3 text-slate-500 hover:text-indigo-600 transition-colors font-semibold">
+                    <div className="w-12 h-12 rounded-2xl bg-indigo-600/10 flex items-center justify-center p-2.5 group-hover:scale-110 transition-transform duration-500 group-hover:rotate-3">
+                      <Global variant="Bold" color="currentColor" className="w-full h-full text-indigo-600" />
+                    </div>
+                    <div>
+                      <h4 className="text-zinc-400 font-black uppercase tracking-widest text-[10px] mb-0.5">Email</h4>
+                      <p className="text-zinc-100 font-bold text-sm tracking-tight">{store.email}</p>
+                    </div>
+                  </a>
+                )}
+                {store?.phone_number && (
+                  <a href={`tel:${store.phone_number}`} className="flex items-center gap-3 text-slate-500 hover:text-indigo-600 transition-colors font-semibold">
+                    <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-neutral-900 flex items-center justify-center">
+                       <Phone className="w-5 h-5 text-slate-400" />
+                    </div>
+                    <span>{store.phone_number}</span>
+                  </a>
+                )}
+              </div>
+            </div>
+
+             <div className="space-y-6">
+              <h5 className="text-sm font-black uppercase tracking-widest text-slate-900 dark:text-white">Store Location</h5>
+              <div className="flex items-start gap-3 text-slate-500 font-semibold">
+                <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-neutral-900 flex items-center justify-center shrink-0">
+                  <MapPin className="w-5 h-5 text-slate-400" />
+                </div>
+                <span>
+                  {store.address_city}, {store.address_country}<br />
+                  {store.address_state}
+                </span>
+              </div>
             </div>
           </div>
 
-          <div className="flex flex-col items-center md:items-end gap-4">
-            <div className="flex gap-3">
-              {store?.social_links &&
-                Object.entries(store.social_links).map(([platform, link]) => {
-                  const key = platform.toLowerCase();
-                  let Icon = Global;
-                  if (key.includes("instagram")) Icon = Instagram;
-                  else if (key.includes("facebook")) Icon = Facebook;
-                  else if (key.includes("twitter") || key.includes("x"))
-                    Icon = TwitterIcon;
-                  else if (key.includes("youtube")) Icon = Youtube;
-                  const isLucide = Icon === TwitterIcon;
-                  return (
-                    <a
-                      key={platform}
-                      href={link as string}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="w-12 h-12 rounded-sm bg-slate-100 dark:bg-neutral-900 flex items-center justify-center hover:bg-[var(--theme-primary)] transition-all hover:text-white"
-                      aria-label={platform}
-                    >
-                      {isLucide ? (
-                        <Icon className="w-5 h-5" />
-                      ) : (
-                        <Icon variant="Bold" color="currentColor" className="w-5 h-5" />
-                      )}
-                    </a>
-                  );
-                })}
-            </div>
-            <p className="text-xs font-black uppercase tracking-widest text-slate-400">
-              © {new Date().getFullYear()} {store?.store_name}
+          <div className="pt-10 border-t border-slate-100 dark:border-neutral-900 flex flex-col md:row items-center justify-between gap-6">
+            <p className="text-sm font-bold text-slate-400">
+              © {new Date().getFullYear()} {store?.store_name}. All rights reserved.
             </p>
+            <div className="flex gap-8 text-sm font-bold text-slate-400">
+              <a href="#" className="hover:text-[var(--theme-primary)]">Privacy Policy</a>
+              <a href="#" className="hover:text-[var(--theme-primary)]">Terms of Service</a>
+            </div>
           </div>
         </div>
       </footer>

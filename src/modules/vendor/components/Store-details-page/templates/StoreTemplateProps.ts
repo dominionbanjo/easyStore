@@ -31,4 +31,5 @@ export interface StoreTemplateProps {
   onCategorySelect: (category: { id: string; name: string } | null) => void;
   onSearchChange: (query: string) => void;
   onPageChange: (page: number) => void;
+  onMessageVendor?: () => void;
 }

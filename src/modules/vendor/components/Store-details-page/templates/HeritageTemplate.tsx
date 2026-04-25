@@ -7,6 +7,7 @@ import {
   Youtube,
   Global,
   InfoCircle,
+  Messages3,
 } from "iconsax-react";
 import { Input } from "@/components/ui/input";
 import { StoreProductsGrid } from "../StoreProductsGrid";
@@ -34,6 +35,7 @@ export default function HeritageTemplate({
   onPageChange,
   onCartOpen,
   cartItemsCount,
+  onMessageVendor,
 }: StoreTemplateProps) {
   // Heritage aesthetic:
   // - Earthy colors, warm background
@@ -67,7 +69,7 @@ export default function HeritageTemplate({
           >
             <ShoppingCart className="w-5 h-5 text-[#3D352B] dark:text-[#EAE3DB]" />
             {cartItemsCount > 0 && (
-              <span className="absolute -top-1 -right-1 h-5 w-5 rounded-sm bg-[var(--theme-primary)] text-white text-[10px] flex items-center justify-center font-bold ring-2 ring-white dark:ring-[#1E1B18] ">
+              <span className="absolute -top-1 -right-1 h-5 w-5 rounded-sm bg-indigo-600 text-white text-[10px] flex items-center justify-center font-bold ring-2 ring-white dark:ring-[#1E1B18] ">
                 {cartItemsCount}
               </span>
             )}
@@ -82,6 +84,16 @@ export default function HeritageTemplate({
             buttonClassName="p-4 rounded-sm bg-white dark:bg-[#2C2622] border border-[#EADDCE] dark:border-[#3D352B]  hover: transition-all"
             iconClassName="w-5 h-5 text-[#3D352B] dark:text-[#EAE3DB]"
           />
+
+          {onMessageVendor && (
+            <button
+              onClick={onMessageVendor}
+              className="p-4 rounded-sm bg-[#3D352B] dark:bg-[#EAE3DB] text-white dark:text-[#1E1B18] border border-[#3D352B] dark:border-[#EAE3DB] hover:scale-110 active:scale-95 transition-all text-indigo-600"
+              title="Message Vendor"
+            >
+              <Messages3 variant="Bold" color="currentColor" className="w-5 h-5" />
+            </button>
+          )}
         </div>
 
         <div className="w-16 h-px bg-[#3D352B]/30 dark:bg-[#EAE3DB]/30 mb-8" />
@@ -158,12 +170,12 @@ export default function HeritageTemplate({
             />
             <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2 text-[#3D352B]/40 dark:text-[#EAE3DB]/40">
               {isSearching && (
-                <Loader2 className="w-4 h-4 animate-spin text-primary" />
+                <Loader2 className="w-4 h-4 animate-spin text-indigo-600" />
               )}
               {searchQuery && (
                 <button
                   onClick={() => onSearchChange("")}
-                  className="hover:text-primary transition-colors"
+                  className="hover:text-indigo-600 transition-colors"
                 >
                   <X className="h-4 w-4" />
                 </button>
@@ -174,7 +186,7 @@ export default function HeritageTemplate({
       </div>
 
       {/* ─── SHOWCASE MAIN ─── */}
-      <main className="max-w-[1400px] mx-auto px-1 sm:px-8 py-8 md:py-12">
+      <main className="max-w-[1600px] mx-auto px-1 sm:px-8 py-8 md:py-12">
         {activeTab === "categories" && !selectedCategory && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10">
             {isCategoriesLoading
@@ -188,14 +200,14 @@ export default function HeritageTemplate({
                   <button
                     key={cat.id}
                     onClick={() => onCategorySelect(cat)}
-                    className="group flex flex-col items-center justify-center bg-white dark:bg-[#1E1A17] rounded-sm p-4 md:p-12  border border-[#EADDCE] dark:border-[#3D352B] text-left hover: transition-all hover:-translate-y-1 hover:border-[var(--theme-primary)]"
+                    className="group flex flex-col items-center justify-center bg-white dark:bg-[#1E1A17] rounded-sm p-4 md:p-12  border border-[#EADDCE] dark:border-[#3D352B] text-left hover: transition-all hover:-translate-y-1 hover:border-indigo-600"
                   >
-                    <div className="w-16 h-16 rounded-sm bg-[#F4EDE4] dark:bg-[#3D352B]/50 text-[var(--theme-primary)] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <div className="w-16 h-16 rounded-sm bg-[#F4EDE4] dark:bg-[#3D352B]/50 text-indigo-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                       <span className="font-serif text-2xl italic">
                         {cat.name.charAt(0)}
                       </span>
                     </div>
-                    <h3 className="text-xl font-serif text-[#2C2622] dark:text-[#EAE3DB] group-hover:text-[var(--theme-primary)] transition-colors text-center">
+                    <h3 className="text-xl font-serif text-[#2C2622] dark:text-[#EAE3DB] group-hover:text-indigo-600 transition-colors text-center">
                       {cat.name}
                     </h3>
                   </button>
@@ -262,7 +274,7 @@ export default function HeritageTemplate({
                   href={link as string}
                   target="_blank"
                   rel="noreferrer"
-                  className="w-10 h-10 flex items-center justify-center rounded-sm bg-[#EADDCE] dark:bg-[#2C2622] hover:bg-[var(--theme-primary)]/10 border border-[#EADDCE] dark:border-[#3D352B] hover:border-[var(--theme-primary)]/40 transition-all text-[var(--theme-primary)]"
+                  className="w-10 h-10 flex items-center justify-center rounded-sm bg-[#EADDCE] dark:bg-[#2C2622] hover:bg-indigo-600/10 border border-[#EADDCE] dark:border-[#3D352B] hover:border-indigo-600/40 transition-all text-indigo-600"
                   aria-label={platform}
                 >
                   {isLucide ? (

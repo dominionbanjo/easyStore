@@ -16,6 +16,7 @@ import {
   Youtube,
   Global,
   InfoCircle,
+  Messages3,
 } from "iconsax-react";
 import { Input } from "@/components/ui/input";
 import { StoreProductsGrid } from "../StoreProductsGrid";
@@ -43,6 +44,7 @@ export default function TitanTemplate({
   onPageChange,
   onCartOpen,
   cartItemsCount,
+  onMessageVendor,
 }: StoreTemplateProps) {
   const [contactOpen, setContactOpen] = useState(false);
 
@@ -103,9 +105,19 @@ export default function TitanTemplate({
               </button>
 
               <TemplateProfileDropdown
-                buttonClassName="p-3 border border-zinc-800 bg-black text-[var(--theme-primary)] rounded-sm hover:bg-[var(--theme-primary)]/10 transition-all"
+                buttonClassName="p-3 border border-zinc-800 bg-black text-indigo-600 rounded-sm hover:bg-indigo-600/10 transition-all font-mono"
                 iconClassName="w-5 h-5"
               />
+
+              {onMessageVendor && (
+                <button
+                  onClick={onMessageVendor}
+                  className="p-3 border border-zinc-800 bg-black text-indigo-600 rounded-sm hover:bg-indigo-600/10 transition-all"
+                  title="Message Vendor"
+                >
+                  <Messages3 variant="Bold" color="currentColor" className="w-5 h-5" />
+                </button>
+              )}
             </div>
           </div>
 
@@ -152,9 +164,19 @@ export default function TitanTemplate({
             </button>
 
             <TemplateProfileDropdown
-              buttonClassName="p-3 border border-zinc-800 bg-black text-[var(--theme-primary)] rounded-sm hover:bg-[var(--theme-primary)]/10 transition-all"
+              buttonClassName="p-3 border border-zinc-800 bg-black text-indigo-600 rounded-sm hover:bg-indigo-600/10 transition-all font-mono"
               iconClassName="w-5 h-5"
             />
+
+            {onMessageVendor && (
+              <button
+                onClick={onMessageVendor}
+                className="p-3 border border-zinc-800 bg-black text-indigo-600 rounded-sm hover:bg-indigo-600/10 transition-all"
+                title="Message Vendor"
+              >
+                <Messages3 variant="Bold" color="currentColor" className="w-5 h-5" />
+              </button>
+            )}
           </div>
         </header>
 
@@ -437,7 +459,7 @@ export default function TitanTemplate({
             <span>
               STATUS: STABLE // © {new Date().getFullYear()} CORE_INTEGRITY
             </span>
-            <span className="text-[var(--theme-primary)]/50">
+            <span className="text-indigo-600/50">
               POWERED BY EAZYSTORE_SYS
             </span>
           </div>

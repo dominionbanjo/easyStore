@@ -116,6 +116,7 @@ function ProductDetailsInner({ id }: { id: string }) {
       })) ?? [],
 
     is_in_wishlist: product.is_in_wishlist,
+    vendor_id: product.vendor_id,
   };
 
   /* ───────── RENDER ───────── */

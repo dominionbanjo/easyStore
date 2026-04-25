@@ -12,4 +12,5 @@ export interface ProductTemplateProps {
   relatedProducts: IProduct[];
   onCartOpen: () => void;
   cartItemsCount: number;
+  onMessageVendor?: () => void;
 }

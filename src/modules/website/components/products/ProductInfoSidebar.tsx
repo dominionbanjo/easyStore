@@ -1,9 +1,11 @@
 import { useState, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import SmartLink from "@/components/shared/SmartLink";
 import type { RootState } from "@/store";
 import { motion, AnimatePresence } from "framer-motion";
-import { buildRoute } from "@/routes/index";
+import { buildRoute, ACCOUNT_ROUTES } from "@/routes/index";
+import { useStartConversationMutation, useSendDirectMessageMutation } from "@/services/messagingApi";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -18,6 +20,8 @@ import {
   ShieldCheck,
   Truck,
   PackageCheck,
+  MessageSquare,
+  Loader2,
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -64,6 +68,7 @@ interface ProductInfoSidebarProps {
     image?: string | null;
     is_in_wishlist?: boolean;
     slug: string;
+    vendor_id?: string;
   };
 }
 
@@ -72,6 +77,7 @@ export default function ProductInfoSidebar({
 }: ProductInfoSidebarProps) {
   const { isAuthenticated } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [quantity, setQuantity] = useState(1);
   const [liked, setLiked] = useState<boolean>(Boolean(product.is_in_wishlist));
@@ -92,6 +98,44 @@ export default function ProductInfoSidebar({
   const [addToCart, { isLoading: addingToCart }] = useAddItemToCartMutation();
   const [addToWishlist] = useAddToWishlistMutation();
   const [removeFromWishlist] = useRemoveFromWishlistMutation();
+  const [startConversation] = useStartConversationMutation();
+  const [sendDirect] = useSendDirectMessageMutation();
+  const [isContactingVendor, setIsContactingVendor] = useState(false);
+
+  const handleMessageVendor = async () => {
+    if (!isAuthenticated) {
+      toast.error("Please login to message the vendor");
+      return;
+    }
+
+    if (!product.vendor_id) {
+      toast.error("Vendor information is missing for this product");
+      return;
+    }
+
+    setIsContactingVendor(true);
+    try {
+      const convResponse = await startConversation({ recipient_id: product.vendor_id }).unwrap();
+      const conversationId = convResponse.data.id;
+
+      // Automatically send initial interest message with product attached
+      await sendDirect({
+        id: conversationId,
+        content: `Hi, I'm interested in this product: ${product.name}`,
+        product_id: product.id,
+        product_name: product.name,
+        product_slug: product.slug,
+        product_image: product.image ? (typeof product.image === "string" ? product.image : (product.image as any).url) : undefined
+      }).unwrap();
+
+      toast.success("Initial message sent to vendor!");
+      navigate(ACCOUNT_ROUTES.MESSAGES);
+    } catch (err: any) {
+      toast.error(err?.data?.message || "Failed to contact vendor");
+    } finally {
+      setIsContactingVendor(false);
+    }
+  };
 
   /* ── Determine mode ── */
   const hasNewOptions = (product.options?.length ?? 0) > 0;
@@ -610,6 +654,23 @@ export default function ProductInfoSidebar({
                   liked && "fill-current scale-110",
                 )}
               />
+            </Button>
+
+            <Button
+              size="icon"
+              variant="outline"
+              onClick={handleMessageVendor}
+              disabled={isContactingVendor}
+              title="Message Vendor"
+              className="h-14 w-14 shrink-0 rounded-sm border-2 transition-all active:scale-90 hover:border-primary/50 text-muted-foreground"
+            >
+              <motion.div animate={isContactingVendor ? { rotate: 360 } : {}}>
+                {isContactingVendor ? (
+                  <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                ) : (
+                  <MessageSquare className="h-6 w-6" />
+                )}
+              </motion.div>
             </Button>
           </div>
         </div>

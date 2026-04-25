@@ -80,6 +80,9 @@ export const preloadSettingsPage = SettingsPageImport;
 const UserProfilePageImport = () => import("@/app/account/profile/page");
 export const UserProfilePage = lazy(UserProfilePageImport);
 export const preloadUserProfilePage = UserProfilePageImport;
+const MessagesPageImport = () => import("@/app/account/messages/page");
+export const MessagesPage = lazy(MessagesPageImport);
+export const preloadMessagesPage = MessagesPageImport;
 
 const SearchResultsPageImport = () => import("@/app/s/page");
 export const SearchResultsPage = lazy(SearchResultsPageImport);

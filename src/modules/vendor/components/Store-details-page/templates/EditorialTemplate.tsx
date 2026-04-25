@@ -14,6 +14,7 @@ import {
   Call,
   Instagram,
   Facebook,
+  Messages3,
 } from "iconsax-react";
 import { Input } from "@/components/ui/input";
 import { StoreProductsGrid } from "../StoreProductsGrid";
@@ -41,6 +42,7 @@ export default function EditorialTemplate({
   onPageChange,
   onCartOpen,
   cartItemsCount,
+  onMessageVendor,
 }: StoreTemplateProps) {
   const [contactOpen, setContactOpen] = useState(false);
   // Editorial aesthetic:
@@ -53,7 +55,7 @@ export default function EditorialTemplate({
       <div className="min-h-screen bg-[#FDFBF7] dark:bg-[#1A1A1A] text-[#1A1A1A] dark:text-[#FDFBF7] font-serif selection:bg-[var(--theme-primary)] selection:text-white">
         {/* ─── MAGAZINE HEADER ─── */}
         <header className="sticky top-0 z-50 bg-white dark:bg-neutral-950 border-b-4 border-[var(--theme-primary)] ">
-          <div className="max-w-7xl mx-auto px-2 sm:px-4 h-20 md:h-24 flex items-center justify-between gap-4 md:gap-6">
+          <div className="max-w-[1600px] mx-auto px-4 h-20 md:h-24 flex items-center justify-between gap-4 md:gap-6">
             <div className="flex items-center gap-4 min-w-0">
               <h1 className="text-2xl md:text-3xl font-black tracking-tighter lowercase">
                 {store?.store_name ?? "Editorial"}
@@ -100,6 +102,16 @@ export default function EditorialTemplate({
                   buttonClassName="relative p-2.5 sm:p-3.5 rounded-sm bg-white dark:bg-neutral-800 border-2 border-slate-100 dark:border-neutral-800 text-[var(--theme-primary)]  hover:scale-110 active:scale-95 transition-all"
                   iconClassName="w-5 h-5 sm:w-6 sm:h-6"
                 />
+
+                {onMessageVendor && (
+                  <button
+                    onClick={onMessageVendor}
+                    className="p-2.5 sm:p-3.5 rounded-sm bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 hover:scale-110 active:scale-95 transition-all"
+                    title="Message Vendor"
+                  >
+                    <Messages3 variant="Bold" color="currentColor" className="w-5 h-5 sm:w-6 sm:h-6" />
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -107,7 +119,7 @@ export default function EditorialTemplate({
 
         {/* ─── SEARCH SECTION ─── */}
         <section className="border-b border-zinc-200 dark:border-zinc-800 py-12 md:py-20 overflow-hidden">
-          <div className="relative z-10 max-w-7xl mx-auto px-2 sm:px-4 py-12 md:py-20 w-full">
+          <div className="relative z-10 max-w-[1600px] mx-auto px-4 py-12 md:py-20 w-full">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-12">
               <div className="flex-1 max-w-3xl relative group">
                 <span className="absolute left-0 top-1/2 -translate-y-1/2 text-2xl">
@@ -138,7 +150,7 @@ export default function EditorialTemplate({
           </div>
         </section>
 
-        <main className="max-w-7xl mx-auto px-2 sm:px-4 py-8 md:py-12 flex-1 w-full">
+        <main className="max-w-[1600px] mx-auto px-4 py-8 md:py-12 flex-1 w-full">
           {/* COLLECTIONS VIEW */}
           {activeTab === "categories" && !selectedCategory && (
             <div className="space-y-32">
@@ -217,7 +229,7 @@ export default function EditorialTemplate({
 
         {/* ─── EDITORIAL FOOTER ─── */}
         <footer className="w-full bg-white dark:bg-neutral-900 border-t border-zinc-200 dark:border-zinc-800 pt-16 md:pt-24 pb-12 md:pb-20 mt-12 md:mt-24">
-          <div className="max-w-7xl mx-auto px-2 sm:px-4">
+          <div className="max-w-[1600px] mx-auto px-4">
             <div className="grid grid-cols-2 md:grid-cols-3 gap-16 font-sans text-xs md:text-sm font-bold tracking-widest uppercase">
               <div className="flex flex-col gap-4">
                 <span className="opacity-30">Connect</span>

@@ -1,5 +1,5 @@
 import type { StoreTemplateProps } from "./StoreTemplateProps";
-import { Search, X, Loader2, ShoppingCart } from "lucide-react";
+import { Search, X, Loader2, ShoppingCart, MessageSquare } from "lucide-react";
 import {
   InfoCircle,
 } from "iconsax-react";
@@ -29,6 +29,7 @@ export default function VanguardTemplate({
   onPageChange,
   onCartOpen,
   cartItemsCount,
+  onMessageVendor,
 }: StoreTemplateProps) {
   const [contactOpen, setContactOpen] = useState(false);
   // Vanguard aesthetic:
@@ -60,6 +61,16 @@ export default function VanguardTemplate({
             </span>
           )}
         </button>
+
+        {onMessageVendor && (
+          <button
+            onClick={onMessageVendor}
+            className="pointer-events-auto relative p-3 sm:p-4 bg-white/10 dark:bg-black/20 backdrop-blur-3xl border border-white/20 dark:border-white/10 rounded-sm text-zinc-900 dark:text-zinc-100  hover:scale-110 active:scale-95 transition-all group"
+            title="Message Vendor"
+          >
+            <MessageSquare className="w-5 h-5 sm:w-6 sm:h-6" />
+          </button>
+        )}
 
         <TemplateProfileDropdown
           buttonClassName="pointer-events-auto p-3 sm:p-4 bg-white/10 dark:bg-black/20 backdrop-blur-3xl border border-white/20 dark:border-white/10 rounded-sm text-zinc-900 dark:text-zinc-100  hover:scale-110 active:scale-95 transition-all"
@@ -97,7 +108,7 @@ export default function VanguardTemplate({
         </div>
       </div>
 
-      <div className="max-w-screen-2xl mx-auto px-1.5 sm:px-6 md:px-12 mt-8 md:mt-12 text-center md:text-left">
+      <div className="max-w-[1600px] mx-auto px-1.5 sm:px-6 md:px-12 mt-8 md:mt-12 text-center md:text-left">
         {/* DISCREET TABS */}
         <div className="flex justify-center border-b border-zinc-200 dark:border-zinc-800 mb-12">
           <button

@@ -41,6 +41,7 @@ export const ACCOUNT_ROUTES = {
   VERIFY_PAYMENT: "/account/verify-payment",
   ORDERS: "/account/orders",
   ORDER_DETAILS: "/account/orders/:id",
+  MESSAGES: "/account/messages",
 } as const;
 
 // 🧑‍💼 Vendor dashboard routes

@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Search, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Messages3 } from "iconsax-react";
 import { TemplateProfileDropdown } from "@/components/shared/TemplateProfileDropdown";
 import type { IProductStore } from "@/types/product/productTypes";
 
@@ -11,6 +12,7 @@ interface BazaarHeaderProps {
   cartItemsCount: number;
   searchOpen: boolean;
   setSearchOpen: (open: boolean) => void;
+  onMessageVendor?: () => void;
 }
 
 export function BazaarHeader({
@@ -19,10 +21,11 @@ export function BazaarHeader({
   cartItemsCount,
   searchOpen,
   setSearchOpen,
+  onMessageVendor,
 }: BazaarHeaderProps) {
   return (
-    <header className="bg-white dark:bg-zinc-900  border-b-4 border-[var(--theme-primary)] sticky top-0 z-50 transition-colors">
-      <div className="max-w-[1600px] mx-auto px-4 py-3 flex items-center justify-between gap-4 overflow-hidden">
+    <header className="bg-white/70 dark:bg-black/70 backdrop-blur-xl border-b border-slate-200/50 dark:border-neutral-800/50 sticky top-0 z-50 transition-colors px-2 sm:px-6 py-3">
+      <div className="max-w-[1600px] mx-auto flex items-center justify-between gap-4 overflow-hidden">
         <div className="flex items-center gap-6 flex-1 min-w-0">
           <Link
             to={`/stores/${store.slug}`}
@@ -32,34 +35,34 @@ export function BazaarHeader({
               <img
                 src={store.logo}
                 alt="logo"
-                className="w-8 h-8 rounded-sm shrink-0 object-cover"
+                className="w-10 h-10 md:w-12 md:h-12 rounded-2xl shrink-0 object-cover border border-slate-200 dark:border-neutral-800"
               />
             )}
-            <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white truncate">
+            <span className="text-xl font-black tracking-tight text-slate-900 dark:text-white truncate">
               {store.store_name}
             </span>
           </Link>
 
           {/* Desktop Search */}
-          <div className="hidden md:flex flex-1 max-w-xl relative">
+          <div className="hidden md:flex flex-1 max-w-xl relative group">
             <Input
               placeholder={`Search in ${store.store_name}...`}
-              className="w-full pl-4 pr-12 h-10 border-2 border-zinc-200 dark:border-zinc-800 rounded-sm focus-visible:ring-0 focus-visible:border-[var(--theme-primary)]"
+              className="w-full pl-5 pr-12 h-11 border-2 border-slate-100 dark:border-neutral-900 focus-visible:border-indigo-600 focus-visible:ring-0 rounded-3xl transition-all"
             />
             <Button
               size="icon"
-              className="absolute right-0 top-0 h-10 w-10 bg-[var(--theme-primary)] hover:bg-[var(--theme-primary)]/90 rounded-l-none"
+              className="absolute right-0 top-0 h-11 w-11 bg-indigo-600 hover:bg-indigo-600/90 rounded-l-none rounded-r-3xl"
             >
               <Search className="h-4 w-4 text-white" />
             </Button>
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 md:gap-3">
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden text-slate-500"
+            className="md:hidden text-slate-500 hover:bg-slate-100 dark:hover:bg-neutral-900 rounded-2xl"
             onClick={() => setSearchOpen(!searchOpen)}
           >
             <Search className="h-5 w-5" />
@@ -68,34 +71,43 @@ export function BazaarHeader({
           <Button
             variant="ghost"
             size="icon"
-            className="relative p-2 flex-shrink-0 hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-700 dark:text-white"
+            className="p-2.5 md:p-3.5 bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-2xl hover:border-indigo-600 hover:text-indigo-600 transition-all shadow-sm active:scale-95 group"
+            onClick={onMessageVendor}
+          >
+            <Messages3 variant="Bold" color="currentColor" className="w-5 h-5 md:w-6 md:h-6" />
+          </Button>
+
+          <Button
+            variant="ghost"
+            size="icon"
+            className="relative p-2.5 md:p-3.5 bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-2xl hover:border-indigo-600 hover:text-indigo-600 transition-all shadow-sm active:scale-95 group"
             onClick={onCartOpen}
           >
-            <ShoppingBag className="h-5 w-5" />
+            <ShoppingBag className="h-5 w-5 md:w-6 md:h-6" />
             {cartItemsCount > 0 && (
-              <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-sm bg-[var(--theme-primary)] text-[10px] font-black text-white ring-2 ring-white dark:ring-zinc-900 ">
+              <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-indigo-600 text-[10px] font-black text-white ring-2 ring-white dark:ring-black">
                 {cartItemsCount}
               </span>
             )}
           </Button>
 
           <TemplateProfileDropdown
-            buttonClassName="relative p-2 flex-shrink-0 hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-700 dark:text-white rounded-sm transition-colors"
-            iconClassName="h-5 w-5"
+            buttonClassName="p-2.5 md:p-3.5 bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-2xl hover:border-indigo-600 hover:text-indigo-600 transition-all shadow-sm active:scale-95"
+            iconClassName="h-5 w-5 md:w-6 md:h-6"
           />
         </div>
       </div>
 
       {/* Mobile Search Expand */}
       {searchOpen && (
-        <div className="md:hidden px-4 py-3 bg-white dark:bg-zinc-900 border-t border-zinc-100 dark:border-zinc-800 animate-in slide-in-from-top-2">
+        <div className="md:hidden px-4 py-3 bg-white/80 dark:bg-black/80 backdrop-blur-xl border-t border-slate-100 dark:border-neutral-900 animate-in slide-in-from-top-2">
           <div className="relative flex gap-2">
             <Input
               placeholder={`Search in ${store.store_name}...`}
-              className="flex-1 h-10 border-2 border-zinc-200 dark:border-zinc-800 rounded-sm"
+              className="flex-1 h-11 border-2 border-slate-100 dark:border-neutral-900 rounded-2xl"
               autoFocus
             />
-            <Button size="icon" className="h-10 w-10 bg-[var(--theme-primary)]">
+            <Button size="icon" className="h-11 w-11 bg-indigo-600 rounded-2xl">
               <Search className="h-4 w-4 text-white" />
             </Button>
           </div>

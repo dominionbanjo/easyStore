@@ -7,6 +7,9 @@ import {
   useGetStoreProductsQuery,
   useGetStoreCategoryProductsQuery,
 } from "@/services/storeApi";
+import { useStartConversationMutation } from "@/services/messagingApi";
+import { ACCOUNT_ROUTES } from "@/routes/index";
+import { toast } from "sonner";
 
 import { StoreSkeleton } from "@/modules/vendor/components/skeletons/StoreSkeleton";
 import { useStoreTheme } from "@/modules/vendor/components/StoreThemeProvider";
@@ -58,6 +61,9 @@ export default function StoreDetailsPage() {
   const cartItemsCount = isAuthenticated
     ? cartData?.data?.cart?.items?.length || 0
     : cartState.localItems?.length || 0;
+
+  const [startConversation] = useStartConversationMutation();
+  const { templateName: activeTemplateName } = useStoreTheme();
 
   // Debounce search
   useEffect(() => {
@@ -203,7 +209,6 @@ export default function StoreDetailsPage() {
   }
 
   const isCategoriesLoading = storeLoading;
-  const { templateName: activeTemplateName } = useStoreTheme();
 
   // Override template if in preview mode
   const templateName = previewTemplate || activeTemplateName;
@@ -227,7 +232,7 @@ export default function StoreDetailsPage() {
   };
 
   const templateProps: StoreTemplateProps = {
-    store,
+    store: store ? { ...store } : ({} as any),
     categories,
     products,
     pagination,
@@ -254,6 +259,26 @@ export default function StoreDetailsPage() {
     },
     onCartOpen: () => setIsCartOpen(true),
     cartItemsCount,
+    onMessageVendor: async () => {
+      if (!isAuthenticated) {
+        toast.error("Please login to message the vendor");
+        return;
+      }
+      if (!store?.user_id) {
+        toast.error("Vendor information is missing for this store");
+        return;
+      }
+      try {
+        const conversationResponse = await startConversation({ recipient_id: store.user_id }).unwrap();
+        const conversationId = conversationResponse.data.id;
+        
+        // Use messagingApi utility to send the initial message if needed
+        // Assuming we want to navigate to the messages page
+        navigate(`${ACCOUNT_ROUTES.MESSAGES}/${conversationId}?prefill=${encodeURIComponent("Hi Im viewing your store any information i should note")}`);
+      } catch (err: any) {
+        toast.error(err?.data?.message || "Failed to start conversation");
+      }
+    },
   };
 
   const renderTemplate = () => {

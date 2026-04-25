@@ -26,6 +26,7 @@ import {
   Sun,
   Moon,
   Compass,
+  MessageSquare,
 } from "lucide-react";
 import { useTheme } from "./ThemeContext";
 import {
@@ -351,6 +352,17 @@ export default function Header() {
                             Wishlist
                           </span>
                         </SmartLink>
+
+                        <SmartLink
+                          to={ACCOUNT_ROUTES.MESSAGES}
+                          onClick={() => setMenuOpen(false)}
+                          className="flex items-center gap-4 px-4 py-3 rounded-sm transition-all hover:bg-zinc-100 dark:hover:bg-white/5 group text-foreground"
+                        >
+                          <div className="p-2 rounded-sm bg-zinc-100 dark:bg-white/5 text-zinc-500 dark:text-zinc-400 group-hover:bg-primary/20 group-hover:text-primary transition-all">
+                            <MessageSquare className="h-5 w-5" />
+                          </div>
+                          <span className="text-base font-medium">Messages</span>
+                        </SmartLink>
                       </>
                     )}
 
@@ -534,6 +546,14 @@ export default function Header() {
                 <Moon className="h-5 w-5 text-neutral-800" />
               )}
             </Button>
+
+            {isAuthenticated && (
+              <SmartLink to={ACCOUNT_ROUTES.MESSAGES}>
+                <Button variant="ghost" size="icon" className="p-2 flex-shrink-0 relative">
+                  <MessageSquare className="h-5 w-5 text-foreground" />
+                </Button>
+              </SmartLink>
+            )}
 
             {/* Profile/Login */}
             {isAuthenticated && user ? (

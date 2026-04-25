@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
-import { Heart } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Messages3 } from "iconsax-react";
+import { Button } from "@/components/ui/button";
 import ProductGallery from "@/modules/website/components/products/ProductGallery";
 import type { IProductStore } from "@/types/product/productTypes";
 import type { UIProduct } from "@/modules/vendor/utils/productAdapter";
@@ -11,7 +11,6 @@ interface BazaarProductInfoProps {
   uiProduct: UIProduct;
   displayPrice: number;
   displayOriginalPrice: number | null | undefined;
-  liked: boolean;
   selectedColor: { id: string; name: string; hex: string } | null;
   setSelectedColor: (
     color: { id: string; name: string; hex: string } | null,
@@ -20,7 +19,7 @@ interface BazaarProductInfoProps {
   setSelectedSize: (size: string | null) => void;
   selectedOptions: Record<string, string>;
   selectOption: (name: string, value: string) => void;
-  toggleWishlist: () => void;
+  onMessageVendor?: () => void;
 }
 
 export function BazaarProductInfo({
@@ -28,83 +27,95 @@ export function BazaarProductInfo({
   uiProduct,
   displayPrice,
   displayOriginalPrice,
-  liked,
   selectedColor,
   setSelectedColor,
   selectedSize,
   setSelectedSize,
   selectedOptions,
   selectOption,
-  toggleWishlist,
+  onMessageVendor,
 }: BazaarProductInfoProps) {
   return (
-    <div className="bg-white dark:bg-zinc-900 rounded-sm  border border-slate-200 dark:border-zinc-800 px-2 py-6 sm:p-6 flex flex-col md:flex-row gap-6 md:gap-8">
-      {/* Product Gallery (Compact for Bazaar) */}
+    <div className="bg-white dark:bg-neutral-900 rounded-[32px] border border-slate-200/50 dark:border-neutral-800/50 px-4 py-8 sm:p-10 flex flex-col md:flex-row gap-8 md:gap-12 shadow-sm animate-in fade-in slide-in-from-left-4 duration-700">
+      {/* Product Gallery (More Spacious) */}
       <div className="w-full md:w-5/12 shrink-0">
-        <ProductGallery images={uiProduct.images} />
+        <div className="sticky top-28">
+           <ProductGallery images={uiProduct.images} />
+        </div>
       </div>
 
-      {/* Product Info (Dense) */}
-      <div className="flex-1 space-y-4">
+      {/* Product Info (Premium Typography) */}
+      <div className="flex-1 space-y-6">
         <Link
           to={`/stores/${store.slug}`}
-          className="text-sm font-bold text-[var(--theme-primary)] hover:underline"
+          className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.2em] text-indigo-600 hover:opacity-80 transition-opacity"
         >
+          <div className="w-6 h-1 bg-indigo-600" />
           Visit {store.store_name} Store
         </Link>
-        <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white leading-tight">
+
+        {onMessageVendor && (
+          <Button
+            onClick={onMessageVendor}
+            variant="outline"
+            className="rounded-2xl gap-2 font-bold border-slate-200 dark:border-neutral-800"
+          >
+            <Messages3 variant="Bold" color="currentColor" className="w-5 h-5" />
+            Message Store
+          </Button>
+        )}
+        
+        <h1 className="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white leading-[1.1] tracking-tight">
           {uiProduct.name}
         </h1>
 
-        <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
-          <span className="bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400 px-2 py-0.5 rounded-sm font-bold text-xs">
+        <div className="flex items-center gap-4 text-sm">
+          <div className="flex items-center gap-1.5 bg-yellow-400/10 text-yellow-600 dark:text-yellow-400 px-3 py-1 rounded-full font-black text-xs border border-yellow-400/20">
             {uiProduct.rating > 0 ? uiProduct.rating.toFixed(1) : "New"} ★
-          </span>
-          <span>|</span>
+          </div>
+          <span className="text-slate-200 dark:text-neutral-800">|</span>
           <a
             href="#reviews"
-            className="hover:text-[var(--theme-primary)] underline"
+            className="text-slate-500 hover:text-indigo-600 font-bold transition-colors"
           >
-            {uiProduct.reviewCount} Ratings
+            {uiProduct.reviewCount} Verified Ratings
           </a>
         </div>
 
-        <Separator />
+        <Separator className="opacity-50" />
 
-        <div className="space-y-1">
-          <div className="flex items-baseline gap-3">
-            <span className="text-3xl font-black text-slate-900 dark:text-white">
+        <div className="space-y-2">
+           <div className="text-[10px] font-black uppercase tracking-widest text-slate-400">Exclusive Price</div>
+          <div className="flex items-baseline gap-4">
+            <span className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tighter">
               ₦{displayPrice?.toLocaleString()}
             </span>
-          </div>
-          {displayOriginalPrice && (
-            <div className="text-sm text-slate-500">
-              List Price:{" "}
-              <span className="line-through">
+            {displayOriginalPrice && (
+               <span className="text-lg text-slate-400 line-through font-medium">
                 ₦{displayOriginalPrice.toLocaleString()}
               </span>
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
         {/* Variant Selectors */}
-        <div className="space-y-6">
+        <div className="space-y-8 pt-4">
           {uiProduct.options &&
             uiProduct.options.length > 0 &&
             uiProduct.options.map((option) => (
-              <div key={option.name}>
-                <span className="text-xs font-medium text-slate-500 block mb-2">
-                  {option.name}
+              <div key={option.name} className="space-y-3">
+                <span className="text-xs font-black uppercase tracking-widest text-slate-400">
+                  Select {option.name}
                 </span>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-3">
                   {option.values.map((value) => (
                     <button
                       key={value}
                       onClick={() => selectOption(option.name, value)}
-                      className={`px-4 py-2 text-sm border transition-all ${
+                      className={`px-6 py-3 rounded-2xl text-sm font-bold border transition-all active:scale-95 ${
                         selectedOptions[option.name] === value
-                          ? "bg-slate-100 dark:bg-zinc-800 border-slate-900 dark:border-white font-bold"
-                          : "border-slate-200 dark:border-zinc-800 text-slate-600 dark:text-zinc-400 hover:border-slate-400"
+                          ? "bg-slate-900 dark:bg-white text-white dark:text-slate-900 border-transparent shadow-lg"
+                          : "bg-white dark:bg-neutral-800 border-slate-200 dark:border-neutral-800 text-slate-600 dark:text-neutral-400 hover:border-indigo-600"
                       }`}
                     >
                       {value}
@@ -115,26 +126,23 @@ export function BazaarProductInfo({
             ))}
 
           {uiProduct.colors.length > 0 && (
-            <div>
-              <span className="text-sm font-bold block mb-2">
-                Color:{" "}
-                <span className="text-slate-500 font-normal">
-                  {
-                    uiProduct.colors.find((c) => c.id === selectedColor?.id)
-                      ?.name
-                  }
-                </span>
-              </span>
-              <div className="flex flex-wrap gap-2">
+            <div className="space-y-3">
+              <div className="flex justify-between items-center">
+                 <span className="text-xs font-black uppercase tracking-widest text-slate-400">Color Variation</span>
+                 <span className="text-sm font-bold text-slate-900 dark:text-white bg-slate-100 dark:bg-neutral-800 px-3 py-1 rounded-lg">
+                    {uiProduct.colors.find((c) => c.id === selectedColor?.id)?.name || "Select"}
+                 </span>
+              </div>
+              <div className="flex flex-wrap gap-3">
                 {uiProduct.colors.map(
                   (color: { id: string; name: string; hex: string }) => (
                     <button
                       key={color.id}
                       onClick={() => setSelectedColor(color)}
-                      className={`w-9 h-9 rounded-sm border-2 transition-all ${
+                      className={`w-12 h-12 rounded-2xl border-4 transition-all active:scale-90 ${
                         selectedColor?.id === color.id
-                          ? "border-[var(--theme-primary)] ring-2 ring-[var(--theme-primary)]/30 scale-110"
-                          : "border-slate-300 dark:border-zinc-700 hover:border-slate-400"
+                          ? "border-indigo-600 ring-4 ring-indigo-600/20 scale-110 shadow-lg"
+                          : "border-white dark:border-neutral-800 hover:border-slate-300 dark:hover:border-neutral-700 shadow-sm"
                       }`}
                       style={{ backgroundColor: color.hex }}
                       aria-label={color.name}
@@ -145,48 +153,18 @@ export function BazaarProductInfo({
             </div>
           )}
 
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-1">
-              {[...Array(5)].map((_, i) => (
-                <span key={i} className="text-amber-400 text-sm">
-                  ★
-                </span>
-              ))}
-              <span className="text-xs text-slate-500 ml-2">
-                ({uiProduct.reviewCount} reviews)
-              </span>
-            </div>
-            <button
-              onClick={toggleWishlist}
-              className={cn(
-                "flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider transition-colors",
-                liked
-                  ? "text-[var(--theme-primary)]"
-                  : "text-slate-400 hover:text-slate-600",
-              )}
-            >
-              <Heart className={cn("h-4 w-4", liked && "fill-current")} />
-              {liked ? "Saved" : "Save"}
-            </button>
-          </div>
-
           {uiProduct.sizes.length > 0 && (
-            <div>
-              <span className="text-sm font-bold block mb-2">
-                Size:{" "}
-                <span className="text-slate-500 font-normal">
-                  {selectedSize}
-                </span>
-              </span>
-              <div className="flex flex-wrap gap-2">
+            <div className="space-y-3">
+              <span className="text-xs font-black uppercase tracking-widest text-slate-400">Size Breakdown</span>
+              <div className="flex flex-wrap gap-3">
                 {uiProduct.sizes.map((size: string) => (
                   <button
                     key={size}
                     onClick={() => setSelectedSize(size)}
-                    className={`px-3 py-1.5 border rounded-sm text-sm font-medium transition-all ${
+                    className={`min-w-[60px] h-12 flex items-center justify-center border rounded-2xl text-sm font-black transition-all active:scale-95 ${
                       selectedSize === size
-                        ? "bg-[var(--theme-primary)] text-white border-[var(--theme-primary)] "
-                        : "bg-white dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 border-slate-300 dark:border-zinc-700 hover:bg-slate-50"
+                        ? "bg-indigo-600 text-white border-transparent shadow-lg shadow-indigo-600/20"
+                        : "bg-white dark:bg-neutral-800 text-slate-700 dark:text-neutral-300 border-slate-200 dark:border-neutral-800 hover:border-indigo-600"
                     }`}
                   >
                     {size}
@@ -197,17 +175,18 @@ export function BazaarProductInfo({
           )}
         </div>
 
-        <Separator />
+        <Separator className="opacity-50" />
 
         {/* Highlights bullet points */}
         {uiProduct.highlights.length > 0 && (
-          <div className="text-sm">
-            <h3 className="font-bold mb-2">About this item</h3>
-            <ul className="list-disc list-inside space-y-1 text-slate-700 dark:text-slate-300 ml-1">
+          <div className="space-y-4">
+            <h3 className="text-xs font-black uppercase tracking-widest text-slate-400">Specifications & Info</h3>
+            <ul className="space-y-3">
               {uiProduct.highlights
                 .slice(0, 5)
                 .map((point: string, idx: number) => (
-                  <li key={idx} className="leading-snug">
+                  <li key={idx} className="flex gap-3 text-sm font-medium text-slate-600 dark:text-neutral-400 leading-snug">
+                     <div className="w-1.5 h-1.5 rounded-full bg-indigo-600 shrink-0 mt-2" />
                     {point}
                   </li>
                 ))}
