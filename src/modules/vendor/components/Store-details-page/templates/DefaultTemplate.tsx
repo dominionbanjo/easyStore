@@ -271,7 +271,7 @@ export default function DefaultTemplate({
                     block: "start",
                   });
                 }}
-                className="bg-[var(--theme-primary)] text-white px-12 py-5 rounded-sm font-bold text-lg hover:bg-[var(--theme-primary)]/90 transition-all hover:-translate-y-1 active:scale-95"
+                className="bg-[var(--theme-primary)] text-white px-8 py-3.5 rounded-sm font-bold text-base hover:bg-[var(--theme-primary)]/90 transition-all hover:-translate-y-1 active:scale-95"
               >
                 Explore Collection
               </button>
