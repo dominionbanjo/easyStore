@@ -46,8 +46,10 @@ export default function CheckoutPage() {
   const [requiredModal, setRequiredModal] = useState<RequiredModal>(null);
 
   // APIs
-  const [getSummary, { data: summaryResponse, isLoading: isSummaryLoading }] =
-    useGetCheckoutSummaryMutation();
+  const [
+    getSummary,
+    { data: summaryResponse, isLoading: isSummaryLoading, isError: isSummaryError, error: summaryError },
+  ] = useGetCheckoutSummaryMutation();
   const [createOrder, { isLoading: isCreatingOrder }] =
     useCreateOnlineOrderDirectMutation();
 
@@ -67,9 +69,23 @@ export default function CheckoutPage() {
         size: item.size ?? undefined,
         color: item.color ?? undefined,
       }));
-      getSummary({ order_items: orderItems });
+      getSummary({ order_items: orderItems }).catch(() => {
+        // errors are handled via the isError effect below
+      });
     }
   }, [cart, getSummary]);
+
+  /* ───────── TOAST SUMMARY ERRORS ───────── */
+  useEffect(() => {
+    if (isSummaryError && summaryError) {
+      const errData = (summaryError as any)?.data;
+      const message =
+        errData?.message ||
+        (typeof errData === "string" ? errData : null) ||
+        "Failed to load checkout summary.";
+      toast.error(message);
+    }
+  }, [isSummaryError, summaryError]);
 
   const summaryData: ICheckoutSummaryVendor[] = useMemo(() => {
     // Standard NestJS response structure: { status, message, data: { success, data: [] } }

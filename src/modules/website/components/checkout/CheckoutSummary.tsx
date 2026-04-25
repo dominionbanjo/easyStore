@@ -164,9 +164,11 @@ export function CheckoutSummary({
                   <p className="text-xs sm:text-sm font-black text-foreground whitespace-nowrap">
                     ₦
                     {(
-                      (item.discount_price && item.discount_price > 0
+                      ((item.discount_price && item.discount_price > 0
                         ? item.discount_price
-                        : item.price) * item.quantity
+                        : item.price) /
+                        100) *
+                      item.quantity
                     ).toLocaleString()}
                   </p>
                 </div>
