@@ -55,66 +55,93 @@ export default function EditorialTemplate({
     <>
       <div className="min-h-screen bg-[#FDFBF7] dark:bg-[#1A1A1A] text-[#1A1A1A] dark:text-[#FDFBF7] font-serif selection:bg-[var(--theme-primary)] selection:text-white">
         {/* ─── MAGAZINE HEADER ─── */}
-        <header className="sticky top-0 z-50 bg-white dark:bg-neutral-950 border-b-4 border-[var(--theme-primary)] ">
-          <div className="max-w-[1600px] mx-auto px-4 h-20 md:h-24 flex items-center justify-between gap-4 md:gap-6">
-            <div className="flex items-center gap-4 min-w-0">
-              <h1 className="text-2xl md:text-3xl font-black tracking-tighter lowercase">
+        <header className="sticky top-0 z-50 bg-white dark:bg-neutral-950 border-b-4 border-[var(--theme-primary)] py-4">
+          <div className="max-w-[1600px] mx-auto px-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex items-center justify-between w-full md:w-auto min-w-0">
+              <h1 className="text-2xl md:text-3xl font-black tracking-tighter lowercase flex-1 truncate pr-4">
                 {store?.store_name ?? "Editorial"}
               </h1>
-            </div>
 
-            <div className="flex items-center gap-6 text-xs md:text-sm font-sans font-bold tracking-widest uppercase">
-              <button
-                onClick={() => {
-                  onTabChange("products");
-                  onCategorySelect(null);
-                }}
-                className={`border-b-2 transition-all ${activeTab === "products" && !selectedCategory ? "border-current pb-1" : "border-transparent opacity-40 hover:opacity-100"}`}
-              >
-                Gallery
-              </button>
-              <button
-                onClick={() => onTabChange("categories")}
-                className={`border-b-2 transition-all ${activeTab === "categories" || selectedCategory ? "border-current pb-1" : "border-transparent opacity-40 hover:opacity-100"}`}
-              >
-                Collections
-              </button>
-              <button
-                onClick={() => setContactOpen(true)}
-                className="hover:scale-110 active:scale-95 group transition-all"
-                aria-label="Store contact information"
-              >
-                <InfoCircle variant="Bold" color="currentColor" className="w-5 h-5" />
-              </button>
-              <div className="shrink-0 flex items-center gap-2 sm:gap-4">
+              {/* Mobile Actions */}
+              <div className="flex md:hidden items-center gap-2 shrink-0">
+                <button
+                  onClick={() => setContactOpen(true)}
+                  className="p-2 hover:scale-110 active:scale-95 transition-all"
+                  aria-label="Store contact information"
+                >
+                  <InfoCircle variant="Bold" color="currentColor" className="w-5 h-5" />
+                </button>
                 <button
                   onClick={onCartOpen}
-                  className="relative p-2.5 sm:p-3.5 rounded-sm bg-[var(--theme-primary)] text-white hover:scale-110 active:scale-95 transition-all"
+                  className="relative p-2 bg-[var(--theme-primary)] text-white rounded-sm hover:scale-110 active:scale-95 transition-all"
                 >
-                  <ShoppingCart className="w-5 h-5 sm:w-6 sm:h-6" />
+                  <ShoppingCart className="w-4 h-4" />
                   {cartItemsCount > 0 && (
-                    <span className="absolute -top-1 -right-1 h-5 w-5 sm:h-6 sm:w-6 rounded-sm bg-white text-[var(--theme-primary)] text-[10px] sm:text-[11px] flex items-center justify-center font-black ring-2 ring-[var(--theme-primary)] ">
+                    <span className="absolute -top-1 -right-1 h-4 w-4 rounded-sm bg-white text-[var(--theme-primary)] text-[9px] flex items-center justify-center font-black ring-1 ring-[var(--theme-primary)]">
+                      {cartItemsCount}
+                    </span>
+                  )}
+                </button>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between md:justify-end gap-6 text-xs md:text-sm font-sans font-bold tracking-widest uppercase w-full md:w-auto overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
+              <div className="flex items-center gap-6">
+                <button
+                  onClick={() => {
+                    onTabChange("products");
+                    onCategorySelect(null);
+                  }}
+                  className={`border-b-2 whitespace-nowrap transition-all ${activeTab === "products" && !selectedCategory ? "border-current pb-1" : "border-transparent opacity-40 hover:opacity-100"}`}
+                >
+                  All Products
+                </button>
+                <button
+                  onClick={() => onTabChange("categories")}
+                  className={`border-b-2 whitespace-nowrap transition-all ${activeTab === "categories" || selectedCategory ? "border-current pb-1" : "border-transparent opacity-40 hover:opacity-100"}`}
+                >
+                  Collections
+                </button>
+              </div>
+              
+              {/* Desktop Actions */}
+              <div className="hidden md:flex shrink-0 items-center gap-4">
+                <button
+                  onClick={() => setContactOpen(true)}
+                  className="hover:scale-110 active:scale-95 group transition-all"
+                  aria-label="Store contact information"
+                >
+                  <InfoCircle variant="Bold" color="currentColor" className="w-6 h-6" />
+                </button>
+                
+                <button
+                  onClick={onCartOpen}
+                  className="relative p-3 rounded-sm bg-[var(--theme-primary)] text-white hover:-translate-y-0.5 active:scale-95 transition-all"
+                >
+                  <ShoppingCart className="w-5 h-5" />
+                  {cartItemsCount > 0 && (
+                    <span className="absolute -top-1.5 -right-1.5 h-6 w-6 rounded-sm bg-white text-[var(--theme-primary)] text-[11px] flex items-center justify-center font-black ring-2 ring-[var(--theme-primary)]">
                       {cartItemsCount}
                     </span>
                   )}
                 </button>
 
                 <TemplateProfileDropdown
-                  buttonClassName="relative p-2.5 sm:p-3.5 rounded-sm bg-white dark:bg-neutral-800 border-2 border-slate-100 dark:border-neutral-800 text-[var(--theme-primary)]  hover:scale-110 active:scale-95 transition-all"
-                  iconClassName="w-5 h-5 sm:w-6 sm:h-6"
+                  buttonClassName="relative p-3 rounded-sm bg-white dark:bg-neutral-800 border-2 border-slate-100 dark:border-neutral-800 text-[var(--theme-primary)] hover:-translate-y-0.5 active:scale-95 transition-all"
+                  iconClassName="w-5 h-5"
                 />
 
                 {onMessageVendor && (
                   <button
                     onClick={onMessageVendor}
                     disabled={isMessagingLoading}
-                    className="p-2.5 sm:p-3.5 rounded-sm bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 hover:scale-110 active:scale-95 transition-all disabled:opacity-50"
+                    className="p-3 rounded-sm bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 hover:-translate-y-0.5 active:scale-95 transition-all disabled:opacity-50"
                     title="Message Vendor"
                   >
                     {isMessagingLoading ? (
-                       <Loader2 className="w-5 h-5 sm:w-6 sm:h-6 animate-spin" />
+                       <Loader2 className="w-5 h-5 animate-spin" />
                     ) : (
-                      <Messages3 variant="Bold" color="currentColor" className="w-5 h-5 sm:w-6 sm:h-6" />
+                      <Messages3 variant="Bold" color="currentColor" className="w-5 h-5" />
                     )}
                   </button>
                 )}
@@ -187,7 +214,7 @@ export default function EditorialTemplate({
                       </div>
                       <div className="flex items-center justify-between border-b-2 border-zinc-900 dark:border-white pb-6 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-700 origin-left">
                         <span className="text-sm font-sans font-black uppercase tracking-widest">
-                          Access Collection
+                          View Collection
                         </span>
                         <ArrowRight className="w-5 h-5" />
                       </div>
@@ -212,7 +239,7 @@ export default function EditorialTemplate({
                       className="hover:opacity-50 transition-opacity flex items-center gap-2"
                     >
                       <ArrowRight className="w-4 h-4 rotate-180" />
-                      Archive All
+                      Back to Collections
                     </button>
                   )}
                   <span>{pagination?.total || 0} ITEMS IN LIST</span>

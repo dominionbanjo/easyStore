@@ -63,50 +63,39 @@ export default function TitanTemplate({
             }}
           />
 
-          <div className="flex items-center gap-6 relative z-10 w-full md:w-auto">
-            {store?.logo ? (
-              <img
-                src={store.logo ?? undefined}
-                alt={store.store_name}
-                className="w-16 h-16 rounded-sm object-cover border border-zinc-700 bg-black p-1"
-              />
-            ) : (
-              <div className="w-16 h-16 rounded-sm bg-zinc-900 border border-zinc-800 flex items-center justify-center font-mono font-bold text-2xl text-[var(--theme-primary)]">
-                {store?.store_name?.substring(0, 2).toUpperCase() || "TT"}
-              </div>
-            )}
-            <div className="flex-1">
-              <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-white uppercase truncate max-w-[200px] md:max-w-none">
+          <div className="flex items-center gap-2 sm:gap-4 relative z-10 flex-1 min-w-0">
+            <div className="flex-1 min-w-0">
+              <h1 className="text-xl md:text-3xl font-bold tracking-tight text-white uppercase truncate">
                 {store?.store_name ?? "TITAN STORE"}
               </h1>
-              <div className="flex items-center gap-4 text-xs font-mono text-zinc-500 mt-2 uppercase tracking-wide">
+              <div className="flex items-center gap-2 sm:gap-4 text-[10px] font-mono text-zinc-500 mt-1 uppercase tracking-wide">
                 <span>
-                  SYS_INIT:{" "}
+                  INIT:{" "}
                   {new Date(store?.created_at || Date.now()).getFullYear()}
                 </span>
                 <span className="w-1 h-1 rounded-sm bg-zinc-700"></span>
                 <span className="flex items-center gap-1 text-[var(--theme-primary)]">
-                  <div className="w-2 h-2 rounded-sm bg-[var(--theme-primary)] animate-pulse" />{" "}
+                  <div className="w-1.5 h-1.5 rounded-sm bg-[var(--theme-primary)] animate-pulse" />{" "}
                   ONLINE
                 </span>
               </div>
             </div>
 
-            <div className="flex md:hidden items-center gap-2">
+            <div className="flex md:hidden items-center gap-1.5 sm:gap-2 shrink-0">
               <button
                 onClick={onCartOpen}
-                className="relative p-3 border border-zinc-800 bg-black text-[var(--theme-primary)] rounded-sm hover:bg-[var(--theme-primary)]/10 transition-all group overflow-hidden"
+                className="relative p-2 sm:p-2.5 border border-zinc-800 bg-black text-[var(--theme-primary)] rounded-sm hover:bg-[var(--theme-primary)]/10 transition-all group overflow-hidden"
               >
                 <ShoppingCart className="w-5 h-5" />
                 {cartItemsCount > 0 && (
-                  <span className="absolute -top-1 -right-1 h-5 w-5 bg-[var(--theme-primary)] text-black text-[10px] flex items-center justify-center font-black rounded-sm ring-1 ring-black -[0_0_10px_var(--theme-primary)]">
+                  <span className="absolute -top-1 -right-1 h-4 w-4 sm:h-5 sm:w-5 bg-[var(--theme-primary)] text-black text-[9px] sm:text-[10px] flex items-center justify-center font-black rounded-sm ring-1 ring-black shadow-[0_0_10px_var(--theme-primary)]">
                     {cartItemsCount}
                   </span>
                 )}
               </button>
 
               <TemplateProfileDropdown
-                buttonClassName="p-3 border border-zinc-800 bg-black text-indigo-600 rounded-sm hover:bg-indigo-600/10 transition-all font-mono"
+                buttonClassName="p-2 sm:p-2.5 border border-zinc-800 bg-black text-[var(--theme-primary)] rounded-sm hover:bg-[var(--theme-primary)]/10 transition-all font-mono"
                 iconClassName="w-5 h-5"
               />
 
@@ -114,7 +103,7 @@ export default function TitanTemplate({
                 <button
                   onClick={onMessageVendor}
                   disabled={isMessagingLoading}
-                  className="p-3 border border-zinc-800 bg-black text-indigo-600 rounded-sm hover:bg-indigo-600/10 transition-all disabled:opacity-50"
+                  className="p-2 sm:p-2.5 border border-zinc-800 bg-black text-[var(--theme-primary)] rounded-sm hover:bg-[var(--theme-primary)]/10 transition-all disabled:opacity-50"
                   title="Message Vendor"
                 >
                   {isMessagingLoading ? (
@@ -170,7 +159,7 @@ export default function TitanTemplate({
             </button>
 
             <TemplateProfileDropdown
-              buttonClassName="p-3 border border-zinc-800 bg-black text-indigo-600 rounded-sm hover:bg-indigo-600/10 transition-all font-mono"
+              buttonClassName="p-3 border border-zinc-800 bg-black text-[var(--theme-primary)] rounded-sm hover:bg-[var(--theme-primary)]/10 transition-all font-mono"
               iconClassName="w-5 h-5"
             />
 
@@ -178,7 +167,7 @@ export default function TitanTemplate({
               <button
                 onClick={onMessageVendor}
                 disabled={isMessagingLoading}
-                className="p-3 border border-zinc-800 bg-black text-indigo-600 rounded-sm hover:bg-indigo-600/10 transition-all disabled:opacity-50"
+                className="p-3 border border-zinc-800 bg-black text-[var(--theme-primary)] rounded-sm hover:bg-[var(--theme-primary)]/10 transition-all disabled:opacity-50"
                 title="Message Vendor"
               >
                 {isMessagingLoading ? (

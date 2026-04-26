@@ -54,20 +54,9 @@ export default function BazaarTemplate({
       {/* ─── BAZAAR HEADER ─── */}
       <header className="sticky top-0 z-50 w-full bg-white/70 dark:bg-black/70 backdrop-blur-xl border-b border-slate-200/50 dark:border-neutral-800/50 px-2 sm:px-6 py-3">
         <div className="max-w-[1600px] mx-auto flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3 md:gap-5 min-w-0">
-            {store.logo ? (
-              <img
-                src={store.logo}
-                alt={store.store_name}
-                className="w-10 h-10 md:w-14 md:h-14 rounded-2xl object-cover border border-slate-200 dark:border-neutral-800 shadow-sm"
-              />
-            ) : (
-              <div className="w-10 h-10 md:w-14 md:h-14 rounded-2xl bg-gradient-to-br from-[var(--theme-primary)] to-[var(--theme-primary)]/80 flex items-center justify-center font-black text-white text-xl shadow-lg">
-                {store.store_name?.charAt(0)}
-              </div>
-            )}
+          <div className="flex items-center gap-3 md:gap-5 min-w-0 flex-1">
             <div className="flex flex-col min-w-0">
-              <h1 className="text-lg md:text-2xl font-black tracking-tight text-slate-900 dark:text-white truncate max-w-[120px] md:max-w-none">
+              <h1 className="text-lg md:text-2xl font-black tracking-tight text-slate-900 dark:text-white truncate max-w-[150px] md:max-w-none">
                 {store.store_name}
               </h1>
               <div className="hidden md:flex items-center gap-2">
@@ -77,35 +66,35 @@ export default function BazaarTemplate({
             </div>
           </div>
 
-          <div className="flex items-center gap-2 md:gap-3">
+          <div className="flex items-center gap-2 md:gap-3 shrink-0">
              <button
               onClick={onMessageVendor}
               disabled={isMessagingLoading}
-              className="p-2.5 md:p-3.5 bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-2xl hover:border-[var(--theme-primary)] hover:text-[var(--theme-primary)] transition-all shadow-sm active:scale-95 group disabled:opacity-50 disabled:cursor-not-allowed"
+              className="p-2 md:p-3 bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-sm hover:border-[var(--theme-primary)] hover:text-[var(--theme-primary)] transition-all shadow-sm active:scale-95 group disabled:opacity-50 disabled:cursor-not-allowed"
               aria-label="Message store"
             >
               {isMessagingLoading ? (
-                <Loader2 className="w-5 h-5 md:w-6 md:h-6 animate-spin text-[var(--theme-primary)]" />
+                <Loader2 className="w-4 h-4 md:w-5 md:h-5 animate-spin text-[var(--theme-primary)]" />
               ) : (
-                <Messages3 variant="Bold" color="currentColor" className="w-5 h-5 md:w-6 md:h-6" />
+                <Messages3 variant="Bold" color="currentColor" className="w-4 h-4 md:w-5 md:h-5" />
               )}
             </button>
 
             <button
               onClick={onCartOpen}
-              className="relative p-2.5 md:p-3.5 bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-2xl hover:border-[var(--theme-primary)] hover:text-[var(--theme-primary)] transition-all shadow-sm active:scale-95 group"
+              className="relative p-2 md:p-3 bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-sm hover:border-[var(--theme-primary)] hover:text-[var(--theme-primary)] transition-all shadow-sm active:scale-95 group"
             >
-              <ShoppingCart className="w-5 h-5 md:w-6 md:h-6" />
+              <ShoppingCart className="w-4 h-4 md:w-5 md:h-5" />
               {cartItemsCount > 0 && (
-                <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-[var(--theme-primary)] text-white text-[10px] flex items-center justify-center font-black ring-2 ring-white dark:ring-black">
+                <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-[var(--theme-primary)] text-white text-[9px] flex items-center justify-center font-black ring-1 ring-white dark:ring-black">
                   {cartItemsCount}
                 </span>
               )}
             </button>
 
             <TemplateProfileDropdown
-              buttonClassName="p-2.5 md:p-3.5 bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-2xl hover:border-[var(--theme-primary)] hover:text-[var(--theme-primary)] transition-all shadow-sm active:scale-95"
-              iconClassName="w-5 h-5 md:w-6 md:h-6"
+              buttonClassName="p-2 md:p-3 bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-sm hover:border-[var(--theme-primary)] hover:text-[var(--theme-primary)] transition-all shadow-sm active:scale-95"
+              iconClassName="w-4 h-4 md:w-5 md:h-5"
             />
           </div>
         </div>
@@ -131,63 +120,61 @@ export default function BazaarTemplate({
 
           <button
             onClick={() => setContactOpen(true)}
-            className="absolute top-6 right-6 z-20 bg-white/10 backdrop-blur-md p-3 rounded-2xl text-white hover:bg-white/20 transition-all border border-white/20"
+            className="absolute top-6 right-6 z-20 bg-white/10 backdrop-blur-md px-2 py-1.5 rounded-sm text-white hover:bg-white/20 transition-all border border-white/10"
             aria-label="Store contact information"
           >
-            <InfoCircle variant="Bold" color="currentColor" className="w-6 h-6" />
+            <InfoCircle variant="Bold" color="currentColor" className="w-5 h-5" />
           </button>
 
           <div className="relative z-10 max-w-[1600px] mx-auto px-4 h-full flex flex-col justify-center">
-            <div className="max-w-3xl space-y-6">
-                <div className="flex items-center gap-3">
-                  <div className="bg-indigo-600 text-white px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-lg shadow-indigo-600/20">
-                    Verified Premium Merchant
-                  </div>
-                  <div className="bg-white/10 backdrop-blur-md text-white/90 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] border border-white/10">
-                    {store.address_city || "Lagos, Nigeria"}
-                  </div>
-                </div>
-              <h2 className="text-5xl md:text-8xl font-[1000] text-white tracking-tight leading-[0.9] drop-shadow-2xl">
-                {store.store_name}
-              </h2>
-              <p className="text-lg md:text-2xl font-medium text-white/80 max-w-2xl leading-relaxed drop-shadow-md">
-                {store.description ||
-                  "Discover our curated collection of premium goods and exclusive deals."}
-              </p>
-
-              <div className="flex flex-wrap gap-4 md:gap-8 pt-4">
-                <div className="bg-white/10 backdrop-blur-md border border-white/10 px-6 py-4 rounded-3xl">
-                  <span className="text-[10px] font-black uppercase text-white/50 tracking-[0.2em] mb-2 block">
-                    Market Rating
+          <div className="relative z-10 max-w-[1600px] mx-auto px-4 h-full flex flex-col justify-center">
+            <div className="max-w-4xl space-y-8">
+              <div className="space-y-4 animate-in fade-in slide-in-from-left-4 duration-700">
+                <div className="flex items-center gap-2 w-fit bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-sm border border-white/10 shadow-xl">
+                  <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                  <span className="text-white font-black text-sm">
+                    {Number(store.rating_average || 0).toFixed(1)}
                   </span>
-                  <div className="flex items-center gap-3">
-                    <div className="flex gap-1">
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`w-4 h-4 ${i < Math.floor(Number(store.rating_average || 0)) ? "fill-yellow-400 text-yellow-400" : "text-white/20"}`}
-                        />
-                      ))}
-                    </div>
-                    <span className="text-white font-black text-2xl">
-                      {Number(store.rating_average || 0).toFixed(1)}
-                    </span>
-                  </div>
+                  <span className="text-white/40 text-[10px] font-bold uppercase tracking-wider ml-1">
+                    Rating
+                  </span>
                 </div>
+                
+                <h2 className="text-4xl sm:text-5xl md:text-7xl lg:text-9xl font-[1000] text-white tracking-tighter leading-[0.85] drop-shadow-2xl">
+                  {store.store_name}
+                </h2>
+                
+                <p className="text-lg md:text-3xl font-medium text-white/90 max-w-3xl leading-snug drop-shadow-md py-2">
+                  {store.description ||
+                    "Discover our curated collection of premium goods and exclusive deals."}
+                </p>
 
                 {(store.address_city || store.address_country) && (
-                  <div className="bg-white/10 backdrop-blur-md border border-white/10 px-6 py-4 rounded-3xl">
-                    <span className="text-[10px] font-black uppercase text-white/50 tracking-[0.2em] mb-2 block">
-                      Base Location
-                    </span>
-                    <div className="flex items-center gap-3 text-white font-black text-2xl">
-                      <MapPin className="w-5 h-5 text-indigo-600" />
-                      <span className="uppercase">{store.address_city || store.address_country}</span>
-                    </div>
+                  <div className="flex items-center gap-2 text-[var(--theme-primary)] font-black text-xs md:text-sm uppercase tracking-[0.3em] opacity-80">
+                    <MapPin className="w-4 h-4" />
+                    <span>{store.address_city || store.address_country}</span>
                   </div>
                 )}
               </div>
+
+              <div className="flex flex-wrap gap-4 pt-2 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
+                {onMessageVendor && (
+                  <button
+                    onClick={onMessageVendor}
+                    disabled={isMessagingLoading}
+                    className="bg-white/10 backdrop-blur-md text-white border border-white/20 px-8 py-3.5 rounded-sm font-black text-xs uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all hover:-translate-y-1 active:scale-95 flex items-center gap-2 shadow-xl disabled:opacity-50"
+                  >
+                    {isMessagingLoading ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Messages3 variant="Bold" color="currentColor" className="w-4 h-4" />
+                    )}
+                    Message Vendor
+                  </button>
+                )}
+              </div>
             </div>
+          </div>
           </div>
         </section>
       )}
@@ -195,13 +182,13 @@ export default function BazaarTemplate({
       <main className="max-w-[1600px] mx-auto px-4 py-8 md:py-20 w-full space-y-12">
         {/* NAV & SEARCH SECTION */}
         <div className="flex flex-col lg:flex-row gap-8 items-start lg:items-center justify-between">
-          <div className="flex p-1.5 bg-slate-100 dark:bg-neutral-900 rounded-[28px] border border-slate-200/50 dark:border-neutral-800/50 w-full lg:w-auto">
+          <div className="flex p-1.5 bg-slate-100 dark:bg-neutral-900 rounded-sm border border-slate-200/50 dark:border-neutral-800/50 w-full lg:w-auto">
             <button
               onClick={() => {
                 onTabChange("products");
                 onCategorySelect(null);
               }}
-              className={`flex-1 lg:flex-none px-6 py-3.5 rounded-[22px] font-bold text-sm md:text-base transition-all ${
+              className={`flex-1 lg:flex-none px-6 py-3.5 rounded-sm font-bold text-sm md:text-base transition-all ${
                 activeTab === "products" && !selectedCategory
                   ? "bg-white dark:bg-black text-indigo-600 shadow-sm"
                   : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
@@ -211,7 +198,7 @@ export default function BazaarTemplate({
             </button>
             <button
               onClick={() => onTabChange("categories")}
-              className={`flex-1 lg:flex-none px-6 py-3.5 rounded-[22px] font-bold text-sm md:text-base transition-all ${
+              className={`flex-1 lg:flex-none px-6 py-3.5 rounded-sm font-bold text-sm md:text-base transition-all ${
                 activeTab === "categories" || selectedCategory
                   ? "bg-white dark:bg-black text-indigo-600 shadow-sm"
                   : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
@@ -228,7 +215,7 @@ export default function BazaarTemplate({
             <Input
               type="text"
               placeholder={`Search in ${store.store_name}...`}
-              className="w-full h-14 md:h-16 bg-white dark:bg-neutral-900 border-2 border-slate-200 dark:border-neutral-800 focus-visible:border-indigo-600 focus-visible:ring-0 rounded-3xl pl-14 pr-12 text-lg font-medium transition-all shadow-sm"
+              className="w-full h-14 md:h-16 bg-white dark:bg-neutral-900 border-2 border-slate-200 dark:border-neutral-800 focus-visible:border-indigo-600 focus-visible:ring-0 rounded-sm pl-14 pr-12 text-lg font-medium transition-all shadow-sm"
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
             />
@@ -255,18 +242,18 @@ export default function BazaarTemplate({
               ? Array.from({ length: 8 }).map((_, i) => (
                   <Skeleton
                     key={i}
-                    className="h-[300px] rounded-3xl bg-slate-200 dark:bg-neutral-800"
+                    className="h-[300px] rounded-sm bg-slate-200 dark:bg-neutral-800"
                   />
                 ))
               : categories?.map((cat) => (
                   <button
                     key={cat.id}
                     onClick={() => onCategorySelect(cat)}
-                    className="group relative h-[300px] rounded-3xl overflow-hidden bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 hover:border-indigo-600 transition-all flex flex-col p-8 text-left shadow-sm hover:shadow-xl hover:shadow-indigo-600/5"
+                    className="group relative h-[300px] rounded-sm overflow-hidden bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 hover:border-indigo-600 transition-all flex flex-col p-8 text-left shadow-sm hover:shadow-xl hover:shadow-indigo-600/5"
                   >
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-600/5 rounded-bl-full group-hover:w-full group-hover:h-full group-hover:rounded-none transition-all duration-500" />
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-600/5 group-hover:w-full group-hover:h-full transition-all duration-500" />
                     <div className="relative z-10 h-full flex flex-col justify-between">
-                      <div className="w-14 h-14 bg-slate-50 dark:bg-neutral-800 rounded-2xl flex items-center justify-center text-indigo-600 font-black text-xl mb-4 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                      <div className="w-14 h-14 bg-slate-50 dark:bg-neutral-800 rounded-sm flex items-center justify-center text-indigo-600 font-black text-xl mb-4 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
                         {cat.name.charAt(0)}
                       </div>
                       <div>
@@ -307,9 +294,9 @@ export default function BazaarTemplate({
             <div className="lg:col-span-2 space-y-8">
               <div className="flex items-center gap-4">
                  {store.logo ? (
-                  <img src={store.logo} alt="" className="w-12 h-12 rounded-xl object-cover" />
+                  <img src={store.logo} alt="" className="w-12 h-12 rounded-sm object-cover" />
                 ) : (
-                  <div className="w-12 h-12 rounded-xl bg-indigo-600" />
+                  <div className="w-12 h-12 rounded-sm bg-indigo-600" />
                 )}
                 <h4 className="text-3xl font-black tracking-tighter uppercase text-slate-900 dark:text-white">
                   {store.store_name}

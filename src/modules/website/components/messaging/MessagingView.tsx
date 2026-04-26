@@ -180,11 +180,25 @@ export const MessagingView = ({ basePath, containerClassName }: MessagingViewPro
 
   useEffect(() => {
     const prefill = searchParams.get("prefill");
+    const productPayloadStr = searchParams.get("product_payload");
+    
     if (prefill && activeTab && activeTab !== "chatroom" && lastProcessedPrefill.current !== prefill) {
       lastProcessedPrefill.current = prefill;
-      handleSendMessage(decodeURIComponent(prefill));
+      
+      let productDetails: IProduct | null = null;
+      if (productPayloadStr) {
+        try {
+          productDetails = JSON.parse(decodeURIComponent(productPayloadStr));
+        } catch (e) {
+          console.error("Failed to parse product payload from URL");
+        }
+      }
+
+      handleSendMessage(decodeURIComponent(prefill), productDetails);
+      
       const newParams = new URLSearchParams(searchParams);
       newParams.delete("prefill");
+      newParams.delete("product_payload");
       const targetUrl = id ? `${basePath}/${id}` : basePath;
       const queryStr = newParams.toString();
       navigate(`${targetUrl}${queryStr ? "?" + queryStr : ""}`, { replace: true });

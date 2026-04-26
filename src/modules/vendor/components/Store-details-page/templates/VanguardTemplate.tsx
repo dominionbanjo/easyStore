@@ -99,13 +99,7 @@ export default function VanguardTemplate({
         <div className="absolute inset-0 bg-gradient-to-t from-white via-white/40 to-transparent dark:from-black dark:via-black/50" />
 
         <div className="relative z-10 flex flex-col items-center text-center px-4">
-          {store?.logo && (
-            <img
-              src={store.logo ?? undefined}
-              alt="Store Logo"
-              className="w-24 h-24 md:w-32 md:h-32 rounded-sm object-cover  mb-6 border-4 border-white dark:border-zinc-800"
-            />
-          )}
+
           <h1 className="text-5xl md:text-7xl font-light tracking-tight mb-4 text-zinc-900 dark:text-white">
             {store?.store_name ?? "Vanguard Store"}
           </h1>

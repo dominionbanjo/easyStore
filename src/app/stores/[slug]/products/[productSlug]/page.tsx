@@ -144,7 +144,16 @@ export default function StoreProductDetailsPage() {
         const resp = await startConversation({ recipient_id: store.user_id }).unwrap();
         const convId = resp.data.id;
         const prefill = encodeURIComponent(`Hi, I'm interested in ${productData.product.name}. Can you provide more details?`);
-        const targetPath = `${ACCOUNT_ROUTES.MESSAGES}/${convId}?prefill=${prefill}`;
+        
+        // Include product data in the query to correctly populate the message
+        const productPayload = encodeURIComponent(JSON.stringify({
+          id: productData.product.id,
+          name: productData.product.name,
+          slug: productData.product.slug,
+          image: productData.product.image,
+        }));
+        
+        const targetPath = `${ACCOUNT_ROUTES.MESSAGES}/${convId}?prefill=${prefill}&product_payload=${productPayload}`;
 
         if (areSubdomainsDisabled()) {
           navigate(targetPath);

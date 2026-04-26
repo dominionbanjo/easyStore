@@ -247,13 +247,7 @@ export default function DefaultTemplate({
           </button>
 
           <div className="relative z-10 text-center px-6 max-w-4xl flex flex-col items-center">
-            {store.logo && (
-              <img
-                src={store.logo ?? undefined}
-                alt="Store logo"
-                className="w-24 h-24 md:w-32 md:h-32 rounded-sm object-cover border-4 border-white/20 mb-8  backdrop-blur-md bg-white/10"
-              />
-            )}
+
             <h2 className="text-5xl md:text-8xl font-black tracking-tight mb-6 text-white drop- leading-none">
               {store.store_name}
             </h2>
@@ -294,20 +288,7 @@ export default function DefaultTemplate({
                 Explore Collection
               </button>
               
-              {onMessageVendor && (
-                <button
-                  onClick={onMessageVendor}
-                  disabled={isMessagingLoading}
-                  className="bg-white/10 backdrop-blur-md text-white border border-white/20 px-8 py-3.5 rounded-sm font-bold text-base hover:bg-white/20 transition-all hover:-translate-y-1 active:scale-95 flex items-center gap-2 disabled:opacity-50"
-                >
-                  {isMessagingLoading ? (
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                  ) : (
-                    <Messages3 variant="Bold" color="currentColor" className="w-5 h-5" />
-                  )}
-                  Message Vendor
-                </button>
-              )}
+
             </div>
           </div>
         </div>

@@ -58,7 +58,7 @@ export default function HeritageTemplate({
         <div className="absolute top-4 sm:top-8 right-2 sm:right-8 z-10 flex items-center gap-2 sm:gap-3">
           <button
             onClick={() => setContactOpen(true)}
-            className="relative text-[#3D352B] dark:text-[#EAE3DB] hover:scale-110 active:scale-95 group transition-all"
+            className="group relative p-4 rounded-sm bg-white dark:bg-[#2C2622] border border-[#EADDCE] dark:border-[#3D352B] hover:scale-105 active:scale-95 transition-all text-[#3D352B] dark:text-[#EAE3DB]"
             aria-label="Store contact info"
           >
             <InfoCircle variant="Bold" color="currentColor" className="w-5 h-5" />
@@ -90,7 +90,7 @@ export default function HeritageTemplate({
             <button
               onClick={onMessageVendor}
               disabled={isMessagingLoading}
-              className="p-4 rounded-sm bg-[#3D352B] dark:bg-[#EAE3DB] text-white dark:text-[#1E1B18] border border-[#3D352B] dark:border-[#EAE3DB] hover:scale-110 active:scale-95 transition-all text-indigo-600 disabled:opacity-50"
+              className="group relative p-4 rounded-sm bg-white dark:bg-[#2C2622] border border-[#EADDCE] dark:border-[#3D352B] hover:scale-105 active:scale-95 transition-all text-[#3D352B] dark:text-[#EAE3DB] disabled:opacity-50"
               title="Message Vendor"
             >
               {isMessagingLoading ? (
@@ -104,17 +104,7 @@ export default function HeritageTemplate({
 
         <div className="w-16 h-px bg-[#3D352B]/30 dark:bg-[#EAE3DB]/30 mb-8" />
 
-        {store?.logo ? (
-          <img
-            src={store.logo ?? undefined}
-            alt={store.store_name}
-            className="w-24 h-24 rounded-sm object-cover  mb-6 border-4 border-white/50 dark:border-white/5"
-          />
-        ) : (
-          <div className="w-20 h-20 rounded-sm bg-[#EADDCE] dark:bg-[#2C2622] flex items-center justify-center font-serif text-[#3D352B] dark:text-[#EAE3DB] text-2xl mb-6 ">
-            {store?.store_name?.charAt(0) || "H"}
-          </div>
-        )}
+
 
         <h1 className="text-4xl md:text-6xl font-serif text-[#2C2622] dark:text-[#F4EDE4] mb-4">
           {store?.store_name ?? "Heritage Market"}
