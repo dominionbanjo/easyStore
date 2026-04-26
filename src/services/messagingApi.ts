@@ -67,6 +67,7 @@ export const messagingApi = apiManager.injectEndpoints({
         params,
       }),
       providesTags: ["Messaging"],
+      keepUnusedDataFor: 8640000,
     }),
     sendChatroomMessage: builder.mutation<any, { content: string; product_id?: string; product_name?: string; product_image?: string; product_slug?: string; local_id?: string }>({
       query: (body) => ({
@@ -152,6 +153,7 @@ export const messagingApi = apiManager.injectEndpoints({
     getUserConversations: builder.query<{ data: IConversation[] }, void>({
       query: () => "messaging/conversations",
       providesTags: ["Messaging"],
+      keepUnusedDataFor: 8640000,
     }),
     startConversation: builder.mutation<{ data: IConversation }, { recipient_id: string }>({
       query: (body) => ({
@@ -168,6 +170,7 @@ export const messagingApi = apiManager.injectEndpoints({
         params,
       }),
       providesTags: (_result, _error, { id }) => [{ type: "Messaging", id }],
+      keepUnusedDataFor: 8640000,
     }),
     sendDirectMessage: builder.mutation<any, { id: string; content: string; product_id?: string; product_name?: string; product_image?: string; product_slug?: string; local_id?: string }>({
       query: ({ id, ...body }) => ({
