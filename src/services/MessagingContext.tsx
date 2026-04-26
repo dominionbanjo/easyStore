@@ -72,7 +72,11 @@ export const MessagingProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         const next = new Set(prev);
         next.delete(user_id);
         return next;
-      });
+       });
+    });
+
+    socket.on("online_users_list", ({ user_ids }) => {
+      setOnlineUsers(new Set(user_ids));
     });
 
     socket.on("chatroom_user_count", ({ count }) => {
