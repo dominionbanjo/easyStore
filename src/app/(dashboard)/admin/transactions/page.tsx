@@ -1,5 +1,4 @@
 import { useState, useMemo } from "react";
-import { motion } from "framer-motion";
 import {
   Card,
   CardHeader,
@@ -91,14 +90,9 @@ export default function SuperAdminTransactionsPage() {
     : undefined;
 
   return (
-    <section className="space-y-8 animate-in fade-in duration-500 pb-10">
+    <section className="space-y-8 pb-10">
       {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
-      >
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-black tracking-tight text-foreground/90">
             Transactions
@@ -120,15 +114,10 @@ export default function SuperAdminTransactionsPage() {
             <Download className="h-3.5 w-3.5 sm:h-4 sm:w-4" /> Export
           </Button>
         </div>
-      </motion.div>
+      </div>
 
       {/* Search + Filters */}
-      <motion.div
-        initial={{ opacity: 0, y: 5 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3, delay: 0.1 }}
-        className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 p-4 sm:p-5 rounded-sm bg-muted/20 border border-border/30 backdrop-blur-sm"
-      >
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 p-4 sm:p-5 rounded-sm bg-muted/20 border border-border/30 backdrop-blur-sm">
         <div className="relative w-full lg:max-w-md">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/60" />
           <Input
@@ -165,7 +154,7 @@ export default function SuperAdminTransactionsPage() {
             ),
           )}
         </div>
-      </motion.div>
+      </div>
 
       {/* Transactions Table */}
       <Card className="border-border/30   overflow-hidden rounded-sm bg-background/60 backdrop-blur-md">

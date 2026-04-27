@@ -1,4 +1,4 @@
-import { useFormContext } from "react-hook-form";
+import { useFormContext, type RegisterOptions } from "react-hook-form";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
@@ -10,6 +10,7 @@ interface FormTextareaProps {
   rows?: number;
   className?: string;
   icon?: React.ReactNode;
+  rules?: RegisterOptions;
 }
 
 export function FormTextarea({
@@ -19,6 +20,7 @@ export function FormTextarea({
   rows = 4,
   className,
   icon,
+  rules,
 }: FormTextareaProps) {
   const {
     register,
@@ -53,7 +55,7 @@ export function FormTextarea({
           rows={rows}
           placeholder={placeholder}
           aria-invalid={!!shouldShowError}
-          {...register(name)}
+          {...register(name, rules)}
           className={cn(
             "rounded-sm text-sm transition-all duration-300 bg-muted/30 border-muted-foreground/10 focus:bg-background/80 focus:border-primary/30 focus:ring-4 focus:ring-primary/5 resize-none  group-hover:bg-muted/40",
             icon ? "pl-11" : "px-4",

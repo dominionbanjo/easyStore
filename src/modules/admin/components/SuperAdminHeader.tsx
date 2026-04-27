@@ -65,7 +65,7 @@ export default function SuperAdminHeader({
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden"
+            className="lg:hidden"
             onClick={onMenuToggle}
           >
             <Menu className="h-5 w-5" />

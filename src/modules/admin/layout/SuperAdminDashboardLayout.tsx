@@ -3,7 +3,6 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import { toast } from "sonner";
-import { motion } from "framer-motion";
 
 import { cn } from "@/lib/utils";
 import { getBaseDomain, areSubdomainsDisabled } from "@/utils/subdomain";
@@ -73,17 +72,12 @@ export default function SuperAdminDashboardLayout() {
       />
 
       {/* Content area */}
-      <div
-        className={cn(
-          "flex flex-col flex-1 min-w-0 transition-all duration-300",
-          "md:ml-[260px]",
-        )}
-      >
+      <div className={cn("flex flex-col flex-1 min-w-0", "lg:ml-[260px]")}>
         <SuperAdminHeader onMenuToggle={() => setSidebarOpen(!sidebarOpen)} />
 
-        <motion.main layout className="p-6 md:p-10 w-full space-y-10">
+        <main className="p-6 lg:p-10 w-full space-y-10">
           <Outlet />
-        </motion.main>
+        </main>
       </div>
     </section>
   );

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
 import {
   Shield,
   Lock,
@@ -87,12 +86,7 @@ export default function SuperAdminAccessControlPage() {
   return (
     <section className="space-y-8">
       {/* ─── Header ─── */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
-      >
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Access Control</h1>
           <p className="text-sm text-muted-foreground">
@@ -108,15 +102,10 @@ export default function SuperAdminAccessControlPage() {
             <Plus className="h-4 w-4" /> Add Role
           </Button>
         </div>
-      </motion.div>
+      </div>
 
       {/* ─── Search Bar ─── */}
-      <motion.div
-        initial={{ opacity: 0, y: 5 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="relative w-full md:max-w-xs"
-      >
+      <div className="relative w-full md:max-w-xs">
         <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
         <Input
           placeholder="Search roles..."
@@ -124,7 +113,7 @@ export default function SuperAdminAccessControlPage() {
           onChange={(e) => setSearch(e.target.value)}
           className="pl-8"
         />
-      </motion.div>
+      </div>
 
       {/* ─── Roles Table ─── */}
       <Card className="border border-border/40 ">
@@ -151,12 +140,9 @@ export default function SuperAdminAccessControlPage() {
 
               <TableBody>
                 {filteredRoles.length > 0 ? (
-                  filteredRoles.map((role, i) => (
-                    <motion.tr
+                  filteredRoles.map((role) => (
+                    <TableRow
                       key={role.id}
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: i * 0.05 }}
                       className="border-b border-border/20 hover:bg-muted/50"
                     >
                       <TableCell className="font-semibold">
@@ -201,7 +187,7 @@ export default function SuperAdminAccessControlPage() {
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </TableCell>
-                    </motion.tr>
+                    </TableRow>
                   ))
                 ) : (
                   <TableRow>
@@ -220,12 +206,7 @@ export default function SuperAdminAccessControlPage() {
       </Card>
 
       {/* ─── Access Overview Summary ─── */}
-      <motion.div
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5"
-      >
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
         {[
           { icon: Shield, label: "Total Roles", value: "8" },
           { icon: UserCog, label: "Admins with Elevated Access", value: "12" },
@@ -245,7 +226,7 @@ export default function SuperAdminAccessControlPage() {
             </div>
           </Card>
         ))}
-      </motion.div>
+      </div>
     </section>
   );
 }

@@ -41,6 +41,45 @@ export interface IAdminTransaction {
   is_flagged?: boolean;
 }
 
+export interface IBroadcast {
+  id: string;
+  subject: string;
+  body: string;
+  target: "all" | "vendors" | "users" | "specific";
+  recipients: string[] | null;
+  scheduled_at: string | null;
+  sent_at: string | null;
+  status: "pending" | "sent" | "failed";
+  is_recurring: boolean;
+  is_active: boolean;
+  recurrence_type: "daily" | "weekly" | "monthly" | null;
+  recurrence_days: string[] | null;
+  recurrence_time: string | null;
+  recurrence_day_of_month: string[] | null;
+  failure_reason: string | null;
+  created_at: string;
+}
+
+export interface IAutomatedNotification {
+  id: string;
+  title: string;
+  message: string;
+  type: "system" | "vendor" | "user" | "alert" | "announcement";
+  status: "active" | "read" | "unread" | "pending" | "sent" | "failed";
+  target: "all" | "vendors" | "users" | "specific";
+  recipients: string[] | null;
+  scheduled_at: string | null;
+  sent_at: string | null;
+  is_recurring: boolean;
+  is_active: boolean;
+  recurrence_type: "daily" | "weekly" | "monthly" | null;
+  recurrence_days: string[] | null;
+  recurrence_time: string | null;
+  recurrence_day_of_month: string[] | null;
+  created_at: string;
+  updated_at: string;
+}
+
 interface IPaginationMeta {
   total: number;
   page: number | string;
@@ -319,6 +358,120 @@ export const adminApi = apiManager.injectEndpoints({
       }),
       invalidatesTags: ["Analytics"],
     }),
+    
+    // ─── Broadcasts ───
+    getAdminBroadcasts: builder.query<{ message: string; data: IBroadcast[] }, void>({
+      query: () => "admin/broadcasts",
+      providesTags: ["Broadcast"],
+    }),
+
+    createAdminBroadcast: builder.mutation<
+      { message: string; data: IBroadcast },
+      Partial<IBroadcast>
+    >({
+      query: (body) => ({
+        url: "admin/broadcasts",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Broadcast"],
+    }),
+
+    updateAdminBroadcast: builder.mutation<
+      IBroadcast,
+      { id: string; data: Partial<IBroadcast> }
+    >({
+      query: ({ id, data }) => ({
+        url: `admin/broadcasts/${id}`,
+        method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags: ["Broadcast"],
+    }),
+
+    deleteAdminBroadcast: builder.mutation<{ message: string }, string>({
+      query: (id) => ({
+        url: `admin/broadcasts/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Broadcast"],
+    }),
+
+    // ─── Automated Notifications ───
+    getAdminAutomatedNotifications: builder.query<
+      { message: string; data: IAutomatedNotification[] },
+      { type?: string; status?: string; search?: string }
+    >({
+      query: (params) => `admin/notifications/automated?${buildQuery(params)}`,
+      providesTags: ["Notification"],
+    }),
+
+    createAdminAutomatedNotification: builder.mutation<
+      IAutomatedNotification,
+      Partial<IAutomatedNotification>
+    >({
+      query: (data) => ({
+        url: `admin/notifications/automated`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Notification"],
+    }),
+
+    updateAdminAutomatedNotification: builder.mutation<
+      IAutomatedNotification,
+      { id: string; data: Partial<IAutomatedNotification> }
+    >({
+      query: ({ id, data }) => ({
+        url: `admin/notifications/automated/${id}`,
+        method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags: ["Notification"],
+    }),
+
+    markAdminAutomatedNotificationRead: builder.mutation<
+      IAutomatedNotification,
+      string
+    >({
+      query: (id) => ({
+        url: `admin/notifications/automated/${id}/read`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["Notification"],
+    }),
+
+    deleteAdminAutomatedNotification: builder.mutation<{ message: string }, string>({
+      query: (id) => ({
+        url: `admin/notifications/automated/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Notification"],
+    }),
+
+    toggleAdminBroadcastStatus: builder.mutation<
+      { message: string; data: IBroadcast },
+      { id: string; is_active: boolean }
+    >({
+      query: ({ id, is_active }) => ({
+        url: `admin/broadcasts/${id}`,
+        method: "PATCH",
+        body: { is_active },
+      }),
+      invalidatesTags: ["Broadcast"],
+    }),
+
+    toggleAdminAutomatedNotificationStatus: builder.mutation<
+      { message: string; data: IAutomatedNotification },
+      { id: string; is_active: boolean }
+    >({
+      query: ({ id, is_active }) => ({
+        url: `admin/notifications/automated/${id}`,
+        method: "PATCH",
+        body: { is_active },
+      }),
+      invalidatesTags: ["Notification"],
+    }),
   }),
 });
 
@@ -339,4 +492,15 @@ export const {
   useGetAdminRevenueQuery,
   useGetAdminSignupMethodsQuery,
   useFlagAdminTransactionMutation,
+  useGetAdminBroadcastsQuery,
+  useCreateAdminBroadcastMutation,
+  useUpdateAdminBroadcastMutation,
+  useDeleteAdminBroadcastMutation,
+  useGetAdminAutomatedNotificationsQuery,
+  useCreateAdminAutomatedNotificationMutation,
+  useUpdateAdminAutomatedNotificationMutation,
+  useMarkAdminAutomatedNotificationReadMutation,
+  useDeleteAdminAutomatedNotificationMutation,
+  useToggleAdminBroadcastStatusMutation,
+  useToggleAdminAutomatedNotificationStatusMutation,
 } = adminApi;

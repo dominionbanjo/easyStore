@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
 import {
   Card,
   CardHeader,
@@ -33,12 +32,7 @@ export default function SuperAdminServerConfigPage() {
   return (
     <section className="space-y-10">
       {/* ─── Header ─── */}
-      <motion.div
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
-      >
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
             <Server className="h-6 w-6 text-primary" />
@@ -52,15 +46,10 @@ export default function SuperAdminServerConfigPage() {
         <Button className="gap-2">
           <Download className="h-4 w-4" /> Export Config
         </Button>
-      </motion.div>
+      </div>
 
       {/* ─── Server Overview ─── */}
-      <motion.div
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4"
-      >
+      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
           { icon: Cloud, label: "Environment", value: apiMode.toUpperCase() },
           { icon: Cpu, label: "Active Nodes", value: "4" },
@@ -80,7 +69,7 @@ export default function SuperAdminServerConfigPage() {
             </div>
           </Card>
         ))}
-      </motion.div>
+      </div>
 
       {/* ─── Configuration Panels ─── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -222,11 +211,7 @@ export default function SuperAdminServerConfigPage() {
       </div>
 
       {/* ─── Danger Zone ─── */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-      >
+      <div>
         <Card className="border-destructive/40 border  bg-destructive/5">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-destructive">
@@ -249,7 +234,7 @@ export default function SuperAdminServerConfigPage() {
             </Button>
           </CardContent>
         </Card>
-      </motion.div>
+      </div>
     </section>
   );
 }

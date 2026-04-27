@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import {
   Card,
   CardHeader,
@@ -136,14 +135,9 @@ export default function SuperAdminReportsPage() {
   ];
 
   return (
-    <section className="space-y-10 pb-10 animate-in fade-in duration-500">
+    <section className="space-y-10 pb-10">
       {/* ─── Page Header ─── */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
-      >
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-black tracking-tight text-foreground/90">
             Reports & Analytics
@@ -163,24 +157,15 @@ export default function SuperAdminReportsPage() {
             <Download className="h-4 w-4" /> Export Data
           </Button>
         </div>
-      </motion.div>
+      </div>
 
       {/* ─── Summary Metrics ─── */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5"
-      >
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
         {metrics.map((m, i) => {
           const isUp = m.trend.startsWith("+");
           const showTrend = m.trend.startsWith("+") || m.trend.startsWith("-");
           return (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.05 }}
-            >
+            <div key={i}>
               <Card className="border-border/30   hover: transition-all duration-300 overflow-hidden group relative">
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 px-4 pt-4 sm:px-6 sm:pt-6">
@@ -228,10 +213,10 @@ export default function SuperAdminReportsPage() {
                   )}
                 </CardContent>
               </Card>
-            </motion.div>
+            </div>
           );
         })}
-      </motion.div>
+      </div>
 
       {/* ─── Revenue Trend Area Chart ─── */}
       <Card className="border-border/30   overflow-hidden">

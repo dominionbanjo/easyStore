@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import {
   Card,
   CardContent,
@@ -172,7 +171,7 @@ export default function SuperAdminOverviewPage() {
   ];
 
   return (
-    <section className="space-y-10 pb-10 animate-in fade-in duration-500">
+    <section className="space-y-10 pb-10">
       {/* ─── Header ─── */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -189,22 +188,16 @@ export default function SuperAdminOverviewPage() {
       </div>
 
       {/* ─── Stats Cards ─── */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
+      <div
         className="grid gap-4 sm:gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
       >
         {metrics.map((stat, i) => (
           <StatCard key={i} {...stat} isLoading={overviewLoading} />
         ))}
-      </motion.div>
+      </div>
 
       {/* ─── Charts Row ─── */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+      <div
         className="grid gap-6 lg:grid-cols-5"
       >
         {/* Growth Chart (3 cols) */}
@@ -354,13 +347,10 @@ export default function SuperAdminOverviewPage() {
             )}
           </CardContent>
         </Card>
-      </motion.div>
+      </div>
 
       {/* ─── Activity + System Health + Quick Stats ─── */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+      <div
         className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
       >
         {/* Recent Signups */}
@@ -499,7 +489,7 @@ export default function SuperAdminOverviewPage() {
             </Button>
           </CardContent>
         </Card>
-      </motion.div>
+      </div>
     </section>
   );
 }

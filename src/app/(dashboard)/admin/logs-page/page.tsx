@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
 import {
   Card,
   CardHeader,
@@ -119,12 +118,7 @@ export default function SuperAdminLogsPage() {
   return (
     <section className="space-y-8">
       {/* ─── Page Header ─── */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
-      >
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">System Logs</h1>
           <p className="text-sm text-muted-foreground">
@@ -141,15 +135,10 @@ export default function SuperAdminLogsPage() {
             <Download className="h-4 w-4" /> Export Logs
           </Button>
         </div>
-      </motion.div>
+      </div>
 
       {/* ─── Filters + Search ─── */}
-      <motion.div
-        initial={{ opacity: 0, y: 5 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="flex flex-col lg:flex-row lg:items-center justify-between gap-4"
-      >
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div className="relative w-full lg:max-w-xs">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/60" />
           <Input
@@ -178,7 +167,7 @@ export default function SuperAdminLogsPage() {
             ),
           )}
         </div>
-      </motion.div>
+      </div>
 
       {/* ─── Logs Table ─── */}
       <Card className="border border-border/40   rounded-sm overflow-hidden">
@@ -214,14 +203,11 @@ export default function SuperAdminLogsPage() {
 
               <TableBody>
                 {filteredLogs.length > 0 ? (
-                  filteredLogs.map((log, i) => {
+                  filteredLogs.map((log) => {
                     const Icon = typeIcons[log.type] || Info;
                     return (
-                      <motion.tr
+                      <TableRow
                         key={log.id}
-                        initial={{ opacity: 0, y: 5 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: i * 0.05 }}
                         className="border-b border-border/20 hover:bg-muted/30 transition-colors"
                       >
                         <TableCell className="text-[11px] sm:text-xs text-muted-foreground whitespace-nowrap px-4 sm:px-6">
@@ -251,7 +237,7 @@ export default function SuperAdminLogsPage() {
                             {log.status}
                           </span>
                         </TableCell>
-                      </motion.tr>
+                      </TableRow>
                     );
                   })
                 ) : (
@@ -271,12 +257,7 @@ export default function SuperAdminLogsPage() {
       </Card>
 
       {/* ─── System Overview Summary ─── */}
-      <motion.div
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5"
-      >
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
         {[
           { icon: CheckCircle2, label: "Successful Operations", value: "92%" },
           { icon: AlertCircle, label: "Warnings Logged", value: "5%" },
@@ -296,7 +277,7 @@ export default function SuperAdminLogsPage() {
             </div>
           </Card>
         ))}
-      </motion.div>
+      </div>
     </section>
   );
 }

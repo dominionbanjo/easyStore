@@ -1,5 +1,4 @@
 import { useMemo, useState } from "react";
-import { motion } from "framer-motion";
 import {
   Card,
   CardContent,
@@ -65,12 +64,7 @@ export default function SuperAdminVendorsPage() {
   return (
     <section className="space-y-6">
       {/* ── Header ── */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
-      >
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">
             Vendors Management
@@ -87,15 +81,10 @@ export default function SuperAdminVendorsPage() {
             {pagination.total.toLocaleString()} vendors
           </Badge>
         )}
-      </motion.div>
+      </div>
 
       {/* ── Search + Status Filters ── */}
-      <motion.div
-        initial={{ opacity: 0, y: 5 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3, delay: 0.05 }}
-        className="flex flex-col lg:flex-row lg:items-center gap-4"
-      >
+      <div className="flex flex-col lg:flex-row lg:items-center gap-4">
         <div className="relative w-full lg:max-w-xs">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/60 pointer-events-none" />
           <Input
@@ -128,7 +117,7 @@ export default function SuperAdminVendorsPage() {
             </Button>
           ))}
         </div>
-      </motion.div>
+      </div>
 
       {/* ── Table ── */}
       <Card className="border border-border/40   rounded-sm overflow-hidden">

@@ -42,7 +42,7 @@ export default function SuperAdminSidebar({ open, onToggle }: Props) {
       {/* Desktop Sidebar */}
       <aside
         className={cn(
-          "hidden md:flex flex-col border-r border-border/30 bg-card text-card-foreground",
+          "hidden lg:flex flex-col border-r border-border/30 bg-card text-card-foreground",
           "fixed left-0 top-0 h-screen w-[260px] z-30"
         )}
       >
@@ -89,7 +89,7 @@ export default function SuperAdminSidebar({ open, onToggle }: Props) {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
               onClick={onToggle}
-              className="fixed inset-0 bg-black/70 z-40 md:hidden"
+              className="fixed inset-0 bg-black/70 z-40 lg:hidden"
             />
             <motion.aside
               initial={{ x: "-100%" }}
@@ -98,7 +98,7 @@ export default function SuperAdminSidebar({ open, onToggle }: Props) {
               transition={{ type: "tween", duration: 0.3 }}
               className={cn(
                 "flex flex-col border-r border-border/30 bg-card text-card-foreground",
-                "fixed left-0 top-0 h-screen w-[260px] z-50 md:hidden"
+                "fixed left-0 top-0 h-screen w-[260px] z-50 lg:hidden"
               )}
             >
               <div className="flex items-center justify-between px-4 py-5 border-b border-border/20">

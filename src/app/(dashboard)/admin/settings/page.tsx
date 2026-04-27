@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   Card,
@@ -26,12 +25,7 @@ export default function SuperAdminSettingsPage() {
   return (
     <section className="space-y-8">
       {/* ─── Header ─── */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
-      >
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
             <Settings className="h-6 w-6 text-primary" />
@@ -45,7 +39,7 @@ export default function SuperAdminSettingsPage() {
         <Button className="gap-2">
           <Cloud className="h-4 w-4" /> Save All Changes
         </Button>
-      </motion.div>
+      </div>
 
       {/* ─── Settings Tabs ─── */}
       <Tabs defaultValue="general" className="w-full space-y-6">

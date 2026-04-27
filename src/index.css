@@ -307,6 +307,29 @@ body::-webkit-scrollbar-thumb:hover,
   background: color-mix(in srgb, var(--foreground) 50%, transparent);
   background-clip: padding-box;
 }
+
+/* Ultra-slim scrollbar for time picker and small lists */
+.ez-slim-scrollbar::-webkit-scrollbar {
+  width: 2px !important;
+  height: 2px !important;
+}
+
+.ez-slim-scrollbar::-webkit-scrollbar-button {
+  display: none !important;
+}
+
+.ez-slim-scrollbar::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+.ez-slim-scrollbar::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--primary) 50%, transparent) !important;
+  border-radius: 10px !important;
+}
+
+.dark .ez-slim-scrollbar::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--foreground) 30%, transparent) !important;
+}
 /* Sonner Toast Customization */
 [data-sonner-toast] {
   @apply rounded-sm border-zinc-200  backdrop-blur-xl transition-all duration-300;
