@@ -126,7 +126,7 @@ export default function HeroSection() {
                   variants={transitionVariants}
                   initial="hidden"
                   animate="visible"
-                  className="text-[44px] sm:text-7xl md:text-8xl lg:text-[100px] font-black tracking-tighter leading-[0.85] text-white w-full mx-auto drop-shadow-[0_4px_40px_rgba(0,0,0,0.8)]"
+                  className="text-[44px] sm:text-7xl md:text-8xl lg:text-[100px] font-black tracking-tighter leading-[0.85] text-white max-w-5xl mx-auto drop-shadow-[0_4px_40px_rgba(0,0,0,0.8)]"
                 >
                   <HeroTitle />
                 </motion.h1>
@@ -220,18 +220,6 @@ export default function HeroSection() {
                       .eazystore.com.ng
                     </span>
                   </div>
-                </div>
-
-                <p className="text-[11px] text-neutral-400 font-bold leading-relaxed">
-                  Build domain authority and trust with a link that truly
-                  represents your brand.
-                </p>
-
-                <div className="pt-2 flex items-center gap-2">
-                  <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-                  <span className="text-[11px] font-black text-emerald-400 uppercase tracking-widest">
-                    Live Preview
-                  </span>
                 </div>
               </div>
             </motion.div>

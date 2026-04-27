@@ -242,6 +242,7 @@ export function AddressRequiredModal({
                     label="State / Region"
                     name="address.state"
                     options={stateOptions}
+                    isSearchable
                     disabled={!countryCode}
                     icon={<Map className="h-4 w-4" />}
                     placeholder={
@@ -253,6 +254,7 @@ export function AddressRequiredModal({
                     label="City"
                     name="address.city"
                     options={cityOptions}
+                    isSearchable
                     disabled={!stateCode}
                     icon={<Building2 className="h-4 w-4" />}
                     placeholder={

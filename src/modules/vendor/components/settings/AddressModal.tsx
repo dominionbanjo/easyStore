@@ -87,6 +87,7 @@ export function AddressModal({
             name="address_country"
             label="Country"
             options={countryOptions}
+            isSearchable
             icon={<Globe className="w-4 h-4 text-primary" />}
             placeholder="Select Country"
           />
@@ -94,6 +95,7 @@ export function AddressModal({
             name="address_state"
             label="State"
             options={stateOptions}
+            isSearchable
             disabled={!countryCode}
             icon={<Navigation className="w-4 h-4 text-primary" />}
             placeholder={!countryCode ? "Select Country" : "Select State"}

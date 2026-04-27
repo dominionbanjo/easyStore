@@ -197,6 +197,7 @@ export function BankAccountModal({
                     label="Select Your Bank"
                     name="bank_code"
                     options={bankOptions}
+                    isSearchable
                     disabled={banksLoading}
                     icon={<Landmark className="h-4 w-4" />}
                     placeholder={
