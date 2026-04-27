@@ -206,9 +206,8 @@ export const MessagingProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     };
   }, [isAuthenticated, connect]);
 
-  // Handle auto-read when active tab changes
   useEffect(() => {
-    if (activeConversationId && socketRef.current) {
+    if (activeConversationId && activeConversationId !== "chatroom" && socketRef.current) {
         socketRef.current.emit("read_conversation", { conversation_id: activeConversationId });
         
         // Optimistically clear unread count in conversations list
@@ -236,7 +235,11 @@ export const MessagingProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     startTyping: (ctx: any) => socketRef.current?.emit("typing_start", ctx),
     stopTyping: (ctx: any) => socketRef.current?.emit("typing_stop", ctx),
     markDelivered: (id: string) => socketRef.current?.emit("mark_delivered", { message_id: id }),
-    readConversation: (id: string) => socketRef.current?.emit("read_conversation", { conversation_id: id }),
+    readConversation: (id: string) => {
+      if (id !== "chatroom") {
+        socketRef.current?.emit("read_conversation", { conversation_id: id });
+      }
+    },
     activeConversationId,
     setActiveConversationId
   }), [isConnected, onlineUsers, chatroomUserCount, typingUsers, activeConversationId]);
