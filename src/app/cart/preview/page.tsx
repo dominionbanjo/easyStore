@@ -182,7 +182,7 @@ export default function CheckoutPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#020617] pb-20 sm:pb-32 transition-colors duration-500 relative overflow-hidden">
+    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#020617] pb-32 sm:pb-40 transition-colors duration-500 relative overflow-hidden">
       {/* Background Decorative Elements */}
       <div className="absolute top-0 left-0 w-full h-[600px] bg-gradient-to-b from-primary/5 to-transparent pointer-events-none" />
       <div className="absolute -top-[10%] -right-[5%] w-[40%] h-[40%] bg-primary/5 blur-[120px] rounded-sm pointer-events-none" />

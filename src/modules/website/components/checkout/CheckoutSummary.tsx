@@ -251,7 +251,7 @@ export function CheckoutSummary({
         </div>
       </CardContent>
 
-      <CardFooter className="p-1 sm:p-8 pt-0 flex flex-col gap-5 sm:gap-6">
+      <CardFooter className="p-1 sm:p-8 pt-0 pb-28 md:pb-8 flex flex-col gap-5 sm:gap-6">
         {/* Missing Requirements Warnings */}
         {isBlocked && (
           <div className="w-full space-y-3">

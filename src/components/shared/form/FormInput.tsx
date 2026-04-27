@@ -14,6 +14,9 @@ interface FormFieldProps {
   inputClassName?: string; // Input className
   icon?: React.ReactNode;
   rules?: RegisterOptions;
+  disabled?: boolean;
+  readOnly?: boolean;
+  maxLength?: number;
 }
 
 export function FormInput({
@@ -25,6 +28,9 @@ export function FormInput({
   inputClassName,
   icon,
   rules,
+  disabled,
+  readOnly,
+  maxLength,
 }: FormFieldProps) {
   const {
     control,
@@ -99,6 +105,9 @@ export function FormInput({
           }}
           placeholder={placeholder}
           aria-invalid={shouldShowError}
+          disabled={disabled}
+          readOnly={readOnly}
+          maxLength={maxLength}
           min={type === "number" ? 0 : undefined}
           className={cn(
             "h-12 rounded-sm text-[15px] transition-all duration-200 bg-muted/20 border-muted-foreground/10 focus:bg-background",

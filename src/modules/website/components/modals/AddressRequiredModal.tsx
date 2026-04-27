@@ -198,7 +198,7 @@ export function AddressRequiredModal({
           </div>
 
           {/* Right Panel - Form */}
-          <div className="w-full md:w-2/3 p-6 sm:p-12 md:overflow-y-auto custom-scrollbar flex flex-col">
+          <div className="w-full md:w-2/3 p-6 sm:p-12 pb-24 md:pb-12 md:overflow-y-auto custom-scrollbar flex flex-col">
             <div className="flex justify-between items-start mb-10">
               <div>
                 <h3 className="text-2xl font-black uppercase tracking-tight text-foreground">

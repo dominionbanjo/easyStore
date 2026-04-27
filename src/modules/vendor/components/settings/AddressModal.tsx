@@ -2,6 +2,10 @@ import { Modal } from "@/components/shared/Modal";
 import { Button } from "@/components/ui/button";
 import { Building, Map, MapPin, Navigation, Globe, Hash } from "lucide-react";
 import { FormInput } from "@/components/shared/form/FormInput";
+import { FormSelect } from "@/components/shared/form/FormSelect";
+import { NigeriaData } from "@/utils/nigeria-data";
+import { useEffect, useState } from "react";
+import { useFormContext, useWatch } from "react-hook-form";
 
 interface AddressModalProps {
   open: boolean;
@@ -12,6 +16,26 @@ export function AddressModal({
   open,
   onOpenChange,
 }: AddressModalProps) {
+  const { control, setValue, formState: { dirtyFields } } = useFormContext();
+  const [countryOptions, setCountryOptions] = useState<{label: string, value: string}[]>([]);
+  const [stateOptions, setStateOptions] = useState<{label: string, value: string}[]>([]);
+
+  const countryCode = useWatch({ name: "address_country", control });
+
+  useEffect(() => {
+    setCountryOptions(NigeriaData.getCountries().map(c => ({ label: c.name, value: c.isoCode })));
+  }, []);
+
+  useEffect(() => {
+    if (countryCode) {
+      setStateOptions(NigeriaData.getStates().map(s => ({ label: s.name, value: s.isoCode })));
+      if (dirtyFields.address_country) {
+        setValue("address_state", "");
+        setValue("address_city", "");
+      }
+    }
+  }, [countryCode, setValue, dirtyFields.address_country]);
+
   return (
     <Modal 
       open={open} 
@@ -50,7 +74,7 @@ export function AddressModal({
       </div>
 
       {/* Form Body */}
-      <div className="p-6 sm:p-8 space-y-6">
+      <div className="p-6 sm:p-8 pb-24 sm:pb-8 space-y-6">
         <FormInput
           name="address_street"
           label="Street Address"
@@ -59,26 +83,29 @@ export function AddressModal({
         />
         
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-          <FormInput
-            name="address_city"
-            label="City"
-            placeholder="Lagos"
-            icon={<Map className="w-4 h-4 text-primary" />}
+          <FormSelect
+            name="address_country"
+            label="Country"
+            options={countryOptions}
+            icon={<Globe className="w-4 h-4 text-primary" />}
+            placeholder="Select Country"
           />
-          <FormInput
+          <FormSelect
             name="address_state"
             label="State"
-            placeholder="Lagos State"
+            options={stateOptions}
+            disabled={!countryCode}
             icon={<Navigation className="w-4 h-4 text-primary" />}
+            placeholder={!countryCode ? "Select Country" : "Select State"}
           />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <FormInput
-            name="address_country"
-            label="Country"
-            placeholder="Nigeria"
-            icon={<Globe className="w-4 h-4 text-primary" />}
+            name="address_city"
+            label="City"
+            placeholder="Lagos"
+            icon={<Map className="w-4 h-4 text-primary" />}
           />
           <FormInput
             name="address_postal_code"
