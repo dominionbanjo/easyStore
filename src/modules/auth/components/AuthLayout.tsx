@@ -24,7 +24,7 @@ export function AuthLayout({
       {/* GLOBAL BACKGROUND with IMAGE - Visible on Mobile, backbone of Left Side */}
       <div className="absolute inset-0 z-0">
         <img
-          src="/images/easyshop.jpg"
+          src="https://res.cloudinary.com/dcmg4skhv/image/upload/v1777329633/easyshop_ptjpvt.jpg"
           alt="Shopping Experience"
           className="w-full h-full object-cover"
         />
