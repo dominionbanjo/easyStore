@@ -36,6 +36,7 @@ export function Modal({
         showCloseButton={false}
         className={cn(
           "z-[200] sm:max-w-[425px] overflow-hidden p-0 gap-0 flex flex-col",
+          "max-h-[calc(100dvh-40px)] sm:max-h-[calc(100dvh-80px)]",
           // Mobile: Position above BottomNav with gaps
           "max-sm:fixed max-sm:bottom-[90px] max-sm:top-auto max-sm:left-[4vw] max-sm:translate-x-0 max-sm:translate-y-0 max-sm:w-[92vw] max-sm:max-h-[calc(100dvh-180px)] max-sm:rounded-sm",
           className
