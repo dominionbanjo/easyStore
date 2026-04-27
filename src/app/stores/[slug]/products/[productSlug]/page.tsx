@@ -21,6 +21,7 @@ import { CartDrawer } from "@/modules/website/components/cart/CartDrawer";
 import { useStartConversationMutation } from "@/services/messagingApi";
 import { toast } from "sonner";
 import { ACCOUNT_ROUTES } from "@/routes";
+import SEO from "@/components/shared/SEO";
 
 export default function StoreProductDetailsPage() {
   let { slug, productSlug } = useParams<{ slug: string; productSlug: string }>();
@@ -168,6 +169,15 @@ export default function StoreProductDetailsPage() {
 
   return (
     <>
+      <SEO 
+        title={`${productData.product.name} | ${store.store_name}`} 
+        description={productData.product.description?.substring(0, 160) ?? undefined}
+        image={
+          typeof productData.product.image === "string"
+            ? productData.product.image
+            : (productData.product.image?.url ?? undefined)
+        } 
+      />
       {previewTemplate && (
         <div className="fixed top-0 left-0 right-0 z-[100] text-zinc-100 py-2 px-4 flex items-center justify-between  border-b border-white/10 backdrop-blur-md bg-zinc-900/95 font-sans">
           <div className="flex items-center gap-3">

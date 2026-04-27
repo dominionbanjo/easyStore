@@ -4,9 +4,15 @@ import type { ProductExtras } from "./useProductExtras";
 type Props = Pick<
   ProductExtras,
   "image" | "gallery" | "setImage" | "setGallery"
->;
+> & { storeSlug?: string };
 
-export function ImageSection({ image, gallery, setImage, setGallery }: Props) {
+export function ImageSection({
+  image,
+  gallery,
+  setImage,
+  setGallery,
+  storeSlug,
+}: Props) {
   return (
     <ImageUploadSection
       image={image}
@@ -16,6 +22,7 @@ export function ImageSection({ image, gallery, setImage, setGallery }: Props) {
       onRemoveGallery={(i) =>
         setGallery((prev) => prev.filter((_, idx) => idx !== i))
       }
+      storeSlug={storeSlug}
     />
   );
 }

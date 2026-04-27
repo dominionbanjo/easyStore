@@ -10,6 +10,7 @@ import {
 import { useStartConversationMutation } from "@/services/messagingApi";
 import { ACCOUNT_ROUTES } from "@/routes/index";
 import { toast } from "sonner";
+import SEO from "@/components/shared/SEO";
 
 import { StoreSkeleton } from "@/modules/vendor/components/skeletons/StoreSkeleton";
 import { useStoreTheme } from "@/modules/vendor/components/StoreThemeProvider";
@@ -312,6 +313,11 @@ export default function StoreDetailsPage() {
 
   return (
     <div className="relative">
+      <SEO 
+        title={store?.store_name ?? undefined} 
+        description={store?.description ?? undefined}
+        image={store?.cover_image || store?.logo || undefined} 
+      />
       {previewTemplate && (
         <div className="fixed top-0 left-0 right-0 z-[100] text-zinc-100 py-2 px-4 flex items-center justify-between  border-b border-white/10 backdrop-blur-md bg-zinc-900/95 font-sans">
           <div className="flex items-center gap-3">

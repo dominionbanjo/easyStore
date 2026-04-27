@@ -160,6 +160,7 @@ export default function SettingsPage() {
         freshConfig as CloudinaryConfig,
         {
           onProgress: (p) => setBannerUploadProgress(p),
+          subfolder: store?.slug || "general",
         },
       );
 
@@ -232,7 +233,7 @@ export default function SettingsPage() {
       if (bannerPreview && bannerPublicId) {
         formData.append("cover_image", bannerPreview);
         formData.append("cover_image_public_id", bannerPublicId);
-      } else if (store.cover_image && !bannerPreview) {
+      } else if (store?.cover_image && !bannerPreview) {
         formData.append("cover_image", "");
         formData.append("cover_image_public_id", "");
       }

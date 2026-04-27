@@ -12,28 +12,31 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { MessagingProvider } from "./services/MessagingContext.tsx";
+import { HelmetProvider } from "react-helmet-async";
 
 import { BrowserRouter as Router } from "react-router-dom";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <ThemeProvider>
-          <Router>
-            <Toaster />
-            <TooltipProvider delayDuration={150}>
-              <AuthProvider>
-                <MessagingProvider>
-                  <App />
-                  <Analytics />
-                  <SpeedInsights />
-                </MessagingProvider>
-              </AuthProvider>
-            </TooltipProvider>
-          </Router>
-        </ThemeProvider>
-      </PersistGate>
-    </Provider>
+    <HelmetProvider>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <ThemeProvider>
+            <Router>
+              <Toaster />
+              <TooltipProvider delayDuration={150}>
+                <AuthProvider>
+                  <MessagingProvider>
+                    <App />
+                    <Analytics />
+                    <SpeedInsights />
+                  </MessagingProvider>
+                </AuthProvider>
+              </TooltipProvider>
+            </Router>
+          </ThemeProvider>
+        </PersistGate>
+      </Provider>
+    </HelmetProvider>
   </StrictMode>,
 );

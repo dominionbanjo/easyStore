@@ -4,7 +4,7 @@ import { Suspense, useEffect } from "react";
 import ScrollToTop from "@/utils/ScrollToTop";
 import { getSubdomain, getBaseDomain, areSubdomainsDisabled } from "@/utils/subdomain";
 import ChunkLoadBoundary from "@/components/shared/ChunkLoadBoundary";
-
+import SEO from "@/components/shared/SEO";
 // Lazy-loaded Components
 import * as Pages from "@/routes/lazyPages";
 import {
@@ -73,17 +73,25 @@ export default function App() {
       redirectTo(
         `${window.location.protocol}//admin.${baseHost}${newPath}${query}${hash}`,
       );
-    } else if (subdomain && subdomain !== "vendor" && subdomain !== "admin") {
+    } else if (subdomain) {
       // Clean up /stores/slug on individual store subdomains
-      if (path.startsWith(`/stores/${subdomain}`)) {
+      if (subdomain !== "vendor" && subdomain !== "admin" && path.startsWith(`/stores/${subdomain}`)) {
         const newPath = path.replace(`/stores/${subdomain}`, "") || "/";
         redirectTo(newPath + query + hash);
+        return;
+      }
+      
+      // Redirect legacy /dashboard to root on vendor/admin subdomains
+      if ((subdomain === "vendor" || subdomain === "admin") && (path === "/dashboard" || path === "/dashboard/")) {
+        redirectTo("/" + query + hash);
+        return;
       }
     }
   }, [subdomain, subdomainsDisabled]);
 
   return (
     <>
+      <SEO />
       <ScrollToTop />
 
       {/* ─── GLOBAL SUSPENSE ─── */}

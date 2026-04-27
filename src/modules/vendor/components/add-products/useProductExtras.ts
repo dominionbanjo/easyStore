@@ -2,7 +2,10 @@ import { useState } from "react";
 import type { UploadedImage } from "./ImageUploadSection";
 import type { SpecItem } from "./SpecificationsSection";
 
+import { useStoreSetup } from "@/modules/vendor/hooks/useStoreSetup";
+
 export function useProductExtras() {
+  const { store } = useStoreSetup();
   const [image, setImage] = useState<UploadedImage | null>(null);
   const [gallery, setGallery] = useState<UploadedImage[]>([]);
   const [specs, setSpecs] = useState<SpecItem[]>([]);
@@ -10,6 +13,7 @@ export function useProductExtras() {
   const [highlights, setHighlights] = useState<string[]>([]);
 
   return {
+    store,
     image,
     gallery,
     specs,

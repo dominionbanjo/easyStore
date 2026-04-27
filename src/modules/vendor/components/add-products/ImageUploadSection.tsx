@@ -34,6 +34,7 @@ interface ImageUploadSectionProps {
   onMainUploaded: (image: UploadedImage | null) => void;
   onGalleryUploaded: (images: UploadedImage[]) => void;
   onRemoveGallery: (index: number) => void;
+  storeSlug?: string;
 }
 
 export default function ImageUploadSection({
@@ -42,6 +43,7 @@ export default function ImageUploadSection({
   onMainUploaded,
   onGalleryUploaded,
   onRemoveGallery,
+  storeSlug,
 }: ImageUploadSectionProps) {
   const {
     data: signature,
@@ -77,6 +79,7 @@ export default function ImageUploadSection({
         fresh as CloudinaryConfig,
         {
           onProgress: (p) => setMainProgress(p),
+          subfolder: storeSlug,
         },
       );
       onMainUploaded(uploaded);
@@ -117,6 +120,7 @@ export default function ImageUploadSection({
                 ),
               );
             },
+            subfolder: storeSlug,
           });
         }),
       );

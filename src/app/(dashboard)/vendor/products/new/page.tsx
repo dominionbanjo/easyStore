@@ -333,7 +333,7 @@ export default function AddProductPage() {
                 </div>
               </CardHeader>
               <CardContent className="p-4 sm:p-8">
-                <ImageSection {...extras} />
+                <ImageSection {...extras} storeSlug={extras.store?.slug} />
               </CardContent>
             </Card>
           </motion.div>

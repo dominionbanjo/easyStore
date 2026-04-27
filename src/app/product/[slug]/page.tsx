@@ -12,6 +12,7 @@ import { formatLocation } from "@/utils/location";
 
 import { useGetSingleProductQuery } from "@/services/productApi";
 import { GoBackButton } from "@/components/shared/GoBackButton";
+import SEO from "@/components/shared/SEO";
 
 export default function ProductDetailsPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -123,6 +124,11 @@ function ProductDetailsInner({ id }: { id: string }) {
 
   return (
     <section className="w-full px-4 md:px-6 lg:px-8 pt-0 md:pt-8 pb-8 md:pb-12 space-y-6 md:space-y-16 bg-white dark:bg-neutral-950 transition-colors duration-300">
+      <SEO 
+        title={uiProduct.name ?? undefined} 
+        description={uiProduct.description?.substring(0, 160) ?? undefined}
+        image={uiProduct.image ?? undefined} 
+      />
       <GoBackButton className="mb-2" />
       {/* Gallery + Sidebar Container */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 xl:gap-24 items-start">
