@@ -28,11 +28,11 @@ import {
 
 import { AddressRequiredModal } from "@/modules/website/components/modals/AddressRequiredModal";
 import { BankAccountModal } from "@/modules/website/components/modals/BankAccountModal";
-import { DeliveryInfo } from "@/modules/website/components/checkout/DeliveryInfo";
+import { SelectAddressModal } from "@/modules/website/components/modals/SelectAddressModal";
 import { CheckoutSummary } from "@/modules/website/components/checkout/CheckoutSummary";
 import { motion } from "framer-motion";
 
-type RequiredModal = "address" | "bank" | null;
+type RequiredModal = "address" | "select-address" | "bank" | null;
 
 export default function CheckoutPage() {
   const navigate = useNavigate();
@@ -48,7 +48,12 @@ export default function CheckoutPage() {
   // APIs
   const [
     getSummary,
-    { data: summaryResponse, isLoading: isSummaryLoading, isError: isSummaryError, error: summaryError },
+    {
+      data: summaryResponse,
+      isLoading: isSummaryLoading,
+      isError: isSummaryError,
+      error: summaryError,
+    },
   ] = useGetCheckoutSummaryMutation();
   const [createOrder, { isLoading: isCreatingOrder }] =
     useCreateOnlineOrderDirectMutation();
@@ -58,6 +63,9 @@ export default function CheckoutPage() {
     {},
   );
   const [activeVendorId, setActiveVendorId] = useState<string | null>(null);
+  const [selectedAddressId, setSelectedAddressId] = useState<string | null>(
+    null,
+  );
 
   /* ───────── FETCH SUMMARY ───────── */
   useEffect(() => {
@@ -117,18 +125,16 @@ export default function CheckoutPage() {
   const handleModalClose = () => setRequiredModal(null);
 
   /* ───────── CALCULATIONS ───────── */
-  const hasAddress = Boolean(user?.address);
+  const hasAddress = Boolean(
+    user?.address || (user?.addresses && user?.addresses.length > 0),
+  );
   const isBankVerified = user?.payout_verified ?? false;
 
-  const fullName =
-    user?.first_name || user?.last_name
-      ? `${user?.first_name ?? ""} ${user?.last_name ?? ""}`.trim()
-      : "No name provided";
-  const phone = user?.phone_number ?? "No phone provided";
-  const street = user?.address?.street ?? "";
-  const state = user?.address?.state ?? "";
-  const postalCode = user?.address?.postal_code ?? "";
-  const city = user?.address?.city ?? "";
+  const currentActiveAddress =
+    user?.addresses?.find((a: any) => a.id === selectedAddressId) ||
+    user?.addresses?.find((a: any) => a.is_default) ||
+    user?.addresses?.[0] ||
+    user?.address;
 
   const isCheckoutDisabled = !hasAddress || !isBankVerified;
 
@@ -163,6 +169,7 @@ export default function CheckoutPage() {
         email: user.email,
         order_items: orderItems,
         delivery_rate_id: selectedRateId || undefined,
+        delivery_address_id: currentActiveAddress?.id,
       }).unwrap();
 
       const data = result.data || result;
@@ -189,55 +196,48 @@ export default function CheckoutPage() {
       <div className="absolute top-[20%] -left-[10%] w-[30%] h-[30%] bg-emerald-500/5 blur-[100px] rounded-sm pointer-events-none" />
 
       {/* ───────── MODALS ───────── */}
+      <SelectAddressModal
+        open={requiredModal === "select-address"}
+        onClose={handleModalClose}
+        selectedAddressId={selectedAddressId}
+        onSelect={(addr) => setSelectedAddressId(addr.id)}
+        onGoToCreate={() => setRequiredModal("address")}
+      />
+
       <AddressRequiredModal
         open={requiredModal === "address"}
         onClose={handleModalClose}
-        mode={user?.address ? "edit" : "create"}
+        mode="create"
       />
 
       <BankAccountModal
         open={requiredModal === "bank"}
         onClose={handleModalClose}
+        user={user}
       />
 
       {/* ───────── PAGE CONTENT ───────── */}
-      <div className="w-full mx-auto px-2 sm:px-6 py-8 sm:py-20 relative z-10">
+      <div className="w-full mx-auto px-2 sm:px-6 pt-4 pb-12 sm:py-20 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          className="space-y-10 sm:space-y-16"
+          className="space-y-6 sm:space-y-16"
         >
           {/* Header Section */}
-          <div className="flex px-3 flex-col md:flex-row md:items-end justify-between gap-6 sm:gap-8">
-            <div className="space-y-6">
-              <Button
-                variant="ghost"
-                onClick={() => navigate(-1)}
-                className="group rounded-sm h-10 px-5 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-md border border-border/40 hover:bg-white dark:hover:bg-zinc-800 transition-all font-black text-[10px] tracking-widest uppercase"
-              >
-                <ArrowLeft className="h-4 w-4 mr-2 transition-transform group-hover:-translate-x-1" />
-                Return to Shopping
-              </Button>
-              <div className="space-y-2">
-                <div className="flex items-center gap-3">
-                  <div className="h-1.5 w-10 bg-primary rounded-sm" />
-                  <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">
-                    Final Stage
-                  </p>
-                </div>
-                <h1 className="text-4xl sm:text-7xl font-black tracking-tighter text-foreground leading-[1] sm:leading-[0.9]">
-                  Checkout <br />
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/60">
-                    Succession
-                  </span>
-                </h1>
-              </div>
-            </div>
+          <div className="flex px-3 items-center justify-between gap-4 sm:gap-8">
+            <Button
+              variant="ghost"
+              onClick={() => navigate(-1)}
+              className="group rounded-sm h-10 px-4 sm:px-5 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-md border border-border/40 hover:bg-white dark:hover:bg-zinc-800 transition-all font-black text-[10px] tracking-widest uppercase"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2 transition-transform group-hover:-translate-x-1" />
+              Return <span className="hidden xs:inline">to Shopping</span>
+            </Button>
 
-            <div className="flex lg:flex items-center gap-6 sm:gap-8 pb-2">
-              <div className="text-left md:text-right">
-                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">
-                  Items In Cart
+            <div className="flex items-center gap-6 sm:gap-8">
+               <div className="text-right">
+                <p className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-0.5">
+                   In Cart
                 </p>
                 <p className="text-xl sm:text-2xl font-black text-foreground">
                   {cart.items.length}
@@ -246,88 +246,13 @@ export default function CheckoutPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-[1.8fr_1fr] gap-4 sm:gap-12 items-start">
-            {/* Left Column: Information */}
-            <div className="space-y-8 sm:space-y-10">
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.2 }}
-              >
-                <DeliveryInfo
-                  fullName={fullName}
-                  phone={phone}
-                  street={street}
-                  state={state}
-                  postalCode={postalCode}
-                  city={city}
-                  hasAddress={hasAddress}
-                  onEditAddress={() => setRequiredModal("address")}
-                />
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="p-6 sm:p-8 rounded-sm sm:rounded-sm bg-background border border-border/40  overflow-hidden relative group"
-              >
-                <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:scale-110 transition-transform duration-700">
-                  <ShieldCheck className="h-32 w-32 rotate-12" />
-                </div>
-                <div className="flex flex-col sm:flex-row gap-6 sm:gap-8 relative z-10">
-                  <div className="w-14 h-14 sm:w-16 sm:h-16 bg-primary/10 rounded-sm sm:rounded-sm flex items-center justify-center shrink-0 ">
-                    <ShieldCheck className="h-7 w-7 sm:h-8 sm:w-8 text-primary" />
-                  </div>
-                  <div className="space-y-3">
-                    <h3 className="text-lg sm:text-xl font-black uppercase tracking-tight text-foreground">
-                      Security First Checkout
-                    </h3>
-                    <p className="text-sm text-muted-foreground font-medium leading-relaxed max-w-xl">
-                      We prioritize your security. Currently, we utilize{" "}
-                      <span className="text-primary font-bold">Paystack's</span>{" "}
-                      industry-leading encrypted tunnel for all transactions.
-                      Direct escrow and crypto integrations are undergoing audit
-                      and will be active shortly.
-                    </p>
-                    <div className="flex items-center gap-2 pt-1">
-                      <div className="h-1.5 w-1.5 rounded-sm bg-emerald-500 animate-pulse" />
-                      <span className="text-[10px] font-black uppercase tracking-widest text-emerald-600">
-                        Encrypted Tunnel Active
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-
-              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-6 sm:gap-8 opacity-40 grayscale group-hover:grayscale-0 transition-all duration-700">
-                <div className="flex items-center gap-2">
-                  <Heart className="h-3.5 w-3.5" />
-                  <span className="text-[10px] font-black uppercase tracking-widest">
-                    Global Shipping
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Sparkles className="h-3.5 w-3.5" />
-                  <span className="text-[10px] font-black uppercase tracking-widest">
-                    Premium Quality
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Navigation className="h-3.5 w-3.5" />
-                  <span className="text-[10px] font-black uppercase tracking-widest">
-                    Real-time Tracking
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Right Column: Order Summary with Stepper/Accordion */}
+          <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-4 sm:gap-12 items-start max-w-6xl mx-auto">
+            {/* Left Column: Order Summary with Stepper/Accordion */}
             <motion.div
-              initial={{ opacity: 0, x: 20 }}
+              initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.4 }}
-              className="lg:sticky lg:top-12 mt-4 lg:mt-0"
+              className="lg:sticky lg:top-12 mt-4 lg:mt-0 order-1 lg:order-1"
             >
               {isSummaryLoading ? (
                 <div className="h-64 flex flex-col items-center justify-center border border-border/40 bg-muted/20 rounded-sm">
@@ -438,13 +363,21 @@ export default function CheckoutPage() {
                               disabled={!hasAddress || !isBankVerified}
                               missingAddress={!hasAddress}
                               missingBankVerification={!isBankVerified}
+                              currentAddress={currentActiveAddress}
                               deliveryOptions={vendor.delivery_options}
                               selectedDeliveryRateId={selectedRateId}
                               onSelectDeliveryRate={(rateId: string) =>
                                 handleRateSelection(vendor.vendor_id, rateId)
                               }
                               onCheckout={() => handleCheckoutVendor(vendor)}
-                              onAddAddress={() => setRequiredModal("address")}
+                              onAddAddress={() =>
+                                setRequiredModal(
+                                  hasAddress &&
+                                    (user?.addresses?.length ?? 0) > 0
+                                    ? "select-address"
+                                    : "address",
+                                )
+                              }
                               onVerifyBank={() => setRequiredModal("bank")}
                             />
                           </AccordionContent>
@@ -455,6 +388,64 @@ export default function CheckoutPage() {
                 </div>
               )}
             </motion.div>
+
+            {/* Right Column: Information */}
+            <div className="space-y-8 sm:space-y-10 order-2 lg:order-2">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="p-6 sm:p-8 rounded-sm sm:rounded-sm bg-background border border-border/40  overflow-hidden relative group"
+              >
+                <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:scale-110 transition-transform duration-700">
+                  <ShieldCheck className="h-32 w-32 rotate-12" />
+                </div>
+                <div className="flex flex-col sm:flex-row gap-6 sm:gap-8 relative z-10">
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 bg-primary/10 rounded-sm sm:rounded-sm flex items-center justify-center shrink-0 ">
+                    <ShieldCheck className="h-7 w-7 sm:h-8 sm:w-8 text-primary" />
+                  </div>
+                  <div className="space-y-3">
+                    <h3 className="text-lg sm:text-xl font-black uppercase tracking-tight text-foreground">
+                      Security First Checkout
+                    </h3>
+                    <p className="text-sm text-muted-foreground font-medium leading-relaxed max-w-xl">
+                      We prioritize your security. Currently, we utilize{" "}
+                      <span className="text-primary font-bold">Paystack's</span>{" "}
+                      industry-leading encrypted tunnel for all transactions.
+                      Direct escrow and crypto integrations are undergoing audit
+                      and will be active shortly.
+                    </p>
+                    <div className="flex items-center gap-2 pt-1">
+                      <div className="h-1.5 w-1.5 rounded-sm bg-emerald-500 animate-pulse" />
+                      <span className="text-[10px] font-black uppercase tracking-widest text-emerald-600">
+                        Encrypted Tunnel Active
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-6 sm:gap-8 opacity-40 grayscale group-hover:grayscale-0 transition-all duration-700">
+                <div className="flex items-center gap-2">
+                  <Heart className="h-3.5 w-3.5" />
+                  <span className="text-[10px] font-black uppercase tracking-widest">
+                    Global Shipping
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Sparkles className="h-3.5 w-3.5" />
+                  <span className="text-[10px] font-black uppercase tracking-widest">
+                    Premium Quality
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Navigation className="h-3.5 w-3.5" />
+                  <span className="text-[10px] font-black uppercase tracking-widest">
+                    Real-time Tracking
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
         </motion.div>
       </div>

@@ -13,13 +13,16 @@ import {
   ShieldCheck,
   Tag,
   ShoppingBag,
+  MapPin,
+  Edit3,
+  Truck,
 } from "lucide-react";
 import type { ICartItem } from "@/types/cart/cartTypes";
 import * as React from "react";
 import { motion } from "framer-motion";
 import { FormProvider, useForm } from "react-hook-form";
 import { FormSelect } from "@/components/shared/form/FormSelect";
-import { Truck } from "lucide-react";
+
 
 interface CheckoutSummaryProps {
   storeName?: string;
@@ -39,6 +42,11 @@ interface CheckoutSummaryProps {
     fee: number;
     duration: string | null;
   }[];
+  currentAddress?: {
+    street?: string | null;
+    city?: string | null;
+    state?: string | null;
+  };
   selectedDeliveryRateId?: string;
   onSelectDeliveryRate?: (rateId: string) => void;
   onCheckout: () => void;
@@ -59,6 +67,7 @@ export function CheckoutSummary({
   missingBankVerification,
   deliveryOptions,
   selectedDeliveryRateId,
+  currentAddress,
   onSelectDeliveryRate,
   onCheckout,
   onAddAddress,
@@ -66,7 +75,7 @@ export function CheckoutSummary({
 }: CheckoutSummaryProps) {
   const isBlocked = missingAddress || missingBankVerification || (!selectedDeliveryRateId && deliveryOptions && deliveryOptions.length > 0);
 
-  const methods = useForm({
+  const methods = useForm<{ delivery_rate_id: string }>({
     defaultValues: {
       delivery_rate_id: selectedDeliveryRateId || "",
     },
@@ -177,6 +186,36 @@ export function CheckoutSummary({
           </div>
 
           <div className="space-y-3 sm:space-y-4 pt-4 border-t border-border/40">
+            {/* Selected Address Display */}
+            {!missingAddress && currentAddress && (
+              <div className="flex items-start justify-between p-3 rounded-sm border border-border/40 bg-muted/20 gap-4">
+                <div className="flex gap-3 min-w-0">
+                  <div className="mt-1 text-primary shrink-0">
+                    <MapPin className="h-4 w-4" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">
+                      Delivery Location
+                    </p>
+                    <p className="text-sm font-semibold truncate leading-tight">
+                      {currentAddress.street}
+                    </p>
+                    <p className="text-[10px] text-muted-foreground mt-1 font-medium">
+                      {currentAddress.city}, {currentAddress.state}
+                    </p>
+                  </div>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 rounded-sm text-muted-foreground hover:text-primary shrink-0"
+                  onClick={onAddAddress}
+                >
+                  <Edit3 className="h-4 w-4" />
+                </Button>
+              </div>
+            )}
+
             <div className="flex justify-between items-center text-xs sm:text-sm font-medium">
               <span className="text-muted-foreground">
                 Original Basket Value

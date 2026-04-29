@@ -82,7 +82,7 @@ export function OrderPaymentSummary({ order }: OrderPaymentSummaryProps) {
 
           {order.platform_fee != null && Number(order.platform_fee) > 0 && (
             <div className="flex justify-between text-muted-foreground text-[10px] font-black uppercase tracking-widest">
-              <span>Fee (2%)</span>
+              <span>Fee (1%)</span>
               <span className="text-foreground font-black font-outfit">
                 ₦{(Number(order.platform_fee) / 100).toLocaleString()}
               </span>

@@ -17,6 +17,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import type { IUser } from "@/types/auth/authTypes";
 
 import { Button } from "@/components/ui/button";
 import { FormInput } from "@/components/shared/form/FormInput";
@@ -37,9 +38,11 @@ type BankFormValues = {
 export function BankAccountModal({
   open,
   onClose,
+  user,
 }: {
   open: boolean;
   onClose: () => void;
+  user?: IUser;
 }) {
   const [registerBank, { isLoading }] = useRegisterBankAccountMutation();
   const [verifyBank] = useVerifyBankAccountMutation();
@@ -59,13 +62,29 @@ export function BankAccountModal({
 
   const form = useForm<BankFormValues>({
     defaultValues: {
-      bank_code: "",
-      account_number: "",
+      bank_code: user?.bank_code ?? "",
+      account_number: user?.account_number ?? "",
       settlement_email: "",
     },
   });
 
-  const { handleSubmit, control } = form;
+  const { handleSubmit, control, reset } = form;
+
+  useEffect(() => {
+    if (open && user) {
+      reset({
+        bank_code: user.bank_code ?? "",
+        account_number: user.account_number ?? "",
+        settlement_email: "",
+      });
+      if (user.payout_verified && user.account_number) {
+        setVerifiedData({
+          account_name: "Verified Existing Account",
+          bank_name: "", // We don't have the bank name easily available without searching bankOptions
+        });
+      }
+    }
+  }, [open, user, reset]);
 
   const bankCode = useWatch({ name: "bank_code", control });
   const accountNumber = useWatch({ name: "account_number", control });
@@ -87,6 +106,12 @@ export function BankAccountModal({
       setVerifiedData(null);
       setVerifyError(null);
       return;
+    }
+
+    // Skip if already matched with verified user info
+    if (user?.payout_verified && user?.bank_code === bankCode && user?.account_number === accountNumber) {
+       setVerifiedData({ account_name: "Verified Existing Account", bank_name: "" });
+       return;
     }
 
     const timeout = setTimeout(async () => {

@@ -38,8 +38,10 @@ const transitionVariants: Variants = {
 export function HeroTitle() {
   return (
     <>
-      Launch your store, own your link, and get paid securely{" "}
-      <span className="relative inline-block mt-2">
+      <span className="block lg:inline">Launch your store,</span>{" "}
+      <span className="block lg:inline">own your link, and</span>
+      <span className="block">get paid securely</span>
+      <span className="relative inline-block">
         <span className="relative z-10 text-primary">
           all in minutes.
           <svg
@@ -95,7 +97,7 @@ export default function HeroSection() {
 
   return (
     <>
-      <section className="relative isolate pt-12 sm:pt-24 pb-20 sm:pb-32 overflow-hidden">
+      <section className="relative isolate pt-12 sm:pt-24 lg:pt-20 pb-20 sm:pb-32 lg:pb-40 overflow-hidden">
         {/* IMMERSIVE BACKGROUND (Full Coverage with Refined Blur) */}
         <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden blur-[4px] scale-105">
           <img
@@ -117,8 +119,8 @@ export default function HeroSection() {
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-neutral-950" />
         </div>
 
-        <div className="relative z-10 w-full mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col items-center justify-center gap-12 sm:gap-20">
+        <div className="relative z-10 w-full mx-auto px-3 sm:px-6 lg:px-8">
+          <div className="flex flex-col items-center justify-center gap-12 sm:gap-20 lg:gap-12">
             {/* CONTENT SECTION (Full Width) */}
             <div className="w-full text-center space-y-6">
               <div className="space-y-4">
@@ -126,7 +128,7 @@ export default function HeroSection() {
                   variants={transitionVariants}
                   initial="hidden"
                   animate="visible"
-                  className="text-[44px] sm:text-7xl md:text-8xl lg:text-[100px] font-black tracking-tighter leading-[0.85] text-white max-w-5xl mx-auto drop-shadow-[0_4px_40px_rgba(0,0,0,0.8)]"
+                  className="text-[44px] sm:text-7xl md:text-8xl lg:text-[82px] font-black tracking-tighter leading-[1.05] text-white max-w-screen-2xl mx-auto drop-shadow-[0_4px_40px_rgba(0,0,0,0.8)]"
                 >
                   <HeroTitle />
                 </motion.h1>
@@ -136,7 +138,7 @@ export default function HeroSection() {
                   initial="hidden"
                   animate="visible"
                   transition={{ delay: 0.1 }}
-                  className="w-full text-lg sm:text-xl lg:text-2xl leading-relaxed text-neutral-100 font-bold max-w-4xl mx-auto text-center drop-shadow-[0_4px_40px_rgba(0,0,0,0.8)]"
+                  className="w-full text-lg sm:text-xl lg:text-2xl leading-relaxed text-neutral-100 font-bold max-w-5xl mx-auto text-center drop-shadow-[0_4px_40px_rgba(0,0,0,0.8)]"
                 >
                   Give your business the professional edge it deserves. Build
                   trust, own your brand, and sell with confidence.
@@ -146,8 +148,8 @@ export default function HeroSection() {
           </div>
         </div>
 
-        <div className="relative z-10 w-full mx-auto px-4 sm:px-6 lg:px-8 mt-4 sm:mt-4">
-          <div className="flex flex-col items-center justify-center gap-8 sm:gap-12 w-full">
+        <div className="relative z-10 w-full mx-auto px-3 sm:px-6 lg:px-8 mt-4 sm:mt-4">
+          <div className="flex flex-col items-center justify-center gap-8 sm:gap-12 lg:gap-6 w-full">
             {/* CTAs */}
             <motion.div
               variants={transitionVariants}
@@ -187,8 +189,8 @@ export default function HeroSection() {
               transition={{ delay: 0.15 }}
               className="flex justify-center w-full px-4"
             >
-              <div className="bg-neutral-900/90 backdrop-blur-2xl border border-white/20 p-6 rounded-sm shadow-[0_30px_60px_rgba(0,0,0,0.6)] space-y-5 w-full max-w-[320px]">
-                <div className="flex items-center gap-4">
+              <div className="bg-neutral-900/90 backdrop-blur-2xl border border-white/20 p-6 rounded-sm shadow-[0_30px_60px_rgba(0,0,0,0.6)] space-y-5 md:space-y-0 md:flex md:items-center md:gap-8 w-full max-w-[320px] md:max-w-fit transition-all duration-500">
+                <div className="flex items-center gap-4 shrink-0">
                   <div className="w-11 h-11 rounded-sm bg-primary/20 flex items-center justify-center text-primary">
                     <Shop variant="Bold" color="currentColor" size={26} />
                   </div>
@@ -196,13 +198,13 @@ export default function HeroSection() {
                     <span className="text-[10px] font-black uppercase tracking-widest text-neutral-400">
                       Custom Domain
                     </span>
-                    <span className="text-base font-bold text-white">
+                    <span className="text-base font-bold text-white whitespace-nowrap">
                       Your Brand, Your Link.
                     </span>
                   </div>
                 </div>
 
-                <div className="bg-white/5 rounded-sm p-4 border border-white/10">
+                <div className="bg-white/5 rounded-sm p-4 border border-white/10 w-full md:w-[280px]">
                   <div className="flex items-center gap-2 mb-3">
                     <div className="flex gap-1.5">
                       <div className="w-2 h-2 rounded-full bg-red-400/60" />
@@ -211,7 +213,7 @@ export default function HeroSection() {
                     </div>
                     <div className="h-1 flex-1 bg-white/5 rounded-full" />
                   </div>
-                  <div className="text-xs font-black tracking-tight flex items-center gap-1.5">
+                  <div className="text-xs font-black tracking-tight flex items-center gap-1.5 whitespace-nowrap">
                     <span className="text-neutral-400">https://</span>
                     <span className="text-emerald-400 italic font-black">
                       gameshop

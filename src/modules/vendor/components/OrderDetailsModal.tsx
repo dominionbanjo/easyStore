@@ -476,24 +476,48 @@ export function OrderDetailsModal({
                     Shipping Address
                   </h4>
                 </div>
-                {order.delivery.address ? (
+                {order.delivery_address || (order.delivery && order.delivery.address) ? (
                   <div className="ml-4 space-y-1">
-                    <p className="text-sm font-semibold text-foreground leading-relaxed">
-                      {order.delivery.address}
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      {[
-                        order.delivery.city,
-                        order.delivery.state,
-                        order.delivery.postal_code,
-                      ]
-                        .filter(Boolean)
-                        .join(", ")}
-                    </p>
-                    {order.delivery.country && (
-                      <p className="text-sm text-muted-foreground/80 font-medium">
-                        {order.delivery.country}
-                      </p>
+                    {order.delivery_address ? (
+                      <>
+                        <p className="text-sm font-semibold text-foreground leading-relaxed">
+                          {order.delivery_address.street}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          {[
+                            order.delivery_address.city,
+                            order.delivery_address.state,
+                            order.delivery_address.postal_code,
+                          ]
+                            .filter(Boolean)
+                            .join(", ")}
+                        </p>
+                        <p className="text-sm text-muted-foreground/80 font-medium">
+                          {order.delivery_address.country === "NG"
+                            ? "Nigeria"
+                            : order.delivery_address.country}
+                        </p>
+                      </>
+                    ) : (
+                      <>
+                        <p className="text-sm font-semibold text-foreground leading-relaxed">
+                          {order.delivery?.address}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          {[
+                            order.delivery?.city,
+                            order.delivery?.state,
+                            order.delivery?.postal_code,
+                          ]
+                            .filter(Boolean)
+                            .join(", ")}
+                        </p>
+                        {order.delivery?.country && (
+                          <p className="text-sm text-muted-foreground/80 font-medium">
+                            {order.delivery.country}
+                          </p>
+                        )}
+                      </>
                     )}
                   </div>
                 ) : (

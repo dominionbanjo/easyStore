@@ -53,8 +53,18 @@ export interface IOrder {
   delivery_id?: string | null;
 
   notes?: string | null;
+  delivery_address_id?: string | null;
 
   // Relations
+  delivery_address?: {
+    id: string;
+    street: string;
+    city: string;
+    state: string;
+    country: string;
+    postal_code: string | null;
+  } | null;
+
   delivery?: {
     id: string;
     delivery_status:
@@ -121,12 +131,14 @@ export interface CreateOfflineOrderArgs {
   order_items: IOrderItem[];
   tax?: number;
   notes?: string;
+  delivery_address_id?: string;
 }
 
 export interface CreateOnlineOrderArgs {
   email: string;
   order_items: CreateOrderItemDto[];
   delivery_rate_id?: string;
+  delivery_address_id?: string;
 }
 
 export interface RecordVendorOfflineSaleArgs {

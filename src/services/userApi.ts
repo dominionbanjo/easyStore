@@ -119,6 +119,32 @@ export const userApi = apiManager.injectEndpoints({
         method: "GET",
       }),
     }),
+
+    addUserAddress: builder.mutation<any, any>({
+      query: (body) => ({
+        url: "users/me/addresses",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["User"],
+    }),
+
+    updateUserAddress: builder.mutation<any, { id: string; body: any }>({
+      query: ({ id, body }) => ({
+        url: `users/me/addresses/${id}`,
+        method: "PATCH",
+        body,
+      }),
+      invalidatesTags: ["User"],
+    }),
+
+    deleteUserAddress: builder.mutation<any, string>({
+      query: (id) => ({
+        url: `users/me/addresses/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["User"],
+    }),
   }),
 });
 
@@ -132,4 +158,7 @@ export const {
   useRegisterBankAccountMutation,
   useVerifyBankAccountMutation,
   useGetNigerianBanksQuery,
+  useAddUserAddressMutation,
+  useUpdateUserAddressMutation,
+  useDeleteUserAddressMutation,
 } = userApi;

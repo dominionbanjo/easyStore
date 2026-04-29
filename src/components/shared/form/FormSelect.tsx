@@ -33,6 +33,7 @@ interface FormSelectProps {
   onValueChange?: (value: string) => void;
   onSearchChange?: (value: string) => void;
   isSearchable?: boolean;
+  isLoading?: boolean;
 }
 
 export function FormSelect({

@@ -7,13 +7,14 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import NavigationProgressBar from "@/components/shared/NavigationProgressBar";
-import { useAppDispatch, useAppSelector } from "@/hooks";
-import { selectCurrentUser, clearUser } from "@/features/userSlice";
+import { useAppSelector } from "@/hooks";
+import { selectCurrentUser } from "@/features/userSlice";
 import { useNavigate } from "react-router-dom";
 import { getAppPath } from "@/utils/subdomain";
 import { ConfirmActionDialog } from "./shared/ConfirmActionDialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
+import { useLogoutMutation } from "@/services/authApi";
 
 interface SuperAdminHeaderProps {
   onMenuToggle: () => void;
@@ -25,9 +26,9 @@ export default function SuperAdminHeader({
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const user = useAppSelector(selectCurrentUser);
+  const [logout, { isLoading: isLoggingOut }] = useLogoutMutation();
 
   useEffect(() => {
     const saved =
@@ -43,10 +44,14 @@ export default function SuperAdminHeader({
     document.documentElement.classList.toggle("dark", newTheme === "dark");
   };
 
-  const handleLogout = () => {
-    dispatch(clearUser());
-    localStorage.removeItem("token");
-    navigate("/auth/login");
+  const handleLogout = async () => {
+    try {
+      await logout().unwrap();
+    } catch {
+      // fallback in case of error, though RTK query handles cleanup
+    } finally {
+      navigate("/auth/login");
+    }
   };
 
   // Get initials for avatar fallback
@@ -177,6 +182,7 @@ export default function SuperAdminHeader({
         description="Are you sure you want to log out of the Super Admin dashboard?"
         onClose={() => setShowLogoutModal(false)}
         onConfirm={handleLogout}
+        isLoading={isLoggingOut}
         confirmLabel="Logout"
         confirmVariant="destructive"
       />

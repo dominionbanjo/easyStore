@@ -42,6 +42,11 @@ export interface IUser {
     postal_code: string;
   } | null;
 
+  addresses?: any[];
+  bank_code?: string;
+  account_number?: string;
+  bank_name?: string;
+
   created_at: string;
   updated_at: string | null;
 }

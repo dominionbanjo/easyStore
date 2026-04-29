@@ -27,6 +27,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { NigeriaData } from "@/utils/nigeria-data";
+import { AddressRequiredModal } from "@/modules/website/components/modals/AddressRequiredModal";
 
 /* ───────────────── COMPONENT ───────────────── */
 
@@ -34,6 +35,7 @@ export default function UserProfilePage() {
   const { data, isLoading, isError } = useGetUserProfileQuery();
   const [editOpen, setEditOpen] = useState(false);
   const [logoutOpen, setLogoutOpen] = useState(false);
+  const [addressModalOpen, setAddressModalOpen] = useState(false);
   const [logoutUser, { isLoading: isLoggingOut }] = useLogoutMutation();
 
   const [countryName, setCountryName] = useState("—");
@@ -275,34 +277,59 @@ export default function UserProfilePage() {
 
             <motion.div variants={itemVariants}>
               <Card className="rounded-sm border-none  overflow-hidden">
-                <div className="p-6 border-b bg-muted/30">
+                <div className="p-6 border-b bg-muted/30 flex items-center justify-between">
                   <h3 className="text-lg font-bold flex items-center gap-2">
                     <MapPin className="h-5 w-5 text-primary" />
-                    Office Address
+                    Saved Locations
                   </h3>
+                  <Button variant="ghost" size="sm" onClick={() => setAddressModalOpen(true)} className="text-primary hover:text-primary">
+                    + Add New
+                  </Button>
                 </div>
                 <CardContent className="p-6">
-                  {user.address ? (
-                    <div className="flex items-start gap-4 text-left">
-                      <div className="p-3 rounded-sm bg-primary/10 text-primary shrink-0">
-                        <MapPin className="h-6 w-6" />
+                  {user.addresses && user.addresses.length > 0 ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {user.addresses.map((addr: any, i: number) => (
+                        <div key={addr.id || i} className="flex items-start gap-4 text-left p-4 rounded-sm border border-border/40 bg-card">
+                          <div className="p-2 rounded-sm bg-primary/10 text-primary shrink-0 mt-0.5">
+                            <MapPin className="h-4 w-4" />
+                          </div>
+                          <div className="space-y-1">
+                            <p className="font-semibold leading-tight flex items-center gap-2">
+                              {addr.street}
+                              {addr.is_default && <Badge variant="secondary" className="text-[9px] px-1.5 h-4 bg-emerald-500/10 text-emerald-600">Default</Badge>}
+                            </p>
+                            <p className="text-muted-foreground text-sm">
+                              {addr.city}, {addr.state} {addr.postal_code}
+                            </p>
+                            <p className="text-muted-foreground font-medium uppercase text-[10px] tracking-widest mt-1">
+                              {addr.country === "NG" ? "Nigeria" : addr.country}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : user.address ? (
+                    <div className="flex items-start gap-4 text-left p-4 rounded-sm border border-border/40 bg-card">
+                      <div className="p-2 rounded-sm bg-primary/10 text-primary shrink-0">
+                        <MapPin className="h-4 w-4" />
                       </div>
                       <div className="space-y-1">
-                        <p className="text-lg font-medium leading-tight">
+                        <p className="font-semibold leading-tight">
                           {user.address.street}
+                          <Badge variant="secondary" className="ml-2 text-[9px] px-1.5 h-4">Default</Badge>
                         </p>
-                        <p className="text-muted-foreground">
-                          {user.address.city}, {stateName}{" "}
-                          {user.address.postal_code}
+                        <p className="text-muted-foreground text-sm">
+                          {user.address.city}, {stateName} {user.address.postal_code}
                         </p>
-                        <p className="text-muted-foreground font-medium uppercase text-xs tracking-widest mt-2">
+                        <p className="text-muted-foreground font-medium uppercase text-[10px] tracking-widest mt-1">
                           {countryName}
                         </p>
                       </div>
                     </div>
                   ) : (
                     <p className="text-muted-foreground italic text-left">
-                      No address provided yet.
+                      No saved locations found. Add one for rapid checkout.
                     </p>
                   )}
                 </CardContent>
@@ -310,36 +337,38 @@ export default function UserProfilePage() {
             </motion.div>
 
             {/* PERFORMANCE SECTION */}
-            <motion.div variants={itemVariants}>
-              <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-sm p-6 text-white  relative overflow-hidden group">
-                <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-110 transition-transform duration-500">
-                  <Star size={120} />
-                </div>
+            {user.account_type === "vendor" && (
+              <motion.div variants={itemVariants}>
+                <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-sm p-6 text-white  relative overflow-hidden group">
+                  <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-110 transition-transform duration-500">
+                    <Star size={120} />
+                  </div>
 
-                <h3 className="text-xl font-bold mb-8 flex items-center gap-3">
-                  <ShieldCheck className="text-primary h-6 w-6" />
-                  Performance Metrics
-                </h3>
+                  <h3 className="text-xl font-bold mb-8 flex items-center gap-3">
+                    <ShieldCheck className="text-primary h-6 w-6" />
+                    Performance Metrics
+                  </h3>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 relative z-10">
-                  <StatCard
-                    label="Average Rating"
-                    value={String(user.rating_average || "0.0")}
-                    subtext="From client reviews"
-                  />
-                  <StatCard
-                    label="Total Reviews"
-                    value={String(user.review_count || "0")}
-                    subtext="Across all products"
-                  />
-                  <StatCard
-                    label="Total Sales"
-                    value="—"
-                    subtext="In the last 30 days"
-                  />
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 relative z-10">
+                    <StatCard
+                      label="Average Rating"
+                      value={String(user.rating_average || "0.0")}
+                      subtext="From client reviews"
+                    />
+                    <StatCard
+                      label="Total Reviews"
+                      value={String(user.review_count || "0")}
+                      subtext="Across all products"
+                    />
+                    <StatCard
+                      label="Total Sales"
+                      value="—"
+                      subtext="In the last 30 days"
+                    />
+                  </div>
                 </div>
-              </div>
-            </motion.div>
+              </motion.div>
+            )}
           </div>
         </motion.div>
       </div>
@@ -355,6 +384,12 @@ export default function UserProfilePage() {
         onClose={() => setLogoutOpen(false)}
         onConfirm={handleLogout}
         isLoading={isLoggingOut}
+      />
+
+      <AddressRequiredModal
+        open={addressModalOpen}
+        onClose={() => setAddressModalOpen(false)}
+        mode="create"
       />
     </main>
   );

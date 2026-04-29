@@ -16,6 +16,16 @@ export const EditProfileSchema = z.object({
     })
     .optional(),
 
+  // Bank Info
+  bank_code: z.string().optional().or(z.literal("")),
+  account_number: z
+    .string()
+    .optional()
+    .or(z.literal(""))
+    .refine((val) => !val || val.length === 10, {
+      message: "Account number must be 10 digits",
+    }),
+
   avatar: z.any().optional(), // handled via FormData
 });
 
