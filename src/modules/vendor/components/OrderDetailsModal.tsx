@@ -26,9 +26,16 @@ import {
   Loader2,
   Copy,
   Check,
+  MessageSquare,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import type { IOrder } from "@/services/ordersApi";
 import { useUpdateDeliveryStatusMutation } from "@/services/ordersApi";
+import { useConfirmDeliveryMutation } from "@/services/deliveryApi";
+import { useStartConversationMutation } from "@/services/messagingApi";
+import { useNavigate } from "react-router-dom";
+import { areSubdomainsDisabled } from "@/utils/subdomain";
 import { toast } from "sonner";
 
 interface OrderDetailsModalProps {
@@ -42,6 +49,7 @@ const deliveryStatuses = [
   { value: "assigned", label: "Assigned", icon: User, rank: 1 },
   { value: "in_transit", label: "In Transit", icon: Truck, rank: 2 },
   { value: "delivered", label: "Delivered", icon: Package, rank: 3 },
+  { value: "confirmed", label: "Confirmed", icon: CheckCircle2, rank: 4 },
   { value: "failed", label: "Failed", icon: XCircle, rank: 3 },
   { value: "returned", label: "Returned", icon: XCircle, rank: 3 },
 ] as const;
@@ -79,17 +87,25 @@ export function OrderDetailsModal({
   open,
   onOpenChange,
 }: OrderDetailsModalProps) {
+  const navigate = useNavigate();
   const [updateDeliveryStatus, { isLoading: isUpdating }] =
     useUpdateDeliveryStatusMutation();
+  const [confirmDelivery, { isLoading: isConfirming }] =
+    useConfirmDeliveryMutation();
+  const [startConversation, { isLoading: isStartingConversation }] =
+    useStartConversationMutation();
   const [optimisticStatus, setOptimisticStatus] = useState<string | null>(null);
   const [updatingStatus, setUpdatingStatus] = useState<string | null>(null);
   const [isCopied, setIsCopied] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [showCode, setShowCode] = useState(false);
 
   // Reset optimistic status when order changes
   useEffect(() => {
     setOptimisticStatus(null);
     setUpdatingStatus(null);
     setIsCopied(false);
+    setShowCode(false);
   }, [order?.id]);
 
   if (!order) return null;
@@ -102,6 +118,27 @@ export function OrderDetailsModal({
     toast.success("Reference copied to clipboard");
     setIsCopied(true);
     setTimeout(() => setIsCopied(false), 2000);
+  };
+
+  const handleMessageBuyer = async () => {
+    if (!order?.buyer?.id) {
+      toast.error("Buyer information not available");
+      return;
+    }
+
+    try {
+      const result = await startConversation({
+        recipient_id: order.buyer.id,
+      }).unwrap();
+      
+      const convId = result.data.id;
+      const basePath = areSubdomainsDisabled() ? "/vendor/messages" : "/messages";
+      
+      onOpenChange(false);
+      navigate(`${basePath}/${convId}`);
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Failed to start conversation");
+    }
   };
 
   const handleStatusUpdate = async (newStatus: string) => {
@@ -130,9 +167,27 @@ export function OrderDetailsModal({
       setUpdatingStatus(null);
     }
   };
+  const handleConfirmDelivery = async () => {
+    if (!otp || otp.length < 6) {
+      toast.error("Please enter a valid 6-digit confirmation code");
+      return;
+    }
+
+    try {
+      await confirmDelivery({
+        order_id: order.id,
+        code: otp,
+      }).unwrap();
+
+      toast.success("Delivery confirmed and escrow funds released!");
+      setOtp("");
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Invalid confirmation code");
+    }
+  };
 
   const currentDeliveryStatus =
-    optimisticStatus || order.delivery?.delivery_status || "pending";
+    order.confirmed ? "confirmed" : (optimisticStatus || order.delivery?.delivery_status || "pending");
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -202,11 +257,11 @@ export function OrderDetailsModal({
                   <Badge
                     variant="outline"
                     className={cn(
-                      getStatusColor(order.status),
+                      getStatusColor(order.confirmed ? "delivered" : order.status),
                       "px-2 py-0 h-6 border",
                     )}
                   >
-                    {order.status}
+                    {order.confirmed ? "confirmed" : order.status}
                   </Badge>
                 </div>
               </div>
@@ -293,6 +348,21 @@ export function OrderDetailsModal({
                       </a>
                     </div>
                   )}
+
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="w-full mt-2 gap-2 h-9 border-primary/20 hover:bg-primary/5 text-primary font-bold uppercase tracking-widest text-[10px] rounded-sm"
+                    onClick={handleMessageBuyer}
+                    disabled={isStartingConversation}
+                  >
+                    {isStartingConversation ? (
+                      <Loader2 className="h-3 w-3 animate-spin" />
+                    ) : (
+                      <MessageSquare className="h-3 w-3" />
+                    )}
+                    Message Buyer
+                  </Button>
                 </div>
               </div>
             </div>
@@ -363,12 +433,18 @@ export function OrderDetailsModal({
 
                   {/* Price */}
                   <div className="w-full sm:w-auto sm:text-right ml-auto">
-                    <p className="font-semibold text-base sm:text-lg">
-                      ₦{(Number(item.price) / 100).toLocaleString()}
-                    </p>
-                    {item.discount_price && (
-                      <p className="text-xs text-muted-foreground line-through">
-                        ₦{(Number(item.discount_price) / 100).toLocaleString()}
+                    {item.discount_price ? (
+                      <>
+                        <p className="font-semibold text-base sm:text-lg">
+                          ₦{(Number(item.discount_price) / 100).toLocaleString()}
+                        </p>
+                        <p className="text-xs text-muted-foreground line-through">
+                          ₦{(Number(item.price) / 100).toLocaleString()}
+                        </p>
+                      </>
+                    ) : (
+                      <p className="font-semibold text-base sm:text-lg">
+                        ₦{(Number(item.price) / 100).toLocaleString()}
                       </p>
                     )}
                   </div>
@@ -393,18 +469,7 @@ export function OrderDetailsModal({
                   ₦{(Number(order.shipping_fee) / 100).toLocaleString()}
                 </span>
               </div>
-              {order.platform_fee != null && order.platform_fee > 0 && (
-                <div className="flex justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="text-muted-foreground">
-                      Service Charge
-                    </span>
-                  </div>
-                  <span>
-                    ₦{(Number(order.platform_fee) / 100).toLocaleString()}
-                  </span>
-                </div>
-              )}
+
               {order.tax && (
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Tax</span>
@@ -414,7 +479,9 @@ export function OrderDetailsModal({
               <Separator />
               <div className="flex justify-between text-lg font-bold">
                 <span>Total</span>
-                <span>₦{(Number(order.total) / 100).toLocaleString()}</span>
+                <span>
+                  ₦{(Number(order.total) / 100).toLocaleString()}
+                </span>
               </div>
             </div>
           </div>
@@ -532,65 +599,154 @@ export function OrderDetailsModal({
                 <h4 className="font-medium text-sm mb-3">
                   Update Delivery Status
                 </h4>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                  {deliveryStatuses.map((status) => {
-                    const Icon = status.icon;
-                    const isCurrent = currentDeliveryStatus === status.value;
-                    const isUpdatingThis =
-                      updatingStatus === status.value && isUpdating;
+                <div className="flex flex-col gap-4">
+                  <div className="flex flex-wrap gap-2">
+                    {deliveryStatuses.map((status) => {
+                      const Icon = status.icon;
+                      const isCurrent = currentDeliveryStatus === status.value;
+                      const isUpdatingThis =
+                        updatingStatus === status.value && isUpdating;
 
-                    // Get ranks for logic
-                    const currentRank =
-                      deliveryStatuses.find(
-                        (s) => s.value === currentDeliveryStatus,
-                      )?.rank ?? 0;
-                    const targetRank = status.rank;
+                      const currentRank =
+                        deliveryStatuses.find(
+                          (s) => s.value === currentDeliveryStatus,
+                        )?.rank ?? 0;
+                      const targetRank = status.rank;
 
-                    // Backward movement is disabled, and current status is disabled
-                    const isDisabled =
-                      isUpdating || isCurrent || targetRank < currentRank;
+                      // Restrictions:
+                      // 1. Cannot go backward (except failed/returned but those have specific logic)
+                      // 2. Cannot mark as failed if already delivered/confirmed
+                      // 3. Cannot change if order is confirmed
+                      const isConfirmedState = order.confirmed || currentDeliveryStatus === "confirmed";
+                      const isFailedStatus = status.value === "failed";
+                      const isAlreadyDelivered = currentDeliveryStatus === "delivered" || isConfirmedState;
 
-                    return (
-                      <Button
-                        key={status.value}
-                        variant={isCurrent ? "default" : "outline"}
-                        size="sm"
-                        disabled={isDisabled}
-                        onClick={() => handleStatusUpdate(status.value)}
-                        className={cn(
-                          "justify-start gap-2 relative transition-all active:scale-95 overflow-hidden disabled:pointer-events-none",
-                          // When updating this specific button, avoid opacity reduction but dim it slightly
-                          isUpdatingThis &&
-                            "disabled:opacity-100 brightness-[0.92] saturate-[0.8]",
-                          // For other disabled buttons (backward or while updating), keep them slightly faded but recognizable
-                          !isUpdatingThis &&
-                            isDisabled &&
-                            "disabled:opacity-60 grayscale-[0.3]",
-                        )}
-                      >
-                        {isUpdatingThis ? (
-                          <Loader2 className="h-4 w-4 animate-spin text-primary" />
-                        ) : (
-                          <Icon className="h-4 w-4" />
-                        )}
-                        <span className="truncate">{status.label}</span>
-                        {isCurrent && !isUpdatingThis && (
-                          <CheckCircle2 className="h-3 w-3 ml-auto shrink-0" />
-                        )}
-                        {/* Progressive Background Indicator for Active Updating */}
-                        {isUpdatingThis && (
-                          <motion.div
-                            layoutId="loading-bar"
-                            className="absolute bottom-0 left-0 h-0.5 bg-white"
-                            initial={{ width: 0 }}
-                            animate={{ width: "100%" }}
-                            transition={{ duration: 1.5, repeat: Infinity }}
-                          />
-                        )}
-                      </Button>
-                    );
-                  })}
+                      const isDisabled =
+                        isUpdating ||
+                        isCurrent ||
+                        isConfirmedState ||
+                        (targetRank < currentRank && !isFailedStatus) ||
+                        (isFailedStatus && isAlreadyDelivered) ||
+                        (status.value === "confirmed"); // Confirmed has its own UI button/OTP
+
+                      return (
+                        <button
+                          key={status.value}
+                          disabled={isDisabled}
+                          onClick={() => handleStatusUpdate(status.value)}
+                          className={cn(
+                            "flex items-center gap-2 px-4 py-2.5 rounded-sm border transition-all duration-200 text-xs font-bold uppercase tracking-wider relative overflow-hidden group",
+                            isCurrent
+                              ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                              : "bg-background hover:bg-accent/50 border-input text-muted-foreground hover:text-foreground",
+                            isDisabled && !isCurrent && "opacity-50 grayscale-[0.5] cursor-not-allowed",
+                            isUpdatingThis && "ring-2 ring-primary ring-offset-2"
+                          )}
+                        >
+                          {isUpdatingThis ? (
+                            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                          ) : (
+                            <Icon className={cn("h-3.5 w-3.5", isCurrent ? "text-primary-foreground" : "text-muted-foreground group-hover:text-foreground")} />
+                          )}
+                          {status.label}
+                          {isCurrent && !isUpdatingThis && (
+                            <CheckCircle2 className="h-3 w-3 ml-1" />
+                          )}
+                          
+                          {/* Loading overlay for the specific button */}
+                          {isUpdatingThis && (
+                            <motion.div
+                              className="absolute inset-0 bg-primary/20"
+                              initial={{ x: "-100%" }}
+                              animate={{ x: "100%" }}
+                              transition={{ duration: 1, repeat: Infinity }}
+                            />
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
+
+                {/* Release Escrow (OTP) or Direct Confirmation */}
+                {currentDeliveryStatus === "delivered" && !order.confirmed && (
+                  <div className="mt-6 p-4 rounded-sm border-2 border-dashed border-primary/30 bg-primary/5">
+                    <div className="flex items-center gap-2 text-primary mb-3">
+                      <CheckCircle2 className="h-5 w-5" />
+                      <h4 className="font-bold text-sm uppercase tracking-wider">
+                        {order.payment_method === "online" && order.escrow ? "Release Escrow Funds" : "Confirm Delivery"}
+                      </h4>
+                    </div>
+                    
+                    {order.payment_method === "online" && order.escrow ? (
+                      <>
+                        <p className="text-xs text-muted-foreground mb-4">
+                          The customer has received their Secure Release Code (OTP).
+                          {order.delivery?.confirmation_code && (
+                            <span className="block mt-2 font-bold text-primary flex items-center gap-2">
+                              Buyer's Code: {showCode ? order.delivery.confirmation_code : "••••••"}
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-6 w-6"
+                                onClick={() => setShowCode(!showCode)}
+                              >
+                                {showCode ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
+                              </Button>
+                            </span>
+                          )}
+                          Enter it below to confirm delivery and release your funds.
+                        </p>
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
+                            placeholder="OTP"
+                            value={otp}
+                            onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                            className="flex-1 h-10 px-3 rounded-sm border bg-background font-mono text-center tracking-[0.5em] text-lg outline-none"
+                          />
+                          <Button
+                            disabled={otp.length < 6 || isConfirming}
+                            onClick={handleConfirmDelivery}
+                            size="sm"
+                          >
+                            {isConfirming ? <Loader2 className="h-4 w-4 animate-spin" /> : "Confirm"}
+                          </Button>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="flex flex-col gap-3">
+                        <p className="text-xs text-muted-foreground">
+                          Confirm that the customer has received their order. This will mark the order as completed.
+                        </p>
+                        <Button
+                          disabled={isConfirming}
+                          onClick={() => handleConfirmDelivery()}
+                          className="w-full gap-2"
+                        >
+                          {isConfirming ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle2 className="h-4 w-4" />}
+                          Confirm Delivery & Complete Order
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {order.confirmed && (
+                  <div className="mt-6 p-4 rounded-sm border border-emerald-500/20 bg-emerald-500/5 flex items-center gap-3">
+                    <div className="p-2 rounded-full bg-emerald-500/10 text-emerald-600">
+                      <CheckCircle2 className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold text-emerald-700 dark:text-emerald-400">Delivery Confirmed</p>
+                      <p className="text-xs text-emerald-600/80">
+                        {order.payment_method === "online" && order.escrow 
+                          ? "Funds have been released from escrow." 
+                          : "Order has been marked as completed."}
+                      </p>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           )}

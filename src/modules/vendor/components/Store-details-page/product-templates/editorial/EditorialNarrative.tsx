@@ -1,6 +1,7 @@
-import { Heart, Share2, ShieldCheck, Truck } from "lucide-react";
+import { Heart, ShieldCheck, Truck } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { UIProduct } from "@/modules/vendor/utils/productAdapter";
+import { ProductShareButton } from "@/modules/website/components/products/ProductShareButton";
 
 interface EditorialNarrativeProps {
   uiProduct: UIProduct;
@@ -239,9 +240,21 @@ export function EditorialNarrative({
                 <Heart className={cn("w-4 h-4", liked && "fill-current")} />{" "}
                 {liked ? "Saved" : "Save"}
               </button>
-              <button className="flex items-center gap-2 hover:opacity-100 transition-opacity">
-                <Share2 className="w-4 h-4" /> Share
-              </button>
+              <ProductShareButton
+                product={{
+                  id: uiProduct.id,
+                  name: uiProduct.name,
+                  price: displayPrice,
+                  originalPrice: displayOriginalPrice,
+                  image: uiProduct.images[0],
+                  vendor: uiProduct.vendor || "EazyStore",
+                  storeSlug: uiProduct.storeSlug || "",
+                  slug: uiProduct.slug,
+                }}
+                variant="ghost"
+                label="Share"
+                className="h-auto p-0 hover:bg-transparent font-sans text-xs uppercase tracking-[0.2em] opacity-60 hover:opacity-100 transition-opacity gap-2"
+              />
             </div>
           </div>
 

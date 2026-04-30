@@ -75,6 +75,7 @@ export const ADMIN_ROUTES = {
   BASE: "/",
   DASHBOARD: "/",
   VENDORS: "/vendors",
+  ORDERS: "/orders",
   USERS: "/users",
   TRANSACTIONS: "/transactions",
   REPORTS: "/reports",

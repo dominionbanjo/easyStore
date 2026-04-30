@@ -27,6 +27,7 @@ export interface ProductActionProps {
   stock: number;
   image?: string | null;
   storeSlug: string;
+  slug: string;
   options?: { name: string; values: string[] }[] | null;
   variants?: ProductVariant[] | null;
   sizes?: string[];

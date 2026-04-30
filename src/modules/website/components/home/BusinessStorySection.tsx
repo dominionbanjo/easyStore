@@ -39,9 +39,9 @@ export default function BusinessStorySection() {
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Left: Text & Story */}
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
             className="space-y-8"
           >
             <div className="space-y-4">
@@ -67,9 +67,8 @@ export default function BusinessStorySection() {
                 <motion.div
                   key={step.title}
                   initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  viewport={{ once: true }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.08, duration: 0.4, ease: "easeOut" }}
                   className="p-6 rounded-sm bg-muted/30 dark:bg-neutral-900/50 border border-border/50 dark:border-white/5 hover:border-primary/20 transition-colors group"
                 >
                   <div
@@ -90,9 +89,9 @@ export default function BusinessStorySection() {
 
           {/* Right: Visual Story */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
             className="relative"
           >
             <div className="aspect-square rounded-sm bg-gradient-to-tr from-primary/20 to-secondary/20 relative flex items-center justify-center p-8">

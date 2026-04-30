@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import {
   Truck,
@@ -8,13 +9,25 @@ import {
   XCircle,
   Clock,
   Package,
+  Key,
+  Copy,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import type { IOrder } from "@/services/ordersApi";
+import { toast } from "sonner";
 
 export function OrderDeliveryInfo({ order }: { order: IOrder }) {
+  const [isCodeVisible, setIsCodeVisible] = useState(false);
+
+  const handleCopyCode = (code: string) => {
+    navigator.clipboard.writeText(code);
+    toast.success("Delivery code copied to clipboard!");
+  };
+
   const getDeliveryStatusConfig = (status: string) => {
     switch (status.toLowerCase()) {
       case "delivered":
@@ -68,6 +81,8 @@ export function OrderDeliveryInfo({ order }: { order: IOrder }) {
     ? getDeliveryStatusConfig(order.delivery.delivery_status)
     : getDeliveryStatusConfig("pending");
 
+  const confirmationCode = order.delivery?.confirmation_code || order.escrow?.release_code;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -92,6 +107,48 @@ export function OrderDeliveryInfo({ order }: { order: IOrder }) {
         <div className="p-3 sm:p-5 space-y-3">
           {order.delivery ? (
             <>
+              {/* Security Code - Highlighted for Buyer */}
+              {confirmationCode && (
+                <div className="mb-6 p-4 rounded-sm bg-emerald-500/5 border border-emerald-500/20 group relative overflow-hidden">
+                  <div className="absolute top-0 right-0 p-1 opacity-20 group-hover:opacity-100 transition-opacity">
+                    <Key className="h-12 w-12 text-emerald-500 -mr-4 -mt-4 rotate-12" />
+                  </div>
+                  
+                  <div className="relative z-10">
+                    <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 mb-2">
+                      <Key className="h-3.5 w-3.5" />
+                      <span className="text-[10px] font-black uppercase tracking-widest">Delivery Confirmation Code</span>
+                    </div>
+                    
+                    <div className="flex items-center justify-between gap-4">
+                      <div className="text-2xl font-black font-mono tracking-[0.3em] text-emerald-600 dark:text-emerald-400">
+                        {isCodeVisible ? confirmationCode : "••••••"}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button 
+                          onClick={() => setIsCodeVisible(!isCodeVisible)}
+                          className="p-2 rounded-sm bg-muted/50 text-muted-foreground hover:bg-muted transition-colors active:scale-95 border border-border/40"
+                          title={isCodeVisible ? "Hide Code" : "Show Code"}
+                        >
+                          {isCodeVisible ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        </button>
+                        <button 
+                          onClick={() => handleCopyCode(confirmationCode)}
+                          className="p-2 rounded-sm bg-emerald-500 text-white hover:bg-emerald-600 transition-colors shadow-lg shadow-emerald-500/20 active:scale-95"
+                          title="Copy Code"
+                        >
+                          <Copy className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </div>
+                    
+                    <p className="mt-2 text-[9px] font-medium text-emerald-600/60 uppercase tracking-wider leading-relaxed">
+                      Give this code to the vendor only when you have received your order to confirm delivery.
+                    </p>
+                  </div>
+                </div>
+              )}
+
               <div className="flex items-start justify-between gap-4">
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <Package className="h-3.5 w-3.5 flex-shrink-0" />

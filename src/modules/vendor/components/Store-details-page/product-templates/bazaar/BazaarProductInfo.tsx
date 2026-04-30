@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import ProductGallery from "@/modules/website/components/products/ProductGallery";
 import type { IProductStore } from "@/types/product/productTypes";
 import type { UIProduct } from "@/modules/vendor/utils/productAdapter";
+import { ProductShareButton } from "@/modules/website/components/products/ProductShareButton";
 
 interface BazaarProductInfoProps {
   store: IProductStore;
@@ -56,21 +57,39 @@ export function BazaarProductInfo({
           Visit {store.store_name} Store
         </Link>
 
-        {onMessageVendor && (
-          <Button
-            onClick={onMessageVendor}
-            disabled={isMessagingLoading}
+        <div className="flex flex-wrap items-center gap-3">
+          {onMessageVendor && (
+            <Button
+              onClick={onMessageVendor}
+              disabled={isMessagingLoading}
+              variant="outline"
+              className="rounded-2xl gap-2 font-bold border-slate-200 dark:border-neutral-800 disabled:opacity-50"
+            >
+              {isMessagingLoading ? (
+                <div className="h-5 w-5 border-2 border-[var(--theme-primary)] border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <Messages3 variant="Bold" color="currentColor" className="w-5 h-5" />
+              )}
+              {isMessagingLoading ? "Connecting..." : "Message Store"}
+            </Button>
+          )}
+
+          <ProductShareButton
+            product={{
+              id: uiProduct.id,
+              name: uiProduct.name,
+              price: displayPrice,
+              originalPrice: displayOriginalPrice,
+              image: uiProduct.images[0],
+              vendor: uiProduct.vendor || "EazyStore",
+              storeSlug: uiProduct.storeSlug || "",
+              slug: uiProduct.slug,
+            }}
             variant="outline"
-            className="rounded-2xl gap-2 font-bold border-slate-200 dark:border-neutral-800 disabled:opacity-50"
-          >
-            {isMessagingLoading ? (
-              <div className="h-5 w-5 border-2 border-[var(--theme-primary)] border-t-transparent rounded-full animate-spin" />
-            ) : (
-              <Messages3 variant="Bold" color="currentColor" className="w-5 h-5" />
-            )}
-            {isMessagingLoading ? "Connecting..." : "Message Store"}
-          </Button>
-        )}
+            label="Share Product"
+            className="rounded-2xl gap-2 font-bold border-slate-200 dark:border-neutral-800"
+          />
+        </div>
         
         <h1 className="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white leading-[1.1] tracking-tight">
           {uiProduct.name}

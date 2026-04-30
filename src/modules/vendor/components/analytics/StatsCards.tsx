@@ -15,17 +15,25 @@ interface StatsCardsProps {
     orders: number;
     customers: number;
     conversion_rate: number;
+    pending_payouts?: number;
   };
 }
 
 export function StatsCards({ summary }: StatsCardsProps) {
   const cards = [
     {
-      title: "Gross Revenue",
+      title: "Net Earnings",
       value: `₦${summary.total_sales.toLocaleString()}`,
       icon: DollarSign,
       color: "emerald",
       trend: "+12.5%",
+    },
+    {
+      title: "Pending Payouts",
+      value: `₦${(summary.pending_payouts || 0).toLocaleString()}`,
+      icon: TrendingUp,
+      color: "orange",
+      trend: "Holdings",
     },
     {
       title: "Total Orders",
@@ -40,13 +48,6 @@ export function StatsCards({ summary }: StatsCardsProps) {
       icon: Users,
       color: "purple",
       trend: "+8.1%",
-    },
-    {
-      title: "Conversion Rate",
-      value: `${summary.conversion_rate}%`,
-      icon: TrendingUp,
-      color: "orange",
-      trend: "+2.4%",
     },
   ];
 

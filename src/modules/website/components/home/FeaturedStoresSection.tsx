@@ -35,8 +35,8 @@ export default function FeaturedStoresSection({
         <div className="flex flex-col gap-4 px-1">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
             className="space-y-3 text-left"
           >
             <h2 className="text-3xl md:text-4xl font-black text-foreground tracking-tight">
@@ -77,8 +77,8 @@ export default function FeaturedStoresSection({
         ) : (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
             className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
           >
             {stores.map((store) => (

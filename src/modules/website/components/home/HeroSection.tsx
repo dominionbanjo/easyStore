@@ -128,7 +128,7 @@ export default function HeroSection() {
                   variants={transitionVariants}
                   initial="hidden"
                   animate="visible"
-                  className="text-[44px] sm:text-7xl md:text-8xl lg:text-[82px] font-black tracking-tighter leading-[1.05] text-white max-w-screen-2xl mx-auto drop-shadow-[0_4px_40px_rgba(0,0,0,0.8)]"
+                  className="text-[40px] sm:text-7xl md:text-8xl lg:text-[82px] font-black tracking-tighter leading-[1.05] text-white max-w-screen-2xl mx-auto drop-shadow-[0_4px_40px_rgba(0,0,0,0.8)]"
                 >
                   <HeroTitle />
                 </motion.h1>
@@ -138,7 +138,7 @@ export default function HeroSection() {
                   initial="hidden"
                   animate="visible"
                   transition={{ delay: 0.1 }}
-                  className="w-full text-lg sm:text-xl lg:text-2xl leading-relaxed text-neutral-100 font-bold max-w-5xl mx-auto text-center drop-shadow-[0_4px_40px_rgba(0,0,0,0.8)]"
+                  className="w-[90%] text-lg sm:text-xl lg:text-2xl leading-relaxed text-neutral-100 font-bold max-w-5xl mx-auto text-center drop-shadow-[0_4px_40px_rgba(0,0,0,0.8)]"
                 >
                   Give your business the professional edge it deserves. Build
                   trust, own your brand, and sell with confidence.

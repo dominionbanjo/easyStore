@@ -12,6 +12,7 @@ import {
   ServerCog,
   ClipboardList,
   Store,
+  ShoppingBag,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -19,11 +20,13 @@ import { areSubdomainsDisabled } from "@/utils/subdomain";
 
 const menuItems = [
   { label: "Overview", icon: LayoutDashboard, to: "/" },
+  { label: "Orders", icon: ShoppingBag, to: "/orders" },
   { label: "Vendors", icon: Store, to: "/vendors" },
   { label: "Users", icon: Users, to: "/users" },
   { label: "Transactions", icon: DollarSign, to: "/transactions" },
+  { label: "Payouts & Escrow", icon: ClipboardList, to: "/payouts" },
   { label: "Reports", icon: FileWarning, to: "/reports" },
-  { label: "System Logs", icon: ClipboardList, to: "/logs" },
+  { label: "System Logs", icon: ServerCog, to: "/logs" },
   { label: "Notifications", icon: Bell, to: "/notifications" },
   { label: "Platform Analytics", icon: BarChart3, to: "/analytics" },
   { label: "Access Control", icon: Shield, to: "/access-control" },

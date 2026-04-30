@@ -16,13 +16,16 @@ import {
   MapPin,
   Edit3,
   Truck,
+  MessageCircle,
+  CheckCircle2,
+  AlertTriangle,
 } from "lucide-react";
 import type { ICartItem } from "@/types/cart/cartTypes";
 import * as React from "react";
 import { motion } from "framer-motion";
 import { FormProvider, useForm } from "react-hook-form";
 import { FormSelect } from "@/components/shared/form/FormSelect";
-
+import { Badge } from "@/components/ui/badge";
 
 interface CheckoutSummaryProps {
   storeName?: string;
@@ -49,9 +52,12 @@ interface CheckoutSummaryProps {
   };
   selectedDeliveryRateId?: string;
   onSelectDeliveryRate?: (rateId: string) => void;
-  onCheckout: () => void;
+  isEscrow: boolean;
+  setIsEscrow: (val: boolean) => void;
+  onCheckout: (isEscrow: boolean) => void;
   onAddAddress: () => void;
   onVerifyBank: () => void;
+  onMessageVendor: () => void;
 }
 
 export function CheckoutSummary({
@@ -69,11 +75,16 @@ export function CheckoutSummary({
   selectedDeliveryRateId,
   currentAddress,
   onSelectDeliveryRate,
+  isEscrow,
+  setIsEscrow,
   onCheckout,
   onAddAddress,
   onVerifyBank,
+  onMessageVendor,
 }: CheckoutSummaryProps) {
-  const isBlocked = missingAddress || missingBankVerification || (!selectedDeliveryRateId && deliveryOptions && deliveryOptions.length > 0);
+  const hasDeliveryOptions = deliveryOptions && deliveryOptions.length > 0;
+  const isBlocked = missingAddress || missingBankVerification || (!selectedDeliveryRateId && hasDeliveryOptions);
+  const noDeliveryAvailable = !hasDeliveryOptions;
 
   const methods = useForm<{ delivery_rate_id: string }>({
     defaultValues: {
@@ -89,7 +100,7 @@ export function CheckoutSummary({
   }, [selectedDeliveryRateId, methods]);
 
   return (
-    <Card className="h-fit rounded-sm sm:rounded-sm border-border/40   bg-background border overflow-hidden">
+    <Card className="h-fit rounded-sm sm:rounded-sm border-border/40 bg-background border overflow-hidden">
       <CardHeader className="p-1 sm:p-8 border-b border-border/40 bg-muted/30">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg sm:text-xl font-black uppercase tracking-tight text-foreground flex items-center gap-3">
@@ -224,7 +235,8 @@ export function CheckoutSummary({
                 ₦{(subtotal ?? 0).toLocaleString()}
               </span>
             </div>
-            {deliveryOptions && deliveryOptions.length > 0 && (
+
+            {hasDeliveryOptions ? (
               <div className="py-2">
                 <FormProvider {...methods}>
                   <FormSelect
@@ -242,7 +254,82 @@ export function CheckoutSummary({
                   />
                 </FormProvider>
               </div>
+            ) : (
+              <div className="p-3 rounded-sm bg-amber-500/5 border border-amber-500/10 space-y-2">
+                <div className="flex items-center gap-2">
+                  <AlertTriangle className="h-3.5 w-3.5 text-amber-500" />
+                  <p className="text-[10px] font-black uppercase tracking-widest text-amber-600">
+                    No Delivery Region Configured
+                  </p>
+                </div>
+                <p className="text-[9px] text-amber-600/70 font-medium leading-tight">
+                  This vendor hasn't set up delivery for your location yet. Please contact them to arrange shipping.
+                </p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={onMessageVendor}
+                  className="w-full h-8 text-[9px] font-black uppercase tracking-widest border-amber-500/20 text-amber-600 hover:bg-amber-500/10"
+                >
+                  <MessageCircle className="mr-2 h-3 w-3" />
+                  Message Vendor
+                </Button>
+              </div>
             )}
+
+            {/* Payment Method Selection */}
+            <div className="pt-2 pb-1">
+               <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 mb-3">
+                Secure Payment Mode
+              </p>
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => setIsEscrow(true)}
+                  className={`flex flex-col items-start p-3 rounded-sm border transition-all text-left relative overflow-hidden group ${
+                    isEscrow
+                      ? "border-primary bg-primary/5 ring-1 ring-primary/20"
+                      : "border-border/40 bg-card hover:border-primary/40"
+                  }`}
+                >
+                  <div className="flex items-center justify-between w-full mb-1">
+                    <ShieldCheck className={`h-4 w-4 ${isEscrow ? "text-primary" : "text-muted-foreground"}`} />
+                    {isEscrow && <CheckCircle2 className="h-3 w-3 text-primary" />}
+                  </div>
+                  <span className={`text-[10px] font-black uppercase tracking-tight ${isEscrow ? "text-primary" : "text-foreground"}`}>
+                    Escrow
+                  </span>
+                  <Badge variant="secondary" className="absolute -right-6 top-1 rotate-45 text-[7px] py-0 px-6 bg-primary text-primary-foreground font-black uppercase tracking-widest">
+                    Preferred
+                  </Badge>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setIsEscrow(false)}
+                  className={`flex flex-col items-start p-3 rounded-sm border transition-all text-left relative ${
+                    !isEscrow
+                      ? "border-primary bg-primary/5 ring-1 ring-primary/20"
+                      : "border-border/40 bg-card hover:border-primary/40"
+                  }`}
+                >
+                  <div className="flex items-center justify-between w-full mb-1">
+                    <CreditCard className={`h-4 w-4 ${!isEscrow ? "text-primary" : "text-muted-foreground"}`} />
+                    {!isEscrow && <CheckCircle2 className="h-3 w-3 text-primary" />}
+                  </div>
+                  <span className={`text-[10px] font-black uppercase tracking-tight ${!isEscrow ? "text-primary" : "text-foreground"}`}>
+                    Direct
+                  </span>
+                </button>
+              </div>
+              
+              {isEscrow && (
+                <p className="mt-2 text-[9px] text-muted-foreground font-medium leading-relaxed flex items-start gap-1.5">
+                  <span className="text-emerald-500 font-black shrink-0">TIP:</span>
+                  Escrow keeps your funds safe until delivery is confirmed. Highly recommended for first-time buyers.
+                </p>
+              )}
+            </div>
 
             <div className="flex justify-between items-center text-xs sm:text-sm font-medium text-emerald-600">
               <div className="flex items-center gap-2">
@@ -292,7 +379,7 @@ export function CheckoutSummary({
 
       <CardFooter className="p-1 sm:p-8 pt-0 pb-28 md:pb-8 flex flex-col gap-5 sm:gap-6">
         {/* Missing Requirements Warnings */}
-        {isBlocked && (
+        {(isBlocked || noDeliveryAvailable) && (
           <div className="w-full space-y-3">
             {missingAddress && (
               <div className="p-3.5 sm:p-4 rounded-sm bg-amber-500/10 border border-amber-500/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
@@ -341,13 +428,53 @@ export function CheckoutSummary({
                 </Button>
               </div>
             )}
+
+            {!selectedDeliveryRateId && hasDeliveryOptions && !missingAddress && (
+              <div className="p-3.5 sm:p-4 rounded-sm bg-emerald-500/10 border border-emerald-500/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="h-2 w-2 rounded-sm bg-emerald-500 animate-pulse shrink-0" />
+                  <div className="space-y-0.5">
+                    <p className="text-[11px] sm:text-xs font-bold text-emerald-600 uppercase tracking-wide">
+                      Selection Required
+                    </p>
+                    <p className="text-[9px] sm:text-[10px] text-emerald-600/80 font-medium max-w-[200px] leading-tight">
+                      Please select a delivery region to calculate shipping.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {noDeliveryAvailable && !missingAddress && (
+              <div className="p-3.5 sm:p-4 rounded-sm bg-rose-500/10 border border-rose-500/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="h-2 w-2 rounded-sm bg-rose-500 animate-pulse shrink-0" />
+                  <div className="space-y-0.5">
+                    <p className="text-[11px] sm:text-xs font-bold text-rose-600 uppercase tracking-wide">
+                      Shipping Unavailable
+                    </p>
+                    <p className="text-[9px] sm:text-[10px] text-rose-600/80 font-medium max-w-[200px] leading-tight">
+                      Vendor has not configured delivery for this store.
+                    </p>
+                  </div>
+                </div>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={onMessageVendor}
+                  className="h-8 text-[9px] sm:text-[10px] font-black uppercase tracking-widest border-rose-500/30 text-rose-700 hover:bg-rose-500/10 hover:text-rose-800 shrink-0 w-full sm:w-auto"
+                >
+                  Message Vendor
+                </Button>
+              </div>
+            )}
           </div>
         )}
 
         <Button
-          className="w-full h-14 sm:h-16 rounded-sm text-xs sm:text-sm font-black uppercase tracking-[0.2em]   transition-all hover:scale-[1.02] active:scale-[0.98] bg-primary hover:bg-primary/90 text-primary-foreground group disabled:opacity-50 disabled:pointer-events-none"
-          disabled={disabled || isProcessing || isBlocked} // Block if requirements missing
-          onClick={onCheckout}
+          className="w-full h-14 sm:h-16 rounded-sm text-xs sm:text-sm font-black uppercase tracking-[0.2em] transition-all hover:scale-[1.02] active:scale-[0.98] bg-primary hover:bg-primary/90 text-primary-foreground group disabled:opacity-50 disabled:pointer-events-none"
+          disabled={disabled || isProcessing || isBlocked || noDeliveryAvailable}
+          onClick={() => onCheckout(isEscrow)}
         >
           {isProcessing ? (
             <>
@@ -356,7 +483,7 @@ export function CheckoutSummary({
             </>
           ) : (
             <>
-              Proceed to Payment
+              {isEscrow ? "Secure with Escrow" : "Proceed to Payment"}
               <CreditCard className="ml-3 h-4 w-4 sm:h-5 sm:w-5 transition-transform group-hover:translate-x-1" />
             </>
           )}

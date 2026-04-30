@@ -17,6 +17,9 @@ import { createOrderColumns } from "@/modules/vendor/columns/orderColumns";
 import { useGetVendorOrdersQuery } from "@/services/ordersApi";
 import type { IOrder } from "@/services/ordersApi";
 import { OrderDetailsModal } from "@/modules/vendor/components/OrderDetailsModal";
+import { useNavigate } from "react-router-dom";
+import { useStartConversationMutation } from "@/services/messagingApi";
+import { toast } from "sonner";
 
 const PAGE_SIZE = 10;
 
@@ -41,6 +44,8 @@ export default function OrdersPage() {
   const [page, setPage] = useState(1);
   const [selectedOrder, setSelectedOrder] = useState<IOrder | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
+  const [startConversation, { isLoading: isMessagingLoading }] = useStartConversationMutation();
 
   // Fetch orders with query parameters
   const { data, isLoading, isFetching, isError } = useGetVendorOrdersQuery({
@@ -56,8 +61,24 @@ export default function OrdersPage() {
     setIsModalOpen(true);
   };
 
+  // Handle message buyer
+  const handleMessageBuyer = async (order: IOrder) => {
+    if (!order.buyer_id) {
+      toast.error("Cannot message guest buyers without an account.");
+      return;
+    }
+
+    try {
+      const result = await startConversation({ recipient_id: order.buyer_id }).unwrap();
+      toast.success("Redirecting to conversation...");
+      navigate(`/messages/${result.data.id}`);
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Failed to start conversation.");
+    }
+  };
+
   // Create columns with callback
-  const orderColumns = createOrderColumns(handleViewDetails);
+  const orderColumns = createOrderColumns(handleViewDetails, handleMessageBuyer);
 
   if (isError) {
     return (
@@ -218,8 +239,9 @@ export default function OrdersPage() {
         <DataTable<IOrder, unknown>
           columns={orderColumns}
           data={orders}
-          isLoading={isLoading || isFetching}
+          isLoading={isLoading || isFetching || isMessagingLoading}
           className="border-none"
+          onRowClick={handleViewDetails}
           emptyMessage={
             isSearching ? "No orders match your search" : "No orders found"
           }

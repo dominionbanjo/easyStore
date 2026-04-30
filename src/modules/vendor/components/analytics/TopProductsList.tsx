@@ -92,7 +92,7 @@ export function TopProductsList({ products }: TopProductsListProps) {
                       </p>
                       <div className="w-1 h-1 rounded-sm bg-border" />
                       <p className="text-xs text-emerald-500 font-black">
-                        ₦{Number(product.total_revenue).toLocaleString()}
+                        ₦{(Number(product.total_revenue) / 100).toLocaleString()}
                       </p>
                     </div>
                   </div>

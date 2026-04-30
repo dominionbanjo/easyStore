@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { CreditCard, ShoppingBag } from "lucide-react";
+import { CreditCard, ShoppingBag, Loader2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { IOrder } from "@/services/ordersApi";
+import { useRetryPaymentMutation } from "@/services/ordersApi";
 import { useAddItemToCartMutation } from "@/services/cartApi";
 import { toast } from "sonner";
 
@@ -50,6 +51,29 @@ export function OrderPaymentSummary({ order }: OrderPaymentSummaryProps) {
       setIsReordering(false);
     }
   };
+  const [retryPayment, { isLoading: isRetrying }] = useRetryPaymentMutation();
+
+  const handleRetryPayment = async () => {
+    try {
+      const result = await retryPayment(order.id).unwrap();
+      
+      if (result.auto_verified) {
+        toast.success("Payment was already successful and has been verified!");
+        // Refreshing the page or state will show the updated status
+        window.location.reload(); 
+        return;
+      }
+
+      if (result.payment_url) {
+        window.location.href = result.payment_url;
+      } else {
+        toast.error("Failed to initialize payment retry. Please try again.");
+      }
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Failed to retry payment. Please contact support.");
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -126,12 +150,17 @@ export function OrderPaymentSummary({ order }: OrderPaymentSummaryProps) {
 
           {/* Action Buttons */}
           <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-border/20">
-            {order.payment_status === "pending" && order.payment_url && (
+            {order.payment_status === "pending" && (
               <Button
                 className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black h-11 rounded-sm uppercase tracking-widest text-[10px] shadow-lg shadow-emerald-600/20 active:scale-[0.98] transition-all"
-                onClick={() => (window.location.href = order.payment_url!)}
+                onClick={handleRetryPayment}
+                disabled={isRetrying}
               >
-                <CreditCard className="mr-2 h-4 w-4" />
+                {isRetrying ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <CreditCard className="mr-2 h-4 w-4" />
+                )}
                 Retry Payment
               </Button>
             )}

@@ -15,6 +15,7 @@ import { useGetCartQuery } from "@/services/cartApi";
 import { useGetUserProfileQuery } from "@/services/userApi";
 import {
   useCreateOnlineOrderDirectMutation,
+  useCreateOnlineOrderMutation,
   useGetCheckoutSummaryMutation,
 } from "@/services/ordersApi";
 import type { ICheckoutSummaryVendor } from "@/services/ordersApi";
@@ -30,9 +31,14 @@ import { AddressRequiredModal } from "@/modules/website/components/modals/Addres
 import { BankAccountModal } from "@/modules/website/components/modals/BankAccountModal";
 import { SelectAddressModal } from "@/modules/website/components/modals/SelectAddressModal";
 import { CheckoutSummary } from "@/modules/website/components/checkout/CheckoutSummary";
+import { PaymentSecurityModal } from "@/modules/website/components/modals/PaymentSecurityModal";
 import { motion } from "framer-motion";
+import { 
+  useStartConversationMutation, 
+  useSendDirectMessageMutation 
+} from "@/services/messagingApi";
 
-type RequiredModal = "address" | "select-address" | "bank" | null;
+type RequiredModal = "address" | "select-address" | "bank" | "payment-security" | null;
 
 export default function CheckoutPage() {
   const navigate = useNavigate();
@@ -44,6 +50,10 @@ export default function CheckoutPage() {
   const user = userProfile?.data?.user;
 
   const [requiredModal, setRequiredModal] = useState<RequiredModal>(null);
+  const [pendingCheckoutVendor, setPendingCheckoutVendor] = useState<{
+    vendor: ICheckoutSummaryVendor;
+    isEscrow: boolean;
+  } | null>(null);
 
   // APIs
   const [
@@ -55,8 +65,14 @@ export default function CheckoutPage() {
       error: summaryError,
     },
   ] = useGetCheckoutSummaryMutation();
-  const [createOrder, { isLoading: isCreatingOrder }] =
+  
+  const [createEscrowOrder, { isLoading: isCreatingEscrowOrder }] =
+    useCreateOnlineOrderMutation();
+  const [createDirectOrder, { isLoading: isCreatingDirectOrder }] =
     useCreateOnlineOrderDirectMutation();
+
+  const [startConversation] = useStartConversationMutation();
+  const [sendMessage] = useSendDirectMessageMutation();
 
   // State
   const [selectedRates, setSelectedRates] = useState<Record<string, string>>(
@@ -66,6 +82,7 @@ export default function CheckoutPage() {
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(
     null,
   );
+  const [isEscrow, setIsEscrow] = useState(true);
 
   /* ───────── FETCH SUMMARY ───────── */
   useEffect(() => {
@@ -122,7 +139,10 @@ export default function CheckoutPage() {
     }
   }, [user, isUserLoading]);
 
-  const handleModalClose = () => setRequiredModal(null);
+  const handleModalClose = () => {
+    setRequiredModal(null);
+    setPendingCheckoutVendor(null);
+  };
 
   /* ───────── CALCULATIONS ───────── */
   const hasAddress = Boolean(
@@ -139,7 +159,7 @@ export default function CheckoutPage() {
   const isCheckoutDisabled = !hasAddress || !isBankVerified;
 
   /* ───────── HANDLE CHECKOUT PER VENDOR ───────── */
-  const handleCheckoutVendor = async (vendor: ICheckoutSummaryVendor) => {
+  const handleCheckoutVendor = async (vendor: ICheckoutSummaryVendor, isEscrow: boolean) => {
     if (isCheckoutDisabled) {
       if (!hasAddress) setRequiredModal("address");
       else if (!isBankVerified) setRequiredModal("bank");
@@ -148,10 +168,15 @@ export default function CheckoutPage() {
 
     if (!user) return;
 
+    // Show security modal for both online paths
+    setPendingCheckoutVendor({ vendor, isEscrow });
+    setRequiredModal("payment-security");
+  };
+
+  const executeCheckout = async (vendor: ICheckoutSummaryVendor, isEscrow: boolean) => {
     const selectedRateId = selectedRates[vendor.vendor_id];
     if (!selectedRateId && vendor.delivery_options.length > 0) {
       toast.error(`Please select a delivery region for ${vendor.store_name}`);
-      // Ensure the accordion is open for them
       setActiveVendorId(vendor.vendor_id);
       return;
     }
@@ -165,20 +190,44 @@ export default function CheckoutPage() {
         color: item.color ?? undefined,
       }));
 
-      const result = await createOrder({
-        email: user.email,
+      const payload = {
+        email: user!.email,
         order_items: orderItems,
         delivery_rate_id: selectedRateId || undefined,
         delivery_address_id: currentActiveAddress?.id,
-      }).unwrap();
+      };
 
-      const data = result.data || result;
+      const mutation = isEscrow ? createEscrowOrder : createDirectOrder;
+      const result = await mutation(payload).unwrap();
+
+      // Backend returns either { data: { success, payment_url } } or { success, payment_url }
+      const data = (result as any).data || result;
 
       if (data.success && data.payment_url) {
         window.location.href = data.payment_url;
       }
     } catch (error: any) {
       toast.error(error?.data?.message || "Failed to create order");
+    }
+  };
+
+  const handleMessageVendor = async (vendor_id: string, store_name: string) => {
+    try {
+      toast.loading(`Starting conversation with ${store_name}...`);
+      const res = await startConversation({ recipient_id: vendor_id }).unwrap();
+      const conversationId = res.data.id;
+      
+      await sendMessage({
+        id: conversationId,
+        content: `Hi, I'm trying to order from your store "${store_name}" but no delivery region is listed for my location. Can you help with delivery details?`,
+      }).unwrap();
+      
+      toast.dismiss();
+      toast.success("Message sent! Redirecting...");
+      navigate(`/account/messages?id=${conversationId}`);
+    } catch (err: any) {
+      toast.dismiss();
+      toast.error(err?.data?.message || "Failed to start conversation");
     }
   };
 
@@ -214,6 +263,18 @@ export default function CheckoutPage() {
         open={requiredModal === "bank"}
         onClose={handleModalClose}
         user={user}
+      />
+
+      <PaymentSecurityModal
+        open={requiredModal === "payment-security"}
+        onClose={handleModalClose}
+        isProcessing={isCreatingEscrowOrder || isCreatingDirectOrder}
+        type={pendingCheckoutVendor?.isEscrow ? "escrow" : "direct"}
+        onConfirm={() => {
+          if (pendingCheckoutVendor) {
+            executeCheckout(pendingCheckoutVendor.vendor, pendingCheckoutVendor.isEscrow);
+          }
+        }}
       />
 
       {/* ───────── PAGE CONTENT ───────── */}
@@ -317,8 +378,19 @@ export default function CheckoutPage() {
                         200000,
                       );
 
-                      const grandTotal =
-                        rawSubtotal + shippingFee + platformFee;
+                      // Escrow fee: 3% capped at NGN 3000 (300,000 kobo)
+                      let escrowFee = 0;
+                      if (isEscrow) {
+                        escrowFee = Math.min(
+                          Math.round((rawSubtotal + shippingFee) * 0.03),
+                          300000,
+                        );
+                      }
+
+                      // Escrow users pay ONLY the 3% escrow fee.
+                      // Direct payment users pay the 1% platform fee.
+                      const totalServiceCharge = isEscrow ? escrowFee : platformFee;
+                      const grandTotal = rawSubtotal + shippingFee + totalServiceCharge;
 
                       return (
                         <AccordionItem
@@ -354,10 +426,10 @@ export default function CheckoutPage() {
                               items={vendor.items}
                               subtotal={rawSubtotal / 100}
                               shipping={shippingFee / 100}
-                              serviceCharge={platformFee / 100}
+                              serviceCharge={totalServiceCharge / 100}
                               total={grandTotal / 100}
                               isProcessing={
-                                isCreatingOrder &&
+                                (isCreatingEscrowOrder || isCreatingDirectOrder) &&
                                 activeVendorId === vendor.vendor_id
                               }
                               disabled={!hasAddress || !isBankVerified}
@@ -369,7 +441,10 @@ export default function CheckoutPage() {
                               onSelectDeliveryRate={(rateId: string) =>
                                 handleRateSelection(vendor.vendor_id, rateId)
                               }
-                              onCheckout={() => handleCheckoutVendor(vendor)}
+                              isEscrow={isEscrow}
+                              setIsEscrow={setIsEscrow}
+                              onCheckout={(isEscrow) => handleCheckoutVendor(vendor, isEscrow)}
+                              onMessageVendor={() => handleMessageVendor(vendor.vendor_id, vendor.store_name)}
                               onAddAddress={() =>
                                 setRequiredModal(
                                   hasAddress &&

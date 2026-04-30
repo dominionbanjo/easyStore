@@ -192,8 +192,8 @@ export const buildAdminVendorColumns = (
     cell: ({ row }) => {
       const store = row.original.store;
       return (
-        <div className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-sm bg-muted flex items-center justify-center flex-shrink-0 overflow-hidden">
+        <div className="flex items-center gap-3 text-left">
+          <div className="h-9 w-9 rounded-sm bg-muted flex items-center justify-center flex-shrink-0 overflow-hidden border border-border/20">
             {store?.logo ? (
               <img
                 src={store.logo}
@@ -201,11 +201,11 @@ export const buildAdminVendorColumns = (
                 className="h-full w-full object-cover"
               />
             ) : (
-              <Store className="h-4 w-4 text-muted-foreground" />
+              <Store className="h-5 w-5 text-muted-foreground/50" />
             )}
           </div>
-          <div>
-            <p className="font-semibold text-sm">
+          <div className="flex flex-col">
+            <p className="font-bold text-sm text-foreground tracking-tight">
               {store?.store_name || "No Store"}
             </p>
           </div>
@@ -222,8 +222,8 @@ export const buildAdminVendorColumns = (
       const first = row.original.first_name || "";
       const last = row.original.last_name || "";
       return (
-        <div>
-          <p className="text-sm font-medium">
+        <div className="text-left">
+          <p className="text-sm font-bold text-foreground">
             {`${first} ${last}`.trim() || "Unknown"}
           </p>
           <p className="text-xs text-muted-foreground">{row.original.email}</p>

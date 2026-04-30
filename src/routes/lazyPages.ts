@@ -177,6 +177,10 @@ const AnalyticsPageImport = () =>
   import("@/app/(dashboard)/vendor/analytics/page");
 export const AnalyticsPage = lazy(AnalyticsPageImport);
 export const preloadAnalyticsPage = AnalyticsPageImport;
+const VendorPayoutsPageImport = () =>
+  import("@/app/(dashboard)/vendor/payouts/page");
+export const VendorPayoutsPage = lazy(VendorPayoutsPageImport);
+export const preloadVendorPayoutsPage = VendorPayoutsPageImport;
 
 const VendorTemplatesPageImport = () =>
   import("@/app/(dashboard)/vendor/templates/page");
@@ -210,6 +214,16 @@ export const SuperAdminTransactionsPage = lazy(
 );
 export const preloadSuperAdminTransactionsPage =
   SuperAdminTransactionsPageImport;
+
+const SuperAdminOrdersPageImport = () =>
+  import("@/app/(dashboard)/admin/orders/page");
+export const SuperAdminOrdersPage = lazy(SuperAdminOrdersPageImport);
+export const preloadSuperAdminOrdersPage = SuperAdminOrdersPageImport;
+
+const SuperAdminPayoutsPageImport = () =>
+  import("@/app/(dashboard)/admin/payouts/page");
+export const SuperAdminPayoutsPage = lazy(SuperAdminPayoutsPageImport);
+export const preloadSuperAdminPayoutsPage = SuperAdminPayoutsPageImport;
 
 const SuperAdminReportsPageImport = () =>
   import("@/app/(dashboard)/admin/reports/page");

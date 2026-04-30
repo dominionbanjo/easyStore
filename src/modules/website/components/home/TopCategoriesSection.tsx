@@ -48,8 +48,8 @@ export default function TopCategoriesSection({
         <div className="flex flex-col gap-4 px-1">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
             className="space-y-4 text-left"
           >
             <h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight flex items-center gap-2">
@@ -88,8 +88,8 @@ export default function TopCategoriesSection({
         ) : (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
             className="grid grid-cols-2 md:grid-cols-4 gap-4"
           >
             {categories.map((category, index) => (

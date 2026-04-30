@@ -112,8 +112,7 @@ export default function CareersPage() {
           <motion.div
             variants={container}
             initial="hidden"
-            whileInView="show"
-            viewport={{ once: true }}
+            animate="show"
             className="grid md:grid-cols-3 gap-6"
           >
             {roles.map((role) => (

@@ -8,6 +8,7 @@ import {
   Copy,
   Check,
 } from "lucide-react";
+import { Messages3 } from "iconsax-react";
 import { toast } from "sonner";
 import { useState } from "react";
 
@@ -53,6 +54,7 @@ const CopyableRef = ({ value }: { value: string }) => {
 
 export const createOrderColumns = (
   onViewDetails?: (order: IOrder) => void,
+  onMessageBuyer?: (order: IOrder) => void,
 ): ColumnDef<IOrder>[] => [
   /* ───────────── Order ID (LEFT ALIGNED) ───────────── */
   {
@@ -228,12 +230,27 @@ export const createOrderColumns = (
                 View Details
               </Button>
 
+              {/* 💬 MESSAGE BUYER */}
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-full justify-start gap-2"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onMessageBuyer?.(order);
+                }}
+              >
+                <Messages3 variant="Outline" color="currentColor" className="h-4 w-4" />
+                Message Buyer
+              </Button>
+
               {/* 📦 MARK AS SHIPPED */}
               {(order.status === "paid" || order.status === "processing") && (
                 <Button
                   variant="ghost"
                   size="sm"
                   className="w-full justify-start gap-2 text-blue-600"
+                  onClick={(e) => e.stopPropagation()}
                 >
                   <Truck className="h-4 w-4" />
                   Mark as Shipped
@@ -246,6 +263,7 @@ export const createOrderColumns = (
                   variant="ghost"
                   size="sm"
                   className="w-full justify-start gap-2 text-green-600"
+                  onClick={(e) => e.stopPropagation()}
                 >
                   <CheckCircle2 className="h-4 w-4" />
                   Mark as Delivered

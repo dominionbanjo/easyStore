@@ -12,6 +12,7 @@ import {
   ChevronRight,
   Palette,
   MessageSquare,
+  Banknote as BanknoteIcon,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -29,6 +30,7 @@ const preloadMap: Record<string, () => void> = {
   "/templates": () => { import("@/app/(dashboard)/vendor/templates/page"); },
   "/settings": () => { import("@/app/(dashboard)/vendor/settings/page"); },
   "/analytics": () => { import("@/app/(dashboard)/vendor/analytics/page"); },
+  "/payouts": () => { import("@/app/(dashboard)/vendor/payouts/page"); },
   "/help": () => { import("@/app/(dashboard)/vendor/help/page"); },
   "/messages": () => { import("@/app/(dashboard)/vendor/messages/page"); },
 };
@@ -41,6 +43,7 @@ const allVendorPreloaders: Array<() => void> = [
   () => { import("@/app/(dashboard)/vendor/templates/page"); },
   () => { import("@/app/(dashboard)/vendor/settings/page"); },
   () => { import("@/app/(dashboard)/vendor/analytics/page"); },
+  () => { import("@/app/(dashboard)/vendor/payouts/page"); },
   () => { import("@/app/(dashboard)/vendor/help/page"); },
   () => { import("@/app/(dashboard)/vendor/messages/page"); },
   () => { import("@/app/(dashboard)/vendor/products/new/page"); },
@@ -51,6 +54,7 @@ const menuItems = [
   { label: "Products", icon: Package, to: "/products" },
   { label: "Orders", icon: ShoppingCart, to: "/orders" },
   { label: "Customers", icon: Users, to: "/customers" },
+  { label: "Payouts", icon: BanknoteIcon, to: "/payouts" },
   { label: "Templates", icon: Palette, to: "/templates" },
   { label: "Messages", icon: MessageSquare, to: "/messages" },
   { label: "Store Settings", icon: Settings, to: "/settings" },

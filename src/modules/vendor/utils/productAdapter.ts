@@ -23,6 +23,7 @@ export interface UIProduct extends ProductActionProps {
   images: string[];
   colors: { id: string; name: string; hex: string }[];
   sizes: string[];
+  slug: string;
 }
 
 export function adaptProductToUI(
@@ -50,6 +51,7 @@ export function adaptProductToUI(
     name: product.name,
     vendor: store.store_name,
     storeSlug: store.slug,
+    slug: product.slug,
     price:
       product.on_sale && product.discount_price
         ? product.discount_price

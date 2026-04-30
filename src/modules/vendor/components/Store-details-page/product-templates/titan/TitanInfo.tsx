@@ -1,6 +1,7 @@
-import { Minus, Plus, Heart, Share2 } from "lucide-react";
+import { Minus, Plus, Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { UIProduct } from "@/modules/vendor/utils/productAdapter";
+import { ProductShareButton } from "@/modules/website/components/products/ProductShareButton";
 
 interface TitanInfoProps {
   uiProduct: UIProduct;
@@ -226,9 +227,22 @@ export function TitanInfo({
             <Heart className={cn("w-3 h-3", liked && "fill-current")} />{" "}
             {liked ? "Saved" : "Save Config"}
           </button>
-          <button className="py-2 border border-zinc-800 hover:bg-zinc-900 text-xs text-zinc-500 flex items-center justify-center gap-2 uppercase transition-colors">
-            <Share2 className="w-3 h-3" /> Export Link
-          </button>
+          <ProductShareButton
+            product={{
+              id: uiProduct.id,
+              name: uiProduct.name,
+              price: displayPrice,
+              originalPrice: displayOriginalPrice,
+              image: uiProduct.images[0],
+              vendor: uiProduct.vendor || "EazyStore",
+              storeSlug: uiProduct.storeSlug || "",
+              slug: uiProduct.slug,
+            }}
+            variant="ghost"
+            label="Export Link"
+            className="h-auto py-2 border border-zinc-800 hover:bg-zinc-900 text-xs text-zinc-500 hover:text-white uppercase transition-colors rounded-none gap-2"
+            iconClassName="w-3 h-3"
+          />
         </div>
       </div>
     </div>

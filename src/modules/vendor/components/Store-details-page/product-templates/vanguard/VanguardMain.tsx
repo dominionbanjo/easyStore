@@ -1,6 +1,7 @@
-import { ShoppingCart, Heart, Share2, Loader2 } from "lucide-react";
+import { ShoppingCart, Heart, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { UIProduct } from "@/modules/vendor/utils/productAdapter";
+import { ProductShareButton } from "@/modules/website/components/products/ProductShareButton";
 
 interface VanguardMainProps {
   uiProduct: UIProduct;
@@ -203,9 +204,21 @@ export function VanguardMain({
                 <Heart className={cn("w-4 h-4", liked && "fill-current")} />{" "}
                 {liked ? "Saved" : "Save"}
               </button>
-              <button className="flex items-center gap-2 text-xs uppercase tracking-widest text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors">
-                <Share2 className="w-4 h-4" /> Share
-              </button>
+              <ProductShareButton
+                product={{
+                  id: uiProduct.id,
+                  name: uiProduct.name,
+                  price: displayPrice,
+                  originalPrice: displayOriginalPrice,
+                  image: uiProduct.images[0],
+                  vendor: uiProduct.vendor || "EazyStore",
+                  storeSlug: uiProduct.storeSlug || "",
+                  slug: uiProduct.slug,
+                }}
+                variant="ghost"
+                label="Share"
+                className="h-auto p-0 hover:bg-transparent text-zinc-500 hover:text-zinc-900 dark:hover:text-white font-medium text-xs uppercase tracking-widest gap-2"
+              />
             </div>
           </div>
         </div>

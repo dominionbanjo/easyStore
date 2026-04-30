@@ -115,9 +115,11 @@ export function FormSelect({
                   </button>
                 </PopoverTrigger>
                 <PopoverContent
-                  className="p-0 border-border/50 shadow-xl overflow-hidden"
+                  className="p-0 border-border/50 shadow-xl"
                   style={{ width: "var(--radix-popover-trigger-width)" }}
                   align="start"
+                  sideOffset={4}
+                  collisionPadding={10}
                 >
                   <div className="sticky top-0 bg-popover z-20 p-2 border-b border-border/40">
                     <div className="relative">
@@ -135,7 +137,7 @@ export function FormSelect({
                       />
                     </div>
                   </div>
-                  <div className="max-h-[300px] overflow-y-auto p-1 custom-scrollbar">
+                  <div className="max-h-[var(--radix-popover-content-available-height,300px)] min-h-[100px] overflow-y-auto p-1 custom-scrollbar pointer-events-auto touch-pan-y">
                     {filteredOptions.length > 0 ? (
                       filteredOptions.map((opt) => (
                         <button
@@ -185,7 +187,7 @@ export function FormSelect({
                   )}
                   <SelectValue placeholder={placeholder} />
                 </SelectTrigger>
-                <SelectContent position="popper" className="max-h-[300px] overflow-y-auto">
+                <SelectContent position="popper">
                   {options.map((opt) => (
                     <SelectItem key={opt.value} value={opt.value}>
                       {opt.label}

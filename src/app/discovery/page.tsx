@@ -222,8 +222,7 @@ export default function DiscoveryPage() {
           key={isFeaturedLoading ? "loading" : "loaded"}
           variants={container}
           initial="hidden"
-          whileInView="show"
-          viewport={{ once: true }}
+          animate="show"
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
         >
           {isFeaturedLoading
@@ -268,8 +267,7 @@ export default function DiscoveryPage() {
           key={isTrendingLoading ? "loading" : "loaded"}
           variants={container}
           initial="hidden"
-          whileInView="show"
-          viewport={{ once: true }}
+          animate="show"
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
         >
           {isTrendingLoading
@@ -314,8 +312,7 @@ export default function DiscoveryPage() {
           key={isNewArrivalsLoading ? "loading" : "loaded"}
           variants={container}
           initial="hidden"
-          whileInView="show"
-          viewport={{ once: true }}
+          animate="show"
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
         >
           {isNewArrivalsLoading

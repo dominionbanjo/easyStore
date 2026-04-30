@@ -71,7 +71,8 @@ export function AdminTransactionDetailModal({
 }: AdminTransactionDetailModalProps) {
   if (!transaction) return null;
 
-  const amount = transaction.amount / 100;
+  const amountKobo = transaction.amount;
+  const amount = Number(amountKobo) / 100;
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>

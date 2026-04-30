@@ -56,6 +56,8 @@ export default function DashboardHeader({}: DashboardHeaderProps) {
     if (path.includes("/settings")) return "Settings";
     if (path.includes("/analytics")) return "Analytics";
     if (path.includes("/templates")) return "Templates";
+    if (path.includes("/payouts")) return "Payouts";
+    if (path.includes("/messages")) return "Messages";
     if (path.includes("/help")) return "Help";
     return "Overview";
   };

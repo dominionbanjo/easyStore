@@ -80,6 +80,43 @@ export interface IAutomatedNotification {
   updated_at: string;
 }
 
+export interface IAdminPayout {
+  id: string;
+  vendor_id: string;
+  amount_kobo: number;
+  status: "pending" | "processing" | "paid" | "failed" | "pending_manual" | "success" | "reversed";
+  reference: string;
+  metadata: any;
+  created_at: string;
+  updated_at: string;
+  vendor?: IAdminUser | null;
+  vendor_bank?: {
+    store_name: string;
+    bank_name: string;
+    account_number: string;
+    account_name: string | null;
+  } | null;
+}
+
+export interface IAdminEscrow {
+  id: string;
+  order_id: string;
+  buyer_id: string;
+  vendor_id: string;
+  subtotal_kobo: number;
+  shipping_kobo: number;
+  escrow_fee_kobo: number;
+  total_amount_kobo: number;
+  amount: number;
+  status: "held" | "released" | "disputed" | "refunded" | "completed" | "funded" | "pending";
+  payout_id: string | null;
+  created_at: string;
+  updated_at: string;
+  buyer?: IAdminUser | null;
+  vendor?: IAdminUser | null;
+  order?: any | null;
+}
+
 interface IPaginationMeta {
   total: number;
   page: number | string;
@@ -472,6 +509,63 @@ export const adminApi = apiManager.injectEndpoints({
       }),
       invalidatesTags: ["Notification"],
     }),
+
+    // ─── Payouts & Escrow ───
+    getAdminPendingManualPayouts: builder.query<
+      IPaginatedResponse<IAdminPayout>,
+      { page?: number; limit?: number }
+    >({
+      query: (params) => `admin/payouts/escrow?${buildQuery(params)}`,
+      providesTags: ["Analytics"],
+    }),
+
+    getAdminAllPayouts: builder.query<
+      IPaginatedResponse<IAdminPayout>,
+      { page?: number; limit?: number; status?: string; search?: string }
+    >({
+      query: (params) => `admin/payouts?${buildQuery(params)}`,
+      providesTags: ["Analytics"],
+    }),
+
+    markAdminPayoutTransferred: builder.mutation<
+      { message: string; data: IAdminPayout },
+      { id: string; admin_note?: string }
+    >({
+      query: ({ id, admin_note }) => ({
+        url: `admin/payouts/escrow/${id}/mark-transferred`,
+        method: "PATCH",
+        body: { admin_note },
+      }),
+      invalidatesTags: ["Analytics"],
+    }),
+
+    getAdminAllEscrows: builder.query<
+      IPaginatedResponse<IAdminEscrow>,
+      { page?: number; limit?: number; status?: string; search?: string }
+    >({
+      query: (params) => `admin/payouts/escrow/all-escrows?${buildQuery(params)}`,
+      providesTags: ["Analytics"],
+    }),
+    
+    getAdminOrders: builder.query<
+      IPaginatedResponse<any>,
+      { page?: number; limit?: number; status?: string; search?: string }
+    >({
+      query: (params) => `admin/orders?${buildQuery(params)}`,
+      providesTags: ["Analytics"],
+    }),
+
+    updateAdminOrderStatus: builder.mutation<
+      { message: string; success: boolean },
+      { id: string; status: string }
+    >({
+      query: ({ id, status }) => ({
+        url: `admin/orders/${id}/status`,
+        method: "PATCH",
+        body: { status },
+      }),
+      invalidatesTags: ["Analytics"],
+    }),
   }),
 });
 
@@ -503,4 +597,10 @@ export const {
   useDeleteAdminAutomatedNotificationMutation,
   useToggleAdminBroadcastStatusMutation,
   useToggleAdminAutomatedNotificationStatusMutation,
+  useGetAdminPendingManualPayoutsQuery,
+  useGetAdminAllPayoutsQuery,
+  useMarkAdminPayoutTransferredMutation,
+  useGetAdminAllEscrowsQuery,
+  useGetAdminOrdersQuery,
+  useUpdateAdminOrderStatusMutation,
 } = adminApi;

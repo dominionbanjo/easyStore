@@ -25,10 +25,9 @@ interface CategoryGroupProps {
 export function CategoryGroup({ category, index }: CategoryGroupProps) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.05 }}
-      viewport={{ once: true }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.04, duration: 0.4, ease: "easeOut" }}
       className="space-y-8"
     >
       {/* Parent Category Header */}

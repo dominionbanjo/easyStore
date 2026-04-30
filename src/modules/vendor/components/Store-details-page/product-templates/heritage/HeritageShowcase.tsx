@@ -2,6 +2,7 @@ import { ShieldCheck, RotateCcw, Heart, Minus, Plus } from "lucide-react";
 import ProductGallery from "@/modules/website/components/products/ProductGallery";
 import { cn } from "@/lib/utils";
 import type { UIProduct } from "@/modules/vendor/utils/productAdapter";
+import { ProductShareButton } from "@/modules/website/components/products/ProductShareButton";
 
 interface HeritageShowcaseProps {
   uiProduct: UIProduct;
@@ -234,6 +235,21 @@ export function HeritageShowcase({
               <Heart className={cn("w-4 h-4", liked && "fill-current")} />
               {liked ? "Applied to Wishlist" : "Wishlist"}
             </button>
+            <ProductShareButton
+              product={{
+                id: uiProduct.id,
+                name: uiProduct.name,
+                price: displayPrice,
+                originalPrice: displayOriginalPrice,
+                image: uiProduct.images[0],
+                vendor: uiProduct.vendor || "EazyStore",
+                storeSlug: uiProduct.storeSlug || "",
+                slug: uiProduct.slug,
+              }}
+              variant="ghost"
+              label="Share Product"
+              className="w-full py-2 flex items-center justify-center gap-2 text-xs uppercase tracking-widest font-bold text-[#8C7A6B] hover:text-[#2C2622] transition-all h-auto p-0 hover:bg-transparent"
+            />
           </div>
 
           {/* Handcrafted Details */}

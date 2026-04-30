@@ -83,6 +83,13 @@ export interface IOrder {
     state?: string | null;
     country?: string | null;
     postal_code?: string | null;
+    confirmation_code?: string | null;
+  } | null;
+
+  escrow?: {
+    id: string;
+    status: string;
+    release_code?: string | null;
   } | null;
 
   vendor?: {
@@ -114,6 +121,7 @@ export interface IOrder {
 
   created_at: string;
   updated_at?: string;
+  confirmed?: boolean;
 }
 
 /* ───────────────── DTO ARGS ───────────────── */
@@ -209,14 +217,9 @@ export interface OrderResponse {
 
 export interface OnlineOrderResponse {
   success: boolean;
-  successfulOrders: {
-    order: IOrder;
-    payment_url: string;
-  }[];
-  failedVendors: {
-    vendor_id: string;
-    error: string;
-  }[];
+  payment_url: string;
+  reference: string;
+  orders: IOrder[];
 }
 
 /* ───────────────── API ───────────────── */
@@ -299,6 +302,23 @@ export const ordersApi = apiManager.injectEndpoints({
         url: `orders/verify/${reference}`,
         method: "POST",
       }),
+    }),
+
+    retryPayment: builder.mutation<
+      {
+        success: boolean;
+        auto_verified: boolean;
+        payment_url?: string;
+        reference?: string;
+        orders?: IOrder[];
+      },
+      string
+    >({
+      query: (id) => ({
+        url: `orders/${id}/retry-payment`,
+        method: "POST",
+      }),
+      invalidatesTags: ["User", "Store"],
     }),
 
     getMyOrders: builder.query<PaginatedResult<IOrder>, GetMyOrdersArgs | void>(
@@ -459,6 +479,7 @@ export const {
   useCreateOnlineOrderMutation,
   useCreateOnlineOrderDirectMutation,
   useVerifyPaymentMutation,
+  useRetryPaymentMutation,
   useGetMyOrdersQuery,
   useGetVendorOrdersQuery,
   useGetOrderByIdQuery,

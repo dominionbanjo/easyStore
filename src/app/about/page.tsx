@@ -70,9 +70,8 @@ export default function AboutPage() {
             <motion.div
               key={i}
               initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.08, duration: 0.4, ease: "easeOut" }}
               className="bg-white dark:bg-neutral-900 rounded-sm p-6 sm:p-8  border border-border/50 dark:border-white/10 hover: hover:-translate-y-1 transition-all duration-300"
             >
               <div className="w-10 h-10 md:w-12 md:h-12 rounded-sm bg-primary/5 flex items-center justify-center text-primary mb-5 md:mb-6">
@@ -95,8 +94,8 @@ export default function AboutPage() {
           <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
               className="relative order-2 md:order-1"
             >
               <div className="aspect-square sm:aspect-[4/5] md:aspect-square bg-muted rounded-sm md:rounded-sm overflow-hidden relative ">
@@ -124,8 +123,8 @@ export default function AboutPage() {
             <div className="space-y-6 md:space-y-8 order-1 md:order-2">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
                 className="space-y-4"
               >
                 <div className="flex items-center gap-2 text-primary font-bold uppercase tracking-widest text-[10px] sm:text-xs">

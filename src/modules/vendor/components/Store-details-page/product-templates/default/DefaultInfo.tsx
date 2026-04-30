@@ -1,7 +1,8 @@
-import { Star, Minus, Plus, ShoppingCart, Heart, Share2 } from "lucide-react";
+import { Star, Minus, Plus, ShoppingCart, Heart } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import type { UIProduct } from "@/modules/vendor/utils/productAdapter";
+import { ProductShareButton } from "@/modules/website/components/products/ProductShareButton";
 
 interface DefaultInfoProps {
   uiProduct: UIProduct;
@@ -235,9 +236,21 @@ export function DefaultInfo({
             {liked ? "Saved to Wishlist" : "Save for Later"}
           </button>
           <div className="w-1 h-1 rounded-sm bg-zinc-300 dark:bg-zinc-700" />
-          <button className="flex items-center gap-2 text-sm font-semibold text-zinc-500 hover:text-[var(--theme-primary)] transition-colors">
-            <Share2 className="w-4 h-4" /> Share Product
-          </button>
+          <ProductShareButton
+            product={{
+              id: uiProduct.id,
+              name: uiProduct.name,
+              price: displayPrice,
+              originalPrice: displayOriginalPrice,
+              image: uiProduct.images[0],
+              vendor: uiProduct.vendor || "EazyStore",
+              storeSlug: uiProduct.storeSlug || "",
+              slug: uiProduct.slug,
+            }}
+            variant="ghost"
+            label="Share Product"
+            className="h-auto p-0 hover:bg-transparent text-zinc-500 hover:text-[var(--theme-primary)] font-semibold text-sm gap-2"
+          />
         </div>
 
         {/* Stock Indicator */}
