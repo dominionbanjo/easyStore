@@ -11,7 +11,7 @@ export default function ProductGridCard({
   className,
 }: ProductGridCardProps) {
   return (
-    <ProductCard.Root
+    <ProductCard
       id={data.id}
       slug={data.slug}
       image={
@@ -39,10 +39,6 @@ export default function ProductGridCard({
       isOnSale={data.on_sale}
       isFavorite={data.is_in_wishlist}
       className={className}
-    >
-      <ProductCard.Image />
-      <ProductCard.Info />
-      <ProductCard.Footer />
-    </ProductCard.Root>
+    />
   );
 }

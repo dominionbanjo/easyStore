@@ -82,7 +82,7 @@ export function SearchResultsGrid({
       {/* Grid */}
       <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 2xl:grid-cols-4 gap-4 md:gap-6">
         {products.map((product) => (
-          <ProductCard.Root
+          <ProductCard
             key={product.id}
             id={product.id}
             slug={product.slug}
@@ -108,11 +108,7 @@ export function SearchResultsGrid({
             }))}
             vendor={product.store_name}
             storeSlug={product.store_slug}
-          >
-            <ProductCard.Image />
-            <ProductCard.Info />
-            <ProductCard.Footer />
-          </ProductCard.Root>
+          />
         ))}
       </div>
 

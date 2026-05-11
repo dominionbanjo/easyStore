@@ -15,7 +15,6 @@ import { FormSelect } from "@/components/shared/form/FormSelect";
 import {
   useAppSelector,
   useAppDispatch,
-  useDebounce,
 } from "@/hooks";
 import {
   selectCurrentUser,
@@ -63,7 +62,6 @@ export function OnboardingModal() {
 
   const { watch, handleSubmit } = form;
   const storeName = watch("store_name");
-  const debouncedStoreName = useDebounce(storeName, 500);
 
   // Prevent showing if user is already a vendor
   const isVendor = user?.account_type === "vendor";
@@ -98,42 +96,25 @@ export function OnboardingModal() {
   }, [showViaRedux, isVendor, initialStep]);
 
   /* ───────── STORE NAME CHECK ───────── */
-  // Effect 1: Handle "Checking..." state immediately as user types
   useEffect(() => {
-    if (step !== "store-form") return;
-
-    if (!storeName || storeName.trim().length < 3) {
+    if (step !== "store-form" || !storeName || storeName.trim().length < 3) {
       setStoreNameStatus("idle");
       return;
     }
 
-    // Set checking status immediately if the current input differs from the debounced value
-    if (storeName !== debouncedStoreName) {
-      setStoreNameStatus("checking");
-    }
-  }, [storeName, debouncedStoreName, step]);
+    setStoreNameStatus("checking");
 
-  // Effect 2: Run the actual check when name is debounced
-  useEffect(() => {
-    if (
-      step !== "store-form" ||
-      !debouncedStoreName ||
-      debouncedStoreName.trim().length < 3
-    ) {
-      return;
-    }
-
-    const checkAvailability = async () => {
+    const timer = setTimeout(async () => {
       try {
-        await checkStoreName({ name: debouncedStoreName }).unwrap();
+        await checkStoreName({ name: storeName.trim() }).unwrap();
         setStoreNameStatus("available");
       } catch {
         setStoreNameStatus("taken");
       }
-    };
+    }, 500);
 
-    checkAvailability();
-  }, [debouncedStoreName, step, checkStoreName]);
+    return () => clearTimeout(timer);
+  }, [storeName, step, checkStoreName]);
 
   /* ───────── ACTIONS ───────── */
   const markAsSeen = () => {

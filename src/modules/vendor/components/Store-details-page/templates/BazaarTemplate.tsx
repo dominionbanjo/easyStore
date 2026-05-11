@@ -53,7 +53,7 @@ export default function BazaarTemplate({
     <div className="min-h-screen bg-[#fafafa] dark:bg-[#050505] text-slate-900 dark:text-white font-sans pb-24">
       {/* ─── BAZAAR HEADER ─── */}
       <header className="sticky top-0 z-50 w-full bg-white/70 dark:bg-black/70 backdrop-blur-xl border-b border-slate-200/50 dark:border-neutral-800/50 px-2 sm:px-6 py-3">
-        <div className="max-w-[1600px] mx-auto flex items-center justify-between gap-4">
+        <div className="w-full flex items-center justify-between gap-4">
           <div className="flex items-center gap-3 md:gap-5 min-w-0 flex-1">
             <div className="flex flex-col min-w-0">
               <h1 className="text-lg md:text-2xl font-black tracking-tight text-slate-900 dark:text-white truncate max-w-[150px] md:max-w-none">

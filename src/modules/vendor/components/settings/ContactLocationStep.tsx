@@ -51,7 +51,7 @@ export function ContactLocationStep({
           />
           <FormInput
             name="phone_number"
-            label="Support Hot-line"
+            label="Support Hot-line *"
             placeholder="+234..."
             icon={<Phone className="w-4 h-4" />}
           />

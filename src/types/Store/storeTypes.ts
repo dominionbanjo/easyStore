@@ -10,6 +10,7 @@ export interface IStore {
   id: string;
   store_name: string;
   slug: string;
+  subdomain: string | null;
   category: string | null;
   description: string | null;
   logo: string | null;
@@ -75,6 +76,7 @@ export interface IStoreDetails {
   vendor_id: string;
   store_name: string;
   slug: string;
+  subdomain: string | null;
   category: string | null;
   description: string | null;
   logo: string | null;

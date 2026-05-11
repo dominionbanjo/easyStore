@@ -20,7 +20,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 
 import { useRegisterMutation } from "@/services/authApi";
 import { useLazyCheckStoreNameQuery } from "@/services/storeApi";
-import { useDebounce } from "@/hooks";
 
 import {
   SignupSchema,
@@ -91,8 +90,6 @@ export default function SignupPage() {
   const storeName = watch("store_name");
   const password = watch("password"); // Added for strength meter
 
-  const debouncedStoreName = useDebounce(storeName, 500);
-
   /* ───────── Store name lookup ───────── */
   const [checkStoreName] = useLazyCheckStoreNameQuery();
 
@@ -100,43 +97,25 @@ export default function SignupPage() {
     "idle" | "checking" | "available" | "taken"
   >("idle");
 
-  // Effect 1: Handle "Checking..." status immediately as user types
   useEffect(() => {
-    if (accountType !== "vendor") return;
-
-    if (!storeName || storeName.trim().length < 3) {
+    if (accountType !== "vendor" || !storeName || storeName.trim().length < 3) {
       setStoreNameStatus("idle");
       return;
     }
 
-    // Set checking status if value is different from currently debounced value
-    // This provides immediate visual feedback
-    if (storeName !== debouncedStoreName) {
-      setStoreNameStatus("checking");
-    }
-  }, [storeName, debouncedStoreName, accountType]);
+    setStoreNameStatus("checking");
 
-  // Effect 2: Run the actual check when debounced
-  useEffect(() => {
-    if (
-      accountType !== "vendor" ||
-      !debouncedStoreName ||
-      debouncedStoreName.trim().length < 3
-    ) {
-      return;
-    }
-
-    const checkAvailability = async () => {
+    const timer = setTimeout(async () => {
       try {
-        await checkStoreName({ name: debouncedStoreName }).unwrap();
+        await checkStoreName({ name: storeName.trim() }).unwrap();
         setStoreNameStatus("available");
       } catch {
         setStoreNameStatus("taken");
       }
-    };
+    }, 500);
 
-    checkAvailability();
-  }, [debouncedStoreName, accountType, checkStoreName]);
+    return () => clearTimeout(timer);
+  }, [storeName, accountType, checkStoreName]);
 
   const isStoreNameInvalid =
     accountType === "vendor" && storeNameStatus === "taken";

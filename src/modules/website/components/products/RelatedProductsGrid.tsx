@@ -36,7 +36,7 @@ export default function RelatedProductsGrid({
           const isOnSale = product.on_sale;
 
           return (
-            <ProductCard.Root
+            <ProductCard
               key={product.id || product.slug}
               id={product.id}
               slug={product.slug}
@@ -62,13 +62,8 @@ export default function RelatedProductsGrid({
                 ...v,
                 image_url: v.image_url ?? undefined,
               }))}
-            >
-              <ProductCard.Image />
-              <ProductCard.Info />
-              {showFooter && <ProductCard.Footer />}
-
-              {/* <ProductCard.Actions /> */}
-            </ProductCard.Root>
+              showFooter={showFooter}
+            />
           );
         })}
       </div>

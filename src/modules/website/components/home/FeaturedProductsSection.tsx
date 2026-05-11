@@ -40,7 +40,7 @@ export default function FeaturedProductsSection() {
     >
       {products.map((product) => {
         return (
-          <ProductCard.Root
+          <ProductCard
             key={product.id}
             id={product.id}
             slug={product.slug}
@@ -70,11 +70,7 @@ export default function FeaturedProductsSection() {
               image_url: v.image_url ?? undefined,
             }))}
             category={product.category}
-          >
-            <ProductCard.Image />
-            <ProductCard.Info />
-            <ProductCard.Footer />
-          </ProductCard.Root>
+          />
         );
       })}
     </ProductSection>

@@ -80,6 +80,7 @@ export default function SettingsPage() {
   const methods = useForm({
     defaultValues: {
       store_name: "",
+      subdomain: "",
       description: "",
       email: "",
       phone_number: "",
@@ -112,6 +113,7 @@ export default function SettingsPage() {
     if (store) {
       reset({
         store_name: store.store_name || "",
+        subdomain: store.subdomain || "",
         description: store.description || "",
         email: store.email || "",
         phone_number: store.phone_number || "",
@@ -203,11 +205,33 @@ export default function SettingsPage() {
     if (!store?.id) return;
     try {
       const data = getValues();
+
+      // Enforce subdomain on Step 1
+      if (activeStep === 1) {
+        if (!data.subdomain || data.subdomain.trim() === "") {
+          toast.error("Please enter a valid store subdomain to proceed.");
+          return;
+        }
+      }
+
+      // Enforce store address and support hot-line on Step 2
+      if (activeStep === 2) {
+        if (!data.phone_number || data.phone_number.trim() === "") {
+          toast.error("Support Hot-line is compulsory. Please enter your support hot-line to proceed.");
+          return;
+        }
+        if (!data.address_street || data.address_street.trim() === "") {
+          toast.error("Store address is compulsory. Please set your store address to proceed.");
+          return;
+        }
+      }
+
       const formData = new FormData();
 
       // Fields for Store Update
       const mainFields = [
         "store_name",
+        "subdomain",
         "description",
         "email",
         "phone_number",
@@ -354,6 +378,7 @@ export default function SettingsPage() {
                   onSave={saveStoreDetails}
                   isSaving={isUpdatingStore}
                   isValidated={isValidated}
+                  storeId={store?.id}
                 />
               </motion.div>
             )}

@@ -62,7 +62,7 @@ export default function DefaultTemplate({
     <div className="bg-white dark:bg-zinc-950 min-h-screen font-sans text-zinc-900 dark:text-zinc-100 selection:bg-[var(--theme-primary)] selection:text-white">
       {/* ─── HEADER ─── */}
       <header className="sticky top-0 z-40 w-full bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800 ">
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4 md:gap-8">
+        <div className="w-full px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4 md:gap-8">
           {/* Logo & Name */}
           <div className="flex items-center gap-3 md:gap-4 shrink-0 min-w-0">
             {store.logo && (

@@ -137,7 +137,7 @@ export function StoreProductsGrid({
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.05 }}
                 >
-                  <ProductCard.Root
+                  <ProductCard
                     id={product.id}
                     slug={product.slug}
                     image={product.image}
@@ -166,10 +166,8 @@ export function StoreProductsGrid({
                       selectedCategory?.name ??
                       "Store Product"
                     }
-                  >
-                    <ProductCard.Image />
-                    <ProductCard.Info />
-                  </ProductCard.Root>
+                    showFooter={false}
+                  />
                 </motion.div>
               ))}
             </div>

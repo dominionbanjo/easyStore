@@ -26,7 +26,7 @@ export function DefaultHeader({
   return (
     <>
       <header className="bg-white/80 dark:bg-black/80 py-6 px-4 sm:px-6 lg:px-8 sticky top-0 md:static z-40 backdrop-blur-xl md:backdrop-blur-none md:bg-transparent border-b border-zinc-200/50 md:border-none transition-colors">
-        <div className="max-w-7xl mx-auto flex flex-row items-center justify-between gap-4">
+        <div className="w-full flex flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2 text-sm text-zinc-500 font-medium overflow-hidden flex-1 min-w-0 pb-2 md:pb-0 scrollbar-hide flex-1 min-w-0">
             <Link
               to={`/stores/${store.slug}`}

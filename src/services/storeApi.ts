@@ -44,6 +44,15 @@ export const storeApi = apiManager.injectEndpoints({
       }),
     }),
 
+    /* ───────── CHECK SUBDOMAIN AVAILABILITY ───────── */
+    checkSubdomain: builder.query<{ status: string; message: string; data: { available: boolean } }, { subdomain: string; storeId?: string }>({
+      query: ({ subdomain, storeId }) => ({
+        url: "store/lookup/check-subdomain",
+        method: "GET",
+        params: { subdomain, storeId },
+      }),
+    }),
+
     /* ───────── GET STORES (LIST) ───────── */
     getStores: builder.query<IGetStoresResponse, GetStoresArgs>({
       query: (params) => ({
@@ -277,6 +286,8 @@ export const storeApi = apiManager.injectEndpoints({
 export const {
   useCheckStoreNameQuery,
   useLazyCheckStoreNameQuery,
+  useCheckSubdomainQuery,
+  useLazyCheckSubdomainQuery,
 
   useGetStoresQuery,
 

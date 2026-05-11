@@ -56,7 +56,7 @@ export default function EditorialTemplate({
       <div className="min-h-screen bg-[#FDFBF7] dark:bg-[#1A1A1A] text-[#1A1A1A] dark:text-[#FDFBF7] font-serif selection:bg-[var(--theme-primary)] selection:text-white">
         {/* ─── MAGAZINE HEADER ─── */}
         <header className="sticky top-0 z-50 bg-white dark:bg-neutral-950 border-b-4 border-[var(--theme-primary)] py-4">
-          <div className="max-w-[1600px] mx-auto px-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="w-full px-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="flex items-center justify-between w-full md:w-auto min-w-0">
               <h1 className="text-2xl md:text-3xl font-black tracking-tighter lowercase flex-1 truncate pr-4">
                 {store?.store_name ?? "Editorial"}

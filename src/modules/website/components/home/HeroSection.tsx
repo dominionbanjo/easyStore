@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { motion, type Variants } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,6 +17,7 @@ import {
 import { AUTH_ROUTES } from "@/routes/index";
 import { getBaseDomain, areSubdomainsDisabled } from "@/utils/subdomain";
 import { useNavigate } from "react-router-dom";
+import { Modal } from "@/components/shared/Modal";
 
 // Hero main fade-in animation
 const transitionVariants: Variants = {
@@ -66,6 +68,7 @@ export default function HeroSection() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const user = useAppSelector(selectCurrentUser);
+  const [isVideoOpen, setIsVideoOpen] = useState(false);
 
   const handleGetStarted = () => {
     if (!user) {
@@ -158,7 +161,10 @@ export default function HeroSection() {
               transition={{ delay: 0.2 }}
               className="flex flex-col items-center gap-4 w-full"
             >
-              <button className="flex items-center gap-2 group/link text-white/80 hover:text-white transition-colors">
+              <button
+                onClick={() => setIsVideoOpen(true)}
+                className="flex items-center gap-2 group/link text-white/80 hover:text-white transition-colors"
+              >
                 <PlayCircle
                   variant="Bold"
                   color="currentColor"
@@ -290,6 +296,23 @@ export default function HeroSection() {
           </div>
         </div>
       </section>
+
+      <Modal
+        open={isVideoOpen}
+        onOpenChange={setIsVideoOpen}
+        title="How to setup your store"
+        className="max-w-[95vw] sm:max-w-[800px] h-fit"
+      >
+        <div className="aspect-video w-full bg-black relative">
+          <video
+            src="https://res.cloudinary.com/dcmg4skhv/video/upload/v1778502104/lv_0_20260511131325_fa0q0v.mp4"
+            className="w-full h-full object-contain"
+            controls
+            autoPlay
+            playsInline
+          />
+        </div>
+      </Modal>
     </>
   );
 }

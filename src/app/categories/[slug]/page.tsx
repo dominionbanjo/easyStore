@@ -128,7 +128,7 @@ export default function CategoryDetailsPage() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.05 }}
                   >
-                    <ProductCard.Root
+                    <ProductCard
                       id={product.id}
                       slug={product.slug}
                       name={product.name}
@@ -157,11 +157,7 @@ export default function CategoryDetailsPage() {
                         image_url: v.image_url ?? undefined,
                       }))}
                       category={product.category ?? slug}
-                    >
-                      <ProductCard.Image />
-                      <ProductCard.Info />
-                      <ProductCard.Footer />
-                    </ProductCard.Root>
+                    />
                   </motion.div>
                 ))}
               </div>

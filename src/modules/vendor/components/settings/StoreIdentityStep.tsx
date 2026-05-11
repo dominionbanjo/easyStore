@@ -1,3 +1,5 @@
+import { useState, useEffect } from "react";
+import { useFormContext } from "react-hook-form";
 import {
   Card,
   CardHeader,
@@ -7,9 +9,10 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Upload, Save, Loader2, Trash2, Store, Info } from "lucide-react";
+import { Upload, Save, Loader2, Trash2, Store, Info, Globe, Check, X, AlertCircle } from "lucide-react";
 import { FormInput } from "@/components/shared/form/FormInput";
 import { FormTextarea } from "@/components/shared/form/FormTextarea";
+import { useLazyCheckSubdomainQuery } from "@/services/storeApi";
 
 interface StoreIdentityStepProps {
   bannerPreview: string | null;
@@ -20,7 +23,20 @@ interface StoreIdentityStepProps {
   onSave: () => void;
   isSaving: boolean;
   isValidated?: boolean;
+  storeId?: string;
 }
+
+const slugify = (text: string) => {
+  return text
+    .toString()
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/[^\w\-]+/g, "")
+    .replace(/\-\-+/g, "-")
+    .replace(/^-+/, "")
+    .replace(/-+$/, "");
+};
 
 export function StoreIdentityStep({
   bannerPreview,
@@ -31,7 +47,74 @@ export function StoreIdentityStep({
   onSave,
   isSaving,
   isValidated,
+  storeId,
 }: StoreIdentityStepProps) {
+  const { watch, setError, clearErrors, setValue, register } = useFormContext();
+  const subdomainValue = watch("subdomain");
+  const [checking, setChecking] = useState(false);
+  const [available, setAvailable] = useState<boolean | null>(null);
+  const [validationError, setValidationError] = useState<string | null>(null);
+
+  const [triggerCheckSubdomain] = useLazyCheckSubdomainQuery();
+
+  useEffect(() => {
+    if (!subdomainValue) {
+      setAvailable(null);
+      setValidationError(null);
+      clearErrors("subdomain");
+      return;
+    }
+
+    const cleanSubdomain = subdomainValue.trim().toLowerCase();
+    
+    const regex = /^[a-z0-9-]+$/;
+    if (!regex.test(cleanSubdomain)) {
+      setAvailable(false);
+      setValidationError("Only lowercase letters, numbers, and dashes are allowed");
+      setError("subdomain", { type: "manual", message: "Invalid format" });
+      return;
+    }
+
+    if (cleanSubdomain.length < 2) {
+      setAvailable(false);
+      setValidationError("Subdomain must be at least 2 characters long");
+      setError("subdomain", { type: "manual", message: "Too short" });
+      return;
+    }
+
+    setAvailable(null);
+    setValidationError(null);
+    clearErrors("subdomain");
+    setChecking(true);
+
+    const delayDebounce = setTimeout(async () => {
+      try {
+        const response = await triggerCheckSubdomain({
+          subdomain: cleanSubdomain,
+          storeId,
+        }).unwrap();
+
+        if (response.data?.available) {
+          setAvailable(true);
+        } else {
+          setAvailable(false);
+          setValidationError(response.message || "This subdomain is already taken");
+          setError("subdomain", { type: "manual", message: "Subdomain taken" });
+        }
+      } catch (err: any) {
+        setAvailable(false);
+        setValidationError(err?.data?.message || "Subdomain is already taken or invalid");
+        setError("subdomain", { type: "manual", message: "Subdomain invalid" });
+      } finally {
+        setChecking(false);
+      }
+    }, 600);
+
+    return () => clearTimeout(delayDebounce);
+  }, [subdomainValue, storeId, triggerCheckSubdomain, setError, clearErrors]);
+
+  const host = window.location.host;
+  const cleanBaseDomain = host.replace(/^(vendor\.|admin\.)/, "");
   return (
     <Card className="border-none  overflow-hidden">
       <CardHeader className="bg-gradient-to-r from-emerald-500/10 via-emerald-500/5 to-transparent px-0 py-6">
@@ -135,6 +218,73 @@ export function StoreIdentityStep({
             placeholder="e.g. Dominion Gadgets"
             icon={<Store className="w-4 h-4" />}
           />
+
+          {/* Subdomain Selection Field */}
+          <div className="space-y-2 relative">
+            <Label className="text-zinc-600 dark:text-zinc-300 font-bold text-sm flex items-center gap-1.5">
+              <Globe className="w-4 h-4 text-emerald-500" />
+              Store Subdomain
+            </Label>
+            
+            <div className="relative flex items-center rounded-sm border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 overflow-hidden shadow-sm hover:border-zinc-400 dark:hover:border-zinc-500 transition-all focus-within:ring-2 focus-within:ring-emerald-500/20 focus-within:border-emerald-500">
+              <div className="pl-3 pr-2 py-3 text-zinc-400 dark:text-zinc-500 flex items-center">
+                <Globe className="w-4 h-4" />
+              </div>
+              
+              <input
+                {...register("subdomain")}
+                type="text"
+                placeholder="e.g. dominion-gadgets"
+                onChange={(e) => {
+                  const val = e.target.value
+                    .toLowerCase()
+                    .replace(/[^a-z0-9-\s]/g, "") // Keep letters, numbers, spaces, and dashes
+                    .replace(/[\s_]+/g, "-")      // Convert space/underscore to single dash
+                    .replace(/-+/g, "-");         // Collapse sequential dashes
+                  setValue("subdomain", val, { shouldValidate: true, shouldDirty: true });
+                }}
+                className="flex-1 py-3 bg-transparent text-sm font-medium outline-none text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 border-none"
+              />
+              
+              <div className="pr-3 text-sm font-bold text-zinc-400 dark:text-zinc-500 bg-zinc-50 dark:bg-zinc-800/50 py-3 px-3 border-l dark:border-zinc-800 select-none">
+                .{cleanBaseDomain}
+              </div>
+
+              {/* Live Availability Status Indicator */}
+              <div className="absolute right-[140px] flex items-center gap-1.5 pr-2 pointer-events-none">
+                {checking && (
+                  <Loader2 className="w-4 h-4 animate-spin text-emerald-500" />
+                )}
+                {!checking && available === true && (
+                  <div className="flex items-center text-emerald-600 dark:text-emerald-400 gap-1 text-xs font-bold animate-fade-in bg-emerald-500/10 px-2 py-0.5 rounded-sm">
+                    <Check className="w-3.5 h-3.5" /> Available
+                  </div>
+                )}
+                {!checking && available === false && (
+                  <div className="flex items-center text-destructive gap-1 text-xs font-bold animate-fade-in bg-destructive/10 px-2 py-0.5 rounded-sm">
+                    <X className="w-3.5 h-3.5" /> Taken
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Helper or validation error messages */}
+            {validationError ? (
+              <p className="text-xs font-medium text-destructive mt-1.5 flex items-center gap-1 animate-slide-up">
+                <AlertCircle className="w-3.5 h-3.5" />
+                {validationError}
+              </p>
+            ) : (
+              <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">
+                Choose a unique web address for your store. If left blank, it will default to 
+                <span className="font-bold text-emerald-600 dark:text-emerald-400 ml-1">
+                  {useFormContext().watch("store_name") 
+                    ? slugify(useFormContext().watch("store_name")) 
+                    : "your-store-name"}
+                </span>.
+              </p>
+            )}
+          </div>
 
           <FormTextarea
             name="description"

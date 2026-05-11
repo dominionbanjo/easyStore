@@ -125,7 +125,7 @@ export default function WishlistPage() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                 >
-                  <ProductCard.Root
+                  <ProductCard
                     id={item.product_id}
                     slug={item.product_id}
                     name={item.name}
@@ -148,11 +148,7 @@ export default function WishlistPage() {
                       ...v,
                       image_url: v.image_url ?? undefined,
                     }))}
-                  >
-                    <ProductCard.Image />
-                    <ProductCard.Info />
-                    <ProductCard.Footer />
-                  </ProductCard.Root>
+                  />
                 </motion.div>
               ))}
             </AnimatePresence>
