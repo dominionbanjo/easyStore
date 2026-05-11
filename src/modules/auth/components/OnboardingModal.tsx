@@ -21,6 +21,7 @@ import {
   setShowOnboardingModal,
   selectShowOnboardingModal,
   selectOnboardingModalStep,
+  setUser,
 } from "@/features/userSlice";
 import {
   useCreateStoreMutation,
@@ -144,8 +145,11 @@ export function OnboardingModal() {
       toast.success("Store created successfully!");
       markAsSeen();
       
+      const updatedUser = { ...user, account_type: "vendor" as const };
+      dispatch(setUser({ user: updatedUser }));
+
       handleRoleRedirect(
-        { ...user, account_type: "vendor" },
+        updatedUser,
         "/",
         navigate
       );

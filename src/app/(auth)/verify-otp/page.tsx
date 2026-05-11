@@ -14,10 +14,15 @@ import { useVerifyOtpMutation, useResendOtpMutation } from "@/services/authApi";
 import { cn } from "@/lib/utils";
 import { WEBSITE_ROUTES, AUTH_ROUTES } from "@/routes/temp";
 import { AuthLayout } from "@/modules/auth/components/AuthLayout";
+import { useAppSelector, useAppDispatch } from "@/hooks";
+import { selectCurrentUser, setUser } from "@/features/userSlice";
+import { handleRoleRedirect } from "@/utils/subdomain";
 
 export default function VerifyOtpPage() {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [searchParams] = useSearchParams();
+  const user = useAppSelector(selectCurrentUser);
 
   const email = searchParams.get("email");
   const isResetFlow = searchParams.get("reset") === "true";
@@ -66,7 +71,14 @@ export default function VerifyOtpPage() {
     try {
       const res = await verifyOtp({ email: email!, otp }).unwrap();
       toast.success(res.message || "Verification successful!");
-      navigate(redirectTo, { replace: true });
+      
+      const verifiedUser = res?.user || (user ? { ...user, email_verified: true } : null);
+      if (verifiedUser) {
+        dispatch(setUser({ user: verifiedUser }));
+        handleRoleRedirect(verifiedUser, redirectTo, navigate);
+      } else {
+        navigate(redirectTo, { replace: true });
+      }
     } catch (error: any) {
       toast.error(error?.data?.message || "OTP verification failed");
     }
