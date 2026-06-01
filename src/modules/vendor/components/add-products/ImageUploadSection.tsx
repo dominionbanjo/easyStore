@@ -18,7 +18,7 @@ import { toast } from "sonner";
 import { optimizeImage } from "@/utils/imageOptimizer";
 import { uploadToCloudinary } from "@/utils/uploadToCloudinary";
 import {
-  useGetCloudinarySignatureQuery,
+  useLazyGetCloudinarySignatureQuery,
   useDeleteCloudinaryImageMutation,
 } from "@/services/cloudinaryApi";
 import type { CloudinaryConfig } from "@/services/cloudinaryApi";
@@ -45,12 +45,8 @@ export default function ImageUploadSection({
   onRemoveGallery,
   storeSlug,
 }: ImageUploadSectionProps) {
-  const {
-    data: signature,
-    isLoading: signing,
-    isError,
-    refetch,
-  } = useGetCloudinarySignatureQuery();
+  const [triggerSignature, { isLoading: signing }] =
+    useLazyGetCloudinarySignatureQuery();
 
   const [deleteImage, { isLoading: deleting }] =
     useDeleteCloudinaryImageMutation();
@@ -62,13 +58,13 @@ export default function ImageUploadSection({
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
 
-  const canUpload = Boolean(signature?.signature) && !signing && !isError;
+  const canUpload = !signing;
 
   /* ───────── UPLOAD MAIN ───────── */
   const uploadMain = async (file: File, input?: HTMLInputElement) => {
     if (!canUpload) return;
     try {
-      const fresh = await refetch().unwrap();
+      const fresh = await triggerSignature(storeSlug).unwrap();
       setMainProgress(0);
 
       // Optimize image before upload
@@ -95,7 +91,7 @@ export default function ImageUploadSection({
   /* ───────── UPLOAD GALLERY ───────── */
   const uploadGallery = async (files: FileList, input?: HTMLInputElement) => {
     if (!canUpload) return;
-    const fresh = await refetch().unwrap();
+    const fresh = await triggerSignature(storeSlug).unwrap();
 
     // Create placeholders for each file
     const fileArray = Array.from(files);

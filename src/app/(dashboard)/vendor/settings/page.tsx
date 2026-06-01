@@ -14,7 +14,7 @@ import {
 } from "@/services/userApi";
 
 import {
-  useGetCloudinarySignatureQuery,
+  useLazyGetCloudinarySignatureQuery,
   useDeleteCloudinaryImageMutation,
   type CloudinaryConfig,
 } from "@/services/cloudinaryApi";
@@ -55,12 +55,8 @@ export default function SettingsPage() {
     useVerifyBankAccountMutation();
 
   /* ───────── CLOUDINARY ───────── */
-  const {
-    data: signature,
-    isLoading: signing,
-    isError: signatureError,
-    refetch: refetchSignature,
-  } = useGetCloudinarySignatureQuery();
+  const [triggerSignature, { isLoading: signing }] =
+    useLazyGetCloudinarySignatureQuery();
 
   const [deleteCloudinaryImage, { isLoading: isDeletingBanner }] =
     useDeleteCloudinaryImageMutation();
@@ -74,8 +70,7 @@ export default function SettingsPage() {
     number | null
   >(null);
   const [bannerPublicId, setBannerPublicId] = useState<string | null>(null);
-  const canUpload =
-    Boolean(signature?.signature) && !signing && !signatureError;
+  const canUpload = !signing;
 
   const methods = useForm({
     defaultValues: {
@@ -154,7 +149,7 @@ export default function SettingsPage() {
     }
 
     try {
-      const freshConfig = await refetchSignature().unwrap();
+      const freshConfig = await triggerSignature(store?.slug || "general").unwrap();
       setBannerUploadProgress(0);
 
       const uploaded = await uploadToCloudinary(

@@ -17,10 +17,11 @@ type CloudinarySignatureApiResponse = {
 export const cloudinaryApi = apiManager.injectEndpoints({
   endpoints: (builder) => ({
     /* ───────── SIGNATURE ───────── */
-    getCloudinarySignature: builder.query<CloudinaryConfig, void>({
-      query: () => ({
+    getCloudinarySignature: builder.query<CloudinaryConfig, string | void>({
+      query: (subfolder) => ({
         url: "/uploads/cloudinary-signature",
         method: "GET",
+        params: subfolder ? { subfolder } : undefined,
       }),
       transformResponse: (response: CloudinarySignatureApiResponse) =>
         response.data,
@@ -42,5 +43,6 @@ export const cloudinaryApi = apiManager.injectEndpoints({
 
 export const {
   useGetCloudinarySignatureQuery,
+  useLazyGetCloudinarySignatureQuery,
   useDeleteCloudinaryImageMutation,
 } = cloudinaryApi;

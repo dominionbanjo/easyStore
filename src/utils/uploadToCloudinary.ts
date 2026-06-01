@@ -25,9 +25,12 @@ export async function uploadToCloudinary(
 ): Promise<UploadResult> {
   const formData = new FormData();
 
-  const folder = options?.subfolder
-    ? `${config.folder}/${options.subfolder}`
-    : config.folder;
+  const folder =
+    options?.subfolder &&
+    config.folder !== options.subfolder &&
+    !config.folder.endsWith(`/${options.subfolder}`)
+      ? `${config.folder}/${options.subfolder}`
+      : config.folder;
 
   formData.append("file", file);
   formData.append("api_key", config.apiKey);

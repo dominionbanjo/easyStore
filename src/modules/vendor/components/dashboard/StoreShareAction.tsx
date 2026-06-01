@@ -31,9 +31,9 @@ export function StoreShareAction({ store, className }: StoreShareActionProps) {
     }
 
     const baseDomain = getBaseDomain();
-    const slug = store.slug;
-    const storeUrl = slug
-      ? `${window.location.protocol}//${slug}.${baseDomain}`
+    const subdomain = store.subdomain || store.slug;
+    const storeUrl = subdomain
+      ? `${window.location.protocol}//${subdomain}.${baseDomain}`
       : `${window.location.protocol}//${baseDomain}/stores/${store.id}`;
 
     setIsSharing(true);
@@ -219,8 +219,8 @@ export function StoreShareAction({ store, className }: StoreShareActionProps) {
                 Shop Directly At:
               </span>
               <span className="text-white font-black text-3xl">
-                {store?.slug
-                  ? `${store.slug}.eazystore.com.ng`
+                {store?.subdomain || store?.slug
+                  ? `${store.subdomain || store.slug}.eazystore.com.ng`
                   : "eazystore.com.ng"}
               </span>
             </div>
