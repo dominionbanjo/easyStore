@@ -157,7 +157,6 @@ export default function SettingsPage() {
         freshConfig as CloudinaryConfig,
         {
           onProgress: (p) => setBannerUploadProgress(p),
-          subfolder: store?.slug || "general",
         },
       );
 

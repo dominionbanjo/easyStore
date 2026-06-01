@@ -75,7 +75,6 @@ export default function ImageUploadSection({
         fresh as CloudinaryConfig,
         {
           onProgress: (p) => setMainProgress(p),
-          subfolder: storeSlug,
         },
       );
       onMainUploaded(uploaded);
@@ -116,7 +115,6 @@ export default function ImageUploadSection({
                 ),
               );
             },
-            subfolder: storeSlug,
           });
         }),
       );

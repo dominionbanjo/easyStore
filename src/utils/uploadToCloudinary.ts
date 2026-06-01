@@ -15,7 +15,6 @@ type CloudinaryConfig = {
 
 type UploadOptions = {
   onProgress?: (percent: number) => void;
-  subfolder?: string;
 };
 
 export async function uploadToCloudinary(
@@ -25,18 +24,11 @@ export async function uploadToCloudinary(
 ): Promise<UploadResult> {
   const formData = new FormData();
 
-  const folder =
-    options?.subfolder &&
-    config.folder !== options.subfolder &&
-    !config.folder.endsWith(`/${options.subfolder}`)
-      ? `${config.folder}/${options.subfolder}`
-      : config.folder;
-
   formData.append("file", file);
   formData.append("api_key", config.apiKey);
   formData.append("timestamp", String(config.timestamp));
   formData.append("signature", config.signature);
-  formData.append("folder", folder);
+  formData.append("folder", config.folder);
 
   try {
     const res = await axios.post(
