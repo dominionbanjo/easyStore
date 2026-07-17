@@ -38,7 +38,7 @@ export default function DiscoveryHero() {
               <span>Curated Selection</span>
             </div>
 
-            <h1 className="text-6xl md:text-8xl font-black tracking-tighter mb-8 text-foreground">
+            <h1 className="text-3xl md:text-5xl font-black tracking-tighter mb-6 text-foreground">
               Discover <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-emerald-600 dark:from-emerald-400 dark:to-teal-500">
                 Something New

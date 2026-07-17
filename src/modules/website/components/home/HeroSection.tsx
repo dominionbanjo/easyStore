@@ -1,13 +1,15 @@
 import { useState } from "react";
 import { motion, type Variants } from "framer-motion";
-import { Button } from "@/components/ui/button";
 import {
-  Global,
   Flash,
   ShieldTick,
-  Location,
   PlayCircle,
   Shop,
+  Location,
+  Heart,
+  TrendUp,
+  Money,
+  Crown,
 } from "iconsax-react";
 import { useAppDispatch, useAppSelector } from "@/hooks";
 import {
@@ -19,29 +21,39 @@ import { getBaseDomain, areSubdomainsDisabled } from "@/utils/subdomain";
 import { useNavigate } from "react-router-dom";
 import { Modal } from "@/components/shared/Modal";
 
-// Hero main fade-in animation
-const transitionVariants: Variants = {
-  hidden: { opacity: 0, y: 20 },
+const containerVariants: Variants = {
+  hidden: {},
   visible: {
-    opacity: 1,
-    y: 0,
     transition: {
-      type: "spring",
-      bounce: 0.2,
-      duration: 0.8,
+      staggerChildren: 0.12,
+      delayChildren: 0.1,
     },
   },
 };
 
-// Campaign video path
-// const CAMPAIGN_VIDEO =
-//   "https://res.cloudinary.com/dcmg4skhv/video/upload/v1776268865/campaign2_gstecn.mp4";
+const fadeUpVariants: Variants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.7, ease: [0.25, 0.1, 0.25, 1] },
+  },
+};
+
+const scaleInVariants: Variants = {
+  hidden: { opacity: 0, scale: 0.9 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: { duration: 0.5, ease: [0.25, 0.1, 0.25, 1] },
+  },
+};
 
 export function HeroTitle() {
   return (
     <>
       <span className="block lg:inline">Launch your store,</span>{" "}
-      <span className="block lg:inline">own your link, and</span>
+      <span className="block lg:inline">own your website, and</span>
       <span className="block">get paid securely</span>
       <span className="relative inline-block">
         <span className="relative z-10 text-primary">
@@ -56,6 +68,9 @@ export function HeroTitle() {
               stroke="currentColor"
               strokeWidth="4"
               fill="transparent"
+              strokeDasharray="200"
+              strokeDashoffset="200"
+              className="animate-dash"
             />
           </svg>
         </span>
@@ -89,7 +104,6 @@ export default function HeroSection() {
       return;
     }
 
-    // If regular user, show onboarding to create store
     dispatch(
       setShowOnboardingModal({
         show: true,
@@ -100,9 +114,8 @@ export default function HeroSection() {
 
   return (
     <>
-      <section className="relative isolate pt-12 sm:pt-24 lg:pt-20 pb-20 sm:pb-32 lg:pb-40 overflow-hidden">
-        {/* IMMERSIVE BACKGROUND (Full Coverage with Refined Blur) */}
-        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden blur-[4px] scale-105">
+      <section className="relative isolate pt-12 sm:pt-20 lg:pt-28 pb-20 sm:pb-32 lg:pb-40 overflow-hidden">
+        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden blur-[2px]">
           <img
             src="https://res.cloudinary.com/dcmg4skhv/image/upload/f_auto,q_auto/v1775869586/african_shopping_mobile_uksxfx.jpg"
             alt=""
@@ -117,183 +130,102 @@ export default function HeroSection() {
             fetchPriority="high"
             className="hidden sm:block w-full h-full object-cover"
           />
-          {/* Solid Cinematic Overlay (Ensures text readability without washing out the image) */}
-          <div className="absolute inset-0 bg-black/60" />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-neutral-950" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-transparent to-black/90" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/90" />
+          <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-transparent to-transparent" />
         </div>
 
-        <div className="relative z-10 w-full mx-auto px-3 sm:px-6 lg:px-8">
-          <div className="flex flex-col items-center justify-center gap-12 sm:gap-20 lg:gap-12">
-            {/* CONTENT SECTION (Full Width) */}
-            <div className="w-full text-center space-y-6">
-              <div className="space-y-4">
-                <motion.h1
-                  variants={transitionVariants}
-                  initial="hidden"
-                  animate="visible"
-                  className="text-[40px] sm:text-7xl md:text-8xl lg:text-[82px] font-black tracking-tighter leading-[1.05] text-white max-w-screen-2xl mx-auto drop-shadow-[0_4px_40px_rgba(0,0,0,0.8)]"
-                >
-                  <HeroTitle />
-                </motion.h1>
+        <div className="relative z-10 w-full mx-auto max-w-6xl px-4 sm:px-8 lg:px-16">
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="flex flex-col items-center text-center space-y-7 lg:space-y-8"
+          >
+            <motion.h1
+              variants={fadeUpVariants}
+              className="text-[34px] sm:text-5xl md:text-6xl lg:text-[54px] font-black tracking-tighter leading-[1.08] text-white"
+            >
+              <HeroTitle />
+            </motion.h1>
 
-                <motion.p
-                  variants={transitionVariants}
-                  initial="hidden"
-                  animate="visible"
-                  transition={{ delay: 0.1 }}
-                  className="w-[90%] text-lg sm:text-xl lg:text-2xl leading-relaxed text-neutral-100 font-bold max-w-5xl mx-auto text-center drop-shadow-[0_4px_40px_rgba(0,0,0,0.8)]"
-                >
-                  Give your business the professional edge it deserves. Build
-                  trust, own your brand, and sell with confidence.
-                </motion.p>
-              </div>
-            </div>
-          </div>
-        </div>
+            <motion.p
+              variants={fadeUpVariants}
+              className="text-base sm:text-lg lg:text-xl leading-relaxed text-neutral-300 font-medium max-w-3xl"
+            >
+              Your brand deserves a store that works as hard as you do.
+              Launch in minutes with your own website, payment protection,
+              and zero technical skills.
+            </motion.p>
 
-        <div className="relative z-10 w-full mx-auto px-3 sm:px-6 lg:px-8 mt-4 sm:mt-4">
-          <div className="flex flex-col items-center justify-center gap-8 sm:gap-12 lg:gap-6 w-full">
-            {/* CTAs */}
             <motion.div
-              variants={transitionVariants}
-              initial="hidden"
-              animate="visible"
-              transition={{ delay: 0.2 }}
-              className="flex flex-col items-center gap-4 w-full"
+              variants={scaleInVariants}
+              className="flex flex-col sm:flex-row items-center gap-4"
             >
               <button
+                onClick={handleGetStarted}
+                className="flex items-center gap-2 px-5 py-2 bg-primary hover:bg-emerald-600 text-white rounded-sm text-sm font-black hover:scale-[1.02] active:scale-95 transition-all animate-pulse-glow shadow-2xl shadow-emerald-500/30"
+              >
+                Get Started
+              </button>
+
+              <button
                 onClick={() => setIsVideoOpen(true)}
-                className="flex items-center gap-2 group/link text-white/80 hover:text-white transition-colors"
+                className="flex items-center gap-2 px-5 py-2 bg-white/5 backdrop-blur-xl border border-white/10 rounded-sm hover:bg-white/10 transition-colors group"
               >
                 <PlayCircle
                   variant="Bold"
-                  color="currentColor"
-                  size={24}
-                  className="transition-transform group-hover/link:scale-110"
+                  color="#10b981"
+                  className="group-hover:scale-110 transition-transform"
+                  size={18}
                 />
-                <span className="text-lg font-bold border-b-2 border-transparent group-hover/link:border-emerald-400">
-                  See how it works
-                </span>
+                <span className="text-white font-black text-sm">Watch demo</span>
               </button>
-
-              <Button
-                size="lg"
-                onClick={handleGetStarted}
-                className="group relative bg-primary hover:bg-emerald-600 dark:bg-emerald-500 dark:hover:bg-emerald-400 text-white rounded-sm h-16 px-10 text-xl font-black hover:scale-[1.02] active:scale-95 transition-all w-fit shadow-2xl shadow-emerald-500/40"
-              >
-                <span className="relative flex items-center gap-2">
-                  Create Store for Free
-                </span>
-              </Button>
             </motion.div>
 
-            {/* Premium Custom Link Preview Card */}
             <motion.div
-              variants={transitionVariants}
-              initial="hidden"
-              animate="visible"
-              transition={{ delay: 0.15 }}
-              className="flex justify-center w-full px-4"
+              variants={fadeUpVariants}
+              className="flex flex-wrap items-center justify-center gap-6"
             >
-              <div className="bg-neutral-900/90 backdrop-blur-2xl border border-white/20 p-6 rounded-sm shadow-[0_30px_60px_rgba(0,0,0,0.6)] space-y-5 md:space-y-0 md:flex md:items-center md:gap-8 w-full max-w-[320px] md:max-w-fit transition-all duration-500">
-                <div className="flex items-center gap-4 shrink-0">
-                  <div className="w-11 h-11 rounded-sm bg-primary/20 flex items-center justify-center text-primary">
-                    <Shop variant="Bold" color="currentColor" size={26} />
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-neutral-400">
-                      Custom Domain
-                    </span>
-                    <span className="text-base font-bold text-white whitespace-nowrap">
-                      Your Brand, Your Link.
-                    </span>
-                  </div>
-                </div>
-
-                <div className="bg-white/5 rounded-sm p-4 border border-white/10 w-full md:w-[280px]">
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="flex gap-1.5">
-                      <div className="w-2 h-2 rounded-full bg-red-400/60" />
-                      <div className="w-2 h-2 rounded-full bg-yellow-400/60" />
-                      <div className="w-2 h-2 rounded-full bg-green-400/60" />
-                    </div>
-                    <div className="h-1 flex-1 bg-white/5 rounded-full" />
-                  </div>
-                  <div className="text-xs font-black tracking-tight flex items-center gap-1.5 whitespace-nowrap">
-                    <span className="text-neutral-400">https://</span>
-                    <span className="text-emerald-400 italic font-black">
-                      gameshop
-                    </span>
-                    <span className="text-neutral-200 font-black">
-                      .eazystore.com.ng
-                    </span>
-                  </div>
-                </div>
+              <div className="flex items-center gap-2 text-neutral-300">
+                <span className="text-emerald-400 font-black text-lg">₦10M+</span>
+                <span className="text-sm font-medium">processed securely</span>
+              </div>
+              <div className="w-px h-5 bg-white/10" />
+              <div className="flex items-center gap-2 text-neutral-300">
+                <span className="text-amber-400 font-black text-lg">500+</span>
+                <span className="text-sm font-medium">active stores</span>
               </div>
             </motion.div>
 
-            {/* Core Value Pillars */}
             <motion.div
-              variants={transitionVariants}
-              initial="hidden"
-              animate="visible"
-              transition={{ delay: 0.2 }}
-              className="grid grid-cols-1 sm:grid-cols-2 gap-8 text-left max-w-2xl mx-auto"
+              variants={fadeUpVariants}
+              className="inline-flex items-center gap-2 bg-white/5 backdrop-blur-xl border border-white/10 rounded-sm px-5 py-3"
             >
-              <div className="flex items-start gap-4">
-                <div className="p-3 bg-white/10 backdrop-blur-md rounded-sm shrink-0 border border-white/10">
-                  <Global variant="Bold" color="#10b981" size={24} />
-                </div>
-                <div>
-                  <h3 className="font-bold text-white text-lg">
-                    Your Store Link
-                  </h3>
-                  <p className="text-sm text-neutral-300 mt-1 drop-shadow-md">
-                    Not a marketplace profile — a real brand.
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start gap-4">
-                <div className="p-3 bg-white/10 backdrop-blur-md rounded-sm shrink-0 border border-white/10">
-                  <Flash variant="Bold" color="#f59e0b" size={24} />
-                </div>
-                <div>
-                  <h3 className="font-bold text-white text-lg">
-                    Instant Setup
-                  </h3>
-                  <p className="text-sm text-neutral-300 mt-1 drop-shadow-md">
-                    No coding, no stress. Go live in minutes.
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start gap-4">
-                <div className="p-3 bg-white/10 backdrop-blur-md rounded-sm shrink-0 border border-white/10">
-                  <ShieldTick variant="Bold" color="#10b981" size={24} />
-                </div>
-                <div>
-                  <h3 className="font-bold text-white text-lg">
-                    Secure Escrow
-                  </h3>
-                  <p className="text-sm text-neutral-300 mt-1 drop-shadow-md">
-                    Get paid safely. Buyers trust you more.
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start gap-4">
-                <div className="p-3 bg-white/10 backdrop-blur-md rounded-sm shrink-0 border border-white/10">
-                  <Location variant="Bold" color="#3b82f6" size={24} />
-                </div>
-                <div>
-                  <h3 className="font-bold text-white text-lg">
-                    Built for Nigeria
-                  </h3>
-                  <p className="text-sm text-neutral-300 mt-1 drop-shadow-md">
-                    Works with local payment realities.
-                  </p>
-                </div>
-              </div>
+              <span className="text-[10px] font-black uppercase tracking-widest text-neutral-400">
+                Custom Website
+              </span>
+              <span className="text-neutral-500 mx-1">—</span>
+              <span className="text-emerald-400 font-black text-sm italic">
+                yourbrand
+              </span>
+              <span className="text-white font-bold text-sm">
+                .eazystore.com.ng
+              </span>
             </motion.div>
-          </div>
+          </motion.div>
+        </div>
+
+        <div className="hidden lg:block absolute inset-0 z-[5] pointer-events-none overflow-hidden">
+          <Shop variant="Bold" color="#10b981" size={32} className="absolute left-[5%] top-[12%] animate-float" />
+          <Location variant="Bold" color="#f59e0b" size={28} className="absolute left-[3%] top-[35%] animate-float-delayed" />
+          <Heart variant="Bold" color="#ef4444" size={26} className="absolute left-[6%] top-[58%] animate-float" />
+          <Crown variant="Bold" color="#f59e0b" size={30} className="absolute left-[4%] top-[80%] animate-float-delayed" />
+
+          <Flash variant="Bold" color="#f59e0b" size={32} className="absolute right-[5%] top-[10%] animate-float-delayed" />
+          <ShieldTick variant="Bold" color="#10b981" size={28} className="absolute right-[3%] top-[33%] animate-float" />
+          <TrendUp variant="Bold" color="#10b981" size={26} className="absolute right-[6%] top-[56%] animate-float-delayed" />
+          <Money variant="Bold" color="#10b981" size={30} className="absolute right-[4%] top-[78%] animate-float" />
         </div>
       </section>
 

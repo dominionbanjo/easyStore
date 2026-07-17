@@ -237,7 +237,7 @@ export default function Header() {
     >
       <nav
         className={cn(
-          "flex w-full items-center justify-between backdrop-blur-md transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] px-4 sm:px-14 xl:px-16 py-3",
+          "flex w-full items-center justify-between backdrop-blur-md transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] px-4 sm:px-14 xl:px-16 py-2",
           "fixed top-0 left-0 right-0",
           "will-change-[transform,background-color,border-color,box-shadow]",
           isScrolled
@@ -505,12 +505,12 @@ export default function Header() {
               placeholder="Search products..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="border-0  bg-transparent py-6 focus-visible:ring-0 text-base px-4 flex-1 min-w-0 placeholder:text-muted-foreground/70"
+              className="border-0  bg-transparent py-3 focus-visible:ring-0 text-sm px-4 flex-1 min-w-0 placeholder:text-muted-foreground/70"
             />
 
             <Button
               type="submit"
-              className="rounded-sm mr-1.5 h-10 px-6 font-semibold bg-primary hover:bg-primary/90 text-primary-foreground  transition-all"
+              className="rounded-sm mr-1.5 h-8 px-5 text-sm font-semibold bg-primary hover:bg-primary/90 text-primary-foreground  transition-all"
             >
               Search
             </Button>
@@ -703,7 +703,7 @@ export default function Header() {
                   >
                     <Button
                       variant="outline"
-                      className="rounded-sm px-4 text-sm h-9"
+                      className="rounded-sm px-3 text-xs h-8"
                     >
                       Sign In
                     </Button>
@@ -713,7 +713,7 @@ export default function Header() {
                       location.pathname + location.search,
                     )}`}
                   >
-                    <Button className="rounded-sm px-4 text-sm h-9 text-white">
+                    <Button className="rounded-sm px-3 text-xs h-8 text-white">
                       Sign Up
                     </Button>
                   </SmartLink>
