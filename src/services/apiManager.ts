@@ -27,6 +27,8 @@ export const apiManager = createApi({
     "Notification",
     "Broadcast",
     "Payout",
+    "Staff",
+    "Order",
   ],
   endpoints: () => ({}),
 });

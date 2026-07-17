@@ -12,6 +12,7 @@ import {
   AccountsLayout,
   VendorDashboardLayout,
   SuperAdminDashboardLayout,
+  StaffDashboardLayout,
 } from "@/routes/lazyPages";
 import LoadingScreen from "@/Loading";
 
@@ -121,6 +122,14 @@ export default function App() {
                   <Route path="templates" element={<Pages.VendorTemplatesPage />} />
                   <Route path="settings" element={<Pages.VendorSettingsPage />} />
                   <Route path="help" element={<Pages.HelpPage />} />
+                  <Route path="staff" element={<Pages.StaffManagementPage />} />
+                  <Route path="sales-terminal" element={<Pages.SalesTerminalPage />} />
+                </Route>
+
+                {/* ─── STAFF DASHBOARD (dev mode) ─── */}
+                <Route path="/staff" element={<StaffDashboardLayout />}>
+                  <Route index element={<Pages.SalesTerminalPage />} />
+                  <Route path="settings" element={<Pages.StaffSettingsPage />} />
                 </Route>
 
                 {/* ─── ADMIN DASHBOARD  (/admin/*) ─── */}
@@ -161,6 +170,15 @@ export default function App() {
                 <Route path="templates" element={<Pages.VendorTemplatesPage />} />
                 <Route path="settings" element={<Pages.VendorSettingsPage />} />
                 <Route path="help" element={<Pages.HelpPage />} />
+                <Route path="staff" element={<Pages.StaffManagementPage />} />
+                <Route path="sales-terminal" element={<Pages.SalesTerminalPage />} />
+              </Route>
+            )}
+
+            {!subdomainsDisabled && subdomain === "staff" && (
+              <Route path="/" element={<StaffDashboardLayout />}>
+                <Route index element={<Pages.SalesTerminalPage />} />
+                <Route path="settings" element={<Pages.StaffSettingsPage />} />
               </Route>
             )}
 

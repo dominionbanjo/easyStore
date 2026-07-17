@@ -191,6 +191,25 @@ const VendorMessagesPageImport = () => import("@/app/(dashboard)/vendor/messages
 export const VendorMessagesPage = lazy(VendorMessagesPageImport);
 export const preloadVendorMessagesPage = VendorMessagesPageImport;
 
+/* ───────────────── STAFF PAGES ───────────────── */
+const StaffManagementPageImport = () =>
+  import("@/modules/vendor/components/staff/StaffManagementPage").then((m) => ({ default: m.StaffManagementPage }));
+export const StaffManagementPage = lazy(StaffManagementPageImport);
+export const preloadStaffManagementPage = StaffManagementPageImport;
+
+const SalesTerminalPageImport = () =>
+  import("@/modules/vendor/components/sales-terminal/SalesTerminalPage").then((m) => ({ default: m.SalesTerminalPage }));
+export const SalesTerminalPage = lazy(SalesTerminalPageImport);
+export const preloadSalesTerminalPage = SalesTerminalPageImport;
+
+const StaffSettingsPageImport = () =>
+  import("@/modules/staff/StaffSettingsPage").then((m) => ({ default: m.StaffSettingsPage }));
+export const StaffSettingsPage = lazy(StaffSettingsPageImport);
+export const preloadStaffSettingsPage = StaffSettingsPageImport;
+
+import { StaffDashboardLayout as _StaffDashboardLayout } from "@/modules/vendor/layout/StaffDashboardLayout";
+export const StaffDashboardLayout = _StaffDashboardLayout;
+
 /* ───────────────── ADMIN PAGES ───────────────── */
 const SuperAdminOverviewPageImport = () =>
   import("@/app/(dashboard)/admin/page");

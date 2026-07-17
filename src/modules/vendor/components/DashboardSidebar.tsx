@@ -13,6 +13,7 @@ import {
   Palette,
   MessageSquare,
   Banknote as BanknoteIcon,
+  UserCog,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -33,6 +34,7 @@ const preloadMap: Record<string, () => void> = {
   "/payouts": () => { import("@/app/(dashboard)/vendor/payouts/page"); },
   "/help": () => { import("@/app/(dashboard)/vendor/help/page"); },
   "/messages": () => { import("@/app/(dashboard)/vendor/messages/page"); },
+  "/staff": () => { import("@/modules/vendor/components/staff/StaffManagementPage"); },
 };
 
 const allVendorPreloaders: Array<() => void> = [
@@ -54,6 +56,7 @@ const menuItems = [
   { label: "Products", icon: Package, to: "/products" },
   { label: "Orders", icon: ShoppingCart, to: "/orders" },
   { label: "Customers", icon: Users, to: "/customers" },
+  { label: "Staff", icon: UserCog, to: "/staff" },
   { label: "Payouts", icon: BanknoteIcon, to: "/payouts" },
   { label: "Templates", icon: Palette, to: "/templates" },
   { label: "Messages", icon: MessageSquare, to: "/messages" },

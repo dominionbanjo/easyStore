@@ -62,6 +62,7 @@ export const VENDOR_ROUTES = {
 
   // Customers
   CUSTOMERS: "/customers",
+  STAFF: "/staff",
   MESSAGES: "/messages",
   TEMPLATES: "/templates",
 
