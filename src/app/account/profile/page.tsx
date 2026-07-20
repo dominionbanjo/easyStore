@@ -191,7 +191,7 @@ export default function UserProfilePage() {
                         Joined
                       </div>
                       <span className="font-semibold">
-                        {format(new Date(user.created_at), "MMM yyyy")}
+                        {user.created_at ? format(new Date(user.created_at), "MMM yyyy") : "—"}
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
