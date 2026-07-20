@@ -208,7 +208,7 @@ export function EditProfileModal({
 
   const cityOptionsList = useMemo(() => {
     if (countryCode !== "NG" || !stateCode) return [];
-    return (geography.ngCities[stateCode] || []).map((c) => ({ label: c.name, value: c.name }));
+    return ((geography.ngCities as Record<string, readonly { readonly name: string }[]>)[stateCode] || []).map((c) => ({ label: c.name, value: c.name }));
   }, [countryCode, stateCode]);
 
   useEffect(() => {

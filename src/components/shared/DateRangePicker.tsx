@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, subDays } from "date-fns";
+import { format, startOfWeek, startOfMonth } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -45,7 +45,7 @@ interface DateRangePickerProps {
   onChange: (range: { dateFrom?: string; dateTo?: string }) => void;
 }
 
-export function DateRangePicker({ value, onChange }: DateRangePickerProps) {
+export function DateRangePicker({ value: _value, onChange }: DateRangePickerProps) {
   const [activePreset, setActivePreset] = useState<PresetKey>("all");
   const [range, setRange] = useState<DateRange | undefined>(undefined);
   const [open, setOpen] = useState(false);

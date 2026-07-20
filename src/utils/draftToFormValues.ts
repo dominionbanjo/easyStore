@@ -8,6 +8,7 @@ export type BuildCreatePayloadArgs = {
     name: string;
     category_id: string;
     description?: string | null;
+    barcode?: string | null;
 
     price?: number | null;
     discount_price?: number | null;

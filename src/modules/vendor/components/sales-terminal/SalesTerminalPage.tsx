@@ -442,6 +442,7 @@ export function SalesTerminalPage() {
 function ProductCard({
   product,
   onAdd,
+  onOpenVariant,
 }: {
   product: { id: string; name: string; slug: string; price: number; image: string | null; stock: number; variants: { id: string; price: number; stock: number; combinations: Record<string, string>; image_url: string | null }[] };
   onAdd: (product: { id: string; name: string; price: number; image: string | null }, variant?: { id: string; price: number; image_url: string | null; combinations: Record<string, string> }) => void;
