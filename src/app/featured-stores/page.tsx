@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { Store } from "lucide-react";
 import { useGetStoresQuery } from "@/services/storeApi";
 import StoreCard from "@/components/shared/StoreCard";
@@ -6,21 +5,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function FeaturedStoresPage() {
   const { data: stores, isLoading } = useGetStoresQuery({ limit: 12 });
-
-  const container = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
-
-  const item = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0 },
-  };
 
   return (
     <div className="min-h-screen bg-white dark:bg-neutral-950 transition-colors duration-300 pb-24">
@@ -57,14 +41,11 @@ export default function FeaturedStoresPage() {
             ))}
           </div>
         ) : (
-          <motion.div
-            variants={container}
-            initial="hidden"
-            animate="show"
+          <div
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
           >
             {stores?.data?.items?.map((store) => (
-              <motion.div key={store.id} variants={item}>
+              <div key={store.id}>
                 <StoreCard
                   id={store.id}
                   name={store.store_name}
@@ -75,9 +56,9 @@ export default function FeaturedStoresPage() {
                   totalProducts={store.total_products}
                   address={store.address}
                 />
-              </motion.div>
+              </div>
             ))}
-          </motion.div>
+          </div>
         )}
       </div>
     </div>

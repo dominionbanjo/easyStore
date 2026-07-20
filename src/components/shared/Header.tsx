@@ -294,13 +294,16 @@ export default function Header() {
                     {isAuthenticated && user && (
                       <>
                         {(user.account_type === "vendor" ||
-                          user.account_type === "admin") && (
+                          user.account_type === "admin" ||
+                          user.account_type === "staff") && (
                           <button
                             onClick={() => {
                               const target =
                                 user.account_type === "vendor"
                                   ? "vendor"
-                                  : "admin";
+                                  : user.account_type === "staff"
+                                    ? "staff"
+                                    : "admin";
                               if (areSubdomainsDisabled()) {
                                 navigate(`/${target}`);
                               } else {
@@ -624,11 +627,16 @@ export default function Header() {
 
                     {/* 🔹 CONDITIONAL DASHBOARD LINK */}
                     {(user.account_type === "vendor" ||
-                      user.account_type === "admin") && (
+                      user.account_type === "admin" ||
+                      user.account_type === "staff") && (
                       <button
                         onClick={() => {
                           const target =
-                            user.account_type === "vendor" ? "vendor" : "admin";
+                            user.account_type === "vendor"
+                              ? "vendor"
+                              : user.account_type === "staff"
+                                ? "staff"
+                                : "admin";
                           if (areSubdomainsDisabled()) {
                             navigate(`/${target}`);
                           } else {

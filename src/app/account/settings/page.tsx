@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   User,
@@ -85,15 +84,12 @@ export default function SettingsPage() {
 
           {/* 🧩 Tab Content */}
           <TabsContent value="profile">
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.25 }}
+            <div
               className="space-y-6"
             >
               <ProfileOverview />
               <PersonalInfoForm />
-            </motion.div>
+            </div>
           </TabsContent>
 
           <TabsContent value="preferences">

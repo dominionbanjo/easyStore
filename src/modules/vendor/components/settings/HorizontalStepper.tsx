@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { Check, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -22,12 +21,9 @@ export function HorizontalStepper({ steps, activeStep, onStepClick }: Horizontal
         <div className="absolute top-5 left-0 w-full h-0.5 bg-muted z-0" />
         
         {/* Progress Line */}
-        <motion.div 
-          className="absolute top-5 left-0 h-0.5 bg-primary z-0 origin-left"
-          initial={{ scaleX: 0 }}
-          animate={{ scaleX: (activeStep - 1) / (steps.length - 1) }}
-          transition={{ duration: 0.5, ease: "easeInOut" }}
-          style={{ width: "100%" }}
+        <div 
+          className="absolute top-5 left-0 h-0.5 bg-primary z-0 transition-all duration-700"
+          style={{ width: `${((activeStep - 1) / (steps.length - 1)) * 100}%` }}
         />
 
         {steps.map((step, index) => {

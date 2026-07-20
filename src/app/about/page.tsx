@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import {
   Mail,
   Phone,
@@ -21,10 +20,7 @@ export default function AboutPage() {
         <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#333_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-30 pointer-events-none" />
 
         <div className="w-full mx-auto px-4 sm:px-6 py-16 md:py-32 relative z-10 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+          <div
             className="space-y-4 sm:space-y-6"
           >
             <Badge
@@ -43,7 +39,7 @@ export default function AboutPage() {
               infrastructure for a seamless, transparent, and connected digital
               economy.
             </p>
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -67,12 +63,9 @@ export default function AboutPage() {
               desc: "Leveraging cutting-edge technology to create shopping experiences that are faster, smarter, and more intuitive.",
             },
           ].map((item, i) => (
-            <motion.div
+            <div
               key={i}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.08, duration: 0.4, ease: "easeOut" }}
-              className="bg-white dark:bg-neutral-900 rounded-sm p-6 sm:p-8  border border-border/50 dark:border-white/10 hover: hover:-translate-y-1 transition-all duration-300"
+              className="bg-white dark:bg-neutral-900 rounded-sm p-6 sm:p-8  border border-border/50 dark:border-white/10 hover:-translate-y-1 transition-all duration-300"
             >
               <div className="w-10 h-10 md:w-12 md:h-12 rounded-sm bg-primary/5 flex items-center justify-center text-primary mb-5 md:mb-6">
                 {item.icon}
@@ -83,7 +76,7 @@ export default function AboutPage() {
               <p className="text-muted-foreground leading-relaxed text-xs md:text-sm">
                 {item.desc}
               </p>
-            </motion.div>
+            </div>
           ))}
         </div>
       </section>
@@ -92,10 +85,7 @@ export default function AboutPage() {
       <section className="bg-white dark:bg-neutral-900 border-y border-border/50 dark:border-white/10">
         <div className="w-full mx-auto px-4 sm:px-6 py-16 md:py-24">
           <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
+            <div
               className="relative order-2 md:order-1"
             >
               <div className="aspect-square sm:aspect-[4/5] md:aspect-square bg-muted rounded-sm md:rounded-sm overflow-hidden relative ">
@@ -118,13 +108,10 @@ export default function AboutPage() {
               {/* Decorative elements */}
               <div className="hidden sm:block absolute -top-10 -left-10 w-40 h-40 bg-primary/10 rounded-sm blur-3xl -z-10" />
               <div className="hidden sm:block absolute -bottom-10 -right-10 w-40 h-40 bg-primary/10 rounded-sm blur-3xl -z-10" />
-            </motion.div>
+            </div>
 
             <div className="space-y-6 md:space-y-8 order-1 md:order-2">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
+              <div
                 className="space-y-4"
               >
                 <div className="flex items-center gap-2 text-primary font-bold uppercase tracking-widest text-[10px] sm:text-xs">
@@ -148,7 +135,7 @@ export default function AboutPage() {
                     Founder & CEO
                   </p>
                 </div>
-              </motion.div>
+              </div>
 
               <div className="pt-6 sm:pt-8 border-t border-border/50">
                 <h4 className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4 sm:mb-6">

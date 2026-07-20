@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -78,22 +77,6 @@ export default function UserProfilePage() {
     resolveLocation();
   }, [user?.address?.country, user?.address?.state]);
 
-  /* ───────────────── ANIMATION VARIANTS ───────────────── */
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 },
-  };
-
   if (isLoading) return <UserProfileSkeleton />;
   if (isError) {
     return (
@@ -115,24 +98,18 @@ export default function UserProfilePage() {
         <div className="absolute inset-0 opacity-20">
           <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_20%_20%,_rgba(255,255,255,0.4)_0%,_transparent_50%)]" />
         </div>
-        <motion.div
-          initial={{ scale: 1.2, opacity: 0 }}
-          animate={{ scale: 1, opacity: 0.1 }}
-          transition={{ duration: 1.5 }}
+        <div
           className="absolute -right-20 -bottom-20 w-96 h-96 bg-white rounded-sm blur-3xl"
         />
       </div>
 
       <div className="w-full mx-auto px-4 -mt-32 md:-mt-40 relative z-10">
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
+        <div
           className="grid grid-cols-1 lg:grid-cols-12 gap-5"
         >
           {/* ================= LEFT COLUMN: PERSONAL CARD ================= */}
           <div className="lg:col-span-4 space-y-6">
-            <motion.div variants={itemVariants}>
+            <div>
               <Card className="rounded-sm border-none  overflow-hidden bg-card/80 dark:bg-neutral-900/80 backdrop-blur-xl">
                 <CardContent className="p-5 flex flex-col items-center text-center">
                   <div className="relative mb-6">
@@ -198,10 +175,10 @@ export default function UserProfilePage() {
                   </div>
                 </CardContent>
               </Card>
-            </motion.div>
+            </div>
 
             {/* QUICK STATS */}
-            <motion.div variants={itemVariants}>
+            <div>
               <Card className="rounded-sm border-none  bg-card/80 dark:bg-neutral-900/80 backdrop-blur-xl">
                 <CardContent className="p-6">
                   <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4">
@@ -232,12 +209,12 @@ export default function UserProfilePage() {
                   </div>
                 </CardContent>
               </Card>
-            </motion.div>
+            </div>
           </div>
 
           {/* ================= RIGHT COLUMN: CONTENT ================= */}
           <div className="lg:col-span-8 space-y-6">
-            <motion.div variants={itemVariants}>
+            <div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Contact Information */}
                 <ProfileSection
@@ -273,9 +250,9 @@ export default function UserProfilePage() {
                   />
                 </ProfileSection>
               </div>
-            </motion.div>
+            </div>
 
-            <motion.div variants={itemVariants}>
+            <div>
               <Card className="rounded-sm border-none  overflow-hidden">
                 <div className="p-6 border-b bg-muted/30 flex items-center justify-between">
                   <h3 className="text-lg font-bold flex items-center gap-2">
@@ -334,11 +311,11 @@ export default function UserProfilePage() {
                   )}
                 </CardContent>
               </Card>
-            </motion.div>
+            </div>
 
             {/* PERFORMANCE SECTION */}
             {user.account_type === "vendor" && (
-              <motion.div variants={itemVariants}>
+              <div>
                 <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-sm p-6 text-white  relative overflow-hidden group">
                   <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-110 transition-transform duration-500">
                     <Star size={120} />
@@ -367,10 +344,10 @@ export default function UserProfilePage() {
                     />
                   </div>
                 </div>
-              </motion.div>
+              </div>
             )}
           </div>
-        </motion.div>
+        </div>
       </div>
 
       <EditProfileModal

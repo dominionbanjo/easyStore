@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import {
   Rocket,
   ChevronRight,
@@ -56,9 +55,7 @@ export function StoreSetupTracker({
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
+    <div
       className={cn(
         "relative overflow-hidden rounded-sm sm:rounded-sm border-none  bg-gradient-to-br from-orange-500 to-orange-600 text-white p-6 sm:p-8",
         className,
@@ -91,10 +88,9 @@ export function StoreSetupTracker({
               <span>{progress}% Complete</span>
             </div>
             <div className="relative h-3 w-full bg-white/20 rounded-sm overflow-hidden">
-              <motion.div
-                initial={{ width: 0 }}
-                animate={{ width: `${progress}%` }}
-                className="absolute inset-y-0 left-0 bg-white -[0_0_20px_rgba(255,255,255,0.5)]"
+              <div
+                className="absolute inset-y-0 left-0 bg-white transition-all duration-700"
+                style={{ width: `${progress}%` }}
               />
             </div>
           </div>
@@ -134,6 +130,6 @@ export function StoreSetupTracker({
           </Button>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

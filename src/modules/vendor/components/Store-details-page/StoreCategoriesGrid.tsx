@@ -1,5 +1,4 @@
 import { Skeleton } from "@/components/ui/skeleton";
-import { motion } from "framer-motion";
 import { Layers } from "lucide-react";
 
 type Category = {
@@ -49,16 +48,11 @@ export function StoreCategoriesGrid({
   /* ─── CONTENT ─── */
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 max-w-7xl mx-auto h-full">
-      {categories.map((cat, index) => (
-        <motion.button
+      {categories.map((cat) => (
+        <button
           key={cat.id}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: index * 0.05 }}
-          whileHover={{ y: -5, scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
           onClick={() => onSelect(cat)}
-          className="group relative h-32 flex flex-col items-center justify-center p-6 bg-white dark:bg-neutral-900 border border-border/50 dark:border-white/5 rounded-sm  hover: hover:border-primary/20 transition-all duration-300"
+          className="group relative h-32 flex flex-col items-center justify-center p-6 bg-white dark:bg-neutral-900 border border-border/50 dark:border-white/5 rounded-sm hover:-translate-y-1 hover:scale-[1.02] active:scale-[0.98] hover:border-primary/20 transition-all duration-300"
         >
           <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-sm" />
           <div className="w-12 h-12 bg-primary/5 dark:bg-emerald-500/10 rounded-sm flex items-center justify-center mb-3 group-hover:bg-primary/10 transition-colors">
@@ -67,7 +61,7 @@ export function StoreCategoriesGrid({
           <p className="font-bold text-foreground group-hover:text-primary dark:group-hover:text-emerald-400 transition-colors text-sm text-center line-clamp-1">
             {cat.name}
           </p>
-        </motion.button>
+        </button>
       ))}
     </div>
   );

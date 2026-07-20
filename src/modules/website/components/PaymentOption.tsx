@@ -1,5 +1,4 @@
 import { Badge } from "@/components/ui/badge";
-import { motion } from "framer-motion";
 
 /* ───────── PAYMENT OPTION COMPONENT ───────── */
 export default function PaymentOption({
@@ -20,10 +19,9 @@ export default function PaymentOption({
   points?: string[];
 }) {
   return (
-    <motion.div
-      whileTap={{ scale: 0.99 }}
+    <div
       onClick={onClick}
-      className={`p-3 rounded-sm border cursor-pointer transition ${
+      className={`p-3 rounded-sm border cursor-pointer transition active:scale-[0.99] ${
         active
           ? "border-primary bg-primary/5"
           : "border-gray-200 hover:bg-gray-50"
@@ -54,6 +52,6 @@ export default function PaymentOption({
           )}
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

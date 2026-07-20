@@ -1,7 +1,8 @@
+import { geography } from "@/data/geography";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { User, Camera, X, CheckCircle2, AlertCircle, Building, Loader2, Trash2, Plus, Edit2, MapPin } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -27,7 +28,6 @@ import {
   EditProfileSchema,
   type EditProfileFormValues,
 } from "../../validators/updateProfileValidator";
-import { Country, State, City } from "country-state-city";
 import { useDebounce } from "@/hooks";
 
 /* ───────────────── TYPES ───────────────── */
@@ -181,58 +181,42 @@ export function EditProfileModal({
     }
   }, [bankCode, debouncedAccountNumber, verifyBank, user]);
 
-  /* ───────────────── LOAD COUNTRIES (ON OPEN) ───────────────── */
+  /* ───────────────── LOAD NIGERIA (ON OPEN) ───────────────── */
 
   useEffect(() => {
     if (!open) return;
-    const ng = Country.getCountryByCode("NG");
-    if (ng) {
-      setCountryOptions([
-        { label: ng.name, value: ng.isoCode },
-      ]);
-    } else {
-      setCountryOptions([
-        { label: "Nigeria", value: "NG" }
-      ]);
-    }
+    const ng = geography.countries.find((c) => c.isoCode === "NG");
+    setCountryOptions(ng ? [{ label: ng.name, value: ng.isoCode }] : [{ label: "Nigeria", value: "NG" }]);
   }, [open]);
 
-  /* ───────────────── LOAD STATES & RESET CITY ───────────────── */
+  /* ───────────────── LOAD STATES ───────────────── */
+
+  const stateOptionsList = useMemo(() => {
+    if (!countryCode || countryCode !== "NG") return [];
+    return geography.ngStates.map((s) => ({ label: s.name, value: s.isoCode }));
+  }, [countryCode]);
 
   useEffect(() => {
-    if (!countryCode) {
-      setStateOptions([]);
-      setCityOptions([]);
-      return;
+    setStateOptions(stateOptionsList);
+    if (countryCode && stateOptionsList.length > 0) {
+      setValue("address.state", "");
+      setValue("address.city", "");
     }
+  }, [countryCode, stateOptionsList, setValue]);
 
-    const mappedStates = State.getStatesOfCountry(countryCode).map((s) => ({
-      label: s.name,
-      value: s.isoCode,
-    }));
-    setStateOptions(mappedStates);
+  /* ───────────────── LOAD CITIES ───────────────── */
 
-    // Only reset if it's a fresh change
-    setValue("address.state", "");
-    setValue("address.city", "");
-  }, [countryCode, setValue]);
-
-  /* ───────────────── LOAD CITIES & RESET CITY ───────────────── */
+  const cityOptionsList = useMemo(() => {
+    if (countryCode !== "NG" || !stateCode) return [];
+    return (geography.ngCities[stateCode] || []).map((c) => ({ label: c.name, value: c.name }));
+  }, [countryCode, stateCode]);
 
   useEffect(() => {
-    if (!countryCode || !stateCode) {
-      setCityOptions([]);
-      return;
+    setCityOptions(cityOptionsList);
+    if (stateCode && cityOptionsList.length > 0) {
+      setValue("address.city", "");
     }
-
-    const mappedCities = City.getCitiesOfState(countryCode, stateCode).map((c) => ({
-      label: c.name,
-      value: c.name,
-    }));
-    setCityOptions(mappedCities);
-
-    setValue("address.city", "");
-  }, [countryCode, stateCode, setValue]);
+  }, [stateCode, cityOptionsList, setValue]);
 
   const handleSaveAddress = async () => {
     const values = form.getValues().address;

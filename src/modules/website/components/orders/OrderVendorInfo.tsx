@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { ShoppingBag, User, Mail, Phone } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import SmartLink from "@/components/shared/SmartLink";
@@ -8,11 +7,7 @@ export function OrderVendorInfo({ order }: { order: IOrder }) {
   if (!order.vendor) return null;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay: 0.25 }}
-    >
+    <div>
       <Card className="overflow-hidden rounded-sm border border-border/40 bg-card/50 backdrop-blur-sm">
         <div className="bg-muted/30 px-4 py-3 border-b border-border/40">
           <h2 className="text-sm font-black text-foreground flex items-center gap-2 uppercase tracking-widest font-outfit">
@@ -100,6 +95,6 @@ export function OrderVendorInfo({ order }: { order: IOrder }) {
           </div>
         </div>
       </Card>
-    </motion.div>
+    </div>
   );
 }

@@ -66,7 +66,7 @@ export function StaffDetailModal({ staffId, open, onOpenChange }: Props) {
 
   return (
     <>
-      <Modal open={open} onOpenChange={onOpenChange} title="Staff Details" description={`${staff.user.first_name} ${staff.user.last_name}`}>
+      <Modal open={open} onOpenChange={onOpenChange} title="Staff Details" description={`${staff.user.first_name} ${staff.user.last_name}`} contentClassName="p-6">
         <div className="space-y-4">
           {editing ? (
             <>

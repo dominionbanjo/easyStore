@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import { motion } from "framer-motion";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { PackageOpen, type LucideIcon } from "lucide-react";
@@ -41,10 +40,7 @@ export function ProductSection({
     >
       <div className="w-full mx-auto space-y-12">
         <div className="flex flex-col gap-4 px-1">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
+          <div
             className="space-y-3 text-left"
           >
             <h2 className="text-3xl md:text-4xl font-black text-foreground tracking-tight">
@@ -61,7 +57,7 @@ export function ProductSection({
                 {headerAction}
               </div>
             )}
-          </motion.div>
+          </div>
         </div>
 
         {/* Content Section */}
@@ -79,14 +75,11 @@ export function ProductSection({
             className="bg-muted/30 dark:bg-neutral-900/50 rounded-sm"
           />
         ) : (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
+          <div
             className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
           >
             {children}
-          </motion.div>
+          </div>
         )}
 
         {/* Footer Section (Pagination etc) */}

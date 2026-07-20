@@ -207,6 +207,11 @@ const StaffSettingsPageImport = () =>
 export const StaffSettingsPage = lazy(StaffSettingsPageImport);
 export const preloadStaffSettingsPage = StaffSettingsPageImport;
 
+const SalesHistoryPageImport = () =>
+  import("@/modules/vendor/components/sales-history/SalesHistoryPage").then((m) => ({ default: m.SalesHistoryPage }));
+export const SalesHistoryPage = lazy(SalesHistoryPageImport);
+export const preloadSalesHistoryPage = SalesHistoryPageImport;
+
 import { StaffDashboardLayout as _StaffDashboardLayout } from "@/modules/vendor/layout/StaffDashboardLayout";
 export const StaffDashboardLayout = _StaffDashboardLayout;
 

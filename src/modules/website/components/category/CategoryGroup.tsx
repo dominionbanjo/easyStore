@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { FolderTree, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
@@ -22,12 +21,9 @@ interface CategoryGroupProps {
   index: number;
 }
 
-export function CategoryGroup({ category, index }: CategoryGroupProps) {
+export function CategoryGroup({ category }: CategoryGroupProps) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.04, duration: 0.4, ease: "easeOut" }}
+    <div
       className="space-y-8"
     >
       {/* Parent Category Header */}
@@ -50,11 +46,9 @@ export function CategoryGroup({ category, index }: CategoryGroupProps) {
       {category.children.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
           {category.children.map((child) => (
-            <motion.div
+            <div
               key={child.id}
-              whileHover={{ y: -8 }}
-              whileTap={{ scale: 0.98 }}
-              className="h-full"
+              className="h-full hover:-translate-y-2 transition-transform duration-300 active:scale-[0.98]"
             >
               <SmartLink
                 to={`${WEBSITE_ROUTES.CATEGORIES}/${child.slug}`}
@@ -84,7 +78,7 @@ export function CategoryGroup({ category, index }: CategoryGroupProps) {
                   </div>
                 </Card>
               </SmartLink>
-            </motion.div>
+            </div>
           ))}
         </div>
       ) : (
@@ -94,6 +88,6 @@ export function CategoryGroup({ category, index }: CategoryGroupProps) {
           </p>
         </div>
       )}
-    </motion.div>
+    </div>
   );
 }

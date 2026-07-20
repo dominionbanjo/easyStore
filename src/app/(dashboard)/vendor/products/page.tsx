@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
 import { SetupEnforcementModal } from "@/modules/vendor/components/modals/SetupEnforcementModal";
 import { WelcomeProductModal } from "@/modules/vendor/components/modals/WelcomeProductModal";
 import { Card, CardContent } from "@/components/ui/card";
@@ -191,19 +190,13 @@ export default function ProductsPage() {
     <section className="space-y-6 md:space-y-8 pb-10">
       {/* ─── Header ─── */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-        >
+        <div>
           <p className="text-muted-foreground text-sm font-medium">
             Manage your inventory and product listings in one place.
           </p>
-        </motion.div>
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="flex items-center gap-3"
+        <div className="flex items-center gap-3"
         >
           <Button
             variant="outline"
@@ -242,7 +235,7 @@ export default function ProductsPage() {
               navigate(getAppPath("/products/new"));
             }}
           />
-        </motion.div>
+        </div>
       </div>
 
       {/* ─── Toolbar (Search & Filters) ─── */}
@@ -368,10 +361,7 @@ export default function ProductsPage() {
 
       {/* ─── Products Table / Grid ─── */}
       {!isActuallyLoading && items.length === 0 && !isSearching ? (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="border-2 border-dashed border-border/60 rounded-sm bg-card/10 p-6 sm:p-10 flex flex-col items-center justify-center text-center space-y-6 min-h-[400px] sm:min-h-[500px]"
+        <div className="border-2 border-dashed border-border/60 rounded-sm bg-card/10 p-6 sm:p-10 flex flex-col items-center justify-center text-center space-y-6 min-h-[400px] sm:min-h-[500px]"
         >
           <div className="h-20 w-20 sm:h-24 sm:w-24 rounded-sm bg-primary/10 flex items-center justify-center  relative">
             <div className="absolute inset-0 rounded-sm bg-primary/20 animate-ping opacity-20" />
@@ -402,7 +392,7 @@ export default function ProductsPage() {
             <Plus className="h-4 w-4 sm:h-5 sm:w-5" />
             Create Product
           </Button>
-        </motion.div>
+        </div>
       ) : (
         <div className="w-full space-y-4">
           <div className="flex flex-row items-center justify-between px-1">
@@ -433,14 +423,8 @@ export default function ProductsPage() {
             </div>
           </div>
 
-          <AnimatePresence mode="wait">
             {viewMode === "table" ? (
-              <motion.div
-                key="table"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-              >
+              <div>
                 <DataTable<IStoreProduct, unknown>
                   columns={productColumns}
                   data={items}
@@ -465,14 +449,9 @@ export default function ProductsPage() {
                       : undefined
                   }
                 />
-              </motion.div>
+              </div>
             ) : (
-              <motion.div
-                key="grid"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
               >
                 {isActuallyLoading ? (
                   // Grid Skeleton
@@ -552,9 +531,8 @@ export default function ProductsPage() {
                     </div>
                   </div>
                 )}
-              </motion.div>
+              </div>
             )}
-          </AnimatePresence>
         </div>
       )}
 

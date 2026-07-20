@@ -29,7 +29,6 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { motion, AnimatePresence } from "framer-motion";
 
 import { extractErrorMessage } from "@/utils/errorHandler";
 import {
@@ -274,31 +273,26 @@ export function CategorySelect({
                 </div>
 
                 {/* Last Used / Recent */}
-                <AnimatePresence>
-                  {lastUsedLabel && !search && !showQuickAdd && (
-                    <motion.button
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      type="button"
-                      onClick={() => selectCategory(lastUsedLabel.id)}
-                      className="w-full flex items-center gap-4 px-5 py-4 rounded-sm bg-primary/[0.03] hover:bg-primary/[0.08] border border-primary/10 transition-all group"
-                    >
-                      <div className="h-8 w-8 rounded-sm bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
-                        <History className="h-4 w-4 text-primary" />
-                      </div>
-                      <div className="flex flex-col text-left">
-                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60">
-                          Recently Used
-                        </span>
-                        <span className="text-sm font-bold text-foreground">
-                          {lastUsedLabel.label}
-                        </span>
-                      </div>
-                      <Plus className="ml-auto h-4 w-4 text-primary opacity-40 group-hover:translate-x-1 transition-transform" />
-                    </motion.button>
-                  )}
-                </AnimatePresence>
+                {lastUsedLabel && !search && !showQuickAdd && (
+                  <button
+                    type="button"
+                    onClick={() => selectCategory(lastUsedLabel.id)}
+                    className="w-full flex items-center gap-4 px-5 py-4 rounded-sm bg-primary/[0.03] hover:bg-primary/[0.08] border border-primary/10 transition-all group"
+                  >
+                    <div className="h-8 w-8 rounded-sm bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <History className="h-4 w-4 text-primary" />
+                    </div>
+                    <div className="flex flex-col text-left">
+                      <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60">
+                        Recently Used
+                      </span>
+                      <span className="text-sm font-bold text-foreground">
+                        {lastUsedLabel.label}
+                      </span>
+                    </div>
+                    <Plus className="ml-auto h-4 w-4 text-primary opacity-40 group-hover:translate-x-1 transition-transform" />
+                  </button>
+                )}
               </div>
 
               {/* Main Content Areas */}
@@ -382,50 +376,43 @@ export function CategorySelect({
                               />
                             </button>
 
-                            <AnimatePresence>
-                              {isExpanded && hasChildren && (
-                                <motion.div
-                                  initial={{ height: 0, opacity: 0 }}
-                                  animate={{ height: "auto", opacity: 1 }}
-                                  exit={{ height: 0, opacity: 0 }}
-                                  className="overflow-hidden"
-                                >
-                                  <div className="mt-2 ml-7 pl-6 border-l-2 border-primary/20 flex flex-col gap-2 py-2">
-                                    {cat.children.map((ch) => {
-                                      const isSelected = field.value === ch.id;
-                                      return (
-                                        <button
-                                          key={ch.id}
-                                          type="button"
-                                          onClick={() => selectCategory(ch.id)}
+                            {isExpanded && hasChildren && (
+                              <div className="overflow-hidden">
+                                <div className="mt-2 ml-7 pl-6 border-l-2 border-primary/20 flex flex-col gap-2 py-2">
+                                  {cat.children.map((ch) => {
+                                    const isSelected = field.value === ch.id;
+                                    return (
+                                      <button
+                                        key={ch.id}
+                                        type="button"
+                                        onClick={() => selectCategory(ch.id)}
+                                        className={cn(
+                                          "w-full flex items-center gap-3 py-3.5 px-5 rounded-sm transition-all relative group/sub",
+                                          isSelected
+                                            ? "bg-primary text-white   font-bold"
+                                            : "hover:bg-primary/[0.05] text-muted-foreground hover:text-primary",
+                                        )}
+                                      >
+                                        <div
                                           className={cn(
-                                            "w-full flex items-center gap-3 py-3.5 px-5 rounded-sm transition-all relative group/sub",
+                                            "h-2 w-2 rounded-sm",
                                             isSelected
-                                              ? "bg-primary text-white   font-bold"
-                                              : "hover:bg-primary/[0.05] text-muted-foreground hover:text-primary",
+                                              ? "bg-white"
+                                              : "bg-muted-foreground/30 group-hover/sub:bg-primary/50",
                                           )}
-                                        >
-                                          <div
-                                            className={cn(
-                                              "h-2 w-2 rounded-sm",
-                                              isSelected
-                                                ? "bg-white"
-                                                : "bg-muted-foreground/30 group-hover/sub:bg-primary/50",
-                                            )}
-                                          />
-                                          <span className="text-sm font-semibold">
-                                            {ch.name}
-                                          </span>
-                                          {isSelected && (
-                                            <Check className="ml-auto h-4 w-4 stroke-[3]" />
-                                          )}
-                                        </button>
-                                      );
-                                    })}
-                                  </div>
-                                </motion.div>
-                              )}
-                            </AnimatePresence>
+                                        />
+                                        <span className="text-sm font-semibold">
+                                          {ch.name}
+                                        </span>
+                                        {isSelected && (
+                                          <Check className="ml-auto h-4 w-4 stroke-[3]" />
+                                        )}
+                                      </button>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                            )}
                           </div>
                         );
                       })
@@ -434,110 +421,97 @@ export function CategorySelect({
 
                   {/* Quick Add Bar */}
                   <div className="shrink-0 p-6 bg-background/50 border-t border-border/40 backdrop-blur-md">
-                    <AnimatePresence mode="wait">
-                      {showQuickAdd ? (
-                        <motion.div
-                          key="form"
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: 20 }}
-                          className="space-y-5"
-                        >
-                          <div className="flex items-center justify-between">
-                            <span className="text-xs font-black uppercase tracking-[0.25em] text-primary">
-                              Add Custom Category
-                            </span>
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              size="sm"
-                              className="h-8 rounded-sm text-muted-foreground hover:text-foreground"
-                              onClick={() => {
-                                setShowQuickAdd(false);
-                                setNewCatName("");
-                                setNewCatParentId(null);
-                                setValue("__quickAddParentId", "none");
-                              }}
-                            >
-                              Cancel
-                            </Button>
-                          </div>
-
-                          <div className="grid grid-cols-1 md:grid-cols-[1fr_200px] gap-4">
-                            <div className="space-y-2">
-                              <label className="text-[10px] font-bold text-muted-foreground uppercase ml-1">
-                                Category Name
-                              </label>
-                              <Input
-                                value={newCatName}
-                                onChange={(e) => setNewCatName(e.target.value)}
-                                placeholder="e.g. Vintage Apparel"
-                                className="h-12 rounded-sm bg-background border-border"
-                              />
-                            </div>
-                            <div className="space-y-2">
-                              <label className="text-[10px] font-bold text-muted-foreground uppercase ml-1">
-                                Parent (Optional)
-                              </label>
-                              <FormSelect
-                                name="__quickAddParentId"
-                                placeholder="None (Top Level)"
-                                options={[
-                                  { label: "None (Top Level)", value: "none" },
-                                  ...categories.map((c) => ({
-                                    label: c.name,
-                                    value: c.id,
-                                  })),
-                                ]}
-                                onValueChange={(val) =>
-                                  setNewCatParentId(val === "none" ? null : val)
-                                }
-                                isSearchable
-                              />
-                            </div>
-                          </div>
-
+                    {showQuickAdd ? (
+                      <div className="space-y-5">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-black uppercase tracking-[0.25em] text-primary">
+                            Add Custom Category
+                          </span>
                           <Button
                             type="button"
-                            className="w-full h-12 rounded-sm bg-primary hover:bg-primary/90 text-white font-black uppercase tracking-widest text-xs gap-3  "
-                            onClick={handleQuickAdd}
-                            disabled={isCreating || !newCatName.trim()}
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 rounded-sm text-muted-foreground hover:text-foreground"
+                            onClick={() => {
+                              setShowQuickAdd(false);
+                              setNewCatName("");
+                              setNewCatParentId(null);
+                              setValue("__quickAddParentId", "none");
+                            }}
                           >
-                            {isCreating ? (
-                              <Loader2 className="h-4 w-4 animate-spin" />
-                            ) : (
-                              <Plus className="h-4 w-4" />
-                            )}
-                            Save Category
+                            Cancel
                           </Button>
-                        </motion.div>
-                      ) : (
-                        <motion.div
-                          key="trigger"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          className="flex flex-col sm:flex-row items-center justify-between gap-6"
-                        >
-                          <div className="flex flex-col text-center sm:text-left">
-                            <span className="text-xs font-bold text-foreground/80">
-                              Don&apos;t see what you need?
-                            </span>
-                            <span className="text-[10px] text-muted-foreground font-medium">
-                              Add a custom category to specifically fit your
-                              products.
-                            </span>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-[1fr_200px] gap-4">
+                          <div className="space-y-2">
+                            <label className="text-[10px] font-bold text-muted-foreground uppercase ml-1">
+                              Category Name
+                            </label>
+                            <Input
+                              value={newCatName}
+                              onChange={(e) => setNewCatName(e.target.value)}
+                              placeholder="e.g. Vintage Apparel"
+                              className="h-12 rounded-sm bg-background border-border"
+                            />
                           </div>
-                          <Button
-                            type="button"
-                            onClick={() => setShowQuickAdd(true)}
-                            className="w-full sm:w-auto bg-foreground text-background hover:bg-foreground/90 rounded-sm h-12 px-6 font-black uppercase tracking-widest text-[10px] gap-2  -foreground/5 shrink-0"
-                          >
+                          <div className="space-y-2">
+                            <label className="text-[10px] font-bold text-muted-foreground uppercase ml-1">
+                              Parent (Optional)
+                            </label>
+                            <FormSelect
+                              name="__quickAddParentId"
+                              placeholder="None (Top Level)"
+                              options={[
+                                { label: "None (Top Level)", value: "none" },
+                                ...categories.map((c) => ({
+                                  label: c.name,
+                                  value: c.id,
+                                })),
+                              ]}
+                              onValueChange={(val) =>
+                                setNewCatParentId(val === "none" ? null : val)
+                              }
+                              isSearchable
+                            />
+                          </div>
+                        </div>
+
+                        <Button
+                          type="button"
+                          className="w-full h-12 rounded-sm bg-primary hover:bg-primary/90 text-white font-black uppercase tracking-widest text-xs gap-3  "
+                          onClick={handleQuickAdd}
+                          disabled={isCreating || !newCatName.trim()}
+                        >
+                          {isCreating ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : (
                             <Plus className="h-4 w-4" />
-                            Quick Add
-                          </Button>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
+                          )}
+                          Save Category
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+                        <div className="flex flex-col text-center sm:text-left">
+                          <span className="text-xs font-bold text-foreground/80">
+                            Don&apos;t see what you need?
+                          </span>
+                          <span className="text-[10px] text-muted-foreground font-medium">
+                            Add a custom category to specifically fit your
+                            products.
+                          </span>
+                        </div>
+                        <Button
+                          type="button"
+                          onClick={() => setShowQuickAdd(true)}
+                          className="w-full sm:w-auto bg-foreground text-background hover:bg-foreground/90 rounded-sm h-12 px-6 font-black uppercase tracking-widest text-[10px] gap-2  -foreground/5 shrink-0"
+                        >
+                          <Plus className="h-4 w-4" />
+                          Quick Add
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

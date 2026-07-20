@@ -36,7 +36,7 @@ export function InviteStaffModal({ open, onOpenChange }: Props) {
   };
 
   return (
-    <Modal open={open} onOpenChange={onOpenChange} title="Invite Staff Member" description="They will receive an email with login instructions and a temporary password.">
+    <Modal open={open} onOpenChange={onOpenChange} title="Invite Staff Member" description="They will receive an email with login instructions and a temporary password." contentClassName="p-6">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="firstName">First Name</Label>

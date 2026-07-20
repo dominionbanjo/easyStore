@@ -1,5 +1,4 @@
 import { useState, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { Heart, Search, ShoppingCart, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -116,42 +115,34 @@ export default function WishlistPage() {
           </div>
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <AnimatePresence>
-              {filteredWishlist.map((item) => (
-                <motion.div
-                  key={item.id}
-                  layout
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                >
-                  <ProductCard
-                    id={item.product_id}
-                    slug={item.product_id}
-                    name={item.name}
-                    price={`₦${Number(item.product?.price || item.price).toLocaleString("en-NG")}`}
-                    discountPrice={
-                      item.product?.on_sale && item.product?.discount_price
-                        ? `₦${Number(item.product.discount_price).toLocaleString("en-NG")}`
-                        : undefined
-                    }
-                    image={item.image || ""}
-                    category="Wishlist"
-                    rating={item.product?.rating_average ?? 0}
-                    stock={item.product?.stock ?? 0}
-                    isOnSale={item.product?.on_sale}
-                    isFavorite={true}
-                    colors={item.product?.colors}
-                    sizes={item.product?.sizes}
-                    options={item.product?.options}
-                    variants={item.product?.variants?.map((v) => ({
-                      ...v,
-                      image_url: v.image_url ?? undefined,
-                    }))}
-                  />
-                </motion.div>
-              ))}
-            </AnimatePresence>
+            {filteredWishlist.map((item) => (
+              <div key={item.id}>
+                <ProductCard
+                  id={item.product_id}
+                  slug={item.product_id}
+                  name={item.name}
+                  price={`₦${Number(item.product?.price || item.price).toLocaleString("en-NG")}`}
+                  discountPrice={
+                    item.product?.on_sale && item.product?.discount_price
+                      ? `₦${Number(item.product.discount_price).toLocaleString("en-NG")}`
+                      : undefined
+                  }
+                  image={item.image || ""}
+                  category="Wishlist"
+                  rating={item.product?.rating_average ?? 0}
+                  stock={item.product?.stock ?? 0}
+                  isOnSale={item.product?.on_sale}
+                  isFavorite={true}
+                  colors={item.product?.colors}
+                  sizes={item.product?.sizes}
+                  options={item.product?.options}
+                  variants={item.product?.variants?.map((v) => ({
+                    ...v,
+                    image_url: v.image_url ?? undefined,
+                  }))}
+                />
+              </div>
+            ))}
           </div>
         )}
 

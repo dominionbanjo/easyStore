@@ -1,5 +1,4 @@
 import { useState, useCallback, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Maximize2, X, ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -61,13 +60,9 @@ export default function ProductGallery({ images }: ProductGalleryProps) {
   );
 
   const fullScreenContent = (
-    <AnimatePresence>
+    <>
       {isFullScreen && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[1000000] flex flex-col items-center justify-center h-[100dvh] w-screen overflow-hidden touch-none bg-black"
+        <div className="fixed inset-0 z-[1000000] flex flex-col items-center justify-center h-[100dvh] w-screen overflow-hidden touch-none bg-black"
           onClick={closeFullScreen}
         >
           {/* Close Button - Centered at top */}
@@ -85,21 +80,8 @@ export default function ProductGallery({ images }: ProductGalleryProps) {
 
           {/* Media Container */}
           <div className="relative w-full h-full flex items-center justify-center p-4 md:p-8 lg:p-12">
-            <motion.div
-              key={`fullscreen-${activeIndex}`}
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              transition={{ type: "spring", damping: 30, stiffness: 300 }}
-              drag="x"
-              dragConstraints={{ left: 0, right: 0 }}
-              dragElastic={0.5}
-              onDragEnd={(_, info) => {
-                const swipe = info.offset.x;
-                if (swipe < -60) paginate(1);
-                else if (swipe > 60) paginate(-1);
-              }}
-              className="w-full h-full flex items-center justify-center cursor-grab active:cursor-grabbing"
+            <div
+              className="w-full h-full flex items-center justify-center"
               onClick={(e) => e.stopPropagation()}
             >
               {isVideo(active) ? (
@@ -116,7 +98,7 @@ export default function ProductGallery({ images }: ProductGalleryProps) {
                   className="max-w-full max-h-full object-contain rounded-sm md:rounded-sm  select-none"
                 />
               )}
-            </motion.div>
+            </div>
 
             {/* Navigation Arrows */}
             <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between px-4 md:px-10 pointer-events-none">
@@ -174,9 +156,9 @@ export default function ProductGallery({ images }: ProductGalleryProps) {
               {activeIndex + 1} / {images.length}
             </p>
           </div>
-        </motion.div>
+        </div>
       )}
-    </AnimatePresence>
+    </>
   );
 
   return (
@@ -186,23 +168,7 @@ export default function ProductGallery({ images }: ProductGalleryProps) {
         className="group relative w-full aspect-square md:aspect-[4/5] rounded-sm md:rounded-sm overflow-hidden bg-muted/50 border border-border/60 touch-none cursor-pointer"
         onClick={() => setIsFullScreen(true)}
       >
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeIndex}
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 1.05 }}
-            transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
-            drag="x"
-            dragConstraints={{ left: 0, right: 0 }}
-            dragElastic={0.2}
-            onDragEnd={(_, info) => {
-              const swipe = info.offset.x;
-              if (swipe < -50) paginate(1);
-              else if (swipe > 50) paginate(-1);
-            }}
-            className="w-full h-full"
-          >
+          <div className="w-full h-full">
             {isVideo(active) ? (
               <video
                 src={active}
@@ -210,17 +176,16 @@ export default function ProductGallery({ images }: ProductGalleryProps) {
                 muted
                 loop
                 playsInline
-                className="w-full h-full object-cover cursor-grab active:cursor-grabbing rounded-sm md:rounded-sm  border border-white/20"
+                className="w-full h-full object-cover rounded-sm md:rounded-sm  border border-white/20"
               />
             ) : (
               <img
                 src={active}
                 alt="Product View"
-                className="w-full h-full object-cover select-none cursor-grab active:cursor-grabbing transition-transform duration-500 hover:scale-105 rounded-sm md:rounded-sm  border border-white/20"
+                className="w-full h-full object-cover select-none transition-transform duration-500 hover:scale-105 rounded-sm md:rounded-sm  border border-white/20"
               />
             )}
-          </motion.div>
-        </AnimatePresence>
+          </div>
 
         {/* Navigation Arrows (Desktop) */}
         <div className="hidden md:block">

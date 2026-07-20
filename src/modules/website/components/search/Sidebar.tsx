@@ -15,7 +15,6 @@ import {
   TickCircle,
   CloseCircle,
 } from "iconsax-react";
-import { motion } from "framer-motion";
 
 import { Slider } from "@/components/ui/slider";
 
@@ -105,10 +104,7 @@ export function SearchFiltersSidebar({
 }: SearchFiltersProps) {
   return (
     <div className={cn("hidden lg:block w-full space-y-6", className)}>
-      <motion.div
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
+      <div
         className="bg-card/50 backdrop-blur-sm border rounded-sm overflow-hidden sticky top-20 shadow-sm"
       >
         <div className="p-4 bg-primary/[0.03] border-b border-primary/5 flex items-center justify-between">
@@ -128,7 +124,7 @@ export function SearchFiltersSidebar({
         <div className="max-h-[calc(100vh-140px)] overflow-y-auto custom-scrollbar">
           <FilterContent filters={filters} />
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }

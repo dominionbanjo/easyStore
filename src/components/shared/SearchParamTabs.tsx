@@ -1,6 +1,6 @@
 import { useSearchParams } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
+
 
 interface Tab {
   id: string;
@@ -51,11 +51,7 @@ export function SearchParamTabs({
             )}
           >
             {isActive && (
-              <motion.div
-                layoutId={`active-bg-${paramName}`}
-                className="absolute inset-0 bg-primary -z-10"
-                transition={{ type: "spring", bounce: 0.15, duration: 0.5 }}
-              />
+              <div className="absolute inset-0 bg-primary -z-10 transition-all duration-300" />
             )}
             {Icon && (
               <Icon 

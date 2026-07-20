@@ -20,7 +20,6 @@ import type {
   AddProductFormInput,
   AddProductFormOutput,
 } from "@/modules/vendor/validators/addProductValidator";
-import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
@@ -285,10 +284,7 @@ export default function AddProductPage() {
 
         <div className="flex flex-col gap-6 md:gap-8 w-full md:max-w-4xl mx-auto">
           {/* Identity Card */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
+          <div>
             <Card className="border-border/40  overflow-hidden rounded-sm">
               <CardHeader className="bg-muted/30 p-4 md:p-8 border-b border-border/40">
                 <div className="flex items-center gap-4">
@@ -310,14 +306,10 @@ export default function AddProductPage() {
                 />
               </CardContent>
             </Card>
-          </motion.div>
+          </div>
 
           {/* Visuals Card */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-          >
+          <div>
             <Card className="border-border/40  overflow-hidden rounded-sm">
               <CardHeader className="bg-muted/30 p-4 md:p-8 border-b border-border/40">
                 <div className="flex items-center gap-4">
@@ -336,14 +328,10 @@ export default function AddProductPage() {
                 <ImageSection {...extras} storeSlug={extras.store?.slug} />
               </CardContent>
             </Card>
-          </motion.div>
+          </div>
 
           {/* Pricing Card */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-          >
+          <div>
             <Card className="border-border/40  overflow-hidden rounded-sm">
               <CardHeader className="bg-muted/30 p-4 md:p-8 border-b border-border/40">
                 <div className="flex items-center gap-4">
@@ -362,14 +350,10 @@ export default function AddProductPage() {
                 <PricingSectionWrapper />
               </CardContent>
             </Card>
-          </motion.div>
+          </div>
 
           {/* Specifications Card */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-          >
+          <div>
             <Card className="border-border/40  overflow-hidden rounded-sm">
               <CardHeader className="bg-muted/30 p-4 md:p-8 border-b border-border/40">
                 <div className="flex items-center gap-4">
@@ -393,14 +377,10 @@ export default function AddProductPage() {
                 <ChipsSection {...extras} />
               </CardContent>
             </Card>
-          </motion.div>
+          </div>
 
           {/* Logistics Card */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-          >
+          <div>
             <Card className="border-border/40  overflow-hidden rounded-sm">
               <CardHeader className="bg-muted/30 p-4 md:p-8 border-b border-border/40">
                 <div className="flex items-center gap-4">
@@ -422,7 +402,7 @@ export default function AddProductPage() {
                 <ShippingSection />
               </CardContent>
             </Card>
-          </motion.div>
+          </div>
 
           {/* Bottom Actions */}
           <div className="pt-8 border-t border-border/40">

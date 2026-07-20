@@ -14,7 +14,6 @@ import {
 } from "lucide-react";
 import { type IOrder } from "@/services/ordersApi";
 import { buildRoute } from "@/routes";
-import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { useState } from "react";
 import { ReceiptDownloadButton } from "./ReceiptDownloadButton";
@@ -24,7 +23,7 @@ interface OrderCardProps {
   index?: number;
 }
 
-export function OrderCard({ order, index = 0 }: OrderCardProps) {
+export function OrderCard({ order }: OrderCardProps) {
   const firstItem = order.order_items?.[0];
   const itemCount = order.order_items?.length || 0;
 
@@ -88,11 +87,7 @@ export function OrderCard({ order, index = 0 }: OrderCardProps) {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, delay: index * 0.05 }}
-    >
+    <div>
       <SmartLink
         to={buildRoute.orderDetails(order.id)}
         className="block no-underline"
@@ -217,7 +212,7 @@ export function OrderCard({ order, index = 0 }: OrderCardProps) {
           </div>
         </Card>
       </SmartLink>
-    </motion.div>
+    </div>
 
 
   );

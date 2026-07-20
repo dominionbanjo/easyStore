@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { Quote, Star } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -20,9 +19,8 @@ export interface Testimonial {
  ───────────────────────────────────────────── */
 function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
   return (
-    <motion.div
-      whileHover={{ y: -5 }}
-      className="w-[380px] flex-shrink-0 bg-white dark:bg-neutral-900 border border-border/50 dark:border-white/5 rounded-sm p-8  hover: hover:border-primary/20 transition-all duration-300 flex flex-col justify-between group"
+    <div
+      className="w-[380px] flex-shrink-0 bg-white dark:bg-neutral-900 border border-border/50 dark:border-white/5 rounded-sm p-8 hover:-translate-y-1 transition-transform duration-300 hover:border-primary/20 transition-all duration-300 flex flex-col justify-between group"
     >
       <div className="space-y-6">
         <div className="flex items-center justify-between">
@@ -61,13 +59,20 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
           </p>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
 /* ─────────────────────────────────────────────
    Auto-Moving Carousel
  ───────────────────────────────────────────── */
+const styles = `
+@keyframes scroll {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+`;
+
 export default function TestimonialsCarousel() {
   const testimonials: Testimonial[] = [
     {
@@ -116,6 +121,8 @@ export default function TestimonialsCarousel() {
   const items = [...testimonials, ...testimonials];
 
   return (
+    <>
+      <style>{styles}</style>
     <section className="py-24 bg-background dark:bg-neutral-950 overflow-hidden transition-colors duration-300">
       <div className="w-full mx-auto px-4 mb-16">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
@@ -141,19 +148,14 @@ export default function TestimonialsCarousel() {
         {/* Left Fader */}
         <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
 
-        <motion.div
+        <div
           className="flex gap-8 px-4"
-          animate={{ x: ["0%", "-50%"] }}
-          transition={{
-            duration: 35,
-            repeat: Infinity,
-            ease: "linear",
-          }}
+          style={{ animation: 'scroll 35s linear infinite' }}
         >
           {items.map((item, index) => (
             <TestimonialCard key={`${item.id}-${index}`} testimonial={item} />
           ))}
-        </motion.div>
+    </div>
 
         {/* Right Fader */}
         <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
@@ -166,5 +168,6 @@ export default function TestimonialsCarousel() {
         </div>
       </div>
     </section>
+    </>
   );
 }

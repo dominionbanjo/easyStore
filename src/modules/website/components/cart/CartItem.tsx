@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { Trash2, Plus, Minus } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -33,7 +32,7 @@ export function CartItem({
   onRemove,
 }: CartItemProps) {
   return (
-    <motion.div layout>
+    <div>
       <Card className="group flex flex-col sm:flex-row gap-4 p-4 sm:p-5 rounded-sm border sm:border  sm: bg-white dark:bg-zinc-900 border-zinc-100 dark:border-white/5 relative overflow-hidden transition-all hover:">
         {/* Image */}
         <SmartLink
@@ -189,6 +188,6 @@ export function CartItem({
           </div>
         </div>
       </Card>
-    </motion.div>
+    </div>
   );
 }

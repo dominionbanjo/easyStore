@@ -347,6 +347,7 @@ export type CreateProductCloudinaryArgs = {
   /* ───────── OPTIONAL DETAILS ───────── */
   description?: string | null;
   discount_price?: number | null;
+  barcode?: string | null;
 
   /* ───────── PRODUCT META ───────── */
   tags?: string[];

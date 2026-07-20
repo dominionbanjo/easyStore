@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { SearchX, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -15,9 +14,7 @@ export function OrdersNoResults({
   onClearFilters,
 }: OrdersNoResultsProps) {
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
+    <div
       className="flex flex-col items-center justify-center py-16 px-6 text-center"
     >
       {/* No Results Icon */}
@@ -62,6 +59,6 @@ export function OrdersNoResults({
         <X className="h-4 w-4" />
         Clear Filters
       </Button>
-    </motion.div>
+    </div>
   );
 }

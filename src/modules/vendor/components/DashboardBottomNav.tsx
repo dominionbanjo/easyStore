@@ -2,7 +2,6 @@ import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { Home, Tag, ShoppingCart, People, More } from "iconsax-react";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
 import { getAppPath } from "@/utils/subdomain";
 import {
   Sheet,
@@ -68,10 +67,9 @@ export function DashboardBottomNav() {
                     ? "text-primary"
                     : "text-muted-foreground hover:text-foreground",
                 )}>
-                  <motion.div
-                    whileTap={{ scale: 0.9 }}
+                  <div
                     className={cn(
-                      "p-1.5 rounded-sm transition-colors relative",
+                      "p-1.5 rounded-sm transition-colors relative active:scale-90",
                       isActive && "bg-primary/10",
                     )}
                   >
@@ -80,15 +78,12 @@ export function DashboardBottomNav() {
                       color="currentColor"
                       size={20}
                     />
-                  </motion.div>
+                  </div>
                   <span className="text-[10px] font-bold uppercase tracking-widest">
                     {item.name}
                   </span>
                   {isActive && (
-                    <motion.div
-                      layoutId="activeTabDashboard"
-                      className="absolute -bottom-1 w-6 h-1 bg-primary rounded-t-full"
-                    />
+                    <div className="absolute -bottom-1 w-6 h-1 bg-primary rounded-t-full" />
                   )}
                 </div>
               )}
@@ -100,12 +95,9 @@ export function DashboardBottomNav() {
         <Sheet open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
           <SheetTrigger asChild>
             <button className="flex flex-col items-center justify-center gap-1 min-w-[64px] text-muted-foreground hover:text-foreground transition-all duration-300">
-              <motion.div
-                whileTap={{ scale: 0.9 }}
-                className="p-1.5 rounded-sm"
-              >
+              <div className="p-1.5 rounded-sm active:scale-90">
                 <More variant="Outline" color="currentColor" size={20} />
-              </motion.div>
+              </div>
               <span className="text-[10px] font-bold uppercase tracking-widest">
                 More
               </span>

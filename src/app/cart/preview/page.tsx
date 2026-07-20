@@ -32,7 +32,6 @@ import { BankAccountModal } from "@/modules/website/components/modals/BankAccoun
 import { SelectAddressModal } from "@/modules/website/components/modals/SelectAddressModal";
 import { CheckoutSummary } from "@/modules/website/components/checkout/CheckoutSummary";
 import { PaymentSecurityModal } from "@/modules/website/components/modals/PaymentSecurityModal";
-import { motion } from "framer-motion";
 import { 
   useStartConversationMutation, 
   useSendDirectMessageMutation 
@@ -279,9 +278,7 @@ export default function CheckoutPage() {
 
       {/* ───────── PAGE CONTENT ───────── */}
       <div className="w-full mx-auto px-2 sm:px-6 pt-4 pb-12 sm:py-20 relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
+        <div
           className="space-y-6 sm:space-y-16"
         >
           {/* Header Section */}
@@ -309,10 +306,7 @@ export default function CheckoutPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-4 sm:gap-12 items-start max-w-6xl mx-auto">
             {/* Left Column: Order Summary with Stepper/Accordion */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.4 }}
+            <div
               className="lg:sticky lg:top-12 mt-4 lg:mt-0 order-1 lg:order-1"
             >
               {isSummaryLoading ? (
@@ -462,14 +456,11 @@ export default function CheckoutPage() {
                   </Accordion>
                 </div>
               )}
-            </motion.div>
+            </div>
 
             {/* Right Column: Information */}
             <div className="space-y-8 sm:space-y-10 order-2 lg:order-2">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
+              <div
                 className="p-6 sm:p-8 rounded-sm sm:rounded-sm bg-background border border-border/40  overflow-hidden relative group"
               >
                 <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:scale-110 transition-transform duration-700">
@@ -498,7 +489,7 @@ export default function CheckoutPage() {
                     </div>
                   </div>
                 </div>
-              </motion.div>
+              </div>
 
               <div className="flex flex-wrap items-center justify-center sm:justify-start gap-6 sm:gap-8 opacity-40 grayscale group-hover:grayscale-0 transition-all duration-700">
                 <div className="flex items-center gap-2">
@@ -522,7 +513,7 @@ export default function CheckoutPage() {
               </div>
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </div>
   );

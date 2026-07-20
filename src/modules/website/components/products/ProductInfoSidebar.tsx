@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import SmartLink from "@/components/shared/SmartLink";
 import type { RootState } from "@/store";
-import { motion, AnimatePresence } from "framer-motion";
 import { buildRoute } from "@/routes/index";
 import {
   getBaseDomain,
@@ -314,11 +313,7 @@ export default function ProductInfoSidebar({
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, x: 20 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.5 }}
-      className="flex flex-col gap-8 w-full"
+    <div className="flex flex-col gap-8 w-full"
     >
       {/* ─── Product Header ─── */}
       <div className="space-y-4 px-1">
@@ -476,10 +471,7 @@ export default function ProductInfoSidebar({
                       style={{ backgroundColor: color.hex }}
                     />
                     {isSelected && (
-                      <motion.div
-                        layoutId="colorCheck"
-                        className="absolute inset-0 flex items-center justify-center"
-                      >
+                      <div className="absolute inset-0 flex items-center justify-center">
                         <Check
                           className={cn(
                             "h-4 w-4",
@@ -490,7 +482,7 @@ export default function ProductInfoSidebar({
                           )}
                           strokeWidth={4}
                         />
-                      </motion.div>
+                      </div>
                     )}
                   </button>
                 );
@@ -544,15 +536,8 @@ export default function ProductInfoSidebar({
       </div>
 
       {/* ─── Stock Status (Single placement below all selections) ─── */}
-      <AnimatePresence mode="wait">
         {allOptionsSelected && activeVariant && (
-          <motion.div
-            key={`${activeVariant.id}-stock`}
-            initial={{ opacity: 0, y: -4 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -4 }}
-            className="px-1 -mt-2"
-          >
+          <div className="px-1 -mt-2">
             {activeVariant.stock <= 0 ? (
               <p className="text-rose-500 text-xs font-black flex items-center gap-1.5 bg-rose-500/5 py-1.5 px-3 rounded-sm border border-rose-500/10 w-fit">
                 <span className="w-1.5 h-1.5 rounded-sm bg-rose-500 animate-pulse" />
@@ -561,13 +546,9 @@ export default function ProductInfoSidebar({
             ) : activeVariant.stock <= 5 ? (
               <div className="flex flex-col gap-1">
                 <p className="text-amber-600 dark:text-amber-400 text-xs font-black flex items-center gap-2 bg-amber-500/5 py-2 px-3 rounded-sm border border-amber-500/20 w-fit ">
-                  <motion.span
-                    animate={{ scale: [1, 1.2, 1] }}
-                    transition={{ repeat: Infinity, duration: 2 }}
-                    className="flex items-center justify-center"
-                  >
+                  <span className="flex items-center justify-center">
                     <PackageCheck className="w-4 h-4" />
-                  </motion.span>
+                  </span>
                   Only {activeVariant.stock} pieces left in stock!
                 </p>
               </div>
@@ -577,9 +558,8 @@ export default function ProductInfoSidebar({
                 {activeVariant.stock} items available in stock
               </p>
             )}
-          </motion.div>
+          </div>
         )}
-      </AnimatePresence>
 
       {/* ─── Purchase Section ─── */}
       <div className="space-y-6">
@@ -621,35 +601,21 @@ export default function ProductInfoSidebar({
               onClick={handleAddToCart}
               className="flex-1 rounded-sm bg-emerald-600 text-white hover:bg-emerald-700 h-14 text-base font-black  -emerald-200/20 group relative overflow-hidden active:scale-95 transition-all"
             >
-              <AnimatePresence mode="wait">
                 {addingToCart ? (
-                  <motion.div
-                    key="loading"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="flex items-center gap-2"
-                  >
+                  <div className="flex items-center gap-2">
                     <div className="h-5 w-5 border-2 border-white/30 border-t-white rounded-sm animate-spin" />
                     Adding...
-                  </motion.div>
+                  </div>
                 ) : (
-                  <motion.div
-                    key="normal"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="flex items-center gap-2"
-                  >
+                  <div className="flex items-center gap-2">
                     <ShoppingCart className="h-5 w-5" />
                     <span>
                       {hasNewOptions && !allOptionsSelected
                         ? "Select Options First"
                         : "Add to Cart"}
                     </span>
-                  </motion.div>
+                  </div>
                 )}
-              </AnimatePresence>
             </Button>
 
             <Button
@@ -680,13 +646,13 @@ export default function ProductInfoSidebar({
               title="Message Vendor"
               className="h-14 w-14 shrink-0 rounded-sm border-2 transition-all active:scale-90 hover:border-primary/50 text-muted-foreground"
             >
-              <motion.div animate={isContactingVendor ? { rotate: 360 } : {}}>
+              <div>
                 {isContactingVendor ? (
                   <Loader2 className="h-6 w-6 animate-spin text-primary" />
                 ) : (
                   <MessageSquare className="h-6 w-6" />
                 )}
-              </motion.div>
+              </div>
             </Button>
           </div>
         </div>
@@ -736,6 +702,6 @@ export default function ProductInfoSidebar({
           </div>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

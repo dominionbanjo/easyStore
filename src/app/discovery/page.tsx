@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { Sparkles, TrendingUp, Zap, ArrowRight, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import SmartLink from "@/components/shared/SmartLink";
@@ -48,21 +47,6 @@ export default function DiscoveryPage() {
     }
   };
 
-  const container = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
-
-  const item = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0 },
-  };
-
   return (
     <div className="min-h-screen bg-white dark:bg-neutral-950 transition-colors duration-300 pb-24">
       {/* Hero Header */}
@@ -70,10 +54,7 @@ export default function DiscoveryPage() {
         <div className="absolute top-0 center w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent dark:from-emerald-900/20" />
 
         <div className="w-full mx-auto text-center relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
+          <div>
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-sm bg-primary/5 dark:bg-emerald-500/10 text-primary dark:text-emerald-400 font-bold text-sm mb-8 border border-primary/10 dark:border-emerald-500/20">
               <Sparkles className="w-4 h-4" />
               <span>Curated Selection</span>
@@ -102,7 +83,7 @@ export default function DiscoveryPage() {
                 <Search className="w-5 h-5" />
               </button>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -218,11 +199,7 @@ export default function DiscoveryPage() {
             </Button>
           </SmartLink>
         </div>
-        <motion.div
-          key={isFeaturedLoading ? "loading" : "loaded"}
-          variants={container}
-          initial="hidden"
-          animate="show"
+        <div
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
         >
           {isFeaturedLoading
@@ -236,11 +213,11 @@ export default function DiscoveryPage() {
                 </div>
               ))
             : featuredProducts?.data?.items?.map((product) => (
-                <motion.div key={product.id} variants={item}>
+                <div key={product.id}>
                   <ProductGridCard data={product} />
-                </motion.div>
+                </div>
               ))}
-        </motion.div>
+        </div>
       </section>
 
       {/* Trending Section */}
@@ -263,11 +240,7 @@ export default function DiscoveryPage() {
             </Button>
           </SmartLink>
         </div>
-        <motion.div
-          key={isTrendingLoading ? "loading" : "loaded"}
-          variants={container}
-          initial="hidden"
-          animate="show"
+        <div
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
         >
           {isTrendingLoading
@@ -281,11 +254,11 @@ export default function DiscoveryPage() {
                 </div>
               ))
             : trendingProducts?.data?.items?.map((product) => (
-                <motion.div key={product.id} variants={item}>
+                <div key={product.id}>
                   <ProductGridCard data={product} />
-                </motion.div>
+                </div>
               ))}
-        </motion.div>
+        </div>
       </section>
 
       {/* New Arrivals Section */}
@@ -308,11 +281,7 @@ export default function DiscoveryPage() {
             </Button>
           </SmartLink>
         </div>
-        <motion.div
-          key={isNewArrivalsLoading ? "loading" : "loaded"}
-          variants={container}
-          initial="hidden"
-          animate="show"
+        <div
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
         >
           {isNewArrivalsLoading
@@ -326,11 +295,11 @@ export default function DiscoveryPage() {
                 </div>
               ))
             : newArrivals?.data?.items?.map((product) => (
-                <motion.div key={product.id} variants={item}>
+                <div key={product.id}>
                   <ProductGridCard data={product} />
-                </motion.div>
+                </div>
               ))}
-        </motion.div>
+        </div>
       </section>
     </div>
   );

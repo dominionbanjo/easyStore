@@ -1,4 +1,3 @@
-import { motion, AnimatePresence } from "framer-motion";
 import {
   ShoppingCart,
   Trash2,
@@ -169,14 +168,9 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
             </div>
           ) : (
             <div className="space-y-6">
-              <AnimatePresence>
                 {cartItems.map((item: ICartItem) => (
-                  <motion.div
+                  <div
                     key={`${item.product_id}-${item.variant_id ?? ""}-${item.variant_options ? JSON.stringify(item.variant_options) : `${item.size ?? "none"}-${item.color ?? "none"}`}`}
-                    layout
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
                     className="flex gap-4 group"
                   >
                     <SmartLink
@@ -307,9 +301,8 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                         </p>
                       </div>
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
-              </AnimatePresence>
             </div>
           )}
         </div>

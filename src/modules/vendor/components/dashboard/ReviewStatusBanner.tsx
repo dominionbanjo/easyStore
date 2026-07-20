@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { CheckCircle2, Rocket, ArrowRight, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -6,9 +5,7 @@ import { getAppPath } from "@/utils/subdomain";
 
 export function ReviewStatusBanner() {
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.98 }}
-      animate={{ opacity: 1, scale: 1 }}
+    <div
       className="relative overflow-hidden rounded-sm border border-emerald-500/20 bg-gradient-to-br from-emerald-50 to-white dark:from-emerald-500/5 dark:to-background p-5 sm:p-6 mt-4 mb-8"
     >
       {/* Background decoration */}
@@ -55,6 +52,6 @@ export function ReviewStatusBanner() {
           </Button>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

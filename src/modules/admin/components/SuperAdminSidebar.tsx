@@ -15,7 +15,7 @@ import {
   ShoppingBag,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+
 import { areSubdomainsDisabled } from "@/utils/subdomain";
 
 const menuItems = [
@@ -83,22 +83,13 @@ export default function SuperAdminSidebar({ open, onToggle }: Props) {
       </aside>
 
       {/* Mobile Sidebar Drawer */}
-      <AnimatePresence>
         {open && (
           <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.4 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
+            <div
               onClick={onToggle}
               className="fixed inset-0 bg-black/70 z-40 lg:hidden"
             />
-            <motion.aside
-              initial={{ x: "-100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "-100%" }}
-              transition={{ type: "tween", duration: 0.3 }}
+            <aside
               className={cn(
                 "flex flex-col border-r border-border/30 bg-card text-card-foreground",
                 "fixed left-0 top-0 h-screen w-[260px] z-50 lg:hidden"
@@ -136,10 +127,10 @@ export default function SuperAdminSidebar({ open, onToggle }: Props) {
                   );
                 })}
               </nav>
-            </motion.aside>
+            </aside>
           </>
         )}
-      </AnimatePresence>
+      
     </>
   );
 }

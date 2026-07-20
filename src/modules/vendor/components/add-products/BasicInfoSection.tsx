@@ -1,7 +1,7 @@
 import { FormInput } from "@/components/shared/form/FormInput";
 import { FormTextarea } from "@/components/shared/form/FormTextarea";
 import { CategorySelect } from "@/components/shared/form/CategorySelect";
-import { Type, FolderTree, AlignLeft } from "lucide-react";
+import { Type, FolderTree, AlignLeft, Barcode } from "lucide-react";
 import ChipSection from "./ChipSection";
 import { addChip, removeChip } from "../../utils/addProduct.helpers";
 import type { ProductExtras } from "./useProductExtras";
@@ -23,6 +23,15 @@ export function BasicInfoSection({ highlights, setHighlights }: Props) {
           name="category_id"
           label="Category"
           icon={<FolderTree className="h-4 w-4" />}
+        />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <FormInput
+          name="barcode"
+          label="Barcode / UPC / EAN (Optional)"
+          placeholder="Scan or enter barcode"
+          icon={<Barcode className="h-4 w-4" />}
         />
       </div>
 

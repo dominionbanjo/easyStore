@@ -19,6 +19,7 @@ export const getSubdomain = (): string | null => {
   if (areSubdomainsDisabled()) {
     if (path.startsWith("/vendor")) return "vendor";
     if (path.startsWith("/admin")) return "admin";
+    if (path.startsWith("/staff")) return "staff";
     
     // For store subdomains, they usually appear as /stores/:slug
     // If we are on a path like /stores/my-store, we can treat 'my-store' as the subdomain
@@ -138,6 +139,12 @@ export const handleRoleRedirect = (
         window.location.href = `${window.location.protocol}//admin.${baseDomain}/${queryString}`;
       }
     }
+  } else if (accountType === "staff") {
+    if (subdomainsDisabled) {
+      navigate("/staff", { replace: true });
+    } else {
+      window.location.href = `${window.location.protocol}//staff.${baseDomain}/`;
+    }
   } else {
     navigate(fallbackRedirect || "/", { replace: true });
   }
@@ -156,7 +163,7 @@ export const getAppPath = (path: string): string => {
   const subdomain = getSubdomain();
 
   // If we're not in a dashboard context, return as-is
-  if (subdomain !== "vendor" && subdomain !== "admin") return path;
+  if (subdomain !== "vendor" && subdomain !== "admin" && subdomain !== "staff") return path;
 
   // Avoid double-prefixing if the path already has it
   if (path.startsWith("/vendor") || path.startsWith("/admin")) return path;

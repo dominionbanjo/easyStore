@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import {
   Rocket,
   Code,
@@ -12,21 +11,6 @@ import {
 import { Button } from "@/components/ui/button";
 
 export default function CareersPage() {
-  const container = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
-
-  const item = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0 },
-  };
-
   const roles = [
     {
       id: "frontend",
@@ -67,11 +51,7 @@ export default function CareersPage() {
         <div className="absolute top-0 center w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent dark:from-emerald-900/20" />
 
         <div className="w-full mx-auto text-center relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
+          <div>
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-sm bg-primary/5 dark:bg-emerald-500/10 text-primary dark:text-emerald-400 font-bold text-sm mb-8 border border-primary/10 dark:border-emerald-500/20">
               <Rocket className="w-4 h-4" />
               <span>We are hiring!</span>
@@ -95,7 +75,7 @@ export default function CareersPage() {
             >
               View Open Positions
             </Button>
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -109,16 +89,12 @@ export default function CareersPage() {
             <p className="text-muted-foreground">Find your next challenge.</p>
           </div>
 
-          <motion.div
-            variants={container}
-            initial="hidden"
-            animate="show"
+          <div
             className="grid md:grid-cols-3 gap-6"
           >
             {roles.map((role) => (
-              <motion.div
+              <div
                 key={role.id}
-                variants={item}
                 className="group relative bg-white dark:bg-neutral-900 rounded-sm p-8 border border-zinc-200 dark:border-white/5 hover:border-primary/50 dark:hover:border-emerald-500/50 transition-all duration-300 hover: hover: dark:hover:-emerald-500/5 hover:-translate-y-1"
               >
                 <div className="w-14 h-14 rounded-sm bg-primary/5 dark:bg-emerald-500/10 flex items-center justify-center text-primary dark:text-emerald-400 mb-6 group-hover:scale-110 transition-transform duration-300">
@@ -154,9 +130,9 @@ export default function CareersPage() {
                   Apply Now
                   <ArrowRight className="w-4 h-4 ml-2 group-hover/link:translate-x-1 transition-transform" />
                 </div>
-              </motion.div>
+              </div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </section>
 

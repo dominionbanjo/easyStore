@@ -6,7 +6,7 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { ShoppingBag, Trophy, ChevronRight } from "lucide-react";
-import { motion } from "framer-motion";
+
 
 interface TopProduct {
   product_id: string;
@@ -51,11 +51,8 @@ export function TopProductsList({ products }: TopProductsListProps) {
                   : product.image;
 
               return (
-                <motion.div
+                <div
                   key={product.product_id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: idx * 0.05 }}
                   className="p-4 flex items-center gap-4 hover:bg-muted/30 transition-colors group cursor-pointer"
                 >
                   <div className="relative shrink-0">
@@ -98,7 +95,7 @@ export function TopProductsList({ products }: TopProductsListProps) {
                   </div>
 
                   <ChevronRight className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-all translate-x-[-10px] group-hover:translate-x-0" />
-                </motion.div>
+                </div>
               );
             })}
           </div>

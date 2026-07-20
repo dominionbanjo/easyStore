@@ -20,7 +20,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 
 import { extractErrorMessage } from "@/utils/errorHandler";
@@ -189,13 +188,8 @@ export function ColorSelectModal({
           </Button>
         </div>
 
-        <AnimatePresence>
           {showAdd && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              className="px-8 overflow-hidden bg-primary/[0.02]"
+            <div className="px-8 overflow-hidden bg-primary/[0.02]"
             >
               <div className="pb-8 pt-2 flex flex-col md:flex-row items-end gap-4 border-b border-primary/10">
                 <div className="flex-1 space-y-2">
@@ -241,9 +235,8 @@ export function ColorSelectModal({
                   )}
                 </Button>
               </div>
-            </motion.div>
+            </div>
           )}
-        </AnimatePresence>
 
         <div className="px-8 flex-1 overflow-y-auto custom-scrollbar min-h-0 py-8">
           {isLoading ? (
@@ -301,18 +294,12 @@ export function ColorSelectModal({
                       </span>
                     </div>
 
-                    <AnimatePresence>
                       {isSelected && (
-                        <motion.div
-                          initial={{ scale: 0, rotate: -45 }}
-                          animate={{ scale: 1, rotate: 0 }}
-                          exit={{ scale: 0, rotate: -45 }}
-                          className="absolute -top-1 -right-1 h-10 w-10 bg-primary text-white flex items-center justify-center rounded-bl-[1.5rem]"
+                        <div className="absolute -top-1 -right-1 h-10 w-10 bg-primary text-white flex items-center justify-center rounded-bl-[1.5rem]"
                         >
                           <Check className="h-4 w-4 stroke-[4]" />
-                        </motion.div>
+                        </div>
                       )}
-                    </AnimatePresence>
                   </button>
                 );
               })}

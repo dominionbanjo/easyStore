@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+
 
 // Sub-components
 import { HelpHeader } from "@/modules/vendor/components/help/HelpHeader";
@@ -9,9 +9,7 @@ import { TutorialList } from "@/modules/vendor/components/help/TutorialList";
 
 export default function HelpPage() {
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
+    <div
       className="max-w-[1400px] mx-auto space-y-20 pb-24"
     >
       {/* ─── Hero & Search ─── */}
@@ -67,6 +65,6 @@ export default function HelpPage() {
       {/* Decorative background gradients */}
       <div className="fixed top-0 right-0 -z-10 w-[600px] h-[600px] bg-emerald-500/5 blur-[120px] rounded-sm pointer-events-none" />
       <div className="fixed bottom-0 left-0 -z-10 w-[600px] h-[600px] bg-blue-500/5 blur-[120px] rounded-sm pointer-events-none" />
-    </motion.div>
+    </div>
   );
 }

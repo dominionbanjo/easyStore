@@ -17,7 +17,7 @@ import { useVerifyPaymentMutation } from "@/services/ordersApi";
 import { useGetCartQuery } from "@/services/cartApi";
 import { ACCOUNT_ROUTES } from "@/routes";
 import SmartLink from "@/components/shared/SmartLink";
-import { motion } from "framer-motion";
+
 
 export default function VerifyPaymentPage() {
   const [searchParams] = useSearchParams();
@@ -180,9 +180,7 @@ export default function VerifyPaymentPage() {
             </div>
 
             {remainingItemsCount > 0 && (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
+              <div
                 className="p-4 rounded-sm bg-primary/5 border border-primary/20 flex flex-col items-center gap-3"
               >
                 <div className="flex items-center gap-2 text-primary">
@@ -199,7 +197,7 @@ export default function VerifyPaymentPage() {
                     Pay for Next Order
                   </Button>
                 </SmartLink>
-              </motion.div>
+              </div>
             )}
 
             <div className="px-4 py-2 rounded-sm bg-emerald-50 dark:bg-emerald-950/20 text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400">

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
 import { CreditCard, ShoppingBag, Loader2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -75,11 +74,7 @@ export function OrderPaymentSummary({ order }: OrderPaymentSummaryProps) {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay: 0.2 }}
-    >
+    <div>
       <Card className="overflow-hidden rounded-sm border border-border/40 bg-card/50 backdrop-blur-sm">
         <div className="bg-muted/30 px-4 py-3 border-b border-border/40">
           <h2 className="text-sm font-black text-foreground flex items-center gap-2 uppercase tracking-widest font-outfit">
@@ -183,6 +178,6 @@ export function OrderPaymentSummary({ order }: OrderPaymentSummaryProps) {
           </div>
         </div>
       </Card>
-    </motion.div>
+    </div>
   );
 }

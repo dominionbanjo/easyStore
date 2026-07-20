@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { motion, type Variants } from "framer-motion";
 import {
   Flash,
   ShieldTick,
@@ -20,34 +19,6 @@ import { AUTH_ROUTES } from "@/routes/index";
 import { getBaseDomain, areSubdomainsDisabled } from "@/utils/subdomain";
 import { useNavigate } from "react-router-dom";
 import { Modal } from "@/components/shared/Modal";
-
-const containerVariants: Variants = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.12,
-      delayChildren: 0.1,
-    },
-  },
-};
-
-const fadeUpVariants: Variants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.7, ease: [0.25, 0.1, 0.25, 1] },
-  },
-};
-
-const scaleInVariants: Variants = {
-  hidden: { opacity: 0, scale: 0.9 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    transition: { duration: 0.5, ease: [0.25, 0.1, 0.25, 1] },
-  },
-};
 
 export function HeroTitle() {
   return (
@@ -136,30 +107,24 @@ export default function HeroSection() {
         </div>
 
         <div className="relative z-10 w-full mx-auto max-w-6xl px-4 sm:px-8 lg:px-16">
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
+          <div
             className="flex flex-col items-center text-center space-y-7 lg:space-y-8"
           >
-            <motion.h1
-              variants={fadeUpVariants}
+            <h1
               className="text-[34px] sm:text-5xl md:text-6xl lg:text-[54px] font-black tracking-tighter leading-[1.08] text-white"
             >
               <HeroTitle />
-            </motion.h1>
+            </h1>
 
-            <motion.p
-              variants={fadeUpVariants}
+            <p
               className="text-base sm:text-lg lg:text-xl leading-relaxed text-neutral-300 font-medium max-w-3xl"
             >
               Your brand deserves a store that works as hard as you do.
               Launch in minutes with your own website, payment protection,
               and zero technical skills.
-            </motion.p>
+            </p>
 
-            <motion.div
-              variants={scaleInVariants}
+            <div
               className="flex flex-col sm:flex-row items-center gap-4"
             >
               <button
@@ -181,10 +146,9 @@ export default function HeroSection() {
                 />
                 <span className="text-white font-black text-sm">Watch demo</span>
               </button>
-            </motion.div>
+            </div>
 
-            <motion.div
-              variants={fadeUpVariants}
+            <div
               className="flex flex-wrap items-center justify-center gap-6"
             >
               <div className="flex items-center gap-2 text-neutral-300">
@@ -196,10 +160,9 @@ export default function HeroSection() {
                 <span className="text-amber-400 font-black text-lg">500+</span>
                 <span className="text-sm font-medium">active stores</span>
               </div>
-            </motion.div>
+            </div>
 
-            <motion.div
-              variants={fadeUpVariants}
+            <div
               className="inline-flex items-center gap-2 bg-white/5 backdrop-blur-xl border border-white/10 rounded-sm px-5 py-3"
             >
               <span className="text-[10px] font-black uppercase tracking-widest text-neutral-400">
@@ -212,8 +175,8 @@ export default function HeroSection() {
               <span className="text-white font-bold text-sm">
                 .eazystore.com.ng
               </span>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         </div>
 
         <div className="hidden lg:block absolute inset-0 z-[5] pointer-events-none overflow-hidden">

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -128,18 +127,13 @@ export default function OrdersPage() {
     <section className="space-y-4 md:space-y-6 pb-10">
       {/* ─── Header ─── */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-        >
+        <div>
           <p className="text-muted-foreground text-sm font-medium">
             Manage all orders and their fulfillment statuses.
           </p>
-        </motion.div>
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
+        <div
           className="flex items-center gap-3"
         >
           <Button
@@ -150,7 +144,7 @@ export default function OrdersPage() {
             <Download className="h-4 w-4" />
             Export
           </Button>
-        </motion.div>
+        </div>
       </div>
 
       {/* ─── Toolbar (Search & Filters) ─── */}

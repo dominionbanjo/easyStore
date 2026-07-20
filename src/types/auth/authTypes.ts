@@ -11,7 +11,7 @@ export interface IRegisterUserPayload {
   current_sales_channel?: string;
   agree_to_terms?: boolean;
 }
-export type AccountType = "user" | "vendor" | "admin";
+export type AccountType = "user" | "vendor" | "admin" | "staff";
 export interface IUser {
   id: string;
 
@@ -22,7 +22,7 @@ export interface IUser {
   phone_number: string | null;
   username: string | null;
 
-  account_type: "user" | "vendor" | "admin";
+  account_type: "user" | "vendor" | "admin" | "staff";
   account_status: "active" | "pending" | "restricted" | "banned";
 
   avatar: string | null;
@@ -43,6 +43,8 @@ export interface IUser {
   } | null;
 
   addresses?: any[];
+  must_change_password?: boolean;
+
   bank_code?: string;
   account_number?: string;
   bank_name?: string;

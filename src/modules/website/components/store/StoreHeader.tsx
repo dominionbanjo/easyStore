@@ -1,5 +1,4 @@
 import { useFormContext } from "react-hook-form";
-import { motion } from "framer-motion";
 import { Search, MapPin, X, Store } from "lucide-react";
 import { NigeriaData } from "@/utils/nigeria-data";
 import { Button } from "@/components/ui/button";
@@ -24,10 +23,7 @@ export default function StoreHeader() {
       <div className="w-full mx-auto px-6 py-12 md:py-16 relative z-10">
         <div className="max-w-3xl mx-auto text-center space-y-8">
           {/* Title Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+          <div
             className="space-y-4"
           >
             <Badge
@@ -59,13 +55,10 @@ export default function StoreHeader() {
               Discover verified sellers, unique local brands, and top-rated
               merchants. Shop with confidence from our trusted partners.
             </p>
-          </motion.div>
+          </div>
 
           {/* Filter Bar */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
+          <div
             className="p-2 bg-white/80 dark:bg-neutral-800/80 backdrop-blur-xl border border-border/50 dark:border-white/10 rounded-sm  -neutral-200/40 dark: max-w-2xl mx-auto"
           >
             <div className="flex flex-col md:flex-row gap-2">
@@ -108,7 +101,7 @@ export default function StoreHeader() {
                 )}
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

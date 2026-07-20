@@ -4,23 +4,19 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import type { IProductReview } from "@/types/product/productTypes";
 import { format } from "date-fns";
-import { motion } from "framer-motion";
+
 
 interface ReviewCardProps {
   review: IProductReview;
   index?: number;
 }
 
-export function ReviewCard({ review, index = 0 }: ReviewCardProps) {
+export function ReviewCard({ review }: ReviewCardProps) {
   const initials =
     `${review.user.first_name?.[0] || ""}${review.user.last_name?.[0] || ""}`.toUpperCase();
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.1, duration: 0.4 }}
-    >
+    <div>
       <Card className="p-6 md:p-8 rounded-sm border-border/40 bg-gradient-to-br from-background to-muted/20 hover: hover: hover:border-primary/20 transition-all duration-300 group">
         <div className="flex flex-col sm:flex-row gap-6">
           {/* User Info & Avatar */}
@@ -76,6 +72,6 @@ export function ReviewCard({ review, index = 0 }: ReviewCardProps) {
           </div>
         </div>
       </Card>
-    </motion.div>
+    </div>
   );
 }

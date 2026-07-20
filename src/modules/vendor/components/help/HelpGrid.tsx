@@ -8,7 +8,7 @@ import {
   Zap,
   ArrowRight,
 } from "lucide-react";
-import { motion } from "framer-motion";
+
 
 const categories = [
   {
@@ -52,12 +52,9 @@ const categories = [
 export function HelpGrid() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {categories.map((cat, idx) => (
-        <motion.div
+      {categories.map((cat) => (
+        <div
           key={cat.title}
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: idx * 0.05 }}
         >
           <Card className="group relative border-none  bg-card hover:ring-2 hover:ring-emerald-500/20 transition-all duration-300 cursor-pointer overflow-hidden p-6">
             <div
@@ -84,7 +81,7 @@ export function HelpGrid() {
               className={`absolute -bottom-8 -right-8 w-24 h-24 bg-${cat.color}-500/5 rounded-sm blur-2xl group-hover:scale-150 transition-transform duration-700`}
             />
           </Card>
-        </motion.div>
+        </div>
       ))}
     </div>
   );

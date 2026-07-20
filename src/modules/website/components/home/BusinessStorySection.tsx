@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { Store, Upload, Megaphone, TrendingUp } from "lucide-react";
 
 const steps = [
@@ -38,10 +37,7 @@ export default function BusinessStorySection() {
       <div className="w-full mx-auto">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Left: Text & Story */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
+          <div
             className="space-y-8"
           >
             <div className="space-y-4">
@@ -63,12 +59,9 @@ export default function BusinessStorySection() {
             </div>
 
             <div className="grid sm:grid-cols-2 gap-6">
-              {steps.map((step, index) => (
-                <motion.div
+              {steps.map((step) => (
+                <div
                   key={step.title}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.08, duration: 0.4, ease: "easeOut" }}
                   className="p-6 rounded-sm bg-muted/30 dark:bg-neutral-900/50 border border-border/50 dark:border-white/5 hover:border-primary/20 transition-colors group"
                 >
                   <div
@@ -82,16 +75,13 @@ export default function BusinessStorySection() {
                   <p className="text-sm text-muted-foreground leading-relaxed">
                     {step.description}
                   </p>
-                </motion.div>
+                </div>
               ))}
             </div>
-          </motion.div>
+          </div>
 
           {/* Right: Visual Story */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
+          <div
             className="relative"
           >
             <div className="aspect-square rounded-sm bg-gradient-to-tr from-primary/20 to-secondary/20 relative flex items-center justify-center p-8">
@@ -131,7 +121,7 @@ export default function BusinessStorySection() {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

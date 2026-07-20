@@ -22,9 +22,12 @@ export default function ForgotPasswordPage() {
   const redirectTo = searchParams.get("redirect") || "/";
   const [forgotPassword, { isLoading }] = useForgotPasswordMutation();
 
+  const prefilledEmail = searchParams.get("email") || "";
+
   const methods = useForm<ForgotPasswordValues>({
     resolver: zodResolver(ForgotPasswordSchema),
     mode: "onTouched",
+    defaultValues: { email: prefilledEmail },
   });
 
   const { handleSubmit } = methods;

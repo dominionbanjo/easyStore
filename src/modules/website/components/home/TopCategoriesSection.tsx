@@ -1,6 +1,5 @@
 import { useRef } from "react";
 import SmartLink from "@/components/shared/SmartLink";
-import { motion } from "framer-motion";
 import { ArrowRight, LayoutGrid, Tag } from "lucide-react";
 import { useGetCategoriesQuery } from "@/services/productDetailsApi";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -46,10 +45,7 @@ export default function TopCategoriesSection({
       <div className="w-full mx-auto space-y-10">
         {/* Header Section */}
         <div className="flex flex-col gap-4 px-1">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
+          <div
             className="space-y-4 text-left"
           >
             <h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight flex items-center gap-2">
@@ -68,7 +64,7 @@ export default function TopCategoriesSection({
               View All Categories
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </SmartLink>
-          </motion.div>
+          </div>
         </div>
 
         {/* Content Section */}
@@ -86,10 +82,7 @@ export default function TopCategoriesSection({
             className="bg-muted/30 rounded-sm py-12"
           />
         ) : (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
+          <div
             className="grid grid-cols-2 md:grid-cols-4 gap-4"
           >
             {categories.map((category, index) => (
@@ -118,7 +111,7 @@ export default function TopCategoriesSection({
                 </Card>
               </SmartLink>
             ))}
-          </motion.div>
+          </div>
         )}
       </div>
     </section>

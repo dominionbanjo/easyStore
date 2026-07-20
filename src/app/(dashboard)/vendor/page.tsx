@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { lazy, Suspense } from "react";
 import {
   BarChart2,
@@ -117,12 +116,12 @@ export default function VendorDashboardPage() {
       {/* ─── Header Section ─── */}
       <DashboardOverviewHeader />
 
-      {/* ─── Status Banners ─── */}
-      {!isLoading && storeStatus === "pending" && isReady && (
+      {/* ─── Status Banners (only after data loads, never on cache flash) ─── */}
+      {data && !isLoading && storeStatus === "pending" && isReady && (
         <ReviewStatusBanner />
       )}
 
-      {!isLoading && storeStatus === "restricted" && (
+      {data && !isLoading && storeStatus === "restricted" && (
         <Alert
           variant="destructive"
           className="mt-4 mb-2 bg-red-50 dark:bg-red-900/10 border-red-200 dark:border-red-900"
@@ -262,10 +261,7 @@ export default function VendorDashboardPage() {
 
           {/* ─── Secondary Info / Quick Actions ─── */}
           <div className="space-y-8">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.5 }}
+            <div
               className="bg-primary/5 rounded-sm p-6 border border-primary/10 relative overflow-hidden group"
             >
               <div className="relative z-10">
@@ -286,7 +282,7 @@ export default function VendorDashboardPage() {
 
               {/* Decorative Circle */}
               <div className="absolute -top-12 -right-12 w-32 h-32 bg-primary/10 rounded-sm blur-3xl group-hover:bg-primary/20 transition-colors" />
-            </motion.div>
+            </div>
 
             {/* Quick Tips / Info Cards */}
             <div className="grid gap-4">

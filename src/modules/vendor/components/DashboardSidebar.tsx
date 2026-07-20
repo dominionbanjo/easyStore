@@ -14,9 +14,9 @@ import {
   MessageSquare,
   Banknote as BanknoteIcon,
   UserCog,
+  Receipt,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
-import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { StoreSetupTracker } from "./shared/StoreSetupTracker";
 import { getAppPath } from "@/utils/subdomain";
@@ -35,6 +35,8 @@ const preloadMap: Record<string, () => void> = {
   "/help": () => { import("@/app/(dashboard)/vendor/help/page"); },
   "/messages": () => { import("@/app/(dashboard)/vendor/messages/page"); },
   "/staff": () => { import("@/modules/vendor/components/staff/StaffManagementPage"); },
+  "/sales-terminal": () => { import("@/modules/vendor/components/sales-terminal/SalesTerminalPage"); },
+  "/sales-history": () => { import("@/modules/vendor/components/sales-history/SalesHistoryPage"); },
 };
 
 const allVendorPreloaders: Array<() => void> = [
@@ -49,6 +51,8 @@ const allVendorPreloaders: Array<() => void> = [
   () => { import("@/app/(dashboard)/vendor/help/page"); },
   () => { import("@/app/(dashboard)/vendor/messages/page"); },
   () => { import("@/app/(dashboard)/vendor/products/new/page"); },
+  () => { import("@/modules/vendor/components/sales-terminal/SalesTerminalPage"); },
+  () => { import("@/modules/vendor/components/sales-history/SalesHistoryPage"); },
 ];
 
 const menuItems = [
@@ -57,6 +61,8 @@ const menuItems = [
   { label: "Orders", icon: ShoppingCart, to: "/orders" },
   { label: "Customers", icon: Users, to: "/customers" },
   { label: "Staff", icon: UserCog, to: "/staff" },
+  { label: "Sales Terminal", icon: Receipt, to: "/sales-terminal" },
+  { label: "Sales History", icon: Receipt, to: "/sales-history" },
   { label: "Payouts", icon: BanknoteIcon, to: "/payouts" },
   { label: "Templates", icon: Palette, to: "/templates" },
   { label: "Messages", icon: MessageSquare, to: "/messages" },
@@ -117,13 +123,11 @@ export default function DashboardSidebar({
           <div className="flex items-center gap-2 overflow-hidden">
             <Store className="h-6 w-6 text-primary shrink-0" />
             {!isCollapsed && (
-              <motion.span
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
+              <span
                 className="font-semibold text-lg truncate"
               >
                 My Store
-              </motion.span>
+              </span>
             )}
           </div>
           <Button
@@ -163,13 +167,11 @@ export default function DashboardSidebar({
               >
                 <Icon className="h-5 w-5 shrink-0" />
                 {!isCollapsed && (
-                  <motion.span
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
+                  <span
                     className="truncate"
                   >
                     {label}
-                  </motion.span>
+                  </span>
                 )}
               </NavLink>
             );

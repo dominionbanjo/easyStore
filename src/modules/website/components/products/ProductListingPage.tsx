@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import type { LucideIcon } from "lucide-react";
 import ProductGridCard from "@/components/shared/ProductGridCard";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -37,20 +36,7 @@ export default function ProductListingPage({
   pagination,
   onPageChange,
 }: ProductListingPageProps) {
-  const container = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
 
-  const item = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0 },
-  };
 
   return (
     <div className="min-h-screen bg-white dark:bg-neutral-950 transition-colors duration-300 pb-24">
@@ -88,19 +74,14 @@ export default function ProductListingPage({
           </div>
         ) : (
           <div>
-            <motion.div
-              key={pagination?.page ?? "list"}
-              variants={container}
-              initial="hidden"
-              animate="show"
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
             >
               {products.map((product) => (
-                <motion.div key={product.id} variants={item}>
+                <div key={product.id}>
                   <ProductGridCard data={product} />
-                </motion.div>
+                </div>
               ))}
-            </motion.div>
+            </div>
 
             {/* Pagination */}
             {pagination && pagination.pages > 1 && (

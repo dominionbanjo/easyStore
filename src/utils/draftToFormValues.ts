@@ -42,6 +42,7 @@ export function buildCreateProductPayload(
     category_id: values.category_id,
     name: values.name,
     description: values.description,
+    barcode: values.barcode || undefined,
 
     price: args.variants?.length ? undefined : (values.price ?? undefined),
     stock: args.variants?.length ? undefined : (values.stock ?? undefined),

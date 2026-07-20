@@ -1,25 +1,20 @@
 import SmartLink from "@/components/shared/SmartLink";
 import { Button } from "@/components/ui/button";
-import { motion } from "framer-motion";
 import { Home, ArrowLeft } from "lucide-react";
 
 export default function NotFoundPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-white dark:bg-neutral-950 px-6 py-24 transition-colors duration-300">
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
+      <div
         className="max-w-xl w-full text-center space-y-12"
       >
         {/* Visual 404 Header */}
         <div className="relative">
-          <motion.h1
-            initial={{ scale: 0.8 }}
-            animate={{ scale: 1 }}
+          <h1
             className="text-[12rem] md:text-[16rem] font-black leading-none text-zinc-100 dark:text-white/5 select-none"
           >
             404
-          </motion.h1>
+          </h1>
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="space-y-4">
               <h2 className="text-4xl md:text-5xl font-black text-foreground tracking-tight">
@@ -58,7 +53,7 @@ export default function NotFoundPage() {
             </Button>
           </div>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }

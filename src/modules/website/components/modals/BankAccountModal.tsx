@@ -16,7 +16,6 @@ import {
   X,
   Sparkles,
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
 import type { IUser } from "@/types/auth/authTypes";
 
 import { Button } from "@/components/ui/button";
@@ -240,23 +239,18 @@ export function BankAccountModal({
                       icon={<CreditCard className="h-4 w-4" />}
                     />
 
-                    <AnimatePresence mode="wait">
+                    <>
                       {isVerifying && (
-                        <motion.p
-                          initial={{ opacity: 0, y: -5 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: 5 }}
+                        <p
                           className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-indigo-500"
                         >
                           <Loader2 className="h-3 w-3 animate-spin" />
                           Verifying Account...
-                        </motion.p>
+                        </p>
                       )}
 
                       {verifiedData && !isVerifying && (
-                        <motion.div
-                          initial={{ opacity: 0, y: -5 }}
-                          animate={{ opacity: 1, y: 0 }}
+                        <div
                           className="p-3 rounded-sm bg-emerald-500/10 border border-emerald-500/20"
                         >
                           <div className="flex items-center gap-2 text-emerald-600 mb-1">
@@ -268,20 +262,18 @@ export function BankAccountModal({
                           <p className="text-xs font-bold text-emerald-700 ml-6">
                             {verifiedData.account_name}
                           </p>
-                        </motion.div>
+                        </div>
                       )}
 
                       {verifyError && !isVerifying && (
-                        <motion.div
-                          initial={{ opacity: 0, y: -5 }}
-                          animate={{ opacity: 1, y: 0 }}
+                        <div
                           className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-red-500"
                         >
                           <XCircle className="h-3 w-3" />
                           {verifyError}
-                        </motion.div>
+                        </div>
                       )}
-                    </AnimatePresence>
+                    </>
                   </div>
 
                   <FormInput
@@ -297,16 +289,9 @@ export function BankAccountModal({
                   disabled={isLoading || isVerifying || !verifiedData}
                 >
                   {isLoading ? (
-                    <motion.div
-                      animate={{ rotate: 360 }}
-                      transition={{
-                        repeat: Infinity,
-                        duration: 1,
-                        ease: "linear",
-                      }}
-                    >
-                      <Sparkles className="h-5 w-5" />
-                    </motion.div>
+                    <div>
+                      <Sparkles className="h-5 w-5 animate-spin" />
+                    </div>
                   ) : (
                     <>
                       Register Bank Account

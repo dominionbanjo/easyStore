@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 interface LogoProps {
@@ -18,10 +17,7 @@ export function Logo({ className, size = "md", showTagline = false }: LogoProps)
   return (
     <div className={cn("flex flex-col items-start leading-none", className)}>
       <div className="flex items-center">
-        <motion.div
-           initial={{ opacity: 0, x: -10 }}
-           animate={{ opacity: 1, x: 0 }}
-           transition={{ duration: 0.5 }}
+        <div
            className={cn(
              "font-black tracking-tighter flex items-center font-outfit uppercase",
              sizeClasses[size]
@@ -29,18 +25,15 @@ export function Logo({ className, size = "md", showTagline = false }: LogoProps)
         >
           <span className="text-foreground">EAZY</span>
           <span className="text-primary font-light ml-0.5">STORE</span>
-        </motion.div>
+        </div>
       </div>
       
       {showTagline && (
-        <motion.p
-          initial={{ opacity: 0, y: 5 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
+        <p
           className="text-[10px] sm:text-[12px] font-bold text-muted-foreground uppercase tracking-[0.4em] mt-1.5 ml-1"
         >
           Simplified
-        </motion.p>
+        </p>
       )}
     </div>
   );
@@ -62,16 +55,14 @@ export function LogoIcon({ className, size = "md" }: { className?: string; size?
         className
       )}
     >
-      <motion.span
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
+      <span
         className={cn(
           "font-black text-white leading-none tracking-tighter select-none font-outfit uppercase",
           size === "sm" ? "text-xs" : size === "md" ? "text-lg" : "text-2xl"
         )}
       >
         EZ
-      </motion.span>
+      </span>
       <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent pointer-events-none" />
       <div className="absolute -inset-2 opacity-0 group-hover/logo-icon:opacity-20 transition-opacity duration-300 bg-white blur-xl" />
     </div>

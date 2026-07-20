@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { Star, MapPin, Package, ArrowRight } from "lucide-react";
-import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
@@ -43,10 +42,8 @@ export default function StoreCard({
   const bannerImage = coverImage || "/images/defaultbanner.png";
 
   return (
-    <motion.div
-      whileHover={{ y: -6 }}
-      transition={{ type: "spring", stiffness: 400, damping: 25 }}
-      className={cn("h-full group", className)}
+    <div
+      className={cn("h-full group hover:-translate-y-1.5 transition-transform duration-300", className)}
     >
       <Link to={`/stores/${slug}`} className="block h-full">
         <Card className="relative h-full overflow-hidden border-border/40 bg-card p-0  hover: hover: transition-all duration-300 rounded-sm">
@@ -117,6 +114,6 @@ export default function StoreCard({
           </div>
         </Card>
       </Link>
-    </motion.div>
+    </div>
   );
 }

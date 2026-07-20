@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { AlertCircle, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -8,9 +7,7 @@ interface OrdersErrorStateProps {
 
 export function OrdersErrorState({ onRetry }: OrdersErrorStateProps) {
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
+    <div
       className="flex flex-col items-center justify-center py-16 px-6 text-center"
     >
       {/* Error Icon */}
@@ -35,6 +32,6 @@ export function OrdersErrorState({ onRetry }: OrdersErrorStateProps) {
         <RefreshCw className="h-4 w-4" />
         Try Again
       </Button>
-    </motion.div>
+    </div>
   );
 }

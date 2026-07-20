@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
 import {
   useGetTemplatesQuery,
   useGetMyStoreQuery,
@@ -107,13 +106,8 @@ export default function VendorTemplatesPage() {
                   tpl.id === currentTemplateId ||
                   (!currentTemplateId && tpl.name === "Default");
                 return (
-                  <motion.div
-                    key={tpl.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    whileHover={{ y: -8 }}
-                    transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                    className={`group relative flex flex-col h-full bg-card rounded-sm overflow-hidden border transition-all duration-500 ${
+                  <div
+                    className={`group relative flex flex-col h-full bg-card rounded-sm overflow-hidden border transition-all duration-500 hover:-translate-y-2 hover: ${     
                       isActive 
                         ? "border-primary -[0_0_40px_-10px_rgba(16,185,129,0.3)] ring-1 ring-primary/50" 
                         : "border-border hover:border-primary/40 "
@@ -210,7 +204,7 @@ export default function VendorTemplatesPage() {
                         )}
                       </div>
                     </div>
-                  </motion.div>
+                  </div>
                 );
               })}
             </div>

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
 import {
   Truck,
   Calendar,
@@ -84,11 +83,7 @@ export function OrderDeliveryInfo({ order }: { order: IOrder }) {
   const confirmationCode = order.delivery?.confirmation_code || order.escrow?.release_code;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay: 0.15 }}
-    >
+    <div>
       <Card className="overflow-hidden rounded-sm border border-border/40 bg-card/50 backdrop-blur-sm">
         <div className="bg-muted/30 px-4 py-3 border-b border-border/40">
           <div className="flex items-center justify-between">
@@ -240,7 +235,7 @@ export function OrderDeliveryInfo({ order }: { order: IOrder }) {
           )}
         </div>
       </Card>
-    </motion.div>
+    </div>
 
   );
 }

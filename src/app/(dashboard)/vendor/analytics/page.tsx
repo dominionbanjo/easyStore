@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { Loader2, RefreshCw, AlertCircle } from "lucide-react";
 import { useGetMyStoreAnalyticsQuery } from "@/services/storeApi";
 import { Button } from "@/components/ui/button";
@@ -69,9 +68,7 @@ export default function AnalyticsPage() {
 
   // Final UI
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
+    <div
       className="max-w-[1400px] mx-auto space-y-10 pb-20 px-4 md:px-0"
     >
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
@@ -130,6 +127,6 @@ export default function AnalyticsPage() {
       {/* Decorative background gradients */}
       <div className="fixed top-0 right-0 -z-10 w-[500px] h-[500px] bg-emerald-500/5 blur-[120px] rounded-sm" />
       <div className="fixed bottom-0 left-0 -z-10 w-[500px] h-[500px] bg-blue-500/5 blur-[120px] rounded-sm" />
-    </motion.div>
+    </div>
   );
 }

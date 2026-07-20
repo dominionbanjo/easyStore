@@ -9,7 +9,6 @@ import {
   Trash2,
 } from "lucide-react";
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
@@ -201,14 +200,8 @@ export default function ImageUploadSection({
               "pointer-events-none",
           )}
         >
-          <AnimatePresence mode="wait">
             {mainProgress !== null ? (
-              <motion.div
-                key="uploading"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="flex flex-col items-center gap-6 w-full max-w-xs px-6"
+              <div className="flex flex-col items-center gap-6 w-full max-w-xs px-6"
               >
                 <div className="relative h-20 w-20 flex items-center justify-center">
                   <Loader2 className="h-10 w-10 text-primary animate-spin absolute" />
@@ -222,13 +215,9 @@ export default function ImageUploadSection({
                     Uploading Cover...
                   </p>
                 </div>
-              </motion.div>
+              </div>
             ) : image ? (
-              <motion.div
-                key="content"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="relative w-full h-full group"
+              <div className="relative w-full h-full group"
               >
                 <img
                   src={image.url}
@@ -274,13 +263,8 @@ export default function ImageUploadSection({
                 </div>
 
                 {/* Confirm Removal Overlay */}
-                <AnimatePresence>
                   {confirmDeleteId === image.public_id && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, scale: 0.9 }}
-                      className="absolute inset-0 bg-red-600/90 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center z-20"
+                    <div className="absolute inset-0 bg-red-600/90 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center z-20"
                     >
                       <Trash2 className="h-10 w-10 text-white mb-4 animate-bounce" />
                       <p className="text-white text-sm font-black uppercase tracking-tight mb-6">
@@ -306,16 +290,11 @@ export default function ImageUploadSection({
                           Confirm
                         </button>
                       </div>
-                    </motion.div>
+                    </div>
                   )}
-                </AnimatePresence>
-              </motion.div>
+              </div>
             ) : (
-              <motion.div
-                key="empty"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="flex flex-col items-center gap-4 py-8"
+              <div className="flex flex-col items-center gap-4 py-8"
               >
                 <div className="h-20 w-20 rounded-sm bg-background flex items-center justify-center  border border-muted-foreground/10 group-hover:scale-110 group-hover:bg-primary transition-all duration-500">
                   <Upload className="h-8 w-8 text-primary group-hover:text-white transition-colors" />
@@ -328,9 +307,8 @@ export default function ImageUploadSection({
                     PNG, JPG or WEBP (Max 5MB)
                   </p>
                 </div>
-              </motion.div>
+              </div>
             )}
-          </AnimatePresence>
 
           <input
             hidden
@@ -361,14 +339,9 @@ export default function ImageUploadSection({
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
-          <AnimatePresence mode="popLayout">
             {gallery.map((g, i) => (
-              <motion.div
+              <div
                 key={g.public_id}
-                layout
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
                 className="relative aspect-square group rounded-sm overflow-hidden border border-muted-foreground/10 bg-muted/20"
               >
                 <img
@@ -406,13 +379,8 @@ export default function ImageUploadSection({
                 </div>
 
                 {/* Confirm Deletion Overlay */}
-                <AnimatePresence>
                   {confirmDeleteId === g.public_id && (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      className="absolute inset-0 bg-red-600/95 flex flex-col items-center justify-center p-2 text-center z-10"
+                    <div className="absolute inset-0 bg-red-600/95 flex flex-col items-center justify-center p-2 text-center z-10"
                     >
                       <p className="text-[9px] font-black text-white uppercase tracking-tighter mb-3 leading-tight">
                         Confirm Delete?
@@ -437,17 +405,14 @@ export default function ImageUploadSection({
                            Yes
                          </button>
                       </div>
-                    </motion.div>
+                    </div>
                   )}
-                </AnimatePresence>
-              </motion.div>
+              </div>
             ))}
 
             {galleryUploads.map((u) => (
-              <motion.div
+              <div
                 key={u.id}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
                 className="relative aspect-square rounded-sm overflow-hidden border-2 border-primary/20 bg-primary/5 flex flex-col items-center justify-center p-4 gap-3"
               >
                 <Loader2 className="h-6 w-6 text-primary animate-spin" />
@@ -457,11 +422,10 @@ export default function ImageUploadSection({
                     {u.progress}%
                   </p>
                 </div>
-              </motion.div>
+              </div>
             ))}
 
-            <motion.label
-              layout
+            <label
               className={cn(
                 "aspect-square rounded-sm border-2 border-dashed border-muted-foreground/20 hover:border-primary/40 hover:bg-primary/5 flex flex-col items-center justify-center cursor-pointer transition-all duration-300 gap-3 group",
                 signing && "opacity-50 cursor-not-allowed",
@@ -484,8 +448,7 @@ export default function ImageUploadSection({
                   e.target.files && uploadGallery(e.target.files, e.target)
                 }
               />
-            </motion.label>
-          </AnimatePresence>
+            </label>
         </div>
 
         {gallery.length < 2 && !galleryUploads.length && (

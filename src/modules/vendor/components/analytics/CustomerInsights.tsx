@@ -6,7 +6,6 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { Users, UserCheck, MapPin } from "lucide-react";
-import { motion } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface StoreCustomer {
@@ -42,12 +41,9 @@ export function CustomerInsights({ customers }: CustomerInsightsProps) {
           </div>
         ) : (
           <div className="divide-y divide-border/30 pr-1">
-            {topVIPs.map((customer, idx) => (
-              <motion.div
+            {topVIPs.map((customer) => (
+              <div
                 key={customer.id}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: idx * 0.05 }}
                 className="p-4 flex items-center gap-4 hover:bg-muted/30 transition-colors group"
               >
                 <Avatar className="h-12 w-12 rounded-sm border border-border/50 ring-2 ring-transparent group-hover:ring-blue-500/20 transition-all">
@@ -79,7 +75,7 @@ export function CustomerInsights({ customers }: CustomerInsightsProps) {
                     {customer.orders} Orders
                   </p>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         )}

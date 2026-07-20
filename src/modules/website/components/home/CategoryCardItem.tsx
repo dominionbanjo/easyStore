@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { Heart, ShoppingCart } from "lucide-react";
-import { motion } from "framer-motion";
 
 interface CategoryCardProps {
   name: string;
@@ -58,20 +57,17 @@ export default function CategoryCard({
         <div className="absolute inset-0 z-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent transition-opacity duration-700 group-hover:opacity-100" />
 
         {/* Like Button (top-right) */}
-        <motion.button
+        <button
           onClick={handleLike}
           aria-label="Toggle favorite"
-          initial={{ opacity: 0, y: 10 }}
-          whileHover={{ scale: 1.05 }}
-          transition={{ duration: 0.3 }}
-          className="absolute right-3 top-3 z-20 flex h-9 w-9 items-center justify-center rounded-sm bg-white/80  backdrop-blur-sm transition-all hover:bg-white group-hover:opacity-100 group-hover:translate-y-0 opacity-0 translate-y-3"
+          className="absolute right-3 top-3 z-20 flex h-9 w-9 items-center justify-center rounded-sm bg-white/80  backdrop-blur-sm transition-all hover:bg-white hover:scale-105 group-hover:opacity-100 group-hover:translate-y-0 opacity-0 translate-y-3"
         >
           <Heart
             className={`h-4 w-4 transition-colors ${
               liked ? "fill-red-500 text-red-500" : "text-gray-700"
             }`}
           />
-        </motion.button>
+        </button>
 
         {/* Always-visible title */}
         <div className="absolute bottom-4 left-4 z-10 text-white">

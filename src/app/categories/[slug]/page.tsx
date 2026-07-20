@@ -1,6 +1,5 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { Search, PackageOpen, Filter } from "lucide-react";
 
 import { Skeleton } from "@/components/ui/skeleton";
@@ -93,26 +92,14 @@ export default function CategoryDetailsPage() {
       <CategoryDetailsHeader name={slug || ""} count={pagination?.total || 0} />
 
       <div className="w-full mx-auto px-1.5 sm:px-4 py-20 space-y-16">
-        <AnimatePresence mode="wait">
           {isFetching && !products.length ? (
-            <motion.div
-              key="fetching"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-8 px-0"
-            >
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-8 px-0">
               {Array.from({ length: 8 }).map((_, i) => (
                 <Skeleton key={i} className="h-[400px] rounded-sm" />
               ))}
-            </motion.div>
+            </div>
           ) : products.length > 0 ? (
-            <motion.div
-              key="content"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="space-y-16"
-            >
+            <div className="space-y-16">
               <div className="flex items-center gap-3 px-2">
                 <Filter className="w-5 h-5 text-primary" />
                 <h2 className="text-xl font-black text-foreground uppercase tracking-widest">
@@ -121,13 +108,8 @@ export default function CategoryDetailsPage() {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-8 px-0">
-                {products.map((product, i) => (
-                  <motion.div
-                    key={product.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.05 }}
-                  >
+                {products.map((product) => (
+                  <div key={product.id}>
                     <ProductCard
                       id={product.id}
                       slug={product.slug}
@@ -158,7 +140,7 @@ export default function CategoryDetailsPage() {
                       }))}
                       category={product.category ?? slug}
                     />
-                  </motion.div>
+                  </div>
                 ))}
               </div>
 
@@ -174,14 +156,9 @@ export default function CategoryDetailsPage() {
                   />
                 </div>
               )}
-            </motion.div>
+            </div>
           ) : (
-            <motion.div
-              key="empty"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-center py-32 bg-white/50 dark:bg-neutral-900/40 backdrop-blur-xl rounded-sm border border-zinc-200 dark:border-white/5  px-4"
-            >
+            <div className="text-center py-32 bg-white/50 dark:bg-neutral-900/40 backdrop-blur-xl rounded-sm border border-zinc-200 dark:border-white/5  px-4">
               <div className="w-24 h-24 bg-primary/10 dark:bg-emerald-500/10 rounded-sm flex items-center justify-center mx-auto mb-8 ring-8 ring-primary/5 dark:ring-emerald-500/5">
                 <Search className="h-12 w-12 text-primary dark:text-emerald-400" />
               </div>
@@ -192,9 +169,8 @@ export default function CategoryDetailsPage() {
                 We couldn't find any items in this collection. Browse other
                 categories or come back later!
               </p>
-            </motion.div>
+            </div>
           )}
-        </AnimatePresence>
       </div>
     </section>
   );

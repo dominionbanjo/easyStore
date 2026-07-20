@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { ProductCard } from "@/components/shared/ProductCard";
 import { Pagination } from "@/components/shared/Pagination";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -82,25 +81,15 @@ export function StoreProductsGrid({
       </div>
 
       {/* ─── CONTENT ─── */}
-      <AnimatePresence mode="wait">
         {showSkeleton ? (
-          <motion.div
-            key="skeleton"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-8 px-0 sm:px-2"
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-8 px-0 sm:px-2"
           >
             {Array.from({ length: 8 }).map((_, i) => (
               <Skeleton key={i} className="h-[400px] rounded-sm" />
             ))}
-          </motion.div>
+          </div>
         ) : !products.length ? (
-          <motion.div
-            key="empty"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center py-32 bg-white/50 dark:bg-neutral-900/40 backdrop-blur-xl rounded-sm border border-zinc-200 dark:border-white/5 px-4 mx-2 "
+          <div className="text-center py-32 bg-white/50 dark:bg-neutral-900/40 backdrop-blur-xl rounded-sm border border-zinc-200 dark:border-white/5 px-4 mx-2 "
           >
             <div className="w-20 h-20 bg-primary/10 dark:bg-emerald-500/10 rounded-sm flex items-center justify-center mx-auto mb-6 ring-8 ring-primary/5 dark:ring-emerald-500/5">
               <PackageOpen className="w-10 h-10 text-primary dark:text-emerald-400" />
@@ -121,22 +110,13 @@ export function StoreProductsGrid({
                 View categories
               </Button>
             )}
-          </motion.div>
+          </div>
         ) : (
-          <motion.div
-            key="content"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="space-y-20"
+          <div className="space-y-20"
           >
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-8 px-0 sm:px-2">
-              {products.map((product, index) => (
-                <motion.div
-                  key={product.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                >
+              {products.map((product) => (
+                <div key={product.id}>
                   <ProductCard
                     id={product.id}
                     slug={product.slug}
@@ -168,7 +148,7 @@ export function StoreProductsGrid({
                     }
                     showFooter={false}
                   />
-                </motion.div>
+                </div>
               ))}
             </div>
 
@@ -184,9 +164,8 @@ export function StoreProductsGrid({
                 />
               </div>
             )}
-          </motion.div>
+          </div>
         )}
-      </AnimatePresence>
     </div>
   );
 }

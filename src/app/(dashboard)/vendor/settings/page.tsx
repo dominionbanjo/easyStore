@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useForm, FormProvider } from "react-hook-form";
-import { AnimatePresence, motion } from "framer-motion";
 import { Loader2, Store, Globe, CreditCard, Truck } from "lucide-react";
 import { toast } from "sonner";
 
@@ -354,78 +353,52 @@ export default function SettingsPage() {
         </div>
 
         <div className="mt-8">
-          <AnimatePresence mode="wait">
-            {activeStep === 1 && (
-              <motion.div
-                key="step1"
-                initial={{ opacity: 0, scale: 0.98 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.98 }}
-                transition={{ duration: 0.2 }}
-              >
-                <StoreIdentityStep
-                  bannerPreview={bannerPreview}
-                  onBannerChange={handleBannerUpload}
-                  onBannerRemove={handleRemoveBanner}
-                  uploadProgress={bannerUploadProgress}
-                  isDeletingBanner={isDeletingBanner}
-                  onSave={saveStoreDetails}
-                  isSaving={isUpdatingStore}
-                  isValidated={isValidated}
-                  storeId={store?.id}
-                />
-              </motion.div>
-            )}
+          {activeStep === 1 && (
+            <div>
+              <StoreIdentityStep
+                bannerPreview={bannerPreview}
+                onBannerChange={handleBannerUpload}
+                onBannerRemove={handleRemoveBanner}
+                uploadProgress={bannerUploadProgress}
+                isDeletingBanner={isDeletingBanner}
+                onSave={saveStoreDetails}
+                isSaving={isUpdatingStore}
+                isValidated={isValidated}
+                storeId={store?.id}
+              />
+            </div>
+          )}
 
-            {activeStep === 2 && (
-              <motion.div
-                key="step2"
-                initial={{ opacity: 0, scale: 0.98 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.98 }}
-                transition={{ duration: 0.2 }}
-              >
-                <ContactLocationStep
-                  onUpdateSocials={handleUpdateSocials}
-                  onOpenAddressModal={() => setShowAddressModal(true)}
-                  onSave={saveStoreDetails}
-                  isSaving={isUpdatingStore}
-                  isValidated={isValidated}
-                />
-              </motion.div>
-            )}
+          {activeStep === 2 && (
+            <div>
+              <ContactLocationStep
+                onUpdateSocials={handleUpdateSocials}
+                onOpenAddressModal={() => setShowAddressModal(true)}
+                onSave={saveStoreDetails}
+                isSaving={isUpdatingStore}
+                isValidated={isValidated}
+              />
+            </div>
+          )}
 
-            {activeStep === 3 && (
-              <motion.div
-                key="step3"
-                initial={{ opacity: 0, scale: 0.98 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.98 }}
-                transition={{ duration: 0.2 }}
-              >
-                <PayoutSetupStep
-                  banks={banksResponse?.data || []}
-                  isVerifying={isVerifyingBank}
-                  isRegistering={isRegisteringBank}
-                  isValidated={isValidated}
-                  onVerify={handleVerifyBank}
-                  onRegister={handleRegisterBank}
-                />
-              </motion.div>
-            )}
+          {activeStep === 3 && (
+            <div>
+              <PayoutSetupStep
+                banks={banksResponse?.data || []}
+                isVerifying={isVerifyingBank}
+                isRegistering={isRegisteringBank}
+                isValidated={isValidated}
+                onVerify={handleVerifyBank}
+                onRegister={handleRegisterBank}
+              />
+            </div>
+          )}
 
-            {activeStep === 4 && (
-              <motion.div
-                key="step4"
-                initial={{ opacity: 0, scale: 0.98 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.98 }}
-                transition={{ duration: 0.2 }}
-              >
-                <DeliverySetupStep storeId={store.id} />
-              </motion.div>
-            )}
-          </AnimatePresence>
+          {activeStep === 4 && (
+            <div>
+              <DeliverySetupStep storeId={store.id} />
+            </div>
+          )}
         </div>
 
         <AddressModal

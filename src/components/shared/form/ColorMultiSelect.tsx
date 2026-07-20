@@ -16,7 +16,6 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { motion } from "framer-motion";
 
 import { useGetColorsQuery } from "@/services/productDetailsApi";
 import type { DraftColor } from "@/features/productDraftSlice";
@@ -231,12 +230,9 @@ export function ColorMultiSelect({
                             </div>
 
                             {isSelected && (
-                              <motion.div
-                                layoutId="check-indicator"
-                                className="absolute top-2 right-2 h-4 w-4 bg-primary text-white rounded-sm flex items-center justify-center"
-                              >
+                              <div className="absolute top-2 right-2 h-4 w-4 bg-primary text-white rounded-sm flex items-center justify-center">
                                 <Check className="h-2.5 w-2.5 stroke-[4]" />
-                              </motion.div>
+                              </div>
                             )}
                           </button>
                         );

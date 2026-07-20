@@ -4,7 +4,7 @@ import type { RootState } from "@/store";
 import { Home, Discover, ShoppingBag, User, Briefcase } from "iconsax-react";
 import { cn } from "@/lib/utils";
 import { WEBSITE_ROUTES, AUTH_ROUTES } from "@/routes";
-import { motion } from "framer-motion";
+
 
 import {
   preloadDiscoveryPage,
@@ -90,10 +90,9 @@ export function BottomNav() {
                 )
               }
             >
-              <motion.div
-                whileTap={{ scale: 0.9 }}
+              <div
                 className={cn(
-                  "p-1.5 rounded-sm transition-colors relative",
+                  "p-1.5 rounded-sm transition-colors relative active:scale-90",
                   isActive && "bg-primary/10",
                 )}
               >
@@ -107,15 +106,12 @@ export function BottomNav() {
                     {cartItemsCount}
                   </span>
                 )}
-              </motion.div>
+              </div>
               <span className="text-[10px] font-bold uppercase tracking-widest">
                 {item.name}
               </span>
               {isActive && (
-                <motion.div
-                  layoutId="activeTab"
-                  className="absolute -bottom-1 w-6 h-1 bg-primary rounded-t-full"
-                />
+                <div className="absolute -bottom-1 w-6 h-1 bg-primary rounded-t-full" />
               )}
             </NavLink>
           );
@@ -126,7 +122,7 @@ export function BottomNav() {
           onClick={handleMoreClick}
           className="flex flex-col items-center justify-center gap-1 min-w-[64px] text-muted-foreground hover:text-foreground transition-all duration-300"
         >
-          <motion.div whileTap={{ scale: 0.9 }} className="p-1.5 rounded-sm">
+          <div className="p-1.5 rounded-sm active:scale-90">
             {isAuthenticated && user?.avatar ? (
               <div className="h-6 w-6 rounded-sm overflow-hidden border border-border">
                 <img
@@ -142,7 +138,7 @@ export function BottomNav() {
             ) : (
               <User variant="Outline" color="currentColor" size={20} />
             )}
-          </motion.div>
+          </div>
           <span className="text-[10px] font-bold uppercase tracking-widest">
             More
           </span>

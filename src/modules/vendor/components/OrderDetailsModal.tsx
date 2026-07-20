@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import {
   Dialog,
@@ -376,11 +375,8 @@ export function OrderDetailsModal({
             </h3>
             <div className="space-y-3">
               {order.order_items.map((item, index) => (
-                <motion.div
+                <div
                   key={index}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.05 }}
                   className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-sm border bg-card hover:bg-accent/50 transition-colors"
                 >
                   {/* Product Image */}
@@ -448,7 +444,7 @@ export function OrderDetailsModal({
                       </p>
                     )}
                   </div>
-                </motion.div>
+                </div>
               ))}
             </div>
           </div>
@@ -655,11 +651,8 @@ export function OrderDetailsModal({
                           
                           {/* Loading overlay for the specific button */}
                           {isUpdatingThis && (
-                            <motion.div
+                            <div
                               className="absolute inset-0 bg-primary/20"
-                              initial={{ x: "-100%" }}
-                              animate={{ x: "100%" }}
-                              transition={{ duration: 1, repeat: Infinity }}
                             />
                           )}
                         </button>

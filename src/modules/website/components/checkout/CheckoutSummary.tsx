@@ -22,7 +22,6 @@ import {
 } from "lucide-react";
 import type { ICartItem } from "@/types/cart/cartTypes";
 import * as React from "react";
-import { motion } from "framer-motion";
 import { FormProvider, useForm } from "react-hook-form";
 import { FormSelect } from "@/components/shared/form/FormSelect";
 import { Badge } from "@/components/ui/badge";
@@ -117,12 +116,9 @@ export function CheckoutSummary({
         <div className="space-y-6 sm:space-y-8">
           {/* Scrollable Items list */}
           <div className="max-h-[280px] sm:max-h-[320px] overflow-y-auto pr-2 sm:pr-3 space-y-4 sm:space-y-6 custom-scrollbar">
-            {items.map((item, idx) => (
-              <motion.div
+            {items.map((item) => (
+              <div
                 key={`${item.product_id}-${item.variant_id ?? ""}-${item.variant_options ? JSON.stringify(item.variant_options) : `${item.size ?? "none"}-${item.color ?? "none"}`}`}
-                initial={{ opacity: 0, x: 10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: idx * 0.05 }}
                 className="flex gap-4 sm:gap-5 group"
               >
                 <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-sm sm:rounded-sm overflow-hidden bg-muted border border-border/40 shrink-0 relative">
@@ -192,7 +188,7 @@ export function CheckoutSummary({
                     ).toLocaleString()}
                   </p>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
 

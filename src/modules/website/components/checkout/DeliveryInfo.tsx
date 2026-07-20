@@ -1,7 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { MapPin, User, Phone, Home, Globe, Hash, Edit3 } from "lucide-react";
-import { motion } from "framer-motion";
 
 interface DeliveryInfoProps {
   fullName: string;
@@ -59,9 +58,7 @@ export function DeliveryInfo({
 
       <CardContent className="p-1 sm:p-10">
         {!hasAddress ? (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
+          <div
             className="flex flex-col items-center justify-center py-10 sm:py-16 text-center space-y-6"
           >
             <div className="w-20 h-20 sm:w-24 sm:h-24 bg-primary/5 rounded-sm sm:rounded-sm flex items-center justify-center relative overflow-hidden group">
@@ -83,7 +80,7 @@ export function DeliveryInfo({
             >
               Add New Address
             </Button>
-          </motion.div>
+          </div>
         ) : (
           <div className="space-y-8 sm:space-y-10">
             {/* Top Row: People & Contact */}

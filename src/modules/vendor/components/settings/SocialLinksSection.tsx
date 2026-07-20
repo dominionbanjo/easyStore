@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import {
   Globe,
   Instagram,
@@ -84,16 +83,12 @@ export function SocialLinksSection({
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <AnimatePresence>
           {Object.entries(socialLinks).map(([platform, url]) => {
             const config = SOCIAL_PLATFORMS.find((p) => p.id === platform);
             const Icon = config?.icon || Globe;
             return (
-              <motion.div
+              <div
                 key={platform}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
                 className="flex items-center gap-3 p-3 rounded-sm border border-border/40 group hover:border-primary/40 transition-all bg-muted/5"
               >
                 <div
@@ -120,10 +115,9 @@ export function SocialLinksSection({
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                 </Button>
-              </motion.div>
+              </div>
             );
           })}
-        </AnimatePresence>
       </div>
 
       <div className="pt-6 border-t border-dashed">

@@ -18,7 +18,6 @@ import {
   Trash2,
   Edit2,
 } from "lucide-react";
-import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { FormInput } from "@/components/shared/form/FormInput";
 import { FormSelect } from "@/components/shared/form/FormSelect";
@@ -443,16 +442,9 @@ export function AddressRequiredModal({
                       disabled={isLoading || (!user?.addresses || user.addresses.length === 0)}
                     >
                       {isLoading ? (
-                        <motion.div
-                          animate={{ rotate: 360 }}
-                          transition={{
-                            repeat: Infinity,
-                            duration: 1,
-                            ease: "linear",
-                          }}
-                        >
-                          <Loader2 className="h-5 w-5" />
-                        </motion.div>
+                        <div>
+                          <Loader2 className="h-5 w-5 animate-spin" />
+                        </div>
                       ) : (
                         <>
                           {mode === "edit"

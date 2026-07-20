@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -97,24 +96,18 @@ export function TabbedGrid<T>({
             value={tab.value}
             className="focus-visible:outline-none"
           >
-            <motion.div
-              layout
+            <div
               className={cn(
                 "grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 px-2 sm:px-4 mx-auto",
                 gridClassName
               )}
             >
               {tab.items.map((item, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.04 }}
-                >
+                <div key={i}>
                   {renderItem(item, i)}
-                </motion.div>
+                </div>
               ))}
-            </motion.div>
+            </div>
           </TabsContent>
         ))}
       </Tabs>

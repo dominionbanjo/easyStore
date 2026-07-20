@@ -3,7 +3,6 @@ import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import { getSubdomain, getBaseDomain, areSubdomainsDisabled } from "@/utils/subdomain";
 import { Store, ArrowLeft, Search } from "lucide-react";
 import {
-  useGetStoreDetailsQuery,
   useGetStoreProductsQuery,
   useGetStoreCategoryProductsQuery,
 } from "@/services/storeApi";
@@ -14,6 +13,7 @@ import SEO from "@/components/shared/SEO";
 
 import { StoreSkeleton } from "@/modules/vendor/components/skeletons/StoreSkeleton";
 import { useStoreTheme } from "@/modules/vendor/components/StoreThemeProvider";
+import { useStoreData } from "@/modules/vendor/layout/StorefrontLayout";
 import DefaultTemplate from "@/modules/vendor/components/Store-details-page/templates/DefaultTemplate";
 import VanguardTemplate from "@/modules/vendor/components/Store-details-page/templates/VanguardTemplate";
 import BazaarTemplate from "@/modules/vendor/components/Store-details-page/templates/BazaarTemplate";
@@ -25,7 +25,7 @@ import type { RootState } from "@/store";
 import { useGetCartQuery } from "@/services/cartApi";
 import { CartDrawer } from "@/modules/website/components/cart/CartDrawer";
 import type { StoreTemplateProps } from "@/modules/vendor/components/Store-details-page/templates/StoreTemplateProps";
-import type { IStorePagination } from "@/types/Store/storeTypes";
+import type { IStorePagination, IStoreDetails, IStoreCategory } from "@/types/Store/storeTypes";
 
 /* ───────────────── COMPONENT ───────────────── */
 
@@ -80,37 +80,28 @@ export default function StoreDetailsPage() {
     return () => clearTimeout(handler);
   }, [searchQuery, debouncedSearch]);
 
-  /* ─── STORE DETAILS ─── */
+  /* ─── STORE DETAILS (from layout context — no duplicate fetch) ─── */
 
-  const {
-    data: storeData,
-    isLoading: storeLoading,
-    isError: storeError,
-  } = useGetStoreDetailsQuery(
-    { slug: slug ?? "", includeCategories: true },
-    { skip: !slug },
-  );
+  const storeResponse = useStoreData();
+  const store = storeResponse?.data?.store;
+  const categories = storeResponse?.data?.categories ?? [];
+  const storeLoading = !storeResponse;
 
   // Handle category query param
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const categoryId = params.get("category");
 
-    if (categoryId && storeData?.data.categories) {
-      const category = storeData.data.categories.find(
-        (c: { id: string }) => c.id === categoryId,
+    if (categoryId && categories.length > 0) {
+      const category = categories.find(
+        (c) => (c as Record<string, unknown>).id === categoryId,
       );
       if (category) {
-        setSelectedCategory(category);
+        setSelectedCategory(category as { id: string; name: string });
         setActiveTab("products");
       }
     }
-  }, [storeData]);
-
-  /* ─── NORMALIZED DATA (derived early for skip conditions) ─── */
-
-  const store = storeData?.data.store;
-  const categories = storeData?.data.categories ?? [];
+  }, [categories]);
 
   /* ─── ALL PRODUCTS ─── */
 
@@ -174,7 +165,7 @@ export default function StoreDetailsPage() {
     return <StoreSkeleton />;
   }
 
-  if (storeError || !store) {
+  if (!store) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-zinc-50/50 dark:bg-zinc-950/50">
         <div className="bg-white dark:bg-zinc-900 p-10 rounded-sm border border-zinc-200 dark:border-zinc-800 max-w-md w-full  -zinc-200/50 dark: text-center">
@@ -233,8 +224,8 @@ export default function StoreDetailsPage() {
   };
 
   const templateProps: StoreTemplateProps = {
-    store: store ? { ...store } : ({} as any),
-    categories,
+    store: store ? { ...store } as unknown as IStoreDetails : ({} as IStoreDetails),
+    categories: categories as unknown as IStoreCategory[],
     products,
     pagination,
     isProductsLoading,
@@ -266,12 +257,13 @@ export default function StoreDetailsPage() {
         toast.error("Please login to message the vendor");
         return;
       }
-      if (!store?.user_id) {
+      const storeRecord = store as Record<string, unknown> | undefined;
+      if (!storeRecord?.user_id) {
         toast.error("Vendor information is missing for this store");
         return;
       }
       try {
-        const conversationResponse = await startConversation({ recipient_id: store.user_id }).unwrap();
+        const conversationResponse = await startConversation({ recipient_id: storeRecord.user_id as string }).unwrap();
         const conversationId = conversationResponse.data.id;
         
         const prefill = encodeURIComponent("Hi Im viewing your store any information i should note");
@@ -314,9 +306,9 @@ export default function StoreDetailsPage() {
   return (
     <div className="relative">
       <SEO 
-        title={store?.store_name ?? undefined} 
-        description={store?.description ?? undefined}
-        image={store?.cover_image || store?.logo || undefined} 
+        title={(store as Record<string, unknown>)?.store_name as string ?? undefined} 
+        description={(store as Record<string, unknown>)?.description as string ?? undefined}
+        image={(store as Record<string, unknown>)?.cover_image as string || (store as Record<string, unknown>)?.logo as string || undefined} 
       />
       {previewTemplate && (
         <div className="fixed top-0 left-0 right-0 z-[100] text-zinc-100 py-2 px-4 flex items-center justify-between  border-b border-white/10 backdrop-blur-md bg-zinc-900/95 font-sans">

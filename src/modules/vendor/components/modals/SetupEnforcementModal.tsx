@@ -10,8 +10,6 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ShieldAlert, Rocket, ArrowRight } from "lucide-react";
 import { useStoreSetup } from "../../hooks/useStoreSetup";
-import { motion } from "framer-motion";
-
 interface SetupEnforcementModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -58,10 +56,9 @@ export function SetupEnforcementModal({
                 <span>{progress}%</span>
               </div>
               <div className="h-2 w-full bg-white/20 rounded-sm overflow-hidden">
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: `${progress}%` }}
-                  className="h-full bg-white -[0_0_15px_rgba(255,255,255,0.8)]"
+                <div
+                  className="h-full bg-white transition-all duration-700"
+                  style={{ width: `${progress}%` }}
                 />
               </div>
             </div>
@@ -82,12 +79,8 @@ export function SetupEnforcementModal({
           </div>
 
           <div className="flex-1 space-y-3 mb-6 overflow-y-auto custom-scrollbar pr-2 min-h-0">
-            {missingSteps.map((step, i) => (
-              <motion.div
-                key={step.id}
-                initial={{ opacity: 0, x: 10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.1 }}
+            {missingSteps.map((step) => (
+              <div
                 className="flex items-start gap-4 p-4 rounded-sm bg-muted/30 border border-muted-foreground/5 hover:bg-muted/50 transition-colors"
               >
                 <div className="mt-1 h-5 w-5 rounded-sm border-2 border-orange-500/30 flex items-center justify-center shrink-0">
@@ -101,7 +94,7 @@ export function SetupEnforcementModal({
                     {step.description}
                   </p>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
 

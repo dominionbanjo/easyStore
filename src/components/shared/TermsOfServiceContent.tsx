@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import {
   Scale,
   FileCheck,
@@ -9,27 +8,10 @@ import {
 import PolicySection from "@/modules/vendor/components/PolicySection";
 
 export function TermsOfServiceContent() {
-  const container = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
-
-  const item = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0 },
-  };
-
   return (
     <div className="w-full mx-auto">
       {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
+      <div
         className="text-center mb-12 sm:mb-20"
       >
         <div className="inline-flex items-center justify-center p-4 sm:p-5 bg-primary/10 dark:bg-emerald-500/10 rounded-sm mb-6 sm:mb-8 ring-8 ring-primary/5 dark:ring-emerald-500/5 transition-all">
@@ -45,16 +27,13 @@ export function TermsOfServiceContent() {
           <CheckCircle2 className="w-3 h-3 sm:w-4 sm:h-4 text-emerald-500" />
           Last updated: February 7, 2026
         </div>
-      </motion.div>
+      </div>
 
       {/* Content */}
-      <motion.div
-        variants={container}
-        initial="hidden"
-        animate="show"
+      <div
         className="relative z-10 space-y-12 sm:space-y-16"
       >
-        <motion.div variants={item}>
+        <div>
           <PolicySection title="1. Acceptance of Terms">
             <p>
               By accessing or using the EazyStore platform, you agree to be
@@ -72,9 +51,9 @@ export function TermsOfServiceContent() {
               </p>
             </div>
           </PolicySection>
-        </motion.div>
+        </div>
 
-        <motion.div variants={item}>
+        <div>
           <PolicySection title="2. User Accounts">
             <p>
               When you create an account with us, you must provide
@@ -101,9 +80,9 @@ export function TermsOfServiceContent() {
               </div>
             </div>
           </PolicySection>
-        </motion.div>
+        </div>
 
-        <motion.div variants={item}>
+        <div>
           <PolicySection title="3. Buying and Selling">
             <p>
               Our platform serves as a marketplace where users can sell and
@@ -135,9 +114,9 @@ export function TermsOfServiceContent() {
               </li>
             </ul>
           </PolicySection>
-        </motion.div>
+        </div>
 
-        <motion.div variants={item}>
+        <div>
           <PolicySection title="4. Prohibited Activities">
             <p>
               You agree not to engage in any of the following prohibited
@@ -162,9 +141,9 @@ export function TermsOfServiceContent() {
               ))}
             </div>
           </PolicySection>
-        </motion.div>
+        </div>
 
-        <motion.div variants={item}>
+        <div>
           <PolicySection title="5. Intellectual Property">
             <p>
               The Service and its original content (excluding Content
@@ -174,9 +153,9 @@ export function TermsOfServiceContent() {
               laws.
             </p>
           </PolicySection>
-        </motion.div>
+        </div>
 
-        <motion.div variants={item}>
+        <div>
           <PolicySection title="6. Termination">
             <p>
               We may terminate or suspend your account immediately, without
@@ -186,9 +165,9 @@ export function TermsOfServiceContent() {
               cease.
             </p>
           </PolicySection>
-        </motion.div>
+        </div>
 
-        <motion.div variants={item}>
+        <div>
           <PolicySection title="7. Contact & Support">
             <div className="bg-emerald-500/5 dark:bg-emerald-500/10 rounded-sm p-6 sm:p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-6 sm:gap-8 border border-emerald-500/10 dark:border-emerald-500/20">
               <div className="flex gap-4 sm:gap-6 items-center">
@@ -212,8 +191,8 @@ export function TermsOfServiceContent() {
               </a>
             </div>
           </PolicySection>
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
     </div>
   );
 }

@@ -18,6 +18,7 @@ interface ModalProps extends React.ComponentProps<typeof Dialog> {
   footer?: React.ReactNode;
   children: React.ReactNode;
   onClose?: () => void;
+  disableOutsideClick?: boolean;
 }
 
 export function Modal({
@@ -28,12 +29,14 @@ export function Modal({
   footer,
   children,
   onClose,
+  disableOutsideClick,
   ...props
 }: ModalProps) {
   return (
     <Dialog {...props}>
       <DialogContent
         showCloseButton={false}
+        onInteractOutside={disableOutsideClick ? (e: Event) => e.preventDefault() : undefined}
         className={cn(
           "z-[200] sm:max-w-[425px] overflow-hidden p-0 gap-0 flex flex-col",
           "max-h-[calc(100dvh-40px)] sm:max-h-[calc(100dvh-80px)]",

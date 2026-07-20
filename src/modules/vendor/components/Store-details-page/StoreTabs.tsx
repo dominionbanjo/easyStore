@@ -1,5 +1,3 @@
-import { motion } from "framer-motion";
-
 type Props = {
   activeTab: "products" | "categories";
   onChange: (tab: "products" | "categories") => void;
@@ -18,11 +16,7 @@ export function StoreTabs({ activeTab, onChange }: Props) {
           }`}
         >
           {activeTab === "products" && (
-            <motion.div
-              layoutId="store-tab"
-              className="absolute inset-0 bg-primary dark:bg-emerald-400 rounded-sm   dark:-emerald-500/20"
-              transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-            />
+            <div className="absolute inset-0 bg-primary dark:bg-emerald-400 rounded-sm   dark:-emerald-500/20 transition-all duration-300" />
           )}
           <span className="relative z-10">All Products</span>
         </button>
@@ -36,11 +30,7 @@ export function StoreTabs({ activeTab, onChange }: Props) {
           }`}
         >
           {activeTab === "categories" && (
-            <motion.div
-              layoutId="store-tab"
-              className="absolute inset-0 bg-primary dark:bg-emerald-400 rounded-sm   dark:-emerald-500/20"
-              transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-            />
+            <div className="absolute inset-0 bg-primary dark:bg-emerald-400 rounded-sm   dark:-emerald-500/20 transition-all duration-300" />
           )}
           <span className="relative z-10">Categories</span>
         </button>

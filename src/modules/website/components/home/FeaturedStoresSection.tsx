@@ -1,6 +1,5 @@
 import { useRef } from "react";
 import SmartLink from "@/components/shared/SmartLink";
-import { motion } from "framer-motion";
 import { ArrowRight, Store as StoreIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useGetStoresQuery } from "@/services/storeApi";
@@ -33,10 +32,7 @@ export default function FeaturedStoresSection({
     >
       <div className="w-full mx-auto space-y-6">
         <div className="flex flex-col gap-4 px-1">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
+          <div
             className="space-y-3 text-left"
           >
             <h2 className="text-3xl md:text-4xl font-black text-foreground tracking-tight">
@@ -55,7 +51,7 @@ export default function FeaturedStoresSection({
                 <ArrowRight className="ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Button>
             </SmartLink>
-          </motion.div>
+          </div>
         </div>
 
         {/* Content Section */}
@@ -75,10 +71,7 @@ export default function FeaturedStoresSection({
             className="bg-muted/30 rounded-sm"
           />
         ) : (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
+          <div
             className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
           >
             {stores.map((store) => (
@@ -94,7 +87,7 @@ export default function FeaturedStoresSection({
                 address={store.address}
               />
             ))}
-          </motion.div>
+          </div>
         )}
       </div>
     </section>

@@ -124,11 +124,13 @@ export default function App() {
                   <Route path="help" element={<Pages.HelpPage />} />
                   <Route path="staff" element={<Pages.StaffManagementPage />} />
                   <Route path="sales-terminal" element={<Pages.SalesTerminalPage />} />
+                  <Route path="sales-history" element={<Pages.SalesHistoryPage />} />
                 </Route>
 
                 {/* ─── STAFF DASHBOARD (dev mode) ─── */}
                 <Route path="/staff" element={<StaffDashboardLayout />}>
                   <Route index element={<Pages.SalesTerminalPage />} />
+                  <Route path="sales-history" element={<Pages.SalesHistoryPage />} />
                   <Route path="settings" element={<Pages.StaffSettingsPage />} />
                 </Route>
 
@@ -172,12 +174,14 @@ export default function App() {
                 <Route path="help" element={<Pages.HelpPage />} />
                 <Route path="staff" element={<Pages.StaffManagementPage />} />
                 <Route path="sales-terminal" element={<Pages.SalesTerminalPage />} />
+                <Route path="sales-history" element={<Pages.SalesHistoryPage />} />
               </Route>
             )}
 
             {!subdomainsDisabled && subdomain === "staff" && (
               <Route path="/" element={<StaffDashboardLayout />}>
                 <Route index element={<Pages.SalesTerminalPage />} />
+                <Route path="sales-history" element={<Pages.SalesHistoryPage />} />
                 <Route path="settings" element={<Pages.StaffSettingsPage />} />
               </Route>
             )}

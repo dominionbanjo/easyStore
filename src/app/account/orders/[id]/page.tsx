@@ -1,6 +1,5 @@
 import { useParams } from "react-router-dom";
 import SmartLink from "@/components/shared/SmartLink";
-import { motion } from "framer-motion";
 import {
   ArrowLeft,
   Calendar,
@@ -134,9 +133,7 @@ export default function OrderDetailsPage() {
       <div className="w-full mx-auto px-2 sm:px-6 lg:px-8">
         <div className="space-y-8">
           {/* Back Button & Breadcrumb */}
-          <motion.div
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
+          <div
             className="flex items-center justify-between"
           >
             <SmartLink to={ACCOUNT_ROUTES.ORDERS}>
@@ -160,13 +157,10 @@ export default function OrderDetailsPage() {
                 className="h-9 px-4 text-[10px] font-black uppercase tracking-widest shadow-sm border-2"
               />
             )}
-          </motion.div>
+          </div>
 
           {/* Header Section */}
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
+          <div
             className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-border/40 pb-8 px-1"
           >
             <div className="space-y-3">
@@ -219,7 +213,7 @@ export default function OrderDetailsPage() {
                 </p>
               </div>
             </div>
-          </motion.div>
+          </div>
 
           {/* New Unified Grid Layout */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">

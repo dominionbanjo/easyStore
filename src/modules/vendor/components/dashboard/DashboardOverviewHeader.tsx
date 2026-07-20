@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { Plus, Download, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSelector, useDispatch } from "react-redux";
@@ -21,20 +20,13 @@ export function DashboardOverviewHeader() {
 
   return (
     <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-8">
-      <motion.div
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.5 }}
-      >
+      <div>
         <p className="text-muted-foreground font-medium">
           Welcome back, {currentUser?.first_name || "Merchant"} 🪄. Here's what's happening today.
         </p>
-      </motion.div>
+      </div>
 
-      <motion.div
-        initial={{ opacity: 0, x: 20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.5 }}
+      <div
         className="flex items-center gap-3"
       >
         <Button
@@ -75,7 +67,7 @@ export function DashboardOverviewHeader() {
           <span className="hidden xs:inline">Add Product</span>
           <span className="xs:hidden">Add</span>
         </Button>
-      </motion.div>
+      </div>
 
       <RecordOfflineSaleModal
         open={offlineModalOpen}

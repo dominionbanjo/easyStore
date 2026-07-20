@@ -1,6 +1,5 @@
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { motion } from "framer-motion";
 
 interface CategoryHeaderProps {
   search: string;
@@ -20,10 +19,7 @@ export function CategoryHeader({
       <div className="absolute bottom-1/3 right-1/3 w-1.5 h-1.5 bg-emerald-400 rounded-sm animate-bounce [animation-delay:1s]" />
 
       <div className="max-w-4xl mx-auto px-4 py-16 md:py-24 relative z-10 text-center space-y-10 md:space-y-12">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
+        <div
           className="space-y-6"
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-sm bg-white/5 border border-white/10 backdrop-blur-md">
@@ -60,13 +56,10 @@ export function CategoryHeader({
             </span>{" "}
             in our curated ecosystem.
           </p>
-        </motion.div>
+        </div>
 
         {/* Search Input */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
+        <div
           className="relative max-w-xl mx-auto group"
         >
           <div className="absolute -inset-1 bg-gradient-to-r from-primary/50 to-emerald-500/50 blur opacity-25 group-focus-within:opacity-100 transition duration-1000 group-hover:duration-200" />
@@ -79,7 +72,7 @@ export function CategoryHeader({
               className="pl-14 h-14 md:h-16 bg-transparent border-0 focus-visible:ring-0 text-white text-base md:text-lg rounded-sm placeholder:text-neutral-500"
             />
           </div>
-        </motion.div>
+        </div>
       </div>
     </div>
   );

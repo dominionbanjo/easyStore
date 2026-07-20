@@ -65,6 +65,15 @@ export default function LoginPage() {
   useEffect(() => {
     const token = Cookies.get("token");
     if (token && isAuthenticated && currentUser) {
+      if (
+        currentUser.account_type === "staff" &&
+        currentUser.must_change_password
+      ) {
+        navigate(
+          `${AUTH_ROUTES.FORGOT_PASSWORD}?email=${encodeURIComponent(currentUser.email)}`,
+        );
+        return;
+      }
       handleRoleRedirect(currentUser, redirectTo, navigate);
     }
   }, [navigate, redirectTo, isAuthenticated, currentUser]);
@@ -82,6 +91,19 @@ export default function LoginPage() {
             user.email,
           )}&reset=true&redirect=${encodeURIComponent(redirectTo)}`,
         );
+        return;
+      }
+
+      if (user.account_type === "staff") {
+        if (user.must_change_password) {
+          toast.info("Please reset your password before continuing");
+          navigate(
+            `${AUTH_ROUTES.FORGOT_PASSWORD}?email=${encodeURIComponent(user.email)}`,
+          );
+          return;
+        }
+        toast.success("Login successful!");
+        handleRoleRedirect(user, redirectTo, navigate);
         return;
       }
 

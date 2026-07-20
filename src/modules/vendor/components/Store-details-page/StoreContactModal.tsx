@@ -79,6 +79,7 @@ export function StoreContactModal({
       onClose={onClose}
       title="Store Information"
       className="sm:max-w-md"
+      contentClassName="p-6"
     >
       <div className="space-y-6">
         {/* Store Identity */}

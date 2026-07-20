@@ -14,7 +14,6 @@ import {
 } from "lucide-react";
 import { FormSelect } from "@/components/shared/form/FormSelect";
 import { cn } from "@/lib/utils";
-import { motion, AnimatePresence } from "framer-motion";
 import { FormPriceInput } from "@/components/shared/form/FormPriceInput";
 import { FormInput } from "@/components/shared/form/FormInput";
 import { Badge } from "@/components/ui/badge";
@@ -250,14 +249,9 @@ export function VariantBuilderSection() {
         </div>
 
         <div className="space-y-4">
-          <AnimatePresence mode="popLayout">
             {optionFields.map((field, index: number) => (
-              <motion.div
+              <div
                 key={field.id}
-                layout
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, scale: 0.95 }}
                 className="rounded-sm border border-border/40 bg-muted/5 transition-all relative overflow-hidden"
               >
                 <div className="flex flex-col gap-6">
@@ -537,15 +531,11 @@ export function VariantBuilderSection() {
                     </div>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             ))}
-          </AnimatePresence>
 
           {optionFields.length === 0 && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="p-12 text-center border-2 border-dashed rounded-sm bg-muted/5 border-border/40 flex flex-col items-center gap-4 group hover:bg-muted/10 hover:border-primary/20 transition-all cursor-pointer"
+            <div className="p-12 text-center border-2 border-dashed rounded-sm bg-muted/5 border-border/40 flex flex-col items-center gap-4 group hover:bg-muted/10 hover:border-primary/20 transition-all cursor-pointer"
               onClick={addOption}
             >
               <div className="h-16 w-16 rounded-sm bg-primary/5 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
@@ -567,7 +557,7 @@ export function VariantBuilderSection() {
               >
                 Create First Option
               </Button>
-            </motion.div>
+            </div>
           )}
         </div>
       </div>
@@ -686,18 +676,14 @@ export function VariantBuilderSection() {
             </div>
 
             <div className="space-y-3">
-              <AnimatePresence initial={false}>
                 {variantFields.map((field, index: number) => {
                   const variantData = field as unknown as VariantField;
                   const comboValues = Object.values(
                     variantData.combinations || {},
                   );
                   return (
-                    <motion.div
+                    <div
                       key={field.id}
-                      initial={{ opacity: 0, scale: 0.98 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.95 }}
                       className="flex flex-col md:grid md:grid-cols-[1fr_110px_110px_110px_110px] gap-2 md:gap-3 p-3 md:p-4 rounded-sm border border-border/40 bg-background/50 hover:bg-white dark:hover:bg-neutral-900 transition-all duration-300 relative group"
                     >
                       {/* Combination Tags */}
@@ -777,10 +763,9 @@ export function VariantBuilderSection() {
                           />
                         </div>
                       </div>
-                    </motion.div>
+                    </div>
                   );
                 })}
-              </AnimatePresence>
             </div>
           </div>
         </div>

@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { motion, AnimatePresence } from "framer-motion";
+
 
 /* ───────────────── TYPES ───────────────── */
 
@@ -64,15 +64,10 @@ export default function SpecificationsSection({
 
       {/* Rows */}
       <div className="space-y-4">
-        <AnimatePresence mode="popLayout">
           {specs.length > 0 ? (
             specs.map((s, i) => (
-              <motion.div
+              <div
                 key={i}
-                layout
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, scale: 0.95 }}
                 className="group relative grid grid-cols-1 md:grid-cols-[1fr_1.5fr_auto] gap-3 p-3 md:p-4 rounded-sm bg-muted/20 border border-muted-foreground/10 hover:border-primary/30 transition-all duration-300"
               >
                 {/* Key */}
@@ -115,13 +110,10 @@ export default function SpecificationsSection({
                 >
                   <X className="h-4 w-4" />
                 </button>
-              </motion.div>
+              </div>
             ))
           ) : (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="py-12 border-2 border-dashed border-muted-foreground/10 rounded-sm flex flex-col items-center justify-center gap-3 bg-muted/5"
+            <div className="py-12 border-2 border-dashed border-muted-foreground/10 rounded-sm flex flex-col items-center justify-center gap-3 bg-muted/5"
             >
               <div className="h-12 w-12 rounded-sm bg-muted/20 flex items-center justify-center">
                 <GripVertical className="h-6 w-6 text-muted-foreground/40" />
@@ -129,9 +121,8 @@ export default function SpecificationsSection({
               <p className="text-[10px] uppercase font-black tracking-widest text-muted-foreground/60">
                 No specifications defined
               </p>
-            </motion.div>
+            </div>
           )}
-        </AnimatePresence>
       </div>
     </div>
   );

@@ -1,6 +1,5 @@
 import { Input } from "@/components/ui/input";
 import { Search, Sparkles } from "lucide-react";
-import { motion } from "framer-motion";
 
 export function HelpHeader() {
   return (
@@ -11,9 +10,7 @@ export function HelpHeader() {
         <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-white rounded-sm blur-3xl" />
       </div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
+      <div
         className="relative z-10 space-y-6 max-w-2xl mx-auto"
       >
         <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-sm text-white/90 text-xs font-black uppercase tracking-widest border border-white/20">
@@ -37,7 +34,7 @@ export function HelpHeader() {
             className="h-14 pl-14 pr-6 rounded-sm border-none bg-white text-emerald-950 placeholder:text-emerald-950/40  focus-visible:ring-4 focus-visible:ring-white/20 transition-all font-medium"
           />
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }

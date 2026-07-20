@@ -39,10 +39,15 @@ export const staffApi = apiManager.injectEndpoints({
   endpoints: (builder) => ({
     getStaffList: builder.query<PaginatedStaffResponse, { page?: number; limit?: number; status?: string; search?: string }>({
       query: (params) => ({ url: "store/staff", method: "GET", params }),
+      transformResponse: (response: { data: { items: StaffMember[]; pagination: PaginatedStaffResponse['pagination'] } }) => ({
+        data: response?.data?.items ?? [],
+        pagination: response?.data?.pagination ?? { total: 0, page: 1, limit: 20, pages: 0, hasNext: false, hasPrev: false },
+      }),
       providesTags: ["Staff"],
     }),
     getStaff: builder.query<StaffMember, string>({
       query: (id) => `store/staff/${id}`,
+      transformResponse: (response: { data: StaffMember }) => response.data,
       providesTags: ["Staff"],
     }),
     inviteStaff: builder.mutation<{ success: boolean; id: string }, InviteStaffPayload>({

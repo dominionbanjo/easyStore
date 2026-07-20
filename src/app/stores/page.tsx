@@ -1,5 +1,4 @@
 import { useMemo, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { SearchX } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 import { FormProvider, useForm } from "react-hook-form";
@@ -117,20 +116,7 @@ export default function StoresPage() {
 
   /* ───────────────── UI ───────────────── */
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
-  };
 
   return (
     <section className="min-h-screen bg-neutral-50/50 dark:bg-neutral-950 selection:bg-primary/20 transition-colors duration-300">
@@ -175,21 +161,10 @@ export default function StoresPage() {
           </div>
         ) : stores.length > 0 ? (
           <>
-            <motion.div
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-              className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-            >
-              <AnimatePresence mode="popLayout">
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {stores.map((store) => (
-                  <motion.div
+                  <div
                     key={store.id}
-                    variants={itemVariants}
-                    layout
-                    initial="hidden"
-                    animate="visible"
-                    exit={{ opacity: 0, scale: 0.9 }}
                     className="h-full"
                   >
                     <StoreCard
@@ -202,10 +177,9 @@ export default function StoresPage() {
                       totalProducts={store.total_products}
                       address={store.address}
                     />
-                  </motion.div>
+                  </div>
                 ))}
-              </AnimatePresence>
-            </motion.div>
+            </div>
 
             {/* ─── PAGINATION ─── */}
             {pagination && pagination.pages > 1 && (
@@ -226,10 +200,7 @@ export default function StoresPage() {
             )}
           </>
         ) : (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="flex flex-col items-center justify-center py-32 text-center max-w-2xl mx-auto bg-white/50 dark:bg-neutral-900/40 backdrop-blur-xl rounded-sm border border-zinc-200 dark:border-white/5  px-8"
+          <div className="flex flex-col items-center justify-center py-32 text-center max-w-2xl mx-auto bg-white/50 dark:bg-neutral-900/40 backdrop-blur-xl rounded-sm border border-zinc-200 dark:border-white/5  px-8"
           >
             <div className="w-24 h-24 bg-primary/10 dark:bg-emerald-500/10 rounded-sm flex items-center justify-center mb-8 ring-8 ring-primary/5 dark:ring-emerald-500/5">
               <SearchX className="h-12 w-12 text-primary dark:text-emerald-400" />
@@ -250,7 +221,7 @@ export default function StoresPage() {
             >
               Clear all filters
             </button>
-          </motion.div>
+          </div>
         )}
       </div>
     </section>

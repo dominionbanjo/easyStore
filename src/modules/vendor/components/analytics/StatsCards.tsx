@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import {
   DollarSign,
   ShoppingBag,
@@ -60,12 +59,9 @@ export function StatsCards({ summary }: StatsCardsProps) {
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-      {cards.map((card, idx) => (
-        <motion.div
+      {cards.map((card) => (
+        <div
           key={card.title}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: idx * 0.1 }}
         >
           <Card className="border-none  bg-card overflow-hidden group hover:ring-2 hover:ring-primary/20 transition-all duration-300">
             <CardContent className="p-6 relative">
@@ -101,7 +97,7 @@ export function StatsCards({ summary }: StatsCardsProps) {
               />
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
       ))}
     </div>
   );

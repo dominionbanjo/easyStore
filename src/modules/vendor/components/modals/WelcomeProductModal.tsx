@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Package, Sparkles, Zap } from "lucide-react";
-import { motion } from "framer-motion";
+
 
 interface WelcomeProductModalProps {
   open: boolean;
@@ -36,14 +36,11 @@ export function WelcomeProductModal({
             <Sparkles className="w-48 h-48 rotate-12 translate-x-12 translate-y-12" />
           </div>
 
-          <motion.div
-            initial={{ scale: 0.5, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ type: "spring", damping: 12 }}
+          <div
             className="relative z-10 h-20 w-20 rounded-sm bg-white/20 backdrop-blur-md flex items-center justify-center mb-6 shadow-xl"
           >
             <Zap className="h-10 w-10 text-white fill-current" />
-          </motion.div>
+          </div>
 
           <h2 className="relative z-10 text-3xl font-black uppercase tracking-tight leading-none text-center">
             You're <br /> All Set!

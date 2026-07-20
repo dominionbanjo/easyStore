@@ -5,7 +5,6 @@ import React, {
   useCallback,
 } from "react";
 import { useSearchParams, useLocation } from "react-router-dom";
-import { motion } from "framer-motion";
 import {
   getDerivedOptions,
   getProductLink,
@@ -306,12 +305,9 @@ const ProductCardComponent = ({
   );
 
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      whileHover={{ y: -8 }}
+    <div
       className={cn(
-        "group relative w-full bg-white dark:bg-neutral-900 rounded-sm p-1 border border-zinc-100 dark:border-white/5 transition-all hover: hover:-emerald-500/10 cursor-pointer overflow-hidden flex flex-col h-full",
+        "group relative w-full bg-white dark:bg-neutral-900 rounded-sm p-1 border border-zinc-100 dark:border-white/5 hover:-translate-y-2 transition-transform duration-300 cursor-pointer overflow-hidden flex flex-col h-full",
         className,
       )}
     >
@@ -699,7 +695,7 @@ const ProductCardComponent = ({
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </motion.div>
+    </div>
   );
 };
 

@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { X, Plus, Hash, Sparkles, Ruler } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+
 
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
@@ -90,15 +90,8 @@ export default function ChipSection({
 
       {/* Chips */}
       <div className="flex flex-wrap gap-2 min-h-[32px]">
-        <AnimatePresence mode="popLayout">
           {values.map((v) => (
-            <motion.div
-              key={v}
-              layout
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-            >
+            <div key={v}>
               <Badge
                 variant="secondary"
                 className="pl-3 pr-1 py-1.5 gap-2 rounded-sm group bg-muted/30 border-muted-foreground/10 hover:bg-muted/50 transition-all"
@@ -112,18 +105,14 @@ export default function ChipSection({
                   <X className="h-3 w-3" />
                 </button>
               </Badge>
-            </motion.div>
+            </div>
           ))}
           {values.length === 0 && (
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-[10px] text-muted-foreground/40 uppercase font-black tracking-widest py-2"
+            <p className="text-[10px] text-muted-foreground/40 uppercase font-black tracking-widest py-2"
             >
               No {label.toLowerCase()} added yet
-            </motion.p>
+            </p>
           )}
-        </AnimatePresence>
       </div>
     </div>
   );

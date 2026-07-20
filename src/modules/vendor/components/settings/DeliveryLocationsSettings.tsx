@@ -1,9 +1,9 @@
 import { useMemo } from "react";
-import { State } from "country-state-city";
 import { Trash, TruckFast, Add } from "iconsax-react";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { geography } from "@/data/geography";
 import { useForm, FormProvider } from "react-hook-form";
 import { FormInput } from "@/components/shared/form/FormInput";
 import { FormSelect } from "@/components/shared/form/FormSelect";
@@ -41,12 +41,9 @@ export function DeliveryLocationsSettings({
   const [deleteRate, { isLoading: isDeleting }] =
     useDeleteStoreDeliveryRateMutation();
 
-  const nigerianStates = useMemo(() => {
-    return State.getStatesOfCountry("NG").map((s) => ({
-      label: s.name,
-      value: s.isoCode,
-    }));
-  }, []);
+  const nigerianStates = useMemo(() =>
+    geography.ngStates.map((s) => ({ label: s.name, value: s.isoCode })),
+  []);
 
   const methods = useForm<DeliveryRateFormValues>({
     defaultValues: {

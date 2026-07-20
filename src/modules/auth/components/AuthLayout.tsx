@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -55,11 +54,7 @@ export function AuthLayout({
 
         {/* Middle Content */}
         <div className="relative z-10 max-w-lg">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-          >
+          <div>
             <h2 className="text-5xl font-black tracking-tight mb-8 leading-[1.1] drop-">
               Launch your <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-green-400">
@@ -81,7 +76,7 @@ export function AuthLayout({
                 Real-time inventory sync
               </li>
             </ul>
-          </motion.div>
+          </div>
         </div>
 
         {/* Footer */}
@@ -115,10 +110,7 @@ export function AuthLayout({
             )}
           </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
+          <div
             className="space-y-6"
           >
             <div className="space-y-4 text-left">
@@ -133,7 +125,7 @@ export function AuthLayout({
             </div>
 
             <div className="pt-2">{children}</div>
-          </motion.div>
+          </div>
         </div>
       </div>
       <HomeFloater />

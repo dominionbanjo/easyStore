@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { Search, Download, X, ChevronDown, ArrowUpDown } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
@@ -101,18 +100,13 @@ export default function CustomersPage() {
     <section className="space-y-6 md:space-y-8 pb-10">
       {/* ─── Header ─── */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-        >
+        <div>
           <p className="text-muted-foreground text-sm font-medium">
             Build and manage relationship with your store customers.
           </p>
-        </motion.div>
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
+        <div
           className="flex items-center gap-3"
         >
           <Button
@@ -123,7 +117,7 @@ export default function CustomersPage() {
             <Download className="h-4 w-4" />
             Export
           </Button>
-        </motion.div>
+        </div>
       </div>
 
       {/* ─── Toolbar (Search & Filters) ─── */}

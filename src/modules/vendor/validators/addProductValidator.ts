@@ -18,6 +18,8 @@ export const addProductSchema = z
 
     description: z.string().optional().nullable(),
 
+    barcode: z.string().max(100).optional().nullable(),
+
     /* ───────── PRICING ───────── */
     price: safeNum(z.number().nonnegative("Price cannot be negative"))
       .optional()

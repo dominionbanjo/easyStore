@@ -1,6 +1,5 @@
 import { useForm, FormProvider } from "react-hook-form";
 import { useSearchParams } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import { Location, Card as CardIcon, Save2, Shop, TruckFast } from "iconsax-react";
 import { toast } from "sonner";
@@ -165,15 +164,8 @@ export function StoreSettingsCompleteView({
         <SearchParamTabs tabs={TABS} />
       </div>
 
-      <AnimatePresence mode="wait">
         {activeTab === "general" && (
-          <motion.div
-            key="general"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
-          >
+          <div>
             <FormProvider {...methods}>
               <Card className="border-border/40 overflow-hidden bg-card/50 backdrop-blur-sm rounded-sm">
                 <CardHeader className="bg-muted/30 p-4 sm:p-6 border-b border-border/40">
@@ -234,17 +226,11 @@ export function StoreSettingsCompleteView({
                 </CardContent>
               </Card>
             </FormProvider>
-          </motion.div>
+          </div>
         )}
 
         {activeTab === "location" && (
-          <motion.div
-            key="location"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
-          >
+          <div>
             <FormProvider {...methods}>
               <Card className="border-border/40 overflow-hidden bg-card/50 backdrop-blur-sm rounded-sm">
                 <CardHeader className="bg-muted/30 p-4 sm:p-6 border-b border-border/40">
@@ -293,29 +279,17 @@ export function StoreSettingsCompleteView({
                 </CardContent>
               </Card>
             </FormProvider>
-          </motion.div>
+          </div>
         )}
 
         {activeTab === "delivery" && (
-          <motion.div
-            key="delivery"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
-          >
+          <div>
             <DeliveryLocationsSettings storeId={store?.id} />
-          </motion.div>
+          </div>
         )}
 
         {activeTab === "payout" && (
-          <motion.div
-            key="payout"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
-          >
+          <div>
             <FormProvider {...payoutMethods}>
               <Card className="border-border/40 overflow-hidden bg-card/50 backdrop-blur-sm rounded-sm">
                 <CardHeader className="bg-muted/30 p-4 sm:p-6 border-b border-border/40">
@@ -411,9 +385,8 @@ export function StoreSettingsCompleteView({
                 </CardContent>
               </Card>
             </FormProvider>
-          </motion.div>
+          </div>
         )}
-      </AnimatePresence>
     </div>
   );
 }

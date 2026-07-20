@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { motion } from "framer-motion";
 import { Star, Send } from "lucide-react";
 import { toast } from "sonner";
 
@@ -119,13 +118,11 @@ export function AddReviewForm({
                   className="min-h-[120px] rounded-sm border-muted-foreground/20 bg-muted/30 focus:bg-background transition-all text-base p-4 resize-none"
                 />
                 {methods.formState.errors.comment && (
-                  <motion.p
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
+                  <p
                     className="text-xs text-destructive font-medium mt-1.5 ml-1"
                   >
                     {methods.formState.errors.comment.message}
-                  </motion.p>
+                  </p>
                 )}
               </div>
             </div>

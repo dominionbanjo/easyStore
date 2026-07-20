@@ -224,7 +224,7 @@ export default function DefaultTemplate({
 
       {/* ─── FULL-WIDTH HERO SECTION ─── */}
       {!searchQuery && !selectedCategory && activeTab === "products" && (
-        <div className="relative w-full min-h-[500px] md:min-h-[600px] flex items-center justify-center bg-zinc-900 overflow-hidden">
+        <div className="relative w-full py-16 md:py-24 flex items-center justify-center bg-zinc-900 overflow-hidden">
           {hasBanner ? (
             <>
               <img

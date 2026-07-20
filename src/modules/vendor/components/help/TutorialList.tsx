@@ -1,6 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Clock, BookOpen, ExternalLink, Play } from "lucide-react";
-import { motion } from "framer-motion";
+
 
 const tutorials = [
   {
@@ -42,12 +42,9 @@ export function TutorialList() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {tutorials.map((item, idx) => (
-          <motion.div
+        {tutorials.map((item) => (
+          <div
             key={item.title}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: idx * 0.1 }}
           >
             <Card className="group border-none  bg-card overflow-hidden h-full flex flex-col hover:ring-2 hover:ring-primary/20 transition-all cursor-pointer">
               {/* Thumbnail Placeholder */}
@@ -89,7 +86,7 @@ export function TutorialList() {
                 </p>
               </CardContent>
             </Card>
-          </motion.div>
+          </div>
         ))}
       </div>
     </div>
