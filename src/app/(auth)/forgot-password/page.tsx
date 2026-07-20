@@ -4,7 +4,10 @@ import { useForm, FormProvider } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
+import Cookies from "js-cookie";
 import { useForgotPasswordMutation } from "@/services/authApi";
+import { useAppDispatch } from "@/hooks";
+import { clearUser } from "@/features/userSlice";
 import { FormInput } from "@/components/shared/form/FormInput";
 import { AUTH_ROUTES } from "@/routes/temp";
 import { AuthLayout } from "@/modules/auth/components/AuthLayout";
@@ -18,6 +21,7 @@ type ForgotPasswordValues = z.infer<typeof ForgotPasswordSchema>;
 
 export default function ForgotPasswordPage() {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [searchParams] = useSearchParams();
   const redirectTo = searchParams.get("redirect") || "/";
   const [forgotPassword, { isLoading }] = useForgotPasswordMutation();
@@ -36,7 +40,10 @@ export default function ForgotPasswordPage() {
     try {
       const res = await forgotPassword(data).unwrap();
       toast.success(res.message || "Password reset link sent successfully");
-      navigate("/");
+      dispatch(clearUser());
+      Cookies.remove("token");
+      localStorage.clear();
+      navigate(AUTH_ROUTES.LOGIN);
     } catch (error: any) {
       toast.error(error?.data?.message || "Failed to send password reset link");
     }

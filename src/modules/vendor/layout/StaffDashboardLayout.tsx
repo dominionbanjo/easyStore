@@ -69,7 +69,7 @@ export function StaffDashboardLayout() {
           </div>
         </aside>
 
-        <main className="lg:ml-56 flex-1 min-h-0 flex flex-col overflow-hidden">
+        <main className="lg:ml-56 flex-1 min-h-0 flex flex-col overflow-y-auto">
           <Outlet />
         </main>
       </div>
