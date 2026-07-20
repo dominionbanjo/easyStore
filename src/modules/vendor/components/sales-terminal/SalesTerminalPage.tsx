@@ -21,6 +21,7 @@ import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { SalesReceiptModal } from "@/modules/vendor/components/sales-history/SalesReceiptModal";
 import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
+import { VariantSelectionModal } from "@/modules/vendor/components/sales-terminal/VariantSelectionModal";
 
 function SkeletonGrid() {
   return (
@@ -47,6 +48,7 @@ export function SalesTerminalPage() {
   const [viewMode, setViewMode] = useState<"products" | "cart">("products");
   const [receiptOrderId, setReceiptOrderId] = useState<string | null>(null);
   const [showSaleConfirm, setShowSaleConfirm] = useState(false);
+  const [variantModalProduct, setVariantModalProduct] = useState<any>(null);
 
   const { data: productsData, isLoading, isFetching } = useGetSalesTerminalProductsQuery({
     page,
@@ -168,7 +170,7 @@ export function SalesTerminalPage() {
         <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">{activeCategory}</h3>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
           {(products ?? []).map((product) => (
-            <ProductCard key={product.id} product={product} onAdd={addToCart} />
+            <ProductCard key={product.id} product={product} onAdd={addToCart} onOpenVariant={setVariantModalProduct} />
           ))}
         </div>
       </div>
@@ -185,7 +187,7 @@ export function SalesTerminalPage() {
           <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">{category}</h3>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
             {categoryProducts.map((product) => (
-              <ProductCard key={product.id} product={product} onAdd={addToCart} />
+              <ProductCard key={product.id} product={product} onAdd={addToCart} onOpenVariant={setVariantModalProduct} />
             ))}
           </div>
         </div>
@@ -404,6 +406,14 @@ export function SalesTerminalPage() {
         onOpenChange={(open) => { if (!open) setReceiptOrderId(null); }}
       />
 
+      {/* ─── Variant Selection Modal ─── */}
+      <VariantSelectionModal
+        product={variantModalProduct}
+        open={!!variantModalProduct}
+        onOpenChange={(open) => { if (!open) setVariantModalProduct(null); }}
+        onConfirm={addToCart}
+      />
+
       {/* ─── Confirm Sale Dialog ─── */}
       <ConfirmDialog
         open={showSaleConfirm}
@@ -435,11 +445,20 @@ function ProductCard({
 }: {
   product: { id: string; name: string; slug: string; price: number; image: string | null; stock: number; variants: { id: string; price: number; stock: number; combinations: Record<string, string>; image_url: string | null }[] };
   onAdd: (product: { id: string; name: string; price: number; image: string | null }, variant?: { id: string; price: number; image_url: string | null; combinations: Record<string, string> }) => void;
+  onOpenVariant?: (product: any) => void;
 }) {
+  const handleClick = () => {
+    if (product.variants.length > 0 && onOpenVariant) {
+      onOpenVariant(product);
+    } else {
+      onAdd(product);
+    }
+  };
+
   return (
     <Card
       className="p-3 cursor-pointer hover:shadow-md transition-shadow"
-      onClick={() => onAdd(product)}
+      onClick={handleClick}
     >
       <div className="aspect-square bg-muted rounded-lg mb-2 overflow-hidden">
         {product.image ? (
