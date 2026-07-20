@@ -50,6 +50,7 @@ export function StaffDetailModal({ staffId, open, onOpenChange }: Props) {
         case "suspend": await suspend(staffId).unwrap(); toast.success("Staff suspended"); break;
         case "unsuspend": await unsuspend(staffId).unwrap(); toast.success("Staff unsuspended"); break;
         case "reset-password": await resetPassword(staffId).unwrap(); toast.success("Password reset email sent"); break;
+        case "reset-account": await resetPassword(staffId).unwrap(); toast.success("Account reset email sent"); break;
         case "remove": await remove(staffId).unwrap(); toast.success("Staff removed"); onOpenChange(false); break;
       }
     } catch (err: any) {
@@ -100,6 +101,7 @@ export function StaffDetailModal({ staffId, open, onOpenChange }: Props) {
                   <Button variant="outline" className="w-full text-green-600" onClick={() => setConfirmAction("unsuspend")}>Unsuspend</Button>
                 )}
                 <Button variant="outline" className="w-full" onClick={() => setConfirmAction("reset-password")}>Reset Password</Button>
+                <Button variant="outline" className="w-full text-amber-600" onClick={() => setConfirmAction("reset-account")}>Reset Account & Send New Password</Button>
                 <Button variant="destructive" className="w-full" onClick={() => setConfirmAction("remove")}>Remove Staff</Button>
               </div>
             </>
@@ -115,15 +117,17 @@ export function StaffDetailModal({ staffId, open, onOpenChange }: Props) {
           confirmAction === "suspend" ? "Suspend Staff?" :
           confirmAction === "unsuspend" ? "Unsuspend Staff?" :
           confirmAction === "reset-password" ? "Reset Password?" :
+          confirmAction === "reset-account" ? "Reset Account?" :
           "Remove Staff?"
         }
         description={
           confirmAction === "suspend" ? "They will not be able to access the dashboard until unsuspended." :
           confirmAction === "unsuspend" ? "They will regain access to the dashboard." :
           confirmAction === "reset-password" ? "A new temporary password will be sent to their email." :
+          confirmAction === "reset-account" ? "Their account will be reset. They will need to change their password on next login. A new temporary password will be sent to their email." :
           "This action cannot be undone. The staff member will be removed from your store."
         }
-        variant={confirmAction === "remove" ? "destructive" : "warning"}
+        variant={confirmAction === "remove" ? "destructive" : confirmAction === "reset-account" ? "warning" : "warning"}
       />
     </>
   );

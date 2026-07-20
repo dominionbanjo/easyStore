@@ -15,7 +15,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
-import { SearchX } from "lucide-react";
+import { Inbox } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Pagination } from "@/components/shared/Pagination";
 
@@ -179,19 +179,13 @@ export function DataTable<TData, TValue>({
                   colSpan={columns.length + 1}
                   className="h-[400px] text-center"
                 >
-                  <div className="flex flex-col items-center justify-center gap-3 animate-in fade-in zoom-in duration-300">
-                    <div className="p-4 rounded-sm bg-muted/50 text-muted-foreground/40">
-                      <SearchX className="h-10 w-10" />
+                  <div className="flex flex-col items-center justify-center gap-4 animate-in fade-in zoom-in duration-300">
+                    <div className="p-5 rounded-full bg-primary/5">
+                      <Inbox className="h-12 w-12 text-primary/30" />
                     </div>
-                    <div className="space-y-1">
-                      <p className="text-base font-semibold text-foreground">
-                        No data to display
-                      </p>
-                      <p className="text-sm text-muted-foreground max-w-[200px] mx-auto">
-                        {emptyMessage ||
-                          "We couldn't find any results matching your search filters."}
-                      </p>
-                    </div>
+                    <p className="text-lg font-bold text-foreground">
+                      {emptyMessage || "No data to display"}
+                    </p>
                   </div>
                 </TableCell>
               </TableRow>
