@@ -30,7 +30,11 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (id.includes("node_modules")) {
+            if (id.includes("lucide-react") || id.includes("iconsax")) return "vendor-icons";
             if (id.includes("react-dom") || id.includes("scheduler")) return "vendor-react-dom";
+            if (id.includes("react-router")) return "vendor-router";
+            if (id.includes("@reduxjs") || id.includes("react-redux") || id.includes("immer") || id.includes("redux")) return "vendor-redux";
+            if (id.includes("@radix-ui")) return "vendor-radix";
             if (id.includes("react")) {
               const match = id.match(/node_modules[\\/](?:\.pnpm[\\/][^\\/]+[\\/]node_modules[\\/])?(react[^\\/]*)/);
               if (match) {
@@ -39,10 +43,6 @@ export default defineConfig({
               }
               return "vendor-react";
             }
-            if (id.includes("react-router")) return "vendor-router";
-            if (id.includes("@reduxjs") || id.includes("react-redux") || id.includes("immer") || id.includes("redux")) return "vendor-redux";
-            if (id.includes("@radix-ui")) return "vendor-radix";
-            if (id.includes("lucide-react") || id.includes("iconsax")) return "vendor-icons";
             if (id.includes("recharts") || id.includes("d3-")) return "vendor-charts";
             if (id.includes("framer-motion") || id.includes("motion")) return "vendor-animation";
             if (id.includes("react-hook-form") || id.includes("hookform") || id.includes("zod")) return "vendor-forms";
