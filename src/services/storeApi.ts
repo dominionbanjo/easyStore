@@ -17,6 +17,8 @@ import type {
   IStoreTheme,
   IStorePagination,
   IStoreDeliveryRate,
+  IMyStoreSummary,
+  ISwitchStoreResponse,
 } from "@/types/Store/storeTypes";
 
 import { apiManager } from "./apiManager";
@@ -138,6 +140,26 @@ export const storeApi = apiManager.injectEndpoints({
       transformResponse: (response: ApiResponse<IStoreDetails>) =>
         response.data,
       providesTags: ["Store"],
+    }),
+
+    /* ───────── GET VENDOR'S STORES ───────── */
+    getMyStores: builder.query<IMyStoreSummary[], void>({
+      query: () => ({
+        url: "store/my-stores",
+        method: "GET",
+      }),
+      transformResponse: (response: ApiResponse<IMyStoreSummary[]>) =>
+        response.data,
+      providesTags: ["Store"],
+    }),
+
+    /* ───────── SWITCH ACTIVE STORE ───────── */
+    switchStore: builder.mutation<ISwitchStoreResponse, string>({
+      query: (storeId) => ({
+        url: "auth/switch-store",
+        method: "POST",
+        body: { store_id: storeId },
+      }),
     }),
 
     /* ───────── UPDATE STORE ───────── */
@@ -306,6 +328,8 @@ export const {
   useCreateStoreMutation,
   useGetVendorCustomersQuery,
   useGetMyStoreQuery,
+  useGetMyStoresQuery,
+  useSwitchStoreMutation,
   useGetMyStoreAnalyticsQuery,
   useUpdateStoreMutation,
   useRegisterStoreBankMutation,

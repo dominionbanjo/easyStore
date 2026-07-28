@@ -41,17 +41,19 @@ export function SalesTerminalPage() {
   const dispatch = useAppDispatch();
   const saleCart = useAppSelector((s) => s.saleCart);
 
-  const [page, setPage] = useState(1);
+  const [pageByCategory, setPageByCategory] = useState<Record<string, number>>({});
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 400);
   const [activeCategory, setActiveCategory] = useState<string | undefined>(undefined);
+  const pageKey = activeCategory ?? '__all__';
+  const currentPage = pageByCategory[pageKey] ?? 1;
   const [viewMode, setViewMode] = useState<"products" | "cart">("products");
   const [receiptOrderId, setReceiptOrderId] = useState<string | null>(null);
   const [showSaleConfirm, setShowSaleConfirm] = useState(false);
   const [variantModalProduct, setVariantModalProduct] = useState<any>(null);
 
   const { data: productsData, isLoading, isFetching } = useGetSalesTerminalProductsQuery({
-    page,
+    page: currentPage,
     limit: 24,
     q: debouncedSearch || undefined,
     category: activeCategory,
@@ -105,12 +107,15 @@ export function SalesTerminalPage() {
 
   const handleSearch = (value: string) => {
     setSearch(value);
-    setPage(1);
+    setPageByCategory((prev) => ({ ...prev, [pageKey]: 1 }));
+  };
+
+  const handlePageChange = (newPage: number) => {
+    setPageByCategory((prev) => ({ ...prev, [pageKey]: newPage }));
   };
 
   const handleCategoryClick = (cat: string | undefined) => {
     setActiveCategory(cat === activeCategory ? undefined : cat);
-    setPage(1);
   };
 
   const updateQty = (productId: string, variantId: string | undefined, delta: number) => {
@@ -342,13 +347,13 @@ export function SalesTerminalPage() {
             />
           </div>
           <span className="text-sm text-muted-foreground whitespace-nowrap hidden sm:block">
-            {pagination ? `Page ${pagination.page} of ${pagination.pages} — ${pagination.total} products` : ""}
+            {pagination ? `Page ${currentPage} of ${pagination.pages} — ${pagination.total} products` : ""}
           </span>
         </div>
 
         <div className="flex gap-2 p-4 pb-2 overflow-x-auto">
           <button
-            onClick={() => { setActiveCategory(undefined); setPage(1); }}
+            onClick={() => setActiveCategory(undefined)}
             className={`px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
               !activeCategory ? "bg-primary text-primary-foreground" : "bg-muted hover:bg-muted/80"
             }`}
@@ -373,11 +378,11 @@ export function SalesTerminalPage() {
 
           {pagination && pagination.pages > 1 && (
             <Pagination
-              page={pagination.page}
+              page={currentPage}
               pages={pagination.pages}
               hasNext={pagination.hasNext}
               hasPrev={pagination.hasPrev}
-              onPageChange={setPage}
+              onPageChange={handlePageChange}
             />
           )}
         </div>
@@ -474,19 +479,6 @@ function ProductCard({
       <p className="text-primary font-bold mt-1">₦{(product.price / 100).toLocaleString()}</p>
       {product.stock <= 5 && (
         <p className="text-xs text-amber-600 mt-1">{product.stock} left</p>
-      )}
-      {product.variants.length > 0 && (
-        <div className="flex gap-1 mt-2 flex-wrap">
-          {product.variants.slice(0, 3).map((v) => (
-            <button
-              key={v.id}
-              onClick={(e) => { e.stopPropagation(); onAdd(product, v); }}
-              className="text-xs bg-muted px-2 py-1 rounded hover:bg-primary hover:text-primary-foreground transition-colors"
-            >
-              {Object.values(v.combinations || {}).join("/")}
-            </button>
-          ))}
-        </div>
       )}
     </Card>
   );

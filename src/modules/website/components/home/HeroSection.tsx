@@ -117,7 +117,7 @@ export default function HeroSection() {
             </h1>
 
             <p
-              className="text-base sm:text-lg lg:text-xl leading-relaxed text-neutral-300 font-medium max-w-3xl"
+              className="text-base sm:text-lg lg:text-xl leading-relaxed text-white/90 font-medium max-w-3xl"
             >
               Your brand deserves a store that works as hard as you do.
               Launch in minutes with your own website, payment protection,

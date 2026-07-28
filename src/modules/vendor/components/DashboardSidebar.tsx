@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 import {
   LayoutDashboard,
@@ -15,12 +16,28 @@ import {
   Banknote as BanknoteIcon,
   UserCog,
   Receipt,
+  Check,
+  Plus,
+  ChevronDown,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { StoreSetupTracker } from "./shared/StoreSetupTracker";
-import { getAppPath } from "@/utils/subdomain";
+import { getAppPath, getCookieDomain } from "@/utils/subdomain";
 import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { selectCurrentUser } from "@/features/userSlice";
+import { useGetMyStoresQuery, useSwitchStoreMutation } from "@/services/storeApi";
+import { CreateStoreModal } from "@/modules/vendor/components/modals/CreateStoreModal";
+import Cookies from "js-cookie";
 
 // Inline dynamic imports — avoids circular dependency with lazyPages → VendorDashboardLayout → DashboardSidebar
 const preloadMap: Record<string, () => void> = {
@@ -105,6 +122,28 @@ export default function DashboardSidebar({
     }
   }, [open]);
 
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const currentUser = useSelector(selectCurrentUser);
+  const { data: stores = [], isLoading: isStoresLoading } = useGetMyStoresQuery();
+  const [switchStore, { isLoading: isSwitching }] = useSwitchStoreMutation();
+  const activeStore = stores.find((s) => s.id === currentUser?.active_store_id);
+
+  const handleSwitchStore = async (storeId: string) => {
+    if (storeId === currentUser?.active_store_id) return;
+    try {
+      const result = await switchStore(storeId).unwrap();
+      if (result.access_token) {
+        Cookies.set("token", result.access_token, {
+          expires: 7,
+          secure: window.location.protocol === "https:",
+          sameSite: "lax",
+          domain: getCookieDomain(),
+        });
+      }
+      window.location.reload();
+    } catch {}
+  };
+
   const handlePreload = (path: string) => {
     preloadMap[path]?.();
   };
@@ -120,21 +159,74 @@ export default function DashboardSidebar({
         )}
       >
         <div className="flex items-center justify-between px-4 py-[18.2px] border-b border-border/20">
-          <div className="flex items-center gap-2 overflow-hidden">
-            <Store className="h-6 w-6 text-primary shrink-0" />
-            {!isCollapsed && (
-              <span
-                className="font-semibold text-lg truncate"
-              >
-                My Store
-              </span>
-            )}
-          </div>
+          {isStoresLoading ? (
+            <div className="flex items-center gap-2 overflow-hidden">
+              <Store className="h-6 w-6 text-primary shrink-0" />
+              {!isCollapsed && <span className="font-semibold text-lg truncate">Loading...</span>}
+            </div>
+          ) : (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild disabled={isSwitching}>
+                <button className="flex items-center gap-2 overflow-hidden flex-1 text-left">
+                  <Store className="h-6 w-6 text-primary shrink-0" />
+                  {!isCollapsed && (
+                    <span className="font-semibold text-lg truncate flex items-center gap-1">
+                      {activeStore?.store_name ?? "Select Store"}
+                      <ChevronDown className="h-3.5 w-3.5 opacity-50 shrink-0" />
+                    </span>
+                  )}
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-56">
+                {stores.map((store) => (
+                  <DropdownMenuItem
+                    key={store.id}
+                    onClick={() => handleSwitchStore(store.id)}
+                    className="flex items-center gap-3 py-2"
+                  >
+                    <div className="w-6 h-6 rounded-sm bg-primary/10 text-primary flex items-center justify-center text-[9px] font-black shrink-0 overflow-hidden">
+                      {store.logo ? (
+                        <img src={store.logo} alt="" className="w-full h-full object-cover" />
+                      ) : (
+                        <Store className="h-3 w-3" />
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-bold truncate">{store.store_name}</p>
+                      <Badge
+                        variant="outline"
+                        className={`text-[8px] px-1 py-0 font-medium mt-0.5 ${
+                          store.status === "active"
+                            ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/20"
+                            : store.status === "pending"
+                              ? "bg-amber-500/10 text-amber-600 border-amber-500/20"
+                              : "bg-red-500/10 text-red-600 border-red-500/20"
+                        }`}
+                      >
+                        {store.status.charAt(0).toUpperCase() + store.status.slice(1)}
+                      </Badge>
+                    </div>
+                    {store.id === currentUser?.active_store_id && (
+                      <Check className="h-3.5 w-3.5 text-primary shrink-0" />
+                    )}
+                  </DropdownMenuItem>
+                ))}
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={() => setShowCreateModal(true)}
+                  className="flex items-center gap-2 py-2 text-primary font-bold text-xs"
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                  Add Another Store
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
           <Button
             variant="ghost"
             size="icon"
             onClick={onCollapse}
-            className="h-8 w-8 hover:bg-muted"
+            className="h-8 w-8 hover:bg-muted shrink-0"
           >
             {isCollapsed ? (
               <ChevronRight className="h-4 w-4" />
@@ -185,6 +277,10 @@ export default function DashboardSidebar({
         )}
       </aside>
 
+      <CreateStoreModal
+        open={showCreateModal}
+        onOpenChange={setShowCreateModal}
+      />
     </>
   );
 }

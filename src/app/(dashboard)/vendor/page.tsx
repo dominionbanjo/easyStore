@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { DashboardStatsLoader } from "@/modules/vendor/components/dashboard/DashboardStatsLoader";
 import { StatCard } from "@/modules/vendor/components/dashboard/StatCard";
 import { DashboardOverviewHeader } from "@/modules/vendor/components/dashboard/DashboardOverviewHeader";
+import { EscrowToggle } from "@/modules/vendor/components/dashboard/EscrowToggle";
 
 // Lazy-load heavy below-fold components — Recharts is the biggest LCP offender
 const SalesChart = lazy(() =>
@@ -328,6 +329,11 @@ export default function VendorDashboardPage() {
                     </p>
                   </div>
                 )}
+
+              <EscrowToggle
+                storeId={data?.summary?.id ?? ""}
+                escrowEnabled={data?.summary?.escrow_enabled ?? false}
+              />
             </div>
           </div>
       </div>

@@ -9,6 +9,7 @@ export interface SalesRecord {
   recorded_by: string | null;
   staff_name: string | null;
   created_at: string;
+  payment_method: string;
 }
 
 export interface ReceiptItem {

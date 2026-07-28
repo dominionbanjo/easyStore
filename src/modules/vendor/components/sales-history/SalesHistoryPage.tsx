@@ -15,7 +15,7 @@ export function SalesHistoryPage() {
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
   const [dateRange, setDateRange] = useState<{ dateFrom?: string; dateTo?: string }>({});
 
-  const { data, isLoading } = useGetSalesHistoryQuery({
+  const { data, isLoading, isFetching } = useGetSalesHistoryQuery({
     page,
     limit: 20,
     search: debouncedSearch || undefined,
@@ -76,7 +76,7 @@ export function SalesHistoryPage() {
       <DataTable
         columns={salesHistoryColumns}
         data={data?.data ?? []}
-        isLoading={isLoading}
+        isLoading={isLoading || isFetching}
         pagination={
           data?.pagination
             ? {

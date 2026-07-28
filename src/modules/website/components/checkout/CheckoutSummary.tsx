@@ -57,6 +57,7 @@ interface CheckoutSummaryProps {
   onAddAddress: () => void;
   onVerifyBank: () => void;
   onMessageVendor: () => void;
+  escrowEnabled?: boolean;
 }
 
 export function CheckoutSummary({
@@ -80,6 +81,7 @@ export function CheckoutSummary({
   onAddAddress,
   onVerifyBank,
   onMessageVendor,
+  escrowEnabled = true,
 }: CheckoutSummaryProps) {
   const hasDeliveryOptions = deliveryOptions && deliveryOptions.length > 0;
   const isBlocked = missingAddress || missingBankVerification || (!selectedDeliveryRateId && hasDeliveryOptions);
@@ -281,23 +283,33 @@ export function CheckoutSummary({
               <div className="grid grid-cols-2 gap-3">
                 <button
                   type="button"
-                  onClick={() => setIsEscrow(true)}
+                  onClick={() => { if (escrowEnabled) setIsEscrow(true); }}
+                  disabled={!escrowEnabled}
                   className={`flex flex-col items-start p-3 rounded-sm border transition-all text-left relative overflow-hidden group ${
-                    isEscrow
-                      ? "border-primary bg-primary/5 ring-1 ring-primary/20"
-                      : "border-border/40 bg-card hover:border-primary/40"
+                    !escrowEnabled
+                      ? "border-border/20 bg-muted/30 opacity-50 cursor-not-allowed"
+                      : isEscrow
+                        ? "border-primary bg-primary/5 ring-1 ring-primary/20"
+                        : "border-border/40 bg-card hover:border-primary/40"
                   }`}
                 >
                   <div className="flex items-center justify-between w-full mb-1">
-                    <ShieldCheck className={`h-4 w-4 ${isEscrow ? "text-primary" : "text-muted-foreground"}`} />
-                    {isEscrow && <CheckCircle2 className="h-3 w-3 text-primary" />}
+                    <ShieldCheck className={`h-4 w-4 ${!escrowEnabled ? "text-muted-foreground/50" : isEscrow ? "text-primary" : "text-muted-foreground"}`} />
+                    {isEscrow && escrowEnabled && <CheckCircle2 className="h-3 w-3 text-primary" />}
                   </div>
-                  <span className={`text-[10px] font-black uppercase tracking-tight ${isEscrow ? "text-primary" : "text-foreground"}`}>
+                  <span className={`text-[10px] font-black uppercase tracking-tight ${!escrowEnabled ? "text-muted-foreground/50" : isEscrow ? "text-primary" : "text-foreground"}`}>
                     Escrow
                   </span>
-                  <Badge variant="secondary" className="absolute -right-6 top-1 rotate-45 text-[7px] py-0 px-6 bg-primary text-primary-foreground font-black uppercase tracking-widest">
-                    Preferred
-                  </Badge>
+                  {!escrowEnabled && (
+                    <Badge variant="outline" className="mt-1 text-[7px] py-0 px-1.5 border-muted-foreground/30 text-muted-foreground/60 font-normal uppercase tracking-wider">
+                      Disabled by vendor
+                    </Badge>
+                  )}
+                  {escrowEnabled && (
+                    <Badge variant="secondary" className="absolute -right-6 top-1 rotate-45 text-[7px] py-0 px-6 bg-primary text-primary-foreground font-black uppercase tracking-widest">
+                      Preferred
+                    </Badge>
+                  )}
                 </button>
 
                 <button
@@ -319,10 +331,17 @@ export function CheckoutSummary({
                 </button>
               </div>
               
-              {isEscrow && (
+              {isEscrow && escrowEnabled && (
                 <p className="mt-2 text-[9px] text-muted-foreground font-medium leading-relaxed flex items-start gap-1.5">
                   <span className="text-emerald-500 font-black shrink-0">TIP:</span>
                   Escrow keeps your funds safe until delivery is confirmed. Highly recommended for first-time buyers.
+                </p>
+              )}
+
+              {!escrowEnabled && (
+                <p className="mt-2 text-[9px] text-muted-foreground/60 font-medium leading-relaxed flex items-start gap-1.5">
+                  <span className="text-muted-foreground/50 font-black shrink-0">NOTE:</span>
+                  This vendor has disabled escrow payments. Only Direct payment is available.
                 </p>
               )}
             </div>

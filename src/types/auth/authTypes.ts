@@ -44,6 +44,7 @@ export interface IUser {
 
   addresses?: any[];
   must_change_password?: boolean;
+  active_store_id?: string | null;
 
   bank_code?: string;
   account_number?: string;

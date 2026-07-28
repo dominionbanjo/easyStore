@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { Outlet, NavLink } from "react-router-dom";
-import { ShoppingCart, Settings, LogOut, Receipt, Sun, Moon } from "lucide-react";
+import { ShoppingCart, Settings, LogOut, Receipt, Sun, Moon, PackagePlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/components/shared/ThemeContext";
 import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
 import { getWebsitePath } from "@/utils/subdomain";
 import { AUTH_ROUTES } from "@/routes/temp";
 import { StaffBottomNav } from "@/modules/vendor/components/StaffBottomNav";
+import { useGetStaffPermissionsQuery } from "@/services/staffApi";
 
 const navItems = [
   { label: "Sales Terminal", icon: ShoppingCart, to: "" },
@@ -17,6 +18,11 @@ const navItems = [
 export function StaffDashboardLayout() {
   const { theme, toggleTheme } = useTheme();
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const { data: permissionsData } = useGetStaffPermissionsQuery();
+  const canCreateProduct = permissionsData?.permissions?.includes("product:create") ?? false;
+  const allNavItems = canCreateProduct
+    ? [...navItems, { label: "Add Product", icon: PackagePlus, to: "add-product" }]
+    : navItems;
 
   const handleLogout = () => {
     const cookies = document.cookie.split("; ");
@@ -37,7 +43,7 @@ export function StaffDashboardLayout() {
             <h2 className="font-bold text-lg text-primary">Staff Panel</h2>
           </div>
           <nav className="flex-1 overflow-y-auto p-2 space-y-1">
-            {navItems.map((item) => (
+            {allNavItems.map((item) => (
               <NavLink
                 key={item.to}
                 end={item.to === ""}

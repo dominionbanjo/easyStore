@@ -136,7 +136,7 @@ export function OnboardingModal() {
     try {
       if (!user) return;
 
-      await createStore({
+      const result = await createStore({
         ...data,
         user_id: user.id,
         email: user.email,
@@ -145,7 +145,8 @@ export function OnboardingModal() {
       toast.success("Store created successfully!");
       markAsSeen();
       
-      const updatedUser = { ...user, account_type: "vendor" as const };
+      const storeId = (result as any)?.id || (result as any)?.data?.id;
+      const updatedUser = { ...user, account_type: "vendor" as const, active_store_id: storeId };
       dispatch(setUser({ user: updatedUser }));
 
       handleRoleRedirect(

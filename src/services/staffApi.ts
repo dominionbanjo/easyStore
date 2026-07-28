@@ -3,6 +3,7 @@ import { apiManager } from "./apiManager";
 export interface StaffMember {
   id: string;
   status: "active" | "suspended" | "invited";
+  permissions?: string[] | null;
   last_login_at: string | null;
   created_at: string;
   user: {
@@ -66,12 +67,24 @@ export const staffApi = apiManager.injectEndpoints({
       query: (id) => ({ url: `store/staff/${id}/unsuspend`, method: "PATCH" }),
       invalidatesTags: ["Staff"],
     }),
-    resetStaffPassword: builder.mutation<{ success: boolean }, string>({
-      query: (id) => ({ url: `store/staff/${id}/reset-password`, method: "POST" }),
+    resetStaffPassword: builder.mutation<{ success: boolean }, { id: string; password?: string }>({
+      query: ({ id, password }) => ({
+        url: `store/staff/${id}/reset-password`,
+        method: "POST",
+        body: password ? { password } : undefined,
+      }),
       invalidatesTags: ["Staff"],
     }),
     removeStaff: builder.mutation<{ success: boolean }, string>({
       query: (id) => ({ url: `store/staff/${id}`, method: "DELETE" }),
+      invalidatesTags: ["Staff"],
+    }),
+    getStaffPermissions: builder.query<{ permissions: string[] }, void>({
+      query: () => "staff/permissions",
+      transformResponse: (response: { data: { permissions: string[] } }) => response.data,
+    }),
+    updateStaffPermissions: builder.mutation<{ success: boolean }, { id: string; permissions: string[] }>({
+      query: ({ id, permissions }) => ({ url: `store/staff/${id}/permissions`, method: "PATCH", body: { permissions } }),
       invalidatesTags: ["Staff"],
     }),
   }),
@@ -86,4 +99,6 @@ export const {
   useUnsuspendStaffMutation,
   useResetStaffPasswordMutation,
   useRemoveStaffMutation,
+  useGetStaffPermissionsQuery,
+  useUpdateStaffPermissionsMutation,
 } = staffApi;

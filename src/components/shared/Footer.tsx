@@ -1,8 +1,10 @@
 import { WEBSITE_ROUTES } from "@/routes/temp";
 import { Logo } from "./Logo";
 import SmartLink from "./SmartLink";
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 import {
   Facebook,
   Twitter,
@@ -14,6 +16,28 @@ import {
 } from "lucide-react";
 
 export default function Footer() {
+  const [subEmail, setSubEmail] = useState("");
+  const [subscribing, setSubscribing] = useState(false);
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!subEmail) return;
+    setSubscribing(true);
+    try {
+      const res = await fetch("/newsletter/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: subEmail, location: "Lagos, Nigeria" }),
+      });
+      if (!res.ok) throw new Error((await res.json())?.message || "Failed");
+      toast.success("Subscribed successfully!");
+      setSubEmail("");
+    } catch (err: any) {
+      toast.error(err?.message || "Subscription failed");
+    }
+    setSubscribing(false);
+  };
+
   return (
     <footer className="bg-card text-card-foreground relative overflow-hidden border-t border-border/50 rounded-t-sm mt-12 -[0_-10px_40px_-15px_rgba(0,0,0,0.05)] transition-colors duration-300">
       {/* Background Decor */}
@@ -157,13 +181,17 @@ export default function Footer() {
               Subscribe for exclusive offers and daily updates directly to your
               inbox.
             </p>
-            <form className="relative" onSubmit={(e) => e.preventDefault()}>
+            <form className="relative" onSubmit={handleSubscribe}>
               <Input
                 placeholder="Enter your email"
+                value={subEmail}
+                onChange={(e) => setSubEmail(e.target.value)}
                 className="bg-muted/50 border-border text-foreground placeholder:text-muted-foreground rounded-sm pr-12 h-12 focus-visible:ring-primary/20"
               />
               <Button
+                type="submit"
                 size="icon"
+                isLoading={subscribing}
                 className="absolute right-1 top-1 h-10 w-10 rounded-sm bg-primary text-primary-foreground hover:bg-primary/90"
               >
                 <Send className="w-4 h-4 ml-0.5" />

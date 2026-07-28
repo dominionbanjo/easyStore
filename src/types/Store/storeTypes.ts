@@ -100,6 +100,7 @@ export interface IStoreDetails {
   bank_name: string | null;
   recipient_code: string | null;
   payout_verified: boolean;
+  escrow_enabled: boolean;
   status: "active" | "pending" | "restricted" | "banned";
   user?: {
     first_name: string;
@@ -274,7 +275,9 @@ export interface IStoreAnalytics {
     conversion_rate: number;
     account_status?: "active" | "pending" | "restricted" | "banned";
     store_status?: "active" | "pending" | "restricted" | "banned";
+    id?: string;
     payout_verified?: boolean;
+    escrow_enabled?: boolean;
   };
   trends: {
     monthly: {
@@ -300,4 +303,23 @@ export interface IStoreAnalytics {
     spent: number;
     orders: number;
   }[];
+}
+
+export interface IMyStoreSummary {
+  id: string;
+  store_name: string;
+  slug: string;
+  logo: string | null;
+  status: "active" | "pending" | "restricted" | "banned";
+  created_at: string;
+}
+
+export interface IMyStoresResponse {
+  stores: IMyStoreSummary[];
+  active_store_id: string | null;
+}
+
+export interface ISwitchStoreResponse {
+  success: boolean;
+  access_token: string;
 }

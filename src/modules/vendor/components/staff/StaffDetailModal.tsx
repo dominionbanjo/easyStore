@@ -1,12 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Modal } from "@/components/shared/Modal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Eye, EyeOff, Key } from "lucide-react";
 import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
-import { useGetStaffQuery, useUpdateStaffMutation, useSuspendStaffMutation, useUnsuspendStaffMutation, useResetStaffPasswordMutation, useRemoveStaffMutation } from "@/services/staffApi";
+import { useGetStaffQuery, useUpdateStaffMutation, useSuspendStaffMutation, useUnsuspendStaffMutation, useResetStaffPasswordMutation, useRemoveStaffMutation, useUpdateStaffPermissionsMutation } from "@/services/staffApi";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
 
 interface Props {
   staffId: string | null;
@@ -21,16 +23,26 @@ export function StaffDetailModal({ staffId, open, onOpenChange }: Props) {
   const [unsuspend] = useUnsuspendStaffMutation();
   const [resetPassword] = useResetStaffPasswordMutation();
   const [remove] = useRemoveStaffMutation();
+  const [updatePermissions] = useUpdateStaffPermissionsMutation();
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [editing, setEditing] = useState(false);
   const [confirmAction, setConfirmAction] = useState<string | null>(null);
+  const [canCreateProduct, setCanCreateProduct] = useState(false);
+  const [savingPermission, setSavingPermission] = useState(false);
+  const [showResetPassModal, setShowResetPassModal] = useState(false);
+  const [customPassword, setCustomPassword] = useState("");
+  const [showCustomPass, setShowCustomPass] = useState(false);
+  const [savingPass, setSavingPass] = useState(false);
 
-  if (staff && !editing && (firstName !== staff.user.first_name || lastName !== staff.user.last_name)) {
-    setFirstName(staff.user.first_name);
-    setLastName(staff.user.last_name);
-  }
+  useEffect(() => {
+    if (staff && !editing) {
+      setFirstName(staff.user.first_name);
+      setLastName(staff.user.last_name);
+      setCanCreateProduct(staff.permissions?.includes("product:create") ?? false);
+    }
+  }, [staff, editing]);
 
   const handleUpdate = async () => {
     if (!staffId) return;
@@ -49,8 +61,8 @@ export function StaffDetailModal({ staffId, open, onOpenChange }: Props) {
       switch (action) {
         case "suspend": await suspend(staffId).unwrap(); toast.success("Staff suspended"); break;
         case "unsuspend": await unsuspend(staffId).unwrap(); toast.success("Staff unsuspended"); break;
-        case "reset-password": await resetPassword(staffId).unwrap(); toast.success("Password reset email sent"); break;
-        case "reset-account": await resetPassword(staffId).unwrap(); toast.success("Account reset email sent"); break;
+        case "reset-password": await resetPassword({ id: staffId }).unwrap(); toast.success("Password reset email sent"); break;
+        case "reset-account": await resetPassword({ id: staffId }).unwrap(); toast.success("Account reset email sent"); break;
         case "remove": await remove(staffId).unwrap(); toast.success("Staff removed"); onOpenChange(false); break;
       }
     } catch (err: any) {
@@ -58,6 +70,10 @@ export function StaffDetailModal({ staffId, open, onOpenChange }: Props) {
     }
     setConfirmAction(null);
   };
+
+  if (staff && !editing && canCreateProduct === false && staff.permissions?.includes("product:create")) {
+    setCanCreateProduct(true);
+  }
 
   if (isLoading || !staff) {
     return <Modal open={open} onOpenChange={onOpenChange} title="Staff Details"><div className="py-8 text-center text-muted-foreground">Loading...</div></Modal>;
@@ -100,12 +116,93 @@ export function StaffDetailModal({ staffId, open, onOpenChange }: Props) {
                 ) : (
                   <Button variant="outline" className="w-full text-green-600" onClick={() => setConfirmAction("unsuspend")}>Unsuspend</Button>
                 )}
-                <Button variant="outline" className="w-full" onClick={() => setConfirmAction("reset-password")}>Reset Password</Button>
+                <Button variant="outline" className="w-full" onClick={() => setShowResetPassModal(true)}>Reset Password</Button>
                 <Button variant="outline" className="w-full text-amber-600" onClick={() => setConfirmAction("reset-account")}>Reset Account & Send New Password</Button>
                 <Button variant="destructive" className="w-full" onClick={() => setConfirmAction("remove")}>Remove Staff</Button>
               </div>
+
+              <div className="border-t pt-4 space-y-3">
+                <p className="text-sm font-semibold">Permissions</p>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium">Can create products</p>
+                    <p className="text-xs text-muted-foreground">Staff can add new products to the store</p>
+                  </div>
+                  <Switch
+                    checked={canCreateProduct}
+                    disabled={savingPermission}
+                    onCheckedChange={async (checked) => {
+                      if (!staffId) return;
+                      setSavingPermission(true);
+                      setCanCreateProduct(checked);
+                      try {
+                        await updatePermissions({ id: staffId, permissions: checked ? ["product:create"] : [] }).unwrap();
+                        toast.success(checked ? "Create product permission granted" : "Create product permission revoked");
+                      } catch {
+                        setCanCreateProduct(!checked);
+                        toast.error("Failed to update permissions");
+                      }
+                      setSavingPermission(false);
+                    }}
+                  />
+                </div>
+              </div>
             </>
           )}
+        </div>
+      </Modal>
+
+      {/* Reset Password Modal */}
+      <Modal open={showResetPassModal} onOpenChange={(open) => { if (!open) { setShowResetPassModal(false); setCustomPassword(""); } }} title="Reset Password" description={`Set a new password for ${staff?.user?.first_name ?? "staff"}.`}>
+        <div className="p-4 space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="customPass">New Password</Label>
+            <div className="relative">
+              <Input
+                id="customPass"
+                type={showCustomPass ? "text" : "password"}
+                value={customPassword}
+                onChange={(e) => setCustomPassword(e.target.value)}
+                placeholder="Enter a new password"
+                minLength={6}
+              />
+              <button
+                type="button"
+                onClick={() => setShowCustomPass(!showCustomPass)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+              >
+                {showCustomPass ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+            </div>
+          </div>
+          <div className="flex gap-3 justify-end border-t pt-4">
+            <Button variant="outline" onClick={() => {
+              setShowResetPassModal(false);
+              setConfirmAction("reset-password");
+            }}>
+              <Key className="mr-2 h-4 w-4" />
+              Send Temp Password
+            </Button>
+            <Button
+              onClick={async () => {
+                if (!customPassword || !staffId) return;
+                setSavingPass(true);
+                try {
+                  await resetPassword({ id: staffId, password: customPassword }).unwrap();
+                  toast.success("Password updated successfully");
+                  setShowResetPassModal(false);
+                  setCustomPassword("");
+                } catch (err: any) {
+                  toast.error(err?.data?.message || "Failed to set password");
+                }
+                setSavingPass(false);
+              }}
+              isLoading={savingPass}
+              disabled={!customPassword || customPassword.length < 6}
+            >
+              Set Password
+            </Button>
+          </div>
         </div>
       </Modal>
 

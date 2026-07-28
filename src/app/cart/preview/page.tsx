@@ -81,7 +81,7 @@ export default function CheckoutPage() {
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(
     null,
   );
-  const [isEscrow, setIsEscrow] = useState(true);
+  const [escrowByVendor, setEscrowByVendor] = useState<Record<string, boolean>>({});
 
   /* ───────── FETCH SUMMARY ───────── */
   useEffect(() => {
@@ -351,40 +351,39 @@ export default function CheckoutPage() {
                     onValueChange={(val) => val && setActiveVendorId(val)}
                   >
                     {summaryData.map((vendor, index) => {
-                      // We must map items properly & calculate dynamic totals
                       const selectedRateId = selectedRates[vendor.vendor_id];
                       const selectedRate = vendor.delivery_options.find(
                         (r) => r.id === selectedRateId,
                       );
 
-                      // Math Logic matched with backend implementation
                       const rawSubtotal = vendor.subtotal;
 
-                      // Calculate shipping
                       let shippingFee = 0;
                       if (selectedRate) {
                         shippingFee = Number(selectedRate.fee) * 100;
                       }
 
-                      // Platform fee: 1% capped at NGN 2000 (200,000 kobo)
                       const platformFee = Math.min(
                         Math.round(rawSubtotal * 0.01),
                         200000,
                       );
 
-                      // Escrow fee: 3% capped at NGN 3000 (300,000 kobo)
+                      const vendorEscrow = escrowByVendor[vendor.vendor_id] ?? false;
+
                       let escrowFee = 0;
-                      if (isEscrow) {
+                      if (vendorEscrow) {
                         escrowFee = Math.min(
                           Math.round((rawSubtotal + shippingFee) * 0.03),
                           300000,
                         );
                       }
 
-                      // Escrow users pay ONLY the 3% escrow fee.
-                      // Direct payment users pay the 1% platform fee.
-                      const totalServiceCharge = isEscrow ? escrowFee : platformFee;
+                      const totalServiceCharge = vendorEscrow ? escrowFee : platformFee;
                       const grandTotal = rawSubtotal + shippingFee + totalServiceCharge;
+
+                      const setVendorEscrow = (val: boolean) => {
+                        setEscrowByVendor((prev) => ({ ...prev, [vendor.vendor_id]: val }));
+                      };
 
                       return (
                         <AccordionItem
@@ -435,8 +434,9 @@ export default function CheckoutPage() {
                               onSelectDeliveryRate={(rateId: string) =>
                                 handleRateSelection(vendor.vendor_id, rateId)
                               }
-                              isEscrow={isEscrow}
-                              setIsEscrow={setIsEscrow}
+                              isEscrow={vendorEscrow}
+                              setIsEscrow={setVendorEscrow}
+                              escrowEnabled={vendor.escrow_enabled}
                               onCheckout={(isEscrow) => handleCheckoutVendor(vendor, isEscrow)}
                               onMessageVendor={() => handleMessageVendor(vendor.vendor_id, vendor.store_name)}
                               onAddAddress={() =>

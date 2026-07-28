@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { ShoppingCart, Receipt, Settings, MoreHorizontal, Sun, Moon, LogOut } from "lucide-react";
+import { ShoppingCart, Receipt, Settings, MoreHorizontal, Sun, Moon, LogOut, PackagePlus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/components/shared/ThemeContext";
 import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
 import { getWebsitePath } from "@/utils/subdomain";
 import { AUTH_ROUTES } from "@/routes/temp";
+import { useGetStaffPermissionsQuery } from "@/services/staffApi";
 import {
   Sheet,
   SheetContent,
@@ -23,6 +24,11 @@ const navItems = [
 export function StaffBottomNav() {
   const { theme, toggleTheme } = useTheme();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const { data: permissionsData } = useGetStaffPermissionsQuery();
+  const canCreateProduct = permissionsData?.permissions?.includes("product:create") ?? false;
+  const allNavItems = canCreateProduct
+    ? [...navItems, { name: "Add Product", path: "add-product", icon: PackagePlus }]
+    : navItems;
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   const handleLogout = () => {
@@ -40,7 +46,7 @@ export function StaffBottomNav() {
     <>
       <nav className="fixed bottom-0 left-0 z-[100] w-full lg:hidden bg-background/80 backdrop-blur-xl border-t border-border/50">
         <div className="flex items-center justify-around h-16 max-w-lg mx-auto">
-          {navItems.map((item) => {
+          {allNavItems.map((item) => {
             const Icon = item.icon;
             return (
               <NavLink

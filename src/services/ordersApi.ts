@@ -171,8 +171,8 @@ export interface ICheckoutSummaryVendor {
     location: string;
     fee: number;
     duration: string | null;
-    notes: string | null;
   }[];
+  escrow_enabled: boolean;
 }
 
 export interface CheckoutSummaryResponse {
