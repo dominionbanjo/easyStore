@@ -67,14 +67,14 @@ export default function ProductListingPage({
       {/* Products Grid */}
       <div className="w-full mx-auto px-4">
         {isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3 sm:gap-4">
             {[...Array(8)].map((_, i) => (
-              <Skeleton key={i} className="h-80 w-full rounded-sm" />
+              <Skeleton key={i} className="h-72 w-full rounded-sm" />
             ))}
           </div>
         ) : (
           <div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3 sm:gap-4"
             >
               {products.map((product) => (
                 <div key={product.id}>

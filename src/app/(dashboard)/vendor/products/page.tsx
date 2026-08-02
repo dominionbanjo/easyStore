@@ -451,7 +451,7 @@ export default function ProductsPage() {
                 />
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3 sm:gap-4"
               >
                 {isActuallyLoading ? (
                   // Grid Skeleton
@@ -503,13 +503,13 @@ export default function ProductsPage() {
                           </Badge>
                         </div>
                       </div>
-                      <CardContent className="p-3 pt-4">
-                        <p className="font-bold line-clamp-1">{product.name}</p>
-                        <div className="flex items-center justify-between mt-2">
-                          <p className="text-primary font-bold">
+                      <CardContent className="p-2 pt-3">
+                        <p className="text-xs sm:text-sm font-bold line-clamp-1">{product.name}</p>
+                        <div className="flex items-center justify-between mt-1.5">
+                          <p className="text-primary text-sm font-bold">
                             ₦{Number(product.price).toLocaleString()}
                           </p>
-                          <p className="text-xs text-muted-foreground">
+                          <p className="text-[10px] sm:text-xs text-muted-foreground">
                             Stock: {product.stock}
                           </p>
                         </div>

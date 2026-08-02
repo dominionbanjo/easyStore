@@ -62,9 +62,9 @@ export function ProductSection({
 
         {/* Content Section */}
         {isLoading ? (
-          <div className="grid gap-2 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid gap-2 sm:gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
             {Array.from({ length: skeletonCount }).map((_, i) => (
-              <Skeleton key={i} className="h-[320px] rounded-sm" />
+              <Skeleton key={i} className="h-[280px] rounded-sm" />
             ))}
           </div>
         ) : isError || isEmpty ? (
@@ -76,7 +76,7 @@ export function ProductSection({
           />
         ) : (
           <div
-            className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+            className="grid gap-3 sm:gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6"
           >
             {children}
           </div>

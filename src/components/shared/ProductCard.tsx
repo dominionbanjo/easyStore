@@ -382,7 +382,7 @@ const ProductCardComponent = ({
         </div>
 
         {/* Name */}
-        <h3 className="text-zinc-900 dark:text-zinc-100 font-bold text-sm sm:text-base leading-tight line-clamp-2 mb-1 group-hover:text-emerald-600 transition-colors">
+        <h3 className="text-zinc-900 dark:text-zinc-100 font-bold text-xs sm:text-sm leading-tight line-clamp-2 mb-1 group-hover:text-emerald-600 transition-colors">
           {name}
         </h3>
 
@@ -394,7 +394,7 @@ const ProductCardComponent = ({
                 {price}
               </span>
             )}
-            <span className="text-lg font-extrabold text-zinc-900 dark:text-white tracking-tight">
+            <span className="text-sm sm:text-base font-extrabold text-zinc-900 dark:text-white tracking-tight">
               {isOnSale && discountPrice ? discountPrice : price}
             </span>
           </div>
@@ -407,16 +407,16 @@ const ProductCardComponent = ({
             }}
             disabled={isOutOfStock || isAddingToCart}
             className={cn(
-              "p-2 rounded-sm transition-all group/btn relative z-10 overflow-hidden",
+              "p-1.5 rounded-sm transition-all group/btn relative z-10 overflow-hidden",
               isOutOfStock
                 ? "bg-zinc-100 text-zinc-400 cursor-not-allowed"
                 : "bg-zinc-900 text-white hover:bg-emerald-500 hover:-emerald-500/40 active:scale-95",
             )}
           >
             {isAddingToCart ? (
-              <Loader2 className="w-5 h-5 animate-spin" />
+              <Loader2 className="w-4 h-4 animate-spin" />
             ) : (
-              <ShoppingCart className="w-5 h-5 group-hover/btn:rotate-12 transition-transform" />
+              <ShoppingCart className="w-4 h-4 group-hover/btn:rotate-12 transition-transform" />
             )}
           </button>
         </div>

@@ -57,9 +57,9 @@ export default function CategoryDetailsPage() {
           </div>
         </div>
         <div className="w-full mx-auto px-1.5 sm:px-4 py-16">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-8">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-2 sm:gap-4">
             {Array.from({ length: 8 }).map((_, i) => (
-              <Skeleton key={i} className="h-[400px] rounded-sm" />
+              <Skeleton key={i} className="h-[320px] rounded-sm" />
             ))}
           </div>
         </div>
@@ -93,7 +93,7 @@ export default function CategoryDetailsPage() {
 
       <div className="w-full mx-auto px-1.5 sm:px-4 py-20 space-y-16">
           {isFetching && !products.length ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-8 px-0">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-2 sm:gap-4 px-0">
               {Array.from({ length: 8 }).map((_, i) => (
                 <Skeleton key={i} className="h-[400px] rounded-sm" />
               ))}
@@ -107,7 +107,7 @@ export default function CategoryDetailsPage() {
                 </h2>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-8 px-0">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3 sm:gap-4 px-0">
                 {products.map((product) => (
                   <div key={product.id}>
                     <ProductCard

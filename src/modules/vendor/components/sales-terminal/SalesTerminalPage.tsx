@@ -25,7 +25,7 @@ import { VariantSelectionModal } from "@/modules/vendor/components/sales-termina
 
 function SkeletonGrid() {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3">
       {Array.from({ length: 8 }).map((_, i) => (
         <div key={i} className="p-3">
           <div className="aspect-square bg-muted animate-pulse rounded-lg mb-2" />
@@ -173,7 +173,7 @@ export function SalesTerminalPage() {
     const grid = activeCategory ? (
       <div>
         <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">{activeCategory}</h3>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3">
           {(products ?? []).map((product) => (
             <ProductCard key={product.id} product={product} onAdd={addToCart} onOpenVariant={setVariantModalProduct} />
           ))}
@@ -190,7 +190,7 @@ export function SalesTerminalPage() {
       ).map(([category, categoryProducts]) => (
         <div key={category}>
           <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">{category}</h3>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3">
             {categoryProducts.map((product) => (
               <ProductCard key={product.id} product={product} onAdd={addToCart} onOpenVariant={setVariantModalProduct} />
             ))}
@@ -463,7 +463,7 @@ function ProductCard({
 
   return (
     <Card
-      className="p-3 cursor-pointer hover:shadow-md transition-shadow"
+      className="p-2 cursor-pointer hover:shadow-md transition-shadow"
       onClick={handleClick}
     >
       <div className="aspect-square bg-muted rounded-lg mb-2 overflow-hidden">
@@ -471,12 +471,12 @@ function ProductCard({
           <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-muted-foreground text-2xl">
-            <ShoppingCart className="h-8 w-8" />
+            <ShoppingCart className="h-6 w-6" />
           </div>
         )}
       </div>
-      <p className="font-medium text-sm line-clamp-2">{product.name}</p>
-      <p className="text-primary font-bold mt-1">₦{(product.price / 100).toLocaleString()}</p>
+      <p className="font-medium text-xs sm:text-sm line-clamp-2">{product.name}</p>
+      <p className="text-primary text-sm font-bold mt-1">₦{(product.price / 100).toLocaleString()}</p>
       {product.stock <= 5 && (
         <p className="text-xs text-amber-600 mt-1">{product.stock} left</p>
       )}

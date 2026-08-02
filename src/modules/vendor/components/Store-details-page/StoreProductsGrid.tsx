@@ -82,10 +82,10 @@ export function StoreProductsGrid({
 
       {/* ─── CONTENT ─── */}
         {showSkeleton ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-8 px-0 sm:px-2"
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-2 sm:gap-4 px-0 sm:px-2"
           >
             {Array.from({ length: 8 }).map((_, i) => (
-              <Skeleton key={i} className="h-[400px] rounded-sm" />
+              <Skeleton key={i} className="h-[320px] rounded-sm" />
             ))}
           </div>
         ) : !products.length ? (
@@ -114,7 +114,7 @@ export function StoreProductsGrid({
         ) : (
           <div className="space-y-20"
           >
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-8 px-0 sm:px-2">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3 sm:gap-4 px-0 sm:px-2">
               {products.map((product) => (
                 <div key={product.id}>
                   <ProductCard
