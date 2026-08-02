@@ -14,6 +14,7 @@ export interface IStore {
   category: string | null;
   description: string | null;
   logo: string | null;
+  cover_image: string | null;
   rating_average: string; // comes as string from backend
   total_products: number;
   address: string | null;
@@ -48,6 +49,7 @@ export interface GetStoresArgs {
   limit?: number;
   search?: string;
   state?: string;
+  sort?: string;
 }
 
 /* ───────────────── SEARCH STORES ───────────────── */

@@ -475,8 +475,8 @@ function ProductCard({
           </div>
         )}
       </div>
-      <p className="font-medium text-xs sm:text-sm line-clamp-2">{product.name}</p>
-      <p className="text-primary text-sm font-bold mt-1">₦{(product.price / 100).toLocaleString()}</p>
+      <p title={product.name} className="font-medium text-xs sm:text-sm line-clamp-2 break-words">{product.name}</p>
+      <p className="text-primary text-sm font-bold mt-1 truncate">₦{(product.price / 100).toLocaleString()}</p>
       {product.stock <= 5 && (
         <p className="text-xs text-amber-600 mt-1">{product.stock} left</p>
       )}

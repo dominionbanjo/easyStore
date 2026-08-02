@@ -16,10 +16,11 @@ export default function FeaturedStoresSection({
 }: FeaturedStoresSectionProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Fetch stores - limit to 4 for the homepage display
+  // Fetch trending stores (weighted ranking: sales, rating, active products)
   const { data, isLoading, isError } = useGetStoresQuery({
-    limit: 4,
+    limit: 12,
     page: 1,
+    sort: "trending",
   });
 
   const stores = data?.data.items ?? [];
@@ -56,10 +57,10 @@ export default function FeaturedStoresSection({
 
         {/* Content Section */}
         {isLoading ? (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-3 sm:gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
             {Array.from({ length: 4 }).map((_, i) => (
               <div key={i} className="space-y-4">
-                <Skeleton className="h-[280px] w-full rounded-sm" />
+                <Skeleton className="h-[240px] w-full rounded-sm" />
               </div>
             ))}
           </div>
@@ -72,7 +73,7 @@ export default function FeaturedStoresSection({
           />
         ) : (
           <div
-            className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
+            className="grid gap-3 sm:gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6"
           >
             {stores.map((store) => (
               <StoreCard
@@ -82,6 +83,7 @@ export default function FeaturedStoresSection({
                 slug={store.slug}
                 description={store.description}
                 logo={store.logo}
+                coverImage={store.cover_image}
                 rating={Number(store.rating_average ?? 0)}
                 totalProducts={store.total_products}
                 address={store.address}

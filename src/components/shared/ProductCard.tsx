@@ -369,11 +369,14 @@ const ProductCardComponent = ({
       {/* ───────────────── INFO SECTION ───────────────── */}
       <div className="px-1.5 pt-2 flex flex-col flex-1">
         {/* Category & Rating Row */}
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest bg-emerald-50 dark:bg-emerald-500/10 px-2 py-0.5 rounded-sm">
+        <div className="flex items-center justify-between gap-2 mb-2 min-w-0">
+          <span
+            title={category}
+            className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest bg-emerald-50 dark:bg-emerald-500/10 px-2 py-0.5 rounded-sm truncate overflow-hidden min-w-0 max-w-[60%]"
+          >
             {category}
           </span>
-          <div className="flex items-center gap-1 px-1.5 py-0.5 bg-amber-50 dark:bg-amber-500/10 rounded-sm border border-amber-100/50 dark:border-amber-400/20">
+          <div className="flex items-center gap-1 px-1.5 py-0.5 bg-amber-50 dark:bg-amber-500/10 rounded-sm border border-amber-100/50 dark:border-amber-400/20 shrink-0">
             <Star className="w-2.5 h-2.5 fill-amber-500 stroke-amber-500" />
             <span className="text-[10px] font-bold text-amber-700 dark:text-amber-400">
               {Number(rating || 0).toFixed(1)}
@@ -382,19 +385,22 @@ const ProductCardComponent = ({
         </div>
 
         {/* Name */}
-        <h3 className="text-zinc-900 dark:text-zinc-100 font-bold text-xs sm:text-sm leading-tight line-clamp-2 mb-1 group-hover:text-emerald-600 transition-colors">
+        <h3
+          title={name}
+          className="text-zinc-900 dark:text-zinc-100 font-bold text-xs sm:text-sm leading-tight line-clamp-2 break-words overflow-hidden mb-1 group-hover:text-emerald-600 transition-colors"
+        >
           {name}
         </h3>
 
         {/* Price Section */}
-        <div className="mt-auto pt-0 flex items-center justify-between">
-          <div className="flex flex-col">
+        <div className="mt-auto pt-0 flex items-center justify-between gap-2 min-w-0">
+          <div className="flex flex-col min-w-0">
             {isOnSale && discountPrice && (
-              <span className="text-[10px] text-zinc-400 line-through decoration-rose-500/30">
+              <span className="text-[10px] text-zinc-400 line-through decoration-rose-500/30 truncate">
                 {price}
               </span>
             )}
-            <span className="text-sm sm:text-base font-extrabold text-zinc-900 dark:text-white tracking-tight">
+            <span className="text-sm sm:text-base font-extrabold text-zinc-900 dark:text-white tracking-tight truncate">
               {isOnSale && discountPrice ? discountPrice : price}
             </span>
           </div>
@@ -407,7 +413,7 @@ const ProductCardComponent = ({
             }}
             disabled={isOutOfStock || isAddingToCart}
             className={cn(
-              "p-1.5 rounded-sm transition-all group/btn relative z-10 overflow-hidden",
+              "p-1.5 rounded-sm transition-all group/btn relative z-10 overflow-hidden shrink-0",
               isOutOfStock
                 ? "bg-zinc-100 text-zinc-400 cursor-not-allowed"
                 : "bg-zinc-900 text-white hover:bg-emerald-500 hover:-emerald-500/40 active:scale-95",
@@ -437,7 +443,7 @@ const ProductCardComponent = ({
           </div>
           <span
             className={cn(
-              "text-[10px] font-bold uppercase tracking-tight",
+              "text-[10px] font-bold uppercase tracking-tight shrink-0",
               isOutOfStock
                 ? "text-zinc-400"
                 : stock <= 5
@@ -456,13 +462,12 @@ const ProductCardComponent = ({
 
       {/* ───────────────── FOOTER SECTION ───────────────── */}
       {showFooter && (
-        <div className="mt-2 pt-2 px-1 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between gap-3">
+        <div className="mt-2 pt-2 px-1 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between gap-3 min-w-0">
           <SmartLink
             to={
               storeSlug ? buildRoute.storeDetails(storeSlug) : `/vendor/${vendor}`
             }
-            className="flex items-center gap-2.5 truncate relative z-10 group/vendor"
-            onClick={(e) => e.stopPropagation()}
+            className="flex items-center gap-2.5 truncate relative z-10 group/vendor min-w-0"
           >
             <div className="h-8 w-8 rounded-sm border-2 border-white dark:border-zinc-800 overflow-hidden ring-1 ring-zinc-100 dark:ring-zinc-800">
               <img
@@ -473,11 +478,14 @@ const ProductCardComponent = ({
                 className="h-full w-full object-cover group-hover/vendor:scale-110 transition-transform"
               />
             </div>
-            <div className="flex flex-col truncate">
+            <div className="flex flex-col truncate min-w-0">
               <span className="text-[10px] text-zinc-400 font-medium uppercase tracking-wider leading-none mb-0.5">
                 Seller
               </span>
-              <span className="text-xs font-bold text-zinc-900 dark:text-zinc-200 truncate group-hover/vendor:text-emerald-500 transition-colors">
+              <span
+                title={vendor}
+                className="text-xs font-bold text-zinc-900 dark:text-zinc-200 truncate group-hover/vendor:text-emerald-500 transition-colors"
+              >
                 {vendor}
               </span>
             </div>

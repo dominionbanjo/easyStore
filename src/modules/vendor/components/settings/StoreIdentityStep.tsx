@@ -223,7 +223,7 @@ export function StoreIdentityStep({
           <div className="space-y-2 relative">
             <Label className="text-zinc-600 dark:text-zinc-300 font-bold text-sm flex items-center gap-1.5">
               <Globe className="w-4 h-4 text-emerald-500" />
-              Store Subdomain
+              Store Website
             </Label>
             
             <div className="relative flex items-center rounded-sm border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 overflow-hidden shadow-sm hover:border-zinc-400 dark:hover:border-zinc-500 transition-all focus-within:ring-2 focus-within:ring-emerald-500/20 focus-within:border-emerald-500">

@@ -31,13 +31,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { StoreSetupTracker } from "./shared/StoreSetupTracker";
-import { getAppPath, getCookieDomain } from "@/utils/subdomain";
+import { getAppPath } from "@/utils/subdomain";
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
-import { selectCurrentUser } from "@/features/userSlice";
-import { useGetMyStoresQuery, useSwitchStoreMutation } from "@/services/storeApi";
 import { CreateStoreModal } from "@/modules/vendor/components/modals/CreateStoreModal";
-import Cookies from "js-cookie";
+import { useStoreSwitcher } from "@/modules/vendor/hooks/useStoreSwitcher";
 
 // Inline dynamic imports — avoids circular dependency with lazyPages → VendorDashboardLayout → DashboardSidebar
 const preloadMap: Record<string, () => void> = {
@@ -123,26 +120,13 @@ export default function DashboardSidebar({
   }, [open]);
 
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const currentUser = useSelector(selectCurrentUser);
-  const { data: stores = [], isLoading: isStoresLoading } = useGetMyStoresQuery();
-  const [switchStore, { isLoading: isSwitching }] = useSwitchStoreMutation();
-  const activeStore = stores.find((s) => s.id === currentUser?.active_store_id);
-
-  const handleSwitchStore = async (storeId: string) => {
-    if (storeId === currentUser?.active_store_id) return;
-    try {
-      const result = await switchStore(storeId).unwrap();
-      if (result.access_token) {
-        Cookies.set("token", result.access_token, {
-          expires: 7,
-          secure: window.location.protocol === "https:",
-          sameSite: "lax",
-          domain: getCookieDomain(),
-        });
-      }
-      window.location.reload();
-    } catch {}
-  };
+  const {
+    stores,
+    isLoading: isStoresLoading,
+    isSwitching,
+    activeStore,
+    handleSwitchStore,
+  } = useStoreSwitcher();
 
   const handlePreload = (path: string) => {
     preloadMap[path]?.();
@@ -206,7 +190,7 @@ export default function DashboardSidebar({
                         {store.status.charAt(0).toUpperCase() + store.status.slice(1)}
                       </Badge>
                     </div>
-                    {store.id === currentUser?.active_store_id && (
+                    {store.id === activeStore?.id && (
                       <Check className="h-3.5 w-3.5 text-primary shrink-0" />
                     )}
                   </DropdownMenuItem>

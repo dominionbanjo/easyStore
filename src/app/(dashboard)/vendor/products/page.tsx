@@ -504,12 +504,17 @@ export default function ProductsPage() {
                         </div>
                       </div>
                       <CardContent className="p-2 pt-3">
-                        <p className="text-xs sm:text-sm font-bold line-clamp-1">{product.name}</p>
-                        <div className="flex items-center justify-between mt-1.5">
-                          <p className="text-primary text-sm font-bold">
+                        <p
+                          title={product.name}
+                          className="text-xs sm:text-sm font-bold line-clamp-1 break-words"
+                        >
+                          {product.name}
+                        </p>
+                        <div className="flex items-center justify-between gap-2 mt-1.5">
+                          <p className="text-primary text-sm font-bold truncate min-w-0">
                             ₦{Number(product.price).toLocaleString()}
                           </p>
-                          <p className="text-[10px] sm:text-xs text-muted-foreground">
+                          <p className="text-[10px] sm:text-xs text-muted-foreground shrink-0">
                             Stock: {product.stock}
                           </p>
                         </div>

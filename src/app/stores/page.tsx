@@ -148,7 +148,7 @@ export default function StoresPage() {
         )}
 
         {isLoading || isFetching ? (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <div className="grid gap-3 sm:gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
             {Array.from({ length: 8 }).map((_, i) => (
               <div key={i} className="space-y-4">
                 <Skeleton className="h-[200px] w-full rounded-sm" />
@@ -161,7 +161,7 @@ export default function StoresPage() {
           </div>
         ) : stores.length > 0 ? (
           <>
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid gap-3 sm:gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
                 {stores.map((store) => (
                   <div
                     key={store.id}
@@ -173,6 +173,7 @@ export default function StoresPage() {
                       slug={store.slug}
                       description={store.description}
                       logo={store.logo}
+                      coverImage={store.cover_image}
                       rating={Number(store.rating_average ?? 0)}
                       totalProducts={store.total_products}
                       address={store.address}
