@@ -29,6 +29,7 @@ export const apiManager = createApi({
     "Payout",
     "Staff",
     "Order",
+    "SchoolZone",
   ],
   endpoints: () => ({}),
 });

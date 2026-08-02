@@ -13,6 +13,7 @@ import {
   ClipboardList,
   Store,
   ShoppingBag,
+  GraduationCap,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
@@ -22,6 +23,7 @@ const menuItems = [
   { label: "Overview", icon: LayoutDashboard, to: "/" },
   { label: "Orders", icon: ShoppingBag, to: "/orders" },
   { label: "Vendors", icon: Store, to: "/vendors" },
+  { label: "School Zones", icon: GraduationCap, to: "/school-zones" },
   { label: "Users", icon: Users, to: "/users" },
   { label: "Transactions", icon: DollarSign, to: "/transactions" },
   { label: "Payouts & Escrow", icon: ClipboardList, to: "/payouts" },

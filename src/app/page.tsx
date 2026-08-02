@@ -2,6 +2,7 @@ import HeroSection from "@/modules/website/components/home/HeroSection";
 import DiscoveryHero from "@/modules/website/components/home/DiscoveryHero";
 import BusinessStorySection from "@/modules/website/components/home/BusinessStorySection";
 import FeaturedStoresSection from "@/modules/website/components/home/FeaturedStoresSection";
+import FeaturedZonesSection from "@/modules/website/components/home/FeaturedZonesSection";
 import TopCategoriesSection from "@/modules/website/components/home/TopCategoriesSection";
 import FeaturedProductsSection from "@/modules/website/components/home/FeaturedProductsSection";
 import AllProductsSection from "@/modules/website/components/home/AllProductsSection";
@@ -15,6 +16,7 @@ export default function LandingPage() {
         <DiscoveryHero />
         <BusinessStorySection />
         <FeaturedStoresSection />
+        <FeaturedZonesSection />
         <TopCategoriesSection />
         <FeaturedProductsSection />
         <AllProductsSection />

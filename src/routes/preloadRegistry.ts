@@ -62,6 +62,7 @@ export const getPreloadForPath = (path: string) => {
   if (path.startsWith("/categories/")) return Pages.preloadCategoryDetailsPage;
   if (path.startsWith("/product/")) return Pages.preloadProductDetailPage;
   if (path.startsWith("/account/orders/")) return Pages.preloadOrderDetailsPage;
+  if (path.startsWith("/zones")) return Pages.preloadZonesPage;
 
   return null;
 };

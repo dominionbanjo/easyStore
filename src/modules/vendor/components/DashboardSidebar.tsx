@@ -19,6 +19,7 @@ import {
   Check,
   Plus,
   ChevronDown,
+  GraduationCap,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -48,6 +49,7 @@ const preloadMap: Record<string, () => void> = {
   "/payouts": () => { import("@/app/(dashboard)/vendor/payouts/page"); },
   "/help": () => { import("@/app/(dashboard)/vendor/help/page"); },
   "/messages": () => { import("@/app/(dashboard)/vendor/messages/page"); },
+  "/school-zones": () => { import("@/app/(dashboard)/vendor/school-zones/page"); },
   "/staff": () => { import("@/modules/vendor/components/staff/StaffManagementPage"); },
   "/sales-terminal": () => { import("@/modules/vendor/components/sales-terminal/SalesTerminalPage"); },
   "/sales-history": () => { import("@/modules/vendor/components/sales-history/SalesHistoryPage"); },
@@ -64,6 +66,7 @@ const allVendorPreloaders: Array<() => void> = [
   () => { import("@/app/(dashboard)/vendor/payouts/page"); },
   () => { import("@/app/(dashboard)/vendor/help/page"); },
   () => { import("@/app/(dashboard)/vendor/messages/page"); },
+  () => { import("@/app/(dashboard)/vendor/school-zones/page"); },
   () => { import("@/app/(dashboard)/vendor/products/new/page"); },
   () => { import("@/modules/vendor/components/sales-terminal/SalesTerminalPage"); },
   () => { import("@/modules/vendor/components/sales-history/SalesHistoryPage"); },
@@ -77,6 +80,7 @@ const menuItems = [
   { label: "Staff", icon: UserCog, to: "/staff" },
   { label: "Sales Terminal", icon: Receipt, to: "/sales-terminal" },
   { label: "Sales History", icon: Receipt, to: "/sales-history" },
+  { label: "School Zones", icon: GraduationCap, to: "/school-zones" },
   { label: "Payouts", icon: BanknoteIcon, to: "/payouts" },
   { label: "Templates", icon: Palette, to: "/templates" },
   { label: "Messages", icon: MessageSquare, to: "/messages" },

@@ -111,6 +111,14 @@ const NewArrivalsPageImport = () => import("@/app/new-arrivals/page");
 export const NewArrivalsPage = lazy(NewArrivalsPageImport);
 export const preloadNewArrivalsPage = NewArrivalsPageImport;
 
+const ZonesPageImport = () => import("@/app/zones/page");
+export const ZonesPage = lazy(ZonesPageImport);
+export const preloadZonesPage = ZonesPageImport;
+
+const ZoneDetailsPageImport = () => import("@/app/zones/[identifier]/page");
+export const ZoneDetailsPage = lazy(ZoneDetailsPageImport);
+export const preloadZoneDetailsPage = ZoneDetailsPageImport;
+
 /* ───────────────── AUTH PAGES ───────────────── */
 const LoginPageImport = () => import("@/app/(auth)/login/page");
 export const LoginPage = lazy(LoginPageImport);
@@ -191,6 +199,11 @@ const VendorMessagesPageImport = () => import("@/app/(dashboard)/vendor/messages
 export const VendorMessagesPage = lazy(VendorMessagesPageImport);
 export const preloadVendorMessagesPage = VendorMessagesPageImport;
 
+const VendorSchoolZonesPageImport = () =>
+  import("@/app/(dashboard)/vendor/school-zones/page");
+export const VendorSchoolZonesPage = lazy(VendorSchoolZonesPageImport);
+export const preloadVendorSchoolZonesPage = VendorSchoolZonesPageImport;
+
 /* ───────────────── STAFF PAGES ───────────────── */
 const StaffManagementPageImport = () =>
   import("@/modules/vendor/components/staff/StaffManagementPage").then((m) => ({ default: m.StaffManagementPage }));
@@ -225,6 +238,11 @@ const SuperAdminVendorsPageImport = () =>
   import("@/app/(dashboard)/admin/vendors/page");
 export const SuperAdminVendorsPage = lazy(SuperAdminVendorsPageImport);
 export const preloadSuperAdminVendorsPage = SuperAdminVendorsPageImport;
+
+const SuperAdminSchoolZonesPageImport = () =>
+  import("@/app/(dashboard)/admin/school-zones/page");
+export const SuperAdminSchoolZonesPage = lazy(SuperAdminSchoolZonesPageImport);
+export const preloadSuperAdminSchoolZonesPage = SuperAdminSchoolZonesPageImport;
 
 const SuperAdminUsersPageImport = () =>
   import("@/app/(dashboard)/admin/users/page");
