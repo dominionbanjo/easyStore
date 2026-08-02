@@ -15,6 +15,8 @@ import {
   MapPin,
 } from "lucide-react";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
 export default function Footer() {
   const [subEmail, setSubEmail] = useState("");
   const [subscribing, setSubscribing] = useState(false);
@@ -24,16 +26,23 @@ export default function Footer() {
     if (!subEmail) return;
     setSubscribing(true);
     try {
-      const res = await fetch("/newsletter/subscribe", {
+      const res = await fetch(`${API_URL}/newsletter/subscribe`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: subEmail, location: "Lagos, Nigeria" }),
       });
-      if (!res.ok) throw new Error((await res.json())?.message || "Failed");
+      const body = await res.json().catch(() => null);
+      if (!res.ok) {
+        throw new Error(
+          (body as { message?: string } | null)?.message || "Failed",
+        );
+      }
       toast.success("Subscribed successfully!");
       setSubEmail("");
-    } catch (err: any) {
-      toast.error(err?.message || "Subscription failed");
+    } catch (err: unknown) {
+      toast.error(
+        err instanceof Error ? err.message : "Subscription failed",
+      );
     }
     setSubscribing(false);
   };
@@ -183,15 +192,19 @@ export default function Footer() {
             </p>
             <form className="relative" onSubmit={handleSubscribe}>
               <Input
+                type="email"
                 placeholder="Enter your email"
                 value={subEmail}
                 onChange={(e) => setSubEmail(e.target.value)}
-                className="bg-muted/50 border-border text-foreground placeholder:text-muted-foreground rounded-sm pr-12 h-12 focus-visible:ring-primary/20"
+                disabled={subscribing}
+                required
+                className="bg-muted/50 border-border text-foreground placeholder:text-muted-foreground rounded-sm pr-12 h-12 focus-visible:ring-primary/20 disabled:opacity-60"
               />
               <Button
                 type="submit"
                 size="icon"
                 isLoading={subscribing}
+                disabled={subscribing}
                 className="absolute right-1 top-1 h-10 w-10 rounded-sm bg-primary text-primary-foreground hover:bg-primary/90"
               >
                 <Send className="w-4 h-4 ml-0.5" />

@@ -6,7 +6,6 @@ import TopCategoriesSection from "@/modules/website/components/home/TopCategorie
 import FeaturedProductsSection from "@/modules/website/components/home/FeaturedProductsSection";
 import AllProductsSection from "@/modules/website/components/home/AllProductsSection";
 import TrustedBy from "@/modules/website/components/home/TrustedBy";
-import TestimonialsCarousel from "@/modules/website/components/home/TestimonialsSection";
 
 export default function LandingPage() {
   return (
@@ -20,7 +19,6 @@ export default function LandingPage() {
         <FeaturedProductsSection />
         <AllProductsSection />
         <TrustedBy />
-        <TestimonialsCarousel />
       </div>
     </div>
   );
