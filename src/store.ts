@@ -15,6 +15,7 @@ import productDraftReducer from "../src/features/productDraftSlice";
 import cartReducer from "./features/cartSlice";
 import { saleCartReducer } from "./features/saleCartSlice";
 import uiReducer from "./features/uiSlice";
+import locationReducer from "./features/locationSlice";
 import { apiManager } from "./services/apiManager";
 
 const rootReducer = combineReducers({
@@ -23,6 +24,7 @@ const rootReducer = combineReducers({
   cart: cartReducer,
   saleCart: saleCartReducer,
   ui: uiReducer,
+  location: locationReducer,
   [apiManager.reducerPath]: apiManager.reducer,
 });
 
@@ -30,7 +32,7 @@ const persistConfig = {
   key: "root",
   version: 1,
   storage,
-  whitelist: ["productDraft", "cart", "saleCart"],
+  whitelist: ["productDraft", "cart", "saleCart", "location"],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

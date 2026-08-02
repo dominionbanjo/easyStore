@@ -39,6 +39,10 @@ import {
 
 type RequiredModal = "address" | "select-address" | "bank" | "payment-security" | null;
 
+// ⭐ Checkout groups are keyed by store (a vendor may own multiple stores).
+const storeKey = (vendor: ICheckoutSummaryVendor) =>
+  vendor.store_id ?? vendor.vendor_id;
+
 export default function CheckoutPage() {
   const navigate = useNavigate();
   const { data: cartData, isLoading: isCartLoading } = useGetCartQuery();
@@ -77,11 +81,11 @@ export default function CheckoutPage() {
   const [selectedRates, setSelectedRates] = useState<Record<string, string>>(
     {},
   );
-  const [activeVendorId, setActiveVendorId] = useState<string | null>(null);
+  const [activeStoreKey, setActiveStoreKey] = useState<string | null>(null);
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(
     null,
   );
-  const [escrowByVendor, setEscrowByVendor] = useState<Record<string, boolean>>({});
+  const [escrowByStore, setEscrowByStore] = useState<Record<string, boolean>>({});
 
   /* ───────── FETCH SUMMARY ───────── */
   useEffect(() => {
@@ -120,10 +124,10 @@ export default function CheckoutPage() {
 
   useEffect(() => {
     // Default open first accordion item if available
-    if (summaryData.length > 0 && !activeVendorId) {
-      setActiveVendorId(summaryData[0].vendor_id);
+    if (summaryData.length > 0 && !activeStoreKey) {
+      setActiveStoreKey(storeKey(summaryData[0]));
     }
-  }, [summaryData, activeVendorId]);
+  }, [summaryData, activeStoreKey]);
 
   /* ───────── MODAL SEQUENCING & REFETCHING ───────── */
   useEffect(() => {
@@ -173,10 +177,11 @@ export default function CheckoutPage() {
   };
 
   const executeCheckout = async (vendor: ICheckoutSummaryVendor, isEscrow: boolean) => {
-    const selectedRateId = selectedRates[vendor.vendor_id];
+    const vendorKey = storeKey(vendor);
+    const selectedRateId = selectedRates[vendorKey];
     if (!selectedRateId && vendor.delivery_options.length > 0) {
       toast.error(`Please select a delivery region for ${vendor.store_name}`);
-      setActiveVendorId(vendor.vendor_id);
+      setActiveStoreKey(vendorKey);
       return;
     }
 
@@ -232,8 +237,8 @@ export default function CheckoutPage() {
 
   if (isCartLoading || !cart) return null;
 
-  const handleRateSelection = (vendorId: string, rateId: string) => {
-    setSelectedRates((prev) => ({ ...prev, [vendorId]: rateId }));
+  const handleRateSelection = (storeKeyId: string, rateId: string) => {
+    setSelectedRates((prev) => ({ ...prev, [storeKeyId]: rateId }));
   };
 
   return (
@@ -347,11 +352,12 @@ export default function CheckoutPage() {
                   <Accordion
                     type="single"
                     collapsible
-                    value={activeVendorId || undefined}
-                    onValueChange={(val) => val && setActiveVendorId(val)}
+                    value={activeStoreKey || undefined}
+                    onValueChange={(val) => val && setActiveStoreKey(val)}
                   >
                     {summaryData.map((vendor, index) => {
-                      const selectedRateId = selectedRates[vendor.vendor_id];
+                      const vendorKey = storeKey(vendor);
+                      const selectedRateId = selectedRates[vendorKey];
                       const selectedRate = vendor.delivery_options.find(
                         (r) => r.id === selectedRateId,
                       );
@@ -368,7 +374,7 @@ export default function CheckoutPage() {
                         200000,
                       );
 
-                      const vendorEscrow = escrowByVendor[vendor.vendor_id] ?? false;
+                      const vendorEscrow = escrowByStore[vendorKey] ?? false;
 
                       let escrowFee = 0;
                       if (vendorEscrow) {
@@ -382,18 +388,18 @@ export default function CheckoutPage() {
                       const grandTotal = rawSubtotal + shippingFee + totalServiceCharge;
 
                       const setVendorEscrow = (val: boolean) => {
-                        setEscrowByVendor((prev) => ({ ...prev, [vendor.vendor_id]: val }));
+                        setEscrowByStore((prev) => ({ ...prev, [vendorKey]: val }));
                       };
 
                       return (
                         <AccordionItem
-                          key={vendor.vendor_id}
-                          value={vendor.vendor_id}
+                          key={vendorKey}
+                          value={vendorKey}
                           className="border-none mb-4"
                         >
                           <AccordionTrigger
                             className={`px-4 py-3 rounded-sm border hover:bg-muted/30 transition-colors [&[data-state=open]]:rounded-b-none ${
-                              activeVendorId === vendor.vendor_id
+                              activeStoreKey === vendorKey
                                 ? "bg-muted/50 border-primary/20"
                                 : "bg-card border-border/40"
                             }`}
@@ -423,7 +429,7 @@ export default function CheckoutPage() {
                               total={grandTotal / 100}
                               isProcessing={
                                 (isCreatingEscrowOrder || isCreatingDirectOrder) &&
-                                activeVendorId === vendor.vendor_id
+                                activeStoreKey === vendorKey
                               }
                               disabled={!hasAddress || !isBankVerified}
                               missingAddress={!hasAddress}
@@ -432,7 +438,7 @@ export default function CheckoutPage() {
                               deliveryOptions={vendor.delivery_options}
                               selectedDeliveryRateId={selectedRateId}
                               onSelectDeliveryRate={(rateId: string) =>
-                                handleRateSelection(vendor.vendor_id, rateId)
+                                handleRateSelection(vendorKey, rateId)
                               }
                               isEscrow={vendorEscrow}
                               setIsEscrow={setVendorEscrow}

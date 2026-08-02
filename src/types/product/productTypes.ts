@@ -185,14 +185,15 @@ export interface PaginationArgs {
   page?: number;
   limit?: number;
   q?: string;
+  sort?: string;
+  state?: string;
+  local?: boolean;
 }
 
 export interface SearchProductsArgs extends PaginationArgs {
   q: string;
-  sort?: string;
   minPrice?: number;
   maxPrice?: number;
-  state?: string;
   rating?: number;
   inStock?: boolean;
   filter?: string;

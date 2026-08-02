@@ -10,30 +10,41 @@ import ProductGridCard from "@/components/shared/ProductGridCard";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import { cn } from "@/lib/utils";
 import { LayoutGrid } from "lucide-react";
 import { Modal } from "@/components/shared/Modal";
+import { selectLocationState } from "@/features/locationSlice";
 
 export default function DiscoveryPage() {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [isDiscoveryOpen, setIsDiscoveryOpen] = useState(false);
+  const locationState = useSelector(selectLocationState);
 
   const { data: featuredProducts, isLoading: isFeaturedLoading } =
     useGetFeaturedProductsQuery(
-      { limit: 4 },
+      {
+        limit: 4,
+        state: locationState ?? undefined,
+        local: locationState ? true : undefined,
+      },
       { refetchOnMountOrArgChange: true },
     );
   const { data: trendingProducts, isLoading: isTrendingLoading } =
     useGetAllProductsQuery({
       limit: 4,
       sort: "rating",
-    } as any);
+      state: locationState ?? undefined,
+      local: locationState ? true : undefined,
+    });
   const { data: newArrivals, isLoading: isNewArrivalsLoading } =
     useGetAllProductsQuery({
       limit: 4,
       sort: "newest",
-    } as any);
+      state: locationState ?? undefined,
+      local: locationState ? true : undefined,
+    });
 
   const handleSearch = () => {
     if (searchQuery.trim()) {

@@ -149,18 +149,8 @@ export interface CreateOnlineOrderArgs {
   delivery_address_id?: string;
 }
 
-export interface RecordVendorOfflineSaleArgs {
-  items: {
-    product_id: string;
-    variant_id?: string;
-    quantity: number;
-  }[];
-  customer_name?: string;
-  customer_email?: string;
-  notes?: string;
-}
-
 export interface ICheckoutSummaryVendor {
+  store_id: string | null;
   vendor_id: string;
   store_name: string;
   items: ICartItem[];
@@ -419,19 +409,6 @@ export const ordersApi = apiManager.injectEndpoints({
       invalidatesTags: ["User", "Store"],
     }),
 
-    /* ───────── RECORD MANUAL OFFLINE SALE ───────── */
-    recordVendorOfflineSale: builder.mutation<
-      { status: string; data: { success: boolean; order: IOrder } },
-      RecordVendorOfflineSaleArgs
-    >({
-      query: (body) => ({
-        url: "orders/vendor/offline-sale",
-        method: "POST",
-        body,
-      }),
-      invalidatesTags: ["Store"], // Refetch analytics & dashboard
-    }),
-
     /* ───────── OFFLINE FULFILLMENT (SELLER) ───────── */
 
     fulfillOfflineOrder: builder.mutation<any, string>({
@@ -485,7 +462,6 @@ export const {
   useGetOrderByIdQuery,
   useUpdateOrderStatusMutation,
   useCancelOrderMutation,
-  useRecordVendorOfflineSaleMutation,
   useFulfillOfflineOrderMutation,
   useUpdateDeliveryStatusMutation,
   useGetOrderReceiptMutation,

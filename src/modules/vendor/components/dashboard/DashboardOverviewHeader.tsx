@@ -7,8 +7,6 @@ import { clearProductDraft } from "@/features/productDraftSlice";
 
 import { useGetMyStoreQuery } from "@/services/storeApi";
 import { getAppPath } from "@/utils/subdomain";
-import { RecordOfflineSaleModal } from "./RecordOfflineSaleModal";
-import { useState } from "react";
 import { StoreShareAction } from "./StoreShareAction";
 
 export function DashboardOverviewHeader() {
@@ -16,7 +14,6 @@ export function DashboardOverviewHeader() {
   const navigate = useNavigate();
   const { currentUser } = useSelector((state: RootState) => state.user);
   const { data: store } = useGetMyStoreQuery();
-  const [offlineModalOpen, setOfflineModalOpen] = useState(false);
 
   return (
     <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-8">
@@ -47,15 +44,6 @@ export function DashboardOverviewHeader() {
         </Button>
         <StoreShareAction store={store} />
         <Button
-          variant="outline"
-          size="sm"
-          className="flex gap-2 border-border/60"
-          onClick={() => setOfflineModalOpen(true)}
-        >
-          <span className="hidden sm:inline">Record Offline Sale</span>
-          <span className="sm:hidden">Record Sale</span>
-        </Button>
-        <Button
           size="sm"
           className="gap-2  "
           onClick={() => {
@@ -68,11 +56,6 @@ export function DashboardOverviewHeader() {
           <span className="xs:hidden">Add</span>
         </Button>
       </div>
-
-      <RecordOfflineSaleModal
-        open={offlineModalOpen}
-        onOpenChange={setOfflineModalOpen}
-      />
     </div>
   );
 }

@@ -117,6 +117,16 @@ export default function VendorDashboardPage() {
       {/* ─── Header Section ─── */}
       <DashboardOverviewHeader />
 
+      {/* ─── Escrow Payments Toggle ─── */}
+      {data && (
+        <div className="border-t border-border/40 py-3">
+          <EscrowToggle
+            storeId={data?.summary?.id ?? ""}
+            escrowEnabled={data?.summary?.escrow_enabled ?? false}
+          />
+        </div>
+      )}
+
       {/* ─── Status Banners (only after data loads, never on cache flash) ─── */}
       {data && !isLoading && storeStatus === "pending" && isReady && (
         <ReviewStatusBanner />
@@ -329,11 +339,6 @@ export default function VendorDashboardPage() {
                     </p>
                   </div>
                 )}
-
-              <EscrowToggle
-                storeId={data?.summary?.id ?? ""}
-                escrowEnabled={data?.summary?.escrow_enabled ?? false}
-              />
             </div>
           </div>
       </div>

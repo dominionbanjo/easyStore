@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useMemo } from "react";
 import SmartLink from "@/components/shared/SmartLink";
 import { ArrowRight, LayoutGrid, Tag } from "lucide-react";
 import { useGetCategoriesQuery } from "@/services/productDetailsApi";
@@ -6,6 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { WEBSITE_ROUTES } from "@/routes";
 
 interface TopCategoriesSectionProps {
   className?: string;
@@ -34,7 +35,15 @@ export default function TopCategoriesSection({
     limit: 8,
   });
 
-  const categories = data?.data ?? [];
+  // Only categories that actually have products, most popular first
+  const categories = useMemo(() => {
+    const all = data?.data ?? [];
+    return all
+      .filter((c) => (c.products_count ?? 0) > 0)
+      .sort((a, b) => (b.products_count ?? 0) - (a.products_count ?? 0))
+      .slice(0, 8);
+  }, [data]);
+
   const isEmpty = !isLoading && !isError && categories.length === 0;
 
   return (
@@ -88,7 +97,7 @@ export default function TopCategoriesSection({
             {categories.map((category, index) => (
               <SmartLink
                 key={category.id}
-                to={`/s?q=${encodeURIComponent(category.name)}`}
+                to={`${WEBSITE_ROUTES.CATEGORIES}/${category.slug}`}
                 className="block group"
               >
                 <Card

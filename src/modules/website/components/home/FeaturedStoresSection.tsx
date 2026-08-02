@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { useSelector } from "react-redux";
 import SmartLink from "@/components/shared/SmartLink";
 import { ArrowRight, Store as StoreIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -6,6 +7,7 @@ import { useGetStoresQuery } from "@/services/storeApi";
 import StoreCard from "@/components/shared/StoreCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/shared/EmptyState";
+import { selectLocationState } from "@/features/locationSlice";
 
 interface FeaturedStoresSectionProps {
   className?: string;
@@ -15,12 +17,15 @@ export default function FeaturedStoresSection({
   className = "",
 }: FeaturedStoresSectionProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const locationState = useSelector(selectLocationState);
 
   // Fetch trending stores (weighted ranking: sales, rating, active products)
   const { data, isLoading, isError } = useGetStoresQuery({
     limit: 12,
     page: 1,
     sort: "trending",
+    state: locationState ?? undefined,
+    local: locationState ? true : undefined,
   });
 
   const stores = data?.data.items ?? [];

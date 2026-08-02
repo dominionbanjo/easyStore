@@ -2,6 +2,7 @@ import { useMemo, useEffect } from "react";
 import { SearchX } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 import { FormProvider, useForm } from "react-hook-form";
+import { useSelector } from "react-redux";
 
 import StoreCard from "@/components/shared/StoreCard";
 import StoreHeader from "@/modules/website/components/store/StoreHeader";
@@ -9,6 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 import { useGetStoresQuery, useSearchStoresQuery } from "@/services/storeApi";
 import { Pagination } from "@/components/shared/Pagination";
+import { selectLocationState } from "@/features/locationSlice";
 
 /* ───────────────── TYPES ───────────────── */
 
@@ -32,6 +34,26 @@ export default function StoresPage() {
   const search = methods.watch("search");
   const selectedState = methods.watch("state");
   const page = Number(searchParams.get("page") ?? 1);
+  const locationState = useSelector(selectLocationState);
+
+  // Location preference is a soft signal (local-first ranking) kept in the
+  // `loc` URL param. An explicit `state` (StoreHeader filter) takes
+  // precedence and stays a hard filter.
+  useEffect(() => {
+    if (!searchParams.get("state") && locationState) {
+      const next = new URLSearchParams(searchParams);
+      next.set("loc", locationState);
+      if (!next.get("page")) next.set("page", "1");
+      setSearchParams(next);
+    } else if (!searchParams.get("state") && !locationState) {
+      const next = new URLSearchParams(searchParams);
+      if (next.has("loc")) {
+        next.delete("loc");
+        setSearchParams(next);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [locationState]);
 
   /* ───────────────── SYNC SEARCH → URL ───────────────── */
 
@@ -67,14 +89,16 @@ export default function StoresPage() {
   /* ───────────────── QUERY ARGS ───────────────── */
 
   const hasSearch = Boolean(search?.trim());
+  const loc = searchParams.get("loc") || undefined;
 
   const listArgs = useMemo(
     () => ({
       page,
       limit: 20,
-      state: selectedState || undefined,
+      state: selectedState || loc || undefined,
+      local: selectedState ? undefined : loc ? true : undefined,
     }),
-    [page, selectedState],
+    [page, selectedState, loc],
   );
 
   const searchArgs = useMemo(
@@ -82,9 +106,10 @@ export default function StoresPage() {
       q: search,
       page,
       limit: 20,
-      state: selectedState || undefined,
+      state: selectedState || loc || undefined,
+      local: selectedState ? undefined : loc ? true : undefined,
     }),
-    [search, page, selectedState],
+    [search, page, selectedState, loc],
   );
 
   /* ───────────────── API CALLS ───────────────── */

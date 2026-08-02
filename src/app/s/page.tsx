@@ -1,5 +1,6 @@
 import { useMemo, useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { useSearchProductsQuery } from "@/services/productApi";
 import { SearchResultsGrid } from "@/modules/website/components/search/SearchResultsGrid";
 import { SearchResultsHeader } from "@/modules/website/components/search/SearchResultsHeader";
@@ -7,6 +8,7 @@ import {
   SearchFiltersSidebar,
   MobileSearchFilters,
 } from "@/modules/website/components/search/Sidebar";
+import { selectLocationState } from "@/features/locationSlice";
 
 function useDebouncedValue<T>(value: T, delay = 400): T {
   const [debounced, setDebounced] = useState(value);
@@ -20,7 +22,27 @@ function useDebouncedValue<T>(value: T, delay = 400): T {
 }
 
 export default function SearchResultsPage() {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const locationState = useSelector(selectLocationState);
+
+  /* ───────────────── PREFILL LOCATION FROM SLICE ───────────────── */
+  // The location preference is a soft signal (local-first ranking), kept in
+  // the `loc` param. An explicit `state` param (sidebar filter) takes
+  // precedence and stays a hard filter.
+  useEffect(() => {
+    if (!searchParams.get("state") && locationState) {
+      const next = new URLSearchParams(searchParams);
+      next.set("loc", locationState);
+      setSearchParams(next, { replace: true });
+    } else if (!searchParams.get("state") && !locationState) {
+      const next = new URLSearchParams(searchParams);
+      if (next.has("loc")) {
+        next.delete("loc");
+        setSearchParams(next, { replace: true });
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [locationState]);
 
   /* ───────────────── QUERY PARAMS ───────────────── */
   const rawQueryArgs = useMemo(() => {
@@ -36,7 +58,7 @@ export default function SearchResultsPage() {
         params[key] = Number(value);
       }
       // Known single-value strings
-      else if (["q", "sort", "state"].includes(key)) {
+      else if (["q", "sort", "state", "loc"].includes(key)) {
         params[key] = value;
       }
       // Everything else is treated as a dynamic filter
@@ -48,12 +70,20 @@ export default function SearchResultsPage() {
       }
     });
 
+    // Explicit sidebar `state` wins (hard filter); `loc` (location
+    // preference) is a soft local-first signal.
+    const explicitState = params.state as string | undefined;
+    const loc = params.loc as string | undefined;
+    delete params.loc;
+
     return {
       q: params.q ?? "",
       page: params.page ?? 1,
       limit: 15,
       sort: params.sort ?? undefined,
       ...params,
+      state: explicitState ?? loc ?? undefined,
+      local: !explicitState && loc ? true : undefined,
     };
   }, [searchParams]);
 

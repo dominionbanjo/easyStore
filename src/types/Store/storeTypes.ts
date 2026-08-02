@@ -50,6 +50,7 @@ export interface GetStoresArgs {
   search?: string;
   state?: string;
   sort?: string;
+  local?: boolean;
 }
 
 /* ───────────────── SEARCH STORES ───────────────── */

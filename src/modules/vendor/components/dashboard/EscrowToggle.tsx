@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { ShieldCheck } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
 import { useUpdateStoreMutation } from "@/services/storeApi";
@@ -28,16 +27,13 @@ export function EscrowToggle({ storeId, escrowEnabled }: EscrowToggleProps) {
 
   return (
     <>
-      <div className="p-4 rounded-sm border border-border/40 bg-card hover:bg-muted/30 transition-colors flex items-center gap-4 group">
-        <div className="h-10 w-10 rounded-sm bg-primary/10 text-primary flex items-center justify-center shrink-0">
-          <ShieldCheck className="h-5 w-5" />
-        </div>
-        <div className="flex-1 min-w-0">
+      <div className="flex items-start justify-between w-full gap-4">
+        <div className="min-w-0">
           <p className="text-sm font-bold">Escrow Payments</p>
-          <p className="text-xs text-muted-foreground leading-tight">
-            {escrowEnabled
-              ? "Buyers can pay via escrow at checkout"
-              : "Buyers can only pay directly"}
+          <p className="text-xs text-muted-foreground font-medium leading-relaxed mt-1 max-w-xl">
+            When enabled, buyers can choose escrow at checkout — funds are
+            held safely by us until they confirm delivery, then released to
+            you. This builds buyer trust and protects you against disputes.
           </p>
         </div>
         <Switch checked={escrowEnabled} onCheckedChange={handleToggle} />

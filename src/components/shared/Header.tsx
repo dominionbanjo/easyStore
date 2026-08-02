@@ -64,6 +64,7 @@ import { Messages3 } from "iconsax-react";
 import { useGetUserConversationsQuery } from "@/services/messagingApi";
 import { setMobileMenuOpen, setCartOpen } from "@/features/uiSlice";
 import { Logo } from "./Logo";
+import StateSelector from "./StateSelector";
 
 export default function Header() {
   const { isMobileMenuOpen, isCartOpen } = useSelector(
@@ -409,8 +410,11 @@ export default function Header() {
                   </nav>
                 </div>
 
-                {/* Sidebar Footer: Theme Toggle & Logout */}
+                {/* Sidebar Footer: Location, Theme Toggle & Logout */}
                 <div className="p-6 pb-24 sm:pb-6 border-t border-zinc-100 dark:border-white/10 space-y-4">
+                  <div className="md:hidden">
+                    <StateSelector />
+                  </div>
                   <button
                     onClick={toggleTheme}
                     className="flex items-center justify-between w-full px-4 py-3 rounded-sm bg-zinc-100 dark:bg-white/5 hover:bg-zinc-200 dark:hover:bg-white/10 transition-all text-foreground"
@@ -494,7 +498,8 @@ export default function Header() {
 
 
         {/* ---------- MIDDLE: Search ---------- */}
-        <div className="hidden md:flex flex-1 justify-center px-4 lg:px-6 max-w-[600px] mx-auto">
+        <div className="hidden md:flex flex-1 justify-center items-center gap-2.5 px-4 lg:px-6 max-w-[680px] mx-auto">
+          <StateSelector />
           <form
             onSubmit={handleSearch}
             className="flex w-full items-center rounded-sm bg-white dark:bg-neutral-900 border border-border/50 dark:border-white/10  focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all duration-300"

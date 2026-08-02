@@ -1,9 +1,11 @@
 import { useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import { ProductCard } from "@/components/shared/ProductCard";
 import { Pagination } from "@/components/shared/Pagination";
 import { LayoutGrid } from "lucide-react";
 import { useGetAllProductsQuery } from "@/services/productApi";
 import { ProductSection } from "./ProductSection";
+import { selectLocationState } from "@/features/locationSlice";
 
 const FALLBACK_IMAGE =
   "https://images.unsplash.com/photo-1580894732444-8ecded7900cd?auto=format&fit=crop&w=1200&q=60";
@@ -11,10 +13,13 @@ const FALLBACK_IMAGE =
 export default function AllProductsSection() {
   const titleRef = useRef<HTMLDivElement | null>(null);
   const [page, setPage] = useState(1);
+  const locationState = useSelector(selectLocationState);
 
   const { data, isLoading, isFetching, isError } = useGetAllProductsQuery({
     page,
     limit: 20,
+    state: locationState ?? undefined,
+    local: locationState ? true : undefined,
   });
 
   const products = data?.data.items ?? [];

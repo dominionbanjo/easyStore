@@ -1,16 +1,21 @@
 import { ProductCard } from "@/components/shared/ProductCard";
 import { useGetFeaturedProductsQuery } from "@/services/productApi";
+import { useSelector } from "react-redux";
 import { Sparkles, ArrowRight } from "lucide-react";
 import { ProductSection } from "./ProductSection";
 import SmartLink from "@/components/shared/SmartLink";
 import { Button } from "@/components/ui/button";
+import { selectLocationState } from "@/features/locationSlice";
 
 const FALLBACK_IMAGE =
   "https://images.unsplash.com/photo-1580894732444-8ecded7900cd?auto=format&fit=crop&w=1200&q=60";
 
 export default function FeaturedProductsSection() {
+  const locationState = useSelector(selectLocationState);
   const { data, isLoading, isError } = useGetFeaturedProductsQuery({
     limit: 8,
+    state: locationState ?? undefined,
+    local: locationState ? true : undefined,
   });
 
   const products = data?.data?.items ?? [];

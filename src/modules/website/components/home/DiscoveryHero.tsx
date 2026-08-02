@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Sparkles, TrendingUp, Zap, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import SmartLink from "@/components/shared/SmartLink";
+import StateSelector from "@/components/shared/StateSelector";
 import { WEBSITE_ROUTES } from "@/routes";
 
 export default function DiscoveryHero() {
@@ -40,6 +41,9 @@ export default function DiscoveryHero() {
               </span>
             </h1>
 
+            <div className="relative max-w-xl mx-auto mb-4">
+              <StateSelector />
+            </div>
             <div className="relative max-w-xl mx-auto">
               <input
                 type="text"
