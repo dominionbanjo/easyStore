@@ -528,11 +528,6 @@ export default function Header() {
 
         {/* ---------- RIGHT: Auth / Cart / Mobile Search ---------- */}
         <div className="flex items-center justify-end gap-1.5 sm:gap-5 flex-shrink-0">
-          {/* Mobile Location */}
-          <div className="md:hidden flex-shrink-0">
-            <StateSelector align="end" />
-          </div>
-
           {/* Mobile Search Trigger */}
           <Button
             variant="ghost"

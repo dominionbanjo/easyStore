@@ -1,9 +1,9 @@
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/store";
 import { Home, Discover, ShoppingBag, User, Briefcase } from "iconsax-react";
 import { cn } from "@/lib/utils";
-import { WEBSITE_ROUTES, AUTH_ROUTES } from "@/routes";
+import { WEBSITE_ROUTES } from "@/routes";
 
 
 import {
@@ -21,7 +21,6 @@ import { useGetCartQuery } from "@/services/cartApi";
 export function BottomNav() {
   const dispatch = useDispatch();
   const location = useLocation();
-  const navigate = useNavigate();
   const isAuthenticated = useSelector(
     (state: RootState) => state.user.isAuthenticated,
   );
@@ -37,11 +36,7 @@ export function BottomNav() {
     : localCart.localItems.length;
 
   const handleMoreClick = () => {
-    if (isAuthenticated) {
-      dispatch(setMobileMenuOpen(true));
-    } else {
-      navigate(AUTH_ROUTES.LOGIN);
-    }
+    dispatch(setMobileMenuOpen(true));
   };
 
   // 🚀 Auto-preload mobile routes on mount
