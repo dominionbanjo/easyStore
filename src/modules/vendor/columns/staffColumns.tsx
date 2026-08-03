@@ -30,8 +30,9 @@ export const staffColumns: ColumnDef<StaffMember>[] = [
     header: "Status",
     cell: ({ row }) => {
       const status = row.original.status;
-      const variant = status === "active" ? "success" : status === "suspended" ? "destructive" : "warning";
-      return <Badge variant={variant as any}>{status}</Badge>;
+      const variant: "destructive" | "outline" =
+        status === "suspended" ? "destructive" : "outline";
+      return <Badge variant={variant}>{status}</Badge>;
     },
   },
   {

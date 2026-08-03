@@ -9,12 +9,13 @@ import {
 import NavigationProgressBar from "@/components/shared/NavigationProgressBar";
 import { useAppSelector } from "@/hooks";
 import { selectCurrentUser } from "@/features/userSlice";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { getAppPath } from "@/utils/subdomain";
 import { ConfirmActionDialog } from "./shared/ConfirmActionDialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { useLogoutMutation } from "@/services/authApi";
+import { getAdminPageMeta } from "@/modules/admin/layout/adminPageMeta";
 
 interface SuperAdminHeaderProps {
   onMenuToggle: () => void;
@@ -27,8 +28,11 @@ export default function SuperAdminHeader({
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const navigate = useNavigate();
+  const location = useLocation();
   const user = useAppSelector(selectCurrentUser);
   const [logout, { isLoading: isLoggingOut }] = useLogoutMutation();
+
+  const pageMeta = getAdminPageMeta(location.pathname);
 
   useEffect(() => {
     const saved =
@@ -65,20 +69,24 @@ export default function SuperAdminHeader({
 
   return (
     <>
-      <header className="flex items-center justify-between px-6 py-4 border-b border-border/30 bg-background sticky top-0 z-30">
-        <div className="flex items-center gap-3">
+      <header className="flex items-center justify-between px-3 sm:px-6 py-3.5 border-b border-border/30 bg-background sticky top-0 z-30">
+        <div className="flex items-center gap-3 min-w-0">
           <Button
             variant="ghost"
             size="icon"
-            className="lg:hidden"
+            className="lg:hidden shrink-0"
             onClick={onMenuToggle}
           >
             <Menu className="h-5 w-5" />
           </Button>
-          <h2 className="font-semibold text-lg hidden sm:block">
-            Super Admin Dashboard
-          </h2>
-          <h2 className="font-semibold text-lg sm:hidden">Admin</h2>
+          <div className="flex flex-col min-w-0">
+            <h2 className="font-bold text-lg sm:text-xl tracking-tight text-foreground truncate">
+              {pageMeta.title}
+            </h2>
+            <p className="text-xs sm:text-sm text-muted-foreground font-medium truncate">
+              {pageMeta.description}
+            </p>
+          </div>
         </div>
 
         <div className="flex items-center gap-3">

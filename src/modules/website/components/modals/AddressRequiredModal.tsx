@@ -33,6 +33,8 @@ import {
   EditProfileSchema,
   type EditProfileFormValues,
 } from "../../validators/updateProfileValidator";
+import type { IUserAddress } from "@/types/auth/authTypes";
+import { extractErrorMessage } from "@/utils/errorHandler";
 
 type Option = { label: string; value: string };
 
@@ -168,12 +170,12 @@ export function AddressRequiredModal({
       setAddressFormMode(null);
       setEditingAddressId(null);
       reset({ address: { street: "", country: "NG", state: "", city: "", postal_code: "" } });
-    } catch (e: any) {
-      toast.error(e?.data?.message || "Failed to save");
+    } catch (e: unknown) {
+      toast.error(extractErrorMessage(e, "Failed to save"));
     }
   };
 
-  const handleEditAddress = (addr: any) => {
+  const handleEditAddress = (addr: IUserAddress) => {
     setEditingAddressId(addr.id);
     setAddressFormMode("edit");
     reset({
@@ -191,7 +193,7 @@ export function AddressRequiredModal({
     try {
       await deleteUserAddress(id).unwrap();
       toast.success("Address deleted");
-    } catch (e) {
+    } catch {
       toast.error("Delete failed");
     }
   };
@@ -212,8 +214,8 @@ export function AddressRequiredModal({
       await updateProfile({ data: formData }).unwrap();
       toast.success("Address saved");
       onClose();
-    } catch (e: any) {
-      toast.error(e?.data?.message || "Failed to save");
+    } catch (e: unknown) {
+      toast.error(extractErrorMessage(e, "Failed to save"));
     }
   };
 
@@ -305,7 +307,7 @@ export function AddressRequiredModal({
 
                          {user?.addresses && user.addresses.length > 0 ? (
                             <div className="space-y-3">
-                               {user.addresses.map((addr: any) => (
+                               {user.addresses.map((addr) => (
                                   <div key={addr.id} className="flex items-center justify-between p-4 rounded-sm border border-border/40 bg-muted/15 group/addr">
                                      <div className="flex gap-4">
                                         <div className="p-2 rounded-sm bg-primary/10 text-primary shrink-0 h-fit">

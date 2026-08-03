@@ -13,6 +13,7 @@ import { Upload, Save, Loader2, Trash2, Store, Info, Globe, Check, X, AlertCircl
 import { FormInput } from "@/components/shared/form/FormInput";
 import { FormTextarea } from "@/components/shared/form/FormTextarea";
 import { useLazyCheckSubdomainQuery } from "@/services/storeApi";
+import { extractErrorMessage } from "@/utils/errorHandler";
 
 interface StoreIdentityStepProps {
   bannerPreview: string | null;
@@ -32,8 +33,8 @@ const slugify = (text: string) => {
     .toLowerCase()
     .trim()
     .replace(/\s+/g, "-")
-    .replace(/[^\w\-]+/g, "")
-    .replace(/\-\-+/g, "-")
+    .replace(/[^\w-]+/g, "")
+    .replace(/--+/g, "-")
     .replace(/^-+/, "")
     .replace(/-+$/, "");
 };
@@ -51,6 +52,7 @@ export function StoreIdentityStep({
 }: StoreIdentityStepProps) {
   const { watch, setError, clearErrors, setValue, register } = useFormContext();
   const subdomainValue = watch("subdomain");
+  const storeNameValue = watch("store_name");
   const [checking, setChecking] = useState(false);
   const [available, setAvailable] = useState<boolean | null>(null);
   const [validationError, setValidationError] = useState<string | null>(null);
@@ -101,9 +103,11 @@ export function StoreIdentityStep({
           setValidationError(response.message || "This subdomain is already taken");
           setError("subdomain", { type: "manual", message: "Subdomain taken" });
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         setAvailable(false);
-        setValidationError(err?.data?.message || "Subdomain is already taken or invalid");
+        setValidationError(
+          extractErrorMessage(err, "Subdomain is already taken or invalid"),
+        );
         setError("subdomain", { type: "manual", message: "Subdomain invalid" });
       } finally {
         setChecking(false);
@@ -278,9 +282,7 @@ export function StoreIdentityStep({
               <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">
                 Choose a unique web address for your store. If left blank, it will default to 
                 <span className="font-bold text-emerald-600 dark:text-emerald-400 ml-1">
-                  {useFormContext().watch("store_name") 
-                    ? slugify(useFormContext().watch("store_name")) 
-                    : "your-store-name"}
+                  {storeNameValue ? slugify(storeNameValue) : "your-store-name"}
                 </span>.
               </p>
             )}

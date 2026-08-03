@@ -1,4 +1,4 @@
-import { Suspense, createContext, useContext } from "react";
+import { Suspense } from "react";
 import { Outlet, useParams } from "react-router-dom";
 import { getSubdomain } from "@/utils/subdomain";
 import { useGetStoreDetailsQuery } from "@/services/storeApi";
@@ -7,21 +7,8 @@ import { StoreThemeProvider } from "../components/StoreThemeProvider";
 import { StoreSkeleton } from "../components/skeletons/StoreSkeleton";
 import { HomeFloater } from "@/components/shared/HomeFloater";
 import ZoneMarketplace from "@/modules/website/components/zone/ZoneMarketplace";
-
-// Context to share store response with child pages (avoids duplicate fetches)
-export interface StoreData {
-  status: string;
-  message: string;
-  data: {
-    store: Record<string, unknown>;
-    theme?: Record<string, unknown> | null;
-    categories?: Record<string, unknown>[];
-  };
-}
-const StoreDataContext = createContext<StoreData | null>(null);
-export function useStoreData(): StoreData | null {
-  return useContext(StoreDataContext);
-}
+import type { IStoreTheme } from "@/types/Store/storeTypes";
+import { StoreDataContext, type StoreData } from "./storefrontContext";
 
 export default function StorefrontLayout() {
   let { slug } = useParams<{ slug: string }>();
@@ -48,20 +35,27 @@ export default function StorefrontLayout() {
 
   if (storeFailed) {
     return (
-      <main className="flex flex-col w-full bg-white dark:bg-neutral-950 text-foreground transition-colors duration-300 min-h-screen">
-        <ZoneMarketplace identifier={slug || ""} />
-      </main>
+      <>
+        <main className="flex flex-col w-full bg-white dark:bg-neutral-950 text-foreground transition-colors duration-300 min-h-screen">
+          <ZoneMarketplace identifier={slug || ""} />
+        </main>
+        <HomeFloater />
+      </>
     );
   }
 
   const storeData = storeResponse as unknown as StoreData;
-  const themeData = storeData?.data?.store
-    ? ((storeData.data.store as Record<string, unknown>).theme as Record<string, unknown>) ?? null
+  const rawTheme = storeData?.data?.store
+    ? (storeData.data.store as Record<string, unknown>).theme
     : null;
+  const themeData =
+    rawTheme && typeof rawTheme === "object"
+      ? (rawTheme as IStoreTheme)
+      : undefined;
 
   return (
     <StoreDataContext.Provider value={storeData ?? null}>
-      <StoreThemeProvider themeData={themeData as any}>
+      <StoreThemeProvider themeData={themeData}>
         <main className="flex flex-col w-full bg-white dark:bg-neutral-950 text-foreground transition-colors duration-300 min-h-screen">
           <Suspense fallback={<StoreSkeleton />}>
             <Outlet />

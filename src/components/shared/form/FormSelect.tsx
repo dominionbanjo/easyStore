@@ -56,9 +56,15 @@ export function FormSelect({
   const [open, setOpen] = React.useState(false);
   const [searchTerm, setSearchTerm] = React.useState("");
 
-  const error = (errors as any)?.[name]?.message as string | undefined;
-  const shouldShowError =
-    !!error && ((touchedFields as any)?.[name] || submitCount > 0);
+  const fieldError = (errors as Record<string, unknown>)[name];
+  const rawMessage =
+    typeof fieldError === "object" &&
+    fieldError !== null &&
+    "message" in fieldError
+      ? fieldError.message
+      : undefined;
+  const error = typeof rawMessage === "string" ? rawMessage : undefined;
+  const shouldShowError = !!error && (!!touchedFields[name] || submitCount > 0);
 
   const filteredOptions = React.useMemo(() => {
     if (!searchTerm) return options;

@@ -4,11 +4,12 @@ import { useSearchProductsQuery, useGetAllProductsQuery } from "@/services/produ
 import { Search, Loader2, Package, History } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import type { IProduct } from "@/types/product/productTypes";
 
 interface ProductPickerProps {
   isOpen: boolean;
   onClose: () => void;
-  onSelect: (product: any) => void;
+  onSelect: (product: IProduct) => void;
 }
 
 export const ProductPicker: React.FC<ProductPickerProps> = ({
@@ -97,7 +98,7 @@ export const ProductPicker: React.FC<ProductPickerProps> = ({
                     ₦{Number(product.price).toLocaleString()}
                   </p>
                   <p className="text-[10px] text-muted-foreground uppercase tracking-widest mt-1">
-                    {(product as any).brand || (product as any).store_name || "Eazystore"}
+                    {product.store_name || "Eazystore"}
                   </p>
                 </div>
                 <Button variant="outline" size="sm" className="rounded-sm text-[10px] h-7">

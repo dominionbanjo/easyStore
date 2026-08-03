@@ -18,6 +18,7 @@ import { toast } from "sonner";
 import { Search, X, User as UserIcon, Calendar, Bell, Check } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { extractErrorMessage } from "@/utils/errorHandler";
 
 interface NotificationDialogProps {
   open: boolean;
@@ -25,19 +26,32 @@ interface NotificationDialogProps {
   notification?: IAutomatedNotification | null;
 }
 
+interface NotificationFormValues {
+  title: string;
+  message: string;
+  type: "system" | "vendor" | "user" | "alert" | "announcement";
+  target: "all" | "vendors" | "users" | "specific";
+  scheduled_at: string;
+  is_recurring: boolean;
+  recurrence_type: "daily" | "weekly" | "monthly";
+  recurrence_days: string[];
+  recurrence_time: string;
+  recurrence_day_of_month: string[];
+}
+
 export function NotificationDialog({ open, onOpenChange, notification }: NotificationDialogProps) {
-  const methods = useForm({
+  const methods = useForm<NotificationFormValues>({
     defaultValues: {
       title: "",
       message: "",
-      type: "system" as any,
-      target: "all" as "all" | "vendors" | "users" | "specific",
+      type: "system",
+      target: "all",
       scheduled_at: "",
       is_recurring: false,
-      recurrence_type: "daily" as any,
-      recurrence_days: [] as string[],
+      recurrence_type: "daily",
+      recurrence_days: [],
       recurrence_time: "12:00",
-      recurrence_day_of_month: [] as string[],
+      recurrence_day_of_month: [],
     }
   });
 
@@ -92,7 +106,7 @@ export function NotificationDialog({ open, onOpenChange, notification }: Notific
     { skip: target !== "specific" || userSearch.length < 2 }
   );
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: NotificationFormValues) => {
     if (data.target === "specific" && selectedEmails.length === 0) {
       toast.error("Please select at least one recipient");
       return;
@@ -125,8 +139,8 @@ export function NotificationDialog({ open, onOpenChange, notification }: Notific
       reset();
       setSelectedEmails([]);
       setUserSearch("");
-    } catch (error: any) {
-      toast.error(error?.data?.message || "Failed to save notification");
+    } catch (error: unknown) {
+      toast.error(extractErrorMessage(error, "Failed to save notification"));
     }
   };
 

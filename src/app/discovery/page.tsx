@@ -6,21 +6,30 @@ import {
   useGetFeaturedProductsQuery,
   useGetAllProductsQuery,
 } from "@/services/productApi";
+import { useGetZonesQuery } from "@/services/schoolZoneApi";
 import ProductGridCard from "@/components/shared/ProductGridCard";
+import ZoneCard from "@/components/shared/ZoneCard";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { cn } from "@/lib/utils";
-import { LayoutGrid } from "lucide-react";
+import { LayoutGrid, GraduationCap } from "lucide-react";
 import { Modal } from "@/components/shared/Modal";
 import { selectLocationState } from "@/features/locationSlice";
+import { NigeriaData } from "@/utils/nigeria-data";
 
 export default function DiscoveryPage() {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [isDiscoveryOpen, setIsDiscoveryOpen] = useState(false);
   const locationState = useSelector(selectLocationState);
+
+  // Auto-open the path picker on first arrival so users choose a discovery
+  // path before scrolling — they can close it if they just want to browse.
+  useEffect(() => {
+    setIsDiscoveryOpen(true);
+  }, []);
 
   const { data: featuredProducts, isLoading: isFeaturedLoading } =
     useGetFeaturedProductsQuery(
@@ -45,6 +54,13 @@ export default function DiscoveryPage() {
       state: locationState ?? undefined,
       local: locationState ? true : undefined,
     });
+  const { data: zonesData, isLoading: isZonesLoading } = useGetZonesQuery({
+    page: 1,
+    limit: 4,
+    state: locationState
+      ? (NigeriaData.getStateByName(locationState)?.isoCode ?? locationState)
+      : undefined,
+  });
 
   const handleSearch = () => {
     if (searchQuery.trim()) {
@@ -156,6 +172,14 @@ export default function DiscoveryPage() {
                   color: "text-purple-500 bg-purple-500/10",
                 },
                 {
+                  title: "School Zones",
+                  subtext: "Campus marketplaces near you",
+                  icon: GraduationCap,
+                  href: "/zones",
+                  color: "text-cyan-500 bg-cyan-500/10",
+                  isNew: true,
+                },
+                {
                   title: "Top Stores",
                   subtext: "Best sellers in Nigeria",
                   icon: Sparkles,
@@ -182,13 +206,71 @@ export default function DiscoveryPage() {
                       {link.subtext}
                     </div>
                   </div>
-                  <ArrowRight className="w-5 h-5 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all text-primary" />
+                  {link.isNew ? (
+                    <span className="text-[10px] font-black uppercase tracking-widest bg-gradient-to-r from-primary to-emerald-500 text-white px-2 py-0.5 rounded-sm shrink-0">
+                      New
+                    </span>
+                  ) : (
+                    <ArrowRight className="w-5 h-5 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all text-primary" />
+                  )}
                 </button>
               ))}
             </div>
           </Modal>
         </div>
       </div>
+
+      {/* School Zones Section */}
+      <section className="w-full mx-auto px-4 mb-16 md:mb-24">
+        <div className="flex flex-col px-1 gap-3 mb-8">
+          <h2 className="text-2xl sm:text-4xl font-black tracking-tight flex items-center gap-2">
+            <GraduationCap className="w-6 h-6 sm:w-8 sm:h-8 text-cyan-500" />
+            School Zones
+          </h2>
+          <p className="text-muted-foreground text-sm sm:text-base max-w-xl">
+            Campus marketplaces with verified vendors for your school community.
+          </p>
+          <SmartLink to="/zones">
+            <Button
+              variant="ghost"
+              className="p-0 h-auto gap-1 text-primary hover:text-primary font-bold hover:bg-transparent"
+            >
+              View All <ArrowRight className="w-4 h-4" />
+            </Button>
+          </SmartLink>
+        </div>
+        <div
+          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3 sm:gap-4"
+        >
+          {isZonesLoading
+            ? Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="space-y-4">
+                  <Skeleton className="h-[200px] w-full rounded-sm" />
+                  <div className="space-y-2">
+                    <Skeleton className="h-4 w-3/4" />
+                    <Skeleton className="h-4 w-1/2" />
+                  </div>
+                </div>
+              ))
+            : zonesData?.data?.items?.map((zone) => (
+                <div key={zone.id} className="h-full">
+                  <ZoneCard
+                    id={zone.id}
+                    name={zone.name}
+                    slug={zone.slug}
+                    subdomain={zone.subdomain}
+                    tagline={zone.tagline}
+                    description={zone.description}
+                    logo={zone.logo}
+                    coverImage={zone.cover_image}
+                    state={zone.state}
+                    location={zone.location}
+                    memberCount={zone.member_count}
+                  />
+                </div>
+              ))}
+        </div>
+      </section>
 
       {/* Featured Section */}
       <section className="w-full mx-auto px-4 mb-16 md:mb-24">

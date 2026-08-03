@@ -29,6 +29,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { extractErrorMessage } from "@/utils/errorHandler";
 import { ProductShareButton } from "./ProductShareButton";
 
 import { useAddItemToCartMutation } from "@/services/cartApi";
@@ -129,7 +130,7 @@ export default function ProductInfoSidebar({
         product_id: product.id,
         product_name: product.name,
         product_slug: product.slug,
-        product_image: product.image ? (typeof product.image === "string" ? product.image : (product.image as any).url) : undefined
+        product_image: product.image || undefined
       }).unwrap();
 
       toast.success("Initial message sent to vendor!");
@@ -145,8 +146,8 @@ export default function ProductInfoSidebar({
           navigate(conversationPath);
         }
       }
-    } catch (err: any) {
-      toast.error(err?.data?.message || "Failed to contact vendor");
+    } catch (err: unknown) {
+      toast.error(extractErrorMessage(err, "Failed to contact vendor"));
     } finally {
       setIsContactingVendor(false);
     }
@@ -279,8 +280,8 @@ export default function ProductInfoSidebar({
       }).unwrap();
 
       toast.success(`${product.name} added to cart`);
-    } catch (err: any) {
-      toast.error(err?.data?.message || "Failed to add product to cart");
+    } catch (err: unknown) {
+      toast.error(extractErrorMessage(err, "Failed to add product to cart"));
     }
   };
 
@@ -304,11 +305,9 @@ export default function ProductInfoSidebar({
           image: product.image ?? null,
         }).unwrap();
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       setLiked(prev);
-      toast.error(
-        err?.data?.message || err?.message || "Wishlist action failed",
-      );
+      toast.error(extractErrorMessage(err, "Wishlist action failed"));
     }
   };
 

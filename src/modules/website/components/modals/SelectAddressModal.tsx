@@ -7,12 +7,13 @@ import {
 import { MapPin, Plus, CheckCircle2, Loader2 } from "lucide-react";
 import { useGetUserProfileQuery } from "@/services/userApi";
 import { Button } from "@/components/ui/button";
+import type { IUserAddress } from "@/types/auth/authTypes";
 
 interface SelectAddressModalProps {
   open: boolean;
   onClose: () => void;
   selectedAddressId?: string | null;
-  onSelect: (address: any) => void;
+  onSelect: (address: IUserAddress) => void;
   onGoToCreate: () => void; // Triggered when they click 'Add New Address'
 }
 
@@ -58,7 +59,7 @@ export function SelectAddressModal({
               </p>
             </div>
           ) : (
-            addresses.map((addr: any) => {
+            addresses.map((addr) => {
               const isSelected = selectedAddressId
                 ? addr.id === selectedAddressId
                 : addr.is_default; // fallback to default if none strictly selected

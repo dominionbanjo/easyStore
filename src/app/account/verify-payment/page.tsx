@@ -17,6 +17,7 @@ import { useVerifyPaymentMutation } from "@/services/ordersApi";
 import { useGetCartQuery } from "@/services/cartApi";
 import { ACCOUNT_ROUTES } from "@/routes";
 import SmartLink from "@/components/shared/SmartLink";
+import { extractErrorMessage } from "@/utils/errorHandler";
 
 
 export default function VerifyPaymentPage() {
@@ -102,10 +103,10 @@ export default function VerifyPaymentPage() {
   /* ───────────────── ERROR ───────────────── */
   if (isError) {
     // Extract error message from RTK Query error
-    const errorMessage =
-      (error as any)?.data?.message ||
-      (error as any)?.message ||
-      "We couldn't verify this payment right now.";
+    const errorMessage = extractErrorMessage(
+      error,
+      "We couldn't verify this payment right now.",
+    );
 
     return (
       <section className="min-h-screen flex items-center justify-center px-4">
@@ -151,7 +152,7 @@ export default function VerifyPaymentPage() {
   const isSuccess =
     orders &&
     orders.length > 0 &&
-    orders.some((order: any) => order.payment_status === "success");
+    orders.some((order) => order.payment_status === "success");
 
   const remainingItemsCount = cartData?.data?.cart?.items?.length || 0;
 

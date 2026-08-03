@@ -8,15 +8,21 @@ import {
 import { selectCurrentUser } from "@/features/userSlice";
 import { NigeriaData } from "@/utils/nigeria-data";
 
-type NominatimReverseResponse = {
-  address?: { state?: string };
+type ReverseGeocodeResponse = {
+  status?: string;
+  message?: string;
+  data?: {
+    success?: boolean;
+    data?: { state?: string | null };
+    state?: string | null;
+  };
 };
 
 interface GeolocationPositionResult {
   coords: { latitude: number; longitude: number };
 }
 
-const GEOCODE_URL = "https://nominatim.openstreetmap.org/reverse";
+const GEO_API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 const GEOLOCATION_TIMEOUT_MS = 10_000;
 
 /* Module-level guard so multiple mounted hook instances never double-attempt GPS */
@@ -68,14 +74,20 @@ export function useLocationPreference() {
       },
     );
 
-    const url = `${GEOCODE_URL}?format=jsonv2&lat=${position.coords.latitude}&lon=${position.coords.longitude}`;
+    const url = `${GEO_API_URL}/geo/reverse?lat=${position.coords.latitude}&lon=${position.coords.longitude}`;
     const response = await fetch(url, {
       headers: { Accept: "application/json" },
     });
     if (!response.ok) return null;
 
-    const data = (await response.json()) as NominatimReverseResponse;
-    return normalizeStateName(data.address?.state);
+    const data = (await response.json()) as ReverseGeocodeResponse;
+
+    // Backend ResponseInterceptor wraps handler results as
+    // { status, message, data: { success, data: { state } } }.
+    // Tolerate the unwrapped shape too for robustness.
+    const state =
+      data?.data?.data?.state ?? data?.data?.state ?? undefined;
+    return normalizeStateName(state);
   }, []);
 
   const detectAndSet = useCallback(
@@ -97,9 +109,11 @@ export function useLocationPreference() {
   /* Prefill from the logged-in user's saved address (ISO code → name) */
   useEffect(() => {
     if (locationState) return;
-    const isoCode = currentUser?.address?.state;
-    if (!isoCode) return;
-    const matched = NigeriaData.getStateByCode(isoCode);
+    const savedState = currentUser?.address?.state;
+    if (!savedState) return;
+    const matched =
+      NigeriaData.getStateByCode(savedState) ??
+      NigeriaData.getStateByName(savedState);
     if (matched) {
       dispatch(setLocationState({ state: matched.name, source: "address" }));
     }

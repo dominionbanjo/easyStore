@@ -58,7 +58,14 @@ export function CategorySelect({
     formState: { errors },
   } = useFormContext();
 
-  const error = (errors as any)?.[name]?.message as string | undefined;
+  const fieldError = (errors as Record<string, unknown>)[name];
+  const rawMessage =
+    typeof fieldError === "object" &&
+    fieldError !== null &&
+    "message" in fieldError
+      ? fieldError.message
+      : undefined;
+  const error = typeof rawMessage === "string" ? rawMessage : undefined;
 
   const [loadCategories, { data, isLoading }] = useLazyGetCategoriesQuery();
   const [createCategory, { isLoading: isCreating }] =
@@ -74,7 +81,7 @@ export function CategorySelect({
   const [newCatName, setNewCatName] = useState("");
   const [newCatParentId, setNewCatParentId] = useState<string | null>(null);
 
-  const categories: ICategory[] = data?.data ?? [];
+  const categories: ICategory[] = useMemo(() => data?.data ?? [], [data]);
 
   /* ───────── LOAD ───────── */
   useEffect(() => {
@@ -118,7 +125,7 @@ export function CategorySelect({
       } else {
         throw new Error("Invalid response from server");
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       toast.error(extractErrorMessage(err, "Failed to create category"));
     } finally {
       setIsSubmitting(false);

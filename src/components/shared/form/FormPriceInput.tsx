@@ -64,17 +64,26 @@ export function FormPriceInput({
     field.onChange(numericValue);
   };
 
-  const getNestedError = (obj: any, path: string) => {
+  const getNestedError = (obj: unknown, path: string): unknown => {
     return path
       .split(/[.[\]]/)
       .filter(Boolean)
-      .reduce((acc, part) => acc?.[part], obj);
+      .reduce<unknown>((acc, part) => {
+        if (typeof acc === "object" && acc !== null && part in acc) {
+          return (acc as Record<string, unknown>)[part];
+        }
+        return undefined;
+      }, obj);
   };
 
   const errorObj = getNestedError(errors, name);
-  const error = errorObj?.message as string | undefined;
+  const rawMessage =
+    typeof errorObj === "object" && errorObj !== null && "message" in errorObj
+      ? errorObj.message
+      : undefined;
+  const error = typeof rawMessage === "string" ? rawMessage : undefined;
   const shouldShowError =
-    !!error && (getNestedError(touchedFields, name) || submitCount > 0);
+    !!error && (!!getNestedError(touchedFields, name) || submitCount > 0);
 
   return (
     <div className={cn("space-y-1.5", className)}>

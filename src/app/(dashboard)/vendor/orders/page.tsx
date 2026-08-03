@@ -19,6 +19,7 @@ import { OrderDetailsModal } from "@/modules/vendor/components/OrderDetailsModal
 import { useNavigate } from "react-router-dom";
 import { useStartConversationMutation } from "@/services/messagingApi";
 import { toast } from "sonner";
+import { extractErrorMessage } from "@/utils/errorHandler";
 
 const PAGE_SIZE = 10;
 
@@ -71,8 +72,8 @@ export default function OrdersPage() {
       const result = await startConversation({ recipient_id: order.buyer_id }).unwrap();
       toast.success("Redirecting to conversation...");
       navigate(`/messages/${result.data.id}`);
-    } catch (error: any) {
-      toast.error(error?.data?.message || "Failed to start conversation.");
+    } catch (error: unknown) {
+      toast.error(extractErrorMessage(error, "Failed to start conversation."));
     }
   };
 

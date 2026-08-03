@@ -24,6 +24,7 @@ import {
   RefreshCcw,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { extractErrorMessage } from "@/utils/errorHandler";
 import {
   useUpdateAdminUserStatusMutation,
   useUpdateAdminVendorStatusMutation,
@@ -193,8 +194,8 @@ export function AdminUserDetailModal({
         }).unwrap();
         toast.success(`User updated to ${pendingStatus}`);
       }
-    } catch (err: any) {
-      toast.error(err?.data?.message || "Failed to update status");
+    } catch (err: unknown) {
+      toast.error(extractErrorMessage(err, "Failed to update status"));
     } finally {
       setPendingStatus(null);
     }

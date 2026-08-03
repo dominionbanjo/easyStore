@@ -43,13 +43,6 @@ export function SalesHistoryPage() {
 
   return (
     <div className="space-y-6 p-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">Sales History</h1>
-          <p className="text-muted-foreground">Record of all offline sales</p>
-        </div>
-      </div>
-
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1 max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />

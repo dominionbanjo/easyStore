@@ -10,7 +10,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Palette, Settings, BarChart2, HelpCircle, LogOut, MessageSquare, Banknote, UserCog, Receipt, Store, Plus, Check } from "lucide-react";
+import { Palette, Settings, BarChart2, HelpCircle, LogOut, MessageSquare, Banknote, UserCog, Receipt, Store, Plus, Check, GraduationCap } from "lucide-react";
 import { useLogoutMutation } from "@/services/authApi";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
@@ -49,6 +49,7 @@ export function DashboardBottomNav() {
   ];
 
   const moreItems = [
+    { name: "School Zones", path: "/school-zones", icon: GraduationCap },
     { name: "Messages", path: "/messages", icon: MessageSquare },
     { name: "Templates", path: "/templates", icon: Palette },
     { name: "Staff", path: "/staff", icon: UserCog },

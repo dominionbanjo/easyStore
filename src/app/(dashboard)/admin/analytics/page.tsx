@@ -133,16 +133,7 @@ export default function SuperAdminPlatformAnalysisPage() {
   return (
     <section className="space-y-10 pb-10">
       {/* ─── Page Header ─── */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-black tracking-tight text-foreground/90">
-            Platform Analysis
-          </h1>
-          <p className="text-sm text-muted-foreground font-medium mt-1">
-            Comprehensive insight into platform health, growth, and performance
-            metrics.
-          </p>
-        </div>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-4">
         <div className="flex items-center gap-2">
           <Button
             variant="outline"

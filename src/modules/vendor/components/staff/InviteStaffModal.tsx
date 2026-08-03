@@ -6,10 +6,18 @@ import { Label } from "@/components/ui/label";
 import { Key, Eye, EyeOff } from "lucide-react";
 import { useInviteStaffMutation } from "@/services/staffApi";
 import { toast } from "sonner";
+import { extractErrorMessage } from "@/utils/errorHandler";
 
 interface Props {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+}
+
+interface InvitePayload {
+  email: string;
+  first_name: string;
+  last_name: string;
+  password?: string;
 }
 
 export function InviteStaffModal({ open, onOpenChange }: Props) {
@@ -28,7 +36,7 @@ export function InviteStaffModal({ open, onOpenChange }: Props) {
       return;
     }
     try {
-      const payload: any = { email, first_name: firstName, last_name: lastName };
+      const payload: InvitePayload = { email, first_name: firstName, last_name: lastName };
       if (setPasswordManually && password) {
         payload.password = password;
       }
@@ -40,8 +48,8 @@ export function InviteStaffModal({ open, onOpenChange }: Props) {
       setPassword("");
       setSetPasswordManually(false);
       onOpenChange(false);
-    } catch (err: any) {
-      toast.error(err?.data?.message || "Failed to send invite");
+    } catch (err: unknown) {
+      toast.error(extractErrorMessage(err, "Failed to send invite"));
     }
   };
 

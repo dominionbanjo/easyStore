@@ -77,7 +77,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
           size,
           color,
           variant_id,
-        } as any),
+        }),
       );
       return;
     }
@@ -88,8 +88,8 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
         size,
         color,
         variant_id,
-      } as any).unwrap();
-    } catch (err: any) {
+      }).unwrap();
+    } catch (err: unknown) {
       toast.error(extractErrorMessage(err, "Failed to update quantity"));
     }
   };
@@ -107,7 +107,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
           size,
           color,
           variant_id,
-        } as any),
+        }),
       );
       toast.success("Item removed");
       return;
@@ -118,9 +118,9 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
         size,
         color,
         variant_id,
-      } as any).unwrap();
+      }).unwrap();
       toast.success("Item removed");
-    } catch (err: any) {
+    } catch (err: unknown) {
       toast.error(extractErrorMessage(err, "Failed to remove item"));
     }
   };

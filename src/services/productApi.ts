@@ -149,7 +149,10 @@ export const productApi = apiManager.injectEndpoints({
 
 
     /* ───────── CREATE ───────── */
-    createProduct: builder.mutation<any, CreateProductArgs>({
+    createProduct: builder.mutation<
+      { success: boolean; message?: string },
+      CreateProductArgs
+    >({
       query: ({ data }) => ({
         url: "product",
         method: "POST",
@@ -159,8 +162,8 @@ export const productApi = apiManager.injectEndpoints({
     }),
 
     createManyProducts: builder.mutation<
-      any,
-      { products: Record<string, any>[] }
+      { success: boolean; message?: string },
+      { products: Record<string, unknown>[] }
     >({
       query: (body) => ({
         url: "product/bulk",
@@ -171,7 +174,10 @@ export const productApi = apiManager.injectEndpoints({
     }),
 
     /* ───────── UPDATE ───────── */
-    updateProduct: builder.mutation<any, UpdateProductArgs>({
+    updateProduct: builder.mutation<
+      { success: boolean; message?: string },
+      UpdateProductArgs
+    >({
       query: ({ id, data }) => ({
         url: `product/${id}`,
         method: "PATCH",
@@ -181,7 +187,10 @@ export const productApi = apiManager.injectEndpoints({
     }),
 
     /* ───────── DELETE ───────── */
-    deleteProduct: builder.mutation<any, string>({
+    deleteProduct: builder.mutation<
+      { success: boolean; message?: string },
+      string
+    >({
       query: (id) => ({
         url: `vendor/products/${id}`,
         method: "DELETE",
@@ -191,7 +200,7 @@ export const productApi = apiManager.injectEndpoints({
 
     /* ───────── CLOUDINARY CREATE ───────── */
     createProductWithCloudinary: builder.mutation<
-      { status: string; data: any },
+      { status: string; data: unknown },
       CreateProductCloudinaryArgs
     >({
       query: (data) => ({
@@ -203,7 +212,7 @@ export const productApi = apiManager.injectEndpoints({
     }),
     /* ───────── CLOUDINARY UPDATE ───────── */
     updateProductWithCloudinary: builder.mutation<
-      { status: string; data: any },
+      { status: string; data: unknown },
       { id: string; data: CreateProductCloudinaryArgs }
     >({
       query: ({ id, data }) => ({
@@ -245,7 +254,7 @@ export const productApi = apiManager.injectEndpoints({
             rating_average: Number(item.rating_average),
 
             // 🔧 normalize mismatched fields
-            specs: item.specs as Record<string, any> | null,
+            specs: item.specs,
             colors: item.colors as string[] | null,
             sizes: item.sizes as string[] | null,
 
@@ -260,7 +269,7 @@ export const productApi = apiManager.injectEndpoints({
 
     /* ───────── UPDATE STATUS ───────── */
     updateProductStatus: builder.mutation<
-      { status: string; data: any },
+      { status: string; data: unknown },
       { id: string; status: ProductStatus }
     >({
       query: ({ id, status }) => ({
@@ -276,7 +285,7 @@ export const productApi = apiManager.injectEndpoints({
 
     /* ───────── UPDATE ON SALE ───────── */
     updateProductOnSale: builder.mutation<
-      { status: string; data: any },
+      { status: string; data: unknown },
       { id: string; on_sale: boolean }
     >({
       query: ({ id, on_sale }) => ({

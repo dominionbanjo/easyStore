@@ -21,6 +21,7 @@ import { cn } from "@/lib/utils";
 import { AdminTransactionDetailModal } from "@/modules/admin/components/transactions/AdminTransactionDetailModal";
 import { ConfirmActionDialog } from "@/modules/admin/components/shared/ConfirmActionDialog";
 import { toast } from "sonner";
+import { extractErrorMessage } from "@/utils/errorHandler";
 
 export default function SuperAdminTransactionsPage() {
   const [search, setSearch] = useState("");
@@ -66,8 +67,8 @@ export default function SuperAdminTransactionsPage() {
     try {
       await flagTransaction({ transactionId: pendingAction.tx.id }).unwrap();
       toast.success("Transaction flagged for review");
-    } catch (err: any) {
-      toast.error(err?.data?.message || "Failed to flag transaction");
+    } catch (err: unknown) {
+      toast.error(extractErrorMessage(err, "Failed to flag transaction"));
     } finally {
       setPendingAction(null);
     }
@@ -92,17 +93,7 @@ export default function SuperAdminTransactionsPage() {
   return (
     <section className="space-y-8 pb-10">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-black tracking-tight text-foreground/90">
-            Transactions
-          </h1>
-          <p className="text-sm text-muted-foreground mt-1 font-medium">
-            Complete platform oversight of financial flows, refunds, and vendor
-            payouts.
-          </p>
-        </div>
-
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-4">
         <div className="flex items-center gap-2 self-start sm:self-center">
           <Button
             variant="outline"

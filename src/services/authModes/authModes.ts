@@ -32,18 +32,29 @@ export const baseQueryWithAuth: BaseQueryFn<
 > = async (args, api, extraOptions) => {
   const result = await rawBaseQuery(args, api, extraOptions);
 
-  const error = result.error as any;
+  const error = result.error as
+    | (FetchBaseQueryError & {
+        data?: unknown;
+        message?: string;
+        originalStatus?: number;
+      })
+    | undefined;
   const status = error?.status || error?.originalStatus;
 
   // 🏥 ENSURE ERROR MESSAGE IS EXTRACTED ROBUSTLY (Mirroring errorHandler.ts logic)
   let message = "";
   const errorData = error?.data;
   if (errorData) {
-    if (typeof errorData.message === "string") message = errorData.message;
-    else if (typeof errorData.error === "string") message = errorData.error;
-    else if (Array.isArray(errorData.message))
-      message = errorData.message.join(", ");
-    else if (typeof errorData === "string") message = errorData;
+    if (typeof errorData === "object" && !Array.isArray(errorData)) {
+      const dataObj = errorData as Record<string, unknown>;
+      if (typeof dataObj.message === "string") message = dataObj.message;
+      else if (typeof dataObj.error === "string") message = dataObj.error;
+      else if (Array.isArray(dataObj.message))
+        message = dataObj.message
+          .filter((m): m is string => typeof m === "string")
+          .join(", ");
+    }
+    if (!message && typeof errorData === "string") message = errorData;
   }
   if (!message && error?.message) message = error.message;
 

@@ -3,6 +3,7 @@
 import { useForm, FormProvider, useWatch } from "react-hook-form";
 import { NigeriaData } from "@/utils/nigeria-data";
 import { toast } from "sonner";
+import { extractErrorMessage } from "@/utils/errorHandler";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -139,8 +140,8 @@ export function AddDeliveryRateForm(props: Props) {
       }
 
       reset();
-    } catch (e: any) {
-      toast.error(e?.data?.message || "Failed to save delivery rate");
+    } catch (e: unknown) {
+      toast.error(extractErrorMessage(e, "Failed to save delivery rate"));
     }
   };
   // console.log(productid)

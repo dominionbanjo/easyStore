@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Outlet, NavLink } from "react-router-dom";
 import { ShoppingCart, Settings, LogOut, Receipt, Sun, Moon, PackagePlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useTheme } from "@/components/shared/ThemeContext";
+import { useTheme } from "@/components/shared/themeContextCore";
 import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
 import { getWebsitePath } from "@/utils/subdomain";
 import { AUTH_ROUTES } from "@/routes/temp";

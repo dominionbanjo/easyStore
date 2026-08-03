@@ -82,7 +82,9 @@ export default function VendorDashboardLayout() {
         if (daysSinceCreated >= 30 && daysSincePrompt >= 30) {
           setShowReviewModal(true);
         }
-      } catch {}
+      } catch {
+        /* ignore review meta errors */
+      }
     };
 
     checkReview();
@@ -130,7 +132,7 @@ export default function VendorDashboardLayout() {
           isCollapsed ? "lg:pl-[80px]" : "lg:pl-[260px]",
         )}
       >
-        <DashboardHeader onMenuToggle={() => setSidebarOpen(!sidebarOpen)} />
+        <DashboardHeader />
 
         {!isStoresLoading && stores.length === 0 && <NoStoreBanner />}
 

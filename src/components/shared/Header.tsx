@@ -28,7 +28,7 @@ import {
   Compass,
   MessageSquare,
 } from "lucide-react";
-import { useTheme } from "./ThemeContext";
+import { useTheme } from "./themeContextCore";
 import {
   Popover,
   PopoverTrigger,
@@ -127,7 +127,7 @@ export default function Header() {
       }
     };
     syncCart();
-  }, [isAuthenticated, localCart.localItems, addItemToCart, dispatch]);
+  }, [isAuthenticated, localCart.localItems, addItemToCart, dispatch, refetchCart]);
 
   const subdomain = getSubdomain();
   const baseDomain = getBaseDomain();
@@ -465,8 +465,8 @@ export default function Header() {
         </div>
 
         {/* ---------- MIDDLE: Desktop Nav ---------- */}
-        <div className="hidden lg:flex flex-1 justify-center px-4">
-          <nav className="flex items-center gap-8 text-sm font-medium whitespace-nowrap">
+        <div className="hidden lg:flex flex-1 justify-center items-center self-stretch px-4">
+          <nav className="flex pt-1.5 items-center justify-center h-full gap-8 min-[1124px]:gap-6 xl:gap-8 text-sm font-medium whitespace-nowrap">
             {navItems.slice(0, 4).map((item) =>
               item.isExternal ? (
                 <a
@@ -498,7 +498,7 @@ export default function Header() {
 
 
         {/* ---------- MIDDLE: Search ---------- */}
-        <div className="hidden md:flex flex-1 justify-center items-center gap-2.5 px-4 lg:px-6 max-w-[680px] mx-auto">
+        <div className="hidden md:flex flex-1 justify-center items-center gap-2.5 px-4 lg:px-6 max-w-[680px] min-[1124px]:max-w-[440px] xl:max-w-[560px] mx-auto min-w-0">
           <StateSelector />
           <form
             onSubmit={handleSearch}
@@ -518,15 +518,21 @@ export default function Header() {
 
             <Button
               type="submit"
-              className="rounded-sm mr-1.5 h-8 px-5 text-sm font-semibold bg-primary hover:bg-primary/90 text-primary-foreground  transition-all"
+              className="rounded-sm mr-1.5 h-8 px-2.5 xl:px-5 text-sm font-semibold bg-primary hover:bg-primary/90 text-primary-foreground  transition-all"
             >
-              Search
+              <Search className="h-4 w-4 xl:hidden" />
+              <span className="hidden xl:inline">Search</span>
             </Button>
           </form>
         </div>
 
         {/* ---------- RIGHT: Auth / Cart / Mobile Search ---------- */}
         <div className="flex items-center justify-end gap-1.5 sm:gap-5 flex-shrink-0">
+          {/* Mobile Location */}
+          <div className="md:hidden flex-shrink-0">
+            <StateSelector align="end" />
+          </div>
+
           {/* Mobile Search Trigger */}
           <Button
             variant="ghost"
@@ -714,20 +720,8 @@ export default function Header() {
                       location.pathname + location.search,
                     )}`}
                   >
-                    <Button
-                      variant="outline"
-                      className="rounded-sm px-3 text-xs h-8"
-                    >
+                    <Button className="rounded-sm px-4 text-xs h-9 text-white">
                       Sign In
-                    </Button>
-                  </SmartLink>
-                  <SmartLink
-                    to={`${AUTH_ROUTES.SIGNUP}?redirect=${encodeURIComponent(
-                      location.pathname + location.search,
-                    )}`}
-                  >
-                    <Button className="rounded-sm px-3 text-xs h-8 text-white">
-                      Sign Up
                     </Button>
                   </SmartLink>
                 </div>

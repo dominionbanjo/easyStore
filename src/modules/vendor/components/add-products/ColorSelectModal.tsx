@@ -49,7 +49,7 @@ export function ColorSelectModal({
   const { data, isLoading, refetch } = useGetColorsQuery();
   const [createColor, { isLoading: isCreating }] = useCreateColorMutation();
 
-  const colors: ApiColor[] = data?.data ?? [];
+  const colors = useMemo(() => data?.data ?? [], [data?.data]);
 
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -115,7 +115,7 @@ export function ColorSelectModal({
       } else {
         throw new Error("Invalid response structure");
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       toast.error(extractErrorMessage(err, "Failed to add color"));
     } finally {
       setIsSubmitting(false);

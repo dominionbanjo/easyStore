@@ -47,7 +47,7 @@ export function StaffSettingsPage() {
       toast.success("Password changed successfully");
       setCurrentPassword("");
       setNewPassword("");
-    } catch (err: any) {
+    } catch (err: unknown) {
       toast.error(typeof err === "string" ? err : "Failed to change password");
     }
     setSaving(false);

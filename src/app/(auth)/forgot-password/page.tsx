@@ -11,6 +11,7 @@ import { clearUser } from "@/features/userSlice";
 import { FormInput } from "@/components/shared/form/FormInput";
 import { AUTH_ROUTES } from "@/routes/temp";
 import { AuthLayout } from "@/modules/auth/components/AuthLayout";
+import { extractErrorMessage } from "@/utils/errorHandler";
 
 /* ------------------------- Schema ------------------------- */
 const ForgotPasswordSchema = z.object({
@@ -44,8 +45,8 @@ export default function ForgotPasswordPage() {
       Cookies.remove("token");
       localStorage.clear();
       navigate(AUTH_ROUTES.LOGIN);
-    } catch (error: any) {
-      toast.error(error?.data?.message || "Failed to send password reset link");
+    } catch (error: unknown) {
+      toast.error(extractErrorMessage(error, "Failed to send password reset link"));
     }
   };
 

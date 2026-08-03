@@ -18,6 +18,7 @@ import { toast } from "sonner";
 import { Search, X, User as UserIcon, Calendar, Send, Check } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { extractErrorMessage } from "@/utils/errorHandler";
 
 interface BroadcastDialogProps {
   open: boolean;
@@ -25,18 +26,30 @@ interface BroadcastDialogProps {
   broadcast?: IBroadcast | null;
 }
 
+interface BroadcastFormValues {
+  subject: string;
+  body: string;
+  target: "all" | "vendors" | "users" | "specific";
+  scheduledAt: string;
+  is_recurring: boolean;
+  recurrence_type: "daily" | "weekly" | "monthly";
+  recurrence_days: string[];
+  recurrence_time: string;
+  recurrence_day_of_month: string[];
+}
+
 export function BroadcastDialog({ open, onOpenChange, broadcast }: BroadcastDialogProps) {
-  const methods = useForm({
+  const methods = useForm<BroadcastFormValues>({
     defaultValues: {
       subject: "",
       body: "",
-      target: "all" as "all" | "vendors" | "users" | "specific",
+      target: "all",
       scheduledAt: "",
       is_recurring: false,
-      recurrence_type: "daily" as any,
-      recurrence_days: [] as string[],
+      recurrence_type: "daily",
+      recurrence_days: [],
       recurrence_time: "12:00",
-      recurrence_day_of_month: [] as string[],
+      recurrence_day_of_month: [],
     }
   });
 
@@ -89,7 +102,7 @@ export function BroadcastDialog({ open, onOpenChange, broadcast }: BroadcastDial
     { skip: target !== "specific" || userSearch.length < 2 }
   );
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: BroadcastFormValues) => {
     if (data.target === "specific" && selectedEmails.length === 0) {
       toast.error("Please select at least one recipient");
       return;
@@ -121,8 +134,8 @@ export function BroadcastDialog({ open, onOpenChange, broadcast }: BroadcastDial
       reset();
       setSelectedEmails([]);
       setUserSearch("");
-    } catch (error: any) {
-      toast.error(error?.data?.message || "Failed to save broadcast");
+    } catch (error: unknown) {
+      toast.error(extractErrorMessage(error, "Failed to save broadcast"));
     }
   };
 

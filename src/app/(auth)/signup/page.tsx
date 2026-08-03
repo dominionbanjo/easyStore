@@ -34,6 +34,7 @@ import { AuthLayout } from "@/modules/auth/components/AuthLayout";
 import { PasswordStrengthMeter } from "@/modules/auth/components/PasswordStrengthMeter";
 import { useGoogleLoginMutation } from "@/services/authApi";
 import { areSubdomainsDisabled, handleRoleRedirect } from "@/utils/subdomain";
+import { extractErrorMessage } from "@/utils/errorHandler";
 import { Modal } from "@/components/shared/Modal";
 import { TermsOfServiceContent } from "@/components/shared/TermsOfServiceContent";
 import { PrivacyPolicyContent } from "@/components/shared/PrivacyPolicyContent";
@@ -47,10 +48,25 @@ const getGoogleButtonWidth = () => {
 };
 
 /* -------------------- Type guard for Google -------------------- */
-function hasGoogleIdentity(win: Window): win is Window & {
-  google: { accounts: { id: { initialize: Function; renderButton: Function } } };
-} {
-  return Boolean((win as any).google?.accounts?.id);
+type GoogleIdentity = {
+  accounts: {
+    id: {
+      initialize: (config: {
+        client_id: string;
+        callback: (response: { credential: string }) => void;
+      }) => void;
+      renderButton: (parent: HTMLElement, options: Record<string, unknown>) => void;
+    };
+  };
+};
+
+function hasGoogleIdentity(win: Window): win is Window & { google: GoogleIdentity } {
+  const google = (win as Window & { google?: unknown }).google;
+  return Boolean(
+    google &&
+      typeof google === "object" &&
+      (google as GoogleIdentity).accounts?.id,
+  );
 }
 
 export default function SignupPage() {
@@ -132,8 +148,8 @@ export default function SignupPage() {
           res.data.user.email,
         )}&redirect=${encodeURIComponent(redirectTo)}`,
       );
-    } catch (error: any) {
-      toast.error(error?.data?.message || "Signup failed. Please try again.");
+    } catch (error: unknown) {
+      toast.error(extractErrorMessage(error, "Signup failed. Please try again."));
     }
   };
 
@@ -151,17 +167,15 @@ export default function SignupPage() {
 
       google.accounts.id.initialize({
         client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID!,
-        callback: async (response: any) => {
+        callback: async (response: { credential: string }) => {
           try {
             const token = response.credential;
-            const res: any = await googleLogin({ token }).unwrap();
-            const user = res?.data?.user || res?.user;
+            const res = await googleLogin({ token }).unwrap();
+            const user = res?.data?.user;
             toast.success("Signed up with Google!");
             handleRoleRedirect(user, redirectTo, navigate);
-          } catch (err: any) {
-            toast.error(
-              err?.data?.message || err?.message || "Google sign-up failed",
-            );
+          } catch (err: unknown) {
+            toast.error(extractErrorMessage(err, "Google sign-up failed"));
           }
         },
       });

@@ -266,7 +266,7 @@ export default function UserProfilePage() {
                 <CardContent className="p-6">
                   {user.addresses && user.addresses.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      {user.addresses.map((addr: any, i: number) => (
+                      {user.addresses.map((addr, i) => (
                         <div key={addr.id || i} className="flex items-start gap-4 text-left p-4 rounded-sm border border-border/40 bg-card">
                           <div className="p-2 rounded-sm bg-primary/10 text-primary shrink-0 mt-0.5">
                             <MapPin className="h-4 w-4" />

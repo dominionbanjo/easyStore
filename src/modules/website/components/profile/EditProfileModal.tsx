@@ -29,13 +29,15 @@ import {
   type EditProfileFormValues,
 } from "../../validators/updateProfileValidator";
 import { useDebounce } from "@/hooks";
+import type { IUser, IUserAddress } from "@/types/auth/authTypes";
+import { extractErrorMessage } from "@/utils/errorHandler";
 
 /* ───────────────── TYPES ───────────────── */
 
 interface EditProfileModalProps {
   open: boolean;
   onClose: () => void;
-  user: any;
+  user?: IUser;
 }
 
 type Option = { label: string; value: string };
@@ -167,10 +169,9 @@ export function EditProfileModal({
             setVerifiedAccountName(result.account_name);
             toast.success("Bank account verified");
           }
-        } catch (error: any) {
+        } catch (error: unknown) {
           setVerifiedAccountName(null);
-          const msg = error?.data?.message || "Invalid bank details";
-          setVerificationError(msg);
+          setVerificationError(extractErrorMessage(error, "Invalid bank details"));
         }
       };
 
@@ -232,12 +233,12 @@ export function EditProfileModal({
       setEditingAddressId(null);
       // Don't reset the whole form, just the address part
       setValue("address", { street: "", country: "NG", state: "", city: "", postal_code: "" });
-    } catch (e: any) {
-      toast.error(e?.data?.message || "Failed to save address");
+    } catch (e: unknown) {
+      toast.error(extractErrorMessage(e, "Failed to save address"));
     }
   };
 
-  const handleEditAddress = (addr: any) => {
+  const handleEditAddress = (addr: IUserAddress) => {
     setEditingAddressId(addr.id);
     setAddressFormMode("edit");
     setValue("address", {
@@ -253,7 +254,7 @@ export function EditProfileModal({
     try {
       await deleteUserAddress(id).unwrap();
       toast.success("Address deleted");
-    } catch (e) {
+    } catch {
       toast.error("Delete failed");
     }
   };
@@ -321,8 +322,8 @@ export function EditProfileModal({
 
       toast.success("Profile updated successfully");
       onClose();
-    } catch (error: any) {
-      toast.error(error?.data?.message || "Update failed");
+    } catch (error: unknown) {
+      toast.error(extractErrorMessage(error, "Update failed"));
     }
   };
 
@@ -440,7 +441,7 @@ export function EditProfileModal({
                   <div className="space-y-3">
                     {user?.addresses && user.addresses.length > 0 ? (
                       <div className="grid grid-cols-1 gap-3">
-                        {user.addresses.map((addr: any) => (
+                        {user.addresses.map((addr) => (
                           <div key={addr.id} className="flex items-center justify-between p-3 rounded-sm border border-border/40 bg-muted/10">
                             <div className="flex gap-3">
                               <MapPin className="h-4 w-4 text-primary shrink-0 mt-0.5" />

@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { MapPin, GraduationCap, Store } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { NigeriaData } from "@/utils/nigeria-data";
 
 interface ZoneCardProps {
   id: string;
@@ -38,7 +39,10 @@ export default function ZoneCard({
   className,
 }: ZoneCardProps) {
   const bannerImage = coverImage || "/images/defaultbanner.png";
-  const locationLabel = [location, state].filter(Boolean).join(", ");
+  const stateName = state
+    ? (NigeriaData.getStateByCode(state)?.name ?? state)
+    : null;
+  const locationLabel = [location, stateName].filter(Boolean).join(", ");
 
   return (
     <div

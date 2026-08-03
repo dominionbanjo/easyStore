@@ -10,6 +10,7 @@ import { FormInput } from "@/components/shared/form/FormInput";
 import { AUTH_ROUTES } from "@/routes/temp";
 import { AuthLayout } from "@/modules/auth/components/AuthLayout";
 import { PasswordStrengthMeter } from "@/modules/auth/components/PasswordStrengthMeter";
+import { extractErrorMessage } from "@/utils/errorHandler";
 
 /* ------------------------- Schema ------------------------- */
 const ResetPasswordSchema = z.object({
@@ -53,8 +54,8 @@ export default function ResetPasswordPage() {
 
       toast.success(res.message || "Password reset successful!");
       navigate(AUTH_ROUTES.LOGIN);
-    } catch (error: any) {
-      toast.error(error?.data?.message || "Failed to reset password");
+    } catch (error: unknown) {
+      toast.error(extractErrorMessage(error, "Failed to reset password"));
     }
   };
 

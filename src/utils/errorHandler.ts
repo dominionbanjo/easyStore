@@ -35,15 +35,25 @@
  * Handles various error structures from RTK Query and backend responses
  */
 export function extractErrorMessage(
-  err: any,
+  err: unknown,
   fallbackMessage = "An error occurred",
 ): string {
   // RTK Query unwrap() can throw errors in different formats:
   // Format 1: { status: 400, data: { message: "...", error: "...", statusCode: 400 } }
   // Format 2: { error: { status: 400, data: { message: "...", error: "...", statusCode: 400 } } }
 
-  const actualError = err?.error || err;
-  const errorData = actualError?.data;
+  const errObj =
+    typeof err === "object" && err !== null ? (err as Record<string, unknown>) : null;
+
+  const nested =
+    errObj?.error && typeof errObj.error === "object"
+      ? (errObj.error as Record<string, unknown>)
+      : null;
+  const actualError = nested ?? errObj;
+  const errorData =
+    actualError?.data && typeof actualError.data === "object"
+      ? (actualError.data as Record<string, unknown>)
+      : null;
 
   if (errorData) {
     // Check for message string
@@ -58,7 +68,7 @@ export function extractErrorMessage(
 
     // Handle array of messages (validation errors)
     if (Array.isArray(errorData.message)) {
-      return errorData.message.join(", ");
+      return errorData.message.filter((m) => typeof m === "string").join(", ");
     }
 
     // Handle if data itself is a string
@@ -79,14 +89,10 @@ export function extractErrorMessage(
 /**
  * Logs detailed error information to console (only in development)
  */
-export function logErrorDetails(err: any, context?: string): void {
+export function logErrorDetails(err: unknown, context?: string): void {
   if (import.meta.env.DEV) {
     const prefix = context ? `[${context}]` : "[Error]";
     console.error(`${prefix} Full error object:`, err);
-    console.error(`${prefix} err.data:`, err?.data);
-    console.error(`${prefix} err.error:`, err?.error);
-    console.error(`${prefix} err.error.data:`, err?.error?.data);
-    console.error(`${prefix} err.status:`, err?.status);
     console.error(`${prefix} Extracted message:`, extractErrorMessage(err));
   }
 }

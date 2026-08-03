@@ -24,7 +24,7 @@ export const MessageInput: React.FC<MessageInputProps> = ({
   disabled,
 }) => {
   const [content, setContent] = useState("");
-  const typingTimerRef = useRef<any>(null);
+  const typingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleSend = () => {
     if ((!content.trim() && !attachedProduct) || disabled) return;

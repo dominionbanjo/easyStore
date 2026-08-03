@@ -1,4 +1,5 @@
 import { apiManager } from "./apiManager";
+import type { RootState } from "@/store";
 
 export interface IParticipant {
   id: string;
@@ -58,6 +59,12 @@ export interface PaginatedResponse<T> {
   message: string;
 }
 
+export interface SendMessageResponse {
+  data: IMessage;
+  status?: string;
+  message?: string;
+}
+
 export const messagingApi = apiManager.injectEndpoints({
   endpoints: (builder) => ({
     getChatroomMessages: builder.query<PaginatedResponse<IMessage>, { page?: number; limit?: number }>({
@@ -69,21 +76,21 @@ export const messagingApi = apiManager.injectEndpoints({
       providesTags: ["Messaging"],
       keepUnusedDataFor: 8640000,
     }),
-    sendChatroomMessage: builder.mutation<any, { content: string; product_id?: string; product_name?: string; product_image?: string; product_slug?: string; local_id?: string }>({
+    sendChatroomMessage: builder.mutation<SendMessageResponse, { content: string; product_id?: string; product_name?: string; product_image?: string; product_slug?: string; local_id?: string }>({
       query: (body) => ({
         url: "messaging/chatroom",
         method: "POST",
         body,
       }),
       async onQueryStarted(args, { dispatch, queryFulfilled, getState }) {
-        const state = getState() as any;
+        const state = getState() as RootState;
         const user = state.user.currentUser;
         const tempId = args.local_id || `temp-${Date.now()}`;
 
         const optimisticMessage: IMessage = {
           id: tempId,
           localId: tempId,
-          sender_id: user?.id,
+          sender_id: user?.id ?? "",
           recipient_id: null,
           conversation_id: null,
           is_public: true,
@@ -97,13 +104,14 @@ export const messagingApi = apiManager.injectEndpoints({
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
           sender: {
-            id: user?.id,
+            id: user?.id ?? "",
             first_name: user?.first_name || "Me",
             last_name: user?.last_name || "",
+            email: user?.email || "",
             avatar: user?.avatar || null,
             username: user?.username || "me",
             account_type: user?.account_type || "user",
-          } as any,
+          },
           status: "sending",
         };
 
@@ -172,21 +180,21 @@ export const messagingApi = apiManager.injectEndpoints({
       providesTags: (_result, _error, { id }) => [{ type: "Messaging", id }],
       keepUnusedDataFor: 8640000,
     }),
-    sendDirectMessage: builder.mutation<any, { id: string; content: string; product_id?: string; product_name?: string; product_image?: string; product_slug?: string; local_id?: string }>({
+    sendDirectMessage: builder.mutation<SendMessageResponse, { id: string; content: string; product_id?: string; product_name?: string; product_image?: string; product_slug?: string; local_id?: string }>({
       query: ({ id, ...body }) => ({
         url: `messaging/conversations/${id}/messages`,
         method: "POST",
         body,
       }),
       async onQueryStarted({ id, ...args }, { dispatch, queryFulfilled, getState }) {
-        const state = getState() as any;
+        const state = getState() as RootState;
         const user = state.user.currentUser;
         const tempId = args.local_id || `temp-${Date.now()}`;
 
         const optimisticMessage: IMessage = {
           id: tempId,
           localId: tempId,
-          sender_id: user?.id,
+          sender_id: user?.id ?? "",
           recipient_id: null,
           conversation_id: id,
           is_public: false,
@@ -200,13 +208,14 @@ export const messagingApi = apiManager.injectEndpoints({
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
           sender: {
-            id: user?.id,
+            id: user?.id ?? "",
             first_name: user?.first_name || "Me",
             last_name: user?.last_name || "",
+            email: user?.email || "",
             avatar: user?.avatar || null,
             username: user?.username || "me",
             account_type: user?.account_type || "user",
-          } as any,
+          },
           status: "sending",
         };
 

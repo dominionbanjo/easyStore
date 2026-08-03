@@ -15,6 +15,7 @@ import { ProductCard } from "@/components/shared/ProductCard";
 import { WishlistSkeleton } from "@/modules/website/components/skeletons/WishlistSkeleton";
 import SmartLink from "@/components/shared/SmartLink";
 import { WEBSITE_ROUTES } from "@/routes/index";
+import { extractErrorMessage } from "@/utils/errorHandler";
 
 export default function WishlistPage() {
   /* ───────────────── mutations ───────────────── */
@@ -24,7 +25,7 @@ export default function WishlistPage() {
 
   const { data, isLoading, isError } = useGetMyWishlistQuery();
 
-  const wishlist = data?.data.wishlist ?? [];
+  const wishlist = useMemo(() => data?.data.wishlist ?? [], [data]);
 
   /* ───────────────── UI STATE ───────────────── */
 
@@ -36,8 +37,8 @@ export default function WishlistPage() {
     try {
       await moveAllToCart().unwrap();
       toast.success("All items moved to cart successfully!");
-    } catch (error: any) {
-      toast.error(error?.data?.message || "Failed to move items to cart.");
+    } catch (error: unknown) {
+      toast.error(extractErrorMessage(error, "Failed to move items to cart."));
     }
   };
 

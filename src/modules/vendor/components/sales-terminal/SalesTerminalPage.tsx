@@ -1,7 +1,7 @@
 import { useState, useCallback, useMemo } from "react";
 import { useDebounce } from "@/hooks";
 import { useAppDispatch, useAppSelector } from "@/hooks";
-import { useGetSalesTerminalProductsQuery, useGetSalesTerminalCategoriesQuery, useRecordOfflineSaleMutation, useLazyLookupByBarcodeQuery } from "@/services/salesApi";
+import { useGetSalesTerminalProductsQuery, useGetSalesTerminalCategoriesQuery, useRecordOfflineSaleMutation, useLazyLookupByBarcodeQuery, type SalesTerminalProduct } from "@/services/salesApi";
 import {
   addToSaleCart,
   updateSaleCartQuantity,
@@ -50,7 +50,7 @@ export function SalesTerminalPage() {
   const [viewMode, setViewMode] = useState<"products" | "cart">("products");
   const [receiptOrderId, setReceiptOrderId] = useState<string | null>(null);
   const [showSaleConfirm, setShowSaleConfirm] = useState(false);
-  const [variantModalProduct, setVariantModalProduct] = useState<any>(null);
+  const [variantModalProduct, setVariantModalProduct] = useState<SalesTerminalProduct | null>(null);
 
   const { data: productsData, isLoading, isFetching } = useGetSalesTerminalProductsQuery({
     page: currentPage,
@@ -449,9 +449,9 @@ function ProductCard({
   onAdd,
   onOpenVariant,
 }: {
-  product: { id: string; name: string; slug: string; price: number; image: string | null; stock: number; variants: { id: string; price: number; stock: number; combinations: Record<string, string>; image_url: string | null }[] };
+  product: SalesTerminalProduct;
   onAdd: (product: { id: string; name: string; price: number; image: string | null }, variant?: { id: string; price: number; image_url: string | null; combinations: Record<string, string> }) => void;
-  onOpenVariant?: (product: any) => void;
+  onOpenVariant?: (product: SalesTerminalProduct) => void;
 }) {
   const handleClick = () => {
     if (product.variants.length > 0 && onOpenVariant) {

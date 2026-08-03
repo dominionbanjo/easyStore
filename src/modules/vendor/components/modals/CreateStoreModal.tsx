@@ -11,10 +11,15 @@ import { useCreateStoreMutation, useLazyCheckStoreNameQuery } from "@/services/s
 import { getCookieDomain } from "@/utils/subdomain";
 import { useAppSelector } from "@/hooks";
 import { selectCurrentUser } from "@/features/userSlice";
+import { extractErrorMessage } from "@/utils/errorHandler";
 
 interface CreateStoreModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+}
+
+interface CreateStoreResponse {
+  access_token?: string;
 }
 
 interface CreateStoreForm {
@@ -78,7 +83,7 @@ export function CreateStoreModal({ open, onOpenChange }: CreateStoreModalProps) 
 
       toast.success("Store created successfully!");
 
-      const responseData = result as any;
+      const responseData = result as unknown as CreateStoreResponse;
       if (responseData?.access_token) {
         Cookies.set("token", responseData.access_token, {
           expires: 7,
@@ -90,8 +95,8 @@ export function CreateStoreModal({ open, onOpenChange }: CreateStoreModalProps) 
 
       onOpenChange(false);
       window.location.reload();
-    } catch (error: any) {
-      toast.error(error?.data?.message || "Failed to create store");
+    } catch (error: unknown) {
+      toast.error(extractErrorMessage(error, "Failed to create store"));
     }
   };
 

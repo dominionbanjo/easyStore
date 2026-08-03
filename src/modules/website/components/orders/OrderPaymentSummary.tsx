@@ -9,6 +9,7 @@ import type { IOrder } from "@/services/ordersApi";
 import { useRetryPaymentMutation } from "@/services/ordersApi";
 import { useAddItemToCartMutation } from "@/services/cartApi";
 import { toast } from "sonner";
+import { extractErrorMessage } from "@/utils/errorHandler";
 
 interface OrderPaymentSummaryProps {
   order: IOrder;
@@ -44,8 +45,8 @@ export function OrderPaymentSummary({ order }: OrderPaymentSummaryProps) {
 
       toast.success("Items added to cart successfully!");
       navigate("/cart"); // Navigate to cart after reordering
-    } catch (error: any) {
-      toast.error(error?.data?.message || "Failed to reorder some items.");
+    } catch (error: unknown) {
+      toast.error(extractErrorMessage(error, "Failed to reorder some items."));
     } finally {
       setIsReordering(false);
     }
@@ -68,8 +69,13 @@ export function OrderPaymentSummary({ order }: OrderPaymentSummaryProps) {
       } else {
         toast.error("Failed to initialize payment retry. Please try again.");
       }
-    } catch (error: any) {
-      toast.error(error?.data?.message || "Failed to retry payment. Please contact support.");
+    } catch (error: unknown) {
+      toast.error(
+        extractErrorMessage(
+          error,
+          "Failed to retry payment. Please contact support.",
+        ),
+      );
     }
   };
 

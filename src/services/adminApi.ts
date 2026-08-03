@@ -1,5 +1,6 @@
 import { apiManager } from "./apiManager";
 import type { IUser } from "@/types/auth/authTypes";
+import type { IOrder } from "./ordersApi";
 
 // Extended type with store relation + extra admin fields
 export interface IAdminUser extends IUser {
@@ -86,7 +87,7 @@ export interface IAdminPayout {
   amount_kobo: number;
   status: "pending" | "processing" | "paid" | "failed" | "pending_manual" | "success" | "reversed";
   reference: string;
-  metadata: any;
+  metadata: { transaction?: IAdminTransaction } | null;
   created_at: string;
   updated_at: string;
   vendor?: IAdminUser | null;
@@ -114,7 +115,7 @@ export interface IAdminEscrow {
   updated_at: string;
   buyer?: IAdminUser | null;
   vendor?: IAdminUser | null;
-  order?: any | null;
+  order?: IOrder | null;
 }
 
 interface IPaginationMeta {
@@ -220,7 +221,7 @@ export interface IRevenueDataPoint {
   txCount: number;
 }
 
-const buildQuery = (params: Record<string, any>) => {
+const buildQuery = (params: Record<string, unknown>) => {
   const urlParams = new URLSearchParams();
   Object.entries(params).forEach(([key, val]) => {
     if (val !== undefined && val !== null && val !== "all" && val !== "")
@@ -232,7 +233,7 @@ const buildQuery = (params: Record<string, any>) => {
 
 export const adminApi = apiManager.injectEndpoints({
   endpoints: (builder) => ({
-    // ─── All users (any type) ───
+    // ─── All users ───
     getAdminUsers: builder.query<
       IPaginatedResponse<IAdminUser>,
       {
@@ -386,7 +387,7 @@ export const adminApi = apiManager.injectEndpoints({
 
     // ─── Action: Flag Transaction ───
     flagAdminTransaction: builder.mutation<
-      { message: string; data: any },
+      { message: string; data: unknown },
       { transactionId: string }
     >({
       query: ({ transactionId }) => ({
@@ -548,7 +549,7 @@ export const adminApi = apiManager.injectEndpoints({
     }),
     
     getAdminOrders: builder.query<
-      IPaginatedResponse<any>,
+      IPaginatedResponse<IOrder>,
       { page?: number; limit?: number; status?: string; search?: string }
     >({
       query: (params) => `admin/orders?${buildQuery(params)}`,

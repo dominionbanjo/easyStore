@@ -44,7 +44,6 @@ export const AutomatedAlertCard = ({
   onEdit,
   onToggle,
   onDelete,
-  onMarkRead: _onMarkRead,
   isToggling
 }: AutomatedCardProps) => {
   const isPaused = !notification.is_active;
@@ -152,7 +151,6 @@ interface BroadcastCardProps {
 export const ManualBroadcastCard = ({
   broadcast,
   onDelete,
-  isLoading: _isLoading,
 }: BroadcastCardProps) => {
   return (
     <Card className="border-border/30 overflow-hidden flex flex-col h-full rounded-sm">

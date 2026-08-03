@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import { getSubdomain, getBaseDomain, areSubdomainsDisabled } from "@/utils/subdomain";
 import { Store, ArrowLeft, Search } from "lucide-react";
@@ -10,10 +10,11 @@ import { useStartConversationMutation } from "@/services/messagingApi";
 import { ACCOUNT_ROUTES } from "@/routes/index";
 import { toast } from "sonner";
 import SEO from "@/components/shared/SEO";
+import { extractErrorMessage } from "@/utils/errorHandler";
 
 import { StoreSkeleton } from "@/modules/vendor/components/skeletons/StoreSkeleton";
-import { useStoreTheme } from "@/modules/vendor/components/StoreThemeProvider";
-import { useStoreData } from "@/modules/vendor/layout/StorefrontLayout";
+import { useStoreTheme } from "@/modules/vendor/components/storeThemeContext";
+import { useStoreData } from "@/modules/vendor/layout/storefrontContext";
 import DefaultTemplate from "@/modules/vendor/components/Store-details-page/templates/DefaultTemplate";
 import VanguardTemplate from "@/modules/vendor/components/Store-details-page/templates/VanguardTemplate";
 import BazaarTemplate from "@/modules/vendor/components/Store-details-page/templates/BazaarTemplate";
@@ -84,7 +85,10 @@ export default function StoreDetailsPage() {
 
   const storeResponse = useStoreData();
   const store = storeResponse?.data?.store;
-  const categories = storeResponse?.data?.categories ?? [];
+  const categories = useMemo(
+    () => storeResponse?.data?.categories ?? [],
+    [storeResponse],
+  );
   const storeLoading = !storeResponse;
 
   // Handle category query param
@@ -279,8 +283,8 @@ export default function StoreDetailsPage() {
             navigate(targetPath);
           }
         }
-      } catch (err: any) {
-        toast.error(err?.data?.message || "Failed to start conversation");
+      } catch (err: unknown) {
+        toast.error(extractErrorMessage(err, "Failed to start conversation"));
       }
     },
   };

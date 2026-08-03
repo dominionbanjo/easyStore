@@ -28,8 +28,10 @@ export interface ICustomer {
 }
 
 export const createCustomerColumns = (
-  _onViewDetails: (customer: ICustomer) => void,
-): ColumnDef<ICustomer>[] => [
+  onViewDetails: (customer: ICustomer) => void,
+): ColumnDef<ICustomer>[] => {
+  void onViewDetails;
+  return [
   {
     accessorKey: "name",
     header: "Customer",
@@ -189,3 +191,4 @@ export const createCustomerColumns = (
     },
   },
 ];
+};

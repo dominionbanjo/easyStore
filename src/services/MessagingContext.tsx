@@ -1,31 +1,16 @@
-import React, { createContext, useContext, useEffect, useRef, useState, useCallback, useMemo } from "react";
+import React, { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { io, Socket } from "socket.io-client";
 import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
 import { messagingApi } from "./messagingApi";
 import type { AppDispatch, RootState } from "@/store";
+import {
+  MessagingContext,
+  type SocketMessagePayload,
+  type TypingContext,
+} from "./messagingContextCore";
 
 const SOCKET_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
-
-interface MessagingContextType {
-  isConnected: boolean;
-  onlineUsers: Set<string>;
-  chatroomUserCount: number;
-  typingUsers: Record<string, string[]>;
-  socket: Socket | null;
-  joinConversation: (id: string) => void;
-  leaveConversation: (id: string) => void;
-  joinChatroom: () => void;
-  leaveChatroom: () => void;
-  startTyping: (context: { conversation_id: string } | { chatroom: true }) => void;
-  stopTyping: (context: { conversation_id: string } | { chatroom: true }) => void;
-  markDelivered: (message_id: string) => void;
-  readConversation: (conversation_id: string) => void;
-  activeConversationId: string | null;
-  setActiveConversationId: (id: string | null) => void;
-}
-
-const MessagingContext = createContext<MessagingContextType | null>(null);
 
 export const MessagingProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isConnected, setIsConnected] = useState(false);
@@ -83,15 +68,18 @@ export const MessagingProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       setChatroomUserCount(count);
     });
 
-    socket.on("new_direct_message", (message) => {
+    socket.on("new_direct_message", (message: SocketMessagePayload) => {
+      const conversationId = message.conversation_id;
+      if (!conversationId) return;
+
       // Update specific conversation cache
       dispatch(
         messagingApi.util.updateQueryData(
           "getConversationMessages",
-          { id: message.conversation_id },
+          { id: conversationId },
           (draft) => {
             if (draft?.data?.items) {
-              const incomingLocalId = (message as any).local_id;
+              const incomingLocalId = message.local_id;
               const exists = draft.data.items.find(m => 
                 m.id === message.id || (incomingLocalId && m.localId === incomingLocalId)
               );
@@ -115,26 +103,26 @@ export const MessagingProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       socket.emit("mark_delivered", { message_id: message.id });
 
       // If viewing, mark as read
-      if (activeChatIdRef.current === message.conversation_id) {
-        socket.emit("read_conversation", { conversation_id: message.conversation_id });
+      if (activeChatIdRef.current === conversationId) {
+        socket.emit("read_conversation", { conversation_id: conversationId });
         // Optimistically clear in list
         dispatch(
           messagingApi.util.updateQueryData("getUserConversations", undefined, (draft) => {
-            const conv = draft?.data?.find(c => c.id === message.conversation_id);
+            const conv = draft?.data?.find(c => c.id === conversationId);
             if (conv) conv.unread_count = 0;
           })
         );
       }
     });
 
-    socket.on("new_chatroom_message", (message) => {
+    socket.on("new_chatroom_message", (message: SocketMessagePayload) => {
       dispatch(
         messagingApi.util.updateQueryData(
           "getChatroomMessages",
           {},
           (draft) => {
             if (draft?.data?.items) {
-              const incomingLocalId = (message as any).local_id;
+              const incomingLocalId = message.local_id;
               const exists = draft.data.items.find(m => 
                 m.id === message.id || (incomingLocalId && m.localId === incomingLocalId)
               );
@@ -232,8 +220,8 @@ export const MessagingProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     leaveConversation: (id: string) => socketRef.current?.emit("leave_conversation", { conversation_id: id }),
     joinChatroom: () => socketRef.current?.emit("join_chatroom"),
     leaveChatroom: () => socketRef.current?.emit("leave_chatroom"),
-    startTyping: (ctx: any) => socketRef.current?.emit("typing_start", ctx),
-    stopTyping: (ctx: any) => socketRef.current?.emit("typing_stop", ctx),
+    startTyping: (ctx: TypingContext) => socketRef.current?.emit("typing_start", ctx),
+    stopTyping: (ctx: TypingContext) => socketRef.current?.emit("typing_stop", ctx),
     markDelivered: (id: string) => socketRef.current?.emit("mark_delivered", { message_id: id }),
     readConversation: (id: string) => {
       if (id !== "chatroom") {
@@ -245,10 +233,4 @@ export const MessagingProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   }), [isConnected, onlineUsers, chatroomUserCount, typingUsers, activeConversationId]);
 
   return <MessagingContext.Provider value={value}>{children}</MessagingContext.Provider>;
-};
-
-export const useMessaging = () => {
-  const context = useContext(MessagingContext);
-  if (!context) throw new Error("useMessaging must be used within a MessagingProvider");
-  return context;
 };

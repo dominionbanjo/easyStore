@@ -29,6 +29,27 @@ export interface CreateStoreArgs extends Partial<IStore> {
   current_sales_channel?: string;
 }
 
+export interface VendorCustomersArgs {
+  search?: string;
+  sort?: string;
+  order?: "ASC" | "DESC";
+  page?: number;
+  limit?: number;
+}
+
+export interface IVendorCustomer {
+  id: string;
+  name: string;
+  email: string;
+  phone_number: string | null;
+  location: string | null;
+  orders_count: number;
+  total_spent: string;
+  rating: string;
+  last_order_at: string | null;
+  created_at: string;
+}
+
 type ApiResponse<T> = {
   status: string;
   message: string;
@@ -117,8 +138,8 @@ export const storeApi = apiManager.injectEndpoints({
 
     /* ───────── GET VENDOR CUSTOMERS ───────── */
     getVendorCustomers: builder.query<
-      { items: any[]; pagination: IStorePagination },
-      any
+      { items: IVendorCustomer[]; pagination: IStorePagination },
+      VendorCustomersArgs
     >({
       query: (params) => ({
         url: "store-customers",
@@ -126,7 +147,10 @@ export const storeApi = apiManager.injectEndpoints({
         params,
       }),
       transformResponse: (
-        response: ApiResponse<{ items: any[]; pagination: IStorePagination }>,
+        response: ApiResponse<{
+          items: IVendorCustomer[];
+          pagination: IStorePagination;
+        }>,
       ) => response.data,
       providesTags: ["Store"],
     }),
@@ -163,7 +187,10 @@ export const storeApi = apiManager.injectEndpoints({
     }),
 
     /* ───────── UPDATE STORE ───────── */
-    updateStore: builder.mutation<any, { id: string; data: FormData }>({
+    updateStore: builder.mutation<
+      { success: boolean; message?: string },
+      { id: string; data: FormData }
+    >({
       query: ({ id, data }) => ({
         url: `store/${id}`,
         method: "PATCH",
@@ -174,7 +201,7 @@ export const storeApi = apiManager.injectEndpoints({
 
     /* ───────── REGISTER BANK ───────── */
     registerStoreBank: builder.mutation<
-      any,
+      { success: boolean; message?: string },
       {
         id: string;
         bank_code: string;
@@ -192,7 +219,7 @@ export const storeApi = apiManager.injectEndpoints({
 
     /* ───────── UPDATE BANK ───────── */
     updateStoreBank: builder.mutation<
-      any,
+      { success: boolean; message?: string },
       {
         id: string;
         bank_code?: string;
@@ -226,7 +253,7 @@ export const storeApi = apiManager.injectEndpoints({
         method: "GET",
       }),
       transformResponse: (response: ApiResponse<ITemplate[]>) => response.data,
-      providesTags: ["Templates"] as any,
+      providesTags: ["Templates"],
       keepUnusedDataFor: 2147483647, // Indefinite caching
     }),
 

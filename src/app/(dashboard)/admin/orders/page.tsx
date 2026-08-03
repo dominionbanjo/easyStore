@@ -8,13 +8,13 @@ import {
 import { Button } from "@/components/ui/button";
 import {
   Download,
-  ShoppingBag,
   Search,
   Filter,
 } from "lucide-react";
 import {
   useGetAdminOrdersQuery,
 } from "@/services/adminApi";
+import type { IAdminTransaction, IAdminUser } from "@/services/adminApi";
 import { DataTable } from "@/components/shared/DataTable";
 import { Input } from "@/components/ui/input";
 import {
@@ -35,7 +35,9 @@ export default function AdminOrdersPage() {
   const debouncedSearch = useDebounce(search, 500);
 
   // For viewing order details
-  const [viewingOrder, setViewingOrder] = useState<any>(null);
+  const [viewingOrder, setViewingOrder] = useState<IAdminTransaction | null>(
+    null,
+  );
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const {
@@ -54,7 +56,12 @@ export default function AdminOrdersPage() {
 
   const columns = useMemo(() => buildAdminOrderColumns(), []);
 
-  const createPaginationState = (pagination: any) =>
+  const createPaginationState = (pagination: {
+    page: number | string;
+    pages: number;
+    hasNext: boolean;
+    hasPrev: boolean;
+  } | undefined) =>
     pagination
       ? {
           page: Number(pagination.page),
@@ -69,21 +76,7 @@ export default function AdminOrdersPage() {
   return (
     <section className="space-y-8 pb-10">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-sm bg-primary/10 flex items-center justify-center shrink-0">
-            <ShoppingBag className="h-6 w-6 text-primary" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-black tracking-tight text-foreground/90 uppercase">
-              Order Management
-            </h1>
-            <p className="text-sm text-muted-foreground mt-0.5 font-medium">
-              Monitor and manage all orders placed across the platform.
-            </p>
-          </div>
-        </div>
-
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-4">
         <Button
           variant="outline"
           className="gap-2 h-10 border-border/40 font-black uppercase tracking-widest text-[10px] bg-background"
@@ -135,15 +128,21 @@ export default function AdminOrdersPage() {
             emptyMessage="No orders found matching your criteria."
             onRowClick={(row) => {
               // Map order to transaction interface for the modal
-              const tx = {
+              const tx: IAdminTransaction = {
                 id: row.id,
+                order_id: null,
+                escrow_id: null,
+                user_id: null,
+                vendor_id: null,
+                reference: null,
                 amount: row.total,
                 currency: "NGN",
                 status: row.status,
                 type: "order",
                 created_at: row.created_at,
-                user: row.buyer,
-                vendor: row.vendor,
+                updated_at: row.created_at,
+                user: row.buyer as unknown as IAdminUser | null,
+                vendor: row.vendor as unknown as IAdminUser | null,
                 description: `Order ${row.id.substring(0, 8)}`,
               };
               setViewingOrder(tx);

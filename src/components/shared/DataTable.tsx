@@ -55,7 +55,7 @@ export function DataTable<TData, TValue>({
   const prevPageRef = useRef<number | undefined>(undefined);
 
   // 🔢 Auto-generated Serial Number Column (Pagination Aware)
-  const snColumn: ColumnDef<TData, any> = {
+  const snColumn: ColumnDef<TData, unknown> = {
     id: "sn",
     header: () => (
       <div className="w-8 text-center font-bold text-muted-foreground">#</div>

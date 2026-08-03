@@ -5,6 +5,7 @@ import { useForm, FormProvider } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
+import { extractErrorMessage } from "@/utils/errorHandler";
 import { Store, User, FileText, LayoutGrid } from "lucide-react";
 
 import { Modal } from "@/components/shared/Modal";
@@ -84,7 +85,7 @@ export function OnboardingModal() {
     if (isNew && !hasSeenOnboarding) {
       setIsOpen(true);
     }
-  }, [user, isVendor]);
+  }, [user, isVendor, isStaff]);
 
   // Sync with Redux trigger
   useEffect(() => {
@@ -94,7 +95,7 @@ export function OnboardingModal() {
         setStep(initialStep);
       }
     }
-  }, [showViaRedux, isVendor, initialStep]);
+  }, [showViaRedux, isVendor, isStaff, initialStep]);
 
   /* ───────── STORE NAME CHECK ───────── */
   useEffect(() => {
@@ -145,7 +146,7 @@ export function OnboardingModal() {
       toast.success("Store created successfully!");
       markAsSeen();
       
-      const storeId = (result as any)?.id || (result as any)?.data?.id;
+      const storeId = result.data?.id;
       const updatedUser = { ...user, account_type: "vendor" as const, active_store_id: storeId };
       dispatch(setUser({ user: updatedUser }));
 
@@ -154,8 +155,8 @@ export function OnboardingModal() {
         "/",
         navigate
       );
-    } catch (error: any) {
-      toast.error(error?.data?.message || "Failed to create store");
+    } catch (error: unknown) {
+      toast.error(extractErrorMessage(error, "Failed to create store"));
     }
   };
 

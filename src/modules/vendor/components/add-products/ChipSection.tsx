@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { X, Plus, Hash, Sparkles, Ruler } from "lucide-react";
+import { X, Plus, Hash, Sparkles, Ruler, type LucideIcon } from "lucide-react";
 
 
 import { Badge } from "@/components/ui/badge";
@@ -14,7 +14,7 @@ interface ChipSectionProps {
   placeholder?: string;
 }
 
-const ICONS: Record<string, any> = {
+const ICONS: Record<string, LucideIcon> = {
   Tags: Hash,
   Highlights: Sparkles,
   Sizes: Ruler,

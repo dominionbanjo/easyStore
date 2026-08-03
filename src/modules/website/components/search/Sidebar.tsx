@@ -99,7 +99,6 @@ import {
 
 export function SearchFiltersSidebar({
   className,
-  products: _products = [],
   filters = {},
 }: SearchFiltersProps) {
   return (
@@ -742,8 +741,8 @@ function EffectListener({
   val,
   onChange,
 }: {
-  val: any;
-  onChange: (val: any) => void;
+  val: string;
+  onChange: (val: string) => void;
 }) {
   const [lastVal, setLastVal] = useState(val);
   useEffect(() => {

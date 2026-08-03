@@ -51,8 +51,8 @@ export const buildAdminPayoutColumns = (
       accessorKey: "amount_kobo",
       cell: ({ row }) => {
         const payout = row.original;
-        // Handle both amount_kobo (admin list) and amount (core payout entity)
-        const rawAmount = payout.amount_kobo || (payout as any).amount || 0;
+        // amount_kobo is the canonical column for the admin list
+        const rawAmount = payout.amount_kobo || 0;
         const amount = rawAmount / 100;
         return (
           <span className="font-black text-sm text-emerald-600">
@@ -71,7 +71,7 @@ export const buildAdminPayoutColumns = (
         if (dateVal) {
           try {
             formattedDate = format(new Date(dateVal), "MMM d, yyyy HH:mm");
-          } catch (e) {
+          } catch {
             console.error("Invalid date value:", dateVal);
           }
         }

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
+import { extractErrorMessage } from "@/utils/errorHandler";
 import {
   Dialog,
   DialogContent,
@@ -135,8 +136,8 @@ export function OrderDetailsModal({
       
       onOpenChange(false);
       navigate(`${basePath}/${convId}`);
-    } catch (error: any) {
-      toast.error(error?.data?.message || "Failed to start conversation");
+    } catch (error: unknown) {
+      toast.error(extractErrorMessage(error, "Failed to start conversation"));
     }
   };
 
@@ -157,11 +158,11 @@ export function OrderDetailsModal({
       }).unwrap();
 
       toast.success(`Delivery status updated to ${newStatus}`);
-    } catch (error: any) {
+    } catch (error: unknown) {
       // Revert optimistic update on failure
       setOptimisticStatus(null);
 
-      toast.error(error.message || "Failed to update delivery status");
+      toast.error(extractErrorMessage(error, "Failed to update delivery status"));
     } finally {
       setUpdatingStatus(null);
     }
@@ -180,8 +181,8 @@ export function OrderDetailsModal({
 
       toast.success("Delivery confirmed and escrow funds released!");
       setOtp("");
-    } catch (error: any) {
-      toast.error(error?.data?.message || "Invalid confirmation code");
+    } catch (error: unknown) {
+      toast.error(extractErrorMessage(error, "Invalid confirmation code"));
     }
   };
 

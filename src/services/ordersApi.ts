@@ -15,6 +15,11 @@ export type OrderStatus =
 export type PaymentMethod = "offline" | "online";
 export type PaymentStatus = "pending" | "success" | "failed";
 
+export interface IOrderMutationResponse {
+  success: boolean;
+  message?: string;
+}
+
 export interface IOrderItem {
   product_id: string;
   name: string;
@@ -158,7 +163,7 @@ export interface ICheckoutSummaryVendor {
   delivery_options: {
     id: string;
     state: string;
-    location: string;
+    location: string | null;
     fee: number;
     duration: string | null;
   }[];
@@ -318,14 +323,21 @@ export const ordersApi = apiManager.injectEndpoints({
           method: "GET",
           params: params || {},
         }),
-        transformResponse: (response: any): PaginatedResult<IOrder> => {
+        transformResponse: (response: unknown): PaginatedResult<IOrder> => {
           // The backend typically returns { status, message, data: { items, pagination } }
           // but some base queries or interceptors might partially unwrap it.
-          const payload = response?.data || response;
+          const payload =
+            (response as { data?: { items?: IOrder[]; pagination?: PaginatedResult<IOrder>["pagination"] } })
+              ?.data ?? response;
+
+          const unwrapped = payload as {
+            items?: IOrder[];
+            pagination?: PaginatedResult<IOrder>["pagination"];
+          };
 
           return {
-            items: payload?.items || [],
-            pagination: payload?.pagination || {
+            items: unwrapped?.items || [],
+            pagination: unwrapped?.pagination || {
               total: 0,
               page: 1,
               limit: 10,
@@ -358,10 +370,35 @@ export const ordersApi = apiManager.injectEndpoints({
         method: "GET",
         params: params || {},
       }),
-      transformResponse: (response: any) => {
+      transformResponse: (response: unknown) => {
         // Handle wrapped response from backend
-        if (response?.data) {
-          return response.data;
+        if (
+          response &&
+          typeof response === "object" &&
+          "data" in response
+        ) {
+          const payload = (response as { data: unknown }).data as {
+            items?: IOrder[];
+            pagination?: {
+              total: number;
+              page: number;
+              limit: number;
+              pages: number;
+              hasNext: boolean;
+              hasPrev: boolean;
+            };
+          };
+          return {
+            items: payload?.items || [],
+            pagination: payload?.pagination || {
+              total: 0,
+              page: 1,
+              limit: 10,
+              pages: 0,
+              hasNext: false,
+              hasPrev: false,
+            },
+          };
         }
         return {
           items: [],
@@ -383,16 +420,19 @@ export const ordersApi = apiManager.injectEndpoints({
         url: `orders/${id}`,
         method: "GET",
       }),
-      transformResponse: (response: any): IOrder => {
+      transformResponse: (response: unknown): IOrder => {
         // Backend returns { status, message, data: order }
-        return response?.data || response;
+        return (
+          (response as { data?: IOrder }).data ??
+          (response as IOrder)
+        );
       },
       providesTags: (_r, _e, id) => [{ type: "Store", id }],
     }),
 
     /* ───────── UPDATE ───────── */
 
-    updateOrderStatus: builder.mutation<any, UpdateOrderStatusArgs>({
+    updateOrderStatus: builder.mutation<IOrderMutationResponse, UpdateOrderStatusArgs>({
       query: ({ id, status }) => ({
         url: `orders/${id}/status`,
         method: "PATCH",
@@ -401,7 +441,7 @@ export const ordersApi = apiManager.injectEndpoints({
       invalidatesTags: ["Store"],
     }),
 
-    cancelOrder: builder.mutation<any, string>({
+    cancelOrder: builder.mutation<IOrderMutationResponse, string>({
       query: (id) => ({
         url: `orders/${id}/cancel`,
         method: "PATCH",
@@ -411,7 +451,7 @@ export const ordersApi = apiManager.injectEndpoints({
 
     /* ───────── OFFLINE FULFILLMENT (SELLER) ───────── */
 
-    fulfillOfflineOrder: builder.mutation<any, string>({
+    fulfillOfflineOrder: builder.mutation<IOrderMutationResponse, string>({
       query: (orderId) => ({
         url: `orders/offline/${orderId}/fulfill`,
         method: "PATCH",

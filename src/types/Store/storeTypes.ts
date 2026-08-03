@@ -259,7 +259,7 @@ export interface IStoreDeliveryRate {
   id: string;
   store_id: string;
   state: string;
-  location: string;
+  location: string | null;
   fee: number;
   duration: string | null;
   notes: string | null;

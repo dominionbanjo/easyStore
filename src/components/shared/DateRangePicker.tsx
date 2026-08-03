@@ -45,7 +45,7 @@ interface DateRangePickerProps {
   onChange: (range: { dateFrom?: string; dateTo?: string }) => void;
 }
 
-export function DateRangePicker({ value: _value, onChange }: DateRangePickerProps) {
+export function DateRangePicker({ onChange }: DateRangePickerProps) {
   const [activePreset, setActivePreset] = useState<PresetKey>("all");
   const [range, setRange] = useState<DateRange | undefined>(undefined);
   const [open, setOpen] = useState(false);

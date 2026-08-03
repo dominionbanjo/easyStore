@@ -13,7 +13,7 @@ export default function NewArrivalsPage() {
     sort: "newest",
     limit: 12,
     page,
-  } as any);
+  });
 
   const products = productsData?.data?.items ?? [];
   const pagination = productsData?.data?.pagination;

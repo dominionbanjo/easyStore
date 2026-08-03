@@ -1,10 +1,10 @@
 import { lazy, type ComponentType, type LazyExoticComponent } from "react";
 
-type ModuleWithDefault<T extends ComponentType<any>> = {
+type ModuleWithDefault<T> = {
   default: T;
 };
 
-type Importer<T extends ComponentType<any>> = () => Promise<ModuleWithDefault<T>>;
+type Importer<T> = () => Promise<ModuleWithDefault<T>>;
 
 const RETRY_PARAM = "_lr";
 const RETRY_PREFIX = "eazystore:lazy-retry:";
@@ -37,7 +37,7 @@ function buildReloadUrl(): string {
   return next.toString();
 }
 
-async function importWithRecovery<T extends ComponentType<any>>(
+async function importWithRecovery<T>(
   importer: Importer<T>,
   moduleKey: string,
 ): Promise<ModuleWithDefault<T>> {
@@ -78,7 +78,7 @@ async function importWithRecovery<T extends ComponentType<any>>(
   }
 }
 
-export function lazyWithRecovery<T extends ComponentType<any>>(
+export function lazyWithRecovery<T extends ComponentType<unknown>>(
   importer: Importer<T>,
   moduleKey?: string,
 ): LazyExoticComponent<T> {

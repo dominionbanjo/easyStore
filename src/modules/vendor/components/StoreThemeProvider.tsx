@@ -1,26 +1,10 @@
-import React, { createContext, useContext } from "react";
+import React from "react";
 import type { CSSProperties } from "react";
 
-import type { IStoreTheme, ThemeConfig } from "@/types/Store/storeTypes";
+import type { IStoreTheme } from "@/types/Store/storeTypes";
+import { ThemeContext } from "./storeThemeContext";
 
-export type { ThemeConfig };
-
-export interface StoreThemeData extends IStoreTheme {
-  custom_config: ThemeConfig | null;
-}
-
-const ThemeContext = createContext<{
-  theme: ThemeConfig;
-  templateName: string;
-} | null>(null);
-
-export function useStoreTheme() {
-  const context = useContext(ThemeContext);
-  if (!context) {
-    throw new Error("useStoreTheme must be used within a StoreThemeProvider");
-  }
-  return context;
-}
+export type { StoreThemeData, ThemeConfig } from "./storeThemeContext";
 
 export function StoreThemeProvider({
   themeData,

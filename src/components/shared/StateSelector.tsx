@@ -8,7 +8,6 @@ import { cn } from "@/lib/utils";
 import {
   clearLocationState,
   selectLocationState,
-  selectLocationSource,
   setLocationState,
 } from "@/features/locationSlice";
 import { NigeriaData } from "@/utils/nigeria-data";
@@ -16,12 +15,15 @@ import { useLocationPreference } from "@/hooks/useLocationPreference";
 
 interface StateSelectorProps {
   className?: string;
+  align?: "start" | "center" | "end";
 }
 
-export default function StateSelector({ className }: StateSelectorProps) {
+export default function StateSelector({
+  className,
+  align = "start",
+}: StateSelectorProps) {
   const dispatch = useDispatch();
   const locationState = useSelector(selectLocationState);
-  const locationSource = useSelector(selectLocationSource);
   const { detectAndSet } = useLocationPreference();
 
   const [open, setOpen] = useState(false);
@@ -51,46 +53,58 @@ export default function StateSelector({ className }: StateSelectorProps) {
     setOpen(false);
   };
 
-  const isDetected = locationSource === "gps" || locationSource === "address";
-
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
           type="button"
-          variant="outline"
+          variant="ghost"
+          size="icon"
           className={cn(
-            "h-10 gap-2 rounded-sm px-3 text-sm font-semibold",
-            locationState && "border-primary/40 text-primary",
+            "p-2 flex-shrink-0",
+            locationState && "text-primary",
             className,
           )}
+          aria-label={
+            locationState
+              ? `Location: ${locationState}. Click to change.`
+              : "Location: All Nigeria. Click to change."
+          }
         >
-          <MapPin className={cn("h-4 w-4", locationState && "text-primary")} />
-          <span className="max-w-[120px] truncate">
-            {locationState ?? "All Nigeria"}
-          </span>
-          {isDetected && (
-            <span className="relative flex h-2 w-2 shrink-0">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
-            </span>
-          )}
+          <MapPin className={cn("h-5 w-5", locationState && "text-primary")} />
         </Button>
       </PopoverTrigger>
 
-      <PopoverContent align="start" className="w-72 p-0">
+      <PopoverContent align={align} className="w-72 p-0">
         <div className="p-3 space-y-2">
-          <div className="flex items-center justify-between">
-            <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
-              Your Location
-            </p>
+          {/* Current location display */}
+          <div className="flex items-center gap-2.5 rounded-sm border border-primary/15 bg-primary/[0.04] px-3 py-2.5">
+            <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-sm bg-primary/10">
+              <MapPin className="h-4 w-4 text-primary" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                Current Location
+              </p>
+              <p
+                title={locationState ?? "All Nigeria"}
+                className={cn(
+                  "truncate text-sm font-bold",
+                  !locationState && "font-medium text-muted-foreground",
+                )}
+              >
+                {locationState ?? "All Nigeria"}
+              </p>
+            </div>
             {locationState && (
               <button
                 type="button"
                 onClick={handleClear}
-                className="flex items-center gap-1 text-xs font-semibold text-destructive hover:underline"
+                aria-label="Reset to All Nigeria"
+                className="flex items-center gap-1 rounded-sm px-1.5 py-1 text-xs font-semibold text-destructive hover:bg-destructive/10 transition-colors"
               >
-                <X className="h-3 w-3" /> All Nigeria
+                <X className="h-3 w-3" />
+                Reset
               </button>
             )}
           </div>

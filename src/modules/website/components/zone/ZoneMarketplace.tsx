@@ -1,11 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { Store, Package, SearchX, GraduationCap } from "lucide-react";
+import { Store, Package, SearchX, GraduationCap, Home, ArrowLeft } from "lucide-react";
 import { useGetZoneQuery, useGetZoneStoresQuery, useGetZoneProductsQuery } from "@/services/schoolZoneApi";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Pagination } from "@/components/shared/Pagination";
 import StoreCard from "@/components/shared/StoreCard";
 import ProductGridCard from "@/components/shared/ProductGridCard";
+import { NigeriaData } from "@/utils/nigeria-data";
+import { getSubdomain, getWebsitePath } from "@/utils/subdomain";
+import { useDebounce } from "@/hooks";
 import { cn } from "@/lib/utils";
 
 type Tab = "stores" | "products";
@@ -14,9 +17,23 @@ interface ZoneMarketplaceProps {
   identifier: string;
 }
 
+/** True when rendered inside a subdomain context (e.g. abuad.eazystore.com.ng). */
+const isZoneSubdomainContext = (): boolean => {
+  const subdomain = getSubdomain();
+  return Boolean(
+    subdomain && subdomain !== "vendor" && subdomain !== "admin" && subdomain !== "staff"
+  );
+};
+
 export default function ZoneMarketplace({ identifier }: ZoneMarketplaceProps) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [tab, setTab] = useState<Tab>("stores");
+  const [searchInput, setSearchInput] = useState(searchParams.get("q") ?? "");
+  const debouncedSearch = useDebounce(searchInput, 350);
+
+  // When rendered on a subdomain (e.g. abuad.eazystore.com.ng), internal
+  // links must escape back to the base domain.
+  const escapePaths = isZoneSubdomainContext();
 
   const { data: zoneResponse, isLoading: isZoneLoading } = useGetZoneQuery(identifier);
 
@@ -55,26 +72,15 @@ export default function ZoneMarketplace({ identifier }: ZoneMarketplaceProps) {
 
   useEffect(() => {
     const next = new URLSearchParams(searchParams);
-    if (!q.trim()) {
+    if (!debouncedSearch.trim()) {
       next.delete("q");
     } else {
-      next.set("q", q.trim());
+      next.set("q", debouncedSearch.trim());
     }
     next.set("page", "1");
     setSearchParams(next, { replace: true });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tab]);
-
-  const handleSearch = (value: string) => {
-    const next = new URLSearchParams(searchParams);
-    if (!value.trim()) {
-      next.delete("q");
-    } else {
-      next.set("q", value.trim());
-    }
-    next.set("page", "1");
-    setSearchParams(next);
-  };
+  }, [debouncedSearch, tab]);
 
   const handlePageChange = (nextPage: number) => {
     const next = new URLSearchParams(searchParams);
@@ -118,16 +124,32 @@ export default function ZoneMarketplace({ identifier }: ZoneMarketplaceProps) {
             <SearchX className="h-12 w-12 text-primary" />
           </div>
           <h3 className="text-3xl font-black text-foreground mb-3 tracking-tight">
-            School zone not found
+            Store not found
           </h3>
           <p className="text-muted-foreground font-medium leading-relaxed mb-8">
-            This zone doesn't exist or is no longer active.
+            This storefront doesn't exist or is no longer available.
           </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+            <a
+              href={getWebsitePath("/")}
+              className="inline-flex items-center justify-center gap-2 px-8 py-3 bg-primary text-white font-black rounded-sm uppercase tracking-widest text-xs hover:scale-105 transition-all active:scale-95"
+            >
+              <Home className="h-4 w-4" />
+              Go Home
+            </a>
+            <button
+              onClick={() => window.history.back()}
+              className="inline-flex items-center justify-center gap-2 px-8 py-3 border-2 border-zinc-200 dark:border-white/10 font-bold rounded-sm text-xs uppercase tracking-widest hover:bg-zinc-50 dark:hover:bg-white/5 transition-all"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Go Back
+            </button>
+          </div>
           <Link
-            to="/zones"
-            className="inline-block px-8 py-3 bg-primary text-white font-black rounded-sm uppercase tracking-widest text-xs hover:scale-105 transition-all active:scale-95"
+            to={getWebsitePath("/zones") ?? "/zones"}
+            className="inline-block mt-6 text-primary font-bold text-sm hover:underline"
           >
-            Browse all zones
+            Browse all school zones
           </Link>
         </div>
       </section>
@@ -189,7 +211,12 @@ export default function ZoneMarketplace({ identifier }: ZoneMarketplaceProps) {
             </span>
             {zone.state && (
               <span className="inline-flex items-center gap-1.5 bg-secondary/30 px-3 py-1.5 rounded-sm text-xs font-semibold text-muted-foreground">
-                {[zone.location, zone.state].filter(Boolean).join(", ")}
+                {[
+                  zone.location,
+                  NigeriaData.getStateByCode(zone.state)?.name ?? zone.state,
+                ]
+                  .filter(Boolean)
+                  .join(", ")}
               </span>
             )}
           </div>
@@ -226,8 +253,8 @@ export default function ZoneMarketplace({ identifier }: ZoneMarketplaceProps) {
 
           <div className="flex items-center gap-2">
             <input
-              value={q}
-              onChange={(e) => handleSearch(e.target.value)}
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
               placeholder={`Search ${tab === "stores" ? "stores" : "products"}...`}
               className="w-full sm:w-72 px-4 py-2.5 rounded-sm border border-border/60 bg-card text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/30"
             />
@@ -263,6 +290,11 @@ export default function ZoneMarketplace({ identifier }: ZoneMarketplaceProps) {
                       rating={Number(store.rating_average ?? 0)}
                       totalProducts={store.total_products}
                       address={store.address}
+                      linkHref={
+                        escapePaths
+                          ? getWebsitePath(`/stores/${store.slug}`)
+                          : undefined
+                      }
                     />
                   </div>
                 ))}
@@ -281,8 +313,12 @@ export default function ZoneMarketplace({ identifier }: ZoneMarketplaceProps) {
             </>
           ) : (
             <EmptyState
-              title="No stores yet"
-              message="Vendors haven't joined this zone yet. Check back soon!"
+              title={debouncedSearch ? "No stores found" : "No stores yet"}
+              message={
+                debouncedSearch
+                  ? "No stores in this zone match your search."
+                  : "Vendors haven't joined this zone yet. Check back soon!"
+              }
             />
           )
         ) : products.length > 0 ? (
@@ -290,7 +326,14 @@ export default function ZoneMarketplace({ identifier }: ZoneMarketplaceProps) {
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3 sm:gap-4">
               {products.map((product) => (
                 <div key={product.id}>
-                  <ProductGridCard data={product} />
+                  <ProductGridCard
+                    data={product}
+                    href={
+                      escapePaths
+                        ? getWebsitePath(`/product/${product.slug}`)
+                        : undefined
+                    }
+                  />
                 </div>
               ))}
             </div>
@@ -308,8 +351,12 @@ export default function ZoneMarketplace({ identifier }: ZoneMarketplaceProps) {
           </>
         ) : (
           <EmptyState
-            title="No products yet"
-            message="No products from this zone's vendors match your search."
+            title={debouncedSearch ? "No products found" : "No products yet"}
+            message={
+              debouncedSearch
+                ? "No products from this zone's vendors match your search."
+                : "No products from this zone's vendors yet."
+            }
           />
         )}
       </div>

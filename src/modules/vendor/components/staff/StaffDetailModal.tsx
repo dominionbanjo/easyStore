@@ -9,6 +9,7 @@ import { useGetStaffQuery, useUpdateStaffMutation, useSuspendStaffMutation, useU
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
+import { extractErrorMessage } from "@/utils/errorHandler";
 
 interface Props {
   staffId: string | null;
@@ -50,8 +51,8 @@ export function StaffDetailModal({ staffId, open, onOpenChange }: Props) {
       await updateStaff({ id: staffId, data: { first_name: firstName, last_name: lastName } }).unwrap();
       toast.success("Staff updated");
       setEditing(false);
-    } catch (err: any) {
-      toast.error(err?.data?.message || "Update failed");
+    } catch (err: unknown) {
+      toast.error(extractErrorMessage(err, "Update failed"));
     }
   };
 
@@ -65,8 +66,8 @@ export function StaffDetailModal({ staffId, open, onOpenChange }: Props) {
         case "reset-account": await resetPassword({ id: staffId }).unwrap(); toast.success("Account reset email sent"); break;
         case "remove": await remove(staffId).unwrap(); toast.success("Staff removed"); onOpenChange(false); break;
       }
-    } catch (err: any) {
-      toast.error(err?.data?.message || "Action failed");
+    } catch (err: unknown) {
+      toast.error(extractErrorMessage(err, "Action failed"));
     }
     setConfirmAction(null);
   };
@@ -104,7 +105,7 @@ export function StaffDetailModal({ staffId, open, onOpenChange }: Props) {
             <>
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div><span className="text-muted-foreground">Email:</span> <span className="font-medium">{staff.user.email}</span></div>
-                <div><span className="text-muted-foreground">Status:</span> <Badge variant={isActive ? "success" : "destructive" as any}>{staff.status}</Badge></div>
+                <div><span className="text-muted-foreground">Status:</span> <Badge variant={isActive ? "outline" : "destructive"}>{staff.status}</Badge></div>
                 <div><span className="text-muted-foreground">Added:</span> <span>{new Date(staff.created_at).toLocaleDateString()}</span></div>
                 <div><span className="text-muted-foreground">Last Login:</span> <span>{staff.last_login_at ? new Date(staff.last_login_at).toLocaleDateString() : "Never"}</span></div>
               </div>
@@ -192,8 +193,8 @@ export function StaffDetailModal({ staffId, open, onOpenChange }: Props) {
                   toast.success("Password updated successfully");
                   setShowResetPassModal(false);
                   setCustomPassword("");
-                } catch (err: any) {
-                  toast.error(err?.data?.message || "Failed to set password");
+                } catch (err: unknown) {
+                  toast.error(extractErrorMessage(err, "Failed to set password"));
                 }
                 setSavingPass(false);
               }}

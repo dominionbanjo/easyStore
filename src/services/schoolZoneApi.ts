@@ -6,6 +6,9 @@ import type {
   IGetZoneProductsResponse,
   IGetMembersResponse,
   IGetMyMembershipsResponse,
+  IGetMyCreatedZonesResponse,
+  IGetZoneDetailResponse,
+  IGetZoneStatsResponse,
   IZoneActionResponse,
   ISchoolZone,
   ISchoolZoneAdminItem,
@@ -15,11 +18,28 @@ import type {
   ApplyToZoneArgs,
   MemberDecisionArgs,
   ZoneApprovalArgs,
+  ZoneMemberStatus,
 } from "@/types/SchoolZone/schoolZoneTypes";
 import type { IStorePagination } from "@/types/Store/storeTypes";
 
 export const schoolZoneApi = apiManager.injectEndpoints({
   endpoints: (builder) => ({
+    /* ───────── CHECK SUBDOMAIN AVAILABILITY ───────── */
+    checkZoneSubdomain: builder.query<
+      {
+        status: "success" | "error";
+        message: string;
+        data: { available: boolean };
+      },
+      { subdomain: string }
+    >({
+      query: ({ subdomain }) => ({
+        url: "school-zones/check-subdomain",
+        method: "GET",
+        params: { subdomain },
+      }),
+    }),
+
     /* ───────── LIST ACTIVE ZONES ───────── */
     getZones: builder.query<IGetZonesResponse, GetZonesArgs>({
       query: (params) => ({
@@ -64,10 +84,27 @@ export const schoolZoneApi = apiManager.injectEndpoints({
     }),
 
     /* ───────── MY MEMBERSHIPS (VENDOR) ───────── */
-    getMyMemberships: builder.query<IGetMyMembershipsResponse, void>({
-      query: () => ({
+    getMyMemberships: builder.query<
+      IGetMyMembershipsResponse,
+      { page?: number; limit?: number }
+    >({
+      query: (params) => ({
         url: "school-zones/me/memberships",
         method: "GET",
+        params,
+      }),
+      providesTags: ["SchoolZone"],
+    }),
+
+    /* ───────── MY CREATED ZONES (VENDOR) ───────── */
+    getMyCreatedZones: builder.query<
+      IGetMyCreatedZonesResponse,
+      { page?: number; limit?: number }
+    >({
+      query: (params) => ({
+        url: "school-zones/me/created",
+        method: "GET",
+        params,
       }),
       providesTags: ["SchoolZone"],
     }),
@@ -128,7 +165,8 @@ export const schoolZoneApi = apiManager.injectEndpoints({
       IGetMembersResponse,
       {
         zoneId: string;
-        status?: "pending" | "active" | "rejected";
+        status?: ZoneMemberStatus;
+        q?: string;
         page?: number;
         limit?: number;
       }
@@ -147,6 +185,42 @@ export const schoolZoneApi = apiManager.injectEndpoints({
         url: `school-zones/${zoneId}/members/${memberId}/decision`,
         method: "POST",
         body,
+      }),
+      invalidatesTags: ["SchoolZone"],
+    }),
+
+    /* ───────── REP/ADMIN: SUSPEND MEMBER ───────── */
+    suspendMember: builder.mutation<
+      IZoneActionResponse,
+      { zoneId: string; memberId: string }
+    >({
+      query: ({ zoneId, memberId }) => ({
+        url: `school-zones/${zoneId}/members/${memberId}/suspend`,
+        method: "POST",
+      }),
+      invalidatesTags: ["SchoolZone"],
+    }),
+
+    /* ───────── REP/ADMIN: UNSUSPEND MEMBER ───────── */
+    unsuspendMember: builder.mutation<
+      IZoneActionResponse,
+      { zoneId: string; memberId: string }
+    >({
+      query: ({ zoneId, memberId }) => ({
+        url: `school-zones/${zoneId}/members/${memberId}/unsuspend`,
+        method: "POST",
+      }),
+      invalidatesTags: ["SchoolZone"],
+    }),
+
+    /* ───────── REP/ADMIN: REMOVE MEMBER FROM ZONE ───────── */
+    removeZoneMember: builder.mutation<
+      IZoneActionResponse,
+      { zoneId: string; memberId: string }
+    >({
+      query: ({ zoneId, memberId }) => ({
+        url: `school-zones/${zoneId}/members/${memberId}`,
+        method: "DELETE",
       }),
       invalidatesTags: ["SchoolZone"],
     }),
@@ -171,6 +245,24 @@ export const schoolZoneApi = apiManager.injectEndpoints({
       providesTags: ["SchoolZone"],
     }),
 
+    /* ───────── ADMIN: ZONE STATS ───────── */
+    getAdminZoneStats: builder.query<IGetZoneStatsResponse, void>({
+      query: () => ({
+        url: "school-zones/admin/stats",
+        method: "GET",
+      }),
+      providesTags: ["SchoolZone"],
+    }),
+
+    /* ───────── ADMIN: ZONE DETAIL (WITH REQUESTER) ───────── */
+    getAdminZoneDetail: builder.query<IGetZoneDetailResponse, string>({
+      query: (zoneId) => ({
+        url: `school-zones/admin/${zoneId}`,
+        method: "GET",
+      }),
+      providesTags: ["SchoolZone"],
+    }),
+
     /* ───────── ADMIN: ZONE APPROVAL ───────── */
     decideZone: builder.mutation<IZoneActionResponse, ZoneApprovalArgs>({
       query: ({ zoneId, ...body }) => ({
@@ -184,11 +276,14 @@ export const schoolZoneApi = apiManager.injectEndpoints({
 });
 
 export const {
+  useCheckZoneSubdomainQuery,
+  useLazyCheckZoneSubdomainQuery,
   useGetZonesQuery,
   useGetZoneQuery,
   useGetZoneStoresQuery,
   useGetZoneProductsQuery,
   useGetMyMembershipsQuery,
+  useGetMyCreatedZonesQuery,
   useGetMyRepZonesQuery,
   useCreateZoneMutation,
   useApplyToZoneMutation,
@@ -196,6 +291,11 @@ export const {
   useUpdateZoneMutation,
   useGetZoneMembersQuery,
   useDecideMemberMutation,
+  useSuspendMemberMutation,
+  useUnsuspendMemberMutation,
+  useRemoveZoneMemberMutation,
   useGetAdminZonesQuery,
+  useGetAdminZoneDetailQuery,
+  useGetAdminZoneStatsQuery,
   useDecideZoneMutation,
 } = schoolZoneApi;

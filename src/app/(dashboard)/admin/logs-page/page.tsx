@@ -32,6 +32,7 @@ import {
   Download,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import type { LucideIcon } from "lucide-react";
 
 const logs = [
   {
@@ -84,7 +85,7 @@ const logs = [
   },
 ];
 
-const typeIcons: Record<string, any> = {
+const typeIcons: Record<string, LucideIcon> = {
   system: Server,
   vendor: Activity,
   user: User,
@@ -118,15 +119,7 @@ export default function SuperAdminLogsPage() {
   return (
     <section className="space-y-8">
       {/* ─── Page Header ─── */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">System Logs</h1>
-          <p className="text-sm text-muted-foreground">
-            Review all system activities, admin actions, vendor updates, and
-            security events in real time.
-          </p>
-        </div>
-
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-4">
         <div className="flex items-center gap-2">
           <Button variant="outline" className="gap-2">
             <Filter className="h-4 w-4" /> Filters

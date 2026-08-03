@@ -32,6 +32,8 @@ export function useAddProductForm(extras: ProductExtras) {
 
   const { reset, getValues, trigger } = methods;
 
+  const { setImage, setGallery, setSpecs, setTags, setHighlights } = extras;
+
   // Auto-save form values to Redux draft (background polling)
   useEffect(() => {
     if (!hasHydrated.current) return;
@@ -84,11 +86,11 @@ export function useAddProductForm(extras: ProductExtras) {
         price: null,
         discount_price: null,
       } as unknown as AddProductFormInput);
-      extras.setImage(null);
-      extras.setGallery([]);
-      extras.setSpecs([]);
-      extras.setTags([]);
-      extras.setHighlights([]);
+      setImage(null);
+      setGallery([]);
+      setSpecs([]);
+      setTags([]);
+      setHighlights([]);
       return;
     }
 
@@ -120,20 +122,20 @@ export function useAddProductForm(extras: ProductExtras) {
     hasHydrated.current = true;
 
     // Handle extras (complex states managed by parent)
-    if (draft.image) extras.setImage(draft.image);
-    if (draft.gallery) extras.setGallery(draft.gallery);
-    if (draft.specs) extras.setSpecs(draftToSpecs(draft.specs));
-    if (draft.tags) extras.setTags(draft.tags);
-    if (draft.highlights) extras.setHighlights(draft.highlights);
+    if (draft.image) setImage(draft.image);
+    if (draft.gallery) setGallery(draft.gallery);
+    if (draft.specs) setSpecs(draftToSpecs(draft.specs));
+    if (draft.tags) setTags(draft.tags);
+    if (draft.highlights) setHighlights(draft.highlights);
   }, [
     draft,
     reset,
     trigger,
-    extras.setImage,
-    extras.setGallery,
-    extras.setSpecs,
-    extras.setTags,
-    extras.setHighlights,
+    setImage,
+    setGallery,
+    setSpecs,
+    setTags,
+    setHighlights,
     getValues,
   ]);
 

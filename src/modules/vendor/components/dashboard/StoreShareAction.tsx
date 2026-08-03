@@ -7,8 +7,18 @@ import { getBaseDomain } from "@/utils/subdomain";
 import { cn } from "@/lib/utils";
 import { useGetStoreProductsQuery } from "@/services/storeApi";
 
+interface ShareStoreData {
+  id: string;
+  slug: string;
+  subdomain?: string | null;
+  store_name: string;
+  description?: string | null;
+  logo?: string | { url: string } | null;
+  banner?: string | { url: string } | null;
+}
+
 interface StoreShareActionProps {
-  store?: any;
+  store?: ShareStoreData;
   className?: string;
 }
 
@@ -18,7 +28,7 @@ export function StoreShareAction({ store, className }: StoreShareActionProps) {
 
   // Fetch a few products to showcase on the flyer
   const { data: productsData } = useGetStoreProductsQuery(
-    { slug: store?.slug, limit: 3 },
+    { slug: store?.slug ?? "", limit: 3 },
     { skip: !store?.slug },
   );
 
@@ -77,8 +87,13 @@ export function StoreShareAction({ store, className }: StoreShareActionProps) {
         await navigator.clipboard.writeText(storeUrl);
         toast.success("Link copied! Now you can share your store anywhere.");
       }
-    } catch (err: any) {
-      if (err.name !== "AbortError") {
+    } catch (err: unknown) {
+      const isAbort =
+        err &&
+        typeof err === "object" &&
+        "name" in err &&
+        (err as { name?: unknown }).name === "AbortError";
+      if (!isAbort) {
         console.error("Sharing failed", err);
         // Fallback: Copy Link
         await navigator.clipboard.writeText(storeUrl);
@@ -170,12 +185,10 @@ export function StoreShareAction({ store, className }: StoreShareActionProps) {
               </div>
 
               <div className="grid grid-cols-3 gap-6">
-                {products.map((product: any) => {
-                  const pImage =
-                    typeof product.image === "string"
-                      ? product.image
-                      : product.image?.url;
-                  const isSale = product.on_sale && product.discount_price > 0;
+                {products.map((product) => {
+                  const pImage = product.image;
+                  const isSale =
+                    !!product.on_sale && (product.discount_price ?? 0) > 0;
 
                   return (
                     <div

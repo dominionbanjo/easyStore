@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useGetOrderReceiptMutation } from "@/services/ordersApi";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { extractErrorMessage } from "@/utils/errorHandler";
 
 interface ReceiptDownloadButtonProps {
   orderId: string;
@@ -63,11 +64,13 @@ export function ReceiptDownloadButton({
       } else {
         toast.error(response.message || "Failed to generate receipt");
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Receipt Download Error:", error);
       toast.error(
-        error?.data?.message ||
+        extractErrorMessage(
+          error,
           "An error occurred while downloading the receipt",
+        ),
       );
     }
   };

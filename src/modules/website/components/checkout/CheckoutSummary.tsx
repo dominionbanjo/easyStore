@@ -40,7 +40,7 @@ interface CheckoutSummaryProps {
   deliveryOptions?: {
     id: string;
     state: string;
-    location: string;
+    location: string | null;
     fee: number;
     duration: string | null;
   }[];
@@ -245,7 +245,9 @@ export function CheckoutSummary({
                     icon={<Truck className="h-4 w-4" />}
                     options={deliveryOptions.map((opt) => ({
                       value: opt.id,
-                      label: `${opt.state} (${opt.location}) — ₦${Number(opt.fee).toLocaleString()}`,
+                      label: opt.location
+                        ? `${opt.state} (${opt.location}) — ₦${Number(opt.fee).toLocaleString()}`
+                        : `${opt.state} — ₦${Number(opt.fee).toLocaleString()}`,
                     }))}
                     onValueChange={onSelectDeliveryRate}
                     className="[&>label]:text-[10px] [&>label]:font-black [&>label]:uppercase [&>label]:tracking-widest [&>label]:text-muted-foreground/60"

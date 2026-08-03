@@ -126,6 +126,7 @@ export default function App() {
                   <Route path="sales-terminal" element={<Pages.SalesTerminalPage />} />
                   <Route path="sales-history" element={<Pages.SalesHistoryPage />} />
                   <Route path="school-zones" element={<Pages.VendorSchoolZonesPage />} />
+                  <Route path="school-zones/:id" element={<Pages.VendorSchoolZoneDetailPage />} />
                 </Route>
 
                 {/* ─── STAFF DASHBOARD (dev mode) ─── */}
@@ -140,6 +141,7 @@ export default function App() {
                   <Route index element={<Pages.SuperAdminOverviewPage />} />
                   <Route path="vendors" element={<Pages.SuperAdminVendorsPage />} />
                   <Route path="school-zones" element={<Pages.SuperAdminSchoolZonesPage />} />
+                  <Route path="school-zones/:id" element={<Pages.SuperAdminSchoolZoneDetailPage />} />
                   <Route path="orders" element={<Pages.SuperAdminOrdersPage />} />
                   <Route path="users" element={<Pages.SuperAdminUsersPage />} />
                   <Route path="transactions" element={<Pages.SuperAdminTransactionsPage />} />
@@ -178,6 +180,7 @@ export default function App() {
                 <Route path="sales-terminal" element={<Pages.SalesTerminalPage />} />
                 <Route path="sales-history" element={<Pages.SalesHistoryPage />} />
                 <Route path="school-zones" element={<Pages.VendorSchoolZonesPage />} />
+                <Route path="school-zones/:id" element={<Pages.VendorSchoolZoneDetailPage />} />
               </Route>
             )}
 
@@ -194,6 +197,7 @@ export default function App() {
                 <Route index element={<Pages.SuperAdminOverviewPage />} />
                 <Route path="vendors" element={<Pages.SuperAdminVendorsPage />} />
                 <Route path="school-zones" element={<Pages.SuperAdminSchoolZonesPage />} />
+                <Route path="school-zones/:id" element={<Pages.SuperAdminSchoolZoneDetailPage />} />
                 <Route path="orders" element={<Pages.SuperAdminOrdersPage />} />
                 <Route path="users" element={<Pages.SuperAdminUsersPage />} />
                 <Route path="transactions" element={<Pages.SuperAdminTransactionsPage />} />
@@ -250,6 +254,12 @@ export default function App() {
               <Route path="/zones" element={<Pages.ZonesPage />} />
               <Route
                 path="/zones/:identifier"
+                element={<Pages.ZoneDetailsPage />}
+              />
+              {/* Alias: /school-zones/:identifier also resolves to the zone marketplace */}
+              <Route path="/school-zones" element={<Pages.ZonesPage />} />
+              <Route
+                path="/school-zones/:identifier"
                 element={<Pages.ZoneDetailsPage />}
               />
               <Route path="/cart" element={<Pages.CartPage />} />

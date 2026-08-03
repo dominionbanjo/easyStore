@@ -4,11 +4,13 @@ import { useSearchParams } from "react-router-dom";
 import { useGetZonesQuery } from "@/services/schoolZoneApi";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Pagination } from "@/components/shared/Pagination";
+import { useDebounce } from "@/hooks";
 import ZoneCard from "@/components/shared/ZoneCard";
 
 export default function ZonesPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState(searchParams.get("q") ?? "");
+  const debouncedSearch = useDebounce(search, 350);
 
   const page = Number(searchParams.get("page") ?? 1);
   const q = searchParams.get("q") ?? "";
@@ -24,15 +26,15 @@ export default function ZonesPage() {
 
   useEffect(() => {
     const next = new URLSearchParams(searchParams);
-    if (!search.trim()) {
+    if (!debouncedSearch.trim()) {
       next.delete("q");
     } else {
-      next.set("q", search.trim());
+      next.set("q", debouncedSearch.trim());
     }
     next.set("page", "1");
     setSearchParams(next, { replace: true });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search]);
+  }, [debouncedSearch]);
 
   const handlePageChange = (nextPage: number) => {
     const next = new URLSearchParams(searchParams);

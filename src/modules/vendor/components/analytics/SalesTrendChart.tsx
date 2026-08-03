@@ -42,6 +42,12 @@ const MONTH_NAMES = [
   "Dec",
 ];
 
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: Array<{ value: number | string }>;
+  label?: string | number;
+}
+
 export function SalesTrendChart({ data }: SalesTrendChartProps) {
   const [activeMetric, setActiveMetric] = useState<"revenue" | "orders">(
     "revenue",
@@ -54,7 +60,7 @@ export function SalesTrendChart({ data }: SalesTrendChartProps) {
     orders: Number(item.orders),
   }));
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
     if (active && payload && payload.length) {
       return (
         <div className="bg-card/95 backdrop-blur-md border border-border/50 p-4 rounded-sm ">

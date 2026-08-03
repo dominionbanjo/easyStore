@@ -46,7 +46,7 @@ export function ColorMultiSelect({
   const { control } = useFormContext();
 
   const { data, isLoading } = useGetColorsQuery();
-  const colors: ApiColor[] = data?.data ?? [];
+  const colors: ApiColor[] = useMemo(() => data?.data ?? [], [data]);
 
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");

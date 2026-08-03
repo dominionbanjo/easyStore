@@ -9,6 +9,23 @@ import type { RootState } from "@/store";
 
 import { useNavigate } from "react-router-dom";
 import { handleRoleRedirect, getSubdomain } from "@/utils/subdomain";
+import type {
+  IAuthResponse,
+  IUser,
+} from "@/types/auth/authTypes";
+
+type GoogleLoginResponse = IAuthResponse & { user?: IUser };
+
+interface GooglePromptNotification {
+  isNotDisplayed: () => boolean;
+  getNotDisplayedReason: () => string;
+  isSkippedMoment: () => boolean;
+  getSkippedReason: () => string;
+}
+
+interface GoogleOneTapIdPrompt {
+  prompt: (notification: (notification: GooglePromptNotification) => void) => void;
+}
 
 export default function AuthProvider({
   children,
@@ -47,11 +64,11 @@ export default function AuthProvider({
         clearInterval(timerId);
         initializedRef.current = true;
 
-        (window.google.accounts.id.initialize as any)({
+        const initializeConfig = {
           client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID!,
           callback: async (response: { credential: string }) => {
             try {
-              const res: any = await googleLogin({
+              const res: GoogleLoginResponse = await googleLogin({
                 token: response.credential,
               }).unwrap();
               const user = res?.data?.user || res?.user;
@@ -59,7 +76,7 @@ export default function AuthProvider({
               const redirectTo =
                 new URLSearchParams(window.location.search).get("redirect") ||
                 "/";
-              let finalRedirect = redirectTo;
+              const finalRedirect = redirectTo;
 
               handleRoleRedirect(user, finalRedirect, navigate);
             } catch (err) {
@@ -70,15 +87,11 @@ export default function AuthProvider({
           auto_select: false, // 👈 KEY FIX: prevents mobile loops/crashes
           cancel_on_tap_outside: false,
           context: "signin",
-        });
+        };
+        window.google.accounts.id.initialize(initializeConfig);
 
-        (window.google.accounts.id.prompt as any)(
-          (notification: {
-            isNotDisplayed: () => boolean;
-            getNotDisplayedReason: () => string;
-            isSkippedMoment: () => boolean;
-            getSkippedReason: () => string;
-          }) => {
+        (window.google.accounts.id as GoogleOneTapIdPrompt).prompt(
+          (notification) => {
             if (notification.isNotDisplayed()) {
               console.warn(
                 "One Tap not displayed:",
@@ -94,7 +107,7 @@ export default function AuthProvider({
     }, 300);
 
     return () => clearInterval(timerId);
-  }, [googleLogin, token]);
+  }, [googleLogin, token, navigate]);
 
   return <>{children}</>;
 }

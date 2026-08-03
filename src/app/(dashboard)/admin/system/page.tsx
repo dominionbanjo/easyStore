@@ -13,7 +13,6 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import {
-  Server,
   Database,
   Cloud,
   RefreshCw,
@@ -32,17 +31,7 @@ export default function SuperAdminServerConfigPage() {
   return (
     <section className="space-y-10">
       {/* ─── Header ─── */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
-            <Server className="h-6 w-6 text-primary" />
-            Server Configuration
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            Manage environment variables, caching, performance tuning, and
-            backup settings for your backend infrastructure.
-          </p>
-        </div>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-4">
         <Button className="gap-2">
           <Download className="h-4 w-4" /> Export Config
         </Button>

@@ -17,6 +17,7 @@ import { AuthLayout } from "@/modules/auth/components/AuthLayout";
 import { useAppSelector, useAppDispatch } from "@/hooks";
 import { selectCurrentUser, setUser } from "@/features/userSlice";
 import { handleRoleRedirect } from "@/utils/subdomain";
+import { extractErrorMessage } from "@/utils/errorHandler";
 
 export default function VerifyOtpPage() {
   const navigate = useNavigate();
@@ -41,8 +42,8 @@ export default function VerifyOtpPage() {
         try {
           await resendOtp({ email }).unwrap();
           toast.success("Verification code sent to your email");
-        } catch (error: any) {
-          toast.error(error?.data?.message || "Failed to send OTP");
+        } catch (error: unknown) {
+          toast.error(extractErrorMessage(error, "Failed to send OTP"));
         }
       })();
     }
@@ -79,8 +80,8 @@ export default function VerifyOtpPage() {
       } else {
         navigate(redirectTo, { replace: true });
       }
-    } catch (error: any) {
-      toast.error(error?.data?.message || "OTP verification failed");
+    } catch (error: unknown) {
+      toast.error(extractErrorMessage(error, "OTP verification failed"));
     }
   };
 
@@ -92,8 +93,8 @@ export default function VerifyOtpPage() {
       await resendOtp({ email }).unwrap();
       toast.success("A new OTP has been sent to your email");
       setTimer(300);
-    } catch (error: any) {
-      toast.error(error?.data?.message || "Failed to resend OTP");
+    } catch (error: unknown) {
+      toast.error(extractErrorMessage(error, "Failed to resend OTP"));
     }
   };
 

@@ -15,7 +15,7 @@ export default function FeaturedProductsPage() {
     limit: 12,
     page,
     sort: "newest", // If sorting is needed
-  } as any);
+  });
 
   const products = featuredData?.data?.items ?? [];
   const pagination = featuredData?.data?.pagination;

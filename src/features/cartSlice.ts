@@ -35,6 +35,22 @@ const initialState: CartState = {
   error: null,
 };
 
+/**
+ * Shape accepted by the shared cart sync handler.
+ * Covers both `{ data: { cart } }` (cart endpoints) and flat responses.
+ */
+type CartSnapshot = {
+  items: ICartItem[];
+  subtotal: number;
+  shipping: number;
+  total: number;
+};
+
+type CartSyncPayload = {
+  data?: { cart: CartSnapshot };
+  cart?: CartSnapshot;
+};
+
 const calculateLocalTotals = (state: CartState) => {
   state.localSubtotal = state.localItems.reduce(
     (acc, item) => acc + (item.discount_price ?? item.price) * item.quantity,
@@ -181,11 +197,11 @@ const cartSlice = createSlice({
     );
 
     /* ───────── SHARED CART SYNC HANDLER ───────── */
-    const syncCart = (state: CartState, payload: any) => {
-      state.items = payload.data.cart.items;
-      state.subtotal = payload.data.cart.subtotal;
-      state.shipping = payload.data.cart.shipping;
-      state.total = payload.data.cart.total;
+    const syncCart = (state: CartState, payload: CartSyncPayload) => {
+      state.items = payload.data!.cart.items;
+      state.subtotal = payload.data!.cart.subtotal;
+      state.shipping = payload.data!.cart.shipping;
+      state.total = payload.data!.cart.total;
     };
 
     /* ───────── ADD ITEM ───────── */

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useGetStoreDeliveryRatesQuery, useUpdateStoreMutation } from "@/services/storeApi";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { extractErrorMessage } from "@/utils/errorHandler";
 
 export function DeliverySetupStep({ storeId }: { storeId: string }) {
   const { data: rates, isLoading } = useGetStoreDeliveryRatesQuery(storeId, {
@@ -31,8 +32,8 @@ export function DeliverySetupStep({ storeId }: { storeId: string }) {
       
       toast.success("Store setup complete! Welcome to your dashboard.");
       navigate("/products?setup=success");
-    } catch (err: any) {
-      toast.error(err?.data?.message || "Failed to finalize store setup");
+    } catch (err: unknown) {
+      toast.error(extractErrorMessage(err, "Failed to finalize store setup"));
     } finally {
       setCompleting(false);
     }

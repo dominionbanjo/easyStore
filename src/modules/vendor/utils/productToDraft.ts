@@ -39,7 +39,7 @@ export function productToDraft(product: IProductDetails) {
         ? [...product.highlights]
         : [],
       options: Array.isArray(product.options)
-        ? product.options.map((o: any) => ({
+        ? product.options.map((o) => ({
             name: o.name,
             values: [...(o.values || [])],
           }))

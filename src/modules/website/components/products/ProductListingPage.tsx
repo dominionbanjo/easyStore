@@ -2,6 +2,7 @@ import type { LucideIcon } from "lucide-react";
 import ProductGridCard from "@/components/shared/ProductGridCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Pagination } from "@/components/shared/Pagination";
+import type { IProduct } from "@/types/product/productTypes";
 
 interface ProductListingPageProps {
   title: string;
@@ -13,7 +14,7 @@ interface ProductListingPageProps {
   badgeColor: string;
   badgeTextColor: string;
   isLoading: boolean;
-  products: any[];
+  products: IProduct[];
   pagination?: {
     page: number;
     pages: number;

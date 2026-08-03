@@ -4,7 +4,7 @@ import { PackageSearch, ArrowLeft, ShoppingBag } from "lucide-react";
 import { useGetStoreDetailsQuery } from "@/services/storeApi";
 import { useGetSingleProductQuery } from "@/services/productApi";
 import { ProductSkeleton } from "@/modules/vendor/components/skeletons/ProductSkeleton";
-import { useStoreTheme } from "@/modules/vendor/components/StoreThemeProvider";
+import { useStoreTheme } from "@/modules/vendor/components/storeThemeContext";
 
 // Placeholder imports for the incoming individual product templates
 import DefaultProductTemplate from "@/modules/vendor/components/Store-details-page/product-templates/DefaultProductTemplate";
@@ -22,9 +22,14 @@ import { useStartConversationMutation } from "@/services/messagingApi";
 import { toast } from "sonner";
 import { ACCOUNT_ROUTES } from "@/routes";
 import SEO from "@/components/shared/SEO";
+import { extractErrorMessage } from "@/utils/errorHandler";
 
 export default function StoreProductDetailsPage() {
-  let { slug, productSlug } = useParams<{ slug: string; productSlug: string }>();
+  const { slug: paramSlug, productSlug } = useParams<{
+    slug: string;
+    productSlug: string;
+  }>();
+  let slug = paramSlug;
   const subdomain = getSubdomain();
   if (subdomain && subdomain !== "vendor" && subdomain !== "admin") {
     slug = subdomain;
@@ -34,6 +39,9 @@ export default function StoreProductDetailsPage() {
   const previewTemplate = searchParams.get("preview_template");
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [startConversation, { isLoading: isMessagingLoading }] = useStartConversationMutation();
+
+  // Theme is resolved unconditionally so hooks run in the same order on every render
+  const { templateName: activeTemplateName, theme } = useStoreTheme();
 
   // Cart state
   const { isAuthenticated } = useSelector((state: RootState) => state.user);
@@ -121,8 +129,6 @@ export default function StoreProductDetailsPage() {
   }
 
   /* ─── RENDER TEMPLATE ─── */
-  const { templateName: activeTemplateName, theme } = useStoreTheme();
-
   // Override template if in preview mode
   const templateName = previewTemplate || activeTemplateName;
 
@@ -161,8 +167,8 @@ export default function StoreProductDetailsPage() {
         } else {
           window.location.href = `${window.location.protocol}//${getBaseDomain()}${targetPath}`;
         }
-      } catch (err: any) {
-        toast.error(err?.data?.message || "Failed to start conversation");
+      } catch (err: unknown) {
+        toast.error(extractErrorMessage(err, "Failed to start conversation"));
       }
     },
   };

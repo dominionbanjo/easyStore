@@ -5,12 +5,8 @@ import {
   Truck,
   CheckCircle2,
   Package,
-  Copy,
-  Check,
 } from "lucide-react";
 import { Messages3 } from "iconsax-react";
-import { toast } from "sonner";
-import { useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -21,36 +17,7 @@ import {
 } from "@/components/ui/popover";
 import type { IOrder } from "@/services/ordersApi";
 import { getStatusConfig } from "../utils/statusUtils";
-
-const CopyableRef = ({ value }: { value: string }) => {
-  const [isCopied, setIsCopied] = useState(false);
-
-  const handleCopy = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    navigator.clipboard.writeText(value);
-    toast.success("Reference copied");
-    setIsCopied(true);
-    setTimeout(() => setIsCopied(false), 2000);
-  };
-
-  return (
-    <div className="flex items-center gap-1.5 group/id">
-      <span className="font-semibold text-xs sm:text-sm">
-        #{value.slice(0, 8).toUpperCase()}
-      </span>
-      <button
-        onClick={handleCopy}
-        className="p-1 opacity-0 group-hover/id:opacity-100 hover:bg-muted rounded-sm transition-all text-muted-foreground hover:text-foreground"
-      >
-        {isCopied ? (
-          <Check className="h-3 w-3 text-emerald-600" />
-        ) : (
-          <Copy className="h-3 w-3" />
-        )}
-      </button>
-    </div>
-  );
-};
+import { CopyableRef } from "./CopyableRef";
 
 export const createOrderColumns = (
   onViewDetails?: (order: IOrder) => void,
@@ -60,7 +27,7 @@ export const createOrderColumns = (
   {
     accessorKey: "id",
     header: () => <div className="text-left">Reference</div>,
-    cell: ({ row }: { row: any }) => {
+    cell: ({ row }) => {
       const order = row.original;
       const ref = order.payment_reference || order.id;
 
@@ -79,7 +46,7 @@ export const createOrderColumns = (
   {
     accessorKey: "buyer",
     header: () => <div className="text-left">Customer</div>,
-    cell: ({ row }: { row: any }) => {
+    cell: ({ row }) => {
       const buyer = row.original.buyer;
 
       return (
@@ -105,10 +72,10 @@ export const createOrderColumns = (
   {
     accessorKey: "order_items",
     header: () => <div className="text-center">Items</div>,
-    cell: ({ row }: { row: any }) => {
+    cell: ({ row }) => {
       const items = row.original.order_items;
       const totalItems = items.reduce(
-        (sum: number, item: any) => sum + item.quantity,
+        (sum: number, item) => sum + item.quantity,
         0,
       );
 
@@ -127,7 +94,7 @@ export const createOrderColumns = (
   {
     accessorKey: "total",
     header: () => <div className="text-center">Total</div>,
-    cell: ({ row }: { row: any }) => (
+    cell: ({ row }) => (
       <div className="text-center font-semibold">
         ₦{(Number(row.original.total) / 100).toLocaleString()}
       </div>
@@ -138,7 +105,7 @@ export const createOrderColumns = (
   {
     accessorKey: "payment_status",
     header: () => <div className="text-center">Payment</div>,
-    cell: ({ row }: { row: any }) => {
+    cell: ({ row }) => {
       const status = row.original.payment_status;
       const config = getStatusConfig(status, "payment");
       const Icon = config.icon;
@@ -158,7 +125,7 @@ export const createOrderColumns = (
   {
     accessorKey: "status",
     header: () => <div className="text-center">Status</div>,
-    cell: ({ row }: { row: any }) => {
+    cell: ({ row }) => {
       const status = row.original.status;
       const config = getStatusConfig(status, "order");
       const Icon = config.icon;
@@ -178,7 +145,7 @@ export const createOrderColumns = (
   {
     accessorKey: "delivery.delivery_status",
     header: () => <div className="text-center">Delivery</div>,
-    cell: ({ row }: { row: any }) => {
+    cell: ({ row }) => {
       const delivery = row.original.delivery;
 
       if (!delivery) {
@@ -206,7 +173,7 @@ export const createOrderColumns = (
   {
     id: "actions",
     header: () => <div className="text-center" />,
-    cell: ({ row }: { row: any }) => {
+    cell: ({ row }) => {
       const order = row.original;
 
       return (

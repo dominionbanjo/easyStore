@@ -236,7 +236,8 @@ export default function SettingsPage() {
       ];
 
       mainFields.forEach((field) => {
-        formData.append(field, (data as any)[field] || "");
+        const value = data[field as keyof typeof data];
+        formData.append(field, typeof value === "string" ? value : "");
       });
 
       formData.append("social_links", JSON.stringify(data.social_links));

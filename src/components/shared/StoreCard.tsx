@@ -1,5 +1,4 @@
-import { Link } from "react-router-dom";
-import { Star, MapPin, Package } from "lucide-react";
+import { MapPin, Star, Package } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
@@ -22,6 +21,8 @@ interface StoreCardProps {
   address?: string | Address | null;
   className?: string;
   coverImage?: string | null;
+  /** Full URL override — used to escape a subdomain context (e.g. zone subdomain → base domain) */
+  linkHref?: string;
 }
 
 const formatCount = (value: number): string =>
@@ -41,6 +42,7 @@ export default function StoreCard({
   address,
   className,
   coverImage,
+  linkHref,
 }: StoreCardProps) {
   const formattedAddress =
     typeof address === "object" && address !== null
@@ -48,12 +50,15 @@ export default function StoreCard({
       : address;
 
   const bannerImage = coverImage || "/images/defaultbanner.png";
+  const linkProps = linkHref
+    ? { href: linkHref }
+    : { to: `/stores/${slug}` };
 
   return (
     <div
       className={cn("h-full group hover:-translate-y-1.5 transition-transform duration-300", className)}
     >
-      <Link to={`/stores/${slug}`} className="block h-full">
+      <a {...linkProps} className="block h-full">
         <Card className="relative h-full overflow-hidden border-border/40 bg-card p-0 transition-all duration-300 rounded-sm">
           {/* ─── BANNER AREA ─── */}
           <div
@@ -118,7 +123,7 @@ export default function StoreCard({
             </div>
           </div>
         </Card>
-      </Link>
+      </a>
     </div>
   );
 }

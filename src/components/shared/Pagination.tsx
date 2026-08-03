@@ -51,7 +51,7 @@ export function Pagination({
     const halfVisible = Math.floor(currentMaxVisible / 2);
 
     let start = Math.max(1, activePage - halfVisible);
-    let end = Math.min(pages, start + currentMaxVisible - 1);
+    const end = Math.min(pages, start + currentMaxVisible - 1);
 
     if (end - start + 1 < currentMaxVisible) {
       start = Math.max(1, end - currentMaxVisible + 1);

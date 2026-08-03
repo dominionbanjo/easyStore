@@ -119,4 +119,8 @@ export const NigeriaData = {
   getCountryByCode: (code: string) => (code === "NG" ? NIGERIA : null),
   getStateByCode: (stateCode: string) =>
     NIGERIA_STATES.find((s) => s.isoCode === stateCode),
+  getStateByName: (stateName: string) =>
+    NIGERIA_STATES.find(
+      (s) => s.name.toLowerCase() === stateName.trim().toLowerCase(),
+    ),
 };

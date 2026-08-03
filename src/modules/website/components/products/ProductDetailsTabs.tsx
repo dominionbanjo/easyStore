@@ -9,6 +9,7 @@ import {
   MapPin,
   Wallet,
   CheckCircle2,
+  type LucideIcon,
 } from "lucide-react";
 
 interface ProductDetailsTabsProps {
@@ -55,7 +56,7 @@ export default function ProductDetailsTabs({
       label: "Shipping & Returns",
       icon: Truck,
     },
-  ].filter(Boolean) as { value: string; label: string; icon: any }[];
+  ].filter(Boolean) as { value: string; label: string; icon: LucideIcon }[];
 
   if (tabs.length === 0) return null;
 

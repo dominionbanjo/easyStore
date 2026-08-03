@@ -8,7 +8,6 @@ import {
 import { Button } from "@/components/ui/button";
 import {
   Download,
-  Wallet,
   AlertCircle,
   Search,
 } from "lucide-react";
@@ -21,6 +20,7 @@ import {
   useGetAdminAllEscrowsQuery,
   useMarkAdminPayoutTransferredMutation,
   type IAdminPayout,
+  type IAdminTransaction,
 } from "@/services/adminApi";
 import { DataTable } from "@/components/shared/DataTable";
 import { toast } from "sonner";
@@ -28,6 +28,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Modal } from "@/components/shared/Modal";
 import { Textarea } from "@/components/ui/textarea";
+import { extractErrorMessage } from "@/utils/errorHandler";
 import { buildAdminPayoutColumns } from "@/modules/admin/components/payouts/AdminPayoutColumns";
 import { buildAdminEscrowColumns } from "@/modules/admin/components/payouts/AdminEscrowColumns";
 import { AdminTransactionDetailModal } from "@/modules/admin/components/transactions/AdminTransactionDetailModal";
@@ -42,7 +43,7 @@ export default function AdminPayoutsEscrowPage() {
   const debouncedSearch = useDebounce(search, 500);
   
   // For viewing transaction/order details from escrow/payout rows
-  const [viewingTx, setViewingTx] = useState<any>(null);
+  const [viewingTx, setViewingTx] = useState<IAdminTransaction | null>(null);
   const [isTxModalOpen, setIsTxModalOpen] = useState(false);
 
   // Queries
@@ -87,8 +88,8 @@ export default function AdminPayoutsEscrowPage() {
       toast.success("Payout marked as transferred successfully");
       setSelectedPayout(null);
       setAdminNote("");
-    } catch (err: any) {
-      toast.error(err?.data?.message || "Failed to update payout status");
+    } catch (err: unknown) {
+      toast.error(extractErrorMessage(err, "Failed to update payout status"));
     }
   };
 
@@ -109,7 +110,12 @@ export default function AdminPayoutsEscrowPage() {
   const historyColumns = useMemo(() => buildAdminPayoutColumns(undefined, true), []);
   const escrowColumns = useMemo(() => buildAdminEscrowColumns(), []);
 
-  const createPaginationState = (pagination: any) =>
+  const createPaginationState = (pagination: {
+    page: number | string;
+    pages: number;
+    hasNext: boolean;
+    hasPrev: boolean;
+  } | undefined) =>
     pagination
       ? {
           page: Number(pagination.page),
@@ -124,22 +130,7 @@ export default function AdminPayoutsEscrowPage() {
   return (
     <section className="space-y-8 pb-10">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-sm bg-primary/10 flex items-center justify-center shrink-0">
-            <Wallet className="h-6 w-6 text-primary" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-black tracking-tight text-foreground/90 uppercase">
-              Payouts & Escrow
-            </h1>
-            <p className="text-sm text-muted-foreground mt-0.5 font-medium">
-              Manage vendor payouts and monitor held escrow funds across the
-              platform.
-            </p>
-          </div>
-        </div>
-
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-4">
         <Button
           variant="outline"
           className="gap-2 h-10 border-border/40 font-black uppercase tracking-widest text-[10px] bg-background"
@@ -267,13 +258,19 @@ export default function AdminPayoutsEscrowPage() {
                   onRowClick={(row) => {
                     const targetId = row.order_id || row.id;
                     if (targetId) {
-                        const tx = {
+                        const tx: IAdminTransaction = {
                             id: targetId,
+                            order_id: null,
+                            escrow_id: null,
+                            user_id: null,
+                            vendor_id: null,
+                            reference: null,
                             amount: row.amount,
                             currency: "NGN",
                             status: row.status,
                             type: "escrow",
                             created_at: row.created_at,
+                            updated_at: row.created_at,
                             user: row.buyer,
                             vendor: row.vendor,
                             description: `Escrow Fund for Order ${targetId.substring(0, 8)}`,

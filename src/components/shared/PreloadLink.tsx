@@ -3,7 +3,7 @@ import type { LinkProps } from "react-router-dom";
 import { useEffect, useRef } from "react";
 
 interface PreloadLinkProps extends LinkProps {
-  preload?: () => Promise<any>;
+  preload?: () => Promise<unknown>;
 }
 
 /**
@@ -25,7 +25,9 @@ export default function PreloadLink({ preload, ...props }: PreloadLinkProps) {
     }
 
     // 🛡️ Rule 5: Mandatory Network Protection (Data Saver / 2G)
-    const connection = (navigator as any).connection;
+    const connection = (
+      navigator as { connection?: { saveData?: boolean; effectiveType?: string } }
+    ).connection;
     if (connection) {
       if (
         connection.saveData === true ||

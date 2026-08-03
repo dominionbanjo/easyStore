@@ -36,6 +36,7 @@ import {
   useStartConversationMutation, 
   useSendDirectMessageMutation 
 } from "@/services/messagingApi";
+import { extractErrorMessage } from "@/utils/errorHandler";
 
 type RequiredModal = "address" | "select-address" | "bank" | "payment-security" | null;
 
@@ -106,19 +107,20 @@ export default function CheckoutPage() {
   /* ───────── TOAST SUMMARY ERRORS ───────── */
   useEffect(() => {
     if (isSummaryError && summaryError) {
-      const errData = (summaryError as any)?.data;
-      const message =
-        errData?.message ||
-        (typeof errData === "string" ? errData : null) ||
-        "Failed to load checkout summary.";
-      toast.error(message);
+      toast.error(
+        extractErrorMessage(summaryError, "Failed to load checkout summary."),
+      );
     }
   }, [isSummaryError, summaryError]);
 
   const summaryData: ICheckoutSummaryVendor[] = useMemo(() => {
     // Standard NestJS response structure: { status, message, data: { success, data: [] } }
-    const rawData =
-      (summaryResponse as any)?.data?.data || summaryResponse?.data || [];
+    const nestedData = (
+      summaryResponse as
+        | { data?: { data?: ICheckoutSummaryVendor[] } }
+        | undefined
+    )?.data?.data;
+    const rawData = nestedData ?? summaryResponse?.data ?? [];
     return Array.isArray(rawData) ? rawData : [];
   }, [summaryResponse]);
 
@@ -154,8 +156,8 @@ export default function CheckoutPage() {
   const isBankVerified = user?.payout_verified ?? false;
 
   const currentActiveAddress =
-    user?.addresses?.find((a: any) => a.id === selectedAddressId) ||
-    user?.addresses?.find((a: any) => a.is_default) ||
+    user?.addresses?.find((a) => a.id === selectedAddressId) ||
+    user?.addresses?.find((a) => a.is_default) ||
     user?.addresses?.[0] ||
     user?.address;
 
@@ -205,13 +207,13 @@ export default function CheckoutPage() {
       const result = await mutation(payload).unwrap();
 
       // Backend returns either { data: { success, payment_url } } or { success, payment_url }
-      const data = (result as any).data || result;
+      const data = "data" in result ? result.data : result;
 
       if (data.success && data.payment_url) {
         window.location.href = data.payment_url;
       }
-    } catch (error: any) {
-      toast.error(error?.data?.message || "Failed to create order");
+    } catch (error: unknown) {
+      toast.error(extractErrorMessage(error, "Failed to create order"));
     }
   };
 
@@ -229,9 +231,9 @@ export default function CheckoutPage() {
       toast.dismiss();
       toast.success("Message sent! Redirecting...");
       navigate(`/account/messages?id=${conversationId}`);
-    } catch (err: any) {
+    } catch (err: unknown) {
       toast.dismiss();
-      toast.error(err?.data?.message || "Failed to start conversation");
+      toast.error(extractErrorMessage(err, "Failed to start conversation"));
     }
   };
 

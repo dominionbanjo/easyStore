@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import {
   useGetUserConversationsQuery,
@@ -9,6 +9,7 @@ import {
   useMarkConversationReadMutation,
   type IMessage,
   type IConversation,
+  type IParticipant,
 } from "@/services/messagingApi";
 import { useMessagingSocket } from "@/services/useMessagingSocket";
 import { ChatSidebar } from "./ChatSidebar";
@@ -33,6 +34,15 @@ import type { RootState } from "@/store";
 interface MessagingViewProps {
   basePath: string; // e.g. "/account/messages" or "/vendor/messages"
   containerClassName?: string;
+}
+
+interface SendMessagePayload {
+  content: string;
+  local_id: string;
+  product_id?: string;
+  product_name?: string;
+  product_slug?: string;
+  product_image?: string;
 }
 
 export const MessagingView = ({ basePath, containerClassName }: MessagingViewProps) => {
@@ -60,19 +70,6 @@ export const MessagingView = ({ basePath, containerClassName }: MessagingViewPro
   });
 
   const lastProcessedPrefill = useRef<string | null>(null);
-
-  useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      try {
-        const unsent = JSON.parse(saved) as IMessage[];
-        setFailedMessages(unsent);
-        unsent.forEach((msg) => handleRetry(msg, true));
-      } catch (e) {
-        console.error("Failed to parse unsent messages", e);
-      }
-    }
-  }, []);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(failedMessages));
@@ -109,9 +106,11 @@ export const MessagingView = ({ basePath, containerClassName }: MessagingViewPro
   const [markRead] = useMarkConversationReadMutation();
 
   const socket = useMessagingSocket(activeTab || undefined);
+  const socketRef = useRef(socket);
+  socketRef.current = socket;
 
   // ─── Derived State ────────────────────────────────────────────────────────
-  const conversations = convData?.data || [];
+  const conversations = useMemo(() => convData?.data || [], [convData?.data]);
 
   // `currentData` is only populated when data belongs to the CURRENT arg (id).
   // While switching to a new conversation, directCurrentData is undefined → we show skeletons.
@@ -161,10 +160,10 @@ export const MessagingView = ({ basePath, containerClassName }: MessagingViewPro
     if (!activeTab) return;
 
     if (activeTab === "chatroom") {
-      socket.joinChatroom();
-      return () => socket.leaveChatroom();
+      socketRef.current.joinChatroom();
+      return () => socketRef.current.leaveChatroom();
     } else {
-      socket.joinConversation(activeTab);
+      socketRef.current.joinConversation(activeTab);
 
       // Only mark as read if there are actually unread messages.
       // Calling markRead unconditionally invalidates the "Messaging" tag
@@ -174,10 +173,107 @@ export const MessagingView = ({ basePath, containerClassName }: MessagingViewPro
         markRead(activeTab);
       }
 
-      return () => socket.leaveConversation(activeTab);
+      return () => socketRef.current.leaveConversation(activeTab);
     }
   }, [activeTab, id, markRead, conversations]);
 
+  // ─── Handlers ─────────────────────────────────────────────────────────────
+  const handleSendMessage = useCallback(
+    async (content: string, product?: IProduct | null) => {
+      const tempId = `temp-${Date.now()}`;
+      const payload: SendMessagePayload = { content, local_id: tempId };
+      if (product) {
+        payload.product_id = product.id;
+        payload.product_name = product.name;
+        payload.product_slug = product.slug;
+        const imageUrl = product.image
+          ? typeof product.image === "string"
+            ? product.image
+            : product.image.url
+          : null;
+        if (imageUrl) payload.product_image = imageUrl;
+      }
+
+      try {
+        if (activeTab === "chatroom") {
+          await sendChatroom(payload).unwrap();
+        } else if (activeTab) {
+          await sendDirect({ id: activeTab, ...payload }).unwrap();
+        }
+        setAttachedProduct(null);
+      } catch {
+        const sender: IParticipant = {
+          id: currentUser?.id ?? "",
+          first_name: currentUser?.first_name ?? "",
+          last_name: currentUser?.last_name ?? "",
+          email: currentUser?.email ?? "",
+          username: currentUser?.username ?? "",
+          avatar: currentUser?.avatar ?? null,
+          account_type: currentUser?.account_type ?? "user",
+        };
+        const failedMsg: IMessage = {
+          id: tempId,
+          localId: tempId,
+          content,
+          sender_id: currentUser?.id ?? "",
+          recipient_id: null,
+          conversation_id: activeTab === "chatroom" ? null : activeTab,
+          is_public: activeTab === "chatroom",
+          product_id: payload.product_id ?? null,
+          product_name: payload.product_name ?? null,
+          product_image: payload.product_image ?? null,
+          product_slug: payload.product_slug ?? null,
+          delivered_at: null,
+          read_at: null,
+          status: "failed",
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          sender,
+        };
+        setFailedMessages((prev) => [...prev, failedMsg]);
+      }
+    },
+    [activeTab, currentUser, sendChatroom, sendDirect, setAttachedProduct, setFailedMessages],
+  );
+
+  const handleRetry = useCallback(
+    async (message: IMessage, isAuto = false) => {
+      const payload = {
+        content: message.content,
+        product_id: message.product_id || undefined,
+        product_name: message.product_name || undefined,
+        product_image: message.product_image || undefined,
+        product_slug: message.product_slug || undefined,
+      };
+      try {
+        if (message.is_public) {
+          await sendChatroom(payload).unwrap();
+        } else if (message.conversation_id) {
+          await sendDirect({ id: message.conversation_id, ...payload }).unwrap();
+        }
+        setFailedMessages((prev) => prev.filter((m) => m.localId !== message.localId));
+      } catch (err) {
+        if (!isAuto) console.error("Manual retry failed:", err);
+      }
+    },
+    [sendChatroom, sendDirect, setFailedMessages],
+  );
+
+  // Restore unsent/failed messages from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      try {
+        const unsent = JSON.parse(saved) as IMessage[];
+        setFailedMessages(unsent);
+        unsent.forEach((msg) => handleRetry(msg, true));
+      } catch {
+        console.error("Failed to parse unsent messages");
+      }
+    }
+  }, [handleRetry]);
+
+  // Handle prefill from URL params (e.g. shared product links)
   useEffect(() => {
     const prefill = searchParams.get("prefill");
     const productPayloadStr = searchParams.get("product_payload");
@@ -189,7 +285,7 @@ export const MessagingView = ({ basePath, containerClassName }: MessagingViewPro
       if (productPayloadStr) {
         try {
           productDetails = JSON.parse(decodeURIComponent(productPayloadStr));
-        } catch (e) {
+        } catch {
           console.error("Failed to parse product payload from URL");
         }
       }
@@ -203,64 +299,7 @@ export const MessagingView = ({ basePath, containerClassName }: MessagingViewPro
       const queryStr = newParams.toString();
       navigate(`${targetUrl}${queryStr ? "?" + queryStr : ""}`, { replace: true });
     }
-  }, [searchParams, activeTab, id, navigate, basePath]);
-
-  // ─── Handlers ─────────────────────────────────────────────────────────────
-  const handleSendMessage = async (content: string, product?: IProduct | null) => {
-    const tempId = `temp-${Date.now()}`;
-    const payload: any = { content, local_id: tempId };
-    if (product) {
-      payload.product_id = product.id;
-      payload.product_name = product.name;
-      payload.product_slug = product.slug;
-      const imageUrl = product.image ? (typeof product.image === "string" ? product.image : (product.image as any).url) : null;
-      if (imageUrl) payload.product_image = imageUrl;
-    }
-
-    try {
-      if (activeTab === "chatroom") {
-        await sendChatroom(payload).unwrap();
-      } else if (activeTab) {
-        await sendDirect({ id: activeTab, ...payload }).unwrap();
-      }
-      setAttachedProduct(null);
-    } catch (err) {
-      const failedMsg: IMessage = {
-        id: tempId,
-        localId: tempId,
-        content: payload.content,
-        sender_id: currentUser?.id,
-        conversation_id: activeTab === "chatroom" ? null : activeTab,
-        is_public: activeTab === "chatroom",
-        status: "failed",
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        sender: currentUser as any,
-        ...payload,
-      };
-      setFailedMessages((prev) => [...prev, failedMsg]);
-    }
-  };
-
-  const handleRetry = async (message: IMessage, isAuto = false) => {
-    const payload = {
-      content: message.content,
-      product_id: message.product_id || undefined,
-      product_name: message.product_name || undefined,
-      product_image: message.product_image || undefined,
-      product_slug: message.product_slug || undefined,
-    };
-    try {
-      if (message.is_public) {
-        await sendChatroom(payload).unwrap();
-      } else if (message.conversation_id) {
-        await sendDirect({ id: message.conversation_id, ...payload }).unwrap();
-      }
-      setFailedMessages((prev) => prev.filter((m) => m.localId !== message.localId));
-    } catch (err) {
-      if (!isAuto) console.error("Manual retry failed:", err);
-    }
-  };
+  }, [searchParams, activeTab, id, navigate, basePath, handleSendMessage]);
 
   const handleTyping = () => {
     if (!activeTab) return;

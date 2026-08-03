@@ -20,7 +20,7 @@ export const productDetailsApi = apiManager.injectEndpoints({
         method: "GET",
         params,
       }),
-      providesTags: ["Categories" as any],
+      providesTags: ["Categories"],
     }),
 
     /* ───────── GET COLORS ───────── */
@@ -29,7 +29,7 @@ export const productDetailsApi = apiManager.injectEndpoints({
         url: "colors",
         method: "GET",
       }),
-      providesTags: ["Colors" as any],
+      providesTags: ["Colors"],
     }),
 
     /* ───────── CREATE CATEGORY ───────── */
@@ -42,7 +42,7 @@ export const productDetailsApi = apiManager.injectEndpoints({
         method: "POST",
         body,
       }),
-      invalidatesTags: ["Categories" as any],
+      invalidatesTags: ["Categories"],
     }),
 
     /* ───────── CREATE COLOR ───────── */
@@ -55,7 +55,7 @@ export const productDetailsApi = apiManager.injectEndpoints({
         method: "POST",
         body,
       }),
-      invalidatesTags: ["Colors" as any],
+      invalidatesTags: ["Colors"],
     }),
   }),
 });

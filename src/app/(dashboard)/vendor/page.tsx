@@ -49,6 +49,20 @@ const MONTH_NAMES = [
   "Nov",
   "Dec",
 ];
+
+interface MonthlyTrendItem {
+  month: number;
+  revenue?: number | string;
+  online_revenue?: number | string;
+  offline_revenue?: number | string;
+}
+
+interface SalesChartDatum {
+  month: string;
+  sales: number;
+  online?: number;
+  offline?: number;
+}
 export default function VendorDashboardPage() {
   const user = useAppSelector(selectCurrentUser);
   const { data, isLoading, isError } = useGetMyStoreAnalyticsQuery();
@@ -256,15 +270,18 @@ export default function VendorDashboardPage() {
             ) : (
               <Suspense fallback={<div className="h-[450px] w-full rounded-sm bg-muted/40 animate-pulse border border-border/40" />}>
                 <SalesChart
-                  data={
-                    trends?.monthly?.map((m: any) => ({
-                      ...m,
-                      month: MONTH_NAMES[m.month - 1] || m.month.toString(),
-                      sales: Number(m.revenue || 0) / 100,
-                      online: Number(m.online_revenue || 0) / 100,
-                      offline: Number(m.offline_revenue || 0) / 100,
-                    })) ?? []
-                  }
+                  data={(
+                    (trends?.monthly as MonthlyTrendItem[] | undefined)?.map(
+                      (m): SalesChartDatum => ({
+                        ...m,
+                        month:
+                          MONTH_NAMES[m.month - 1] || m.month.toString(),
+                        sales: Number(m.revenue || 0) / 100,
+                        online: Number(m.online_revenue || 0) / 100,
+                        offline: Number(m.offline_revenue || 0) / 100,
+                      }),
+                    ) ?? []
+                  )}
                 />
               </Suspense>
             )}

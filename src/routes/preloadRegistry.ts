@@ -6,7 +6,7 @@ import { getSubdomain } from "@/utils/subdomain";
  * 🗺️ Route Preload Map
  * 🧠 Cache for the registry to avoid re-creation
  */
-let cachedRegistry: Record<string, () => Promise<any>> | null = null;
+let cachedRegistry: Record<string, () => Promise<unknown>> | null = null;
 
 /**
  * 🔧 Get Registry
@@ -63,6 +63,7 @@ export const getPreloadForPath = (path: string) => {
   if (path.startsWith("/product/")) return Pages.preloadProductDetailPage;
   if (path.startsWith("/account/orders/")) return Pages.preloadOrderDetailsPage;
   if (path.startsWith("/zones")) return Pages.preloadZonesPage;
+  if (path.startsWith("/school-zones")) return Pages.preloadZonesPage;
 
   return null;
 };

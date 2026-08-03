@@ -86,14 +86,7 @@ export default function SuperAdminAccessControlPage() {
   return (
     <section className="space-y-8">
       {/* ─── Header ─── */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Access Control</h1>
-          <p className="text-sm text-muted-foreground">
-            Manage roles, permissions, and access levels across the platform.
-          </p>
-        </div>
-
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-4">
         <div className="flex items-center gap-2">
           <Button variant="outline" className="gap-2">
             <Filter className="h-4 w-4" /> Filters

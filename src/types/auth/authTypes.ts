@@ -12,6 +12,16 @@ export interface IRegisterUserPayload {
   agree_to_terms?: boolean;
 }
 export type AccountType = "user" | "vendor" | "admin" | "staff";
+export interface IUserAddress {
+  id: string;
+  is_default?: boolean;
+  street?: string;
+  country?: string;
+  state?: string;
+  city?: string;
+  postal_code?: string;
+}
+
 export interface IUser {
   id: string;
 
@@ -34,15 +44,9 @@ export interface IUser {
   rating_count: number;
   review_count: number;
 
-  address: {
-    city: string;
-    state: string;
-    street: string;
-    country: string;
-    postal_code: string;
-  } | null;
+  address: IUserAddress;
 
-  addresses?: any[];
+  addresses?: IUserAddress[];
   must_change_password?: boolean;
   active_store_id?: string | null;
 

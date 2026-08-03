@@ -2,7 +2,7 @@ import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { ShoppingCart, Receipt, Settings, MoreHorizontal, Sun, Moon, LogOut, PackagePlus } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useTheme } from "@/components/shared/ThemeContext";
+import { useTheme } from "@/components/shared/themeContextCore";
 import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
 import { getWebsitePath } from "@/utils/subdomain";
 import { AUTH_ROUTES } from "@/routes/temp";

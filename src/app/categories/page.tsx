@@ -14,7 +14,7 @@ export default function CategoriesPage() {
   });
 
   /* ───────────────── DATA ───────────────── */
-  const categories = data?.data ?? [];
+  const categories = useMemo(() => data?.data ?? [], [data]);
 
   /* ───────────────── SEARCH (FRONTEND ONLY) ───────────────── */
   const filteredCategories = useMemo(() => {
@@ -121,7 +121,7 @@ export default function CategoriesPage() {
   );
 }
 
-function FolderTreeIcon(props: any) {
+function FolderTreeIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}

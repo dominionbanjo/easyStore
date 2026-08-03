@@ -11,8 +11,15 @@ import { CreditCard, Loader2, CheckCircle2, Hash, Landmark, User } from "lucide-
 import { FormSelect } from "@/components/shared/form/FormSelect";
 import { FormInput } from "@/components/shared/form/FormInput";
 
+interface Bank {
+  name: string;
+  code: string;
+  slug: string;
+  type: string;
+}
+
 interface PayoutSetupStepProps {
-  banks: any[];
+  banks: Bank[];
   isVerifying: boolean;
   isRegistering: boolean;
   isValidated: boolean;

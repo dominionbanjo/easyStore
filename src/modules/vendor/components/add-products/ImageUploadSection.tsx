@@ -78,7 +78,7 @@ export default function ImageUploadSection({
       );
       onMainUploaded(uploaded);
       toast.success("Main image uploaded");
-    } catch (err) {
+    } catch {
       toast.error("Main upload failed");
     } finally {
       setMainProgress(null);
@@ -93,7 +93,7 @@ export default function ImageUploadSection({
 
     // Create placeholders for each file
     const fileArray = Array.from(files);
-    const newUploads = fileArray.map((_, _i) => ({
+    const newUploads = fileArray.map(() => ({
       id: Math.random().toString(36).substr(2, 9),
       progress: 0,
     }));
@@ -119,7 +119,7 @@ export default function ImageUploadSection({
       );
       onGalleryUploaded(results);
       toast.success(`${results.length} images added to gallery`);
-    } catch (err) {
+    } catch {
       toast.error("Some images failed to upload");
     } finally {
       setGalleryUploads((prev) =>
@@ -146,7 +146,7 @@ export default function ImageUploadSection({
       await deleteImage({ public_id: image.public_id }).unwrap();
       onMainUploaded(null);
       toast.success("Cover image removed");
-    } catch (err) {
+    } catch {
       toast.error("Failed to remove cover image");
     } finally {
       setDeletingId(null);
@@ -170,7 +170,7 @@ export default function ImageUploadSection({
       await deleteImage({ public_id: img.public_id }).unwrap();
       onRemoveGallery(index);
       toast.success("Gallery image removed");
-    } catch (err) {
+    } catch {
       toast.error("Failed to remove gallery image");
     } finally {
       setDeletingId(null);

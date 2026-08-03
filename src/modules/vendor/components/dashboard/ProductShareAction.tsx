@@ -78,8 +78,13 @@ export function ProductShareAction({ product, store, className }: ProductShareAc
         await navigator.clipboard.writeText(productUrl);
         toast.success("Link copied! Now you can share it anywhere.");
       }
-    } catch (err: any) {
-      if (err.name !== "AbortError") {
+    } catch (err: unknown) {
+      const isAbort =
+        err &&
+        typeof err === "object" &&
+        "name" in err &&
+        (err as { name?: unknown }).name === "AbortError";
+      if (!isAbort) {
         console.error("Sharing failed", err);
         toast.error("Sharing failed, but we've copied the link for you!");
       }

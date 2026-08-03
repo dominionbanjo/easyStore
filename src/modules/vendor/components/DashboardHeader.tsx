@@ -25,12 +25,9 @@ import { toast } from "sonner";
 import NavigationProgressBar from "@/components/shared/NavigationProgressBar";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
+import { getVendorPageMeta } from "@/modules/vendor/layout/vendorPageMeta";
 
-interface DashboardHeaderProps {
-  onMenuToggle: () => void;
-}
-
-export default function DashboardHeader({}: DashboardHeaderProps) {
+export default function DashboardHeader() {
   const navigate = useNavigate();
   const location = useLocation();
   const [logoutUser] = useLogoutMutation();
@@ -47,20 +44,8 @@ export default function DashboardHeader({}: DashboardHeaderProps) {
     0,
   );
 
-  // ─── Dynamic Title Logic ───
-  const getPageTitle = () => {
-    const path = location.pathname;
-    if (path.includes("/products")) return "Products";
-    if (path.includes("/orders")) return "Orders";
-    if (path.includes("/customers")) return "Customers";
-    if (path.includes("/settings")) return "Settings";
-    if (path.includes("/analytics")) return "Analytics";
-    if (path.includes("/templates")) return "Templates";
-    if (path.includes("/payouts")) return "Payouts";
-    if (path.includes("/messages")) return "Messages";
-    if (path.includes("/help")) return "Help";
-    return "Overview";
-  };
+  // ─── Dynamic Page Meta (title + description) ───
+  const pageMeta = getVendorPageMeta(location.pathname);
 
   // 🌗 Local theme management
   const [theme, setTheme] = useState<"light" | "dark">("light");
@@ -90,11 +75,14 @@ export default function DashboardHeader({}: DashboardHeaderProps) {
   };
 
   return (
-    <header className="flex items-center justify-between px-3 sm:px-6 py-5 border-b border-border/40 bg-background/95 backdrop-blur-sm sticky top-0 z-30">
-      <div className="flex flex-col">
-        <h2 className="font-black text-2xl sm:text-3xl tracking-tight text-foreground uppercase">
-          {getPageTitle()}
+    <header className="flex items-center justify-between px-3 sm:px-6 py-3.5 border-b border-border/40 bg-background/95 backdrop-blur-sm sticky top-0 z-30">
+      <div className="flex flex-col min-w-0">
+        <h2 className="font-bold text-lg sm:text-xl tracking-tight text-foreground truncate">
+          {pageMeta.title}
         </h2>
+        <p className="text-xs sm:text-sm text-muted-foreground font-medium mt-0.5 truncate">
+          {pageMeta.description}
+        </p>
       </div>
 
       <div className="flex items-center gap-1.5 sm:gap-3">

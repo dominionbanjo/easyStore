@@ -5,7 +5,6 @@ import type { RootState } from "@/store";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import {
-  Package,
   Image as ImageIcon,
   Tag,
   Settings,
@@ -39,6 +38,7 @@ import { buildCreateProductPayload } from "@/utils/draftToFormValues";
 import { productToDraft } from "@/modules/vendor/utils/productToDraft";
 import { useProductExtras } from "@/modules/vendor/components/add-products/useProductExtras";
 import { useAddProductForm } from "@/modules/vendor/components/add-products/useAddProductForm";
+import { extractErrorMessage } from "@/utils/errorHandler";
 import { useStoreSetup } from "@/modules/vendor/hooks/useStoreSetup";
 import { getAppPath } from "@/utils/subdomain";
 import { SetupEnforcementModal } from "@/modules/vendor/components/modals/SetupEnforcementModal";
@@ -175,11 +175,11 @@ export default function AddProductPage() {
 
       dispatch(clearProductDraft());
       navigate(getAppPath("/products"));
-    } catch (err: any) {
-      const errorMsg =
-        err?.data?.message ||
-        err?.data?.error ||
-        "Something went wrong while saving your product.";
+    } catch (err: unknown) {
+      const errorMsg = extractErrorMessage(
+        err,
+        "Something went wrong while saving your product.",
+      );
 
       const displayMsg = Array.isArray(errorMsg) ? errorMsg[0] : errorMsg;
       toast.error(displayMsg);
@@ -223,46 +223,35 @@ export default function AddProductPage() {
               </div>
               Back to Catalog
             </Link>
-            <div className="flex items-center gap-4">
-              <div className="h-12 w-12 rounded-sm bg-primary/10 flex items-center justify-center">
-                <Package className="h-6 w-6 text-primary" />
+            {/* Auto-save Status Indicator */}
+            <div className="flex items-center gap-3">
+              <div
+                className={cn(
+                  "flex items-center gap-1.5 transition-all duration-500 px-3 py-0.5 rounded-sm border ",
+                  isSyncing
+                    ? "bg-amber-500/5 border-amber-500/20 text-amber-600 animate-pulse"
+                    : "bg-emerald-500/5 border-emerald-500/20 text-emerald-600",
+                )}
+              >
+                {isSyncing ? (
+                  <RefreshCw className="h-2.5 w-2.5 animate-spin" />
+                ) : (
+                  <CheckCircle2 className="h-2.5 w-2.5" />
+                )}
+                <span className="text-[9px] font-black uppercase tracking-widest leading-none">
+                  {isSyncing ? "Saving..." : "Draft Saved"}
+                </span>
               </div>
-              <div>
-                <h1 className="text-3xl font-black tracking-tight text-foreground flex items-center gap-3">
-                  {isEditMode ? "Edit Product" : "New Product"}
-                </h1>
 
-                {/* Auto-save Status Indicator */}
-                <div className="flex items-center gap-3 mt-1">
-                  <div
-                    className={cn(
-                      "flex items-center gap-1.5 transition-all duration-500 px-3 py-0.5 rounded-sm border ",
-                      isSyncing
-                        ? "bg-amber-500/5 border-amber-500/20 text-amber-600 animate-pulse"
-                        : "bg-emerald-500/5 border-emerald-500/20 text-emerald-600",
-                    )}
-                  >
-                    {isSyncing ? (
-                      <RefreshCw className="h-2.5 w-2.5 animate-spin" />
-                    ) : (
-                      <CheckCircle2 className="h-2.5 w-2.5" />
-                    )}
-                    <span className="text-[9px] font-black uppercase tracking-widest leading-none">
-                      {isSyncing ? "Saving..." : "Draft Saved"}
-                    </span>
-                  </div>
-
-                  {lastSynced && !isSyncing && (
-                    <span className="text-[10px] font-bold text-muted-foreground/30 italic">
-                      at{" "}
-                      {new Date(lastSynced).toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </span>
-                  )}
-                </div>
-              </div>
+              {lastSynced && !isSyncing && (
+                <span className="text-[10px] font-bold text-muted-foreground/30 italic">
+                  at{" "}
+                  {new Date(lastSynced).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </span>
+              )}
             </div>
           </div>
 

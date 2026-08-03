@@ -20,7 +20,7 @@ export interface IDelivery {
 
   courier_id?: string | null;
 
-  order_items: any[];
+  order_items: unknown[];
 
   address?: string | null;
   city?: string | null;
@@ -108,7 +108,10 @@ export const deliveryApi = apiManager.injectEndpoints({
 
     /* ───────── ASSIGN COURIER ───────── */
 
-    assignCourier: builder.mutation<any, AssignCourierArgs>({
+    assignCourier: builder.mutation<
+      { success: boolean; message?: string },
+      AssignCourierArgs
+    >({
       query: ({ delivery_id, courier_id }) => ({
         url: `deliveries/${delivery_id}/assign-courier`,
         method: "PATCH",
@@ -119,7 +122,10 @@ export const deliveryApi = apiManager.injectEndpoints({
 
     /* ───────── UPDATE STATUS ───────── */
 
-    updateDeliveryStatus: builder.mutation<any, UpdateDeliveryStatusArgs>({
+    updateDeliveryStatus: builder.mutation<
+      { success: boolean; message?: string },
+      UpdateDeliveryStatusArgs
+    >({
       query: ({ delivery_id, status }) => ({
         url: `deliveries/${delivery_id}/status`,
         method: "PATCH",
@@ -130,7 +136,10 @@ export const deliveryApi = apiManager.injectEndpoints({
 
     /* ───────── CONFIRM DELIVERY (ESCROW RELEASE) ───────── */
 
-    confirmDelivery: builder.mutation<any, ConfirmDeliveryArgs>({
+    confirmDelivery: builder.mutation<
+      { success: boolean; message?: string },
+      ConfirmDeliveryArgs
+    >({
       query: (body) => ({
         url: "deliveries/confirm",
         method: "POST",

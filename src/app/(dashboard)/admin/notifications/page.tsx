@@ -18,6 +18,7 @@ import { NotificationDialog as AdminAutomatedNotificationDialog } from "@/module
 import { ConfirmActionDialog } from "@/modules/admin/components/shared/ConfirmActionDialog";
 import { toast } from "sonner";
 import { useDebounce } from "@/hooks";
+import { extractErrorMessage } from "@/utils/errorHandler";
 import {
   AutomatedAlertCard,
   ManualBroadcastCard,
@@ -76,8 +77,8 @@ export default function SuperAdminNotificationsPage() {
         await deleteAutomated(pendingDeleteAction.id).unwrap();
         toast.success("Automated notification template deleted");
       }
-    } catch (err: any) {
-      toast.error(err?.data?.message || "Failed to delete item");
+    } catch (err: unknown) {
+      toast.error(extractErrorMessage(err, "Failed to delete item"));
     } finally {
       setPendingDeleteAction(null);
     }
@@ -93,8 +94,8 @@ export default function SuperAdminNotificationsPage() {
         is_active: newStatus,
       }).unwrap();
       toast.success(`Notification ${newStatus ? "activated" : "paused"}`);
-    } catch (err: any) {
-      toast.error(err?.data?.message || "Failed to update status");
+    } catch (err: unknown) {
+      toast.error(extractErrorMessage(err, "Failed to update status"));
     } finally {
       setPendingStatusToggle(null);
     }
@@ -103,16 +104,7 @@ export default function SuperAdminNotificationsPage() {
   return (
     <section className="space-y-8 pb-10">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-black tracking-tight text-foreground/90 flex items-center gap-2">
-            Notifications Center
-          </h1>
-          <p className="text-sm text-muted-foreground mt-1 font-medium">
-            Manage automated system alerts and manual platform-wide broadcasts.
-          </p>
-        </div>
-
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-4">
         <div className="flex items-center gap-2">
           {activeTab === "manual" ? (
             <Button
@@ -181,7 +173,7 @@ export default function SuperAdminNotificationsPage() {
                     onDelete={(id) =>
                       setPendingDeleteAction({ id, type: "automated" })
                     }
-                    onMarkRead={(_id) => {}}
+                    onMarkRead={() => {}}
                     isToggling={isTogglingStatus}
                   />
                 ))}

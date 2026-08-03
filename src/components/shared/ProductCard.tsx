@@ -68,6 +68,8 @@ export interface ProductCardProps {
   isFavorite?: boolean;
   showFooter?: boolean;
   className?: string;
+  /** Full URL override — used to escape a subdomain context (e.g. zone subdomain → base domain) */
+  href?: string;
 }
 
 const ProductCardComponent = ({
@@ -91,6 +93,7 @@ const ProductCardComponent = ({
   isFavorite = false,
   showFooter = true,
   className,
+  href,
 }: ProductCardProps) => {
   const [searchParams] = useSearchParams();
   const location = useLocation();
@@ -142,11 +145,17 @@ const ProductCardComponent = ({
         await removeFromWishlist({ productId: id }).unwrap();
         toast.info("Removed from wishlist");
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       setIsFavorited(prev);
-      toast.error(
-        err?.data?.message || err?.message || "Failed to update wishlist",
-      );
+      const message =
+        typeof err === "object" && err !== null && "data" in err
+          ? String(
+              (err as { data?: { message?: string } }).data?.message ??
+                (err as { message?: string }).message ??
+                "Failed to update wishlist"
+            )
+          : "Failed to update wishlist";
+      toast.error(message);
     }
   }, [id, name, image, price, isFavorited, isAuthenticated, addToWishlist, removeFromWishlist]);
 
@@ -268,8 +277,15 @@ const ProductCardComponent = ({
       setSelectedSize(null);
       setSelectedColor(null);
       setSelectedOptions({});
-    } catch (error: any) {
-      toast.error(error?.data?.message || "Failed to add to cart");
+    } catch (error: unknown) {
+      const message =
+        typeof error === "object" && error !== null && "data" in error
+          ? String(
+              (error as { data?: { message?: string } }).data?.message ??
+                "Failed to add to cart"
+            )
+          : "Failed to add to cart";
+      toast.error(message);
     }
   }, [
     id,
@@ -293,8 +309,10 @@ const ProductCardComponent = ({
 
   /* ── DERIVED UI ── */
   const productLink = useMemo(
-    () => getProductLink(location.pathname, slug, storeSlug, previewTemplate),
-    [location.pathname, storeSlug, slug, previewTemplate]
+    () =>
+      href ??
+      getProductLink(location.pathname, slug, storeSlug, previewTemplate),
+    [location.pathname, storeSlug, slug, previewTemplate, href]
   );
 
   const isOutOfStock = stock <= 0;

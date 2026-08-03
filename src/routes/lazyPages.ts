@@ -204,6 +204,12 @@ const VendorSchoolZonesPageImport = () =>
 export const VendorSchoolZonesPage = lazy(VendorSchoolZonesPageImport);
 export const preloadVendorSchoolZonesPage = VendorSchoolZonesPageImport;
 
+const VendorSchoolZoneDetailPageImport = () =>
+  import("@/app/(dashboard)/vendor/school-zones/[id]/page");
+export const VendorSchoolZoneDetailPage = lazy(VendorSchoolZoneDetailPageImport);
+export const preloadVendorSchoolZoneDetailPage =
+  VendorSchoolZoneDetailPageImport;
+
 /* ───────────────── STAFF PAGES ───────────────── */
 const StaffManagementPageImport = () =>
   import("@/modules/vendor/components/staff/StaffManagementPage").then((m) => ({ default: m.StaffManagementPage }));
@@ -243,6 +249,14 @@ const SuperAdminSchoolZonesPageImport = () =>
   import("@/app/(dashboard)/admin/school-zones/page");
 export const SuperAdminSchoolZonesPage = lazy(SuperAdminSchoolZonesPageImport);
 export const preloadSuperAdminSchoolZonesPage = SuperAdminSchoolZonesPageImport;
+
+const SuperAdminSchoolZoneDetailPageImport = () =>
+  import("@/app/(dashboard)/admin/school-zones/[id]/page");
+export const SuperAdminSchoolZoneDetailPage = lazy(
+  SuperAdminSchoolZoneDetailPageImport,
+);
+export const preloadSuperAdminSchoolZoneDetailPage =
+  SuperAdminSchoolZoneDetailPageImport;
 
 const SuperAdminUsersPageImport = () =>
   import("@/app/(dashboard)/admin/users/page");

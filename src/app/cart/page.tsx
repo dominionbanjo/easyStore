@@ -25,7 +25,7 @@ import { CartItem } from "@/modules/website/components/cart/CartItem";
 import { CartSummary } from "@/modules/website/components/cart/CartSummary";
 
 /* ───────── DEBOUNCE HELPER ───────── */
-function debounce<T extends (...args: any[]) => void>(fn: T, delay = 500) {
+function debounce<T extends (...args: never[]) => void>(fn: T, delay = 500) {
   let timer: ReturnType<typeof setTimeout>;
   return (...args: Parameters<T>) => {
     clearTimeout(timer);
@@ -46,9 +46,13 @@ export default function CartPage() {
   const [removeCartItem] = useRemoveCartItemMutation();
   const [clearCart] = useClearCartMutation();
 
-  const cartItems = isAuthenticated
-    ? (data?.data.cart?.items ?? [])
-    : localCart.localItems;
+  const cartItems = useMemo(
+    () =>
+      isAuthenticated
+        ? (data?.data.cart?.items ?? [])
+        : localCart.localItems,
+    [isAuthenticated, data, localCart.localItems],
+  );
   const subtotal = isAuthenticated
     ? (data?.data.cart?.subtotal ?? 0)
     : localCart.localSubtotal;
@@ -110,7 +114,7 @@ export default function CartPage() {
         ) => {
           updateCartItem({ productId, quantity, size, color, variant_id })
             .unwrap()
-            .catch((err: any) => {
+            .catch((err: unknown) => {
               toast.error(
                 extractErrorMessage(err, "Unable to update quantity"),
               );
@@ -164,7 +168,7 @@ export default function CartPage() {
           size,
           color,
           variant_id,
-        } as any),
+        }),
       );
       return;
     }
@@ -185,7 +189,7 @@ export default function CartPage() {
           size,
           color,
           variant_id,
-        } as any),
+        }),
       );
       toast.success("Item removed from cart");
       return;
@@ -196,9 +200,9 @@ export default function CartPage() {
         size,
         color,
         variant_id,
-      } as any).unwrap();
+      }).unwrap();
       toast.success("Item removed from cart");
-    } catch (err: any) {
+    } catch (err: unknown) {
       toast.error(extractErrorMessage(err, "Failed to remove item"));
     }
   };
@@ -212,7 +216,7 @@ export default function CartPage() {
     try {
       await clearCart().unwrap();
       toast.success("Cart cleared");
-    } catch (err: any) {
+    } catch (err: unknown) {
       toast.error(extractErrorMessage(err, "Failed to clear cart"));
     }
   };

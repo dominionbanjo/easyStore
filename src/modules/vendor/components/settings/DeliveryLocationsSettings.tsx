@@ -4,6 +4,7 @@ import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { geography } from "@/data/geography";
+import { NigeriaData } from "@/utils/nigeria-data";
 import { useForm, FormProvider } from "react-hook-form";
 import { FormInput } from "@/components/shared/form/FormInput";
 import { FormSelect } from "@/components/shared/form/FormSelect";
@@ -73,8 +74,15 @@ export function DeliveryLocationsSettings({
 
       toast.success("Delivery location added");
       reset();
-    } catch (err: any) {
-      toast.error(err?.data?.message || "Failed to add delivery location");
+    } catch (err) {
+      const message =
+        typeof err === "object" && err !== null && "data" in err
+          ? String(
+              (err as { data: { message?: string } }).data?.message ??
+                "Failed to add delivery location"
+            )
+          : "Failed to add delivery location";
+      toast.error(message);
     }
   };
 
@@ -82,8 +90,15 @@ export function DeliveryLocationsSettings({
     try {
       await deleteRate(rateId).unwrap();
       toast.success("Delivery location removed");
-    } catch (err: any) {
-      toast.error(err?.data?.message || "Failed to remove location");
+    } catch (err) {
+      const message =
+        typeof err === "object" && err !== null && "data" in err
+          ? String(
+              (err as { data: { message?: string } }).data?.message ??
+                "Failed to remove location"
+            )
+          : "Failed to remove location";
+      toast.error(message);
     }
   };
 
@@ -126,7 +141,7 @@ export function DeliveryLocationsSettings({
                   className="grid grid-cols-12 gap-2 items-center bg-muted/20 p-3 rounded-sm border border-border/30 text-sm font-medium"
                 >
                   <div className="col-span-3 text-emerald-600 dark:text-emerald-400 font-bold font-outfit uppercase tracking-tight text-xs">
-                    {rate.state}
+                    {NigeriaData.getStateByCode(rate.state)?.name ?? rate.state}
                   </div>
                   <div className="col-span-4 truncate text-xs font-bold">
                     {rate.location}

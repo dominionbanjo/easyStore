@@ -71,11 +71,7 @@ export default function AnalyticsPage() {
     <div
       className="max-w-[1400px] mx-auto space-y-10 pb-20 px-4 md:px-0"
     >
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-        <div className="space-y-1">
-          <h1 className="text-3xl font-black tracking-tight">Financial Insights</h1>
-          <p className="text-muted-foreground font-medium">Track your performance and manage payouts</p>
-        </div>
+      <div className="flex flex-col md:flex-row justify-end items-start md:items-center gap-6">
         <AnalyticsHeader />
       </div>
 

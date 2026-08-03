@@ -12,13 +12,29 @@ export interface StoreAnalyticsSummary {
   pending_orders_count: number;
 }
 
+export interface StoreAnalyticsTrendPoint {
+  year: number;
+  month: number;
+  revenue: number;
+  orders: number;
+}
+
 export interface StoreAnalyticsTrend {
-  monthly: any[];
+  monthly: StoreAnalyticsTrendPoint[];
 }
 
 export interface StoreAnalyticsImage {
   url: string;
   public_id: string;
+}
+
+export interface StoreAnalyticsCustomer {
+  id: string;
+  name: string;
+  email: string;
+  location: string | null;
+  spent: number;
+  orders: number;
 }
 
 export interface StoreAnalyticsTopProduct {
@@ -36,7 +52,7 @@ export interface StoreAnalyticsResponse {
   data: {
     summary: StoreAnalyticsSummary;
     trends: StoreAnalyticsTrend;
-    customers: any[];
+    customers: StoreAnalyticsCustomer[];
     top_products: StoreAnalyticsTopProduct[];
   };
 }

@@ -1,3 +1,6 @@
+import type { NavigateFunction } from "react-router-dom";
+import type { IUser } from "@/types/auth/authTypes";
+
 /**
  * Utility functions for handling domains and subdomains
  */
@@ -8,7 +11,7 @@
  * vendor.localhost are tricky to set up.
  */
 export const areSubdomainsDisabled = (): boolean => {
-  return (import.meta.env as any).VITE_DISABLE_SUBDOMAIN === "true";
+  return import.meta.env.VITE_DISABLE_SUBDOMAIN === "true";
 };
 
 export const getSubdomain = (): string | null => {
@@ -100,9 +103,9 @@ export const getCookieDomain = (): string | undefined => {
 
 
 export const handleRoleRedirect = (
-  user: any,
+  user: IUser | null | undefined,
   fallbackRedirect: string,
-  navigate: (path: string, options?: any) => void
+  navigate: NavigateFunction
 ) => {
   const accountType = user?.account_type;
   const currentSubdomain = getSubdomain();

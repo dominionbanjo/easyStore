@@ -10,7 +10,7 @@ import {
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TrendingUp } from "lucide-react";
-import { useTheme } from "@/components/shared/ThemeContext";
+import { useTheme } from "@/components/shared/themeContextCore";
 
 interface SalesChartProps {
   data: {

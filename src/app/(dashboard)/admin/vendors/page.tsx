@@ -64,19 +64,9 @@ export default function SuperAdminVendorsPage() {
   return (
     <section className="space-y-6">
       {/* ── Header ── */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">
-            Vendors Management
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            Approve new vendors, manage store visibility, and control access
-            across the platform.
-          </p>
-        </div>
-
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-4">
         {pagination && (
-          <Badge variant="secondary" className="text-sm px-3 py-1.5 gap-1.5">
+          <Badge variant="secondary" className="text-sm px-3 py-1.5 gap-1.5 w-fit">
             <Store className="h-3.5 w-3.5" />
             {pagination.total.toLocaleString()} vendors
           </Badge>

@@ -1,12 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Loader2, Upload } from "lucide-react";
+import { Navigation } from "lucide-react";
 import { useForm, FormProvider } from "react-hook-form";
 import { Modal } from "@/components/shared/Modal";
 import { Button } from "@/components/ui/button";
 import { FormInput } from "@/components/shared/form/FormInput";
+import { FormSelect } from "@/components/shared/form/FormSelect";
 import { FormTextarea } from "@/components/shared/form/FormTextarea";
-import { useCreateZoneMutation } from "@/services/schoolZoneApi";
+import { FormPriceInput } from "@/components/shared/form/FormPriceInput";
+import ImageUploadBox from "@/components/shared/ImageUploadBox";
+import { NigeriaData } from "@/utils/nigeria-data";
+import {
+  useCreateZoneMutation,
+  useLazyCheckZoneSubdomainQuery,
+} from "@/services/schoolZoneApi";
 import {
   useGetCloudinarySignatureQuery,
   type CloudinaryConfig,
@@ -24,9 +31,12 @@ type CreateZoneFormValues = {
   tagline: string;
   description: string;
   state: string;
-  location: string;
   contact_email: string;
   contact_phone: string;
+  department: string;
+  course: string;
+  student_id_number: string;
+  delivery_fee: number | null;
 };
 
 export default function CreateZoneModal({
@@ -34,7 +44,12 @@ export default function CreateZoneModal({
   onClose,
 }: CreateZoneModalProps) {
   const [create, { isLoading }] = useCreateZoneMutation();
+  const [checkSubdomain] = useLazyCheckZoneSubdomainQuery();
   const { data: cloudinaryData } = useGetCloudinarySignatureQuery();
+
+  const [subdomainStatus, setSubdomainStatus] = useState<
+    "idle" | "checking" | "available" | "taken"
+  >("idle");
 
   const methods = useForm<CreateZoneFormValues>({
     defaultValues: {
@@ -43,20 +58,62 @@ export default function CreateZoneModal({
       tagline: "",
       description: "",
       state: "",
-      location: "",
       contact_email: "",
       contact_phone: "",
+      department: "",
+      course: "",
+      student_id_number: "",
+      delivery_fee: null,
     },
   });
   const subdomain = methods.watch("subdomain");
 
+  useEffect(() => {
+    const clean = subdomain.trim().toLowerCase();
+    if (clean.length < 2) {
+      setSubdomainStatus("idle");
+      return;
+    }
+    if (!/^[a-z0-9-]+$/.test(clean)) {
+      setSubdomainStatus("taken");
+      return;
+    }
+
+    setSubdomainStatus("checking");
+
+    const timer = setTimeout(async () => {
+      try {
+        await checkSubdomain({ subdomain: clean }).unwrap();
+        setSubdomainStatus("available");
+      } catch {
+        setSubdomainStatus("taken");
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [subdomain, checkSubdomain]);
+
+  const stateOptions = NigeriaData.getStates().map((s) => ({
+    label: s.name,
+    value: s.isoCode,
+  }));
+
   const [logo, setLogo] = useState<string | null>(null);
   const [coverImage, setCoverImage] = useState<string | null>(null);
-  const [uploading, setUploading] = useState(false);
+  const [schoolIdImage, setSchoolIdImage] = useState<string | null>(null);
+  const [uploadingLogo, setUploadingLogo] = useState(false);
+  const [uploadingCover, setUploadingCover] = useState(false);
+  const [uploadingSchoolId, setUploadingSchoolId] = useState(false);
+  const [logoProgress, setLogoProgress] = useState(0);
+  const [coverProgress, setCoverProgress] = useState(0);
+  const [schoolIdProgress, setSchoolIdProgress] = useState(0);
 
   const canUpload = Boolean(cloudinaryData);
 
-  const uploadImage = async (file: File): Promise<string> => {
+  const uploadImage = async (
+    file: File,
+    onProgress?: (percent: number) => void
+  ): Promise<string> => {
     if (file.size > 5 * 1024 * 1024) {
       throw new Error("File size cannot exceed 5MB");
     }
@@ -65,44 +122,93 @@ export default function CreateZoneModal({
     }
     const uploaded = await uploadToCloudinary(
       file,
-      cloudinaryData as CloudinaryConfig
+      cloudinaryData as CloudinaryConfig,
+      { onProgress }
     );
     return uploaded.url;
   };
 
-  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setUploading(true);
+  const handleLogoUpload = async (file: File) => {
+    setUploadingLogo(true);
+    setLogoProgress(0);
     try {
-      setLogo(await uploadImage(file));
+      setLogo(await uploadImage(file, setLogoProgress));
       toast.success("Logo uploaded");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Failed to upload logo");
     } finally {
-      setUploading(false);
-      e.target.value = "";
+      setUploadingLogo(false);
+      setLogoProgress(0);
     }
   };
 
-  const handleCoverUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setUploading(true);
+  const handleCoverUpload = async (file: File) => {
+    setUploadingCover(true);
+    setCoverProgress(0);
     try {
-      setCoverImage(await uploadImage(file));
+      setCoverImage(await uploadImage(file, setCoverProgress));
       toast.success("Cover image uploaded");
     } catch (err) {
       toast.error(
         err instanceof Error ? err.message : "Failed to upload cover image"
       );
     } finally {
-      setUploading(false);
-      e.target.value = "";
+      setUploadingCover(false);
+      setCoverProgress(0);
+    }
+  };
+
+  const handleSchoolIdUpload = async (file: File) => {
+    setUploadingSchoolId(true);
+    setSchoolIdProgress(0);
+    try {
+      setSchoolIdImage(await uploadImage(file, setSchoolIdProgress));
+      toast.success("School ID uploaded");
+    } catch (err) {
+      toast.error(
+        err instanceof Error ? err.message : "Failed to upload school ID"
+      );
+    } finally {
+      setUploadingSchoolId(false);
+      setSchoolIdProgress(0);
     }
   };
 
   const handleSubmit = async (values: CreateZoneFormValues) => {
+    const stateName =
+      NigeriaData.getStateByCode(values.state)?.name ?? values.state;
+
+    if (subdomainStatus === "checking") {
+      toast.error("Please wait — checking subdomain availability");
+      return;
+    }
+    if (subdomainStatus === "taken") {
+      toast.error("This subdomain is not available. Please choose another.");
+      return;
+    }
+
+    if (!values.department.trim()) {
+      toast.error("Department is required");
+      return;
+    }
+    if (!values.course.trim()) {
+      toast.error("Course of study is required");
+      return;
+    }
+    if (!values.student_id_number.trim()) {
+      toast.error("Student ID number is required");
+      return;
+    }
+    if (!schoolIdImage) {
+      toast.error("Upload your school ID image");
+      return;
+    }
+    const fee = Number(values.delivery_fee ?? 0);
+    if (!values.delivery_fee || Number.isNaN(fee) || fee < 0) {
+      toast.error("Enter a valid delivery fee");
+      return;
+    }
+
     try {
       await create({
         name: values.name.trim(),
@@ -110,11 +216,16 @@ export default function CreateZoneModal({
         tagline: values.tagline.trim() || undefined,
         description: values.description.trim() || undefined,
         state: values.state.trim(),
-        location: values.location.trim() || undefined,
+        location: stateName,
         contact_email: values.contact_email.trim() || undefined,
         contact_phone: values.contact_phone.trim() || undefined,
         logo: logo ?? undefined,
         cover_image: coverImage ?? undefined,
+        department: values.department.trim(),
+        course: values.course.trim(),
+        student_id_number: values.student_id_number.trim(),
+        school_id_image: schoolIdImage,
+        delivery_fee: fee,
       }).unwrap();
 
       toast.success(
@@ -124,6 +235,7 @@ export default function CreateZoneModal({
       methods.reset();
       setLogo(null);
       setCoverImage(null);
+      setSchoolIdImage(null);
     } catch (err) {
       const message =
         typeof err === "object" && err !== null && "data" in err
@@ -152,11 +264,38 @@ export default function CreateZoneModal({
       }}
       onClose={onClose}
       title="Create a School Zone"
+      footer={
+        <div className="flex justify-end gap-3 px-6 py-3">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="h-9"
+            onClick={onClose}
+            disabled={isLoading}
+          >
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            form="create-zone-form"
+            size="sm"
+            className="h-9"
+            disabled={
+              isLoading || uploadingLogo || uploadingCover || uploadingSchoolId
+            }
+            isLoading={isLoading}
+          >
+            Submit Request
+          </Button>
+        </div>
+      }
     >
       <FormProvider {...methods}>
         <form
+          id="create-zone-form"
           onSubmit={methods.handleSubmit(handleSubmit)}
-          className="space-y-5 py-4"
+          className="space-y-5 px-6 py-5"
         >
           <p className="text-sm text-muted-foreground font-medium">
             Create a campus marketplace for your school. A platform admin will
@@ -170,19 +309,37 @@ export default function CreateZoneModal({
               placeholder="e.g. University of Lagos"
               rules={{ required: "School name is required" }}
             />
-            <FormInput
-              label="Subdomain"
-              name="subdomain"
-              placeholder="e.g. unilag"
-              rules={{
-                required: "Subdomain is required",
-                pattern: {
-                  value: /^[a-z0-9-]+$/,
-                  message:
-                    "Only lowercase letters, numbers, and dashes allowed",
-                },
-              }}
-            />
+            <div className="relative">
+              <FormInput
+                label="Subdomain"
+                name="subdomain"
+                placeholder="e.g. unilag"
+                rules={{
+                  required: "Subdomain is required",
+                  pattern: {
+                    value: /^[a-z0-9-]+$/,
+                    message:
+                      "Only lowercase letters, numbers, and dashes allowed",
+                  },
+                }}
+              />
+              {subdomainStatus !== "idle" && (
+                <div className="absolute right-3 top-[38px] text-xs">
+                  {subdomainStatus === "checking" && (
+                    <span className="flex items-center gap-1 text-muted-foreground">
+                      <span className="h-3 w-3 animate-spin rounded-sm border-2 border-primary/20 border-t-primary" />
+                      Checking...
+                    </span>
+                  )}
+                  {subdomainStatus === "available" && (
+                    <span className="text-green-600 font-bold">Available</span>
+                  )}
+                  {subdomainStatus === "taken" && (
+                    <span className="text-destructive font-bold">Unavailable</span>
+                  )}
+                </div>
+              )}
+            </div>
             {subdomainHint && (
               <p className="text-xs text-muted-foreground font-medium">
                 {subdomainHint}
@@ -198,16 +355,13 @@ export default function CreateZoneModal({
               name="description"
               placeholder="Tell students what this zone is about..."
             />
-            <FormInput
+            <FormSelect
               label="State"
               name="state"
-              placeholder="e.g. Lagos"
-              rules={{ required: "State is required" }}
-            />
-            <FormInput
-              label="Location / Campus"
-              name="location"
-              placeholder="e.g. Akoka, Yaba"
+              options={stateOptions}
+              isSearchable
+              icon={<Navigation className="h-4 w-4 text-primary" />}
+              placeholder="Select State"
             />
             <FormInput
               label="Contact Email"
@@ -221,98 +375,70 @@ export default function CreateZoneModal({
               placeholder="e.g. 08012345678"
             />
 
-            {/* Logo upload */}
-            <div className="space-y-2">
-              <label className="text-sm font-semibold text-foreground">
-                Logo
-              </label>
-              {logo ? (
-                <div className="relative w-24 h-24 rounded-sm overflow-hidden border border-border/60">
-                  <img
-                    src={logo}
-                    alt="Logo preview"
-                    className="h-full w-full object-cover"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setLogo(null)}
-                    className="absolute top-1 right-1 bg-destructive text-white text-[10px] font-bold px-1.5 py-0.5 rounded-sm"
-                  >
-                    Remove
-                  </button>
-                </div>
-              ) : (
-                <label className="flex items-center justify-center gap-2 border-2 border-dashed border-border/60 rounded-sm py-4 cursor-pointer hover:border-primary/40 transition-colors">
-                  <Upload className="h-5 w-5 text-muted-foreground" />
-                  <span className="text-xs font-semibold text-muted-foreground">
-                    {uploading ? "Uploading..." : "Upload logo"}
-                  </span>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleLogoUpload}
-                    className="hidden"
-                    disabled={uploading || !canUpload}
-                  />
-                </label>
-              )}
+            {/* ── School rep verification (same as joining a zone) ── */}
+            <div className="border border-border/40 rounded-sm p-4 space-y-4 bg-muted/20">
+              <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">
+                Your School Details
+              </p>
+              <FormInput
+                label="Department"
+                name="department"
+                placeholder="e.g. Computer Science"
+                rules={{ required: "Department is required" }}
+              />
+              <FormInput
+                label="Course of Study"
+                name="course"
+                placeholder="e.g. B.Sc. Computer Science"
+                rules={{ required: "Course of study is required" }}
+              />
+              <FormInput
+                label="Student ID Number"
+                name="student_id_number"
+                placeholder="e.g. 2020/12345"
+                rules={{ required: "Student ID number is required" }}
+              />
+              <FormPriceInput
+                label="Delivery Fee (₦)"
+                name="delivery_fee"
+                placeholder="e.g. 500"
+              />
+
+              {/* School ID upload */}
+              <ImageUploadBox
+                label="School ID Image"
+                required
+                previewUrl={schoolIdImage}
+                uploading={uploadingSchoolId}
+                progress={schoolIdProgress}
+                disabled={!canUpload}
+                onRemove={() => setSchoolIdImage(null)}
+                onFileSelect={handleSchoolIdUpload}
+              />
             </div>
+
+            {/* Logo upload */}
+            <ImageUploadBox
+              label="Logo"
+              compact
+              previewUrl={logo}
+              uploading={uploadingLogo}
+              progress={logoProgress}
+              disabled={!canUpload}
+              onRemove={() => setLogo(null)}
+              onFileSelect={handleLogoUpload}
+            />
 
             {/* Cover upload */}
-            <div className="space-y-2">
-              <label className="text-sm font-semibold text-foreground">
-                Cover Image
-              </label>
-              {coverImage ? (
-                <div className="relative rounded-sm overflow-hidden border border-border/60">
-                  <img
-                    src={coverImage}
-                    alt="Cover preview"
-                    className="h-32 w-full object-cover"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setCoverImage(null)}
-                    className="absolute top-2 right-2 bg-destructive text-white text-xs font-bold px-2.5 py-1 rounded-sm"
-                  >
-                    Remove
-                  </button>
-                </div>
-              ) : (
-                <label className="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-border/60 rounded-sm py-6 cursor-pointer hover:border-primary/40 transition-colors">
-                  <Upload className="h-6 w-6 text-muted-foreground" />
-                  <span className="text-xs font-semibold text-muted-foreground">
-                    {uploading ? "Uploading..." : "Upload cover image"}
-                  </span>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleCoverUpload}
-                    className="hidden"
-                    disabled={uploading || !canUpload}
-                  />
-                </label>
-              )}
-            </div>
-          </div>
-
-          <div className="flex justify-end gap-3 pt-2">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={onClose}
-              disabled={isLoading}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              disabled={isLoading || uploading}
-              isLoading={isLoading}
-            >
-              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Submit Request
-            </Button>
+            <ImageUploadBox
+              label="Cover Image"
+              previewUrl={coverImage}
+              uploading={uploadingCover}
+              progress={coverProgress}
+              disabled={!canUpload}
+              onRemove={() => setCoverImage(null)}
+              onFileSelect={handleCoverUpload}
+            />
           </div>
         </form>
       </FormProvider>

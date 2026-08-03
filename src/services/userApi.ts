@@ -14,6 +14,15 @@ export interface UpdateProfileArgs {
   data: FormData;
 }
 
+export interface IUserAddressInput {
+  street?: string;
+  country?: string;
+  state?: string;
+  city?: string;
+  postal_code?: string;
+  is_default?: boolean;
+}
+
 type VerifyBankApiResponse = {
   status: string;
   message: string;
@@ -64,7 +73,7 @@ export const userApi = apiManager.injectEndpoints({
       invalidatesTags: ["User"],
     }),
 
-    deleteUser: builder.mutation<any, string>({
+    deleteUser: builder.mutation<{ success: boolean; message?: string }, string>({
       query: (id) => ({
         url: `/api/v1/users/${id}`,
         method: "DELETE",
@@ -120,7 +129,10 @@ export const userApi = apiManager.injectEndpoints({
       }),
     }),
 
-    addUserAddress: builder.mutation<any, any>({
+    addUserAddress: builder.mutation<
+      { success: boolean; message?: string },
+      IUserAddressInput | undefined
+    >({
       query: (body) => ({
         url: "users/me/addresses",
         method: "POST",
@@ -129,7 +141,10 @@ export const userApi = apiManager.injectEndpoints({
       invalidatesTags: ["User"],
     }),
 
-    updateUserAddress: builder.mutation<any, { id: string; body: any }>({
+    updateUserAddress: builder.mutation<
+      { success: boolean; message?: string },
+      { id: string; body: IUserAddressInput | undefined }
+    >({
       query: ({ id, body }) => ({
         url: `users/me/addresses/${id}`,
         method: "PATCH",
@@ -138,7 +153,10 @@ export const userApi = apiManager.injectEndpoints({
       invalidatesTags: ["User"],
     }),
 
-    deleteUserAddress: builder.mutation<any, string>({
+    deleteUserAddress: builder.mutation<
+      { success: boolean; message?: string },
+      string
+    >({
       query: (id) => ({
         url: `users/me/addresses/${id}`,
         method: "DELETE",

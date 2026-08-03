@@ -9,7 +9,7 @@ export const calculatePaystackTotal = (amount: number) => {
   }
 
   // Formula: (Amount + Flat) / (1 - Percent)
-  let total = (amount + flatFee) / (1 - percent);
+  const total = (amount + flatFee) / (1 - percent);
 
   // Check fee cap
   let fee = total - amount;

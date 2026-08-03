@@ -173,16 +173,8 @@ export default function SuperAdminOverviewPage() {
   return (
     <section className="space-y-10 pb-10">
       {/* ─── Header ─── */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-black tracking-tight text-foreground/90">
-            Dashboard Overview
-          </h1>
-          <p className="text-sm text-muted-foreground font-medium mt-1">
-            Real-time platform performance and vendor ecosystem metrics.
-          </p>
-        </div>
-        <Button className="gap-2   font-bold">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-4">
+        <Button className="gap-2 font-bold">
           <Settings className="h-4 w-4" /> System Settings
         </Button>
       </div>

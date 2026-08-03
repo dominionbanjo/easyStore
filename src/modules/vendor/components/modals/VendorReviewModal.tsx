@@ -5,6 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { extractErrorMessage } from "@/utils/errorHandler";
 
 interface Props {
   open: boolean;
@@ -37,8 +38,8 @@ export function VendorReviewModal({ open, onOpenChange, onSubmit, onDismiss }: P
       await onSubmit(rating, comment);
       toast.success("Thank you for your review!");
       onOpenChange(false);
-    } catch (err: any) {
-      toast.error(err?.data?.message || "Failed to submit review");
+    } catch (err: unknown) {
+      toast.error(extractErrorMessage(err, "Failed to submit review"));
     }
     setSubmitting(false);
   };

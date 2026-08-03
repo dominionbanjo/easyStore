@@ -45,7 +45,7 @@ export function ConfirmDialog({
             {cancelText}
           </AlertDialogCancel>
           <Button
-            variant={variant === "warning" ? "default" : (variant as any)}
+            variant={variant === "warning" ? "default" : variant}
             onClick={(e) => {
               e.preventDefault();
               onConfirm();

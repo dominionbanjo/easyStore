@@ -189,13 +189,7 @@ export default function ProductsPage() {
   return (
     <section className="space-y-6 md:space-y-8 pb-10">
       {/* ─── Header ─── */}
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div>
-          <p className="text-muted-foreground text-sm font-medium">
-            Manage your inventory and product listings in one place.
-          </p>
-        </div>
-
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-end">
         <div className="flex items-center gap-3"
         >
           <Button
@@ -291,7 +285,11 @@ export default function ProductsPage() {
                           : "text-muted-foreground",
                       )}
                       onClick={() =>
-                        setStatus(s === "all" ? undefined : (s as any))
+                        setStatus(
+                          s === "all"
+                            ? undefined
+                            : (s as "active" | "inactive"),
+                        )
                       }
                     >
                       {s === "active" && (

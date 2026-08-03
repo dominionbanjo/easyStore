@@ -45,8 +45,6 @@ export default function ProductGallery({ images }: ProductGalleryProps) {
     }
   };
 
-  if (!images?.length) return null;
-
   const isVideo = (src: string) => src.endsWith(".mp4");
 
   const paginate = useCallback(
@@ -58,6 +56,8 @@ export default function ProductGallery({ images }: ProductGalleryProps) {
     },
     [activeIndex, images.length],
   );
+
+  if (!images?.length) return null;
 
   const fullScreenContent = (
     <>

@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
-import { Settings, Palette, Cloud } from "lucide-react";
+import { Palette, Cloud } from "lucide-react";
 
 export default function SuperAdminSettingsPage() {
   const [theme, setTheme] = useState("system");
@@ -25,17 +25,7 @@ export default function SuperAdminSettingsPage() {
   return (
     <section className="space-y-8">
       {/* ─── Header ─── */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
-            <Settings className="h-6 w-6 text-primary" />
-            Platform Settings
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            Configure global platform behavior, themes, integrations, and
-            security policies.
-          </p>
-        </div>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-4">
         <Button className="gap-2">
           <Cloud className="h-4 w-4" /> Save All Changes
         </Button>

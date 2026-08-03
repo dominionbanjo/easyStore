@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "@/store";
 import { toast } from "sonner";
+import { extractErrorMessage } from "@/utils/errorHandler";
 import { useAddItemToCartMutation } from "@/services/cartApi";
 import {
   useAddToWishlistMutation,
@@ -177,8 +178,8 @@ export function useProductActions(product: ProductActionProps) {
       }).unwrap();
 
       toast.success(`${product.name} added to cart`);
-    } catch (err: any) {
-      toast.error(err?.data?.message || "Failed to add product to cart");
+    } catch (err: unknown) {
+      toast.error(extractErrorMessage(err, "Failed to add product to cart"));
     }
   };
 
@@ -202,11 +203,9 @@ export function useProductActions(product: ProductActionProps) {
           image: product.image ?? null,
         }).unwrap();
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       setLiked(prev);
-      toast.error(
-        err?.data?.message || err?.message || "Wishlist action failed",
-      );
+      toast.error(extractErrorMessage(err, "Wishlist action failed"));
     }
   };
 

@@ -7,7 +7,9 @@ import { toast } from "sonner";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import Cookies from "js-cookie";
 import { useLoginMutation, useGoogleLoginMutation } from "@/services/authApi";
+import type { IUser } from "@/types/auth/authTypes";
 import { handleRoleRedirect, areSubdomainsDisabled } from "@/utils/subdomain";
+import { extractErrorMessage } from "@/utils/errorHandler";
 import { AUTH_ROUTES } from "@/routes/temp";
 import {
   LoginSchema,
@@ -25,17 +27,25 @@ const getGoogleButtonWidth = () => {
 };
 
 /* -------------------- Type guard for Google -------------------- */
-function hasGoogleIdentity(win: Window): win is Window & {
-  google: {
-    accounts: {
-      id: {
-        initialize: Function;
-        renderButton: Function;
-      };
+type GoogleIdentity = {
+  accounts: {
+    id: {
+      initialize: (config: {
+        client_id: string;
+        callback: (response: { credential: string }) => void;
+      }) => void;
+      renderButton: (parent: HTMLElement, options: Record<string, unknown>) => void;
     };
   };
-} {
-  return Boolean((win as any).google?.accounts?.id);
+};
+
+function hasGoogleIdentity(win: Window): win is Window & { google: GoogleIdentity } {
+  const google = (win as Window & { google?: unknown }).google;
+  return Boolean(
+    google &&
+      typeof google === "object" &&
+      (google as GoogleIdentity).accounts?.id,
+  );
 }
 
 import { Mail, Lock } from "lucide-react";
@@ -44,7 +54,8 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { isAuthenticated, currentUser } = useSelector(
-    (state: any) => state.user,
+    (state: { user: { isAuthenticated: boolean; currentUser: IUser | null } }) =>
+      state.user,
   );
   const googleButtonRef = useRef<HTMLDivElement>(null);
   const showGoogleButton = !areSubdomainsDisabled();
@@ -109,8 +120,8 @@ export default function LoginPage() {
 
       toast.success("Login successful!");
       handleRoleRedirect(user, redirectTo, navigate);
-    } catch (err: any) {
-      toast.error(err?.data?.message || err?.message || "Login failed");
+    } catch (err: unknown) {
+      toast.error(extractErrorMessage(err, "Login failed"));
     }
   };
 
@@ -132,17 +143,15 @@ export default function LoginPage() {
 
       google.accounts.id.initialize({
         client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID!,
-        callback: async (response: any) => {
+        callback: async (response: { credential: string }) => {
           try {
             const token = response.credential;
-            const res: any = await googleLogin({ token }).unwrap();
-            const user = res?.data?.user || res?.user;
+            const res = await googleLogin({ token }).unwrap();
+            const user = res?.data?.user;
             toast.success("Logged in with Google!");
             handleRoleRedirect(user, redirectTo, navigate);
-          } catch (err: any) {
-            toast.error(
-              err?.data?.message || err?.message || "Google login failed",
-            );
+          } catch (err: unknown) {
+            toast.error(extractErrorMessage(err, "Google login failed"));
           }
         },
       });

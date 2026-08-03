@@ -4,11 +4,14 @@ import type { IProduct } from "@/types/product/productTypes";
 interface ProductGridCardProps {
   data: IProduct;
   className?: string;
+  /** Full URL override — used to escape a subdomain context (e.g. zone subdomain → base domain) */
+  href?: string;
 }
 
 export default function ProductGridCard({
   data,
   className,
+  href,
 }: ProductGridCardProps) {
   return (
     <ProductCard
@@ -39,6 +42,7 @@ export default function ProductGridCard({
       isOnSale={data.on_sale}
       isFavorite={data.is_in_wishlist}
       className={className}
+      href={href}
     />
   );
 }

@@ -32,11 +32,7 @@ export function StaffManagementPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">Staff Management</h1>
-          <p className="text-muted-foreground">Invite and manage your store staff</p>
-        </div>
+      <div className="flex items-center justify-end">
         <Button onClick={() => setInviteOpen(true)}>
           <Plus className="mr-2 h-4 w-4" />
           Invite Staff

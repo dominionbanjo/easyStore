@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useMessaging } from "./MessagingContext";
+import { useMessaging } from "./messagingContextCore";
 
 /**
  * Compatibility wrapper for the legacy useMessagingSocket hook.

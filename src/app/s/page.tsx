@@ -46,7 +46,7 @@ export default function SearchResultsPage() {
 
   /* ───────────────── QUERY PARAMS ───────────────── */
   const rawQueryArgs = useMemo(() => {
-    const params: Record<string, any> = {};
+    const params: Record<string, string | number | boolean | undefined> = {};
 
     // Map all search params to the query object
     searchParams.forEach((value, key) => {
@@ -74,14 +74,23 @@ export default function SearchResultsPage() {
     // preference) is a soft local-first signal.
     const explicitState = params.state as string | undefined;
     const loc = params.loc as string | undefined;
+    const q = params.q as string | undefined;
+    const page = params.page as number | undefined;
+    const sort = params.sort as string | undefined;
+
+    // Remove handled keys so the spread below only carries dynamic filters
+    delete params.q;
+    delete params.page;
+    delete params.sort;
     delete params.loc;
+    delete params.state;
 
     return {
-      q: params.q ?? "",
-      page: params.page ?? 1,
-      limit: 15,
-      sort: params.sort ?? undefined,
       ...params,
+      q: q ?? "",
+      page: page ?? 1,
+      limit: 15,
+      sort,
       state: explicitState ?? loc ?? undefined,
       local: !explicitState && loc ? true : undefined,
     };

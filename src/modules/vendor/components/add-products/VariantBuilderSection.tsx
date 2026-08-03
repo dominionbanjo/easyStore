@@ -79,7 +79,9 @@ export function VariantBuilderSection() {
     name: "variants",
   });
 
-  const options = (useWatch({ control, name: "options" }) as Option[]) || [];
+  const watchedOptions = useWatch({ control, name: "options" });
+  const options = useMemo(() => (watchedOptions as Option[]) || [], [watchedOptions]);
+  const variants = useWatch({ control, name: "variants" });
 
   // Generate combinations (Debounced)
   useEffect(() => {
@@ -90,7 +92,7 @@ export function VariantBuilderSection() {
       );
 
       if (processedOptions.length === 0) {
-        if ((getValues("variants") || []).length > 0) {
+        if (((variants as VariantField[]) || []).length > 0) {
           replaceVariants([]);
         }
         return;
@@ -127,7 +129,7 @@ export function VariantBuilderSection() {
       };
 
       const combinations = generateCombinations(processedOptions);
-      const hydratedVariants = getValues("variants") || [];
+      const hydratedVariants = (variants as VariantField[]) || [];
 
       // Optimize lookup with Hash Map O(N) instead of O(N*M)
       const getStableKey = (obj: Record<string, string>) =>
@@ -166,7 +168,7 @@ export function VariantBuilderSection() {
     }, 500); // 500ms debounce
 
     return () => clearTimeout(timer);
-  }, [JSON.stringify(options)]);
+  }, [options, variants, replaceVariants]);
 
   const addOption = () => {
     prependOption({ name: "", values: [] });

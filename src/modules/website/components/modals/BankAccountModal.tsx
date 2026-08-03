@@ -21,6 +21,7 @@ import type { IUser } from "@/types/auth/authTypes";
 import { Button } from "@/components/ui/button";
 import { FormInput } from "@/components/shared/form/FormInput";
 import { FormSelect } from "@/components/shared/form/FormSelect";
+import { extractErrorMessage } from "@/utils/errorHandler";
 
 import {
   useGetNigerianBanksQuery,
@@ -127,16 +128,16 @@ export function BankAccountModal({
           account_name: res.account_name,
           bank_name: res.bank_name,
         });
-      } catch (e: any) {
+      } catch (e: unknown) {
         setVerifiedData(null);
-        setVerifyError(e?.data?.message || "Unable to verify bank details");
+        setVerifyError(extractErrorMessage(e, "Unable to verify bank details"));
       } finally {
         setIsVerifying(false);
       }
     }, 600);
 
     return () => clearTimeout(timeout);
-  }, [bankCode, accountNumber, verifyBank]);
+  }, [bankCode, accountNumber, verifyBank, user?.account_number, user?.bank_code, user?.payout_verified]);
 
   const onSubmit = async (values: BankFormValues) => {
     if (!verifiedData || isVerifying) return;
@@ -146,8 +147,8 @@ export function BankAccountModal({
 
       toast.success("Bank account saved successfully");
       onClose();
-    } catch (e: any) {
-      toast.error(e?.data?.message || "Failed to save bank details");
+    } catch (e: unknown) {
+      toast.error(extractErrorMessage(e, "Failed to save bank details"));
     }
   };
 
