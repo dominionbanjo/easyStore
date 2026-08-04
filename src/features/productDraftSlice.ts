@@ -15,6 +15,9 @@ export interface ProductDraftData {
   category_id?: string;
   description?: string | null;
 
+  /** True once this draft has been successfully synced to the backend. */
+  syncedToBackend?: boolean;
+
   price?: number | null;
   discount_price?: number | null;
   stock?: number | null;

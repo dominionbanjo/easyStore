@@ -2,7 +2,12 @@ import { useEffect, useState } from "react";
 import { FormProvider, type SubmitHandler } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "@/store";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 import { toast } from "sonner";
 import {
   Image as ImageIcon,
@@ -12,8 +17,6 @@ import {
   Layers,
   Sparkles,
   ChevronLeft,
-  CheckCircle2,
-  RefreshCw,
 } from "lucide-react";
 import type {
   AddProductFormInput,
@@ -31,7 +34,8 @@ import {
 import {
   useCreateProductWithCloudinaryMutation,
   useGetVendorSingleProductQuery,
-  useUpdateProductWithCloudinaryMutation,
+  usePublishProductDraftMutation,
+  useGetProductDraftQuery,
 } from "@/services/productApi";
 import { buildSpecsObject } from "@/modules/vendor/utils/addProduct.helpers";
 import { buildCreateProductPayload } from "@/utils/draftToFormValues";
@@ -56,6 +60,8 @@ export default function AddProductPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { slug } = useParams<{ slug?: string }>();
+  const [searchParams] = useSearchParams();
+  const draftParam = searchParams.get("draft");
 
   const { isReady, isLoading: checkingSetup } = useStoreSetup();
   const [showSetupModal, setShowSetupModal] = useState(false);
@@ -74,13 +80,12 @@ export default function AddProductPage() {
   const {
     handleSubmit,
     formState: { isValid },
+    saveDraftNow,
+    isSavingDraft,
+    cancelSync,
   } = methods;
 
-  const {
-    data: draft,
-    isSyncing,
-    lastSynced,
-  } = useSelector((s: RootState) => s.productDraft);
+  const { data: draft } = useSelector((s: RootState) => s.productDraft);
 
   /* ───────── API ───────── */
   const { data: productData, isLoading: loadingProduct } =
@@ -91,19 +96,34 @@ export default function AddProductPage() {
   const [createProduct, { isLoading: creating }] =
     useCreateProductWithCloudinaryMutation();
 
-  const [updateProduct, { isLoading: updating }] =
-    useUpdateProductWithCloudinaryMutation();
+  const [publishProduct, { isLoading: publishing }] =
+    usePublishProductDraftMutation();
+
+  const { data: resumeDraftData } = useGetProductDraftQuery(draftParam!, {
+    skip: Boolean(isEditMode || !draftParam),
+  });
 
   const { image, gallery, specs: specItems, tags, highlights } = extras;
 
-  /* ───────── CLEAR STALE DRAFT ───────── */
+  /* ───────── RESUME BACKEND DRAFT (?draft=) ───────── */
   useEffect(() => {
-    // If we're creating a new product but the draft belongs to an edit session, clear it.
-    if (!isEditMode && draft?.id) {
-      dispatch(clearProductDraft());
-    }
-    // We intentionally don't clear on unmount so data persists for previews and reloads.
-  }, [isEditMode, draft?.id, dispatch]);
+    if (isEditMode || !draftParam) return;
+    if (!resumeDraftData?.data?.product) return;
+    if (draft?.id === resumeDraftData.data.product.id) return;
+
+    const { values, extras: normalizedExtras } = productToDraft(
+      resumeDraftData.data.product,
+    );
+
+    dispatch(
+      setProductDraft({
+        ...values,
+        ...normalizedExtras,
+        id: resumeDraftData.data.product.id,
+        syncedToBackend: true,
+      }),
+    );
+  }, [isEditMode, draftParam, resumeDraftData, draft?.id, dispatch]);
 
   /* ───────── HYDRATE EDIT MODE ───────── */
   useEffect(() => {
@@ -123,6 +143,7 @@ export default function AddProductPage() {
         ...values,
         ...normalizedExtras,
         id: productData.data.product.id,
+        syncedToBackend: true,
       }),
     );
   }, [isEditMode, productData, draft, dispatch]);
@@ -138,7 +159,8 @@ export default function AddProductPage() {
         tags,
         highlights,
         specs: buildSpecsObject(specItems),
-        id: productId,
+        id: productId ?? draft?.id,
+        syncedToBackend: draft?.syncedToBackend,
       }),
     );
 
@@ -166,14 +188,18 @@ export default function AddProductPage() {
 
     try {
       if (isEditMode) {
-        await updateProduct({ id: productId!, data: payload }).unwrap();
+        await publishProduct({ draftId: productId!, data: payload }).unwrap();
         toast.success("Product updated successfully");
+      } else if (draft?.id) {
+        await publishProduct({ draftId: draft.id, data: payload }).unwrap();
+        toast.success("Product published successfully");
       } else {
         await createProduct(payload).unwrap();
         toast.success("Product created successfully");
       }
 
       dispatch(clearProductDraft());
+      cancelSync();
       navigate(getAppPath("/products"));
     } catch (err: unknown) {
       const errorMsg = extractErrorMessage(
@@ -183,6 +209,19 @@ export default function AddProductPage() {
 
       const displayMsg = Array.isArray(errorMsg) ? errorMsg[0] : errorMsg;
       toast.error(displayMsg);
+    }
+  };
+
+  /* ───────── MANUAL SAVE DRAFT ───────── */
+  const handleManualSaveDraft = async () => {
+    try {
+      await saveDraftNow();
+      cancelSync();
+      toast.success("Draft saved");
+      dispatch(clearProductDraft());
+      navigate(getAppPath("/products"));
+    } catch {
+      toast.error("Could not save draft. Please try again.");
     }
   };
 
@@ -223,36 +262,6 @@ export default function AddProductPage() {
               </div>
               Back to Catalog
             </Link>
-            {/* Auto-save Status Indicator */}
-            <div className="flex items-center gap-3">
-              <div
-                className={cn(
-                  "flex items-center gap-1.5 transition-all duration-500 px-3 py-0.5 rounded-sm border ",
-                  isSyncing
-                    ? "bg-amber-500/5 border-amber-500/20 text-amber-600 animate-pulse"
-                    : "bg-emerald-500/5 border-emerald-500/20 text-emerald-600",
-                )}
-              >
-                {isSyncing ? (
-                  <RefreshCw className="h-2.5 w-2.5 animate-spin" />
-                ) : (
-                  <CheckCircle2 className="h-2.5 w-2.5" />
-                )}
-                <span className="text-[9px] font-black uppercase tracking-widest leading-none">
-                  {isSyncing ? "Saving..." : "Draft Saved"}
-                </span>
-              </div>
-
-              {lastSynced && !isSyncing && (
-                <span className="text-[10px] font-bold text-muted-foreground/30 italic">
-                  at{" "}
-                  {new Date(lastSynced).toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </span>
-              )}
-            </div>
           </div>
 
           <div className="flex items-center gap-3">
@@ -396,9 +405,11 @@ export default function AddProductPage() {
           {/* Bottom Actions */}
           <div className="pt-8 border-t border-border/40">
             <ActionsSection
-              creating={creating || updating}
+              creating={creating || publishing}
               onPreview={handleSubmit(onPreview)}
               onCreate={handleSubmit(onSubmit)}
+              onSaveDraft={handleManualSaveDraft}
+              savingDraft={isSavingDraft}
               submitLabel={isEditMode ? "Update Product" : "Publish Product"}
               disabled={!canSubmit}
             />

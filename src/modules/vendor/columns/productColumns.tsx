@@ -2,6 +2,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import {
   CheckCircle,
   XCircle,
+  FileText,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -16,22 +17,29 @@ export const productColumns: ColumnDef<IStoreProduct>[] = [
     header: () => <div className="text-left">Product</div>,
     cell: ({ row }) => {
       const product = row.original;
+      const displayName = product.name || "Untitled draft";
       const truncatedName =
-        product.name.length > 18
-          ? product.name.substring(0, 18) + "..."
-          : product.name;
+        displayName.length > 18
+          ? displayName.substring(0, 18) + "..."
+          : displayName;
 
       return (
         <div className="flex items-center gap-2 text-left max-w-[140px] sm:max-w-[280px]">
-          <img
-            src={product.image?.url}
-            alt={product.name}
-            className="w-10 h-10 sm:w-12 sm:h-12 rounded-sm object-cover border shrink-0"
-          />
+          {product.image?.url ? (
+            <img
+              src={product.image.url}
+              alt={displayName}
+              className="w-10 h-10 sm:w-12 sm:h-12 rounded-sm object-cover border shrink-0"
+            />
+          ) : (
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-sm object-cover border shrink-0 bg-muted flex items-center justify-center text-muted-foreground/40">
+              <FileText className="h-5 w-5" />
+            </div>
+          )}
           <div className="min-w-0 flex-1 overflow-hidden">
             <p
               className="font-semibold text-xs sm:text-sm truncate"
-              title={product.name}
+              title={displayName}
             >
               {truncatedName}
             </p>
@@ -61,7 +69,9 @@ export const productColumns: ColumnDef<IStoreProduct>[] = [
     header: () => <div className="text-center">Price</div>,
     cell: ({ row }) => (
       <div className="text-center font-semibold">
-        ₦{Number(row.original.price).toLocaleString()}
+        {row.original.price != null
+          ? `₦${Number(row.original.price).toLocaleString()}`
+          : "—"}
       </div>
     ),
   },
@@ -106,6 +116,20 @@ export const productColumns: ColumnDef<IStoreProduct>[] = [
             >
               <CheckCircle className="h-3 w-3" />
               Active
+            </Badge>
+          </div>
+        );
+      }
+
+      if (status === "draft") {
+        return (
+          <div className="flex justify-center">
+            <Badge
+              variant="outline"
+              className={cn(base, "bg-amber-50 text-amber-700 border-amber-200")}
+            >
+              <FileText className="h-3 w-3" />
+              Draft
             </Badge>
           </div>
         );

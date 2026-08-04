@@ -22,6 +22,7 @@ export const apiManager = createApi({
     "Wishlist",
     "Store",
     "Product",
+    "Draft",
     "Analytics",
     "Messaging",
     "Notification",

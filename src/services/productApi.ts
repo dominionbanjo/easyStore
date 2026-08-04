@@ -16,6 +16,8 @@ import type {
   VendorProductSearchResponse,
   VendorProductSearchParams,
   ProductStatus,
+  SaveProductDraftArgs,
+  IProductDraftsResponse,
 } from "@/types/product/productTypes";
 
 import { apiManager } from "./apiManager";
@@ -299,6 +301,64 @@ export const productApi = apiManager.injectEndpoints({
       ],
     }),
 
+    /* ───────── DRAFTS ───────── */
+    saveProductDraft: builder.mutation<
+      { success: boolean; message?: string; id: string },
+      SaveProductDraftArgs
+    >({
+      query: (data) => ({
+        url: "vendor/products/drafts",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Draft", "Store"],
+    }),
+
+    publishProductDraft: builder.mutation<
+      { success: boolean; message?: string; id: string },
+      { draftId: string; data: CreateProductCloudinaryArgs }
+    >({
+      query: ({ draftId, data }) => ({
+        url: `vendor/products/drafts/${draftId}/publish`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Draft", "Store"],
+    }),
+
+    getProductDrafts: builder.query<
+      IProductDraftsResponse,
+      { q?: string; page?: number; limit?: number }
+    >({
+      query: (params) => ({
+        url: "vendor/products/drafts",
+        method: "GET",
+        params,
+      }),
+      providesTags: ["Draft"],
+    }),
+
+    getProductDraft: builder.query<GetSingleProductResponse, string>({
+      query: (id) => ({
+        url: `vendor/products/drafts/${id}`,
+        method: "GET",
+      }),
+      providesTags: (_result, _error, id) => [
+        { type: "Draft", id },
+      ],
+    }),
+
+    deleteProductDraft: builder.mutation<
+      { success: boolean; message?: string },
+      string
+    >({
+      query: (id) => ({
+        url: `vendor/products/drafts/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Draft", "Store"],
+    }),
+
     getProductDeliveryRates: builder.query<
       ApiResponse<ProductDeliveryRate[]>,
       string
@@ -401,6 +461,13 @@ export const {
 
   useUpdateProductStatusMutation,
   useUpdateProductOnSaleMutation,
+
+  /* ───────── DRAFTS ───────── */
+  useSaveProductDraftMutation,
+  usePublishProductDraftMutation,
+  useGetProductDraftsQuery,
+  useGetProductDraftQuery,
+  useDeleteProductDraftMutation,
 
   /* ───────── DELIVERY RATES ───────── */
   useGetProductDeliveryRatesQuery,

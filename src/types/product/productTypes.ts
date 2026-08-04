@@ -303,7 +303,7 @@ export interface IStoreProduct {
 
   shipping_note: string | null;
   returns_note: string | null;
-  status?: "active" | "inactive";
+  status?: "active" | "inactive" | "draft";
 
   rating_average: number;
   rating_count: number;
@@ -328,6 +328,56 @@ export interface IStoreProductsResponse {
   data: {
     items: IStoreProduct[];
     pagination: IPagination;
+  };
+}
+
+/* ───────────────── PRODUCT DRAFTS ───────────────── */
+export type SaveProductDraftArgs = Partial<CreateProductCloudinaryArgs> & {
+  id?: string;
+};
+
+export interface IProductDraft {
+  id: string;
+  vendor_id?: string;
+  store_id?: string;
+  category_id?: string | null;
+
+  name?: string | null;
+  slug?: string | null;
+  description?: string | null;
+
+  price?: number | null;
+  discount_price?: number | null;
+
+  stock?: number | null;
+  tags?: string[] | null;
+  image?: IProductImage | null;
+  gallery?: IProductImage[] | null;
+
+  highlights?: string[] | null;
+  specs?: Record<string, string> | null;
+
+  options?: { name: string; values: string[] }[] | null;
+  variants?: unknown[] | null;
+
+  shipping_note?: string | null;
+  returns_note?: string | null;
+
+  status?: "draft";
+  updated_at?: string;
+  created_at?: string;
+}
+
+export interface IProductDraftsResponse {
+  message: string;
+  data: {
+    drafts: IProductDraft[];
+    pagination: {
+      page: number;
+      limit: number;
+      total: number;
+      pages: number;
+    };
   };
 }
 
@@ -463,7 +513,7 @@ export interface VendorProductSearchItem {
   shipping_note: string | null;
   returns_note: string | null;
 
-  status: "active" | "inactive";
+  status: "active" | "inactive" | "draft";
   rating_average: string;
   rating_count: number;
   review_count: number;
@@ -479,7 +529,7 @@ export interface VendorProductSearchItem {
   category_ref: ProductCategoryRef;
 }
 
-export type ProductStatus = "active" | "inactive";
+export type ProductStatus = "active" | "inactive" | "draft";
 
 export interface VendorProductSearchResponse {
   status: "success";

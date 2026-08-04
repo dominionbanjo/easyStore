@@ -51,6 +51,7 @@ import {
   useDeleteProductMutation,
   useUpdateProductOnSaleMutation,
   useUpdateProductStatusMutation,
+  useDeleteProductDraftMutation,
 } from "@/services/productApi";
 import { useGetMyStoreQuery } from "@/services/storeApi";
 import { ProductShareAction } from "@/modules/vendor/components/dashboard/ProductShareAction";
@@ -75,9 +76,9 @@ export default function ProductsPage() {
     undefined,
   );
   const [onSale, setOnSale] = useState<boolean | undefined>(undefined);
-  const [status, setStatus] = useState<"active" | "inactive" | undefined>(
-    undefined,
-  );
+  const [status, setStatus] = useState<
+    "active" | "inactive" | "draft" | undefined
+  >(undefined);
   const [page, setPage] = useState(1);
   const [viewMode, setViewMode] = useState<"table" | "grid">("table");
 
@@ -88,6 +89,8 @@ export default function ProductsPage() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const [deleteProduct, { isLoading: deleting }] = useDeleteProductMutation();
+  const [deleteProductDraft, { isLoading: deletingDraft }] =
+    useDeleteProductDraftMutation();
   const [updateStatus, { isLoading: updatingStatus }] =
     useUpdateProductStatusMutation();
   const [updateOnSale, { isLoading: updatingOnSale }] =
@@ -203,7 +206,7 @@ export default function ProductsPage() {
           <Button
             className="bg-primary text-primary-foreground gap-2 rounded-sm  "
             onClick={() => {
-              if (draftData) {
+              if (draftData && !draftData.syncedToBackend) {
                 setShowRecoveryModal(true);
               } else {
                 dispatch(clearProductDraft());
@@ -273,7 +276,7 @@ export default function ProductsPage() {
                 align="end"
               >
                 <div className="space-y-1">
-                  {["all", "active", "inactive"].map((s) => (
+                  {["all", "active", "inactive", "draft"].map((s) => (
                     <Button
                       key={s}
                       variant="ghost"
@@ -288,7 +291,7 @@ export default function ProductsPage() {
                         setStatus(
                           s === "all"
                             ? undefined
-                            : (s as "active" | "inactive"),
+                            : (s as "active" | "inactive" | "draft"),
                         )
                       }
                     >
@@ -297,6 +300,9 @@ export default function ProductsPage() {
                       )}
                       {s === "inactive" && (
                         <span className="h-2 w-2 rounded-sm bg-slate-400 mr-2" />
+                      )}
+                      {s === "draft" && (
+                        <span className="h-2 w-2 rounded-sm bg-amber-500 mr-2" />
                       )}
                       <span className="capitalize">
                         {s === "all" ? "All Visibilities" : s}
@@ -379,7 +385,7 @@ export default function ProductsPage() {
           <Button
             className="bg-primary hover:bg-primary/90 text-primary-foreground h-12 px-6 sm:px-8 rounded-sm   gap-2 font-bold uppercase tracking-widest text-[10px] sm:text-xs"
             onClick={() => {
-              if (draftData) {
+              if (draftData && !draftData.syncedToBackend) {
                 setShowRecoveryModal(true);
               } else {
                 dispatch(clearProductDraft());
@@ -475,6 +481,13 @@ export default function ProductsPage() {
                       key={product.id}
                       className="p-2 rounded-sm border-border/40 hover:border-primary/40 transition-all group bg-card  hover: cursor-pointer"
                       onClick={() => {
+                        if (product.status === "draft") {
+                          dispatch(clearProductDraft());
+                          navigate(
+                            getAppPath(`/products/new?draft=${product.id}`),
+                          );
+                          return;
+                        }
                         const path = getWebsitePath(`/product/${product.slug}`);
                         if (path?.startsWith("http")) {
                           window.location.href = path;
@@ -484,36 +497,56 @@ export default function ProductsPage() {
                       }}
                     >
                       <div className="aspect-square relative overflow-hidden rounded-sm bg-muted/20">
-                        <img
-                          src={product.image?.url}
-                          alt={product.name}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        />
+                        {product.image?.url ? (
+                          <img
+                            src={product.image.url}
+                            alt={product.name}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-muted-foreground/40">
+                            <Package className="h-8 w-8" />
+                          </div>
+                        )}
                         <div className="absolute top-2 right-2 flex flex-col gap-1">
                           <Badge
                             variant={
                               product.status === "active"
                                 ? "default"
-                                : "secondary"
+                                : product.status === "draft"
+                                  ? "secondary"
+                                  : "secondary"
                             }
+                            className={cn(
+                              product.status === "draft" &&
+                                "bg-amber-500/10 text-amber-600 border-amber-500/30",
+                            )}
                           >
-                            {product.status}
+                            {product.status === "active"
+                              ? "Active"
+                              : product.status === "draft"
+                                ? "Draft"
+                                : "Hidden"}
                           </Badge>
                         </div>
                       </div>
                       <CardContent className="p-2 pt-3">
                         <p
-                          title={product.name}
+                          title={product.name || "Untitled draft"}
                           className="text-xs sm:text-sm font-bold line-clamp-1 break-words"
                         >
-                          {product.name}
+                          {product.name || "Untitled draft"}
                         </p>
                         <div className="flex items-center justify-between gap-2 mt-1.5">
                           <p className="text-primary text-sm font-bold truncate min-w-0">
-                            ₦{Number(product.price).toLocaleString()}
+                            {product.price != null
+                              ? `₦${Number(product.price).toLocaleString()}`
+                              : "—"}
                           </p>
                           <p className="text-[10px] sm:text-xs text-muted-foreground shrink-0">
-                            Stock: {product.stock}
+                            {product.status === "draft"
+                              ? "Draft"
+                              : `Stock: ${product.stock}`}
                           </p>
                         </div>
                       </CardContent>
@@ -561,20 +594,26 @@ export default function ProductsPage() {
           <div className="flex flex-col">
             {/* Modal Header Image */}
             <div className="relative h-48 w-full overflow-hidden">
-              <img
-                src={selectedProduct.image?.url}
-                alt={selectedProduct.name}
-                className="w-full h-full object-cover"
-              />
+              {selectedProduct.image?.url ? (
+                <img
+                  src={selectedProduct.image.url}
+                  alt={selectedProduct.name}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center bg-muted text-muted-foreground/40">
+                  <Package className="h-10 w-10" />
+                </div>
+              )}
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
               <div className="absolute bottom-4 left-6 right-6">
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="text-xl font-bold text-white">
-                      {selectedProduct.name}
+                      {selectedProduct.name || "Untitled draft"}
                     </h3>
                     <p className="text-white/80 text-xs font-medium uppercase tracking-widest mt-1">
-                      {selectedProduct.category_ref?.name}
+                      {selectedProduct.category_ref?.name || "Draft"}
                     </p>
                   </div>
                   <Badge
@@ -587,10 +626,16 @@ export default function ProductsPage() {
                       "bg-white/20 backdrop-blur-md text-white border-white/20",
                       selectedProduct.status === "active"
                         ? "bg-emerald-500/80"
-                        : "bg-zinc-500/80",
+                        : selectedProduct.status === "draft"
+                          ? "bg-amber-500/80"
+                          : "bg-zinc-500/80",
                     )}
                   >
-                    {selectedProduct.status}
+                    {selectedProduct.status === "active"
+                      ? "Active"
+                      : selectedProduct.status === "draft"
+                        ? "Draft"
+                        : "Hidden"}
                   </Badge>
                 </div>
               </div>
@@ -598,6 +643,39 @@ export default function ProductsPage() {
 
             {/* Modal Content */}
             <div className="p-6 space-y-6">
+              {selectedProduct.status === "draft" ? (
+                <>
+                  <p className="text-sm text-muted-foreground">
+                    This is an unfinished product draft. Continue editing on
+                    any device, or discard it.
+                  </p>
+                  <div className="grid grid-cols-2 gap-2">
+                    <Button
+                      className="h-11 justify-start gap-3 rounded-sm font-bold bg-primary hover:bg-primary/90 text-xs"
+                      onClick={() => {
+                        dispatch(clearProductDraft());
+                        setSelectedProduct(null);
+                        navigate(
+                          getAppPath(`/products/new?draft=${selectedProduct.id}`),
+                        );
+                      }}
+                    >
+                      <Edit variant="Bold" color="white" size={18} />
+                      Continue
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="h-11 justify-start gap-3 rounded-sm font-bold border-destructive/40 text-destructive text-xs"
+                      disabled={deletingDraft}
+                      onClick={() => setIsDeleteModalOpen(true)}
+                    >
+                      <Trash variant="Bold" color="currentColor" size={18} />
+                      Discard
+                    </Button>
+                  </div>
+                </>
+              ) : (
+                <>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
                   <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
@@ -779,6 +857,8 @@ export default function ProductsPage() {
               >
                 Close Overview
               </Button>
+              </>
+              )}
             </div>
           </div>
         )}
@@ -788,17 +868,30 @@ export default function ProductsPage() {
       {selectedProduct && (
         <ConfirmDeleteDialog
           open={isDeleteModalOpen}
-          loading={deleting}
-          title="Delete product"
-          description={`Are you sure you want to delete "${selectedProduct.name}"? This action cannot be undone.`}
+          loading={deleting || deletingDraft}
+          title={selectedProduct.status === "draft" ? "Discard draft" : "Delete product"}
+          description={
+            selectedProduct.status === "draft"
+              ? `Are you sure you want to discard this draft${selectedProduct.name ? ` for "${selectedProduct.name}"` : ""}? Uploaded images will be permanently removed.`
+              : `Are you sure you want to delete "${selectedProduct.name}"? This action cannot be undone.`
+          }
           onConfirm={async () => {
             try {
-              await deleteProduct(selectedProduct.id).unwrap();
+              if (selectedProduct.status === "draft") {
+                await deleteProductDraft(selectedProduct.id).unwrap();
+                toast.success("Draft discarded successfully");
+              } else {
+                await deleteProduct(selectedProduct.id).unwrap();
+                toast.success("Product deleted successfully");
+              }
               setIsDeleteModalOpen(false);
               setSelectedProduct(null);
-              toast.success("Product deleted successfully");
             } catch {
-              toast.error("Failed to delete product");
+              toast.error(
+                selectedProduct.status === "draft"
+                  ? "Failed to discard draft"
+                  : "Failed to delete product",
+              );
             }
           }}
           onClose={() => setIsDeleteModalOpen(false)}

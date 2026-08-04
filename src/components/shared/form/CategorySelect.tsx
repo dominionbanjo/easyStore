@@ -85,10 +85,8 @@ export function CategorySelect({
 
   /* ───────── LOAD ───────── */
   useEffect(() => {
-    if (open) {
-      loadCategories({});
-    }
-  }, [open, loadCategories]);
+    loadCategories({});
+  }, [loadCategories]);
 
   useEffect(() => {
     setLastUsed(localStorage.getItem(STORAGE_KEY));
