@@ -1,67 +1,56 @@
 import { ArrowLeft, Tag } from "lucide-react";
 import SmartLink from "@/components/shared/SmartLink";
 import { WEBSITE_ROUTES } from "@/routes";
+import type { ICategoryChild } from "@/types/category/categoryTypes";
 
 interface CategoryDetailsHeaderProps {
   name: string;
   count: number;
+  children?: ICategoryChild[];
 }
 
 export function CategoryDetailsHeader({
   name,
   count,
+  children = [],
 }: CategoryDetailsHeaderProps) {
   return (
-    <div className="relative overflow-hidden bg-white dark:bg-neutral-950 border-b border-zinc-200 dark:border-white/10 transition-colors duration-300">
-      {/* Decorative background elements */}
-      <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-96 h-96 bg-primary/5 dark:bg-emerald-500/10 rounded-sm blur-3xl opacity-60" />
-      <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/4 w-72 h-72 bg-primary/5 dark:bg-emerald-500/10 rounded-sm blur-3xl opacity-60" />
-
-      <div className="max-w-7xl mx-auto px-4 py-16 md:py-24 relative z-10">
-        <SmartLink to={WEBSITE_ROUTES.CATEGORIES} className="block mb-12">
-          <div
-            className="group flex items-center gap-2 text-sm font-black uppercase tracking-widest text-muted-foreground hover:text-primary dark:hover:text-emerald-400 transition-colors"
-          >
-            <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-            Back to Collections
-          </div>
-        </SmartLink>
-
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-          <div
-            className="space-y-4"
-          >
-            <div className="flex items-center gap-2 text-primary dark:text-emerald-400 font-black uppercase tracking-[0.2em] text-xs">
-              <Tag className="w-3.5 h-3.5" />
-              Category Collection
-            </div>
-            <h1 className="text-4xl md:text-7xl font-black text-foreground tracking-tighter leading-none capitalize italic">
-              {name.replace(/-/g, " ")}
+    <div className="bg-white dark:bg-neutral-900 border-b border-border/60 dark:border-white/10 transition-colors duration-300">
+      <div className="max-w-7xl mx-auto px-1.5 sm:px-4 py-3.5 md:py-4 space-y-3">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <SmartLink
+              to={WEBSITE_ROUTES.CATEGORIES}
+              className="flex items-center gap-1.5 text-sm font-bold text-muted-foreground hover:text-primary transition-colors flex-shrink-0"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back
+            </SmartLink>
+            <span className="w-px h-5 bg-border/60 dark:bg-white/10 flex-shrink-0" />
+            <h1 className="text-xl md:text-2xl font-black text-foreground tracking-tight capitalize truncate">
+              {name}
             </h1>
-            <p className="text-muted-foreground text-lg md:text-xl max-w-2xl leading-relaxed font-medium">
-              Discover our handpicked selection of top-quality items in{" "}
-              <span className="text-foreground font-black border-b-2 border-primary/20 dark:border-emerald-500/20 pb-0.5">
-                {name.replace(/-/g, " ")}
-              </span>
-              .
-            </p>
           </div>
 
-          <div
-            className="flex-shrink-0"
-          >
-            <div className="bg-white/50 dark:bg-neutral-900/40 backdrop-blur-xl border border-zinc-200 dark:border-emerald-500/20 rounded-sm px-10 py-8 flex flex-col items-center justify-center   dark:-emerald-500/5 group hover:scale-105 transition-transform duration-500">
-              <span className="text-5xl font-black text-primary dark:text-emerald-400 leading-none mb-2 tabular-nums">
-                {count}
-              </span>
-              <span className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] text-center">
-                Found
-                <br />
-                Products
-              </span>
-            </div>
-          </div>
+          <span className="flex-shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-sm bg-primary/10 text-primary text-[11px] md:text-xs font-black uppercase tracking-wider">
+            <Tag className="w-3.5 h-3.5" />
+            {count} Products
+          </span>
         </div>
+
+        {children.length > 0 && (
+          <div className="flex flex-wrap gap-2">
+            {children.map((child) => (
+              <SmartLink
+                key={child.id}
+                to={`${WEBSITE_ROUTES.CATEGORIES}/${child.slug}`}
+                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full border border-border/60 dark:border-white/10 text-xs sm:text-sm font-medium text-muted-foreground hover:text-primary hover:border-primary/40 transition-colors"
+              >
+                {child.name}
+              </SmartLink>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -2,8 +2,10 @@ import { useMemo, useState } from "react";
 import { Search } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetCategoriesQuery } from "@/services/productDetailsApi";
+import { useGetProductsGroupedByCategoryQuery } from "@/services/productApi";
 import { CategoryHeader } from "@/modules/website/components/category/CategoryHeader";
 import { CategoryGroup } from "@/modules/website/components/category/CategoryGroup";
+import type { IProduct } from "@/types/product/productTypes";
 
 export default function CategoriesPage() {
   const [search, setSearch] = useState("");
@@ -13,8 +15,20 @@ export default function CategoriesPage() {
     limit: 50,
   });
 
+  const { data: groupedData, isLoading: isGroupedLoading } =
+    useGetProductsGroupedByCategoryQuery({ limit: 6 });
+
   /* ───────────────── DATA ───────────────── */
   const categories = useMemo(() => data?.data ?? [], [data]);
+
+  /* Product glimpses per parent category — one backend request for the page */
+  const productsByParent = useMemo(() => {
+    const map = new Map<string, IProduct[]>();
+    for (const group of groupedData?.data ?? []) {
+      map.set(group.id, group.products ?? []);
+    }
+    return map;
+  }, [groupedData]);
 
   /* ───────────────── SEARCH (FRONTEND ONLY) ───────────────── */
   const filteredCategories = useMemo(() => {
@@ -44,29 +58,23 @@ export default function CategoriesPage() {
   /* ───────────────── LOADING STATE ───────────────── */
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-white dark:bg-neutral-950 transition-colors duration-300">
+      <div className="min-h-screen bg-neutral-50/50 dark:bg-neutral-950 transition-colors duration-300">
         <div className="bg-white dark:bg-neutral-900 border-b border-border/50">
-          <div className="w-full mx-auto px-4 py-12 md:py-16 text-center space-y-10">
-            <Skeleton className="h-4 w-32 mx-auto rounded-sm" />
-            <div className="space-y-4">
-              <Skeleton className="h-12 sm:h-16 w-full max-w-lg mx-auto rounded-sm" />
-              <Skeleton className="h-6 w-full max-w-md mx-auto rounded-sm" />
-            </div>
-            <Skeleton className="h-16 w-full max-w-xl mx-auto rounded-sm" />
+          <div className="w-full mx-auto px-4 py-6 md:py-8 space-y-4">
+            <Skeleton className="h-8 w-64 rounded-sm" />
+            <Skeleton className="h-4 w-80 max-w-full rounded-sm" />
+            <Skeleton className="h-11 w-full md:w-72 rounded-sm" />
           </div>
         </div>
-        <div className="w-full mx-auto px-4 py-8 md:py-16 space-y-20">
+        <div className="w-full mx-auto px-4 py-8 space-y-12">
           {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="space-y-8">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 border-b-2 border-primary/5 pb-4">
-                <Skeleton className="h-10 w-48 rounded-sm" />
-                <Skeleton className="h-8 w-32 rounded-sm" />
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-                {Array.from({ length: 4 }).map((_, j) => (
+            <div key={i} className="space-y-4">
+              <Skeleton className="h-8 w-56 rounded-sm" />
+              <div className="flex gap-3 sm:gap-4 overflow-hidden">
+                {Array.from({ length: 5 }).map((_, j) => (
                   <Skeleton
                     key={j}
-                    className="h-32 rounded-sm border border-border/50"
+                    className="w-[190px] sm:w-[210px] h-[300px] rounded-sm flex-shrink-0"
                   />
                 ))}
               </div>
@@ -98,9 +106,9 @@ export default function CategoriesPage() {
   return (
     <section className="min-h-screen bg-neutral-50/50 dark:bg-neutral-950 mt-4 transition-colors duration-300">
       <CategoryHeader search={search} onSearchChange={setSearch} />
-      <div className="w-full mx-auto px-4 py-8 md:py-16 space-y-16 md:space-y-24">
+      <div className="w-full mx-auto px-4 py-6 md:py-10 space-y-12 md:space-y-14">
         {filteredCategories.length === 0 ? (
-          <div className="text-center py-20 md:py-32 bg-white dark:bg-neutral-900 rounded-sm border-2 border-dashed border-border/60 dark:border-white/10 ">
+          <div className="text-center py-20 md:py-28 bg-white dark:bg-neutral-900 rounded-sm border-2 border-dashed border-border/60 dark:border-white/10 px-4">
             <div className="w-20 h-20 bg-primary/5 rounded-sm flex items-center justify-center mx-auto mb-6">
               <Search className="h-10 w-10 text-primary/40" />
             </div>
@@ -112,8 +120,13 @@ export default function CategoriesPage() {
             </p>
           </div>
         ) : (
-          filteredCategories.map((parent, index) => (
-            <CategoryGroup key={parent.id} category={parent} index={index} />
+          filteredCategories.map((parent) => (
+            <CategoryGroup
+              key={parent.id}
+              category={parent}
+              products={productsByParent.get(parent.id)}
+              productsLoading={isGroupedLoading}
+            />
           ))
         )}
       </div>

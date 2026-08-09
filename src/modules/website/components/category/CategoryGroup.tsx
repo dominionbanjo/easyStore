@@ -1,93 +1,93 @@
-import { FolderTree, ChevronRight } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Card } from "@/components/ui/card";
+import { FolderTree, ArrowRight, ChevronRight } from "lucide-react";
 import SmartLink from "@/components/shared/SmartLink";
+import ProductGridCard from "@/components/shared/ProductGridCard";
+import { Skeleton } from "@/components/ui/skeleton";
 import { WEBSITE_ROUTES } from "@/routes";
-
-interface SubCategory {
-  id: string;
-  name: string;
-  slug: string;
-  products_count: number;
-}
+import type { IProduct } from "@/types/product/productTypes";
+import type { ICategoryChild } from "@/types/category/categoryTypes";
 
 interface CategoryGroupProps {
   category: {
     id: string;
     name: string;
+    slug: string;
     products_count: number;
-    children: SubCategory[];
+    children: ICategoryChild[];
   };
-  index: number;
+  products?: IProduct[];
+  productsLoading?: boolean;
 }
 
-export function CategoryGroup({ category }: CategoryGroupProps) {
+export function CategoryGroup({
+  category,
+  products = [],
+  productsLoading = false,
+}: CategoryGroupProps) {
+  const showProducts = products.length > 0;
+
   return (
-    <div
-      className="space-y-8"
-    >
-      {/* Parent Category Header */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between border-b-2 border-primary/10 pb-6 mb-8 gap-4 px-2">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 bg-primary/10 rounded-sm flex items-center justify-center ">
-            <FolderTree className="h-6 w-6 text-primary" />
-          </div>
-          <h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight">
+    <section className="space-y-4">
+      {/* Compact header row */}
+      <div className="flex items-center justify-between gap-3 border-b border-border/60 dark:border-white/10 pb-3 px-1">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <FolderTree className="h-5 w-5 text-primary flex-shrink-0" />
+          <h2 className="text-xl md:text-2xl font-black text-foreground tracking-tight truncate">
             {category.name}
           </h2>
+          {category.products_count > 0 && (
+            <span className="hidden sm:inline-flex text-xs font-bold text-muted-foreground uppercase tracking-wider flex-shrink-0">
+              {category.products_count} items
+            </span>
+          )}
         </div>
 
-        <Badge className="bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border border-neutral-200 dark:border-white/10 rounded-sm px-3 py-1.5 font-bold text-[10px] md:text-xs tracking-widest uppercase w-fit">
-          {category.products_count} Collections Available
-        </Badge>
+        <SmartLink
+          to={`${WEBSITE_ROUTES.CATEGORIES}/${category.slug}`}
+          className="group flex items-center gap-1 text-sm font-bold text-primary hover:text-primary/80 transition-colors flex-shrink-0"
+        >
+          View All
+          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+        </SmartLink>
       </div>
 
-      {/* Subcategories Grid */}
-      {category.children.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-          {category.children.map((child) => (
+      {/* Product preview rail */}
+      {productsLoading ? (
+        <div className="flex gap-3 sm:gap-4 overflow-hidden">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <Skeleton
+              key={i}
+              className="w-[190px] sm:w-[210px] h-[300px] rounded-sm flex-shrink-0"
+            />
+          ))}
+        </div>
+      ) : showProducts ? (
+        <div className="flex gap-3 sm:gap-4 overflow-x-auto pb-2 snap-x custom-scrollbar">
+          {products.map((product) => (
             <div
-              key={child.id}
-              className="h-full hover:-translate-y-2 transition-transform duration-300 active:scale-[0.98]"
+              key={product.id}
+              className="w-[190px] sm:w-[210px] flex-shrink-0 snap-start"
             >
-              <SmartLink
-                to={`${WEBSITE_ROUTES.CATEGORIES}/${child.slug}`}
-                className="block h-full no-underline"
-              >
-                <Card className="group h-full cursor-pointer rounded-sm border border-neutral-200/60 dark:border-white/10 bg-white dark:bg-neutral-900 p-6 md:p-8 hover:-[0_20px_50px_rgba(0,0,0,0.1)] dark:hover:-[0_20px_50px_rgba(0,0,0,0.5)] hover:border-primary/30 transition-all duration-500 relative overflow-hidden">
-                  {/* Hover decorative element */}
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-sm -translate-y-1/2 translate-x-1/2 group-hover:scale-[3] transition-transform duration-700 blur-2xl" />
-
-                  <div className="flex flex-col h-full justify-between relative z-10">
-                    <div className="space-y-4">
-                      <div className="w-10 h-10 rounded-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-100 dark:border-white/5 flex items-center justify-center group-hover:bg-primary group-hover:border-primary transition-all duration-300">
-                        <ChevronRight className="h-5 w-5 text-neutral-400 dark:text-neutral-500 group-hover:text-white group-hover:translate-x-0.5 transition-all" />
-                      </div>
-
-                      <h3 className="text-lg md:text-xl font-black text-foreground group-hover:text-primary transition-colors leading-tight">
-                        {child.name}
-                      </h3>
-                    </div>
-
-                    <div className="mt-6 pt-4 border-t border-neutral-100 dark:border-white/5 flex items-center justify-between">
-                      <p className="text-[10px] md:text-xs text-neutral-400 dark:text-neutral-500 font-black uppercase tracking-widest">
-                        {child.products_count} Products
-                      </p>
-                      <span className="h-2 w-2 rounded-sm bg-emerald-500 -[0_0_10px_rgba(16,185,129,0.5)]" />
-                    </div>
-                  </div>
-                </Card>
-              </SmartLink>
+              <ProductGridCard data={product} />
             </div>
           ))}
         </div>
-      ) : (
-        <div className="bg-neutral-100/50 dark:bg-neutral-900/50 rounded-sm p-12 text-center border-2 border-dashed border-neutral-200 dark:border-white/10">
-          <p className="text-neutral-500 dark:text-neutral-400 font-bold uppercase tracking-widest text-xs">
-            No subcategories currently available.
-          </p>
+      ) : null}
+
+      {/* Subcategory pills */}
+      {category.children.length > 0 && (
+        <div className="flex flex-wrap gap-2 px-1">
+          {category.children.map((child) => (
+            <SmartLink
+              key={child.id}
+              to={`${WEBSITE_ROUTES.CATEGORIES}/${child.slug}`}
+              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full border border-border/60 dark:border-white/10 text-xs sm:text-sm font-medium text-muted-foreground hover:text-primary hover:border-primary/40 transition-colors"
+            >
+              {child.name}
+              <ChevronRight className="w-3 h-3" />
+            </SmartLink>
+          ))}
         </div>
       )}
-    </div>
+    </section>
   );
 }
