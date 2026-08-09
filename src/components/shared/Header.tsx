@@ -22,7 +22,6 @@ import {
   ShoppingBag,
   Heart,
   User as UserIcon,
-  X,
   Sun,
   Moon,
   Compass,
@@ -199,6 +198,13 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isScrolled]);
 
+  // Close the expanded mobile search bar once the user scrolls away
+  useEffect(() => {
+    if (isScrolled && searchOpen) {
+      setSearchOpen(false);
+    }
+  }, [isScrolled, searchOpen]);
+
   const handleLogout = async () => {
     try {
       await logoutUser().unwrap();
@@ -290,7 +296,7 @@ export default function Header() {
                   </div>
                 )}
 
-                <div className="flex-1 overflow-y-auto py-6 px-4 custom-scrollbar">
+                <div className="flex-1 overflow-y-auto py-6 px-4 ez-thin-scrollbar">
                   <nav className="space-y-1">
                     {/* Premium Menu Items */}
                     {isAuthenticated && user && (
@@ -774,8 +780,9 @@ export default function Header() {
 
       {/* Mobile Expand Search */}
       {searchOpen && (
-        <div className="fixed top-[64px] left-0 w-full z-40 md:hidden bg-white dark:bg-neutral-900 border-b dark:border-white/10  px-4 py-4 fade-slide-down">
-          <form onSubmit={handleSearch} className="flex items-center gap-3">
+        <div className="fixed top-[64px] left-0 w-full z-40 md:hidden bg-white dark:bg-neutral-900 border-b dark:border-white/10 px-4 py-3 fade-slide-down">
+          <form onSubmit={handleSearch} className="flex items-center gap-2">
+            <StateSelector className="h-10 w-10 p-0 rounded-sm border border-border/60 dark:border-white/10 bg-muted/30" />
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
@@ -793,15 +800,6 @@ export default function Header() {
               className="bg-primary text-primary-foreground h-10 px-4"
             >
               Search
-            </Button>
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              className="h-10 w-10 text-muted-foreground hover:text-destructive"
-              onClick={() => setSearchOpen(false)}
-            >
-              <X className="h-5 w-5" />
             </Button>
           </form>
         </div>
