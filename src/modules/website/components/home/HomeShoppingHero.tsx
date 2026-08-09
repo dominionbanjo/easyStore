@@ -1,10 +1,11 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
+  type CarouselApi,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import {
@@ -57,6 +58,28 @@ const quickLinks = [
 
 export default function HomeShoppingHero() {
   const locationState = useSelector(selectLocationState);
+
+  const [carouselApi, setCarouselApi] = useState<CarouselApi>();
+  const [canScrollPrev, setCanScrollPrev] = useState(false);
+  const [canScrollNext, setCanScrollNext] = useState(false);
+
+  useEffect(() => {
+    if (!carouselApi) return;
+
+    const update = () => {
+      setCanScrollPrev(carouselApi.canScrollPrev());
+      setCanScrollNext(carouselApi.canScrollNext());
+    };
+
+    update();
+    carouselApi.on("select", update);
+    carouselApi.on("reInit", update);
+
+    return () => {
+      carouselApi.off("select", update);
+      carouselApi.off("reInit", update);
+    };
+  }, [carouselApi]);
 
   const { data: categoriesData, isLoading: isCategoriesLoading } =
     useGetCategoriesQuery({ page: 1, limit: 100 });
@@ -132,6 +155,7 @@ export default function HomeShoppingHero() {
                 plugins={[
                   Autoplay({ delay: 5000, stopOnInteraction: false }),
                 ]}
+                setApi={setCarouselApi}
                 className="w-full"
               >
                 <CarouselContent className="ml-0">
@@ -183,8 +207,12 @@ export default function HomeShoppingHero() {
                     </CarouselItem>
                   ))}
                 </CarouselContent>
-                <CarouselPrevious className="left-3 border-white/20 bg-white/10 text-white hover:bg-white/20 hover:text-white" />
-                <CarouselNext className="right-3 border-white/20 bg-white/10 text-white hover:bg-white/20 hover:text-white" />
+                {canScrollPrev && (
+                  <CarouselPrevious className="left-3 border-white/20 bg-white/10 text-white hover:bg-white/20 hover:text-white" />
+                )}
+                {canScrollNext && (
+                  <CarouselNext className="right-3 border-white/20 bg-white/10 text-white hover:bg-white/20 hover:text-white" />
+                )}
               </Carousel>
             ) : null}
           </div>
