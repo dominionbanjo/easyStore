@@ -64,6 +64,10 @@ const CartPageImport = () => import("@/app/cart/page");
 export const CartPage = lazy(CartPageImport);
 export const preloadCartPage = CartPageImport;
 
+const StartSellingPageImport = () => import("@/app/start-selling/page");
+export const StartSellingPage = lazy(StartSellingPageImport);
+export const preloadStartSellingPage = StartSellingPageImport;
+
 const CheckoutPageImport = () => import("@/app/cart/preview/page");
 export const CheckoutPage = lazy(CheckoutPageImport);
 export const preloadCheckoutPage = CheckoutPageImport;

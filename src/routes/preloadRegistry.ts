@@ -23,6 +23,7 @@ function getRegistry() {
     [ROUTES.WEBSITE.FEATURED]: Pages.preloadFeaturedProductsPage,
     [ROUTES.WEBSITE.TRENDING]: Pages.preloadTrendingProductsPage,
     [ROUTES.WEBSITE.NEW_ARRIVALS]: Pages.preloadNewArrivalsPage,
+    [ROUTES.WEBSITE.START_SELLING]: Pages.preloadStartSellingPage,
     [ROUTES.ACCOUNT.PROFILE]: Pages.preloadUserProfilePage,
     [ROUTES.ACCOUNT.SETTINGS]: Pages.preloadSettingsPage,
     [ROUTES.WEBSITE.CART]: Pages.preloadCartPage,

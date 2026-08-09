@@ -137,6 +137,15 @@ export default function Footer() {
                   New Arrivals
                 </SmartLink>
               </li>
+              <li>
+                <SmartLink
+                  to={WEBSITE_ROUTES.START_SELLING}
+                  className="hover:text-primary transition-colors flex items-center gap-2 group"
+                >
+                  <span className="w-1.5 h-1.5 rounded-sm bg-primary/0 group-hover:bg-primary transition-colors" />
+                  Sell on EasyStore
+                </SmartLink>
+              </li>
             </ul>
           </div>
 

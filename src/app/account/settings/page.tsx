@@ -12,6 +12,7 @@ import {
 import ProfileOverview from "@/modules/website/settings/components/ProfileOverview";
 import PersonalInfoForm from "@/modules/website/settings/components/PersonalInfoForm";
 import AccountPreferences from "@/modules/website/settings/components/AccountPreferences";
+import ShoppingPreferences from "@/modules/website/settings/components/ShoppingPreferences";
 import SecuritySettings from "@/modules/website/settings/components/SecuritySettings";
 import PaymentSettings from "@/modules/website/settings/components/PaymentSettings";
 import NotificationSettings from "@/modules/website/settings/components/NotificationSettings";
@@ -93,7 +94,10 @@ export default function SettingsPage() {
           </TabsContent>
 
           <TabsContent value="preferences">
-            <AccountPreferences />
+            <div className="space-y-6">
+              <AccountPreferences />
+              <ShoppingPreferences />
+            </div>
           </TabsContent>
 
           <TabsContent value="security">

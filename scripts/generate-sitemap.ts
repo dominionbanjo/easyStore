@@ -15,6 +15,7 @@ const PUBLIC_ROUTES = [
   "/featured",
   "/trending",
   "/new-arrivals",
+  "/start-selling",
   "/auth/login",
   "/auth/signup",
   "/auth/verify-otp",
@@ -44,7 +45,7 @@ const loadEnv = () => {
         }
       }
     }
-  } catch (error) {
+  } catch {
     console.warn("⚠️ Could not read .env file, using defaults");
   }
 };

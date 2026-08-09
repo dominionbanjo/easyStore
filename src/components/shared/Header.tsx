@@ -27,6 +27,7 @@ import {
   Moon,
   Compass,
   MessageSquare,
+  BadgeDollarSign,
 } from "lucide-react";
 import { useTheme } from "./themeContextCore";
 import {
@@ -333,6 +334,19 @@ export default function Header() {
                         </SmartLink>
 
                         <SmartLink
+                          to={WEBSITE_ROUTES.START_SELLING}
+                          onClick={() => setMenuOpen(false)}
+                          className="flex items-center gap-4 px-4 py-3 rounded-sm transition-all hover:bg-emerald-500/10 group text-foreground"
+                        >
+                          <div className="p-2 rounded-sm bg-emerald-500/20 text-emerald-500 group-hover:bg-emerald-500 group-hover:text-white transition-all">
+                            <BadgeDollarSign className="h-5 w-5" />
+                          </div>
+                          <span className="text-base font-bold">
+                            Sell on EasyStore
+                          </span>
+                        </SmartLink>
+
+                        <SmartLink
                           to={ACCOUNT_ROUTES.ORDERS}
                           onClick={() => setMenuOpen(false)}
                           className="flex items-center gap-4 px-4 py-3 rounded-sm transition-all hover:bg-zinc-100 dark:hover:bg-white/5 group text-foreground"
@@ -382,6 +396,19 @@ export default function Header() {
 
                     {!isAuthenticated && (
                       <>
+                        <SmartLink
+                          to={WEBSITE_ROUTES.START_SELLING}
+                          onClick={() => setMenuOpen(false)}
+                          className="flex items-center gap-4 px-4 py-3 rounded-sm transition-all hover:bg-emerald-500/10 group text-foreground"
+                        >
+                          <div className="p-2 rounded-sm bg-emerald-500/20 text-emerald-500 group-hover:bg-emerald-500 group-hover:text-white transition-all">
+                            <BadgeDollarSign className="h-5 w-5" />
+                          </div>
+                          <span className="text-base font-bold">
+                            Sell on EasyStore
+                          </span>
+                        </SmartLink>
+
                         <SmartLink
                           to={AUTH_ROUTES.LOGIN}
                           onClick={() => setMenuOpen(false)}
@@ -539,6 +566,14 @@ export default function Header() {
           </Button>
 
           <div className="flex items-center gap-2 sm:gap-3">
+            <SmartLink
+              to={WEBSITE_ROUTES.START_SELLING}
+              className="hidden md:flex items-center gap-1.5 text-sm font-bold text-primary hover:text-primary/80 transition-colors whitespace-nowrap"
+            >
+              <BadgeDollarSign className="h-4 w-4" />
+              Sell
+            </SmartLink>
+
             <Button
               variant="ghost"
               size="icon"

@@ -248,6 +248,7 @@ export default function App() {
               />
               <Route path="/careers" element={<Pages.CareersPage />} />
               <Route path="/discovery" element={<Pages.DiscoveryPage />} />
+              <Route path="/start-selling" element={<Pages.StartSellingPage />} />
               <Route path="/featured" element={<Pages.FeaturedProductsPage />} />
               <Route path="/trending" element={<Pages.TrendingProductsPage />} />
               <Route path="/new-arrivals" element={<Pages.NewArrivalsPage />} />
