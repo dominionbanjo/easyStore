@@ -22,6 +22,8 @@ import { useGetCategoriesQuery } from "@/services/productDetailsApi";
 import { useGetDealRecommendationsQuery } from "@/services/recommendationApi";
 import { selectLocationState } from "@/features/locationSlice";
 import SmartLink from "@/components/shared/SmartLink";
+import HorizontalScrollRail from "@/components/shared/HorizontalScrollRail";
+import VerticalScrollView from "@/components/shared/VerticalScrollView";
 import { Skeleton } from "@/components/ui/skeleton";
 import { WEBSITE_ROUTES } from "@/routes";
 import { cn } from "@/lib/utils";
@@ -95,8 +97,7 @@ export default function HomeShoppingHero() {
       .filter((category) => (category.products_count ?? 0) > 0)
       .sort(
         (a, b) => (b.products_count ?? 0) - (a.products_count ?? 0),
-      )
-      .slice(0, 12);
+      );
   }, [categoriesData]);
 
   const deals = dealsData?.data?.items ?? [];
@@ -106,7 +107,7 @@ export default function HomeShoppingHero() {
       <div className="px-1.5 md:px-14 xl:px-16 py-4 md:py-6 w-full">
         <div className="grid lg:grid-cols-[240px_1fr] gap-4">
           {/* ─── LEFT: Category Rail (desktop) ─── */}
-          <aside className="hidden lg:block bg-white dark:bg-neutral-900 border border-border/60 dark:border-white/10 rounded-sm overflow-hidden">
+          <aside className="hidden lg:flex flex-col lg:h-[420px] bg-white dark:bg-neutral-900 border border-border/60 dark:border-white/10 rounded-sm overflow-hidden">
             <div className="flex items-center gap-2 px-4 py-3 bg-primary/5 dark:bg-emerald-500/10 border-b border-border/60 dark:border-white/10">
               <LayoutGrid className="w-4 h-4 text-primary" />
               <h2 className="font-bold text-sm text-foreground">
@@ -114,7 +115,7 @@ export default function HomeShoppingHero() {
               </h2>
             </div>
 
-            <nav className="py-2">
+            <VerticalScrollView className="flex-1" contentClassName="py-2">
               {isCategoriesLoading ? (
                 <div className="space-y-2 px-4 py-2">
                   {Array.from({ length: 8 }).map((_, i) => (
@@ -133,7 +134,7 @@ export default function HomeShoppingHero() {
                   </SmartLink>
                 ))
               )}
-            </nav>
+            </VerticalScrollView>
 
             <div className="border-t border-border/60 dark:border-white/10 px-4 py-3">
               <SmartLink
@@ -146,7 +147,7 @@ export default function HomeShoppingHero() {
           </aside>
 
           {/* ─── RIGHT: Deals Banner Carousel ─── */}
-          <div className="relative">
+          <div className="relative lg:min-h-[420px]">
             {isDealsLoading ? (
               <Skeleton className="h-[300px] sm:h-[380px] lg:h-[420px] rounded-sm w-full" />
             ) : deals.length > 0 ? (
@@ -219,8 +220,8 @@ export default function HomeShoppingHero() {
         </div>
 
         {/* ─── Mobile: horizontal category chips ─── */}
-        <div className="lg:hidden mt-4 overflow-x-auto pb-1">
-          <div className="flex gap-2 w-max">
+        <div className="lg:hidden mt-4">
+          <HorizontalScrollRail className="gap-2">
             {!isCategoriesLoading &&
               categories.slice(0, 10).map((category) => (
                 <SmartLink
@@ -231,7 +232,7 @@ export default function HomeShoppingHero() {
                   {category.name}
                 </SmartLink>
               ))}
-          </div>
+          </HorizontalScrollRail>
         </div>
 
         {/* ─── Quick Links Strip ─── */}

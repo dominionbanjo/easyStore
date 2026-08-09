@@ -1,6 +1,7 @@
 import { FolderTree, ArrowRight, ChevronRight } from "lucide-react";
 import SmartLink from "@/components/shared/SmartLink";
 import ProductGridCard from "@/components/shared/ProductGridCard";
+import HorizontalScrollRail from "@/components/shared/HorizontalScrollRail";
 import { Skeleton } from "@/components/ui/skeleton";
 import { WEBSITE_ROUTES } from "@/routes";
 import type { IProduct } from "@/types/product/productTypes";
@@ -61,7 +62,7 @@ export function CategoryGroup({
           ))}
         </div>
       ) : showProducts ? (
-        <div className="flex gap-3 sm:gap-4 overflow-x-auto pb-2 snap-x custom-scrollbar">
+        <HorizontalScrollRail className="gap-3 sm:gap-4">
           {products.map((product) => (
             <div
               key={product.id}
@@ -70,7 +71,7 @@ export function CategoryGroup({
               <ProductGridCard data={product} />
             </div>
           ))}
-        </div>
+        </HorizontalScrollRail>
       ) : null}
 
       {/* Subcategory pills */}

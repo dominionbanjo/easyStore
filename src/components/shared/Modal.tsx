@@ -3,6 +3,7 @@ import { X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import VerticalScrollView from "@/components/shared/VerticalScrollView";
 import {
   Dialog,
   DialogContent,
@@ -73,11 +74,11 @@ export function Modal({
         </DialogHeader>
 
 
-        <div className={cn("flex-1 overflow-y-auto custom-scrollbar min-h-0", contentClassName)}>
+        <VerticalScrollView className="flex-1" contentClassName={contentClassName}>
           <div className="flex flex-col min-h-full">
             {children}
           </div>
-        </div>
+        </VerticalScrollView>
 
         {/* Sticky footer — always visible, never scrolls */}
         {footer && (

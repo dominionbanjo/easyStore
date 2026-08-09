@@ -301,9 +301,10 @@
 html,
 body,
 .custom-scrollbar {
-  scrollbar-width: auto;
-  scrollbar-color: color-mix(in srgb, var(--primary) 70%, transparent)
-    rgba(0, 0, 0, 0.05);
+  /* `thin` forces scrollbars to stay visible on Windows/macOS overlay setups */
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--primary) 85%, transparent)
+    rgba(0, 0, 0, 0.06);
 }
 
 html::-webkit-scrollbar,
@@ -316,14 +317,14 @@ body::-webkit-scrollbar,
 html::-webkit-scrollbar-track,
 body::-webkit-scrollbar-track,
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.02);
+  background: rgba(0, 0, 0, 0.06);
   border-radius: 100px;
 }
 
 html::-webkit-scrollbar-thumb,
 body::-webkit-scrollbar-thumb,
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: color-mix(in srgb, var(--primary) 70%, transparent);
+  background: color-mix(in srgb, var(--primary) 85%, transparent);
   border-radius: 100px;
   border: 1px solid transparent;
   background-clip: padding-box;
@@ -332,34 +333,34 @@ body::-webkit-scrollbar-thumb,
 html::-webkit-scrollbar-thumb:hover,
 body::-webkit-scrollbar-thumb:hover,
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: color-mix(in srgb, var(--primary) 60%, transparent);
+  background: color-mix(in srgb, var(--primary) 100%, transparent);
   background-clip: padding-box;
 }
 
 .dark html,
 .dark body,
 .dark .custom-scrollbar {
-  scrollbar-color: color-mix(in srgb, var(--foreground) 60%, transparent)
-    rgba(255, 255, 255, 0.05);
+  scrollbar-color: color-mix(in srgb, var(--foreground) 70%, transparent)
+    rgba(255, 255, 255, 0.08);
 }
 
 .dark html::-webkit-scrollbar-track,
 .dark body::-webkit-scrollbar-track,
 .dark .custom-scrollbar::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .dark html::-webkit-scrollbar-thumb,
 .dark body::-webkit-scrollbar-thumb,
 .dark .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: color-mix(in srgb, var(--foreground) 60%, transparent);
+  background: color-mix(in srgb, var(--foreground) 70%, transparent);
   background-clip: padding-box;
 }
 
 .dark html::-webkit-scrollbar-thumb:hover,
 .dark body::-webkit-scrollbar-thumb:hover,
 .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: color-mix(in srgb, var(--foreground) 50%, transparent);
+  background: color-mix(in srgb, var(--foreground) 90%, transparent);
   background-clip: padding-box;
 }
 
@@ -384,6 +385,44 @@ body::-webkit-scrollbar-thumb:hover,
 
 .dark .ez-slim-scrollbar::-webkit-scrollbar-thumb {
   background: color-mix(in srgb, var(--foreground) 30%, transparent) !important;
+}
+
+/* Slim, clearly visible branded scrollbar for compact lists (e.g. home category rail) */
+.ez-thin-scrollbar::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+.ez-thin-scrollbar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 9999px;
+}
+
+.ez-thin-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 9999px;
+}
+
+.ez-thin-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--primary) 80%, #000);
+}
+
+.ez-thin-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) rgba(0, 0, 0, 0.05);
+}
+
+.dark .ez-thin-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.dark .ez-thin-scrollbar::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--foreground) 55%, transparent);
+}
+
+.dark .ez-thin-scrollbar {
+  scrollbar-color: color-mix(in srgb, var(--foreground) 55%, transparent)
+    rgba(255, 255, 255, 0.06);
 }
 /* Sonner Toast Customization */
 [data-sonner-toast] {

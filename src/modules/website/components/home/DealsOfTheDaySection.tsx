@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { selectLocationState } from "@/features/locationSlice";
 import { useGetDealRecommendationsQuery } from "@/services/recommendationApi";
 import ProductGridCard from "@/components/shared/ProductGridCard";
+import HorizontalScrollRail from "@/components/shared/HorizontalScrollRail";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/shared/EmptyState";
 import SmartLink from "@/components/shared/SmartLink";
@@ -61,7 +62,7 @@ export default function DealsOfTheDaySection() {
             className="bg-muted/30 dark:bg-neutral-900/50 rounded-sm"
           />
         ) : (
-          <div className="flex gap-3 sm:gap-4 overflow-x-auto pb-4 snap-x custom-scrollbar">
+          <HorizontalScrollRail className="gap-3 sm:gap-4">
             {products.map((product) => (
               <div
                 key={product.id}
@@ -70,7 +71,7 @@ export default function DealsOfTheDaySection() {
                 <ProductGridCard data={product} />
               </div>
             ))}
-          </div>
+          </HorizontalScrollRail>
         )}
       </div>
     </section>

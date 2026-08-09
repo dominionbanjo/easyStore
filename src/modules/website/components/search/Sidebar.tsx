@@ -21,6 +21,7 @@ import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import VerticalScrollView from "@/components/shared/VerticalScrollView";
 
 import { FormPriceInput } from "@/components/shared/form/FormPriceInput";
 import { FormSelect } from "@/components/shared/form/FormSelect";
@@ -120,9 +121,9 @@ export function SearchFiltersSidebar({
           </div>
           <ResetButton variant="text" />
         </div>
-        <div className="max-h-[calc(100vh-140px)] overflow-y-auto custom-scrollbar">
+        <VerticalScrollView className="max-h-[calc(100vh-140px)]">
           <FilterContent filters={filters} />
-        </div>
+        </VerticalScrollView>
       </div>
     </div>
   );
@@ -253,13 +254,13 @@ export function MobileSearchFilters({
           </div>
         </DrawerHeader>
 
-        <div className="overflow-y-auto custom-scrollbar flex-1">
+        <VerticalScrollView className="flex-1">
           <FilterContent
             mobile
             filters={filters}
             onClose={() => setIsOpen(false)}
           />
-        </div>
+        </VerticalScrollView>
 
         <DrawerFooter className="pt-4 pb-20 border-t border-primary/5 bg-background/50 backdrop-blur-md px-8">
           <div className="flex justify-start">
