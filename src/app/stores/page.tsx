@@ -95,6 +95,7 @@ export default function StoresPage() {
     () => ({
       page,
       limit: 20,
+      sort: "trending", // same weighted algorithm as the landing-page Trending Stores rail
       state: selectedState || loc || undefined,
       local: selectedState ? undefined : loc ? true : undefined,
     }),
@@ -151,7 +152,7 @@ export default function StoresPage() {
       </FormProvider>
 
       {/* ─── CONTENT ─── */}
-      <div className="w-full mx-auto px-6 py-12 md:py-20">
+      <div className="w-full mx-auto px-6 py-4 md:py-6">
         {/* Results Count & Sort (Optional placeholder for future) */}
         {!isLoading && stores.length > 0 && (
           <div className="mb-8 flex items-center justify-between">

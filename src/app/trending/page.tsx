@@ -1,18 +1,22 @@
 import { TrendingUp } from "lucide-react";
-import { useGetAllProductsQuery } from "@/services/productApi";
 import { useState } from "react";
+import { useSelector } from "react-redux";
+import { useGetTrendingRecommendationsQuery } from "@/services/recommendationApi";
+import { selectLocationState } from "@/features/locationSlice";
 import ProductListingPage from "@/modules/website/components/products/ProductListingPage";
 
 export default function TrendingProductsPage() {
   const [page, setPage] = useState(1);
+  const locationState = useSelector(selectLocationState);
+
   const {
     data: productsData,
     isLoading,
     isFetching,
-  } = useGetAllProductsQuery({
-    sort: "rating",
+  } = useGetTrendingRecommendationsQuery({
     limit: 12,
     page,
+    state: locationState ?? undefined,
   });
 
   const products = productsData?.data?.items ?? [];
@@ -24,10 +28,6 @@ export default function TrendingProductsPage() {
       subtitle="The most popular items on EazyStore right now. Don't miss out on what everyone is talking about."
       icon={TrendingUp}
       badgeText="Going Fast"
-      badgeColor="bg-orange-500"
-      badgeTextColor="text-orange-500"
-      gradientFrom="from-orange-500"
-      gradientTo="to-red-500"
       isLoading={isLoading || isFetching}
       products={products}
       pagination={pagination}

@@ -77,18 +77,18 @@ export default function DiscoveryPage() {
   return (
     <div className="min-h-screen bg-white dark:bg-neutral-950 transition-colors duration-300 pb-24">
       {/* Hero Header */}
-      <section className="relative overflow-hidden pt-0 md:pt-8 pb-8 md:pb-16 px-4 mb-8">
+      <section className="relative overflow-hidden pt-6 md:pt-8 pb-6 md:pb-8 px-4">
         <div className="absolute top-0 center w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent dark:from-emerald-900/20" />
 
         <div className="w-full mx-auto text-center relative z-10">
           <div>
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-sm bg-primary/5 dark:bg-emerald-500/10 text-primary dark:text-emerald-400 font-bold text-sm mb-8 border border-primary/10 dark:border-emerald-500/20">
-              <Sparkles className="w-4 h-4" />
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-sm bg-primary/5 dark:bg-emerald-500/10 text-primary dark:text-emerald-400 font-bold text-xs mb-4 border border-primary/10 dark:border-emerald-500/20">
+              <Sparkles className="w-3.5 h-3.5" />
               <span>Curated Selection</span>
             </div>
 
-            <h1 className="text-4xl sm:text-5xl md:text-8xl font-black tracking-tighter mb-8 text-foreground leading-[0.9]">
-              Discover <br />
+            <h1 className="text-2xl md:text-3xl font-black tracking-tight mb-4 text-foreground">
+              Discover{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-emerald-600 dark:from-emerald-400 dark:to-teal-500">
                 Something New
               </span>
@@ -101,13 +101,13 @@ export default function DiscoveryPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={handleKeyDown}
-                className="w-full h-14 pl-6 pr-14 rounded-sm bg-white dark:bg-neutral-900 border border-zinc-200 dark:border-white/10  text-lg focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all dark:placeholder:text-zinc-600"
+                className="w-full h-12 pl-6 pr-14 rounded-sm bg-white dark:bg-neutral-900 border border-zinc-200 dark:border-white/10 text-base focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all dark:placeholder:text-zinc-600"
               />
               <button
                 onClick={handleSearch}
-                className="absolute right-2 top-2 h-10 w-10 bg-primary rounded-sm flex items-center justify-center text-white hover:bg-primary/90 transition-colors"
+                className="absolute right-2 top-1/2 -translate-y-1/2 h-9 w-9 bg-primary rounded-sm flex items-center justify-center text-white hover:bg-primary/90 transition-colors"
               >
-                <Search className="w-5 h-5" />
+                <Search className="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -115,29 +115,29 @@ export default function DiscoveryPage() {
       </section>
 
       {/* Quick Navigation Trigger */}
-      <div className="w-full mx-auto px-4 mb-20 flex justify-center">
+      <div className="w-full mx-auto px-4 mb-8 flex justify-center">
         <div className="relative group max-w-sm w-full">
           <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/50 to-emerald-500/50 rounded-sm blur opacity-25 group-hover:opacity-50 transition duration-300" />
           <Button
             variant="outline"
             onClick={() => setIsDiscoveryOpen(true)}
-            className="relative w-full h-16 px-6 bg-white dark:bg-neutral-900 border-zinc-200 dark:border-white/10 rounded-sm flex items-center justify-between group hover:border-primary/50 transition-all"
+            className="relative w-full h-12 px-4 bg-white dark:bg-neutral-900 border-zinc-200 dark:border-white/10 rounded-sm flex items-center justify-between group hover:border-primary/50 transition-all"
           >
-            <div className="flex items-center gap-4 text-left">
-              <div className="p-2.5 rounded-sm bg-primary/10 text-primary">
-                <LayoutGrid className="w-6 h-6" />
+            <div className="flex items-center gap-3 text-left">
+              <div className="p-2 rounded-sm bg-primary/10 text-primary">
+                <LayoutGrid className="w-5 h-5" />
               </div>
               <div>
-                <div className="text-xs font-bold text-muted-foreground uppercase tracking-widest leading-none mb-1">
+                <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none mb-0.5">
                   Explore Path
                 </div>
-                <div className="text-xl font-black text-foreground">
+                <div className="text-base font-black text-foreground">
                   Choose Discovery
                 </div>
               </div>
             </div>
             <div className="p-1 rounded-sm bg-zinc-100 dark:bg-neutral-800 text-muted-foreground group-hover:text-primary transition-colors">
-              <ArrowRight className="w-5 h-5 rotate-90" />
+              <ArrowRight className="w-4 h-4 rotate-90" />
             </div>
           </Button>
 
@@ -221,10 +221,10 @@ export default function DiscoveryPage() {
       </div>
 
       {/* School Zones Section */}
-      <section className="w-full mx-auto px-4 mb-16 md:mb-24">
-        <div className="flex flex-col px-1 gap-3 mb-8">
-          <h2 className="text-2xl sm:text-4xl font-black tracking-tight flex items-center gap-2">
-            <GraduationCap className="w-6 h-6 sm:w-8 sm:h-8 text-cyan-500" />
+      <section className="w-full mx-auto px-4 mb-10 md:mb-12">
+        <div className="flex flex-col px-1 gap-2 mb-4">
+          <h2 className="text-lg md:text-xl font-black tracking-tight flex items-center gap-2">
+            <GraduationCap className="w-5 h-5 text-cyan-500" />
             School Zones
           </h2>
           <p className="text-muted-foreground text-sm sm:text-base max-w-xl">
@@ -273,10 +273,10 @@ export default function DiscoveryPage() {
       </section>
 
       {/* Featured Section */}
-      <section className="w-full mx-auto px-4 mb-16 md:mb-24">
-        <div className="flex flex-col px-1 gap-3 mb-8">
-          <h2 className="text-2xl sm:text-4xl font-black tracking-tight flex items-center gap-2">
-            <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
+      <section className="w-full mx-auto px-4 mb-10 md:mb-12">
+        <div className="flex flex-col px-1 gap-2 mb-4">
+          <h2 className="text-lg md:text-xl font-black tracking-tight flex items-center gap-2">
+            <Sparkles className="w-5 h-5 text-primary" />
             Featured
           </h2>
           <p className="text-muted-foreground text-sm sm:text-base max-w-xl">
@@ -314,10 +314,10 @@ export default function DiscoveryPage() {
       </section>
 
       {/* Trending Section */}
-      <section className="w-full mx-auto px-4 mb-16 md:mb-24">
-        <div className="flex flex-col px-1 gap-3 mb-8">
-          <h2 className="text-2xl sm:text-4xl font-black tracking-tight flex items-center gap-2">
-            <TrendingUp className="w-6 h-6 sm:w-8 sm:h-8 text-orange-500" />
+      <section className="w-full mx-auto px-4 mb-10 md:mb-12">
+        <div className="flex flex-col px-1 gap-2 mb-4">
+          <h2 className="text-lg md:text-xl font-black tracking-tight flex items-center gap-2">
+            <TrendingUp className="w-5 h-5 text-orange-500" />
             Trending Now
           </h2>
           <p className="text-muted-foreground text-sm sm:text-base max-w-xl">
@@ -355,10 +355,10 @@ export default function DiscoveryPage() {
       </section>
 
       {/* New Arrivals Section */}
-      <section className="w-full mx-auto px-4 mb-16 md:mb-24">
-        <div className="flex flex-col px-1 gap-3 mb-8">
-          <h2 className="text-2xl sm:text-4xl font-black tracking-tight flex items-center gap-2">
-            <Zap className="w-6 h-6 sm:w-8 sm:h-8 text-blue-500" />
+      <section className="w-full mx-auto px-4 mb-10 md:mb-12">
+        <div className="flex flex-col px-1 gap-2 mb-4">
+          <h2 className="text-lg md:text-xl font-black tracking-tight flex items-center gap-2">
+            <Zap className="w-5 h-5 text-blue-500" />
             New Arrivals
           </h2>
           <p className="text-muted-foreground text-sm sm:text-base max-w-xl">

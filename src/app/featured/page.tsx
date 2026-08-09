@@ -26,10 +26,6 @@ export default function FeaturedProductsPage() {
       subtitle="Handpicked premium selection from our top-rated vendors. Quality meets affordability."
       icon={Sparkles}
       badgeText="Curated Selection"
-      badgeColor="bg-purple-500"
-      badgeTextColor="text-purple-500"
-      gradientFrom="from-purple-500"
-      gradientTo="to-pink-500"
       isLoading={isLoading || isFetching}
       products={products}
       pagination={pagination}

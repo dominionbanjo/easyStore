@@ -24,10 +24,6 @@ export default function NewArrivalsPage() {
       subtitle="Be the first to cop the latest gear. Updated daily with the hottest new products."
       icon={Zap}
       badgeText="Just Landed"
-      badgeColor="bg-blue-500"
-      badgeTextColor="text-blue-500"
-      gradientFrom="from-blue-600"
-      gradientTo="to-indigo-600"
       isLoading={isLoading || isFetching}
       products={products}
       pagination={pagination}
