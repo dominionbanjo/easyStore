@@ -8,6 +8,7 @@ import { User, Camera, X, CheckCircle2, AlertCircle, Building, Loader2, Trash2, 
 import { Button } from "@/components/ui/button";
 import { FormInput } from "@/components/shared/form/FormInput";
 import { FormSelect } from "@/components/shared/form/FormSelect";
+import { OptimizedImage } from "@/components/shared/OptimizedImage";
 import {
   Dialog,
   DialogContent,
@@ -360,10 +361,11 @@ export function EditProfileModal({
                 <div className="relative group">
                   <div className="h-32 w-32 rounded-sm overflow-hidden border-4 border-background ring-2 ring-primary/20 bg-muted flex items-center justify-center transition-all group-hover:ring-primary/40 ">
                     {avatarPreview ? (
-                      <img
+                      <OptimizedImage
                         src={avatarPreview}
                         alt="Avatar preview"
-                        className="h-full w-full object-cover"
+                        recipe="LOGO"
+                        aspectRatio="1 / 1"
                       />
                     ) : (
                       <User className="h-14 w-14 text-muted-foreground" />

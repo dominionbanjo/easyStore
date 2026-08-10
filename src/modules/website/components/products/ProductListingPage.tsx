@@ -1,7 +1,9 @@
+import type { RefObject } from "react";
 import type { LucideIcon } from "lucide-react";
 import ProductGridCard from "@/components/shared/ProductGridCard";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Pagination } from "@/components/shared/Pagination";
+import { InfiniteListSkeletons } from "@/components/shared/InfiniteListSkeletons";
+import { InfiniteListRetry } from "@/components/shared/InfiniteListRetry";
 import type { IProduct } from "@/types/product/productTypes";
 
 interface ProductListingPageProps {
@@ -10,14 +12,13 @@ interface ProductListingPageProps {
   icon: LucideIcon;
   badgeText: string;
   isLoading: boolean;
+  isFetching: boolean;
+  isInitialError: boolean;
+  pageLoadFailed: boolean;
+  hasLoaded: boolean;
+  loadMore: () => void;
   products: IProduct[];
-  pagination?: {
-    page: number;
-    pages: number;
-    hasNext: boolean;
-    hasPrev: boolean;
-  };
-  onPageChange: (page: number) => void;
+  sentinelRef: RefObject<HTMLDivElement | null>;
 }
 
 export default function ProductListingPage({
@@ -26,10 +27,16 @@ export default function ProductListingPage({
   icon: Icon,
   badgeText,
   isLoading,
+  isFetching,
+  isInitialError,
+  pageLoadFailed,
+  hasLoaded,
+  loadMore,
   products,
-  pagination,
-  onPageChange,
+  sentinelRef,
 }: ProductListingPageProps) {
+  const isEmpty = hasLoaded && !products.length && !isFetching;
+
   return (
     <div className="min-h-screen bg-white dark:bg-neutral-950 transition-colors duration-300 pb-24">
       {/* Compact Header Bar */}
@@ -58,6 +65,10 @@ export default function ProductListingPage({
               <Skeleton key={i} className="h-72 w-full rounded-sm" />
             ))}
           </div>
+        ) : isInitialError || isEmpty ? (
+          <div className="text-center py-24 text-muted-foreground">
+            No products found in this collection right now.
+          </div>
         ) : (
           <div>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3 sm:gap-4">
@@ -68,21 +79,13 @@ export default function ProductListingPage({
               ))}
             </div>
 
-            {/* Pagination */}
-            {pagination && pagination.pages > 1 && (
-              <div className="mt-10">
-                <Pagination
-                  page={pagination.page}
-                  pages={pagination.pages}
-                  hasNext={pagination.hasNext}
-                  hasPrev={pagination.hasPrev}
-                  onPageChange={(p) => {
-                    onPageChange(p);
-                    window.scrollTo({ top: 0, behavior: "smooth" });
-                  }}
-                />
-              </div>
-            )}
+            {/* Infinite scroll loading — skeletons appear, replaced by products */}
+            {isFetching && <InfiniteListSkeletons count={8} />}
+
+            {pageLoadFailed && <InfiniteListRetry onRetry={loadMore} />}
+
+            {/* Sentinel always mounted so the observer can attach at any time */}
+            <div ref={sentinelRef} className="h-px w-full" aria-hidden="true" />
           </div>
         )}
       </div>

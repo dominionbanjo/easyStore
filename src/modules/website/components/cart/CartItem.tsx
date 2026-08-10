@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import type { ICartItem } from "@/types/cart/cartTypes";
 import SmartLink from "@/components/shared/SmartLink";
+import { OptimizedImage } from "@/components/shared/OptimizedImage";
 
 interface CartItemProps {
   item: ICartItem;
@@ -39,10 +40,12 @@ export function CartItem({
           to={`/product/${item.slug}`}
           className="relative h-48 sm:h-32 w-full sm:w-32 shrink-0 rounded-sm overflow-hidden bg-gray-100 dark:bg-zinc-800"
         >
-          <img
+          <OptimizedImage
             src={item.image ?? "/placeholder.png"}
             alt={item.name}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+            recipe="CARD"
+            aspectRatio="4 / 3"
+            className="transition-transform duration-500 group-hover:scale-110"
           />
         </SmartLink>
 

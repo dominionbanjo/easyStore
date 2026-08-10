@@ -1,29 +1,36 @@
-import { useRef, useState } from "react";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import { ProductCard } from "@/components/shared/ProductCard";
-import { Pagination } from "@/components/shared/Pagination";
-import { LayoutGrid } from "lucide-react";
+import { LayoutGrid, ArrowRight } from "lucide-react";
 import { useGetAllProductsQuery } from "@/services/productApi";
 import { ProductSection } from "./ProductSection";
 import { selectLocationState } from "@/features/locationSlice";
+import { useInView } from "@/modules/website/hooks/useInView";
+import { WEBSITE_ROUTES } from "@/routes";
 
 const FALLBACK_IMAGE =
   "https://images.unsplash.com/photo-1580894732444-8ecded7900cd?auto=format&fit=crop&w=1200&q=60";
 
 export default function AllProductsSection() {
-  const titleRef = useRef<HTMLDivElement | null>(null);
-  const [page, setPage] = useState(1);
   const locationState = useSelector(selectLocationState);
-
-  const { data, isLoading, isFetching, isError } = useGetAllProductsQuery({
-    page,
-    limit: 20,
-    state: locationState ?? undefined,
-    local: locationState ? true : undefined,
+  const { ref: sectionRef, isInView } = useInView<HTMLDivElement>({
+    rootMargin: "800px 0px",
+    once: true,
   });
 
+  const { data, isLoading, isError } = useGetAllProductsQuery(
+    {
+      page: 1,
+      limit: 20,
+      state: locationState ?? undefined,
+      local: locationState ? true : undefined,
+    },
+    { skip: !isInView },
+  );
+
   const products = data?.data.items ?? [];
-  const pagination = data?.data.pagination;
+
+  const isEmpty = !products.length && !isLoading && !isError;
 
   const resolveImage = (image?: string | { url: string } | null): string => {
     if (!image) return FALLBACK_IMAGE;
@@ -32,35 +39,26 @@ export default function AllProductsSection() {
   };
 
   return (
-    <div ref={titleRef}>
+    <div ref={sectionRef}>
       <ProductSection
         title="Marketplace Collective"
         subtitle="Explore thousands of unique products from verified local businesses. Everything you need, all in one place."
-        isLoading={isLoading || isFetching}
+        isLoading={isLoading}
         isError={isError}
-        isEmpty={!products.length && !isLoading && !isFetching}
+        isEmpty={isEmpty}
         emptyIcon={LayoutGrid}
         emptyTitle="Marketplace is Quiet"
         emptyDescription="We don't have any products available right now. We're stocking up, so come back soon!"
         footerAction={
-          pagination &&
-          pagination.pages > 1 && (
-            <Pagination
-              page={pagination.page}
-              pages={pagination.pages}
-              hasNext={pagination.hasNext}
-              hasPrev={pagination.hasPrev}
-              onPageChange={(p) => {
-                setPage(p);
-                requestAnimationFrame(() => {
-                  titleRef.current?.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start",
-                  });
-                });
-              }}
-            />
-          )
+          products.length > 0 ? (
+            <Link
+              to={WEBSITE_ROUTES.PRODUCTS}
+              className="group inline-flex items-center gap-2 px-8 py-3 bg-primary text-white font-black rounded-sm uppercase tracking-widest text-xs hover:scale-105 transition-all active:scale-95"
+            >
+              See More Products
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          ) : undefined
         }
       >
         {products.map((product) => {

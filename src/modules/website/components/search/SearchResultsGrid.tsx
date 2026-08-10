@@ -1,36 +1,33 @@
-import { useSearchParams } from "react-router-dom";
+import type { RefObject } from "react";
 import { ProductCard } from "@/components/shared/ProductCard";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Pagination } from "@/components/shared/Pagination";
-import type { IPagination, IProduct } from "@/types/product/productTypes";
+import { InfiniteListSkeletons } from "@/components/shared/InfiniteListSkeletons";
+import { InfiniteListRetry } from "@/components/shared/InfiniteListRetry";
+import type { IProduct } from "@/types/product/productTypes";
 
 interface SearchResultsGridProps {
   products: IProduct[];
-  pagination?: IPagination;
   isLoading: boolean;
-  isError: boolean;
+  isFetching: boolean;
+  isInitialError: boolean;
+  pageLoadFailed: boolean;
+  hasLoaded: boolean;
+  loadMore: () => void;
+  sentinelRef: RefObject<HTMLDivElement | null>;
   debouncedQuery: string;
 }
 
 export function SearchResultsGrid({
   products,
-  pagination,
   isLoading,
-  isError,
+  isFetching,
+  isInitialError,
+  pageLoadFailed,
+  hasLoaded,
+  loadMore,
+  sentinelRef,
   debouncedQuery,
 }: SearchResultsGridProps) {
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  /* ───────────────── HELPERS ───────────────── */
-
-  const setPage = (page: number) => {
-    const next = new URLSearchParams(searchParams);
-    next.set("page", String(page));
-    setSearchParams(next);
-  };
-
-  /* ───────────────── STATES ───────────────── */
-
   if (isLoading) {
     return (
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3 md:gap-4">
@@ -41,7 +38,7 @@ export function SearchResultsGrid({
     );
   }
 
-  if (isError) {
+  if (isInitialError) {
     return (
       <div className="flex flex-col items-center justify-center py-32 text-center bg-white/50 dark:bg-neutral-900/40 backdrop-blur-xl rounded-sm border border-zinc-200 dark:border-white/5  px-8">
         <div className="w-24 h-24 bg-rose-500/10 dark:bg-rose-500/10 rounded-sm flex items-center justify-center mb-8 ring-8 ring-rose-500/5">
@@ -56,6 +53,10 @@ export function SearchResultsGrid({
         </p>
       </div>
     );
+  }
+
+  if (!hasLoaded) {
+    return null;
   }
 
   if (!products.length) {
@@ -74,8 +75,6 @@ export function SearchResultsGrid({
       </div>
     );
   }
-
-  /* ───────────────── RENDER ───────────────── */
 
   return (
     <div className="space-y-6 animate-in fade-in-50 duration-500">
@@ -112,19 +111,13 @@ export function SearchResultsGrid({
         ))}
       </div>
 
-      {/* ─── PAGINATION ─── */}
-      {pagination && pagination.pages > 1 && (
-        <Pagination
-          page={pagination.page}
-          pages={pagination.pages}
-          hasNext={pagination.hasNext}
-          hasPrev={pagination.hasPrev}
-          onPageChange={(page) => {
-            setPage(page);
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          }}
-        />
-      )}
+      {/* Infinite scroll loading */}
+      {isFetching && <InfiniteListSkeletons count={8} />}
+
+      {pageLoadFailed && <InfiniteListRetry onRetry={loadMore} />}
+
+      {/* Sentinel always mounted so the observer can attach at any time */}
+      <div ref={sentinelRef} className="h-px w-full" aria-hidden="true" />
     </div>
   );
 }

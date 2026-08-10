@@ -1,15 +1,23 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { Store, Package, SearchX, GraduationCap, Home, ArrowLeft } from "lucide-react";
 import { useGetZoneQuery, useGetZoneStoresQuery, useGetZoneProductsQuery } from "@/services/schoolZoneApi";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Pagination } from "@/components/shared/Pagination";
 import StoreCard from "@/components/shared/StoreCard";
 import ProductGridCard from "@/components/shared/ProductGridCard";
 import { NigeriaData } from "@/utils/nigeria-data";
 import { getSubdomain, getWebsitePath } from "@/utils/subdomain";
 import { useDebounce } from "@/hooks";
 import { cn } from "@/lib/utils";
+import { useInfiniteList } from "@/modules/website/hooks/useInfiniteList";
+import { OptimizedImage } from "@/components/shared/OptimizedImage";
+import { InfiniteListSkeletons } from "@/components/shared/InfiniteListSkeletons";
+import type {
+  IGetZoneStoresResponse,
+  IGetZoneProductsResponse,
+} from "@/types/SchoolZone/schoolZoneTypes";
+import type { IProduct } from "@/types/product/productTypes";
+import type { IZoneStore } from "@/types/SchoolZone/schoolZoneTypes";
 
 type Tab = "stores" | "products";
 
@@ -37,38 +45,45 @@ export default function ZoneMarketplace({ identifier }: ZoneMarketplaceProps) {
 
   const { data: zoneResponse, isLoading: isZoneLoading } = useGetZoneQuery(identifier);
 
-  const page = Number(searchParams.get("page") ?? 1);
-  const q = searchParams.get("q") ?? "";
+  const q = debouncedSearch.trim();
 
-  const storesArgs = useMemo(
-    () => ({ identifier, page, limit: 20, q }),
-    [identifier, page, q]
+  const buildStoresArgs = useCallback(
+    (page: number) => ({ identifier, page, q }),
+    [identifier, q],
   );
-  const productsArgs = useMemo(
-    () => ({ identifier, page, limit: 20, q }),
-    [identifier, page, q]
+  const buildProductsArgs = useCallback(
+    (page: number) => ({ identifier, page, q }),
+    [identifier, q],
   );
 
-  const {
-    data: storesData,
-    isLoading: isStoresLoading,
-    isFetching: isStoresFetching,
-  } = useGetZoneStoresQuery(storesArgs, { skip: tab !== "stores" });
+  const storesList = useInfiniteList<
+    IZoneStore,
+    { identifier: string; page: number; q: string },
+    IGetZoneStoresResponse
+  >(useGetZoneStoresQuery, buildStoresArgs, {
+    limit: 20,
+    enabled: tab === "stores",
+    key: `stores|${q}`,
+  });
 
-  const {
-    data: productsData,
-    isLoading: isProductsLoading,
-    isFetching: isProductsFetching,
-  } = useGetZoneProductsQuery(productsArgs, { skip: tab !== "products" });
+  const productsList = useInfiniteList<
+    IProduct,
+    { identifier: string; page: number; q: string },
+    IGetZoneProductsResponse
+  >(useGetZoneProductsQuery, buildProductsArgs, {
+    limit: 20,
+    enabled: tab === "products",
+    key: `products|${q}`,
+  });
 
   const zone = zoneResponse?.data;
-  const stores = storesData?.data.items ?? [];
-  const products = productsData?.data.items ?? [];
-  const pagination =
-    tab === "stores" ? storesData?.data.pagination : productsData?.data.pagination;
+  const stores = storesList.items;
+  const products = productsList.items;
 
-  const isLoading = isZoneLoading || (tab === "stores" ? isStoresLoading : isProductsLoading);
-  const isFetching = tab === "stores" ? isStoresFetching : isProductsFetching;
+  const activeList = tab === "stores" ? storesList : productsList;
+  const isLoading = isZoneLoading || (tab === "stores" ? storesList.isLoading : productsList.isLoading);
+  const isFetching = tab === "stores" ? storesList.isFetching : productsList.isFetching;
+  const sentinelRef = activeList.sentinelRef;
 
   useEffect(() => {
     const next = new URLSearchParams(searchParams);
@@ -77,17 +92,9 @@ export default function ZoneMarketplace({ identifier }: ZoneMarketplaceProps) {
     } else {
       next.set("q", debouncedSearch.trim());
     }
-    next.set("page", "1");
     setSearchParams(next, { replace: true });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch, tab]);
-
-  const handlePageChange = (nextPage: number) => {
-    const next = new URLSearchParams(searchParams);
-    next.set("page", String(nextPage));
-    setSearchParams(next);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
 
   /* ───────────────── LOADING ───────────────── */
 
@@ -171,10 +178,12 @@ export default function ZoneMarketplace({ identifier }: ZoneMarketplaceProps) {
         <div className="absolute bottom-0 inset-x-0">
           <div className="w-full mx-auto px-6 pb-8 flex flex-col sm:flex-row sm:items-end gap-4">
             {zone.logo && (
-              <img
+              <OptimizedImage
                 src={zone.logo}
                 alt={zone.name}
-                className="h-20 w-20 sm:h-24 sm:w-24 rounded-sm object-cover border-2 border-white/80 shadow-lg bg-white"
+                recipe="LOGO"
+                aspectRatio="1 / 1"
+                wrapperClassName="h-20 w-20 sm:h-24 sm:w-24 rounded-sm border-2 border-white/80 shadow-lg bg-white"
               />
             )}
             <div className="min-w-0">
@@ -262,7 +271,7 @@ export default function ZoneMarketplace({ identifier }: ZoneMarketplaceProps) {
         </div>
 
         {/* ─── LIST ─── */}
-        {isLoading || isFetching ? (
+        {isLoading && !(tab === "stores" ? stores.length : products.length) ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3 sm:gap-4">
             {Array.from({ length: 8 }).map((_, i) => (
               <div key={i} className="space-y-4">
@@ -299,17 +308,10 @@ export default function ZoneMarketplace({ identifier }: ZoneMarketplaceProps) {
                   </div>
                 ))}
               </div>
-              {pagination && pagination.pages > 1 && (
-                <div className="mt-16 border-t border-border/50 pt-8 flex justify-center">
-                  <Pagination
-                    page={pagination.page}
-                    pages={pagination.pages}
-                    hasNext={pagination.hasNext}
-                    hasPrev={pagination.hasPrev}
-                    onPageChange={handlePageChange}
-                  />
-                </div>
-              )}
+              <InfiniteScrollFooter
+                isFetching={isFetching}
+                sentinelRef={sentinelRef}
+              />
             </>
           ) : (
             <EmptyState
@@ -337,17 +339,10 @@ export default function ZoneMarketplace({ identifier }: ZoneMarketplaceProps) {
                 </div>
               ))}
             </div>
-            {pagination && pagination.pages > 1 && (
-              <div className="mt-16 border-t border-border/50 pt-8 flex justify-center">
-                <Pagination
-                  page={pagination.page}
-                  pages={pagination.pages}
-                  hasNext={pagination.hasNext}
-                  hasPrev={pagination.hasPrev}
-                  onPageChange={handlePageChange}
-                />
-              </div>
-            )}
+            <InfiniteScrollFooter
+              isFetching={isFetching}
+              sentinelRef={sentinelRef}
+            />
           </>
         ) : (
           <EmptyState
@@ -377,5 +372,21 @@ function EmptyState({ title, message }: { title: string; message: string }) {
         {message}
       </p>
     </div>
+  );
+}
+
+function InfiniteScrollFooter({
+  isFetching,
+  sentinelRef,
+}: {
+  isFetching: boolean;
+  sentinelRef: React.RefObject<HTMLDivElement | null>;
+}) {
+  return (
+    <>
+      {isFetching && <InfiniteListSkeletons count={8} />}
+      {/* Sentinel always mounted so the observer can attach at any time */}
+      <div ref={sentinelRef} className="h-px w-full" aria-hidden="true" />
+    </>
   );
 }

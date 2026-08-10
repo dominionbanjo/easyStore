@@ -1,22 +1,30 @@
+import { useCallback } from "react";
 import { Zap } from "lucide-react";
 import { useGetAllProductsQuery } from "@/services/productApi";
-import { useState } from "react";
 import ProductListingPage from "@/modules/website/components/products/ProductListingPage";
+import { useInfiniteList } from "@/modules/website/hooks/useInfiniteList";
+import type { IPaginatedResponse, IProduct } from "@/types/product/productTypes";
 
 export default function NewArrivalsPage() {
-  const [page, setPage] = useState(1);
+  const buildArgs = useCallback(
+    (page: number) => ({ page, sort: "newest" }),
+    [],
+  );
+
   const {
-    data: productsData,
+    items: products,
     isLoading,
     isFetching,
-  } = useGetAllProductsQuery({
-    sort: "newest",
-    limit: 12,
-    page,
-  });
-
-  const products = productsData?.data?.items ?? [];
-  const pagination = productsData?.data?.pagination;
+    isInitialError,
+    pageLoadFailed,
+    hasLoaded,
+    sentinelRef,
+    loadMore,
+  } = useInfiniteList<
+    IProduct,
+    { page: number; sort: string },
+    IPaginatedResponse<IProduct>
+  >(useGetAllProductsQuery, buildArgs, { limit: 12 });
 
   return (
     <ProductListingPage
@@ -24,10 +32,14 @@ export default function NewArrivalsPage() {
       subtitle="Be the first to cop the latest gear. Updated daily with the hottest new products."
       icon={Zap}
       badgeText="Just Landed"
-      isLoading={isLoading || isFetching}
+      isLoading={isLoading}
+      isFetching={isFetching}
+      isInitialError={isInitialError}
+      pageLoadFailed={pageLoadFailed}
+      hasLoaded={hasLoaded}
+      loadMore={loadMore}
       products={products}
-      pagination={pagination}
-      onPageChange={setPage}
+      sentinelRef={sentinelRef}
     />
   );
 }

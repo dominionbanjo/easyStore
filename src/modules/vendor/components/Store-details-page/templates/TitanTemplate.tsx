@@ -29,7 +29,7 @@ export default function TitanTemplate({
   store,
   categories,
   products,
-  pagination,
+  productsTotal,
   isProductsLoading,
   isProductsFetching,
   isCategoriesLoading,
@@ -38,10 +38,10 @@ export default function TitanTemplate({
   searchQuery,
   isSearching,
   productsKey,
+  sentinelRef,
   onTabChange,
   onCategorySelect,
   onSearchChange,
-  onPageChange,
   onCartOpen,
   cartItemsCount,
   onMessageVendor,
@@ -356,21 +356,21 @@ export default function TitanTemplate({
                         )}
                       </div>
                       <div className="text-xs font-mono text-zinc-600 uppercase bg-black px-3 py-1 border border-zinc-800 rounded-sm">
-                        BLOCK_COUNT: {pagination?.total || 0}
+                        BLOCK_COUNT: {productsTotal || 0}
                       </div>
                     </div>
 
                     <StoreProductsGrid
                       key={productsKey}
                       products={products}
-                      pagination={pagination}
+                      total={productsTotal}
                       isLoading={isProductsLoading}
                       isFetching={isProductsFetching}
+                      sentinelRef={sentinelRef}
                       selectedCategory={selectedCategory}
                       onBackToCategories={() => {
                         onCategorySelect(null);
                       }}
-                      onPageChange={onPageChange}
                     />
                   </div>
                 )}

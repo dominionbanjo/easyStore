@@ -25,6 +25,7 @@ import * as React from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { FormSelect } from "@/components/shared/form/FormSelect";
 import { Badge } from "@/components/ui/badge";
+import { OptimizedImage } from "@/components/shared/OptimizedImage";
 
 interface CheckoutSummaryProps {
   storeName?: string;
@@ -124,10 +125,12 @@ export function CheckoutSummary({
                 className="flex gap-4 sm:gap-5 group"
               >
                 <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-sm sm:rounded-sm overflow-hidden bg-muted border border-border/40 shrink-0 relative">
-                  <img
+                  <OptimizedImage
                     src={item.image ?? "/placeholder.png"}
                     alt={item.name}
-                    className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                    recipe="THUMBNAIL"
+                    aspectRatio="1 / 1"
+                    className="transition-transform group-hover:scale-110"
                   />
                   <div className="absolute top-0 right-0 bg-primary text-white text-[10px] font-black h-5 w-5 flex items-center justify-center rounded-bl-xl">
                     {item.quantity}

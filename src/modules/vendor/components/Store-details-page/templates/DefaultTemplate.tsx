@@ -30,7 +30,7 @@ export default function DefaultTemplate({
   store,
   categories,
   products,
-  pagination,
+  productsTotal,
   isProductsLoading,
   isProductsFetching,
   isCategoriesLoading,
@@ -39,10 +39,10 @@ export default function DefaultTemplate({
   searchQuery,
   isSearching,
   productsKey,
+  sentinelRef,
   onTabChange,
   onCategorySelect,
   onSearchChange,
-  onPageChange,
   onCartOpen,
   cartItemsCount,
   onMessageVendor,
@@ -387,21 +387,21 @@ export default function DefaultTemplate({
                 </h3>
               </div>
               <div className="text-sm font-bold tracking-widest uppercase text-zinc-400">
-                {pagination?.total || 0} PRODUCTS
+                {productsTotal || 0} PRODUCTS
               </div>
             </div>
 
             <StoreProductsGrid
               key={productsKey}
               products={products}
-              pagination={pagination}
+              total={productsTotal}
               isLoading={isProductsLoading}
               isFetching={isProductsFetching}
+              sentinelRef={sentinelRef}
               selectedCategory={selectedCategory}
               onBackToCategories={() => {
                 onCategorySelect(null);
               }}
-              onPageChange={onPageChange}
             />
           </div>
         )}

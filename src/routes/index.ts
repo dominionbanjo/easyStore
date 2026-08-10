@@ -18,6 +18,7 @@ export const WEBSITE_ROUTES = {
   FEATURED: "/featured",
   TRENDING: "/trending",
   NEW_ARRIVALS: "/new-arrivals",
+  PRODUCTS: "/products",
   START_SELLING: "/start-selling",
   CART: "/cart",
   CHECKOUT: "/cart/preview",

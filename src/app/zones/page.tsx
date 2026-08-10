@@ -1,47 +1,49 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { SearchX, GraduationCap } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 import { useGetZonesQuery } from "@/services/schoolZoneApi";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Pagination } from "@/components/shared/Pagination";
 import { useDebounce } from "@/hooks";
 import ZoneCard from "@/components/shared/ZoneCard";
+import { useInfiniteList } from "@/modules/website/hooks/useInfiniteList";
+import { InfiniteListSkeletons } from "@/components/shared/InfiniteListSkeletons";
+import type { IGetZonesResponse, ISchoolZone } from "@/types/SchoolZone/schoolZoneTypes";
 
 export default function ZonesPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState(searchParams.get("q") ?? "");
   const debouncedSearch = useDebounce(search, 350);
 
-  const page = Number(searchParams.get("page") ?? 1);
-  const q = searchParams.get("q") ?? "";
+  const q = debouncedSearch.trim();
 
-  const { data, isLoading, isFetching } = useGetZonesQuery({
-    page,
-    limit: 20,
-    q: q || undefined,
-  });
+  const buildArgs = useCallback((page: number) => ({ page, q }), [q]);
 
-  const zones = data?.data.items ?? [];
-  const pagination = data?.data.pagination;
+  const {
+    items: zones,
+    isLoading,
+    isFetching,
+    isError,
+    hasLoaded,
+    sentinelRef,
+  } = useInfiniteList<ISchoolZone, { page: number; q: string }, IGetZonesResponse>(
+    useGetZonesQuery,
+    buildArgs,
+    {
+      limit: 20,
+      key: q,
+    },
+  );
 
   useEffect(() => {
     const next = new URLSearchParams(searchParams);
-    if (!debouncedSearch.trim()) {
+    if (!q) {
       next.delete("q");
     } else {
-      next.set("q", debouncedSearch.trim());
+      next.set("q", q);
     }
-    next.set("page", "1");
     setSearchParams(next, { replace: true });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSearch]);
-
-  const handlePageChange = (nextPage: number) => {
-    const next = new URLSearchParams(searchParams);
-    next.set("page", String(nextPage));
-    setSearchParams(next);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  }, [q]);
 
   return (
     <section className="min-h-screen bg-neutral-50/50 dark:bg-neutral-950 transition-colors duration-300 pb-24">
@@ -73,7 +75,7 @@ export default function ZonesPage() {
 
       {/* ─── ZONES GRID ─── */}
       <div className="w-full mx-auto px-6 py-8">
-        {isLoading || isFetching ? (
+        {isLoading && !zones.length ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3 sm:gap-4">
             {Array.from({ length: 8 }).map((_, i) => (
               <div key={i} className="space-y-4">
@@ -106,19 +108,9 @@ export default function ZonesPage() {
                 </div>
               ))}
             </div>
-            {pagination && pagination.pages > 1 && (
-              <div className="mt-16 border-t border-border/50 pt-8 flex justify-center">
-                <Pagination
-                  page={pagination.page}
-                  pages={pagination.pages}
-                  hasNext={pagination.hasNext}
-                  hasPrev={pagination.hasPrev}
-                  onPageChange={handlePageChange}
-                />
-              </div>
-            )}
+            {isFetching && <InfiniteListSkeletons count={8} />}
           </>
-        ) : (
+        ) : hasLoaded || isError ? (
           <div className="flex flex-col items-center justify-center py-32 text-center max-w-2xl mx-auto bg-white/50 dark:bg-neutral-900/40 backdrop-blur-xl rounded-sm border border-zinc-200 dark:border-white/5 px-8">
             <div className="w-24 h-24 bg-primary/10 rounded-sm flex items-center justify-center mb-8 ring-8 ring-primary/5">
               <SearchX className="h-12 w-12 text-primary" />
@@ -131,8 +123,11 @@ export default function ZonesPage() {
               different name!
             </p>
           </div>
-        )}
+        ) : null}
       </div>
+
+      {/* Sentinel always mounted so the observer can attach at any time */}
+      <div ref={sentinelRef} className="h-px w-full" aria-hidden="true" />
     </section>
   );
 }

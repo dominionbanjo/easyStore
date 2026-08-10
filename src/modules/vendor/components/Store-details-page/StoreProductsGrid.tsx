@@ -1,58 +1,34 @@
-import { useEffect, useRef, useState } from "react";
+import type { RefObject } from "react";
 import { ProductCard } from "@/components/shared/ProductCard";
-import { Pagination } from "@/components/shared/Pagination";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, PackageOpen, Filter } from "lucide-react";
-import type { IStoreProduct, IStorePagination } from "@/types/Store/storeTypes";
+import { InfiniteListSkeletons } from "@/components/shared/InfiniteListSkeletons";
+import type { IStoreProduct } from "@/types/Store/storeTypes";
 
 type Props = {
   products: IStoreProduct[];
-  pagination?: IStorePagination;
+  total: number;
   isLoading: boolean;
   isFetching: boolean;
+  sentinelRef: RefObject<HTMLDivElement | null>;
   selectedCategory?: { id: string; name: string } | null;
   onBackToCategories?: () => void;
-  onPageChange: (page: number) => void;
 };
 
 export function StoreProductsGrid({
   products,
-  pagination,
   isLoading,
   isFetching,
+  sentinelRef,
   selectedCategory,
   onBackToCategories,
-  onPageChange,
 }: Props) {
-  const sectionRef = useRef<HTMLDivElement | null>(null);
-  const [isPaging, setIsPaging] = useState(false);
-
-  useEffect(() => {
-    if (isPaging && !isFetching) {
-      setIsPaging(false);
-    }
-  }, [isFetching, isPaging]);
-
-  const handlePageChange = (page: number) => {
-    if (isFetching) return;
-    setIsPaging(true);
-    onPageChange(page);
-
-    requestAnimationFrame(() => {
-      sectionRef.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    });
-  };
-
-  const showSkeleton = isLoading || isPaging || isFetching;
+  const showSkeleton = isLoading && !products.length;
 
   return (
     <div
       id="main-grid"
-      ref={sectionRef}
       className="max-w-7xl mx-auto space-y-12 pb-24"
     >
       {/* ─── CATEGORY HEADER ─── */}
@@ -152,18 +128,11 @@ export function StoreProductsGrid({
               ))}
             </div>
 
-            {/* ─── PAGINATION ─── */}
-            {pagination && pagination.pages > 1 && (
-              <div className="flex justify-center border-t border-border/50 pt-16">
-                <Pagination
-                  page={pagination.page}
-                  pages={pagination.pages}
-                  hasNext={pagination.hasNext}
-                  hasPrev={pagination.hasPrev}
-                  onPageChange={handlePageChange}
-                />
-              </div>
-            )}
+            {/* ─── INFINITE SCROLL LOADING ─── */}
+            {isFetching && <InfiniteListSkeletons count={8} />}
+
+            {/* Sentinel always mounted so the observer can attach at any time */}
+            <div ref={sentinelRef} className="h-px w-full" aria-hidden="true" />
           </div>
         )}
     </div>

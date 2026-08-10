@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import { Send, Plus, X, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { OptimizedImage } from "@/components/shared/OptimizedImage";
 import type { IProduct } from "@/types/product/productTypes";
 
 interface MessageInputProps {
@@ -55,10 +56,11 @@ export const MessageInput: React.FC<MessageInputProps> = ({
         <div className="mb-3 p-3 bg-primary/5 border border-primary/20 rounded-sm flex items-center gap-3 fade-in relative">
           <div className="h-10 w-10 rounded-sm overflow-hidden border border-primary/10">
             {attachedProduct.image ? (
-              <img 
+              <OptimizedImage 
                 src={typeof attachedProduct.image === "string" ? attachedProduct.image : attachedProduct.image.url} 
                 alt="" 
-                className="h-full w-full object-cover" 
+                recipe="THUMBNAIL"
+                aspectRatio="1 / 1"
               />
             ) : (
               <div className="h-full w-full bg-muted flex items-center justify-center">

@@ -76,6 +76,16 @@ export default function VerticalScrollView({
     if (e.pointerType === "touch") return;
     if (e.button !== 0) return;
 
+    // Never hijack clicks on interactive elements (buttons, links, inputs)
+    const target = e.target as HTMLElement | null;
+    if (
+      target?.closest(
+        "button, a, input, textarea, select, [role='button'], [role='link'], [role='menuitem']",
+      )
+    ) {
+      return;
+    }
+
     const el = containerRef.current;
     if (!el) return;
 

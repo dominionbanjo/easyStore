@@ -1,4 +1,5 @@
 import SmartLink from "@/components/shared/SmartLink";
+import { OptimizedImage } from "@/components/shared/OptimizedImage";
 import { Card } from "@/components/ui/card";
 import {
   Package,
@@ -136,10 +137,12 @@ export function OrderCard({ order }: OrderCardProps) {
             <div className="flex gap-4 mb-6">
               <div className="w-20 h-20 bg-muted/30 rounded-sm overflow-hidden flex-shrink-0 border border-border/10">
                 {firstItem?.image ? (
-                  <img
+                  <OptimizedImage
                     src={firstItem.image}
                     alt={firstItem.name}
-                    className="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-500"
+                    recipe="THUMBNAIL"
+                    aspectRatio="1 / 1"
+                    className="grayscale-[20%] group-hover:grayscale-0 transition-all duration-500"
                   />
                 ) : (
                   <div className="flex items-center justify-center h-full text-muted-foreground/30">

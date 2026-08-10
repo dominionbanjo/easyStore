@@ -14,7 +14,7 @@ export default function VanguardTemplate({
   store,
   categories,
   products,
-  pagination,
+  productsTotal,
   isProductsLoading,
   isProductsFetching,
   isCategoriesLoading,
@@ -23,10 +23,10 @@ export default function VanguardTemplate({
   searchQuery,
   isSearching,
   productsKey,
+  sentinelRef,
   onTabChange,
   onCategorySelect,
   onSearchChange,
-  onPageChange,
   onCartOpen,
   cartItemsCount,
   onMessageVendor,
@@ -178,14 +178,14 @@ export default function VanguardTemplate({
             <StoreProductsGrid
               key={productsKey}
               products={products}
-              pagination={pagination}
+              total={productsTotal}
               isLoading={isProductsLoading}
               isFetching={isProductsFetching}
+              sentinelRef={sentinelRef}
               selectedCategory={selectedCategory}
               onBackToCategories={() => {
                 onCategorySelect(null);
               }}
-              onPageChange={onPageChange}
             />
           )}
         </div>

@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useSearchProductsQuery } from "@/services/productApi";
@@ -9,6 +9,12 @@ import {
   MobileSearchFilters,
 } from "@/modules/website/components/search/Sidebar";
 import { selectLocationState } from "@/features/locationSlice";
+import { useInfiniteList } from "@/modules/website/hooks/useInfiniteList";
+import type {
+  ISearchProductsResponse,
+  IProduct,
+  SearchProductsArgs,
+} from "@/types/product/productTypes";
 
 function useDebouncedValue<T>(value: T, delay = 400): T {
   const [debounced, setDebounced] = useState(value);
@@ -75,7 +81,6 @@ export default function SearchResultsPage() {
     const explicitState = params.state as string | undefined;
     const loc = params.loc as string | undefined;
     const q = params.q as string | undefined;
-    const page = params.page as number | undefined;
     const sort = params.sort as string | undefined;
 
     // Remove handled keys so the spread below only carries dynamic filters
@@ -88,7 +93,6 @@ export default function SearchResultsPage() {
     return {
       ...params,
       q: q ?? "",
-      page: page ?? 1,
       limit: 15,
       sort,
       state: explicitState ?? loc ?? undefined,
@@ -99,20 +103,40 @@ export default function SearchResultsPage() {
   /* ───────────────── DEBOUNCED QUERY ───────────────── */
   const debouncedQuery = useDebouncedValue(rawQueryArgs.q, 500);
 
-  const queryArgs = { ...rawQueryArgs, q: debouncedQuery };
-  console.log("[SearchResultsPage] Final API queryArgs:", queryArgs);
+  const buildArgs = useCallback(
+    (page: number): SearchProductsArgs => ({
+      ...rawQueryArgs,
+      q: debouncedQuery,
+      page,
+    }),
+    [rawQueryArgs, debouncedQuery],
+  );
+
+  const listKey = `${debouncedQuery}|${searchParams.toString()}`;
 
   /* ───────────────── API ───────────────── */
-  const { data, isLoading, isFetching, isError } = useSearchProductsQuery(
-    queryArgs,
+  const {
+    items: products,
+    isLoading,
+    isFetching,
+    isInitialError,
+    pageLoadFailed,
+    hasLoaded,
+    sentinelRef,
+    loadMore,
+    currentData,
+  } = useInfiniteList<IProduct, SearchProductsArgs, ISearchProductsResponse>(
+    useSearchProductsQuery,
+    buildArgs,
     {
-      skip: !debouncedQuery,
+      limit: 15,
+      enabled: !!debouncedQuery,
+      key: listKey,
     },
   );
 
-  const products = data?.data.items ?? [];
-  const pagination = data?.data.pagination;
-  const filters = data?.data.filters ?? {};
+  const pagination = currentData?.data.pagination;
+  const filters = currentData?.data.filters ?? {};
 
   return (
     <section className="mx-auto px-4 pt-16 pb-8 bg-white dark:bg-neutral-950 transition-colors duration-300 min-h-screen">
@@ -134,9 +158,13 @@ export default function SearchResultsPage() {
         {/* Results */}
         <SearchResultsGrid
           products={products}
-          pagination={pagination}
-          isLoading={isLoading || isFetching}
-          isError={isError}
+          isLoading={isLoading}
+          isFetching={isFetching}
+          isInitialError={isInitialError}
+          pageLoadFailed={pageLoadFailed}
+          hasLoaded={hasLoaded}
+          loadMore={loadMore}
+          sentinelRef={sentinelRef}
           debouncedQuery={debouncedQuery}
         />
       </div>

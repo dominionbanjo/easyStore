@@ -27,7 +27,7 @@ export default function EditorialTemplate({
   store,
   categories,
   products,
-  pagination,
+  productsTotal,
   isProductsLoading,
   isProductsFetching,
   isCategoriesLoading,
@@ -36,10 +36,10 @@ export default function EditorialTemplate({
   searchQuery,
   isSearching,
   productsKey,
+  sentinelRef,
   onTabChange,
   onCategorySelect,
   onSearchChange,
-  onPageChange,
   onCartOpen,
   cartItemsCount,
   onMessageVendor,
@@ -242,19 +242,19 @@ export default function EditorialTemplate({
                       Back to Collections
                     </button>
                   )}
-                  <span>{pagination?.total || 0} ITEMS IN LIST</span>
+                  <span>{productsTotal || 0} ITEMS IN LIST</span>
                 </div>
               </div>
 
               <StoreProductsGrid
                 key={productsKey}
                 products={products}
-                pagination={pagination}
+                total={productsTotal}
                 isLoading={isProductsLoading}
                 isFetching={isProductsFetching}
+                sentinelRef={sentinelRef}
                 selectedCategory={selectedCategory}
                 onBackToCategories={() => onCategorySelect(null)}
-                onPageChange={onPageChange}
               />
             </div>
           )}

@@ -1,48 +1,54 @@
 import { useParams } from "react-router-dom";
-import { useState, useEffect, useRef } from "react";
+import { useCallback } from "react";
 import { Search, PackageOpen } from "lucide-react";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { ProductCard } from "@/components/shared/ProductCard";
-import { Pagination } from "@/components/shared/Pagination";
 
 import { useGetProductsByCategoryQuery } from "@/services/productApi";
 import { useGetCategoriesQuery } from "@/services/productDetailsApi";
 import { CategoryDetailsHeader } from "@/modules/website/components/category/CategoryDetailsHeader";
+import { useInfiniteList } from "@/modules/website/hooks/useInfiniteList";
+import { InfiniteListSkeletons } from "@/components/shared/InfiniteListSkeletons";
+import { InfiniteListRetry } from "@/components/shared/InfiniteListRetry";
+import type { IPaginatedResponse, IProduct } from "@/types/product/productTypes";
 
 const FALLBACK_IMAGE =
   "https://images.unsplash.com/photo-1580894732444-8ecded7900cd?auto=format&fit=crop&w=1200&q=60";
 
 export default function CategoryDetailsPage() {
   const { slug } = useParams<{ slug: string }>();
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const [page, setPage] = useState(1);
 
-  const { data, isLoading, isFetching, isError } =
-    useGetProductsByCategoryQuery(
-      {
-        identifier: slug!,
-        page,
-        limit: 20,
-      },
-      { skip: !slug },
-    );
+  const buildArgs = useCallback(
+    (page: number) => ({ identifier: slug!, page }),
+    [slug],
+  );
+
+  const {
+    items: products,
+    isLoading,
+    isFetching,
+    isInitialError,
+    pageLoadFailed,
+    hasLoaded,
+    sentinelRef,
+    loadMore,
+    total,
+  } = useInfiniteList<
+    IProduct,
+    { identifier: string; page: number },
+    IPaginatedResponse<IProduct>
+  >(useGetProductsByCategoryQuery, buildArgs, {
+    limit: 20,
+    enabled: !!slug,
+    key: slug,
+  });
 
   // Look up the pretty name + subcategories from the (cached) category tree
   const { data: categoriesData } = useGetCategoriesQuery({ page: 1, limit: 50 });
   const category = categoriesData?.data?.find((c) => c.slug === slug);
 
-  const products = data?.data.items ?? [];
-  const pagination = data?.data.pagination;
-
-  useEffect(() => {
-    if (!isLoading && !isFetching) {
-      sectionRef.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    }
-  }, [page, isLoading, isFetching]);
+  const isEmpty = hasLoaded && !products.length && !isFetching;
 
   /* ───────────────── LOADING STATE ───────────────── */
   if (isLoading && !products.length) {
@@ -69,7 +75,7 @@ export default function CategoryDetailsPage() {
   }
 
   /* ───────────────── ERROR STATE ───────────────── */
-  if (isError) {
+  if (isInitialError) {
     return (
       <section className="min-h-[70vh] flex flex-col items-center justify-center text-center p-4 bg-white dark:bg-neutral-950">
         <div className="w-24 h-24 bg-rose-500/10 dark:bg-rose-500/10 rounded-sm flex items-center justify-center mb-8 ring-8 ring-rose-500/5">
@@ -88,11 +94,9 @@ export default function CategoryDetailsPage() {
 
   return (
     <section className="min-h-screen bg-neutral-50/50 dark:bg-neutral-950 pb-24 transition-colors duration-300">
-      <div ref={sectionRef} />
-
       <CategoryDetailsHeader
         name={category?.name ?? (slug || "").replace(/-/g, " ")}
-        count={pagination?.total || 0}
+        count={total || 0}
         children={category?.children}
       />
 
@@ -142,20 +146,14 @@ export default function CategoryDetailsPage() {
               ))}
             </div>
 
-            {/* ─── PAGINATION ─── */}
-            {pagination && pagination.pages > 1 && (
-              <div className="flex justify-center border-t border-border/50 dark:border-white/10 pt-8">
-                <Pagination
-                  page={pagination.page}
-                  pages={pagination.pages}
-                  hasNext={pagination.hasNext}
-                  hasPrev={pagination.hasPrev}
-                  onPageChange={setPage}
-                />
-              </div>
-            )}
+            {/* ─── INFINITE SCROLL ─── */}
+            {isFetching && <InfiniteListSkeletons count={8} />}
+            {pageLoadFailed && <InfiniteListRetry onRetry={loadMore} />}
+
+            {/* Sentinel always mounted so the observer can attach at any time */}
+            <div ref={sentinelRef} className="h-px w-full" aria-hidden="true" />
           </div>
-        ) : (
+        ) : isEmpty ? (
           <div className="text-center py-24 md:py-32 bg-white/50 dark:bg-neutral-900/40 backdrop-blur-xl rounded-sm border border-zinc-200 dark:border-white/5 px-4">
             <div className="w-24 h-24 bg-primary/10 dark:bg-emerald-500/10 rounded-sm flex items-center justify-center mx-auto mb-8 ring-8 ring-primary/5 dark:ring-emerald-500/5">
               <Search className="h-12 w-12 text-primary dark:text-emerald-400" />
@@ -168,7 +166,7 @@ export default function CategoryDetailsPage() {
               categories or come back later!
             </p>
           </div>
-        )}
+        ) : null}
       </div>
     </section>
   );

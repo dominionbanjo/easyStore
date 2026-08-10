@@ -115,6 +115,10 @@ const NewArrivalsPageImport = () => import("@/app/new-arrivals/page");
 export const NewArrivalsPage = lazy(NewArrivalsPageImport);
 export const preloadNewArrivalsPage = NewArrivalsPageImport;
 
+const AllProductsPageImport = () => import("@/app/products/page");
+export const AllProductsPage = lazy(AllProductsPageImport);
+export const preloadAllProductsPage = AllProductsPageImport;
+
 const ZonesPageImport = () => import("@/app/zones/page");
 export const ZonesPage = lazy(ZonesPageImport);
 export const preloadZonesPage = ZonesPageImport;

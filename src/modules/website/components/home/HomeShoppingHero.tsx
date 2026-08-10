@@ -22,6 +22,7 @@ import { useGetCategoriesQuery } from "@/services/productDetailsApi";
 import { useGetDealRecommendationsQuery } from "@/services/recommendationApi";
 import { selectLocationState } from "@/features/locationSlice";
 import SmartLink from "@/components/shared/SmartLink";
+import { OptimizedImage } from "@/components/shared/OptimizedImage";
 import HorizontalScrollRail from "@/components/shared/HorizontalScrollRail";
 import VerticalScrollView from "@/components/shared/VerticalScrollView";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -160,21 +161,24 @@ export default function HomeShoppingHero() {
                 className="w-full"
               >
                 <CarouselContent className="ml-0">
-                  {deals.map((deal) => (
+                  {deals.map((deal, index) => (
                     <CarouselItem key={deal.id} className="pl-0">
                       <SmartLink
                         to={`${WEBSITE_ROUTES.PRODUCT_DETAILS.replace(":slug", deal.slug)}`}
                         className="relative block h-[300px] sm:h-[380px] lg:h-[420px] w-full overflow-hidden rounded-sm group"
                       >
-                        <img
+                        <OptimizedImage
                           src={
                             typeof deal.image === "string"
                               ? deal.image
                               : (deal.image?.url ?? FALLBACK_IMAGE)
                           }
                           alt={deal.name}
-                          loading="eager"
-                          className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                          recipe="HERO"
+                          aspectRatio="auto"
+                          wrapperClassName="absolute inset-0"
+                          priority={index === 0}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/10" />
 

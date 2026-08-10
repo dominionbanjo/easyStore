@@ -6,6 +6,7 @@ import { Check, CheckCheck, MoreVertical, ExternalLink, Info, RotateCcw, AlertCi
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import SmartLink from "@/components/shared/SmartLink";
+import { OptimizedImage } from "@/components/shared/OptimizedImage";
 
 interface MessageItemProps {
   message: IMessage;
@@ -64,10 +65,12 @@ export const MessageItem = React.memo(({
                 : "bg-muted/50 border-border text-foreground"
             )}>
               {message.product_image && (
-                <img 
+                <OptimizedImage 
                   src={message.product_image} 
                   alt={message.product_name || ""} 
-                  className="h-12 w-12 rounded-sm object-cover"
+                  recipe="THUMBNAIL"
+                  aspectRatio="1 / 1"
+                  wrapperClassName="h-12 w-12 rounded-sm"
                 />
               )}
               <div className="flex-1 min-w-0">

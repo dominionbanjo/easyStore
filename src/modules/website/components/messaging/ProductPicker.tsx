@@ -4,6 +4,7 @@ import { useSearchProductsQuery, useGetAllProductsQuery } from "@/services/produ
 import { Search, Loader2, Package, History } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { OptimizedImage } from "@/components/shared/OptimizedImage";
 import type { IProduct } from "@/types/product/productTypes";
 
 interface ProductPickerProps {
@@ -81,10 +82,11 @@ export const ProductPicker: React.FC<ProductPickerProps> = ({
               >
                 <div className="h-14 w-14 rounded-sm overflow-hidden bg-muted border border-border group-hover:scale-105 transition-transform">
                   {product.image ? (
-                    <img
+                    <OptimizedImage
                       src={typeof product.image === "string" ? product.image : product.image.url}
                       alt={product.name}
-                      className="h-full w-full object-cover"
+                      recipe="THUMBNAIL"
+                      aspectRatio="1 / 1"
                     />
                   ) : (
                     <div className="h-full w-full flex items-center justify-center">

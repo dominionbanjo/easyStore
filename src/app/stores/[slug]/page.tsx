@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import { getSubdomain, getBaseDomain, areSubdomainsDisabled } from "@/utils/subdomain";
 import { Store, ArrowLeft, Search } from "lucide-react";
@@ -26,7 +26,13 @@ import type { RootState } from "@/store";
 import { useGetCartQuery } from "@/services/cartApi";
 import { CartDrawer } from "@/modules/website/components/cart/CartDrawer";
 import type { StoreTemplateProps } from "@/modules/vendor/components/Store-details-page/templates/StoreTemplateProps";
-import type { IStorePagination, IStoreDetails, IStoreCategory } from "@/types/Store/storeTypes";
+import type { IStoreDetails, IStoreCategory } from "@/types/Store/storeTypes";
+import type {
+  IGetStoreProductsResponse,
+  IGetStoreCategoryProductsResponse,
+} from "@/types/Store/storeTypes";
+import type { IStoreProduct } from "@/types/Store/storeTypes";
+import { useInfiniteList } from "@/modules/website/hooks/useInfiniteList";
 
 /* ───────────────── COMPONENT ───────────────── */
 
@@ -43,7 +49,6 @@ export default function StoreDetailsPage() {
   const [activeTab, setActiveTab] = useState<"products" | "categories">(
     "products",
   );
-  const [page, setPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [isSearching, setIsSearching] = useState(false);
@@ -74,7 +79,6 @@ export default function StoreDetailsPage() {
     }
     const handler = setTimeout(() => {
       setDebouncedSearch(searchQuery);
-      setPage(1); // Reset page on search
       setIsSearching(false);
     }, 500);
 
@@ -109,59 +113,55 @@ export default function StoreDetailsPage() {
 
   /* ─── ALL PRODUCTS ─── */
 
-  const {
-    data: productsData,
-    isLoading: productsLoading,
-    isFetching: productsFetching,
-  } = useGetStoreProductsQuery(
-    { slug: slug ?? "", page, limit: 20, q: debouncedSearch },
-    { skip: !!selectedCategory || !store },
+  const buildAllArgs = useCallback(
+    (page: number) => ({ slug: slug ?? "", page, q: debouncedSearch }),
+    [slug, debouncedSearch],
   );
+
+  const allProductsList = useInfiniteList<
+    IStoreProduct,
+    { slug: string; page: number; q: string },
+    IGetStoreProductsResponse
+  >(useGetStoreProductsQuery, buildAllArgs, {
+    limit: 20,
+    enabled: !selectedCategory && !!store,
+    key: `all|${debouncedSearch}`,
+  });
 
   /* ─── CATEGORY PRODUCTS ─── */
 
-  const {
-    data: categoryProductsData,
-    isLoading: categoryLoading,
-    isFetching: categoryFetching,
-  } = useGetStoreCategoryProductsQuery(
-    {
+  const buildCategoryArgs = useCallback(
+    (page: number) => ({
       slug: slug ?? "",
       categoryId: selectedCategory?.id ?? "",
       page,
-      limit: 20,
       q: debouncedSearch,
-    },
-    { skip: !selectedCategory },
+    }),
+    [slug, selectedCategory?.id, debouncedSearch],
   );
 
-  // Use category data when a category is selected, otherwise use all products
-  const products = selectedCategory
-    ? (categoryProductsData?.data.items ?? [])
-    : (productsData?.data.items ?? []);
-
-  const pagination: IStorePagination = (selectedCategory
-    ? categoryProductsData?.data.pagination
-    : productsData?.data.pagination) || {
-    total: 0,
-    page: 1,
+  const categoryProductsList = useInfiniteList<
+    IStoreProduct,
+    { slug: string; categoryId: string; page: number; q: string },
+    IGetStoreCategoryProductsResponse
+  >(useGetStoreCategoryProductsQuery, buildCategoryArgs, {
     limit: 20,
-    pages: 1,
-    hasNext: false,
-    hasPrev: false,
-  };
+    enabled: !!selectedCategory && !!store,
+    key: `category-${selectedCategory?.id ?? "none"}|${debouncedSearch}`,
+  });
 
-  const isProductsLoading = selectedCategory
-    ? categoryLoading
-    : productsLoading;
+  // Use category data when a category is selected, otherwise use all products
+  const activeList = selectedCategory ? categoryProductsList : allProductsList;
 
-  const isProductsFetching = selectedCategory
-    ? categoryFetching
-    : productsFetching || isSearching;
+  const products = activeList.items;
+  const productsTotal = activeList.total;
+  const isProductsLoading = activeList.isLoading;
+  const isProductsFetching = activeList.isFetching || isSearching;
+  const sentinelRef = activeList.sentinelRef;
 
   const productsKey = selectedCategory
-    ? `category-${selectedCategory.id}-page-${page}`
-    : `all-products-page-${page}`;
+    ? `category-${selectedCategory.id}-q-${debouncedSearch}`
+    : `all-products-q-${debouncedSearch}`;
 
   /* ─── STORE LOADING STATE ─── */
 
@@ -214,7 +214,6 @@ export default function StoreDetailsPage() {
     if (cat) {
       setActiveTab("products");
     }
-    setPage(1);
 
     // Auto-scroll to top of product grid section
     setTimeout(() => {
@@ -231,7 +230,7 @@ export default function StoreDetailsPage() {
     store: store ? { ...store } as unknown as IStoreDetails : ({} as IStoreDetails),
     categories: categories as unknown as IStoreCategory[],
     products,
-    pagination,
+    productsTotal,
     isProductsLoading,
     isProductsFetching,
     isCategoriesLoading,
@@ -239,20 +238,15 @@ export default function StoreDetailsPage() {
     selectedCategory,
     searchQuery,
     isSearching,
-    page,
     productsKey,
+    sentinelRef,
     onTabChange: (tab: "products" | "categories") => {
       setActiveTab(tab);
       setSelectedCategory(null);
-      setPage(1);
       setSearchQuery("");
     },
     onCategorySelect: handleCategorySelect,
     onSearchChange: (query: string) => setSearchQuery(query),
-    onPageChange: (p: number) => {
-      setPage(p);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    },
     onCartOpen: () => setIsCartOpen(true),
     cartItemsCount,
     isMessagingLoading: isStartingConversation,

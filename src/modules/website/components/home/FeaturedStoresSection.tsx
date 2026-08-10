@@ -1,4 +1,3 @@
-import { useRef } from "react";
 import { useSelector } from "react-redux";
 import SmartLink from "@/components/shared/SmartLink";
 import { ArrowRight, Store as StoreIcon } from "lucide-react";
@@ -8,6 +7,7 @@ import StoreCard from "@/components/shared/StoreCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { selectLocationState } from "@/features/locationSlice";
+import { useInView } from "@/modules/website/hooks/useInView";
 
 interface FeaturedStoresSectionProps {
   className?: string;
@@ -16,25 +16,31 @@ interface FeaturedStoresSectionProps {
 export default function FeaturedStoresSection({
   className = "",
 }: FeaturedStoresSectionProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
   const locationState = useSelector(selectLocationState);
+  const { ref: sectionRef, isInView } = useInView<HTMLElement>({
+    rootMargin: "800px 0px",
+    once: true,
+  });
 
   // Fetch trending stores (weighted ranking: sales, rating, active products)
-  const { data, isLoading, isError } = useGetStoresQuery({
-    limit: 12,
-    page: 1,
-    sort: "trending",
-    state: locationState ?? undefined,
-    local: locationState ? true : undefined,
-  });
+  const { data, isLoading, isError } = useGetStoresQuery(
+    {
+      limit: 12,
+      page: 1,
+      sort: "trending",
+      state: locationState ?? undefined,
+      local: locationState ? true : undefined,
+    },
+    { skip: !isInView },
+  );
 
   const stores = data?.data.items ?? [];
   const isEmpty = !isLoading && !isError && stores.length === 0;
 
   return (
     <section
-      ref={containerRef}
-      className={`pt-8 md:pt-16 pb-8 md:pb-24 px-1 sm:px-6 overflow-hidden bg-slate-50/50 dark:bg-neutral-950 transition-colors duration-300 ${className}`}
+      ref={sectionRef}
+      className={`pt-8 md:pt-16 pb-8 md:pb-24 px-1 sm:px-6 overflow-hidden bg-slate-50/50 dark:bg-neutral-950 transition-colors duration-300 [content-visibility:auto] [contain-intrinsic-size:auto_500px] ${className}`}
     >
       <div className="w-full mx-auto space-y-6">
         <div className="flex flex-col gap-4 px-1">

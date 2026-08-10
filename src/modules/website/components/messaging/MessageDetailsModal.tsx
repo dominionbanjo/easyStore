@@ -12,6 +12,7 @@ import {
   ExternalLink
 } from "lucide-react";
 import SmartLink from "@/components/shared/SmartLink";
+import { OptimizedImage } from "@/components/shared/OptimizedImage";
 
 interface MessageDetailsModalProps {
   message: IMessage | null;
@@ -122,7 +123,7 @@ export const MessageDetailsModal: React.FC<MessageDetailsModalProps> = ({
               className="flex items-center gap-4 p-3 rounded-sm border border-primary/20 bg-primary/5 hover:bg-primary/10 transition-colors group"
             >
               {message.product_image && (
-                <img src={message.product_image} alt="" className="h-12 w-12 rounded-sm object-cover border border-border" />
+                <OptimizedImage src={message.product_image} alt="" recipe="THUMBNAIL" aspectRatio="1 / 1" wrapperClassName="h-12 w-12 rounded-sm border border-border" />
               )}
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-bold truncate group-hover:text-primary transition-colors">

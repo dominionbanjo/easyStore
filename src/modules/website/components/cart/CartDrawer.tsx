@@ -22,6 +22,7 @@ import type { ICartItem } from "@/types/cart/cartTypes";
 import { AUTH_ROUTES, WEBSITE_ROUTES } from "@/routes/temp";
 import { toast } from "sonner";
 import SmartLink from "@/components/shared/SmartLink";
+import { OptimizedImage } from "@/components/shared/OptimizedImage";
 import { extractErrorMessage } from "@/utils/errorHandler";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "@/store";
@@ -178,10 +179,12 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                       className="w-20 h-24 rounded-sm overflow-hidden bg-muted flex-shrink-0 border border-border/40"
                       onClick={onClose}
                     >
-                      <img
+                      <OptimizedImage
                         src={item.image ?? "/placeholder.png"}
                         alt={item.name}
-                        className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                        recipe="THUMBNAIL"
+                        aspectRatio="5 / 6"
+                        className="transition-transform group-hover:scale-110"
                       />
                     </SmartLink>
                     <div className="flex-1 min-w-0 space-y-1">

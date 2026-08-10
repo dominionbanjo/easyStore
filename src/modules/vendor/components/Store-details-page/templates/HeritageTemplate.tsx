@@ -20,7 +20,7 @@ export default function HeritageTemplate({
   store,
   categories,
   products,
-  pagination,
+  productsTotal,
   isProductsLoading,
   isProductsFetching,
   isCategoriesLoading,
@@ -29,10 +29,10 @@ export default function HeritageTemplate({
   searchQuery,
   isSearching,
   productsKey,
+  sentinelRef,
   onTabChange,
   onCategorySelect,
   onSearchChange,
-  onPageChange,
   onCartOpen,
   cartItemsCount,
   onMessageVendor,
@@ -233,14 +233,14 @@ export default function HeritageTemplate({
             <StoreProductsGrid
               key={productsKey}
               products={products}
-              pagination={pagination}
+              total={productsTotal}
               isLoading={isProductsLoading}
               isFetching={isProductsFetching}
+              sentinelRef={sentinelRef}
               selectedCategory={selectedCategory}
               onBackToCategories={() => {
                 onCategorySelect(null);
               }}
-              onPageChange={onPageChange}
             />
           </div>
         )}

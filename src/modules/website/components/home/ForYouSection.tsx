@@ -7,23 +7,32 @@ import { ProductSection } from "./ProductSection";
 import ProductGridCard from "@/components/shared/ProductGridCard";
 import SmartLink from "@/components/shared/SmartLink";
 import { ACCOUNT_ROUTES } from "@/routes";
+import { useInView } from "@/modules/website/hooks/useInView";
 
 export default function ForYouSection() {
   const locationState = useSelector(selectLocationState);
   const isAuthenticated = useSelector(
     (state: RootState) => state.user.isAuthenticated,
   );
-
-  const { data, isLoading, isError } = useGetForYouRecommendationsQuery({
-    limit: 10,
-    state: locationState ?? undefined,
+  const { ref: sectionRef, isInView } = useInView<HTMLDivElement>({
+    rootMargin: "800px 0px",
+    once: true,
   });
+
+  const { data, isLoading, isError } = useGetForYouRecommendationsQuery(
+    {
+      limit: 10,
+      state: locationState ?? undefined,
+    },
+    { skip: !isInView },
+  );
 
   const products = data?.data?.items ?? [];
   const personalized = data?.data?.personalized ?? false;
 
   return (
-    <ProductSection
+    <div ref={sectionRef}>
+      <ProductSection
       title={personalized ? "Recommended for You" : "Trending Now"}
       subtitle={
         personalized
@@ -51,6 +60,7 @@ export default function ForYouSection() {
       {products.map((product) => (
         <ProductGridCard key={product.id} data={product} />
       ))}
-    </ProductSection>
+      </ProductSection>
+    </div>
   );
 }

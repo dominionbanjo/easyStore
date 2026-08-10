@@ -252,6 +252,7 @@ export default function App() {
               <Route path="/featured" element={<Pages.FeaturedProductsPage />} />
               <Route path="/trending" element={<Pages.TrendingProductsPage />} />
               <Route path="/new-arrivals" element={<Pages.NewArrivalsPage />} />
+              <Route path="/products" element={<Pages.AllProductsPage />} />
               <Route path="/zones" element={<Pages.ZonesPage />} />
               <Route
                 path="/zones/:identifier"

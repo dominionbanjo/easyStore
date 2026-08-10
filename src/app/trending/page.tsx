@@ -1,26 +1,38 @@
+import { useCallback } from "react";
 import { TrendingUp } from "lucide-react";
-import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useGetTrendingRecommendationsQuery } from "@/services/recommendationApi";
 import { selectLocationState } from "@/features/locationSlice";
 import ProductListingPage from "@/modules/website/components/products/ProductListingPage";
+import { useInfiniteList } from "@/modules/website/hooks/useInfiniteList";
+import type { IRecommendationResponse } from "@/types/recommendation/recommendationTypes";
+import type { IProduct } from "@/types/product/productTypes";
 
 export default function TrendingProductsPage() {
-  const [page, setPage] = useState(1);
   const locationState = useSelector(selectLocationState);
 
+  const buildArgs = useCallback(
+    (page: number) => ({ page, state: locationState ?? undefined }),
+    [locationState],
+  );
+
   const {
-    data: productsData,
+    items: products,
     isLoading,
     isFetching,
-  } = useGetTrendingRecommendationsQuery({
+    isInitialError,
+    pageLoadFailed,
+    hasLoaded,
+    sentinelRef,
+    loadMore,
+  } = useInfiniteList<
+    IProduct,
+    { page: number; state: string | undefined },
+    IRecommendationResponse
+  >(useGetTrendingRecommendationsQuery, buildArgs, {
     limit: 12,
-    page,
-    state: locationState ?? undefined,
+    key: locationState ?? "none",
   });
-
-  const products = productsData?.data?.items ?? [];
-  const pagination = productsData?.data?.pagination;
 
   return (
     <ProductListingPage
@@ -28,10 +40,14 @@ export default function TrendingProductsPage() {
       subtitle="The most popular items on EazyStore right now. Don't miss out on what everyone is talking about."
       icon={TrendingUp}
       badgeText="Going Fast"
-      isLoading={isLoading || isFetching}
+      isLoading={isLoading}
+      isFetching={isFetching}
+      isInitialError={isInitialError}
+      pageLoadFailed={pageLoadFailed}
+      hasLoaded={hasLoaded}
+      loadMore={loadMore}
       products={products}
-      pagination={pagination}
-      onPageChange={setPage}
+      sentinelRef={sentinelRef}
     />
   );
 }

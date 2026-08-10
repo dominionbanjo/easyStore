@@ -1,6 +1,7 @@
 import { Package } from "lucide-react";
 import SmartLink from "@/components/shared/SmartLink";
 import { Card } from "@/components/ui/card";
+import { OptimizedImage } from "@/components/shared/OptimizedImage";
 import type { IOrder } from "@/services/ordersApi";
 
 export function OrderItemsList({ order }: { order: IOrder }) {
@@ -29,10 +30,12 @@ export function OrderItemsList({ order }: { order: IOrder }) {
                 className="w-16 h-16 sm:w-20 sm:h-20 bg-muted/20 rounded-sm overflow-hidden border border-border/10 flex-shrink-0"
               >
                 {item.image ? (
-                  <img
+                  <OptimizedImage
                     src={item.image}
                     alt={item.name}
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                    recipe="THUMBNAIL"
+                    aspectRatio="1 / 1"
+                    className="transition-transform duration-300 group-hover:scale-110"
                   />
                 ) : (
                   <div className="flex items-center justify-center h-full text-muted-foreground/30">

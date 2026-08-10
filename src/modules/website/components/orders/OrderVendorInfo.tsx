@@ -1,6 +1,7 @@
 import { ShoppingBag, User, Mail, Phone } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import SmartLink from "@/components/shared/SmartLink";
+import { OptimizedImage } from "@/components/shared/OptimizedImage";
 import type { IOrder } from "@/services/ordersApi";
 
 export function OrderVendorInfo({ order }: { order: IOrder }) {
@@ -21,10 +22,11 @@ export function OrderVendorInfo({ order }: { order: IOrder }) {
             <div className="flex items-center gap-3 p-2 rounded-sm bg-purple-500/5 dark:bg-purple-500/10 border border-purple-500/10">
               <div className="w-10 h-10 rounded-sm overflow-hidden border border-border/10 flex-shrink-0 bg-white dark:bg-neutral-800">
                 {order.vendor.store.logo ? (
-                  <img
+                  <OptimizedImage
                     src={order.vendor.store.logo}
                     alt={order.vendor.store.store_name}
-                    className="w-full h-full object-cover"
+                    recipe="LOGO"
+                    aspectRatio="1 / 1"
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-purple-600/40">

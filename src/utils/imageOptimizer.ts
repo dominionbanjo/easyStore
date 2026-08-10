@@ -1,27 +1,52 @@
 /**
  * Image Optimizer Utility
- * Compresses images iteratively using HTML5 Canvas to target a specific maximum file size.
- * Based on production best practices (e.g., target ≤ 3.5MB).
+ * Compresses images using a single-pass downscale plus binary-searched quality,
+ * preferring WebP and falling back to JPEG. Targets low-end device uploads.
  */
 
-const MAX_TARGET_SIZE = 3.5 * 1024 * 1024; // 3.5MB
-const INITIAL_MAX_DIMENSION = 3840; // Starts with 4K max
-const MIN_QUALITY = 0.3; // Minimum quality we are willing to accept before downscaling more aggressively
+const MAX_TARGET_SIZE = 2 * 1024 * 1024; // 2MB
+const INITIAL_MAX_DIMENSION = 3840; // Master cap — zoom headroom
+const MIN_QUALITY = 0.5;
+const MAX_QUALITY = 0.85;
+const MAX_ATTEMPTS = 6;
 
-/**
- * Iteratively optimizes an image file to fit within a target file size.
- * Adjusts quality and dimensions until the target is met or limits are reached.
- * 
- * @param file The original image file
- * @returns A promise that resolves to the optimized File object
- */
+type EncodeType = "image/webp" | "image/jpeg";
+
+const encode = (canvas: HTMLCanvasElement, type: EncodeType, quality: number) =>
+  new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, type, quality));
+
+const findTargetQuality = async (
+  canvas: HTMLCanvasElement,
+  type: EncodeType,
+): Promise<{ blob: Blob; quality: number } | null> => {
+  let low = MIN_QUALITY;
+  let high = MAX_QUALITY;
+  let best: Blob | null = null;
+  let bestQuality = MIN_QUALITY;
+
+  for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
+    const quality = (low + high) / 2;
+    const blob = await encode(canvas, type, quality);
+    if (!blob) return null;
+
+    if (blob.size <= MAX_TARGET_SIZE) {
+      best = blob;
+      bestQuality = quality;
+      low = quality;
+    } else {
+      high = quality;
+    }
+  }
+
+  const bestBlob = best ?? (await encode(canvas, type, bestQuality));
+  return bestBlob ? { blob: bestBlob, quality: bestQuality } : null;
+};
+
 export const optimizeImage = async (file: File): Promise<File> => {
-  // Only optimize images
   if (!file.type.startsWith("image/")) {
     return file;
   }
 
-  // Skip optimization if already within reasonable size limits
   if (file.size <= MAX_TARGET_SIZE) {
     return file;
   }
@@ -29,80 +54,54 @@ export const optimizeImage = async (file: File): Promise<File> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
-    
+
     reader.onload = (event) => {
       const img = new Image();
       img.src = event.target?.result as string;
-      
+
       img.onload = async () => {
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
         if (!ctx) return resolve(file);
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = "high";
 
-        let currentWidth = img.width;
-        let currentHeight = img.height;
-        let scaleFactor = 1.0;
+        let width = img.width;
+        let height = img.height;
+        const scaleFactor = Math.min(
+          1,
+          INITIAL_MAX_DIMENSION / width,
+          INITIAL_MAX_DIMENSION / height,
+        );
+        width = Math.round(width * scaleFactor);
+        height = Math.round(height * scaleFactor);
 
-        // Step 1: Initial dimension cap if extremely large
-        if (currentWidth > INITIAL_MAX_DIMENSION || currentHeight > INITIAL_MAX_DIMENSION) {
-          scaleFactor = Math.min(INITIAL_MAX_DIMENSION / currentWidth, INITIAL_MAX_DIMENSION / currentHeight);
-          currentWidth *= scaleFactor;
-          currentHeight *= scaleFactor;
-        }
+        canvas.width = width;
+        canvas.height = height;
+        ctx.drawImage(img, 0, 0, width, height);
 
-        let currentBlob: Blob | null = null;
-        let quality = 0.9;
-        let attempts = 0;
-        const maxAttempts = 8; // Prevent infinite loops
-
-        // Iterative optimization loop
-        while (attempts < maxAttempts) {
-          canvas.width = currentWidth;
-          canvas.height = currentHeight;
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          ctx.drawImage(img, 0, 0, currentWidth, currentHeight);
-
-          const blob: Blob | null = await new Promise((res) => 
-            canvas.toBlob(res, "image/jpeg", quality)
-          );
-
-          if (!blob) break;
-          currentBlob = blob;
-
-          // Target reached!
-          if (blob.size <= MAX_TARGET_SIZE) {
-            break;
-          }
-
-          // Step 2: If size still too large, reduce quality or scale
-          if (quality > MIN_QUALITY) {
-            // Reduce quality in steps
-            quality -= 0.15;
-          } else {
-            // Quality is already low, start reducing dimensions as well (0.8x each time)
-            currentWidth *= 0.8;
-            currentHeight *= 0.8;
-          }
-          
-          attempts++;
-        }
-
-        if (currentBlob) {
-          const optimizedFile = new File([currentBlob], file.name, {
-            type: "image/jpeg",
-            lastModified: Date.now(),
-          });
-          
-          // Final check: ensure we didn't accidentally make it larger through over-processing
-          resolve(optimizedFile.size < file.size ? optimizedFile : file);
+        let result: Blob | null = null;
+        const webpResult = await findTargetQuality(canvas, "image/webp");
+        if (webpResult) {
+          result = webpResult.blob;
         } else {
-          resolve(file);
+          const jpegResult = await findTargetQuality(canvas, "image/jpeg");
+          result = jpegResult?.blob ?? null;
         }
+
+        if (!result) return resolve(file);
+
+        const optimizedFile = new File([result], file.name, {
+          type: result.type,
+          lastModified: Date.now(),
+        });
+
+        resolve(optimizedFile.size < file.size ? optimizedFile : file);
       };
-      
+
       img.onerror = () => reject(new Error("Failed to load image for optimization"));
     };
-    
+
     reader.onerror = () => reject(new Error("Failed to read image file"));
   });
 };

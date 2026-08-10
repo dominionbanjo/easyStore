@@ -35,6 +35,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { OptimizedImage } from "./OptimizedImage";
 
 /* ───────────────── COMPONENT ───────────────── */
 
@@ -376,11 +377,12 @@ const ProductCardComponent = ({
         </button>
 
         {/* 🖼️ The Actual Image */}
-        <img
+        <OptimizedImage
           src={image}
           alt={name}
-          className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110 group-hover:rotate-1"
-          loading="lazy"
+          recipe="CARD"
+          aspectRatio="1 / 1"
+          className="transition-transform duration-700 ease-out group-hover:scale-110 group-hover:rotate-1"
         />
       </div>
 
@@ -488,12 +490,14 @@ const ProductCardComponent = ({
             className="flex items-center gap-2.5 truncate relative z-10 group/vendor min-w-0"
           >
             <div className="h-8 w-8 rounded-sm border-2 border-white dark:border-zinc-800 overflow-hidden ring-1 ring-zinc-100 dark:ring-zinc-800">
-              <img
+              <OptimizedImage
                 src={
                   avatar || "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix"
                 }
                 alt={vendor}
-                className="h-full w-full object-cover group-hover/vendor:scale-110 transition-transform"
+                recipe="LOGO"
+                aspectRatio="1 / 1"
+                className="group-hover/vendor:scale-110 transition-transform"
               />
             </div>
             <div className="flex flex-col truncate min-w-0">
@@ -520,8 +524,11 @@ const ProductCardComponent = ({
           <DialogHeader>
             <DialogTitle>Select Options</DialogTitle>
             <DialogDescription className="flex items-center gap-3 mt-1">
-              <img
+              <OptimizedImage
                 src={image}
+                alt=""
+                recipe="THUMBNAIL"
+                aspectRatio="1 / 1"
                 className="w-12 h-12 rounded-sm object-cover border"
               />
               <div className="flex flex-col flex-1">

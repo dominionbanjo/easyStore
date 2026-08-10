@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { Heart, ShoppingCart } from "lucide-react";
+import { OptimizedImage } from "@/components/shared/OptimizedImage";
 
 interface CategoryCardProps {
   name: string;
@@ -46,10 +47,12 @@ export default function CategoryCard({
             playsInline
           />
         ) : (
-          <img
+          <OptimizedImage
             src={thumbnail}
             alt={name}
-            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+            recipe="CAROUSEL"
+            aspectRatio="26 / 32"
+            className="transition-transform duration-700 group-hover:scale-105"
           />
         )}
 
