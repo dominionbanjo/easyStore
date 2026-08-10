@@ -29,6 +29,8 @@ interface UseInfiniteListConfig {
   limit?: number;
   enabled?: boolean;
   key?: string;
+  /** Pixels of runway before the sentinel where the next page prefetches (default 1500). */
+  prefetchMargin?: number;
 }
 
 interface InfiniteQueryOptions {
@@ -81,7 +83,7 @@ export const useInfiniteList = <
   buildArgs: (page: number) => Args,
   config: UseInfiniteListConfig = {},
 ): UseInfiniteListResult<TItem> & { currentData?: TEnvelope } => {
-  const { limit = 20, enabled = true, key } = config;
+  const { limit = 20, enabled = true, key, prefetchMargin = 1500 } = config;
 
   const pendingRef = useRef(0);
   const failedPageRef = useRef<number | null>(null);
@@ -145,7 +147,6 @@ export const useInfiniteList = <
       const freshItems = pageItems.filter((item) => !existingIds.has(item.id));
       return {
         ...prev,
-        page: prev.page + 1,
         hasLoaded: true,
         items:
           freshItems.length > 0
@@ -194,12 +195,15 @@ export const useInfiniteList = <
           loadMore();
         }
       },
-      { rootMargin: "600px 0px" },
+      { rootMargin: `${prefetchMargin}px 0px` },
     );
 
     observer.observe(sentinel);
     return () => observer.disconnect();
-  }, [enabled, hasMore, key, loadMore]);
+    // Re-observe after every append so the next page keeps prefetching while
+    // the sentinel stays within the prefetch runway (progressive background
+    // loading — no wait at the bottom).
+  }, [enabled, hasMore, key, loadMore, state.items.length, prefetchMargin]);
 
   return {
     items: state.items,
