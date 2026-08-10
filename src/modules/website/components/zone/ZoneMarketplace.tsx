@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { Store, Package, SearchX, GraduationCap, Home, ArrowLeft } from "lucide-react";
 import { useGetZoneQuery, useGetZoneStoresQuery, useGetZoneProductsQuery } from "@/services/schoolZoneApi";
@@ -12,11 +12,22 @@ import { cn } from "@/lib/utils";
 import { useInfiniteList } from "@/modules/website/hooks/useInfiniteList";
 import { OptimizedImage } from "@/components/shared/OptimizedImage";
 import { InfiniteListSkeletons } from "@/components/shared/InfiniteListSkeletons";
+import {
+  SearchFiltersSidebar,
+  MobileSearchFilters,
+} from "@/modules/website/components/search/Sidebar";
+import {
+  browseKey,
+  mapSearchParamsToArgs,
+} from "@/modules/website/utils/searchParams";
 import type {
   IGetZoneStoresResponse,
   IGetZoneProductsResponse,
 } from "@/types/SchoolZone/schoolZoneTypes";
-import type { IProduct } from "@/types/product/productTypes";
+import type {
+  IProduct,
+  SearchProductsArgs,
+} from "@/types/product/productTypes";
 import type { IZoneStore } from "@/types/SchoolZone/schoolZoneTypes";
 
 type Tab = "stores" | "products";
@@ -47,13 +58,29 @@ export default function ZoneMarketplace({ identifier }: ZoneMarketplaceProps) {
 
   const q = debouncedSearch.trim();
 
+  const mappedFilters = useMemo(
+    () => mapSearchParamsToArgs(searchParams),
+    [searchParams],
+  );
+
   const buildStoresArgs = useCallback(
     (page: number) => ({ identifier, page, q }),
     [identifier, q],
   );
+
   const buildProductsArgs = useCallback(
-    (page: number) => ({ identifier, page, q }),
-    [identifier, q],
+    (page: number): SearchProductsArgs & { identifier: string } => ({
+      identifier,
+      page,
+      q,
+      sort: mappedFilters.sort,
+      minPrice: mappedFilters.minPrice,
+      maxPrice: mappedFilters.maxPrice,
+      rating: mappedFilters.rating,
+      state: mappedFilters.state,
+      filter: mappedFilters.filter,
+    }),
+    [identifier, q, mappedFilters],
   );
 
   const storesList = useInfiniteList<
@@ -68,17 +95,18 @@ export default function ZoneMarketplace({ identifier }: ZoneMarketplaceProps) {
 
   const productsList = useInfiniteList<
     IProduct,
-    { identifier: string; page: number; q: string },
+    SearchProductsArgs & { identifier: string },
     IGetZoneProductsResponse
   >(useGetZoneProductsQuery, buildProductsArgs, {
     limit: 20,
     enabled: tab === "products",
-    key: `products|${q}`,
+    key: browseKey(`products|${q}`, searchParams),
   });
 
   const zone = zoneResponse?.data;
   const stores = storesList.items;
   const products = productsList.items;
+  const filters = productsList.currentData?.data.filters ?? {};
 
   const activeList = tab === "stores" ? storesList : productsList;
   const isLoading = isZoneLoading || (tab === "stores" ? storesList.isLoading : productsList.isLoading);
@@ -323,36 +351,60 @@ export default function ZoneMarketplace({ identifier }: ZoneMarketplaceProps) {
               }
             />
           )
-        ) : products.length > 0 ? (
+        ) : (
           <>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3 sm:gap-4">
-              {products.map((product) => (
-                <div key={product.id}>
-                  <ProductGridCard
-                    data={product}
-                    href={
-                      escapePaths
-                        ? getWebsitePath(`/product/${product.slug}`)
-                        : undefined
+            <div className="lg:hidden mb-4 p-1 bg-zinc-100/50 dark:bg-white/5 rounded-full flex items-center">
+              <MobileSearchFilters
+                products={products}
+                filters={filters}
+                showLocation={false}
+              />
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-8">
+              <SearchFiltersSidebar
+                products={products}
+                filters={filters}
+                showLocation={false}
+              />
+              <div>
+                {products.length > 0 ? (
+                  <>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3 sm:gap-4">
+                      {products.map((product) => (
+                        <div key={product.id}>
+                          <ProductGridCard
+                            data={product}
+                            href={
+                              escapePaths
+                                ? getWebsitePath(`/product/${product.slug}`)
+                                : undefined
+                            }
+                          />
+                        </div>
+                      ))}
+                    </div>
+                    <InfiniteScrollFooter
+                      isFetching={isFetching}
+                      sentinelRef={sentinelRef}
+                    />
+                  </>
+                ) : (
+                  <EmptyState
+                    title={
+                      debouncedSearch
+                        ? "No products found"
+                        : "No products yet"
+                    }
+                    message={
+                      debouncedSearch
+                        ? "No products from this zone's vendors match your search."
+                        : "No products from this zone's vendors yet."
                     }
                   />
-                </div>
-              ))}
+                )}
+              </div>
             </div>
-            <InfiniteScrollFooter
-              isFetching={isFetching}
-              sentinelRef={sentinelRef}
-            />
           </>
-        ) : (
-          <EmptyState
-            title={debouncedSearch ? "No products found" : "No products yet"}
-            message={
-              debouncedSearch
-                ? "No products from this zone's vendors match your search."
-                : "No products from this zone's vendors yet."
-            }
-          />
         )}
       </div>
     </section>

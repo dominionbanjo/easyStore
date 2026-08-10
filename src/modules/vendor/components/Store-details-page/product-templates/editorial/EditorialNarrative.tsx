@@ -81,16 +81,16 @@ export function EditorialNarrative({
             <span className="text-sm font-sans uppercase tracking-[0.2em] text-[var(--theme-primary)]">
               Collection / {uiProduct.category}
             </span>
-            <h1 className="text-5xl md:text-6xl font-medium leading-[1.1] tracking-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-6xl font-medium leading-[1.1] tracking-tight">
               {uiProduct.name}
             </h1>
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-6 flex-wrap">
               <div className="flex items-baseline gap-4">
-                <div className="text-3xl font-light">
+                <div className="text-xl sm:text-2xl md:text-3xl font-light">
                   ₦{displayPrice?.toLocaleString()}
                 </div>
                 {displayOriginalPrice && (
-                  <div className="text-xl font-light text-zinc-400 line-through">
+                  <div className="text-base sm:text-xl font-light text-zinc-400 line-through">
                     ₦{displayOriginalPrice.toLocaleString()}
                   </div>
                 )}
@@ -187,7 +187,7 @@ export function EditorialNarrative({
 
           <div className="pt-8 space-y-6">
             <div className="flex items-center gap-6">
-              <div className="flex items-center border-b border-[#2C2C2C]/20 dark:border-[#EAEAEA]/20 pb-2 font-sans font-medium text-lg">
+              <div className="flex items-center border-b border-[#2C2C2C]/20 dark:border-[#EAEAEA]/20 pb-2 font-sans font-medium text-base sm:text-lg">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
                   className="px-4 opacity-50 hover:opacity-100"
@@ -207,7 +207,7 @@ export function EditorialNarrative({
               <button
                 disabled={currentStock <= 0 || addingToCart}
                 onClick={handleAddToCart}
-                className="flex-1 py-4 bg-[#2C2C2C] dark:bg-[#EAEAEA] text-[#FDFBF7] dark:text-[#1A1A1A] font-sans font-medium uppercase tracking-[0.2em] text-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2 disabled:opacity-40 disabled:bg-zinc-200 dark:disabled:bg-zinc-800 disabled:text-zinc-600 dark:disabled:text-zinc-300"
+                className="flex-1 py-3 sm:py-4 bg-[#2C2C2C] dark:bg-[#EAEAEA] text-[#FDFBF7] dark:text-[#1A1A1A] font-sans font-medium uppercase tracking-[0.2em] text-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2 disabled:opacity-40 disabled:bg-zinc-200 dark:disabled:bg-zinc-800 disabled:text-zinc-600 dark:disabled:text-zinc-300"
               >
                 {addingToCart ? (
                   <div className="h-4 w-4 border-2 border-current border-t-transparent rounded-sm animate-spin" />
@@ -221,7 +221,7 @@ export function EditorialNarrative({
             <button
                onClick={onMessageVendor}
                disabled={isMessagingLoading}
-               className="w-full py-4 border border-[#2C2C2C]/20 dark:border-[#EAEAEA]/20 font-sans font-medium uppercase tracking-[0.2em] text-sm hover:border-[#2C2C2C] dark:hover:border-[#EAEAEA] transition-all flex items-center justify-center gap-2 disabled:opacity-40"
+               className="w-full py-3 sm:py-4 border border-[#2C2C2C]/20 dark:border-[#EAEAEA]/20 font-sans font-medium uppercase tracking-[0.2em] text-sm hover:border-[#2C2C2C] dark:hover:border-[#EAEAEA] transition-all flex items-center justify-center gap-2 disabled:opacity-40"
             >
               {isMessagingLoading ? (
                  <div className="h-4 w-4 border-2 border-current border-t-transparent rounded-sm animate-spin" />

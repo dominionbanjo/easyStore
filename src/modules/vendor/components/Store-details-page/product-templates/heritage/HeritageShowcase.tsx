@@ -60,11 +60,11 @@ export function HeritageShowcase({
         {/* Info Container */}
         <div className="flex flex-col justify-center space-y-8">
           <div>
-            <h1 className="text-4xl md:text-5xl font-bold text-[#2C2622] dark:text-white leading-[1.15] mb-4">
+            <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold text-[#2C2622] dark:text-white leading-[1.15] mb-4">
               {uiProduct.name}
             </h1>
             <div className="flex flex-wrap items-center gap-6 mt-2">
-              <div className="flex items-center gap-4 text-2xl text-[var(--theme-primary)] font-bold">
+              <div className="flex items-center gap-4 text-xl sm:text-2xl text-[var(--theme-primary)] font-bold">
                 <span>₦{displayPrice?.toLocaleString()}</span>
                 {displayOriginalPrice && (
                   <span className="text-base text-[#8C7A6B] line-through font-normal">
@@ -173,14 +173,14 @@ export function HeritageShowcase({
           {/* Basket Actions */}
           <div className="pt-6 space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-4">
-              <div className="flex items-center justify-between border-2 border-[#EADDCE] dark:border-[#5C5042] rounded-sm px-2 py-1 bg-[#FAF7F2] dark:bg-[#2C2622] h-16 md:h-auto">
+              <div className="flex items-center justify-between border-2 border-[#EADDCE] dark:border-[#5C5042] rounded-sm px-2 py-1 bg-[#FAF7F2] dark:bg-[#2C2622] h-12 sm:h-16">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
                   className="w-10 h-10 rounded-sm hover:bg-[#EADDCE] dark:hover:bg-[#3D352B] flex items-center justify-center font-bold text-[#5C5042] dark:text-[#EAE3DB] transition-colors"
                 >
                   <Minus className="w-4 h-4" />
                 </button>
-                <span className="font-bold font-sans text-lg w-10 text-center text-[#2C2622] dark:text-white">
+                <span className="font-bold font-sans text-base sm:text-lg w-10 text-center text-[#2C2622] dark:text-white">
                   {quantity}
                 </span>
                 <button
@@ -196,10 +196,10 @@ export function HeritageShowcase({
               <button
                 disabled={currentStock <= 0 || addingToCart}
                 onClick={handleAddToCart}
-                className="w-full h-16 px-8 bg-[var(--theme-primary)] text-white font-bold rounded-sm font-sans tracking-wide uppercase  -[var(--theme-primary)]/20 hover:opacity-90 transition-all hover:translate-y-[-2px] hover: flex items-center justify-center gap-2 disabled:bg-zinc-200 dark:disabled:bg-zinc-800 disabled:text-zinc-500 disabled: disabled:translate-y-0"
+                className="w-full h-12 sm:h-16 px-8 bg-[var(--theme-primary)] text-white font-bold rounded-sm font-sans tracking-wide uppercase  -[var(--theme-primary)]/20 hover:opacity-90 transition-all hover:translate-y-[-2px] hover: flex items-center justify-center gap-2 disabled:bg-zinc-200 dark:disabled:bg-zinc-800 disabled:text-zinc-500 disabled: disabled:translate-y-0"
               >
                 {addingToCart ? (
-                  <div className="h-5 w-5 border-2 border-white/30 border-t-white rounded-sm animate-spin" />
+                  <div className="h-4 w-4 sm:h-5 sm:w-5 border-2 border-white/30 border-t-white rounded-sm animate-spin" />
                 ) : currentStock <= 0 ? (
                   "Sold Out"
                 ) : (
@@ -214,7 +214,7 @@ export function HeritageShowcase({
             <button
               onClick={onMessageVendor}
               disabled={isMessagingLoading}
-              className="w-full py-4 border-2 border-[#EADDCE] dark:border-[#5C5042] text-[#2C2622] dark:text-[#EAE3DB] font-bold rounded-sm font-sans tracking-wide uppercase hover:border-[#8C7A6B] transition-all flex items-center justify-center gap-2 disabled:opacity-40"
+              className="w-full py-3 sm:py-4 border-2 border-[#EADDCE] dark:border-[#5C5042] text-[#2C2622] dark:text-[#EAE3DB] font-bold rounded-sm font-sans tracking-wide uppercase hover:border-[#8C7A6B] transition-all flex items-center justify-center gap-2 disabled:opacity-40"
             >
               {isMessagingLoading ? (
                 <div className="h-5 w-5 border-2 border-[var(--theme-primary)] border-t-transparent rounded-sm animate-spin" />

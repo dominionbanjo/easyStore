@@ -1,15 +1,30 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
 import { LayoutGrid } from "lucide-react";
-import { useGetAllProductsQuery } from "@/services/productApi";
+import { useSearchProductsQuery } from "@/services/productApi";
 import ProductListingPage from "@/modules/website/components/products/ProductListingPage";
 import { useInfiniteList } from "@/modules/website/hooks/useInfiniteList";
+import {
+  browseKey,
+  mapSearchParamsToArgs,
+} from "@/modules/website/utils/searchParams";
 import type {
-  IPaginatedResponse,
+  ISearchProductsResponse,
   IProduct,
+  SearchProductsArgs,
 } from "@/types/product/productTypes";
 
 export default function AllProductsPage() {
-  const buildArgs = useCallback((page: number) => ({ page }), []);
+  const [searchParams] = useSearchParams();
+  const mappedArgs = useMemo(
+    () => mapSearchParamsToArgs(searchParams),
+    [searchParams],
+  );
+
+  const buildArgs = useCallback(
+    (page: number): SearchProductsArgs => ({ ...mappedArgs, q: "", page }),
+    [mappedArgs],
+  );
 
   const {
     items: products,
@@ -18,13 +33,17 @@ export default function AllProductsPage() {
     isInitialError,
     pageLoadFailed,
     hasLoaded,
+    total,
     sentinelRef,
     loadMore,
-  } = useInfiniteList<
-    IProduct,
-    { page: number },
-    IPaginatedResponse<IProduct>
-  >(useGetAllProductsQuery, buildArgs, { limit: 20 });
+    currentData,
+  } = useInfiniteList<IProduct, SearchProductsArgs, ISearchProductsResponse>(
+    useSearchProductsQuery,
+    buildArgs,
+    { limit: 20, key: browseKey("products", searchParams) },
+  );
+
+  const filters = currentData?.data.filters ?? {};
 
   return (
     <ProductListingPage
@@ -39,6 +58,8 @@ export default function AllProductsPage() {
       hasLoaded={hasLoaded}
       loadMore={loadMore}
       products={products}
+      total={total}
+      filters={filters}
       sentinelRef={sentinelRef}
     />
   );

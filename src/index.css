@@ -145,13 +145,16 @@
 }
 
 /* --- Fade-in upward on mount --- */
+/* Note: base style must NOT keep a transform or will-change: transform —
+   either one creates a containing block that breaks `position: fixed`
+   descendants (e.g. the floating filter button). */
 .fade-in-up {
   opacity: 1;
-  transform: translateY(0);
+  transform: none;
   transition:
     opacity 300ms ease,
     transform 300ms ease;
-  will-change: opacity, transform;
+  will-change: opacity;
 }
 
 @starting-style {

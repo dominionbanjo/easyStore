@@ -10,6 +10,7 @@ import {
 } from "@/modules/website/components/search/Sidebar";
 import { selectLocationState } from "@/features/locationSlice";
 import { useInfiniteList } from "@/modules/website/hooks/useInfiniteList";
+import { mapSearchParamsToArgs } from "@/modules/website/utils/searchParams";
 import type {
   ISearchProductsResponse,
   IProduct,
@@ -51,65 +52,31 @@ export default function SearchResultsPage() {
   }, [locationState]);
 
   /* ───────────────── QUERY PARAMS ───────────────── */
-  const rawQueryArgs = useMemo(() => {
-    const params: Record<string, string | number | boolean | undefined> = {};
+  const mappedArgs = useMemo(
+    () => mapSearchParamsToArgs(searchParams),
+    [searchParams],
+  );
 
-    // Map all search params to the query object
-    searchParams.forEach((value, key) => {
-      // Ignore livereload or known cache busters
-      if (key === "_lr") return;
-
-      // Known numerical parameters
-      if (["minPrice", "maxPrice", "page", "rating"].includes(key)) {
-        params[key] = Number(value);
-      }
-      // Known single-value strings
-      else if (["q", "sort", "state", "loc"].includes(key)) {
-        params[key] = value;
-      }
-      // Everything else is treated as a dynamic filter
-      else {
-        // Collect dynamic options into the unified 'filter' query string
-        // format: Option:Value1,Value2|Option2:Value
-        const filterStr = params.filter ? `${params.filter}|` : "";
-        params.filter = `${filterStr}${key}:${value}`;
-      }
-    });
-
-    // Explicit sidebar `state` wins (hard filter); `loc` (location
-    // preference) is a soft local-first signal.
-    const explicitState = params.state as string | undefined;
-    const loc = params.loc as string | undefined;
-    const q = params.q as string | undefined;
-    const sort = params.sort as string | undefined;
-
-    // Remove handled keys so the spread below only carries dynamic filters
-    delete params.q;
-    delete params.page;
-    delete params.sort;
-    delete params.loc;
-    delete params.state;
-
-    return {
-      ...params,
-      q: q ?? "",
-      limit: 15,
-      sort,
-      state: explicitState ?? loc ?? undefined,
-      local: !explicitState && loc ? true : undefined,
-    };
-  }, [searchParams]);
+  // Explicit sidebar `state` wins (hard filter); `loc` (location
+  // preference) is a soft local-first signal.
+  const explicitState = searchParams.get("state") ?? undefined;
+  const loc = searchParams.get("loc") ?? undefined;
 
   /* ───────────────── DEBOUNCED QUERY ───────────────── */
-  const debouncedQuery = useDebouncedValue(rawQueryArgs.q, 500);
+  const debouncedQuery = useDebouncedValue(
+    searchParams.get("q") ?? "",
+    500,
+  );
 
   const buildArgs = useCallback(
     (page: number): SearchProductsArgs => ({
-      ...rawQueryArgs,
+      ...mappedArgs,
       q: debouncedQuery,
+      state: explicitState ?? loc ?? undefined,
+      local: !explicitState && loc ? true : undefined,
       page,
     }),
-    [rawQueryArgs, debouncedQuery],
+    [mappedArgs, debouncedQuery, explicitState, loc],
   );
 
   const listKey = `${debouncedQuery}|${searchParams.toString()}`;

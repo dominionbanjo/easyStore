@@ -51,15 +51,15 @@ export function VanguardMain({
             <p className="text-[var(--theme-primary)] font-medium mb-3 tracking-widest uppercase text-xs">
               {uiProduct.category}
             </p>
-            <h1 className="text-4xl md:text-5xl font-light text-zinc-900 dark:text-white mb-6 leading-tight font-serif">
+            <h1 className="text-2xl sm:text-3xl md:text-5xl font-light text-zinc-900 dark:text-white mb-6 leading-tight font-serif">
               {uiProduct.name}
             </h1>
-            <div className="flex items-end gap-4 text-2xl font-light">
+            <div className="flex items-end gap-4 text-xl sm:text-2xl font-light flex-wrap">
               <span className="text-zinc-900 dark:text-white">
                 ₦{displayPrice?.toLocaleString()}
               </span>
               {displayOriginalPrice && (
-                <span className="text-zinc-400 line-through text-lg mb-0.5">
+                <span className="text-zinc-400 line-through text-base sm:text-lg mb-0.5">
                   ₦{displayOriginalPrice.toLocaleString()}
                 </span>
               )}
@@ -167,7 +167,7 @@ export function VanguardMain({
             <button
               disabled={currentStock <= 0 || addingToCart}
               onClick={handleAddToCart}
-              className="w-full py-4 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-100 transition-colors uppercase tracking-[0.2em] text-sm font-medium disabled:bg-zinc-100 dark:disabled:bg-zinc-900 disabled:text-zinc-500 dark:disabled:text-zinc-200 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full py-3 sm:py-4 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-100 transition-colors uppercase tracking-[0.2em] text-sm font-medium disabled:bg-zinc-100 dark:disabled:bg-zinc-900 disabled:text-zinc-500 dark:disabled:text-zinc-200 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {addingToCart ? (
                 <div className="h-4 w-4 border-2 border-current border-t-transparent rounded-sm animate-spin" />
@@ -183,7 +183,7 @@ export function VanguardMain({
             <button
               onClick={onMessageVendor}
               disabled={isMessagingLoading}
-              className="w-full py-4 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors uppercase tracking-[0.2em] text-sm font-medium flex items-center justify-center gap-2 disabled:opacity-50"
+              className="w-full py-3 sm:py-4 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors uppercase tracking-[0.2em] text-sm font-medium flex items-center justify-center gap-2 disabled:opacity-50"
             >
               {isMessagingLoading ? (
                 <Loader2 className="w-4 h-4 animate-spin" />

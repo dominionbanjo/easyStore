@@ -91,7 +91,7 @@ export function BazaarProductInfo({
           />
         </div>
         
-        <h1 className="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white leading-[1.1] tracking-tight">
+        <h1 className="text-2xl sm:text-3xl md:text-5xl font-black text-slate-900 dark:text-white leading-[1.1] tracking-tight">
           {uiProduct.name}
         </h1>
 
@@ -112,12 +112,12 @@ export function BazaarProductInfo({
 
         <div className="space-y-2">
            <div className="text-[10px] font-black uppercase tracking-widest text-slate-400">Exclusive Price</div>
-          <div className="flex items-baseline gap-4">
-            <span className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tighter">
+          <div className="flex items-baseline gap-4 flex-wrap">
+            <span className="text-2xl sm:text-3xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tighter">
               ₦{displayPrice?.toLocaleString()}
             </span>
             {displayOriginalPrice && (
-               <span className="text-lg text-slate-400 line-through font-medium">
+               <span className="text-base sm:text-lg text-slate-400 line-through font-medium">
                 ₦{displayOriginalPrice.toLocaleString()}
               </span>
             )}
@@ -165,7 +165,7 @@ export function BazaarProductInfo({
                     <button
                       key={color.id}
                       onClick={() => setSelectedColor(color)}
-                      className={`w-12 h-12 rounded-sm border-4 transition-all active:scale-90 ${
+                      className={`w-10 h-10 sm:w-12 sm:h-12 rounded-sm border-4 transition-all active:scale-90 ${
                         selectedColor?.id === color.id
                           ? "border-indigo-600 ring-4 ring-indigo-600/20 scale-110 shadow-lg"
                           : "border-white dark:border-neutral-800 hover:border-slate-300 dark:hover:border-neutral-700 shadow-sm"

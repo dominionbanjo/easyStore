@@ -1,18 +1,42 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Sparkles } from "lucide-react";
-import { useGetFeaturedProductsQuery } from "@/services/productApi";
+import {
+  useGetFeaturedProductsQuery,
+  useSearchProductsQuery,
+} from "@/services/productApi";
 import ProductListingPage from "@/modules/website/components/products/ProductListingPage";
 import { useInfiniteList } from "@/modules/website/hooks/useInfiniteList";
+import {
+  browseKey,
+  hasActiveBrowseFilters,
+  mapSearchParamsToArgs,
+} from "@/modules/website/utils/searchParams";
 import type {
   IFeaturedProductsResponse,
+  ISearchProductsResponse,
   IProduct,
+  SearchProductsArgs,
 } from "@/types/product/productTypes";
 
 export default function FeaturedProductsPage() {
-  const buildArgs = useCallback(
-    (page: number) => ({ page, sort: "newest" }),
-    [],
+  const [searchParams] = useSearchParams();
+  const hasFilters = hasActiveBrowseFilters(searchParams);
+  const mappedArgs = useMemo(
+    () => mapSearchParamsToArgs(searchParams),
+    [searchParams],
   );
+
+  // Clean state = curated featured feed; any filter/sort = marketplace search.
+  const buildArgs = useCallback(
+    (page: number): SearchProductsArgs =>
+      hasFilters ? { ...mappedArgs, q: "", page } : { page, q: "", sort: "newest" },
+    [mappedArgs, hasFilters],
+  );
+
+  const queryHook = hasFilters
+    ? useSearchProductsQuery
+    : useGetFeaturedProductsQuery;
 
   const {
     items: products,
@@ -21,13 +45,22 @@ export default function FeaturedProductsPage() {
     isInitialError,
     pageLoadFailed,
     hasLoaded,
+    total,
     sentinelRef,
     loadMore,
+    currentData,
   } = useInfiniteList<
     IProduct,
-    { page: number; sort: string },
-    IFeaturedProductsResponse
-  >(useGetFeaturedProductsQuery, buildArgs, { limit: 12 });
+    SearchProductsArgs,
+    IFeaturedProductsResponse | ISearchProductsResponse
+  >(queryHook, buildArgs, {
+    limit: 12,
+    key: browseKey("featured", searchParams),
+  });
+
+  const filters = (
+    currentData as ISearchProductsResponse | undefined
+  )?.data?.filters ?? {};
 
   return (
     <ProductListingPage
@@ -42,6 +75,8 @@ export default function FeaturedProductsPage() {
       hasLoaded={hasLoaded}
       loadMore={loadMore}
       products={products}
+      total={total}
+      filters={filters}
       sentinelRef={sentinelRef}
     />
   );

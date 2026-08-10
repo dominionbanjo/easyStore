@@ -1,14 +1,35 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Zap } from "lucide-react";
-import { useGetAllProductsQuery } from "@/services/productApi";
+import { useSearchProductsQuery } from "@/services/productApi";
 import ProductListingPage from "@/modules/website/components/products/ProductListingPage";
 import { useInfiniteList } from "@/modules/website/hooks/useInfiniteList";
-import type { IPaginatedResponse, IProduct } from "@/types/product/productTypes";
+import {
+  browseKey,
+  mapSearchParamsToArgs,
+} from "@/modules/website/utils/searchParams";
+import type {
+  ISearchProductsResponse,
+  IProduct,
+  SearchProductsArgs,
+} from "@/types/product/productTypes";
 
 export default function NewArrivalsPage() {
+  const [searchParams] = useSearchParams();
+  const mappedArgs = useMemo(
+    () => mapSearchParamsToArgs(searchParams),
+    [searchParams],
+  );
+
+  // Fresh drops default: newest first unless the user picks another sort.
   const buildArgs = useCallback(
-    (page: number) => ({ page, sort: "newest" }),
-    [],
+    (page: number): SearchProductsArgs => ({
+      ...mappedArgs,
+      q: "",
+      sort: mappedArgs.sort ?? "date_desc",
+      page,
+    }),
+    [mappedArgs],
   );
 
   const {
@@ -18,13 +39,17 @@ export default function NewArrivalsPage() {
     isInitialError,
     pageLoadFailed,
     hasLoaded,
+    total,
     sentinelRef,
     loadMore,
-  } = useInfiniteList<
-    IProduct,
-    { page: number; sort: string },
-    IPaginatedResponse<IProduct>
-  >(useGetAllProductsQuery, buildArgs, { limit: 12 });
+    currentData,
+  } = useInfiniteList<IProduct, SearchProductsArgs, ISearchProductsResponse>(
+    useSearchProductsQuery,
+    buildArgs,
+    { limit: 12, key: browseKey("new-arrivals", searchParams) },
+  );
+
+  const filters = currentData?.data.filters ?? {};
 
   return (
     <ProductListingPage
@@ -39,6 +64,8 @@ export default function NewArrivalsPage() {
       hasLoaded={hasLoaded}
       loadMore={loadMore}
       products={products}
+      total={total}
+      filters={filters}
       sentinelRef={sentinelRef}
     />
   );

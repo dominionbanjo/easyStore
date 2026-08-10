@@ -90,7 +90,7 @@ export default function VanguardProductTemplate({
       {/* ─── RELATED PRODUCTS ─── */}
       {relatedProducts?.length > 0 && (
         <div className="mt-20 md:mt-32 border-t border-zinc-100 dark:border-zinc-900 pt-12 md:pt-16 px-1.5 sm:px-0">
-          <h2 className="text-3xl font-light font-serif text-center mb-12">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-light font-serif text-center mb-8 sm:mb-12">
             Related Pieces
           </h2>
           <RelatedProductsGrid products={relatedProducts} />

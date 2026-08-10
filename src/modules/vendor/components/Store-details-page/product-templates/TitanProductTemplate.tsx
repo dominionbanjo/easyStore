@@ -104,7 +104,7 @@ export default function TitanProductTemplate({
         {/* ─── CROWDSOURCED LOGS (REVIEWS) ─── */}
         <div className="mt-12 border border-zinc-800 bg-black p-6">
           <div className="flex flex-col md:flex-row items-baseline gap-4 mb-8 border-b border-zinc-800 pb-4">
-            <h2 className="text-xl font-bold text-white uppercase tracking-tight">
+            <h2 className="text-base sm:text-xl font-bold text-white uppercase tracking-tight">
               User Telemetry Logs
             </h2>
             <span className="text-xs text-[var(--theme-primary)] font-mono">

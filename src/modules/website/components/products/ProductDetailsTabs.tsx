@@ -75,7 +75,7 @@ export default function ProductDetailsTabs({
                 key={tab.value}
                 value={tab.value}
                 className={cn(
-                  "relative flex-1 sm:flex-none flex items-center justify-center gap-2 sm:gap-2.5 px-4 sm:px-8 py-2 sm:py-2.5 rounded-sm sm:rounded-sm text-xs sm:text-sm font-semibold transition-all duration-300 whitespace-nowrap",
+                  "relative flex-1 sm:flex-none flex items-center justify-center gap-2 sm:gap-2.5 px-3 sm:px-8 py-2 sm:py-2.5 rounded-sm sm:rounded-sm text-xs sm:text-sm font-semibold transition-all duration-300 whitespace-nowrap",
                   "data-[state=active]:bg-background data-[state=active]:text-primary data-[state=active]:",
                   "hover:text-foreground/80",
                 )}
@@ -104,13 +104,13 @@ export default function ProductDetailsTabs({
                     </div>
                     <div className="space-y-4 md:space-y-6 flex-1">
                       <div>
-                        <h3 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight mb-2">
+                        <h3 className="text-base sm:text-lg md:text-3xl font-bold tracking-tight mb-2">
                           Product Description
                         </h3>
                         <div className="h-1 w-12 bg-primary rounded-sm" />
                       </div>
                       <div className="relative">
-                        <p className="text-base sm:text-lg md:text-xl leading-relaxed text-foreground/80 whitespace-pre-line">
+                        <p className="text-sm sm:text-base md:text-xl leading-relaxed text-foreground/80 whitespace-pre-line">
                           {product.description}
                         </p>
                       </div>
@@ -131,7 +131,7 @@ export default function ProductDetailsTabs({
                       <Layers className="w-5 h-5 sm:w-6 sm:h-6" />
                     </div>
                     <div>
-                      <h3 className="text-xl sm:text-2xl font-bold tracking-tight">
+                      <h3 className="text-base sm:text-lg md:text-2xl font-bold tracking-tight">
                         Technical Specifications
                       </h3>
                       <p className="text-xs sm:text-sm text-muted-foreground">
@@ -174,7 +174,7 @@ export default function ProductDetailsTabs({
                       <Truck className="w-5 h-5 sm:w-6 sm:h-6" />
                     </div>
                     <div>
-                      <h3 className="text-xl sm:text-2xl font-bold tracking-tight">
+                      <h3 className="text-base sm:text-lg md:text-2xl font-bold tracking-tight">
                         Delivery & Logistics
                       </h3>
                       <p className="text-xs sm:text-sm text-muted-foreground">

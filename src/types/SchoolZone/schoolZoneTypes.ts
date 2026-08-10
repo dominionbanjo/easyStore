@@ -240,6 +240,8 @@ export interface IGetZoneProductsResponse {
   data: {
     items: IProduct[];
     pagination: IStorePagination;
+    /** Aggregated variant combination options for dynamic sidebar filters. */
+    filters?: Record<string, string[]>;
   };
 }
 

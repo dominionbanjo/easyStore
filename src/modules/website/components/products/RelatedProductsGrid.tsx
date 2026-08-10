@@ -20,7 +20,7 @@ export default function RelatedProductsGrid({
   return (
     <section className={cn("pt-10 space-y-8 px-0 sm:px-0", className)}>
       {title && (
-        <h2 className="text-2xl font-bold text-foreground px-3 sm:px-0">
+        <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-foreground px-3 sm:px-0">
           {title}
         </h2>
       )}

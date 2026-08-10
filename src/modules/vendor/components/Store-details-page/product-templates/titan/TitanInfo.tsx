@@ -57,12 +57,12 @@ export function TitanInfo({
         </span>
       </div>
 
-      <h1 className="text-3xl md:text-4xl font-bold text-white uppercase leading-none tracking-tight mb-2">
+      <h1 className="text-xl sm:text-2xl md:text-4xl font-bold text-white uppercase leading-none tracking-tight mb-2">
         {uiProduct.name}
       </h1>
 
-      <div className="text-[var(--theme-primary)] flex items-end gap-3 mt-6 mb-8 font-bold tracking-tight">
-        <span className="text-4xl text-white">
+      <div className="text-[var(--theme-primary)] flex items-end gap-3 mt-6 mb-8 font-bold tracking-tight flex-wrap">
+        <span className="text-2xl sm:text-3xl md:text-4xl text-white">
           ₦{displayPrice?.toLocaleString()}
         </span>
         {displayOriginalPrice && (
@@ -167,16 +167,16 @@ export function TitanInfo({
         <div className="flex items-center justify-between border border-zinc-800 p-1">
           <button
             onClick={() => setQuantity(Math.max(1, quantity - 1))}
-            className="w-10 h-10 flex items-center justify-center hover:bg-zinc-800 text-zinc-500 hover:text-white transition-colors"
+            className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center hover:bg-zinc-800 text-zinc-500 hover:text-white transition-colors"
           >
             <Minus className="w-4 h-4" />
           </button>
-          <span className="font-bold text-white text-lg">{quantity}</span>
+          <span className="font-bold text-white text-base sm:text-lg">{quantity}</span>
           <button
             onClick={() =>
               setQuantity(Math.min(currentStock || 1, quantity + 1))
             }
-            className="w-10 h-10 flex items-center justify-center hover:bg-zinc-800 text-zinc-500 hover:text-white transition-colors"
+            className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center hover:bg-zinc-800 text-zinc-500 hover:text-white transition-colors"
           >
             <Plus className="w-4 h-4" />
           </button>
@@ -184,7 +184,7 @@ export function TitanInfo({
         <button
           disabled={currentStock <= 0 || addingToCart}
           onClick={handleAddToCart}
-          className="w-full py-4 bg-[var(--theme-primary)] text-black font-black uppercase tracking-widest hover:bg-[var(--theme-primary)]/80 transition-colors flex items-center justify-center gap-3 group disabled:opacity-50 disabled:bg-zinc-800 disabled:text-zinc-500 disabled:border-zinc-700"
+          className="w-full py-3 sm:py-4 bg-[var(--theme-primary)] text-black font-black uppercase tracking-widest hover:bg-[var(--theme-primary)]/80 transition-colors flex items-center justify-center gap-3 group disabled:opacity-50 disabled:bg-zinc-800 disabled:text-zinc-500 disabled:border-zinc-700"
         >
           {addingToCart ? (
             <div className="h-5 w-5 border-2 border-black/30 border-t-black rounded-sm animate-spin" />
@@ -203,7 +203,7 @@ export function TitanInfo({
         <button
           onClick={onMessageVendor}
           disabled={isMessagingLoading}
-          className="w-full py-3 border border-zinc-800 text-[10px] font-mono tracking-[0.2em] uppercase hover:bg-zinc-800/50 hover:border-[var(--theme-primary)] transition-all flex items-center justify-center gap-2 group disabled:opacity-50"
+          className="w-full py-2.5 sm:py-3 border border-zinc-800 text-[10px] font-mono tracking-[0.2em] uppercase hover:bg-zinc-800/50 hover:border-[var(--theme-primary)] transition-all flex items-center justify-center gap-2 group disabled:opacity-50"
         >
           {isMessagingLoading ? (
              <div className="h-4 w-4 border-2 border-[var(--theme-primary)] border-t-transparent rounded-sm animate-spin" />

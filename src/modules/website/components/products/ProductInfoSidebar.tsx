@@ -332,18 +332,18 @@ export default function ProductInfoSidebar({
               <ProductShareButton product={product} />
             </div>
           </div>
-          <h1 className="text-3xl md:text-4xl font-black tracking-tight text-foreground leading-[1.1]">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-foreground leading-[1.1]">
             {product.name}
           </h1>
         </div>
 
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex items-baseline gap-2">
-            <span className="text-4xl font-black text-primary">
+            <span className="text-2xl sm:text-3xl md:text-4xl font-black text-primary">
               ₦{Number(displayPrice).toLocaleString()}
             </span>
             {displayOriginalPrice && (
-              <span className="text-xl font-medium text-muted-foreground line-through decoration-rose-500/30">
+              <span className="text-base sm:text-xl font-medium text-muted-foreground line-through decoration-rose-500/30">
                 ₦{Number(displayOriginalPrice).toLocaleString()}
               </span>
             )}
@@ -564,22 +564,22 @@ export default function ProductInfoSidebar({
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
           {/* Quantity Selector */}
-          <div className="bg-muted/50 dark:bg-neutral-800 rounded-sm flex items-center justify-between p-1 border border-border/40 dark:border-white/10 h-14 sm:w-fit">
+          <div className="bg-muted/50 dark:bg-neutral-800 rounded-sm flex items-center justify-between p-1 border border-border/40 dark:border-white/10 h-12 sm:w-fit">
             <Button
               variant="ghost"
               size="icon"
-              className="rounded-sm h-12 w-12 hover:bg-background dark:hover:bg-neutral-700  text-muted-foreground"
+              className="rounded-sm h-10 w-10 hover:bg-background dark:hover:bg-neutral-700  text-muted-foreground"
               onClick={() => setQuantity((q) => Math.max(1, q - 1))}
             >
               <Minus className="h-4 w-4" />
             </Button>
-            <span className="font-bold text-lg w-12 text-center text-foreground">
+            <span className="font-bold text-base w-12 text-center text-foreground">
               {quantity}
             </span>
             <Button
               variant="ghost"
               size="icon"
-              className="rounded-sm h-12 w-12 hover:bg-background dark:hover:bg-neutral-700  text-muted-foreground"
+              className="rounded-sm h-10 w-10 hover:bg-background dark:hover:bg-neutral-700  text-muted-foreground"
               onClick={() =>
                 setQuantity((q) => Math.min(q + 1, currentStock || 999))
               }
@@ -588,7 +588,7 @@ export default function ProductInfoSidebar({
             </Button>
           </div>
 
-          <div className="flex flex-1 gap-3">
+          <div className="flex flex-1 gap-3 min-w-0">
             <Button
               size="lg"
               disabled={
@@ -598,17 +598,17 @@ export default function ProductInfoSidebar({
                   (!allOptionsSelected || (matchedVariant?.stock ?? 0) <= 0))
               }
               onClick={handleAddToCart}
-              className="flex-1 rounded-sm bg-emerald-600 text-white hover:bg-emerald-700 h-14 text-base font-black  -emerald-200/20 group relative overflow-hidden active:scale-95 transition-all"
+              className="flex-1 min-w-0 rounded-sm bg-emerald-600 text-white hover:bg-emerald-700 h-12 text-sm sm:text-base font-black group relative overflow-hidden active:scale-95 transition-all"
             >
                 {addingToCart ? (
                   <div className="flex items-center gap-2">
-                    <div className="h-5 w-5 border-2 border-white/30 border-t-white rounded-sm animate-spin" />
+                    <div className="h-4 w-4 border-2 border-white/30 border-t-white rounded-sm animate-spin" />
                     Adding...
                   </div>
                 ) : (
                   <div className="flex items-center gap-2">
-                    <ShoppingCart className="h-5 w-5" />
-                    <span>
+                    <ShoppingCart className="h-4 w-4 sm:h-5 sm:w-5 shrink-0" />
+                    <span className="truncate">
                       {hasNewOptions && !allOptionsSelected
                         ? "Select Options First"
                         : "Add to Cart"}
@@ -623,15 +623,15 @@ export default function ProductInfoSidebar({
               onClick={toggleWishlist}
               title={liked ? "Remove from Favorites" : "Add to Favorites"}
               className={cn(
-                "h-14 w-14 shrink-0 rounded-sm border-2 transition-all active:scale-90",
+                "h-12 w-12 shrink-0 rounded-sm border-2 transition-all active:scale-90",
                 liked
-                  ? "bg-rose-50 dark:bg-rose-950/30 border-rose-100 dark:border-rose-900/50 text-rose-500 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-950/50  -rose-200/20 dark:-rose-900/20"
+                  ? "bg-rose-50 dark:bg-rose-950/30 border-rose-100 dark:border-rose-900/50 text-rose-500 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-950/50"
                   : "hover:border-primary/50 text-muted-foreground",
               )}
             >
               <Heart
                 className={cn(
-                  "h-6 w-6 transition-transform duration-300",
+                  "h-5 w-5 transition-transform duration-300",
                   liked && "fill-current scale-110",
                 )}
               />
@@ -643,13 +643,13 @@ export default function ProductInfoSidebar({
               onClick={handleMessageVendor}
               disabled={isContactingVendor}
               title="Message Vendor"
-              className="h-14 w-14 shrink-0 rounded-sm border-2 transition-all active:scale-90 hover:border-primary/50 text-muted-foreground"
+              className="h-12 w-12 shrink-0 rounded-sm border-2 transition-all active:scale-90 hover:border-primary/50 text-muted-foreground"
             >
               <div>
                 {isContactingVendor ? (
-                  <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                  <Loader2 className="h-5 w-5 animate-spin text-primary" />
                 ) : (
-                  <MessageSquare className="h-6 w-6" />
+                  <MessageSquare className="h-5 w-5" />
                 )}
               </div>
             </Button>

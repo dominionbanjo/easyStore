@@ -99,7 +99,7 @@ export default function DefaultProductTemplate({
         {/* ─── REVIEWS ─── */}
         <div className="mt-16 md:mt-24">
           <div className="flex items-center gap-4 mb-8">
-            <h2 className="text-2xl md:text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
+            <h2 className="text-lg sm:text-2xl md:text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
               Customer Reviews
             </h2>
             <div className="h-px flex-1 bg-zinc-200 dark:bg-zinc-800" />
@@ -121,7 +121,7 @@ export default function DefaultProductTemplate({
               <span className="text-[var(--theme-primary)] font-bold tracking-wider uppercase text-sm mb-2 block">
                 Discover More
               </span>
-              <h2 className="text-3xl md:text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
+              <h2 className="text-xl sm:text-3xl md:text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
                 From {store.store_name}
               </h2>
             </div>

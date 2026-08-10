@@ -61,7 +61,7 @@ export default function ReviewsSection({
         {/* ─── Header & Stats ─── */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div className="space-y-1">
-            <h2 className="text-3xl font-black tracking-tight text-foreground">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-black tracking-tight text-foreground">
               Customer Reviews
             </h2>
             <div className="flex items-center gap-4">
@@ -70,7 +70,7 @@ export default function ReviewsSection({
                   {[...Array(5)].map((_, i) => (
                     <Star
                       key={i}
-                      className={`h-5 w-5 ${
+                      className={`h-4 w-4 sm:h-5 sm:w-5 ${
                         i < Math.round(ratingAverage)
                           ? "fill-yellow-400 stroke-yellow-400"
                           : "fill-muted stroke-muted-foreground/20"
@@ -78,7 +78,7 @@ export default function ReviewsSection({
                     />
                   ))}
                 </div>
-                <span className="font-bold text-xl">
+                <span className="font-bold text-base sm:text-xl">
                   {ratingAverage.toFixed(1)}
                 </span>
               </div>
@@ -93,9 +93,9 @@ export default function ReviewsSection({
             <DialogTrigger asChild>
               <Button
                 size="lg"
-                className="rounded-sm bg-primary text-white hover:bg-primary/90   transition-all font-bold px-8 h-14"
+                className="rounded-sm bg-primary text-white hover:bg-primary/90   transition-all font-bold px-5 sm:px-8 h-11 sm:h-14"
               >
-                <MessageSquarePlus className="w-5 h-5 mr-3" />
+                <MessageSquarePlus className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3" />
                 Write a Review
               </Button>
             </DialogTrigger>
@@ -150,7 +150,7 @@ export default function ReviewsSection({
               <div className="w-20 h-20 rounded-sm bg-muted flex items-center justify-center mb-6">
                 <MessageSquarePlus className="w-10 h-10 text-muted-foreground" />
               </div>
-              <h3 className="text-2xl font-bold text-foreground">
+              <h3 className="text-lg sm:text-2xl font-bold text-foreground">
                 Be the first to review!
               </h3>
               <p className="text-muted-foreground mt-2 max-w-sm">
@@ -159,7 +159,7 @@ export default function ReviewsSection({
               </p>
               <Button
                 variant="link"
-                className="mt-4 text-primary font-bold text-lg"
+                className="mt-4 text-primary font-bold text-sm sm:text-lg"
                 onClick={() => setOpen(true)}
               >
                 Start your review now

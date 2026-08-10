@@ -39,6 +39,13 @@ export function BottomNav() {
     dispatch(setMobileMenuOpen(true));
   };
 
+  // Tapping the nav item of the page you're already on scrolls back to top.
+  const handleNavClick = (path: string) => {
+    if (location.pathname === path) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
   // 🚀 Auto-preload mobile routes on mount
   useEffect(() => {
     const triggerPreloads = async () => {
@@ -76,6 +83,7 @@ export function BottomNav() {
             <NavLink
               key={item.path}
               to={item.path}
+              onClick={() => handleNavClick(item.path)}
               className={({ isActive }) =>
                 cn(
                   "flex flex-col items-center justify-center gap-1 min-w-[64px] transition-all duration-300 relative",

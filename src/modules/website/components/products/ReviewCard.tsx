@@ -21,7 +21,7 @@ export function ReviewCard({ review }: ReviewCardProps) {
         <div className="flex flex-col sm:flex-row gap-6">
           {/* User Info & Avatar */}
           <div className="flex sm:flex-col items-center sm:items-center gap-4 shrink-0 sm:w-32">
-            <Avatar className="w-16 h-16 border-2 border-primary/10  group-hover:scale-110 transition-transform duration-300">
+            <Avatar className="w-12 h-12 sm:w-16 sm:h-16 border-2 border-primary/10  group-hover:scale-110 transition-transform duration-300">
               <AvatarImage
                 src={review.user.avatar || ""}
                 alt={review.user.first_name}
@@ -65,7 +65,7 @@ export function ReviewCard({ review }: ReviewCardProps) {
 
             <div className="relative">
               <div className="absolute -left-4 top-0 w-1 h-0 group-hover:h-full bg-primary/20 transition-all duration-500 rounded-sm hidden sm:block" />
-              <p className="text-lg text-foreground/80 leading-relaxed italic">
+              <p className="text-sm sm:text-base md:text-lg text-foreground/80 leading-relaxed italic">
                 "{review.comment}"
               </p>
             </div>

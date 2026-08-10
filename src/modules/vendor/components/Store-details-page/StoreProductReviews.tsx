@@ -62,7 +62,7 @@ export function StoreProductReviews({
         {/* ─── Header & Stats ─── */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div className="space-y-1">
-            <h2 className="text-2xl md:text-3xl font-black tracking-tight text-zinc-900 dark:text-zinc-100">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-black tracking-tight text-zinc-900 dark:text-zinc-100">
               Customer Reviews
             </h2>
             <div className="flex items-center gap-4">
@@ -71,7 +71,7 @@ export function StoreProductReviews({
                   {[...Array(5)].map((_, i) => (
                     <Star
                       key={i}
-                      className={`h-5 w-5 ${
+                      className={`h-4 w-4 sm:h-5 sm:w-5 ${
                         i < Math.round(ratingAverage)
                           ? "fill-[var(--theme-primary)] stroke-[var(--theme-primary)]"
                           : "fill-zinc-200 stroke-zinc-200 dark:fill-zinc-800 dark:stroke-zinc-800"
@@ -79,7 +79,7 @@ export function StoreProductReviews({
                     />
                   ))}
                 </div>
-                <span className="font-bold text-xl text-zinc-900 dark:text-zinc-100">
+                <span className="font-bold text-base sm:text-xl text-zinc-900 dark:text-zinc-100">
                   {ratingAverage.toFixed(1)}
                 </span>
               </div>
@@ -94,9 +94,9 @@ export function StoreProductReviews({
             <DialogTrigger asChild>
               <Button
                 size="lg"
-                className="rounded-sm bg-[var(--theme-primary)] text-white hover:opacity-90  transition-all font-bold px-8 h-12 md:h-14 border border-black/10 dark:border-white/10"
+                className="rounded-sm bg-[var(--theme-primary)] text-white hover:opacity-90  transition-all font-bold px-5 sm:px-8 h-11 sm:h-12 md:h-14 border border-black/10 dark:border-white/10"
               >
-                <MessageSquarePlus className="w-5 h-5 mr-3" />
+                <MessageSquarePlus className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3" />
                 Write a Review
               </Button>
             </DialogTrigger>
@@ -151,7 +151,7 @@ export function StoreProductReviews({
               <div className="w-16 h-16 rounded-sm bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center mb-4">
                 <MessageSquarePlus className="w-8 h-8 text-[var(--theme-primary)]" />
               </div>
-              <h3 className="text-xl md:text-2xl font-bold text-zinc-900 dark:text-zinc-100">
+              <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-zinc-900 dark:text-zinc-100">
                 Be the first to review!
               </h3>
               <p className="text-zinc-500 mt-2 max-w-sm text-sm">

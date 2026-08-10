@@ -63,16 +63,16 @@ export function DefaultInfo({
           )}
         </div>
 
-        <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-zinc-900 dark:text-white mb-6 leading-[1.15] tracking-tight">
+        <h1 className="text-2xl sm:text-3xl lg:text-5xl font-extrabold text-zinc-900 dark:text-white mb-6 leading-[1.15] tracking-tight">
           {uiProduct.name}
         </h1>
 
-        <div className="flex items-end gap-4">
-          <span className="text-4xl font-black text-[var(--theme-primary)] tabular-nums tracking-tight">
+        <div className="flex items-end gap-4 flex-wrap">
+          <span className="text-2xl sm:text-3xl md:text-4xl font-black text-[var(--theme-primary)] tabular-nums tracking-tight">
             ₦{displayPrice?.toLocaleString()}
           </span>
           {displayOriginalPrice && (
-            <span className="text-xl text-zinc-400 line-through tabular-nums mb-1 font-medium">
+            <span className="text-base sm:text-xl text-zinc-400 line-through tabular-nums mb-1 font-medium">
               ₦{displayOriginalPrice.toLocaleString()}
             </span>
           )}
@@ -170,21 +170,21 @@ export function DefaultInfo({
       {/* Actions */}
       <div className="space-y-6 mt-10">
         <div className="flex flex-col sm:flex-row gap-4">
-          <div className="flex items-center justify-between border-2 border-zinc-200 dark:border-zinc-800 rounded-sm bg-zinc-50 dark:bg-zinc-950 p-1 w-full sm:w-40 shrink-0">
+          <div className="flex items-center justify-between border-2 border-zinc-200 dark:border-zinc-800 rounded-sm bg-zinc-50 dark:bg-zinc-950 p-1 w-full sm:w-40 shrink-0 h-11 sm:h-12">
             <button
               onClick={() => setQuantity(Math.max(1, quantity - 1))}
-              className="w-12 h-12 flex items-center justify-center text-zinc-500 hover:text-zinc-900 dark:hover:text-white rounded-sm hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors"
+              className="w-10 h-10 flex items-center justify-center text-zinc-500 hover:text-zinc-900 dark:hover:text-white rounded-sm hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors"
             >
               <Minus className="w-4 h-4" />
             </button>
-            <span className="font-bold text-lg text-zinc-900 dark:text-white w-10 text-center">
+            <span className="font-bold text-base text-zinc-900 dark:text-white w-10 text-center">
               {quantity}
             </span>
             <button
               onClick={() =>
                 setQuantity(Math.min(currentStock || 1, quantity + 1))
               }
-              className="w-12 h-12 flex items-center justify-center text-zinc-500 hover:text-zinc-900 dark:hover:text-white rounded-sm hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors"
+              className="w-10 h-10 flex items-center justify-center text-zinc-500 hover:text-zinc-900 dark:hover:text-white rounded-sm hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors"
             >
               <Plus className="w-4 h-4" />
             </button>
@@ -194,15 +194,15 @@ export function DefaultInfo({
             <button
               disabled={currentStock <= 0 || addingToCart}
               onClick={handleAddToCart}
-              className="w-full h-12 bg-[var(--theme-primary)] text-white font-bold text-lg rounded-sm hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:bg-zinc-100 dark:disabled:bg-zinc-800 disabled:text-zinc-400 disabled:translate-y-0 disabled:"
+              className="w-full h-11 sm:h-12 bg-[var(--theme-primary)] text-white font-bold text-sm sm:text-base rounded-sm hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:bg-zinc-100 dark:disabled:bg-zinc-800 disabled:text-zinc-400 disabled:translate-y-0 disabled:"
             >
               {addingToCart ? (
-                <div className="h-5 w-5 border-2 border-white/30 border-t-white rounded-sm animate-spin" />
+                <div className="h-4 w-4 sm:h-5 sm:w-5 border-2 border-white/30 border-t-white rounded-sm animate-spin" />
               ) : currentStock <= 0 ? (
                 "Out of Stock"
               ) : (
                 <>
-                  <ShoppingCart className="w-5 h-5" />
+                  <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5" />
                   Add to Cart
                 </>
               )}
@@ -213,7 +213,7 @@ export function DefaultInfo({
         <button
           onClick={onMessageVendor}
           disabled={isMessagingLoading}
-          className="w-full h-12 border-2 border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white font-bold rounded-sm hover:border-[var(--theme-primary)] transition-all flex items-center justify-center gap-2 disabled:opacity-40"
+          className="w-full h-11 sm:h-12 border-2 border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white font-bold rounded-sm hover:border-[var(--theme-primary)] transition-all flex items-center justify-center gap-2 disabled:opacity-40"
         >
           {isMessagingLoading ? (
             <div className="h-5 w-5 border-2 border-[var(--theme-primary)] border-t-transparent rounded-sm animate-spin" />

@@ -197,6 +197,8 @@ export interface SearchProductsArgs extends PaginationArgs {
   rating?: number;
   inStock?: boolean;
   filter?: string;
+  /** Category id or slug to scope browsing (includes child categories). */
+  category?: string;
 }
 
 export interface ProductsByCategoryArgs extends PaginationArgs {

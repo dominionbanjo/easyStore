@@ -1,4 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
+import { createPortal } from "react-dom";
 import { useSearchParams } from "react-router-dom";
 import { useForm, FormProvider } from "react-hook-form";
 import { RotateCcw } from "lucide-react";
@@ -81,6 +82,8 @@ interface SearchFiltersProps {
   /** Aggregated variant combination options from the search API response.
    *  Keys are option names (e.g. "Color", "Size"), values are unique sorted strings. */
   filters?: Record<string, string[]>;
+  /** Hide the Location (state) section — used on zone-scoped pages. */
+  showLocation?: boolean;
 }
 
 /* ───────────────── COMPONENTS ───────────────── */
@@ -93,7 +96,6 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
 } from "@/components/ui/drawer";
 
 // ... existing imports ...
@@ -101,6 +103,7 @@ import {
 export function SearchFiltersSidebar({
   className,
   filters = {},
+  showLocation = true,
 }: SearchFiltersProps) {
   return (
     <div className={cn("hidden lg:block w-full space-y-6", className)}>
@@ -122,7 +125,7 @@ export function SearchFiltersSidebar({
           <ResetButton variant="text" />
         </div>
         <VerticalScrollView className="max-h-[calc(100vh-140px)]">
-          <FilterContent filters={filters} />
+          <FilterContent filters={filters} showLocation={showLocation} />
         </VerticalScrollView>
       </div>
     </div>
@@ -131,9 +134,11 @@ export function SearchFiltersSidebar({
 
 export function MobileSearchFilters({
   filters = {},
+  showLocation = true,
 }: {
   products?: IProduct[];
   filters?: Record<string, string[]>;
+  showLocation?: boolean;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [params] = useSearchParams();
@@ -142,13 +147,20 @@ export function MobileSearchFilters({
 
   useEffect(() => {
     const handleScroll = () => {
-      // More aggressive scroll detection for different containers
       const scrollPos =
         window.scrollY ||
         document.documentElement.scrollTop ||
         document.body.scrollTop;
       const isMobile = window.innerWidth < 1024; // Align with lg breakpoint
-      setIsScrolled(scrollPos > 150 && isMobile);
+
+      if (!isMobile) {
+        setIsScrolled(false);
+        return;
+      }
+
+      // Hysteresis latch: start floating after 80px, snap back only when
+      // near the top (where the inline pill is actually visible).
+      setIsScrolled((prev) => (prev ? scrollPos > 30 : scrollPos > 80));
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -177,52 +189,67 @@ export function MobileSearchFilters({
     return count;
   }, [params]);
 
+  const openDrawer = () => setIsOpen(true);
+
+  const renderTrigger = () => {
+    if (isScrolled) {
+      // Portaled to <body> so no ancestor transform/overflow can break `fixed`.
+      return createPortal(
+        <button
+          type="button"
+          onClick={openDrawer}
+          aria-label="Refine filters"
+          className="fixed bottom-24 left-6 z-[9999] flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white shadow-[0_8px_32px_rgba(16,185,129,0.3)] border-2 border-white/20 hover:scale-105 active:scale-95 transition-transform duration-200"
+        >
+          <Setting4
+            variant="Outline"
+            color="currentColor"
+            size={20}
+            className="rotate-0"
+          />
+          {activeCount > 0 && (
+            <Badge
+              variant="default"
+              className="absolute -top-1 -right-1 bg-white text-primary font-black shadow-sm px-2 h-4 min-w-4 flex items-center justify-center rounded-sm text-[8px]"
+            >
+              {activeCount}
+            </Badge>
+          )}
+        </button>,
+        document.body,
+      );
+    }
+
+    return (
+      <div className="flex-1">
+        <button
+          type="button"
+          onClick={openDrawer}
+          className="flex w-full items-center justify-center gap-2 h-10 px-4 text-[10px] font-black uppercase tracking-widest text-foreground hover:bg-zinc-200/50 dark:hover:bg-white/5 rounded-l-full transition-colors group relative"
+        >
+          <Setting4
+            variant="Outline"
+            color="currentColor"
+            size={16}
+            className="text-primary group-hover:rotate-90 transition-transform duration-500"
+          />
+          <span>Refine</span>
+          {activeCount > 0 && (
+            <Badge
+              variant="default"
+              className="ml-1 bg-emerald-500 text-white dark:text-neutral-950 border-none relative z-10 px-2 h-4 min-w-4 flex items-center justify-center rounded-sm text-[8px]"
+            >
+              {activeCount}
+            </Badge>
+          )}
+        </button>
+      </div>
+    );
+  };
+
   return (
     <Drawer open={isOpen} onOpenChange={setIsOpen}>
-      <DrawerTrigger asChild>
-        <div
-          className={cn(
-            "transition-all duration-300",
-            isScrolled
-              ? "fixed bottom-24 left-6 z-[9999] pointer-events-auto scale-100 opacity-100"
-              : "flex-1",
-          )}
-        >
-          <button
-            className={cn(
-              "flex items-center justify-center transition-all duration-500 group relative",
-              isScrolled
-                ? "h-14 w-14 rounded-full bg-primary text-white shadow-[0_8px_32px_rgba(16,185,129,0.3)] border-2 border-white/20 hover:scale-105 active:scale-95"
-                : "w-full gap-2 h-10 px-4 text-[10px] font-black uppercase tracking-widest text-foreground hover:bg-zinc-200/50 dark:hover:bg-white/5 rounded-l-full",
-            )}
-          >
-            <Setting4
-              variant="Outline"
-              color="currentColor"
-              size={isScrolled ? 20 : 16}
-              className={cn(
-                "transition-transform duration-500",
-                !isScrolled && "text-primary group-hover:rotate-90",
-                isScrolled && "rotate-0",
-              )}
-            />
-            {!isScrolled && <span>Refine</span>}
-            {activeCount > 0 && (
-              <Badge
-                variant="default"
-                className={cn(
-                  "px-2 h-4 min-w-4 flex items-center justify-center rounded-sm text-[8px] transition-all",
-                  isScrolled
-                    ? "absolute -top-1 -right-1 bg-white text-primary font-black shadow-sm"
-                    : "ml-1 bg-emerald-500 text-white dark:text-neutral-950 border-none relative z-10",
-                )}
-              >
-                {activeCount}
-              </Badge>
-            )}
-          </button>
-        </div>
-      </DrawerTrigger>
+      {renderTrigger()}
       <DrawerContent className="max-h-[92vh] rounded-t-sm border-t-0 flex flex-col bg-card/95 backdrop-blur-xl">
         <div className="mx-auto w-12 h-1.5 rounded-sm bg-muted/30 mt-3" />
         <DrawerHeader className="text-left px-8 pt-4 pb-4 border-b border-primary/5">
@@ -258,6 +285,7 @@ export function MobileSearchFilters({
           <FilterContent
             mobile
             filters={filters}
+            showLocation={showLocation}
             onClose={() => setIsOpen(false)}
           />
         </VerticalScrollView>
@@ -330,9 +358,11 @@ function ResetButton({
 function FilterContent({
   mobile,
   filters = {},
+  showLocation = true,
 }: {
   mobile?: boolean;
   filters?: Record<string, string[]>;
+  showLocation?: boolean;
   onClose?: () => void;
 }) {
   console.log("[FilterContent] Rendered with filters:", filters);
@@ -524,38 +554,40 @@ function FilterContent({
         </div>
 
         {/* Location (State Only) */}
-        <div>
-          <Section
-            title="Location"
-            icon={<Routing variant="Outline" color="currentColor" size={16} />}
-            defaultOpen
-            isActive={
-              methods.watch("state") !== "all" && !!methods.watch("state")
-            }
-            onClear={() => {
-              setValue("state", "all");
-              updateParam("state", "");
-            }}
-          >
-            <div className="space-y-3">
-              <FormSelect
-                name="state"
-                label="State"
-                options={[
-                  { label: "All States", value: "all" },
-                  ...stateOptions,
-                ]}
-                placeholder="Select State"
-              />
-              <EffectListener
-                val={methods.watch("state")}
-                onChange={(val) =>
-                  updateParam("state", val === "all" ? "" : val)
-                }
-              />
-            </div>
-          </Section>
-        </div>
+        {showLocation && (
+          <div>
+            <Section
+              title="Location"
+              icon={<Routing variant="Outline" color="currentColor" size={16} />}
+              defaultOpen
+              isActive={
+                methods.watch("state") !== "all" && !!methods.watch("state")
+              }
+              onClear={() => {
+                setValue("state", "all");
+                updateParam("state", "");
+              }}
+            >
+              <div className="space-y-3">
+                <FormSelect
+                  name="state"
+                  label="State"
+                  options={[
+                    { label: "All States", value: "all" },
+                    ...stateOptions,
+                  ]}
+                  placeholder="Select State"
+                />
+                <EffectListener
+                  val={methods.watch("state")}
+                  onChange={(val) =>
+                    updateParam("state", val === "all" ? "" : val)
+                  }
+                />
+              </div>
+            </Section>
+          </div>
+        )}
 
         {/* Ratings */}
         <div>

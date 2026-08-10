@@ -88,7 +88,7 @@ export default function HeritageProductTemplate({
 
         {/* ─── APPRECIATION (REVIEWS) ─── */}
         <div className="mt-16 text-center">
-          <h2 className="text-3xl font-bold italic text-[#2C2622] dark:text-white mb-8 border-b border-[#EADDCE] dark:border-[#3D352B] pb-6 inline-block">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold italic text-[#2C2622] dark:text-white mb-8 border-b border-[#EADDCE] dark:border-[#3D352B] pb-6 inline-block">
             Words of Appreciation
           </h2>
           <div className="bg-white dark:bg-[#1E1A17] rounded-sm p-6 md:p-12  border border-[#EADDCE] dark:border-[#3D352B] text-left">
@@ -104,7 +104,7 @@ export default function HeritageProductTemplate({
         {/* ─── RELATED CRAFTS ─── */}
         {relatedProducts?.length > 0 && (
           <div className="mt-16 text-center">
-            <h2 className="text-3xl font-bold italic text-[#2C2622] dark:text-white mb-8">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold italic text-[#2C2622] dark:text-white mb-8">
               Similar Crafts from {store.store_name}
             </h2>
             <RelatedProductsGrid products={relatedProducts} />

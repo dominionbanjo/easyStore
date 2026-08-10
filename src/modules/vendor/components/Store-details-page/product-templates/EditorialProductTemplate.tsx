@@ -88,7 +88,7 @@ export default function EditorialProductTemplate({
         </div>
 
         <div className="max-w-4xl mx-auto text-center font-sans">
-          <h3 className="text-xl uppercase tracking-[0.3em] opacity-50 mb-12">
+          <h3 className="text-sm sm:text-xl uppercase tracking-[0.3em] opacity-50 mb-8 sm:mb-12">
             Critique & Reflections
           </h3>
           <StoreProductReviews
@@ -102,7 +102,7 @@ export default function EditorialProductTemplate({
         {relatedProducts?.length > 0 && (
           <div className="space-y-16">
             <div className="flex flex-col gap-6 pb-8 border-b-2 border-zinc-900 dark:border-white">
-              <h3 className="text-6xl md:text-8xl font-black tracking-tighter lowercase leading-none text-left">
+              <h3 className="text-3xl sm:text-5xl md:text-8xl font-black tracking-tighter lowercase leading-none text-left">
                 Further Reading
               </h3>
               <div className="flex items-center justify-between text-xs font-sans font-black tracking-[0.2em] uppercase opacity-50">
