@@ -30,7 +30,7 @@ export default function AllProductsSection() {
 
   const products = data?.data.items ?? [];
 
-  const isEmpty = !products.length && !isLoading && !isError;
+  const isEmpty = isInView && !products.length && !isLoading && !isError;
 
   const resolveImage = (image?: string | { url: string } | null): string => {
     if (!image) return FALLBACK_IMAGE;
@@ -39,11 +39,11 @@ export default function AllProductsSection() {
   };
 
   return (
-    <div ref={sectionRef}>
+    <div ref={sectionRef} data-scroll-anchor="marketplace-collective">
       <ProductSection
         title="Marketplace Collective"
         subtitle="Explore thousands of unique products from verified local businesses. Everything you need, all in one place."
-        isLoading={isLoading}
+        isLoading={!isInView || isLoading}
         isError={isError}
         isEmpty={isEmpty}
         emptyIcon={LayoutGrid}
@@ -81,8 +81,6 @@ export default function AllProductsSection() {
               vendor={product.store_name ?? "Seller"}
               storeSlug={product.store_slug}
               isFavorite={product.is_in_wishlist}
-              colors={product.colors}
-              sizes={product.sizes}
               options={product.options}
               variants={product.variants?.map((v) => ({
                 ...v,

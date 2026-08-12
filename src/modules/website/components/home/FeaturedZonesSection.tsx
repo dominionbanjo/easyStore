@@ -25,12 +25,14 @@ export default function FeaturedZonesSection({
   );
 
   const zones = data?.data.items ?? [];
-  const isEmpty = !isLoading && !isError && zones.length === 0;
+  const showLoading = !isInView || isLoading;
+  const isEmpty = isInView && !isLoading && !isError && zones.length === 0;
 
   return (
     <section
       ref={sectionRef}
-      className={`pt-8 md:pt-16 pb-8 md:pb-24 px-1 sm:px-6 overflow-hidden bg-slate-50/50 dark:bg-neutral-950 transition-colors duration-300 [content-visibility:auto] [contain-intrinsic-size:auto_500px] ${className}`}
+      data-scroll-anchor="featured-zones"
+      className={`ez-cv-section pt-8 md:pt-16 pb-8 md:pb-24 px-1 sm:px-6 overflow-hidden bg-slate-50/50 dark:bg-neutral-950 transition-colors duration-300 [content-visibility:auto] [contain-intrinsic-size:auto_500px] ${className}`}
     >
       <div className="w-full mx-auto space-y-6">
         <div className="flex flex-col gap-4 px-1">
@@ -56,7 +58,7 @@ export default function FeaturedZonesSection({
         </div>
 
         {/* Content Section */}
-        {isLoading ? (
+        {showLoading ? (
           <div className="grid gap-3 sm:gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
             {Array.from({ length: 4 }).map((_, i) => (
               <div key={i} className="space-y-4">

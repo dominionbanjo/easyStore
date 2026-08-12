@@ -26,6 +26,7 @@ import {
   PackageCheck,
   MessageSquare,
   Loader2,
+  Wallet,
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -33,6 +34,7 @@ import { extractErrorMessage } from "@/utils/errorHandler";
 import { ProductShareButton } from "./ProductShareButton";
 
 import { useAddItemToCartMutation } from "@/services/cartApi";
+import { useGetInstallmentConfigQuery } from "@/services/installmentsApi";
 import {
   useAddToWishlistMutation,
   useRemoveFromWishlistMutation,
@@ -67,13 +69,12 @@ interface ProductInfoSidebarProps {
     /* New variant options system */
     options?: { name: string; values: string[] }[] | null;
     variants?: ProductVariant[] | null;
-    /* Legacy */
-    sizes?: string[];
-    colors?: { id: string; name: string; hex: string }[];
     image?: string | null;
     is_in_wishlist?: boolean;
     slug: string;
     vendor_id?: string;
+    installment_enabled?: boolean;
+    installment_presets?: string[];
   };
 }
 
@@ -92,20 +93,25 @@ export default function ProductInfoSidebar({
     Record<string, string>
   >({});
 
-  /* Legacy */
-  const [selectedSize, setSelectedSize] = useState<string | null>(null);
-  const [selectedColor, setSelectedColor] = useState<{
-    id: string;
-    name: string;
-    hex: string;
-  } | null>(null);
-
   const [addToCart, { isLoading: addingToCart }] = useAddItemToCartMutation();
   const [addToWishlist] = useAddToWishlistMutation();
   const [removeFromWishlist] = useRemoveFromWishlistMutation();
   const [startConversation] = useStartConversationMutation();
   const [sendDirect] = useSendDirectMessageMutation();
   const [isContactingVendor, setIsContactingVendor] = useState(false);
+
+  const { data: installmentConfig } = useGetInstallmentConfigQuery();
+
+  const installmentPlanNames = useMemo(() => {
+    if (!product.installment_enabled) return [];
+    const offered = product.installment_presets ?? [];
+    if (offered.length === 0) return [];
+    const all = installmentConfig?.presets ?? [];
+    return offered
+      .map((id) => all.find((p) => p.id === id))
+      .filter((p): p is (typeof all)[number] => Boolean(p))
+      .map((p) => p.name);
+  }, [product.installment_enabled, product.installment_presets, installmentConfig]);
 
   const handleMessageVendor = async () => {
     if (!isAuthenticated) {
@@ -172,14 +178,7 @@ export default function ProductInfoSidebar({
     );
   }, [selectedOptions, product.variants, product.options, hasNewOptions]);
 
-  /* ── Legacy variant (by size) ── */
-  const legacyVariant = useMemo(() => {
-    if (hasNewOptions || !product.variants?.length || !selectedSize)
-      return null;
-    return product.variants.find((v) => v.size === selectedSize) ?? null;
-  }, [selectedSize, product.variants, hasNewOptions]);
-
-  const activeVariant = hasNewOptions ? matchedVariant : legacyVariant;
+  const activeVariant = matchedVariant;
 
   /* ── Derived display values ── */
   const displayPrice = activeVariant
@@ -227,18 +226,6 @@ export default function ProductInfoSidebar({
         return;
       }
     } else {
-      if (product.sizes?.length && !selectedSize) {
-        toast.error("Please select a size");
-        return;
-      }
-      if (product.colors?.length && !selectedColor) {
-        toast.error("Please select a color");
-        return;
-      }
-      if (activeVariant && quantity > activeVariant.stock) {
-        toast.error(`Only ${activeVariant.stock} items left for this size`);
-        return;
-      }
       if (!activeVariant && quantity > product.stock) {
         toast.error(`Only ${product.stock} items left in stock`);
         return;
@@ -255,9 +242,6 @@ export default function ProductInfoSidebar({
           price: displayPrice,
           discount_price: displayOriginalPrice ? displayPrice : null,
           quantity,
-          size: selectedSize,
-          color: selectedColor?.name,
-          color_hex: selectedColor?.hex,
           variant_id: activeVariant?.id,
           variant_options:
             hasNewOptions && Object.keys(selectedOptions).length > 0
@@ -274,8 +258,6 @@ export default function ProductInfoSidebar({
       await addToCart({
         product_id: product.id,
         quantity,
-        size: selectedSize,
-        color: selectedColor?.id,
         variant_id: activeVariant?.id,
       }).unwrap();
 
@@ -359,6 +341,19 @@ export default function ProductInfoSidebar({
             </div>
           )}
         </div>
+
+        {installmentPlanNames.length > 0 && (
+          <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground mt-2">
+            <Wallet className="w-3.5 h-3.5 text-primary/70" />
+            <span>
+              or pay in installments
+              <span className="text-muted-foreground/70">
+                {" "}
+                — {installmentPlanNames.join(", ")}
+              </span>
+            </span>
+          </div>
+        )}
       </div>
 
       {/* ─── Description ─── */}
@@ -438,100 +433,6 @@ export default function ProductInfoSidebar({
               </div>
             </div>
           ))}
-
-        {/* LEGACY: Colors */}
-        {!hasNewOptions && (product.colors?.length ?? 0) > 0 && (
-          <div className="space-y-3">
-            <div className="flex justify-between items-center text-sm">
-              <span className="font-bold uppercase tracking-widest text-muted-foreground/80 text-[10px]">
-                Color:{" "}
-                <span className="text-foreground">
-                  {selectedColor?.name || "Select Color"}
-                </span>
-              </span>
-            </div>
-            <div className="flex gap-3 flex-wrap">
-              {product.colors!.map((color) => {
-                const isSelected = selectedColor?.id === color.id;
-                return (
-                  <button
-                    key={color.id}
-                    type="button"
-                    onClick={() => setSelectedColor(color)}
-                    className={cn(
-                      "group relative w-10 h-10 rounded-sm flex items-center justify-center p-0.5 transition-all duration-300",
-                      isSelected
-                        ? "ring-2 ring-primary ring-offset-2"
-                        : "ring-1 ring-border ring-offset-0 hover:ring-2 hover:ring-primary/40 hover:ring-offset-1",
-                    )}
-                  >
-                    <div
-                      className="w-full h-full rounded-sm border border-black/5"
-                      style={{ backgroundColor: color.hex }}
-                    />
-                    {isSelected && (
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <Check
-                          className={cn(
-                            "h-4 w-4",
-                            color.hex.toLowerCase() === "#ffffff" ||
-                              color.hex.toLowerCase() === "white"
-                              ? "text-black"
-                              : "text-white",
-                          )}
-                          strokeWidth={4}
-                        />
-                      </div>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        {/* LEGACY: Sizes */}
-        {!hasNewOptions && (product.sizes?.length ?? 0) > 0 && (
-          <div className="space-y-3">
-            <div className="flex justify-between items-center text-sm">
-              <span className="font-bold uppercase tracking-widest text-muted-foreground/80 text-[10px]">
-                Size:{" "}
-                <span className="text-foreground">
-                  {selectedSize || "Select Size"}
-                </span>
-              </span>
-              <button className="text-[10px] font-bold text-primary underline underline-offset-4 uppercase tracking-wider">
-                Size Guide
-              </button>
-            </div>
-            <div className="flex gap-2.5 flex-wrap">
-              {product.sizes!.map((size) => {
-                const isSelected = selectedSize === size;
-                const sizeVariant = product.variants?.find(
-                  (v) => v.size === size,
-                );
-                const outOfStock = sizeVariant ? sizeVariant.stock <= 0 : false;
-                return (
-                  <button
-                    key={size}
-                    onClick={() => !outOfStock && setSelectedSize(size)}
-                    disabled={outOfStock}
-                    className={cn(
-                      "min-w-[50px] h-11 px-4 rounded-sm text-sm font-bold transition-all duration-200 border-2",
-                      isSelected
-                        ? "bg-primary text-white border-primary   scale-105"
-                        : outOfStock
-                          ? "bg-muted text-muted-foreground border-border cursor-not-allowed opacity-40 line-through"
-                          : "bg-background text-foreground border-border hover:border-primary/50",
-                    )}
-                  >
-                    {size}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        )}
       </div>
 
       {/* ─── Stock Status (Single placement below all selections) ─── */}

@@ -53,6 +53,7 @@ export interface IOrder {
 
   payment_reference?: string | null;
   payment_url?: string | null;
+  payment_plan_id?: string | null;
 
   escrow_id?: string | null;
   delivery_id?: string | null;
@@ -168,6 +169,7 @@ export interface ICheckoutSummaryVendor {
     duration: string | null;
   }[];
   escrow_enabled: boolean;
+  installments_enabled: boolean;
 }
 
 export interface CheckoutSummaryResponse {
@@ -288,6 +290,10 @@ export const ordersApi = apiManager.injectEndpoints({
           idempotent?: boolean;
           message?: string;
           orders?: IOrder[];
+          /** True when the reference was an installment deposit. */
+          installment?: boolean;
+          plan_id?: string;
+          order_id?: string;
         };
         message?: string;
       },

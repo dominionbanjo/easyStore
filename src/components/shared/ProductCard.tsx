@@ -52,8 +52,6 @@ export interface ProductCardProps {
   vendor?: string;
   storeSlug?: string;
   avatar?: string;
-  colors?: { id: string; name: string; hex: string }[];
-  sizes?: string[];
   options?: { name: string; values: string[] }[] | null;
   variants?:
     | {
@@ -86,8 +84,6 @@ const ProductCardComponent = ({
   vendor = "Seller",
   storeSlug,
   avatar,
-  colors = [],
-  sizes = [],
   options = null,
   variants = null,
   isOnSale = false,
@@ -111,8 +107,6 @@ const ProductCardComponent = ({
 
   /* ── STATE ── */
   const [showVariantModal, setShowVariantModal] = useState(false);
-  const [selectedSize, setSelectedSize] = useState<string | null>(null);
-  const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [selectedOptions, setSelectedOptions] = useState<
     Record<string, string>
   >({});
@@ -162,18 +156,11 @@ const ProductCardComponent = ({
 
   const handleAddToCart = useCallback(async () => {
     // If product has variants, require selection
-    const hasLegacyVariants =
-      (!variants || variants.length === 0) &&
-      ((colors && colors.length > 0) || (sizes && sizes.length > 0));
     const hasNewVariants = derivedOptions.length > 0;
-    const hasVariants = hasLegacyVariants || hasNewVariants;
+    const hasVariants = hasNewVariants;
 
     if (hasVariants && !showVariantModal) {
-      if (!hasNewVariants) {
-        // Initialize defaults if only 1 option available (legacy)
-        if (sizes?.length === 1) setSelectedSize(sizes[0]);
-        if (colors?.length === 1) setSelectedColor(colors[0].id);
-      } else if (hasNewVariants) {
+      if (hasNewVariants) {
         const initialSelections: Record<string, string> = {};
         derivedOptions.forEach((opt) => {
           if (opt.values.length === 1)
@@ -193,15 +180,6 @@ const ProductCardComponent = ({
         );
         if (missingOptions.length > 0) {
           toast.error(`Please select a ${missingOptions[0].name}`);
-          return;
-        }
-      } else {
-        if (sizes?.length && !selectedSize) {
-          toast.error("Please select a size");
-          return;
-        }
-        if (colors?.length && !selectedColor) {
-          toast.error("Please select a color");
           return;
         }
       }
@@ -248,9 +226,6 @@ const ProductCardComponent = ({
           price: finalPrice,
           discount_price: finalDiscountPrice,
           quantity: 1,
-          size: selectedSize,
-          color: colors?.find((c) => c.id === selectedColor)?.name,
-          color_hex: colors?.find((c) => c.id === selectedColor)?.hex,
           variant_id: variantId,
           variant_options: selectedOptions,
           image,
@@ -258,8 +233,6 @@ const ProductCardComponent = ({
       );
       toast.success(`${name} added to cart`);
       setShowVariantModal(false);
-      setSelectedSize(null);
-      setSelectedColor(null);
       setSelectedOptions({});
       return;
     }
@@ -268,15 +241,11 @@ const ProductCardComponent = ({
       await addItemToCart({
         product_id: id,
         quantity: 1,
-        size: selectedSize,
-        color: selectedColor,
         variant_id: variantId,
       }).unwrap();
 
       toast.success(`${name} added to cart`);
       setShowVariantModal(false);
-      setSelectedSize(null);
-      setSelectedColor(null);
       setSelectedOptions({});
     } catch (error: unknown) {
       const message =
@@ -296,11 +265,7 @@ const ProductCardComponent = ({
     price,
     discountPrice,
     variants,
-    colors,
-    sizes,
     derivedOptions,
-    selectedSize,
-    selectedColor,
     selectedOptions,
     showVariantModal,
     isAuthenticated,
@@ -641,74 +606,6 @@ const ProductCardComponent = ({
                   </div>
                 ))
               : null}
-
-            {/* LEGACY: Sizes */}
-            {derivedOptions.length === 0 && sizes && sizes.length > 0 && (
-              <div className="space-y-2.5">
-                <div className="flex justify-between items-center">
-                  <Label className="text-zinc-500 font-semibold text-xs uppercase tracking-wider">
-                    Size
-                  </Label>
-                  {selectedSize && (
-                    <span className="text-xs font-bold text-emerald-600">
-                      {selectedSize}
-                    </span>
-                  )}
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {sizes.map((s) => (
-                    <button
-                      key={s}
-                      onClick={() => setSelectedSize(s)}
-                      className={cn(
-                        "px-4 py-2 rounded-sm text-sm font-medium transition-all border",
-                        selectedSize === s
-                          ? "bg-zinc-900 text-white border-zinc-900 scale-105"
-                          : "bg-white text-zinc-600 border-zinc-200 hover:border-zinc-400 dark:bg-zinc-800 dark:text-zinc-200 dark:border-zinc-700",
-                      )}
-                    >
-                      {s}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* LEGACY: Colors */}
-            {derivedOptions.length === 0 && colors && colors.length > 0 && (
-              <div className="space-y-2.5">
-                <div className="flex justify-between items-center">
-                  <Label className="text-zinc-500 font-semibold text-xs uppercase tracking-wider">
-                    Color
-                  </Label>
-                  {selectedColor && (
-                    <span className="text-xs font-bold text-zinc-900 dark:text-zinc-100">
-                      {colors.find((c) => c.id === selectedColor)?.name}
-                    </span>
-                  )}
-                </div>
-                <div className="flex flex-wrap gap-3">
-                  {colors.map((c) => (
-                    <button
-                      key={c.id}
-                      onClick={() => setSelectedColor(c.id)}
-                      className={cn(
-                        "w-10 h-10 rounded-sm border-2 transition-all relative flex items-center justify-center",
-                        selectedColor === c.id
-                          ? "border-emerald-500 ring-2 ring-emerald-500/20 scale-110"
-                          : "border-transparent hover:scale-110",
-                      )}
-                      style={{ backgroundColor: c.hex }}
-                      title={c.name}
-                    >
-                      {selectedColor === c.id && (
-                        <Check className="w-4 h-4 text-white" />
-                      )}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
 
           <DialogFooter>

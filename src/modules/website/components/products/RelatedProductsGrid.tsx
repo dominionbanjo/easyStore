@@ -55,8 +55,6 @@ export default function RelatedProductsGrid({
               stock={product.stock ?? 0}
               category={product.category ?? ""}
               isFavorite={product.is_in_wishlist}
-              colors={product.colors}
-              sizes={product.sizes}
               options={product.options}
               variants={product.variants?.map((v) => ({
                 ...v,

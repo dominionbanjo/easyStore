@@ -47,14 +47,6 @@ export interface IProduct {
       }[]
     | null;
 
-  /* legacy */
-  colors?: {
-    id: string;
-    name: string;
-    hex: string;
-  }[];
-  sizes?: string[];
-
   category?: string;
   on_sale?: boolean;
 }
@@ -78,16 +70,12 @@ export interface IProductDetails extends IProduct {
 
   options?: { name: string; values: string[] }[] | null;
 
-  /* legacy */
-  colors?: {
-    id: string;
-    name: string;
-    hex: string;
-  }[];
-  sizes?: string[];
-
   shipping_note?: string | null;
   returns_note?: string | null;
+
+  installment_enabled?: boolean;
+  installment_preset_id?: string;
+  installment_presets?: string[];
 
   rating_count?: number;
   review_count?: number;
@@ -199,6 +187,8 @@ export interface SearchProductsArgs extends PaginationArgs {
   filter?: string;
   /** Category id or slug to scope browsing (includes child categories). */
   category?: string;
+  /** Store UUID — scopes the search to a single store. */
+  store_id?: string;
 }
 
 export interface ProductsByCategoryArgs extends PaginationArgs {
@@ -207,16 +197,6 @@ export interface ProductsByCategoryArgs extends PaginationArgs {
 
 export interface ProductsByStoreArgs extends PaginationArgs {
   storeId: string;
-}
-
-/* ───────────────── MUTATIONS ───────────────── */
-export interface CreateProductArgs {
-  data: FormData;
-}
-
-export interface UpdateProductArgs {
-  id: string;
-  data: Partial<CreateProductCloudinaryArgs>;
 }
 
 /* ───────────────── SEARCH PAGINATION ───────────────── */
@@ -299,10 +279,6 @@ export interface IStoreProduct {
       }[]
     | null;
 
-  /* legacy */
-  colors?: string[] | null;
-  sizes?: string[] | null;
-
   shipping_note: string | null;
   returns_note: string | null;
   status?: "active" | "inactive" | "draft";
@@ -334,7 +310,7 @@ export interface IStoreProductsResponse {
 }
 
 /* ───────────────── PRODUCT DRAFTS ───────────────── */
-export type SaveProductDraftArgs = Partial<CreateProductCloudinaryArgs> & {
+export type SaveProductDraftArgs = Partial<CreateProductArgs> & {
   id?: string;
 };
 
@@ -383,14 +359,14 @@ export interface IProductDraftsResponse {
   };
 }
 
-// types/product/createProductCloudinary.ts
+// types/product/createProduct.ts
 
 export type CloudinaryAsset = {
   url: string;
   public_id: string;
 };
 
-export type CreateProductCloudinaryArgs = {
+export type CreateProductArgs = {
   /* ───────── REQUIRED CORE ───────── */
   category_id: string;
   name: string;
@@ -415,16 +391,18 @@ export type CreateProductCloudinaryArgs = {
     discount_price?: number | null;
   }[];
 
-  /* legacy */
-  sizes?: string[];
-  colors?: string[];
-
   /* ───────── SPECIFICATIONS ───────── */
   specs?: Record<string, string> | null;
 
   /* ───────── SHIPPING ───────── */
   shipping_note?: string | null;
   returns_note?: string | null;
+
+  /* ───────── INSTALLMENTS ───────── */
+  installment_enabled?: boolean;
+  installment_preset_id?: string;
+  installment_presets?: string[];
+
   /* ───────── MEDIA ───────── */
   image?: CloudinaryAsset | null;
   gallery?: CloudinaryAsset[];
@@ -507,10 +485,6 @@ export interface VendorProductSearchItem {
         discount_price?: number;
       }[]
     | null;
-
-  /* legacy */
-  colors?: unknown | null;
-  sizes?: unknown | null;
 
   shipping_note: string | null;
   returns_note: string | null;

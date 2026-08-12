@@ -30,6 +30,7 @@ export const apiManager = createApi({
     "Payout",
     "Staff",
     "Order",
+    "Installments",
     "SchoolZone",
     "Categories",
     "Colors",

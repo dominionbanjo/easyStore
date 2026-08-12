@@ -2,9 +2,10 @@ import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import { useForm, FormProvider } from "react-hook-form";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2, ShieldCheck, Wallet } from "lucide-react";
 import { Modal } from "@/components/shared/Modal";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 import { FormInput } from "@/components/shared/form/FormInput";
 import { FormSelect } from "@/components/shared/form/FormSelect";
 import { useCreateStoreMutation, useLazyCheckStoreNameQuery } from "@/services/storeApi";
@@ -26,6 +27,8 @@ interface CreateStoreForm {
   store_name: string;
   description: string;
   current_sales_channel: string;
+  escrow_enabled: boolean;
+  installments_enabled: boolean;
 }
 
 const SALES_CHANNELS = [
@@ -46,6 +49,8 @@ export function CreateStoreModal({ open, onOpenChange }: CreateStoreModalProps) 
       store_name: "",
       description: "",
       current_sales_channel: "",
+      escrow_enabled: false,
+      installments_enabled: false,
     },
   });
 
@@ -168,6 +173,68 @@ export function CreateStoreModal({ open, onOpenChange }: CreateStoreModalProps) 
             options={SALES_CHANNELS}
             placeholder="Select a sales channel"
           />
+
+          {/* ─── Payment Preferences ─── */}
+          <div className="pt-2 space-y-3">
+            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
+              Payment Preferences
+            </p>
+
+            <div className="flex items-start justify-between gap-4 p-3.5 rounded-sm border border-border/40 bg-muted/20">
+              <div className="flex gap-3 min-w-0">
+                <div className="p-2 rounded-sm bg-primary/10 text-primary shrink-0">
+                  <ShieldCheck className="h-4 w-4" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-xs font-black uppercase tracking-tight text-foreground">
+                    Escrow Protection
+                  </p>
+                  <p className="text-[11px] text-muted-foreground font-medium leading-relaxed mt-0.5">
+                    Buyer funds are held safely by EazyStore until delivery is
+                    confirmed, then released to you. Recommended for building
+                    buyer trust. (Optional — turn on anytime in Settings.)
+                  </p>
+                </div>
+              </div>
+              <div className="shrink-0 pt-1">
+                <Switch
+                  checked={methods.watch("escrow_enabled")}
+                  onCheckedChange={(val) =>
+                    methods.setValue("escrow_enabled", val, { shouldDirty: true })
+                  }
+                />
+              </div>
+            </div>
+
+            <div className="flex items-start justify-between gap-4 p-3.5 rounded-sm border border-border/40 bg-muted/20">
+              <div className="flex gap-3 min-w-0">
+                <div className="p-2 rounded-sm bg-primary/10 text-primary shrink-0">
+                  <Wallet className="h-4 w-4" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-xs font-black uppercase tracking-tight text-foreground">
+                    Pay in Installments
+                  </p>
+                  <p className="text-[11px] text-muted-foreground font-medium leading-relaxed mt-0.5">
+                    Let buyers pay for products in parts — a deposit now, then
+                    scheduled payments. The product stays reserved for them and
+                    you ship only when fully paid. (Optional — turn on anytime
+                    in Settings, then enable it per product.)
+                  </p>
+                </div>
+              </div>
+              <div className="shrink-0 pt-1">
+                <Switch
+                  checked={methods.watch("installments_enabled")}
+                  onCheckedChange={(val) =>
+                    methods.setValue("installments_enabled", val, {
+                      shouldDirty: true,
+                    })
+                  }
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </FormProvider>
     </Modal>

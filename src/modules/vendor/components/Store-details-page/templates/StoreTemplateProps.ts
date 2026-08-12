@@ -2,13 +2,13 @@ import type { RefObject } from "react";
 import type {
   IStoreDetails,
   IStoreCategory,
-  IStoreProduct,
 } from "@/types/Store/storeTypes";
+import type { IProduct } from "@/types/product/productTypes";
 
 export interface StoreTemplateProps {
   store: IStoreDetails;
   categories: IStoreCategory[];
-  products: IStoreProduct[];
+  products: IProduct[];
   productsTotal: number;
   isProductsLoading: boolean;
   isProductsFetching: boolean;
@@ -21,6 +21,12 @@ export interface StoreTemplateProps {
   isSearching: boolean;
   productsKey: string;
   sentinelRef: RefObject<HTMLDivElement | null>;
+
+  // List state (from useInfiniteList)
+  hasLoaded: boolean;
+  isInitialError: boolean;
+  pageLoadFailed: boolean;
+  loadMore: () => void;
 
   // Cart info
   onCartOpen: () => void;

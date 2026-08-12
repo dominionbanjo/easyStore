@@ -31,8 +31,6 @@ export interface ProductActionProps {
   slug: string;
   options?: { name: string; values: string[] }[] | null;
   variants?: ProductVariant[] | null;
-  sizes?: string[];
-  colors?: { id: string; name: string; hex: string }[];
   is_in_wishlist?: boolean;
 }
 
@@ -46,12 +44,6 @@ export function useProductActions(product: ProductActionProps) {
   const [selectedOptions, setSelectedOptions] = useState<
     Record<string, string>
   >({});
-  const [selectedSize, setSelectedSize] = useState<string | null>(null);
-  const [selectedColor, setSelectedColor] = useState<{
-    id: string;
-    name: string;
-    hex: string;
-  } | null>(null);
 
   const [addItemToCart, { isLoading: addingToCart }] =
     useAddItemToCartMutation();
@@ -75,13 +67,7 @@ export function useProductActions(product: ProductActionProps) {
     );
   }, [selectedOptions, product.variants, product.options, hasNewOptions]);
 
-  const legacyVariant = useMemo(() => {
-    if (hasNewOptions || !product.variants?.length || !selectedSize)
-      return null;
-    return product.variants.find((v) => v.size === selectedSize) ?? null;
-  }, [selectedSize, product.variants, hasNewOptions]);
-
-  const activeVariant = hasNewOptions ? matchedVariant : legacyVariant;
+  const activeVariant = matchedVariant;
 
   const displayPrice = activeVariant
     ? (activeVariant.discount_price ?? activeVariant.price)
@@ -125,18 +111,6 @@ export function useProductActions(product: ProductActionProps) {
         return;
       }
     } else {
-      if (product.sizes?.length && !selectedSize) {
-        toast.error("Please select a size");
-        return;
-      }
-      if (product.colors?.length && !selectedColor) {
-        toast.error("Please select a color");
-        return;
-      }
-      if (activeVariant && quantity > activeVariant.stock) {
-        toast.error(`Only ${activeVariant.stock} items left for this size`);
-        return;
-      }
       if (!activeVariant && quantity > product.stock) {
         toast.error(`Only ${product.stock} items left in stock`);
         return;
@@ -153,9 +127,6 @@ export function useProductActions(product: ProductActionProps) {
           price: displayPrice,
           discount_price: displayOriginalPrice ? displayPrice : null,
           quantity,
-          size: selectedSize,
-          color: selectedColor?.name,
-          color_hex: selectedColor?.hex,
           variant_id: activeVariant?.id,
           variant_options:
             hasNewOptions && Object.keys(selectedOptions).length > 0
@@ -172,8 +143,6 @@ export function useProductActions(product: ProductActionProps) {
       await addItemToCart({
         product_id: product.id,
         quantity,
-        size: selectedSize,
-        color: selectedColor?.id,
         variant_id: activeVariant?.id,
       }).unwrap();
 
@@ -214,10 +183,6 @@ export function useProductActions(product: ProductActionProps) {
     setQuantity,
     liked,
     selectedOptions,
-    selectedSize,
-    setSelectedSize,
-    selectedColor,
-    setSelectedColor,
     addingToCart,
     hasNewOptions,
     activeVariant,

@@ -23,9 +23,12 @@ import {
   useGetNigerianBanksQuery,
 } from "@/services/userApi";
 import { Landmark } from "lucide-react";
+import { Wallet } from "iconsax-react";
 import { FormSelect } from "@/components/shared/form/FormSelect";
 import type { IStoreDetails } from "@/types/Store/storeTypes";
 import { DeliveryLocationsSettings } from "./DeliveryLocationsSettings";
+import { EscrowToggle } from "@/modules/vendor/components/dashboard/EscrowToggle";
+import { InstallmentsToggle } from "@/modules/vendor/components/dashboard/InstallmentsToggle";
 
 interface StoreSettingsCompleteViewProps {
   store: IStoreDetails;
@@ -53,6 +56,7 @@ const TABS = [
   { id: "general", label: "General", icon: Shop },
   { id: "location", label: "Location", icon: Location },
   { id: "delivery", label: "Delivery", icon: TruckFast },
+  { id: "payments", label: "Payments", icon: Wallet },
   { id: "payout", label: "Payout", icon: CardIcon },
 ];
 
@@ -285,6 +289,31 @@ export function StoreSettingsCompleteView({
         {activeTab === "delivery" && (
           <div>
             <DeliveryLocationsSettings storeId={store?.id} />
+          </div>
+        )}
+
+        {activeTab === "payments" && (
+          <div>
+            <Card className="border-border/40 overflow-hidden bg-card/50 backdrop-blur-sm rounded-sm">
+              <CardHeader className="bg-muted/30 p-4 sm:p-6 border-b border-border/40">
+                <CardTitle className="text-lg font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400 flex items-center gap-2">
+                  <Wallet className="w-5 h-5" variant="Bold" color="currentColor" /> Payment Preferences
+                </CardTitle>
+                <CardDescription className="text-[10px] uppercase font-bold text-muted-foreground/60">
+                  Choose how buyers pay you.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="p-4 sm:p-6 space-y-5">
+                <EscrowToggle
+                  storeId={store?.id}
+                  escrowEnabled={store?.escrow_enabled ?? false}
+                />
+                <InstallmentsToggle
+                  storeId={store?.id}
+                  installmentsEnabled={store?.installments_enabled ?? false}
+                />
+              </CardContent>
+            </Card>
           </div>
         )}
 

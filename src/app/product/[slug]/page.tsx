@@ -108,16 +108,10 @@ function ProductDetailsInner({ id }: { id: string }) {
         image_url: v.image_url ?? undefined, // null → undefined to satisfy ProductVariant type
       })) ?? [],
 
-    sizes: product.sizes ?? [],
-    colors:
-      product.colors?.map((c) => ({
-        id: c.id,
-        name: c.name,
-        hex: c.hex,
-      })) ?? [],
-
     is_in_wishlist: product.is_in_wishlist,
     vendor_id: product.vendor_id,
+    installment_enabled: product.installment_enabled ?? false,
+    installment_presets: product.installment_presets ?? [],
   };
 
   /* ───────── RENDER ───────── */

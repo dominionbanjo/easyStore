@@ -24,10 +24,6 @@ export default function VanguardProductTemplate({
 
   const {
     liked,
-    selectedColor,
-    setSelectedColor,
-    selectedSize,
-    setSelectedSize,
     addingToCart,
     displayPrice,
     displayOriginalPrice,
@@ -61,10 +57,6 @@ export default function VanguardProductTemplate({
       <VanguardMain
         uiProduct={uiProduct}
         liked={liked}
-        selectedColor={selectedColor}
-        setSelectedColor={setSelectedColor}
-        selectedSize={selectedSize}
-        setSelectedSize={setSelectedSize}
         addingToCart={addingToCart}
         displayPrice={displayPrice}
         displayOriginalPrice={displayOriginalPrice}

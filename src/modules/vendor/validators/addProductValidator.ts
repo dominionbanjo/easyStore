@@ -40,6 +40,13 @@ export const addProductSchema = z
 
     returns_note: z.string().optional(),
 
+    /* ����� INSTALLMENTS (OPTIONAL) ����� */
+    installment_enabled: z.boolean().optional().default(false),
+    installment_presets: z
+      .array(z.string())
+      .optional()
+      .default(["fifty-fifty-2wk"]),
+
     /* ───────── OPTIONS & VARIANTS (CONDITIONAL) ───────── */
     options: z
       .array(

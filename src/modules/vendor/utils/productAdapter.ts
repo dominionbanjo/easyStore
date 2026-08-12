@@ -21,8 +21,6 @@ export interface UIProduct extends ProductActionProps {
     location: string;
   };
   images: string[];
-  colors: { id: string; name: string; hex: string }[];
-  sizes: string[];
   slug: string;
 }
 
@@ -92,14 +90,6 @@ export function adaptProductToUI(
         stock: v.stock,
         discount_price: v.discount_price ? Number(v.discount_price) : undefined,
         image_url: v.image_url ?? undefined,
-      })) ?? [],
-
-    sizes: product.sizes ?? [],
-    colors:
-      product.colors?.map((c) => ({
-        id: c.id,
-        name: c.name,
-        hex: c.hex,
       })) ?? [],
 
     is_in_wishlist: product.is_in_wishlist,

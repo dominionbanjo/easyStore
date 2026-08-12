@@ -104,7 +104,10 @@ export default function HomeShoppingHero() {
   const deals = dealsData?.data?.items ?? [];
 
   return (
-    <section className="w-full bg-background dark:bg-neutral-950 transition-colors duration-300">
+    <section
+      data-scroll-anchor="hero"
+      className="w-full bg-background dark:bg-neutral-950 transition-colors duration-300"
+    >
       <div className="px-1.5 md:px-14 xl:px-16 py-4 md:py-6 w-full">
         <div className="grid lg:grid-cols-[240px_1fr] gap-4">
           {/* ─── LEFT: Category Rail (desktop) ─── */}

@@ -32,8 +32,6 @@ export default function ProductGridCard({
       stock={data.stock}
       vendor={data.store_name || "EazyStore"}
       storeSlug={data.store_slug}
-      colors={data.colors}
-      sizes={data.sizes}
       options={data.options}
       variants={data.variants?.map((v) => ({
         ...v,

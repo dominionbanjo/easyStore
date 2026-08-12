@@ -27,10 +27,6 @@ export default function EditorialProductTemplate({
     quantity,
     setQuantity,
     liked,
-    selectedColor,
-    setSelectedColor,
-    selectedSize,
-    setSelectedSize,
     addingToCart,
     displayPrice,
     displayOriginalPrice,
@@ -64,10 +60,6 @@ export default function EditorialProductTemplate({
         quantity={quantity}
         setQuantity={setQuantity}
         liked={liked}
-        selectedColor={selectedColor}
-        setSelectedColor={setSelectedColor}
-        selectedSize={selectedSize}
-        setSelectedSize={setSelectedSize}
         addingToCart={addingToCart}
         currentStock={currentStock}
         displayPrice={displayPrice}

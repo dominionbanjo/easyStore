@@ -21,7 +21,10 @@ export default function FeaturedBrands() {
   );
 
   return (
-    <section className="py-20 bg-muted/20 dark:bg-neutral-900/40 border-y border-border/40 overflow-hidden select-none">
+    <section
+      data-scroll-anchor="trusted-by"
+      className="py-20 bg-muted/20 dark:bg-neutral-900/40 border-y border-border/40 overflow-hidden select-none"
+    >
       <div className="w-full mx-auto px-6">
         <div className="text-center space-y-4 mb-14">
           <h3 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight">

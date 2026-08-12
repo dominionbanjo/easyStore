@@ -9,12 +9,6 @@ interface DefaultInfoProps {
   quantity: number;
   setQuantity: (q: number) => void;
   liked: boolean;
-  selectedColor: { id: string; name: string; hex: string } | null;
-  setSelectedColor: (
-    color: { id: string; name: string; hex: string } | null,
-  ) => void;
-  selectedSize: string | null;
-  setSelectedSize: (size: string | null) => void;
   addingToCart: boolean;
   displayPrice: number;
   displayOriginalPrice: number | null | undefined;
@@ -32,10 +26,6 @@ export function DefaultInfo({
   quantity,
   setQuantity,
   liked,
-  selectedColor,
-  setSelectedColor,
-  selectedSize,
-  setSelectedSize,
   addingToCart,
   displayPrice,
   displayOriginalPrice,
@@ -112,59 +102,6 @@ export function DefaultInfo({
               </div>
             </div>
           ))}
-
-        {uiProduct.colors.length > 0 && (
-          <div>
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-sm font-bold text-zinc-900 dark:text-white uppercase tracking-wider">
-                Color
-              </h3>
-              <span className="text-sm text-zinc-500 font-medium">
-                {uiProduct.colors.find((c) => c.id === selectedColor?.id)?.name}
-              </span>
-            </div>
-            <div className="flex flex-wrap gap-4">
-              {uiProduct.colors.map(
-                (color: { id: string; name: string; hex: string }) => (
-                  <button
-                    key={color.id}
-                    onClick={() => setSelectedColor(color)}
-                    className={`w-10 h-10 rounded-sm border-2 transition-all ${
-                      selectedColor?.id === color.id
-                        ? "border-[var(--theme-primary)] ring-2 ring-[var(--theme-primary)]/10 scale-110 "
-                        : "border-slate-200 dark:border-zinc-800 hover:border-slate-300"
-                    }`}
-                    style={{ backgroundColor: color.hex }}
-                    aria-label={color.name}
-                  />
-                ),
-              )}
-            </div>
-          </div>
-        )}
-
-        {uiProduct.sizes.length > 0 && (
-          <div>
-            <h3 className="text-sm font-bold text-zinc-900 dark:text-white uppercase tracking-wider mb-4">
-              Size
-            </h3>
-            <div className="flex flex-wrap gap-3">
-              {uiProduct.sizes.map((size: string) => (
-                <button
-                  key={size}
-                  onClick={() => setSelectedSize(size)}
-                  className={`min-w-[4rem] px-6 py-3 rounded-sm text-sm font-bold transition-all  ${
-                    selectedSize === size
-                      ? "bg-[var(--theme-primary)] text-white -[var(--theme-primary)]/25"
-                      : "bg-zinc-50 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-800 hover:border-[var(--theme-primary)]/50"
-                  }`}
-                >
-                  {size}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Actions */}

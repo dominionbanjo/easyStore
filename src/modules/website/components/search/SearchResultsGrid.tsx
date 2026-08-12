@@ -98,8 +98,6 @@ export function SearchResultsGrid({
             rating={Number(product.rating_average ?? 0)}
             stock={product.stock}
             isFavorite={product.is_in_wishlist}
-            colors={product.colors}
-            sizes={product.sizes}
             options={product.options}
             variants={product.variants?.map((v) => ({
               ...v,

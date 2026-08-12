@@ -6,13 +6,11 @@ import type {
   ProductsByCategoryArgs,
   ProductsByStoreArgs,
   SearchProductsArgs,
-  CreateProductArgs,
-  UpdateProductArgs,
   IProductsGroupedByCategoryResponse,
   GetSingleProductResponse,
   ISearchProductsResponse,
   IStoreProductsResponse,
-  CreateProductCloudinaryArgs,
+  CreateProductArgs,
   VendorProductSearchResponse,
   VendorProductSearchParams,
   ProductStatus,
@@ -150,44 +148,6 @@ export const productApi = apiManager.injectEndpoints({
     }),
 
 
-    /* ───────── CREATE ───────── */
-    createProduct: builder.mutation<
-      { success: boolean; message?: string },
-      CreateProductArgs
-    >({
-      query: ({ data }) => ({
-        url: "product",
-        method: "POST",
-        body: data,
-      }),
-      invalidatesTags: ["Store"],
-    }),
-
-    createManyProducts: builder.mutation<
-      { success: boolean; message?: string },
-      { products: Record<string, unknown>[] }
-    >({
-      query: (body) => ({
-        url: "product/bulk",
-        method: "POST",
-        body,
-      }),
-      invalidatesTags: ["Store"],
-    }),
-
-    /* ───────── UPDATE ───────── */
-    updateProduct: builder.mutation<
-      { success: boolean; message?: string },
-      UpdateProductArgs
-    >({
-      query: ({ id, data }) => ({
-        url: `product/${id}`,
-        method: "PATCH",
-        body: data,
-      }),
-      invalidatesTags: ["Store"],
-    }),
-
     /* ───────── DELETE ───────── */
     deleteProduct: builder.mutation<
       { success: boolean; message?: string },
@@ -200,10 +160,10 @@ export const productApi = apiManager.injectEndpoints({
       invalidatesTags: ["Store"],
     }),
 
-    /* ───────── CLOUDINARY CREATE ───────── */
-    createProductWithCloudinary: builder.mutation<
+    /* ───────── CREATE ───────── */
+    createProduct: builder.mutation<
       { status: string; data: unknown },
-      CreateProductCloudinaryArgs
+      CreateProductArgs
     >({
       query: (data) => ({
         url: "vendor/products",
@@ -212,10 +172,10 @@ export const productApi = apiManager.injectEndpoints({
       }),
       invalidatesTags: ["Store"],
     }),
-    /* ───────── CLOUDINARY UPDATE ───────── */
-    updateProductWithCloudinary: builder.mutation<
+    /* ───────── UPDATE ───────── */
+    updateProduct: builder.mutation<
       { status: string; data: unknown },
-      { id: string; data: CreateProductCloudinaryArgs }
+      { id: string; data: CreateProductArgs }
     >({
       query: ({ id, data }) => ({
         url: `vendor/products/${id}`,
@@ -257,8 +217,6 @@ export const productApi = apiManager.injectEndpoints({
 
             // 🔧 normalize mismatched fields
             specs: item.specs,
-            colors: item.colors as string[] | null,
-            sizes: item.sizes as string[] | null,
 
             highlights: item.highlights ?? null,
             is_out_of_stock: item.stock <= 0,
@@ -316,7 +274,7 @@ export const productApi = apiManager.injectEndpoints({
 
     publishProductDraft: builder.mutation<
       { success: boolean; message?: string; id: string },
-      { draftId: string; data: CreateProductCloudinaryArgs }
+      { draftId: string; data: CreateProductArgs }
     >({
       query: ({ draftId, data }) => ({
         url: `vendor/products/drafts/${draftId}/publish`,
@@ -450,12 +408,8 @@ export const {
   useGetVendorSingleProductQuery,
 
   useCreateProductMutation,
-  useCreateManyProductsMutation,
   useUpdateProductMutation,
   useDeleteProductMutation,
-
-  useCreateProductWithCloudinaryMutation,
-  useUpdateProductWithCloudinaryMutation,
 
   useSearchMyStoreProductsQuery,
 

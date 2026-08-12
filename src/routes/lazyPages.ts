@@ -284,6 +284,11 @@ const SuperAdminOrdersPageImport = () =>
 export const SuperAdminOrdersPage = lazy(SuperAdminOrdersPageImport);
 export const preloadSuperAdminOrdersPage = SuperAdminOrdersPageImport;
 
+const SuperAdminInstallmentsPageImport = () =>
+  import("@/app/(dashboard)/admin/installments/page");
+export const SuperAdminInstallmentsPage = lazy(SuperAdminInstallmentsPageImport);
+export const preloadSuperAdminInstallmentsPage = SuperAdminInstallmentsPageImport;
+
 const SuperAdminPayoutsPageImport = () =>
   import("@/app/(dashboard)/admin/payouts/page");
 export const SuperAdminPayoutsPage = lazy(SuperAdminPayoutsPageImport);

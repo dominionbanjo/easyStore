@@ -17,6 +17,7 @@ import {
   Layers,
   Sparkles,
   ChevronLeft,
+  Wallet,
 } from "lucide-react";
 import type {
   AddProductFormInput,
@@ -32,10 +33,11 @@ import {
   clearProductDraft,
 } from "@/features/productDraftSlice";
 import {
-  useCreateProductWithCloudinaryMutation,
+  useCreateProductMutation,
   useGetVendorSingleProductQuery,
   usePublishProductDraftMutation,
   useGetProductDraftQuery,
+  useDeleteProductDraftMutation,
 } from "@/services/productApi";
 import { buildSpecsObject } from "@/modules/vendor/utils/addProduct.helpers";
 import { buildCreateProductPayload } from "@/utils/draftToFormValues";
@@ -53,6 +55,7 @@ import { ImageSection } from "@/modules/vendor/components/add-products/ImageSect
 import { ShippingSection } from "@/modules/vendor/components/add-products/ShippingSection";
 import { SpecsSection } from "@/modules/vendor/components/add-products/SpecsSection";
 import { Wrapper as PricingSectionWrapper } from "@/modules/vendor/components/add-products/PricingSectionWrapper";
+import { InstallmentSection } from "@/modules/vendor/components/add-products/InstallmentSection";
 import { cn } from "@/lib/utils";
 import { SectionTooltip } from "@/components/shared/SectionTooltip";
 
@@ -83,6 +86,8 @@ export default function AddProductPage() {
     saveDraftNow,
     isSavingDraft,
     cancelSync,
+    suppressSync,
+    getDraftRowId,
   } = methods;
 
   const { data: draft } = useSelector((s: RootState) => s.productDraft);
@@ -94,10 +99,11 @@ export default function AddProductPage() {
   const productId = productData?.data?.product?.id;
 
   const [createProduct, { isLoading: creating }] =
-    useCreateProductWithCloudinaryMutation();
+    useCreateProductMutation();
 
   const [publishProduct, { isLoading: publishing }] =
     usePublishProductDraftMutation();
+  const [deleteProductDraft] = useDeleteProductDraftMutation();
 
   const { data: resumeDraftData } = useGetProductDraftQuery(draftParam!, {
     skip: Boolean(isEditMode || !draftParam),
@@ -169,6 +175,10 @@ export default function AddProductPage() {
 
   /* ───────── SUBMIT ───────── */
   const onSubmit: SubmitHandler<AddProductFormInput> = async (data) => {
+    // Stop auto-syncs from this point — a late 40s tick must never create
+    // an orphan draft row after the product is created/published.
+    suppressSync();
+
     const values = data as unknown as AddProductFormOutput;
 
     if (!image) return toast.error("Upload a main product image");
@@ -196,6 +206,14 @@ export default function AddProductPage() {
       } else {
         await createProduct(payload).unwrap();
         toast.success("Product created successfully");
+
+        // Close the race: an auto-save that was in flight during createProduct
+        // may have persisted a separate DRAFT row — delete it so it never
+        // shows up as an orphan in the drafts list.
+        const orphanDraftId = getDraftRowId();
+        if (orphanDraftId) {
+          await deleteProductDraft(orphanDraftId).catch(() => undefined);
+        }
       }
 
       dispatch(clearProductDraft());
@@ -398,6 +416,33 @@ export default function AddProductPage() {
               </CardHeader>
               <CardContent className="p-4 sm:p-8">
                 <ShippingSection />
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Installments Card */}
+          <div>
+            <Card className="border-border/40  overflow-hidden rounded-sm">
+              <CardHeader className="bg-muted/30 p-4 md:p-8 border-b border-border/40">
+                <div className="flex items-center gap-4">
+                  <div className="h-9 w-9 rounded-sm bg-background flex items-center justify-center ">
+                    <Wallet className="h-5 w-5 text-primary" />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CardTitle className="text-base md:text-lg font-black uppercase tracking-tight">
+                      Installments
+                    </CardTitle>
+                    <SectionTooltip content="Allow buyers to pay in parts. The product stays reserved for the buyer until fully paid, then you ship it." />
+                    <span className="text-[10px] font-bold text-muted-foreground bg-muted px-2 py-0.5 rounded-sm uppercase">
+                      Optional
+                    </span>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="p-4 sm:p-8">
+                <InstallmentSection
+                  storeInstallmentsEnabled={extras.store?.installments_enabled ?? false}
+                />
               </CardContent>
             </Card>
           </div>

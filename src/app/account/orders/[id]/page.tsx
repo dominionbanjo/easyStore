@@ -25,6 +25,7 @@ import { OrderPaymentSummary } from "@/modules/website/components/orders/OrderPa
 import { OrderItemsList } from "@/modules/website/components/orders/OrderItemsList";
 import { OrderDeliveryInfo } from "@/modules/website/components/orders/OrderDeliveryInfo";
 import { OrderDetailsSkeleton } from "@/modules/website/components/orders/OrderDetailsSkeleton";
+import { InstallmentPlanCard } from "@/modules/website/components/orders/InstallmentPlanCard";
 
 export default function OrderDetailsPage() {
   const { id } = useParams<{ id: string }>();
@@ -225,6 +226,9 @@ export default function OrderDetailsPage() {
 
             {/* Right: Sidebar (4 columns) */}
             <div className="lg:col-span-4 space-y-6">
+              {order.payment_plan_id && (
+                <InstallmentPlanCard planId={order.payment_plan_id} />
+              )}
               <OrderPaymentSummary
                 order={order}
                 handleCopy={handleCopy}

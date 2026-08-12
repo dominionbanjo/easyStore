@@ -26,13 +26,13 @@ export default function TrendingNowSection() {
   const products = data?.data?.items ?? [];
 
   return (
-    <div ref={sectionRef}>
+    <div ref={sectionRef} data-scroll-anchor="trending-now">
       <ProductSection
       title="Trending Now"
       subtitle="The fastest-moving products across EasyStore this week."
-      isLoading={isLoading}
+      isLoading={!isInView || isLoading}
       isError={isError}
-      isEmpty={!products.length}
+      isEmpty={isInView && !products.length && !isLoading && !isError}
       emptyIcon={TrendingUp}
       emptyTitle="No trending items yet"
       emptyDescription="Popular products will appear here as shoppers engage."

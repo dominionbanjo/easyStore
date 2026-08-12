@@ -29,10 +29,6 @@ export default function TitanProductTemplate({
     quantity,
     setQuantity,
     liked,
-    selectedColor,
-    setSelectedColor,
-    selectedSize,
-    setSelectedSize,
     addingToCart,
     displayPrice,
     displayOriginalPrice,
@@ -71,10 +67,6 @@ export default function TitanProductTemplate({
               quantity={quantity}
               setQuantity={setQuantity}
               liked={liked}
-              selectedColor={selectedColor}
-              setSelectedColor={setSelectedColor}
-              selectedSize={selectedSize}
-              setSelectedSize={setSelectedSize}
               addingToCart={addingToCart}
               displayPrice={displayPrice}
               displayOriginalPrice={displayOriginalPrice}

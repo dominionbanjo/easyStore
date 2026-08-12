@@ -12,6 +12,7 @@ import {
   CreditCard,
   ArrowLeft,
   ShoppingBag,
+  Wallet,
 } from "lucide-react";
 import { useVerifyPaymentMutation } from "@/services/ordersApi";
 import { useGetCartQuery } from "@/services/cartApi";
@@ -154,6 +155,10 @@ export default function VerifyPaymentPage() {
     orders.length > 0 &&
     orders.some((order) => order.payment_status === "success");
 
+  // Installment deposits are confirmed by the installment module — the
+  // response carries no `orders` array, so handle it as its own success state.
+  const isInstallment = data?.data?.installment === true;
+
   const remainingItemsCount = cartData?.data?.cart?.items?.length || 0;
 
   /* ───────────────── SUCCESS ───────────────── */
@@ -223,6 +228,64 @@ export default function VerifyPaymentPage() {
                   </Button>
                 </SmartLink>
               )}
+            </div>
+          </CardContent>
+        </Card>
+      </section>
+    );
+  }
+
+  /* ───────────────── INSTALLMENT SUCCESS ───────────────── */
+  if (isInstallment) {
+    const orderId = data?.data?.order_id;
+    return (
+      <section className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-emerald-50/30 dark:from-neutral-950 dark:via-neutral-900 dark:to-emerald-950/10 flex items-center justify-center px-4 transition-colors duration-300">
+        <Card className="w-full max-w-md text-center rounded-sm border-2 border-emerald-100 dark:border-emerald-950/20 overflow-hidden bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl">
+          <CardContent className="py-16 space-y-8">
+            <div className="relative">
+              <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-sm" />
+              <div className="w-24 h-24 bg-primary/10 dark:bg-emerald-500/10 rounded-sm flex items-center justify-center mx-auto relative z-10">
+                <Wallet className="h-14 w-14 text-primary dark:text-emerald-400" />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <h1 className="text-3xl font-black text-foreground">
+                Deposit Received
+              </h1>
+              <p className="text-muted-foreground font-medium max-w-xs mx-auto">
+                Your installment plan is now active. Remaining payments fall
+                due on schedule and your order ships once it&apos;s fully paid.
+              </p>
+            </div>
+
+            <div className="px-4 py-2 rounded-sm bg-primary/5 dark:bg-emerald-500/5 text-xs font-mono font-bold text-primary dark:text-emerald-400">
+              Ref: {reference}
+            </div>
+
+            <div className="space-y-3">
+              <SmartLink
+                to={
+                  orderId
+                    ? `${ACCOUNT_ROUTES.ORDERS}/${orderId}`
+                    : ACCOUNT_ROUTES.ORDERS
+                }
+                className="w-full block"
+              >
+                <Button className="w-full h-14 rounded-sm text-lg font-bold hover:scale-105 active:scale-95 transition-all">
+                  <CreditCard className="mr-2 h-5 w-5" />
+                  View My Plan
+                </Button>
+              </SmartLink>
+
+              <SmartLink to="/" className="w-full block">
+                <Button
+                  variant="ghost"
+                  className="w-full h-12 text-muted-foreground font-bold"
+                >
+                  Back to Shopping
+                </Button>
+              </SmartLink>
             </div>
           </CardContent>
         </Card>

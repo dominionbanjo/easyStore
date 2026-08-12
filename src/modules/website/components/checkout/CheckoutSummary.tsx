@@ -21,6 +21,10 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import type { ICartItem } from "@/types/cart/cartTypes";
+import type {
+  InstallmentPreset,
+  InstallmentMode,
+} from "@/types/installment/installmentTypes";
 import * as React from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { FormSelect } from "@/components/shared/form/FormSelect";
@@ -59,6 +63,16 @@ interface CheckoutSummaryProps {
   onVerifyBank: () => void;
   onMessageVendor: () => void;
   escrowEnabled?: boolean;
+  /* ─── Installment plan mode ─── */
+  installmentsEnabled?: boolean;
+  installmentActive?: boolean;
+  onSetInstallmentActive?: (val: boolean) => void;
+  presets?: InstallmentPreset[];
+  selectedPreset?: string;
+  onSelectPreset?: (presetId: string) => void;
+  installmentMode?: InstallmentMode;
+  onSetInstallmentMode?: (mode: InstallmentMode) => void;
+  onInstallmentCheckout?: () => void;
 }
 
 export function CheckoutSummary({
@@ -83,6 +97,15 @@ export function CheckoutSummary({
   onVerifyBank,
   onMessageVendor,
   escrowEnabled = true,
+  installmentsEnabled = false,
+  installmentActive = false,
+  onSetInstallmentActive,
+  presets = [],
+  selectedPreset = "",
+  onSelectPreset,
+  installmentMode = "manual",
+  onSetInstallmentMode,
+  onInstallmentCheckout,
 }: CheckoutSummaryProps) {
   const hasDeliveryOptions = deliveryOptions && deliveryOptions.length > 0;
   const isBlocked = missingAddress || missingBankVerification || (!selectedDeliveryRateId && hasDeliveryOptions);
@@ -285,31 +308,29 @@ export function CheckoutSummary({
                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 mb-3">
                 Secure Payment Mode
               </p>
-              <div className="grid grid-cols-2 gap-3">
+              <div className={`grid gap-3 ${installmentsEnabled ? "grid-cols-3" : "grid-cols-2"}`}>
                 <button
                   type="button"
-                  onClick={() => { if (escrowEnabled) setIsEscrow(true); }}
+                  onClick={() => {
+                    onSetInstallmentActive?.(false);
+                    if (escrowEnabled) setIsEscrow(true);
+                  }}
                   disabled={!escrowEnabled}
                   className={`flex flex-col items-start p-3 rounded-sm border transition-all text-left relative overflow-hidden group ${
                     !escrowEnabled
                       ? "border-border/20 bg-muted/30 opacity-50 cursor-not-allowed"
-                      : isEscrow
+                      : isEscrow && !installmentActive
                         ? "border-primary bg-primary/5 ring-1 ring-primary/20"
                         : "border-border/40 bg-card hover:border-primary/40"
                   }`}
                 >
                   <div className="flex items-center justify-between w-full mb-1">
-                    <ShieldCheck className={`h-4 w-4 ${!escrowEnabled ? "text-muted-foreground/50" : isEscrow ? "text-primary" : "text-muted-foreground"}`} />
-                    {isEscrow && escrowEnabled && <CheckCircle2 className="h-3 w-3 text-primary" />}
+                    <ShieldCheck className={`h-4 w-4 ${!escrowEnabled ? "text-muted-foreground/50" : isEscrow && !installmentActive ? "text-primary" : "text-muted-foreground"}`} />
+                    {isEscrow && !installmentActive && escrowEnabled && <CheckCircle2 className="h-3 w-3 text-primary" />}
                   </div>
-                  <span className={`text-[10px] font-black uppercase tracking-tight ${!escrowEnabled ? "text-muted-foreground/50" : isEscrow ? "text-primary" : "text-foreground"}`}>
+                  <span className={`text-[10px] font-black uppercase tracking-tight ${!escrowEnabled ? "text-muted-foreground/50" : isEscrow && !installmentActive ? "text-primary" : "text-foreground"}`}>
                     Escrow
                   </span>
-                  {!escrowEnabled && (
-                    <Badge variant="outline" className="mt-1 text-[7px] py-0 px-1.5 border-muted-foreground/30 text-muted-foreground/60 font-normal uppercase tracking-wider">
-                      Disabled by vendor
-                    </Badge>
-                  )}
                   {escrowEnabled && (
                     <Badge variant="secondary" className="absolute -right-6 top-1 rotate-45 text-[7px] py-0 px-6 bg-primary text-primary-foreground font-black uppercase tracking-widest">
                       Preferred
@@ -319,31 +340,144 @@ export function CheckoutSummary({
 
                 <button
                   type="button"
-                  onClick={() => setIsEscrow(false)}
+                  onClick={() => {
+                    onSetInstallmentActive?.(false);
+                    setIsEscrow(false);
+                  }}
                   className={`flex flex-col items-start p-3 rounded-sm border transition-all text-left relative ${
-                    !isEscrow
+                    !isEscrow && !installmentActive
                       ? "border-primary bg-primary/5 ring-1 ring-primary/20"
                       : "border-border/40 bg-card hover:border-primary/40"
                   }`}
                 >
                   <div className="flex items-center justify-between w-full mb-1">
-                    <CreditCard className={`h-4 w-4 ${!isEscrow ? "text-primary" : "text-muted-foreground"}`} />
-                    {!isEscrow && <CheckCircle2 className="h-3 w-3 text-primary" />}
+                    <CreditCard className={`h-4 w-4 ${!isEscrow && !installmentActive ? "text-primary" : "text-muted-foreground"}`} />
+                    {!isEscrow && !installmentActive && <CheckCircle2 className="h-3 w-3 text-primary" />}
                   </div>
-                  <span className={`text-[10px] font-black uppercase tracking-tight ${!isEscrow ? "text-primary" : "text-foreground"}`}>
+                  <span className={`text-[10px] font-black uppercase tracking-tight ${!isEscrow && !installmentActive ? "text-primary" : "text-foreground"}`}>
                     Direct
                   </span>
                 </button>
+
+                {installmentsEnabled && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onSetInstallmentActive?.(true);
+                      setIsEscrow(false);
+                    }}
+                    className={`flex flex-col items-start p-3 rounded-sm border transition-all text-left relative ${
+                      installmentActive
+                        ? "border-primary bg-primary/5 ring-1 ring-primary/20"
+                        : "border-border/40 bg-card hover:border-primary/40"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between w-full mb-1">
+                      <Tag className={`h-4 w-4 ${installmentActive ? "text-primary" : "text-muted-foreground"}`} />
+                      {installmentActive && <CheckCircle2 className="h-3 w-3 text-primary" />}
+                    </div>
+                    <span className={`text-[10px] font-black uppercase tracking-tight ${installmentActive ? "text-primary" : "text-foreground"}`}>
+                      Installment
+                    </span>
+                  </button>
+                )}
               </div>
+
+              {installmentActive && (
+                <div className="mt-3 space-y-3 rounded-sm border border-primary/20 bg-primary/5 p-3">
+                  <div className="flex items-center justify-between">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-primary">
+                      Choose Your Plan
+                    </p>
+                    <span className="text-[9px] font-medium text-muted-foreground">
+                      Vendor-offered plans
+                    </span>
+                  </div>
+                  <div className="space-y-2">
+                    {presets.map((preset) => {
+                      const isSelected = selectedPreset === preset.id;
+                      const perInstallment = Math.floor((total * 100) / preset.count);
+                      return (
+                        <button
+                          key={preset.id}
+                          type="button"
+                          onClick={() => onSelectPreset?.(preset.id)}
+                          className={`w-full flex items-center justify-between gap-2 p-2.5 rounded-sm border text-left transition-all ${
+                            isSelected
+                              ? "border-primary bg-background ring-1 ring-primary/20"
+                              : "border-border/40 bg-background/60 hover:border-primary/40"
+                          }`}
+                        >
+                          <div className="min-w-0">
+                            <p className={`text-xs font-black ${isSelected ? "text-primary" : "text-foreground"}`}>
+                              {preset.name}
+                            </p>
+                            <p className="text-[9px] text-muted-foreground font-medium">
+                              Deposit ₦{(perInstallment / 100).toLocaleString()} · then{" "}
+                              {preset.count - 1} payment
+                              {preset.count > 2 ? "s" : ""} of ₦
+                              {(perInstallment / 100).toLocaleString()} ·{" "}
+                              {preset.interval_days}-day intervals
+                            </p>
+                          </div>
+                          {isSelected && <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => onSetInstallmentMode?.("auto")}
+                      className={`flex-1 p-2.5 rounded-sm border text-left transition-all ${
+                        installmentMode === "auto"
+                          ? "border-primary bg-background ring-1 ring-primary/20"
+                          : "border-border/40 bg-background/60 hover:border-primary/40"
+                      }`}
+                    >
+                      <p className={`text-[10px] font-black uppercase tracking-tight ${installmentMode === "auto" ? "text-primary" : "text-foreground"}`}>
+                        Auto-Pay
+                      </p>
+                      <p className="text-[9px] text-muted-foreground font-medium mt-0.5 leading-tight">
+                        Save your card, we charge each installment automatically.
+                      </p>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => onSetInstallmentMode?.("manual")}
+                      className={`flex-1 p-2.5 rounded-sm border text-left transition-all ${
+                        installmentMode === "manual"
+                          ? "border-primary bg-background ring-1 ring-primary/20"
+                          : "border-border/40 bg-background/60 hover:border-primary/40"
+                      }`}
+                    >
+                      <p className={`text-[10px] font-black uppercase tracking-tight ${installmentMode === "manual" ? "text-primary" : "text-foreground"}`}>
+                        Manual
+                      </p>
+                      <p className="text-[9px] text-muted-foreground font-medium mt-0.5 leading-tight">
+                        We remind you by email + notification each due date.
+                      </p>
+                    </button>
+                  </div>
+
+                  <p className="text-[9px] text-muted-foreground/80 font-medium leading-relaxed">
+                    <span className="text-primary font-black shrink-0">HOW IT WORKS:</span>{" "}
+                    Pay the deposit now — the product is reserved for you. The vendor ships
+                    once fully paid. Miss a payment: 2 warnings, then cancellation with a
+                    full refund of everything paid.
+                  </p>
+                </div>
+              )}
               
-              {isEscrow && escrowEnabled && (
+              {isEscrow && escrowEnabled && !installmentActive && (
                 <p className="mt-2 text-[9px] text-muted-foreground font-medium leading-relaxed flex items-start gap-1.5">
                   <span className="text-emerald-500 font-black shrink-0">TIP:</span>
                   Escrow keeps your funds safe until delivery is confirmed. Highly recommended for first-time buyers.
                 </p>
               )}
 
-              {!escrowEnabled && (
+              {!escrowEnabled && !installmentActive && (
                 <p className="mt-2 text-[9px] text-muted-foreground/60 font-medium leading-relaxed flex items-start gap-1.5">
                   <span className="text-muted-foreground/50 font-black shrink-0">NOTE:</span>
                   This vendor has disabled escrow payments. Only Direct payment is available.
@@ -493,8 +627,16 @@ export function CheckoutSummary({
 
         <Button
           className="w-full h-14 sm:h-16 rounded-sm text-xs sm:text-sm font-black uppercase tracking-[0.2em] transition-all hover:scale-[1.02] active:scale-[0.98] bg-primary hover:bg-primary/90 text-primary-foreground group disabled:opacity-50 disabled:pointer-events-none"
-          disabled={disabled || isProcessing || isBlocked || noDeliveryAvailable}
-          onClick={() => onCheckout(isEscrow)}
+          disabled={
+            disabled ||
+            isProcessing ||
+            isBlocked ||
+            noDeliveryAvailable ||
+            (installmentActive && (!selectedPreset || !onInstallmentCheckout))
+          }
+          onClick={() =>
+            installmentActive ? onInstallmentCheckout?.() : onCheckout(isEscrow)
+          }
         >
           {isProcessing ? (
             <>
@@ -503,8 +645,16 @@ export function CheckoutSummary({
             </>
           ) : (
             <>
-              {isEscrow ? "Secure with Escrow" : "Proceed to Payment"}
-              <CreditCard className="ml-3 h-4 w-4 sm:h-5 sm:w-5 transition-transform group-hover:translate-x-1" />
+              {installmentActive
+                ? "Start Installment Plan"
+                : isEscrow
+                  ? "Secure with Escrow"
+                  : "Proceed to Payment"}
+              {installmentActive ? (
+                <Tag className="ml-3 h-4 w-4 sm:h-5 sm:w-5" />
+              ) : (
+                <CreditCard className="ml-3 h-4 w-4 sm:h-5 sm:w-5 transition-transform group-hover:translate-x-1" />
+              )}
             </>
           )}
         </Button>

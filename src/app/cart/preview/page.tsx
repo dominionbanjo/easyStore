@@ -18,6 +18,12 @@ import {
   useCreateOnlineOrderMutation,
   useGetCheckoutSummaryMutation,
 } from "@/services/ordersApi";
+import {
+  useGetInstallmentConfigQuery,
+  useCreateInstallmentOrderMutation,
+  useCreateInstallmentPlanMutation,
+} from "@/services/installmentsApi";
+import type { InstallmentMode } from "@/types/installment/installmentTypes";
 import type { ICheckoutSummaryVendor } from "@/services/ordersApi";
 import { toast } from "sonner";
 import {
@@ -43,6 +49,26 @@ type RequiredModal = "address" | "select-address" | "bank" | "payment-security" 
 // ⭐ Checkout groups are keyed by store (a vendor may own multiple stores).
 const storeKey = (vendor: ICheckoutSummaryVendor) =>
   vendor.store_id ?? vendor.vendor_id;
+
+/**
+ * Preset ids the vendor offers for this store group = intersection of every
+ * item's installment_presets (legacy items without the list impose no limit,
+ * falling back to all platform presets).
+ */
+const offeredPresetIds = (
+  vendor: ICheckoutSummaryVendor,
+  config: { presets?: { id: string }[] } | undefined,
+): string[] => {
+  const subsets = vendor.items
+    .map((item) => item.installment_presets ?? [])
+    .filter((subset) => subset.length > 0);
+  if (subsets.length === 0) {
+    return (config?.presets ?? []).map((p) => p.id);
+  }
+  return subsets.reduce(
+    (acc, cur) => acc.filter((id) => cur.includes(id)),
+  );
+};
 
 export default function CheckoutPage() {
   const navigate = useNavigate();
@@ -74,6 +100,12 @@ export default function CheckoutPage() {
     useCreateOnlineOrderMutation();
   const [createDirectOrder, { isLoading: isCreatingDirectOrder }] =
     useCreateOnlineOrderDirectMutation();
+  const [createInstallmentOrder, { isLoading: isCreatingInstallmentOrder }] =
+    useCreateInstallmentOrderMutation();
+  const [createInstallmentPlan, { isLoading: isCreatingInstallmentPlan }] =
+    useCreateInstallmentPlanMutation();
+
+  const { data: installmentConfig } = useGetInstallmentConfigQuery();
 
   const [startConversation] = useStartConversationMutation();
   const [sendMessage] = useSendDirectMessageMutation();
@@ -87,6 +119,15 @@ export default function CheckoutPage() {
     null,
   );
   const [escrowByStore, setEscrowByStore] = useState<Record<string, boolean>>({});
+  const [installmentActiveByStore, setInstallmentActiveByStore] = useState<
+    Record<string, boolean>
+  >({});
+  const [presetByStore, setPresetByStore] = useState<Record<string, string>>(
+    {},
+  );
+  const [installmentModeByStore, setInstallmentModeByStore] = useState<
+    Record<string, InstallmentMode>
+  >({});
 
   /* ───────── FETCH SUMMARY ───────── */
   useEffect(() => {
@@ -176,6 +217,70 @@ export default function CheckoutPage() {
     // Show security modal for both online paths
     setPendingCheckoutVendor({ vendor, isEscrow });
     setRequiredModal("payment-security");
+  };
+
+  const executeInstallmentCheckout = async (vendor: ICheckoutSummaryVendor) => {
+    if (isCheckoutDisabled) {
+      if (!hasAddress) setRequiredModal("address");
+      else if (!isBankVerified) setRequiredModal("bank");
+      return;
+    }
+    if (!user) return;
+
+    const vendorKey = storeKey(vendor);
+    const allowedIds = offeredPresetIds(vendor, installmentConfig);
+    const storedPreset = presetByStore[vendorKey];
+    const presetId =
+      storedPreset && allowedIds.includes(storedPreset)
+        ? storedPreset
+        : (allowedIds[0] ?? "");
+    if (!presetId) {
+      toast.error("Please choose an installment plan");
+      setActiveStoreKey(vendorKey);
+      return;
+    }
+
+    const selectedRateId = selectedRates[vendorKey];
+    if (!selectedRateId && vendor.delivery_options.length > 0) {
+      toast.error(`Please select a delivery region for ${vendor.store_name}`);
+      setActiveStoreKey(vendorKey);
+      return;
+    }
+
+    try {
+      const orderItems = vendor.items.map((item) => ({
+        product_id: item.product_id,
+        variant_id: item.variant_id ?? undefined,
+        quantity: item.quantity,
+        size: item.size ?? undefined,
+        color: item.color ?? undefined,
+      }));
+
+      /* 1. Create the pending order (no charge) */
+      const orderResult = await createInstallmentOrder({
+        email: user.email,
+        order_items: orderItems,
+        delivery_rate_id: selectedRateId || undefined,
+        delivery_address_id: currentActiveAddress?.id,
+      }).unwrap();
+
+      if (!orderResult.success || !orderResult.order_id) {
+        throw new Error("Failed to create installment order");
+      }
+
+      /* 2. Create the plan — charges the deposit, returns payment_url */
+      const planResult = await createInstallmentPlan({
+        order_id: orderResult.order_id,
+        preset_id: presetId,
+        mode: installmentModeByStore[vendorKey] ?? "manual",
+      }).unwrap();
+
+      if (planResult.success && planResult.payment_url) {
+        window.location.href = planResult.payment_url;
+      }
+    } catch (error: unknown) {
+      toast.error(extractErrorMessage(error, "Failed to start installment plan"));
+    }
   };
 
   const executeCheckout = async (vendor: ICheckoutSummaryVendor, isEscrow: boolean) => {
@@ -274,7 +379,12 @@ export default function CheckoutPage() {
       <PaymentSecurityModal
         open={requiredModal === "payment-security"}
         onClose={handleModalClose}
-        isProcessing={isCreatingEscrowOrder || isCreatingDirectOrder}
+        isProcessing={
+          isCreatingEscrowOrder ||
+          isCreatingDirectOrder ||
+          isCreatingInstallmentOrder ||
+          isCreatingInstallmentPlan
+        }
         type={pendingCheckoutVendor?.isEscrow ? "escrow" : "direct"}
         onConfirm={() => {
           if (pendingCheckoutVendor) {
@@ -393,6 +503,43 @@ export default function CheckoutPage() {
                         setEscrowByStore((prev) => ({ ...prev, [vendorKey]: val }));
                       };
 
+                      const allItemsInstallmentEnabled =
+                        vendor.items.length > 0 &&
+                        vendor.items.every(
+                          (item) => item.installment_enabled === true,
+                        );
+                      const offeredIds = offeredPresetIds(
+                        vendor,
+                        installmentConfig,
+                      );
+                      const offeredPresets = (
+                        installmentConfig?.presets ?? []
+                      ).filter((p) => offeredIds.includes(p.id));
+                      const installmentsEnabled =
+                        (vendor.installments_enabled ?? false) &&
+                        allItemsInstallmentEnabled &&
+                        offeredIds.length > 0 &&
+                        grandTotal >= (installmentConfig?.min_order_kobo ?? Infinity);
+                      const installmentActive =
+                        installmentActiveByStore[vendorKey] ?? false;
+                      const storedPreset = presetByStore[vendorKey];
+                      const vendorPreset =
+                        storedPreset && offeredIds.includes(storedPreset)
+                          ? storedPreset
+                          : (offeredIds[0] ?? "");
+                      const vendorInstallmentMode =
+                        installmentModeByStore[vendorKey] ?? "manual";
+
+                      const setVendorInstallmentActive = (val: boolean) => {
+                        setInstallmentActiveByStore((prev) => ({
+                          ...prev,
+                          [vendorKey]: val,
+                        }));
+                        if (val) {
+                          setEscrowByStore((prev) => ({ ...prev, [vendorKey]: false }));
+                        }
+                      };
+
                       return (
                         <AccordionItem
                           key={vendorKey}
@@ -430,7 +577,10 @@ export default function CheckoutPage() {
                               serviceCharge={totalServiceCharge / 100}
                               total={grandTotal / 100}
                               isProcessing={
-                                (isCreatingEscrowOrder || isCreatingDirectOrder) &&
+                                (isCreatingEscrowOrder ||
+                                  isCreatingDirectOrder ||
+                                  isCreatingInstallmentOrder ||
+                                  isCreatingInstallmentPlan) &&
                                 activeStoreKey === vendorKey
                               }
                               disabled={!hasAddress || !isBankVerified}
@@ -456,6 +606,27 @@ export default function CheckoutPage() {
                                 )
                               }
                               onVerifyBank={() => setRequiredModal("bank")}
+                              installmentsEnabled={installmentsEnabled}
+                              installmentActive={installmentActive}
+                              onSetInstallmentActive={setVendorInstallmentActive}
+                              presets={offeredPresets}
+                              selectedPreset={vendorPreset}
+                              onSelectPreset={(presetId) =>
+                                setPresetByStore((prev) => ({
+                                  ...prev,
+                                  [vendorKey]: presetId,
+                                }))
+                              }
+                              installmentMode={vendorInstallmentMode}
+                              onSetInstallmentMode={(mode) =>
+                                setInstallmentModeByStore((prev) => ({
+                                  ...prev,
+                                  [vendorKey]: mode,
+                                }))
+                              }
+                              onInstallmentCheckout={() => {
+                                executeInstallmentCheckout(vendor);
+                              }}
                             />
                           </AccordionContent>
                         </AccordionItem>

@@ -21,6 +21,7 @@ import { DashboardStatsLoader } from "@/modules/vendor/components/dashboard/Dash
 import { StatCard } from "@/modules/vendor/components/dashboard/StatCard";
 import { DashboardOverviewHeader } from "@/modules/vendor/components/dashboard/DashboardOverviewHeader";
 import { EscrowToggle } from "@/modules/vendor/components/dashboard/EscrowToggle";
+import { InstallmentsToggle } from "@/modules/vendor/components/dashboard/InstallmentsToggle";
 
 // Lazy-load heavy below-fold components — Recharts is the biggest LCP offender
 const SalesChart = lazy(() =>
@@ -131,12 +132,16 @@ export default function VendorDashboardPage() {
       {/* ─── Header Section ─── */}
       <DashboardOverviewHeader />
 
-      {/* ─── Escrow Payments Toggle ─── */}
+      {/* ─── Payment Preference Toggles ─── */}
       {data && (
-        <div className="border-t border-border/40 py-3">
+        <div className="border-t border-border/40 py-3 space-y-4">
           <EscrowToggle
             storeId={data?.summary?.id ?? ""}
             escrowEnabled={data?.summary?.escrow_enabled ?? false}
+          />
+          <InstallmentsToggle
+            storeId={data?.summary?.id ?? ""}
+            installmentsEnabled={data?.summary?.installments_enabled ?? false}
           />
         </div>
       )}

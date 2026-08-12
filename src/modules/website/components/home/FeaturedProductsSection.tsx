@@ -29,13 +29,13 @@ export default function FeaturedProductsSection() {
   const products = data?.data?.items ?? [];
 
   return (
-    <div ref={sectionRef}>
+    <div ref={sectionRef} data-scroll-anchor="featured-products">
       <ProductSection
       title="Featured Deals"
       subtitle="Handpicked premium selection from our top-rated vendors. Quality meets affordability."
-      isLoading={isLoading}
+      isLoading={!isInView || isLoading}
       isError={isError}
-      isEmpty={!products.length}
+      isEmpty={isInView && !products.length && !isLoading && !isError}
       emptyIcon={Sparkles}
       emptyTitle="New Deals Coming Soon"
       emptyDescription="We're currently scouting for the best products to feature here. Keep an eye out!"
@@ -76,8 +76,6 @@ export default function FeaturedProductsSection() {
             vendor={product.store_name ?? "Seller"}
             storeSlug={product.store_slug}
             isFavorite={product.is_in_wishlist}
-            colors={product.colors}
-            sizes={product.sizes}
             options={product.options}
             variants={product.variants?.map((v) => ({
               ...v,

@@ -134,8 +134,6 @@ export default function WishlistPage() {
                   stock={item.product?.stock ?? 0}
                   isOnSale={item.product?.on_sale}
                   isFavorite={true}
-                  colors={item.product?.colors}
-                  sizes={item.product?.sizes}
                   options={item.product?.options}
                   variants={item.product?.variants?.map((v) => ({
                     ...v,

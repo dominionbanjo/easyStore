@@ -8,12 +8,6 @@ interface EditorialNarrativeProps {
   quantity: number;
   setQuantity: (q: number) => void;
   liked: boolean;
-  selectedColor: { id: string; name: string; hex: string } | null;
-  setSelectedColor: (
-    color: { id: string; name: string; hex: string } | null,
-  ) => void;
-  selectedSize: string | null;
-  setSelectedSize: (size: string | null) => void;
   addingToCart: boolean;
   currentStock: number;
   displayPrice: number;
@@ -31,10 +25,6 @@ export function EditorialNarrative({
   quantity,
   setQuantity,
   liked,
-  selectedColor,
-  setSelectedColor,
-  selectedSize,
-  setSelectedSize,
   addingToCart,
   currentStock,
   displayPrice,
@@ -137,52 +127,6 @@ export function EditorialNarrative({
                   </div>
                 </div>
               ))}
-
-            {uiProduct.colors.length > 0 && (
-              <div className="space-y-4">
-                <span className="text-xs uppercase tracking-[0.2em]">
-                  Select Pigment
-                </span>
-                <div className="flex flex-wrap gap-4">
-                  {uiProduct.colors.map((color) => (
-                    <button
-                      key={color.id}
-                      onClick={() => setSelectedColor(color)}
-                      className={`w-10 h-10 rounded-sm transition-all flex items-center justify-center ${
-                        selectedColor?.id === color.id
-                          ? "ring-1 ring-offset-4 ring-offset-[#FDFBF7] dark:ring-offset-[#1A1A1A] ring-[#2C2C2C] dark:ring-[#EAEAEA]"
-                          : ""
-                      }`}
-                      style={{ backgroundColor: color.hex }}
-                      aria-label={color.name}
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {uiProduct.sizes.length > 0 && (
-              <div className="space-y-4">
-                <span className="text-xs uppercase tracking-[0.2em]">
-                  Select Dimension
-                </span>
-                <div className="flex flex-wrap gap-3">
-                  {uiProduct.sizes.map((size: string) => (
-                    <button
-                      key={size}
-                      onClick={() => setSelectedSize(size)}
-                      className={`px-6 py-3 border border-[#2C2C2C]/20 dark:border-[#EAEAEA]/20 text-sm tracking-widest uppercase transition-all ${
-                        selectedSize === size
-                          ? "bg-[#2C2C2C] text-[#FDFBF7] dark:bg-[#EAEAEA] dark:text-[#1A1A1A]"
-                          : "hover:border-[#2C2C2C] dark:hover:border-[#EAEAEA]"
-                      }`}
-                    >
-                      {size}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
 
           <div className="pt-8 space-y-6">

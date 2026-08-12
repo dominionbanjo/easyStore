@@ -20,6 +20,7 @@ import { useNavigate } from "react-router-dom";
 import { useStartConversationMutation } from "@/services/messagingApi";
 import { toast } from "sonner";
 import { extractErrorMessage } from "@/utils/errorHandler";
+import { VendorInstallmentsView } from "@/modules/vendor/components/installments/VendorInstallmentsView";
 
 const PAGE_SIZE = 10;
 
@@ -126,6 +127,9 @@ export default function OrdersPage() {
 
   return (
     <section className="space-y-4 md:space-y-6 pb-10">
+      {/* ─── Installment Plans in Progress ─── */}
+      <VendorInstallmentsView />
+
       {/* ─── Header ─── */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>

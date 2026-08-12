@@ -31,6 +31,11 @@ export function productToDraft(product: IProductDetails) {
 
       shipping_note: product.shipping_note || "",
       returns_note: product.returns_note || "",
+
+      installment_enabled: product.installment_enabled ?? false,
+      installment_presets: Array.isArray(product.installment_presets)
+        ? [...product.installment_presets]
+        : ["fifty-fifty-2wk"],
     },
 
     extras: {

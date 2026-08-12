@@ -22,6 +22,7 @@ export function useAddProductForm(extras: ProductExtras) {
   const hasHydrated = useRef(false);
   const draftIdRef = useRef<string | undefined>(undefined);
   const skipNextSync = useRef(false);
+  const suppressSyncRef = useRef(false);
 
   const [saveProductDraft, { isLoading: isSavingDraft }] =
     useSaveProductDraftMutation();
@@ -33,6 +34,8 @@ export function useAddProductForm(extras: ProductExtras) {
       stock: undefined,
       price: undefined,
       discount_price: undefined,
+      installment_enabled: false,
+      installment_presets: ["fifty-fifty-2wk"],
     },
   });
 
@@ -88,6 +91,8 @@ export function useAddProductForm(extras: ProductExtras) {
       stock: toNum(currentValues.stock),
       shipping_note: currentValues.shipping_note,
       returns_note: currentValues.returns_note,
+      installment_enabled: currentValues.installment_enabled,
+      installment_presets: currentValues.installment_presets,
       options: currentValues.options,
       variants,
       image: extras.image,
@@ -128,6 +133,7 @@ export function useAddProductForm(extras: ProductExtras) {
 
   const syncDraft = useCallback(async () => {
     if (!hasHydrated.current) return;
+    if (suppressSyncRef.current) return;
     if (skipNextSync.current) {
       skipNextSync.current = false;
       return;
@@ -193,6 +199,7 @@ export function useAddProductForm(extras: ProductExtras) {
     if (!draft) {
       hasHydrated.current = false;
       draftIdRef.current = undefined;
+      suppressSyncRef.current = false;
       reset({
         stock: null,
         price: null,
@@ -259,10 +266,26 @@ export function useAddProductForm(extras: ProductExtras) {
     skipNextSync.current = true;
   }, []);
 
+  /**
+   * Permanently suppress auto-syncs (until the draft is cleared).
+   * Used after a create/publish submit so a late 40s tick can never
+   * create an orphan draft row.
+   */
+  const suppressSync = useCallback(() => {
+    suppressSyncRef.current = true;
+  }, []);
+
+  /** Current backend draft row id (set after a successful save). */
+  const getDraftRowId = useCallback((): string | undefined => {
+    return draftIdRef.current ?? draft?.id;
+  }, [draft?.id]);
+
   return {
     ...methods,
     saveDraftNow,
     isSavingDraft,
     cancelSync,
+    suppressSync,
+    getDraftRowId,
   };
 }

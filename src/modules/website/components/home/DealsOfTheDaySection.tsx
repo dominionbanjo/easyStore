@@ -26,12 +26,14 @@ export default function DealsOfTheDaySection() {
   );
 
   const products = data?.data?.items ?? [];
-  const isEmpty = !isLoading && !isError && products.length === 0;
+  const showLoading = !isInView || isLoading;
+  const isEmpty = isInView && !isLoading && !isError && products.length === 0;
 
   return (
     <section
       ref={sectionRef}
-      className="py-10 md:py-14 px-1 sm:px-6 overflow-hidden bg-background dark:bg-neutral-950 transition-colors duration-300 [content-visibility:auto] [contain-intrinsic-size:auto_500px]"
+      data-scroll-anchor="deals-of-the-day"
+      className="ez-cv-section py-10 md:py-14 px-1 sm:px-6 overflow-hidden bg-background dark:bg-neutral-950 transition-colors duration-300 [content-visibility:auto] [contain-intrinsic-size:auto_500px]"
     >
       <div className="w-full mx-auto space-y-8">
         <div className="flex items-end justify-between gap-4 px-1">
@@ -56,7 +58,7 @@ export default function DealsOfTheDaySection() {
           </SmartLink>
         </div>
 
-        {isLoading ? (
+        {showLoading ? (
           <div className="flex gap-4 overflow-hidden">
             {Array.from({ length: 5 }).map((_, i) => (
               <Skeleton

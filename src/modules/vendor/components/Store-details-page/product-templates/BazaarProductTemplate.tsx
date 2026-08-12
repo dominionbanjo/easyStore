@@ -28,10 +28,6 @@ export default function BazaarProductTemplate({
     quantity,
     setQuantity,
     liked,
-    selectedColor,
-    setSelectedColor,
-    selectedSize,
-    setSelectedSize,
     addingToCart,
     displayPrice,
     displayOriginalPrice,
@@ -69,10 +65,6 @@ export default function BazaarProductTemplate({
               displayOriginalPrice={displayOriginalPrice}
               selectedOptions={selectedOptions}
               selectOption={selectOption}
-              selectedColor={selectedColor}
-              setSelectedColor={setSelectedColor}
-              selectedSize={selectedSize}
-              setSelectedSize={setSelectedSize}
               onMessageVendor={onMessageVendor}
             />
           </div>

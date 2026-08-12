@@ -17,7 +17,9 @@ export interface ICartItem {
   color_hex?: string | null;
   variant_id?: string | null;
   variant_options?: Record<string, string> | null;
-
+  installment_enabled?: boolean;
+  /** Vendor-offered installment presets (buyer picks within this list). */
+  installment_presets?: string[];
 }
 
 export interface ICart {

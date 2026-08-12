@@ -143,6 +143,7 @@ export default function App() {
                   <Route path="school-zones" element={<Pages.SuperAdminSchoolZonesPage />} />
                   <Route path="school-zones/:id" element={<Pages.SuperAdminSchoolZoneDetailPage />} />
                   <Route path="orders" element={<Pages.SuperAdminOrdersPage />} />
+                  <Route path="installments" element={<Pages.SuperAdminInstallmentsPage />} />
                   <Route path="users" element={<Pages.SuperAdminUsersPage />} />
                   <Route path="transactions" element={<Pages.SuperAdminTransactionsPage />} />
                   <Route path="payouts" element={<Pages.SuperAdminPayoutsPage />} />
@@ -199,6 +200,7 @@ export default function App() {
                 <Route path="school-zones" element={<Pages.SuperAdminSchoolZonesPage />} />
                 <Route path="school-zones/:id" element={<Pages.SuperAdminSchoolZoneDetailPage />} />
                 <Route path="orders" element={<Pages.SuperAdminOrdersPage />} />
+                <Route path="installments" element={<Pages.SuperAdminInstallmentsPage />} />
                 <Route path="users" element={<Pages.SuperAdminUsersPage />} />
                 <Route path="transactions" element={<Pages.SuperAdminTransactionsPage />} />
                 <Route path="payouts" element={<Pages.SuperAdminPayoutsPage />} />

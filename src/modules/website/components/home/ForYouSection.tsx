@@ -31,7 +31,7 @@ export default function ForYouSection() {
   const personalized = data?.data?.personalized ?? false;
 
   return (
-    <div ref={sectionRef}>
+    <div ref={sectionRef} data-scroll-anchor="for-you">
       <ProductSection
       title={personalized ? "Recommended for You" : "Trending Now"}
       subtitle={
@@ -39,9 +39,9 @@ export default function ForYouSection() {
           ? "Picked for you from your preferences, purchases, wishlist and cart."
           : "What shoppers are loving right now — sign in and pick your interests for personalised picks."
       }
-      isLoading={isLoading}
+      isLoading={!isInView || isLoading}
       isError={isError}
-      isEmpty={!products.length}
+      isEmpty={isInView && !products.length && !isLoading && !isError}
       emptyIcon={personalized ? Sparkles : TrendingUp}
       emptyTitle="Nothing to show yet"
       emptyDescription="New recommendations are on the way. Check back soon!"

@@ -6,12 +6,6 @@ import { ProductShareButton } from "@/modules/website/components/products/Produc
 interface VanguardMainProps {
   uiProduct: UIProduct;
   liked: boolean;
-  selectedColor: { id: string; name: string; hex: string } | null;
-  setSelectedColor: (
-    color: { id: string; name: string; hex: string } | null,
-  ) => void;
-  selectedSize: string | null;
-  setSelectedSize: (size: string | null) => void;
   addingToCart: boolean;
   displayPrice: number;
   displayOriginalPrice: number | null | undefined;
@@ -27,10 +21,6 @@ interface VanguardMainProps {
 export function VanguardMain({
   uiProduct,
   liked,
-  selectedColor,
-  setSelectedColor,
-  selectedSize,
-  setSelectedSize,
   addingToCart,
   displayPrice,
   displayOriginalPrice,
@@ -115,52 +105,6 @@ export function VanguardMain({
                   </div>
                 </div>
               ))}
-
-            {uiProduct.colors.length > 0 && (
-              <div>
-                <h3 className="text-xs tracking-widest uppercase font-medium mb-4 text-zinc-400">
-                  Color
-                </h3>
-                <div className="flex flex-wrap gap-4">
-                  {uiProduct.colors.map((color) => (
-                    <button
-                      key={color.id}
-                      onClick={() => setSelectedColor(color)}
-                      className={`w-8 h-8 rounded-sm border transition-all ${
-                        selectedColor?.id === color.id
-                          ? "border-zinc-900 dark:border-white scale-110 "
-                          : "border-transparent"
-                      }`}
-                      style={{ backgroundColor: color.hex }}
-                      aria-label={color.name}
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {uiProduct.sizes.length > 0 && (
-              <div>
-                <h3 className="text-xs tracking-widest uppercase font-medium mb-4 text-zinc-400">
-                  Size
-                </h3>
-                <div className="flex flex-wrap gap-3">
-                  {uiProduct.sizes.map((size: string) => (
-                    <button
-                      key={size}
-                      onClick={() => setSelectedSize(size)}
-                      className={`min-w-[3rem] px-4 py-2 border rounded-none text-xs tracking-widest uppercase transition-all ${
-                        selectedSize === size
-                          ? "bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 border-zinc-900 dark:border-white"
-                          : "bg-transparent text-zinc-900 dark:text-white border-zinc-200 dark:border-zinc-800 hover:border-zinc-400"
-                      }`}
-                    >
-                      {size}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
 
           <div className="pt-8 flex flex-col gap-4">

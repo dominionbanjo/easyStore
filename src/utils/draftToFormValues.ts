@@ -1,7 +1,7 @@
 import type { UploadedImage } from "@/modules/vendor/components/add-products/ImageUploadSection";
 import type { SpecItem } from "@/modules/vendor/components/add-products/SpecificationsSection";
 import { buildSpecsObject } from "@/modules/vendor/utils/addProduct.helpers";
-import type { CreateProductCloudinaryArgs } from "@/types/product/productTypes";
+import type { CreateProductArgs } from "@/types/product/productTypes";
 
 export type BuildCreatePayloadArgs = {
   values: {
@@ -16,6 +16,9 @@ export type BuildCreatePayloadArgs = {
 
     shipping_note?: string | null;
     returns_note?: string | null;
+
+    installment_enabled?: boolean;
+    installment_presets?: string[];
   };
 
   options?: { name: string; values: string[] }[] | null;
@@ -36,7 +39,7 @@ export type BuildCreatePayloadArgs = {
 
 export function buildCreateProductPayload(
   args: BuildCreatePayloadArgs,
-): CreateProductCloudinaryArgs {
+): CreateProductArgs {
   const { values, image, gallery, tags, highlights, specItems } = args;
 
   return {
@@ -58,6 +61,9 @@ export function buildCreateProductPayload(
 
     shipping_note: values.shipping_note,
     returns_note: values.returns_note,
+
+    installment_enabled: values.installment_enabled,
+    installment_presets: values.installment_presets,
 
     image,
     gallery,

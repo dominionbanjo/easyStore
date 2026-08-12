@@ -51,12 +51,14 @@ export default function TopCategoriesSection({
       .slice(0, 8);
   }, [data]);
 
-  const isEmpty = !isLoading && !isError && categories.length === 0;
+  const isEmpty = isInView && !isLoading && !isError && categories.length === 0;
+  const showLoading = !isInView || isLoading;
 
   return (
     <section
       ref={sectionRef}
-      className={`py-12 md:py-20 px-1 sm:px-6 overflow-hidden bg-background [content-visibility:auto] [contain-intrinsic-size:auto_400px] ${className}`}
+      data-scroll-anchor="top-categories"
+      className={`ez-cv-section py-12 md:py-20 px-1 sm:px-6 overflow-hidden bg-background [content-visibility:auto] [contain-intrinsic-size:auto_400px] ${className}`}
     >
       <div className="w-full mx-auto space-y-10">
         {/* Header Section */}
@@ -84,7 +86,7 @@ export default function TopCategoriesSection({
         </div>
 
         {/* Content Section */}
-        {isLoading ? (
+        {showLoading ? (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {Array.from({ length: 8 }).map((_, i) => (
               <Skeleton key={i} className="h-24 md:h-32 rounded-sm w-full" />

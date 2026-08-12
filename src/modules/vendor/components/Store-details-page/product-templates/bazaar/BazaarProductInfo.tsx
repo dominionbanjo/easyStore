@@ -12,12 +12,6 @@ interface BazaarProductInfoProps {
   uiProduct: UIProduct;
   displayPrice: number;
   displayOriginalPrice: number | null | undefined;
-  selectedColor: { id: string; name: string; hex: string } | null;
-  setSelectedColor: (
-    color: { id: string; name: string; hex: string } | null,
-  ) => void;
-  selectedSize: string | null;
-  setSelectedSize: (size: string | null) => void;
   selectedOptions: Record<string, string>;
   selectOption: (name: string, value: string) => void;
   onMessageVendor?: () => void;
@@ -29,10 +23,6 @@ export function BazaarProductInfo({
   uiProduct,
   displayPrice,
   displayOriginalPrice,
-  selectedColor,
-  setSelectedColor,
-  selectedSize,
-  setSelectedSize,
   selectedOptions,
   selectOption,
   onMessageVendor,
@@ -150,55 +140,6 @@ export function BazaarProductInfo({
                 </div>
               </div>
             ))}
-
-          {uiProduct.colors.length > 0 && (
-            <div className="space-y-3">
-              <div className="flex justify-between items-center">
-                 <span className="text-xs font-black uppercase tracking-widest text-slate-400">Color Variation</span>
-                 <span className="text-sm font-bold text-slate-900 dark:text-white bg-slate-100 dark:bg-neutral-800 px-3 py-1 rounded-sm">
-                    {uiProduct.colors.find((c) => c.id === selectedColor?.id)?.name || "Select"}
-                 </span>
-              </div>
-              <div className="flex flex-wrap gap-3">
-                {uiProduct.colors.map(
-                  (color: { id: string; name: string; hex: string }) => (
-                    <button
-                      key={color.id}
-                      onClick={() => setSelectedColor(color)}
-                      className={`w-10 h-10 sm:w-12 sm:h-12 rounded-sm border-4 transition-all active:scale-90 ${
-                        selectedColor?.id === color.id
-                          ? "border-indigo-600 ring-4 ring-indigo-600/20 scale-110 shadow-lg"
-                          : "border-white dark:border-neutral-800 hover:border-slate-300 dark:hover:border-neutral-700 shadow-sm"
-                      }`}
-                      style={{ backgroundColor: color.hex }}
-                      aria-label={color.name}
-                    />
-                  ),
-                )}
-              </div>
-            </div>
-          )}
-
-          {uiProduct.sizes.length > 0 && (
-            <div className="space-y-3">
-              <span className="text-xs font-black uppercase tracking-widest text-slate-400">Size Breakdown</span>
-              <div className="flex flex-wrap gap-3">
-                {uiProduct.sizes.map((size: string) => (
-                  <button
-                    key={size}
-                    onClick={() => setSelectedSize(size)}
-                    className={`min-w-[60px] h-12 flex items-center justify-center border rounded-sm text-sm font-black transition-all active:scale-95 ${
-                      selectedSize === size
-                        ? "bg-indigo-600 text-white border-transparent shadow-lg shadow-indigo-600/20"
-                        : "bg-white dark:bg-neutral-800 text-slate-700 dark:text-neutral-300 border-slate-200 dark:border-neutral-800 hover:border-indigo-600"
-                    }`}
-                  >
-                    {size}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
 
         <Separator className="opacity-50" />

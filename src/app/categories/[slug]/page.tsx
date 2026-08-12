@@ -166,8 +166,6 @@ export default function CategoryDetailsPage() {
                         isFavorite={product.is_in_wishlist}
                         vendor={product.store_name}
                         storeSlug={product.store_slug}
-                        colors={product.colors}
-                        sizes={product.sizes}
                         options={product.options}
                         variants={product.variants?.map((v) => ({
                           ...v,

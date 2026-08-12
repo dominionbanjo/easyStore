@@ -104,6 +104,7 @@ export interface IStoreDetails {
   recipient_code: string | null;
   payout_verified: boolean;
   escrow_enabled: boolean;
+  installments_enabled: boolean;
   status: "active" | "pending" | "restricted" | "banned";
   user?: {
     first_name: string;
@@ -167,8 +168,6 @@ export interface IStoreProduct {
   stock: number;
   is_in_wishlist?: boolean;
   store_slug?: string;
-  colors?: { id: string; name: string; hex: string }[];
-  sizes?: string[];
   category?: string;
   store_name?: string;
   created_at?: string;
@@ -281,6 +280,7 @@ export interface IStoreAnalytics {
     id?: string;
     payout_verified?: boolean;
     escrow_enabled?: boolean;
+    installments_enabled?: boolean;
   };
   trends: {
     monthly: {

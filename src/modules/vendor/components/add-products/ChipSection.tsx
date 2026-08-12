@@ -39,14 +39,19 @@ export default function ChipSection({
     }
     onAdd(v);
     setInput("");
+    userAddedRef.current = true;
   }
 
-  // Robust focus return: whenever values array grows, return focus to this input
+  // Robust focus return: only when the user just added a chip — never on
+  // external population (e.g. loading an existing product into the edit
+  // form), which would yank the page down to this field on page load.
   const prevCount = useRef(values.length);
+  const userAddedRef = useRef(false);
   useEffect(() => {
-    if (values.length > prevCount.current) {
+    if (values.length > prevCount.current && userAddedRef.current) {
       inputRef.current?.focus();
     }
+    userAddedRef.current = false;
     prevCount.current = values.length;
   }, [values.length]);
 

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useForm, FormProvider } from "react-hook-form";
-import { Loader2, Store, Globe, CreditCard, Truck } from "lucide-react";
+import { Loader2, Store, Globe, CreditCard, Truck, Wallet } from "lucide-react";
 import { toast } from "sonner";
 
 import {
@@ -26,6 +26,7 @@ import { StoreIdentityStep } from "@/modules/vendor/components/settings/StoreIde
 import { ContactLocationStep } from "@/modules/vendor/components/settings/ContactLocationStep";
 import { PayoutSetupStep } from "@/modules/vendor/components/settings/PayoutSetupStep";
 import { DeliverySetupStep } from "@/modules/vendor/components/settings/DeliverySetupStep";
+import { PaymentPreferencesStep } from "@/modules/vendor/components/settings/PaymentPreferencesStep";
 import { AddressModal } from "@/modules/vendor/components/settings/AddressModal";
 import { useStoreSetup } from "@/modules/vendor/hooks/useStoreSetup";
 import { StoreSettingsCompleteView } from "@/modules/vendor/components/settings/StoreSettingsCompleteView";
@@ -33,8 +34,9 @@ import { StoreSettingsCompleteView } from "@/modules/vendor/components/settings/
 const STEPS = [
   { id: 1, title: "Store Identity", icon: Store },
   { id: 2, title: "Contact Details", icon: Globe },
-  { id: 3, title: "Payout Setup", icon: CreditCard },
-  { id: 4, title: "Delivery Rates", icon: Truck },
+  { id: 3, title: "Payment Preferences", icon: Wallet },
+  { id: 4, title: "Payout Setup", icon: CreditCard },
+  { id: 5, title: "Delivery Rates", icon: Truck },
 ];
 
 export default function SettingsPage() {
@@ -87,6 +89,8 @@ export default function SettingsPage() {
       bank_code: "",
       account_number: "",
       account_name: "",
+      escrow_enabled: false,
+      installments_enabled: false,
     },
   });
 
@@ -120,6 +124,8 @@ export default function SettingsPage() {
         bank_code: store.bank_code || "",
         account_number: store.account_number || "",
         account_name: "",
+        escrow_enabled: store.escrow_enabled ?? false,
+        installments_enabled: store.installments_enabled ?? false,
       });
       setBannerPreview(store.cover_image || null);
       setBannerPublicId(store.cover_image_public_id || null);
@@ -241,9 +247,14 @@ export default function SettingsPage() {
       });
 
       formData.append("social_links", JSON.stringify(data.social_links));
+      formData.append("escrow_enabled", String(Boolean(data.escrow_enabled)));
+      formData.append(
+        "installments_enabled",
+        String(Boolean(data.installments_enabled)),
+      );
 
       let nextSetupStage = setupStage;
-      if (!isSetupComplete && activeStep < 3) {
+      if (!isSetupComplete && activeStep < 4) {
         nextSetupStage = setupStage + 1;
         formData.append("setup_stage", String(nextSetupStage));
       }
@@ -258,7 +269,7 @@ export default function SettingsPage() {
 
       await updateStore({ id: store.id, data: formData }).unwrap();
       toast.success("Store details updated successfully!");
-      if (!isSetupComplete && activeStep < 3) {
+      if (!isSetupComplete && activeStep < 4) {
         setActiveStep(nextSetupStage);
       }
     } catch (error: unknown) {
@@ -298,7 +309,7 @@ export default function SettingsPage() {
       }).unwrap();
       toast.success("Bank account registered successfully!");
       // Proceed to delivery setup
-      setActiveStep(4);
+      setActiveStep(5);
     } catch (error: unknown) {
       const err = error as { data?: { message?: string } };
       toast.error(err.data?.message || "Failed to register bank account");
@@ -384,6 +395,15 @@ export default function SettingsPage() {
 
           {activeStep === 3 && (
             <div>
+              <PaymentPreferencesStep
+                onSave={saveStoreDetails}
+                isSaving={isUpdatingStore}
+              />
+            </div>
+          )}
+
+          {activeStep === 4 && (
+            <div>
               <PayoutSetupStep
                 banks={banksResponse?.data || []}
                 isVerifying={isVerifyingBank}
@@ -395,7 +415,7 @@ export default function SettingsPage() {
             </div>
           )}
 
-          {activeStep === 4 && (
+          {activeStep === 5 && (
             <div>
               <DeliverySetupStep storeId={store.id} />
             </div>

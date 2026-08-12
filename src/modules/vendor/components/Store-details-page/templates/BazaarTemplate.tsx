@@ -32,6 +32,10 @@ export default function BazaarTemplate({
   isProductsLoading,
   isProductsFetching,
   isCategoriesLoading,
+  hasLoaded,
+  isInitialError,
+  pageLoadFailed,
+  loadMore,
   activeTab,
   selectedCategory,
   searchQuery,
@@ -279,7 +283,12 @@ export default function BazaarTemplate({
               total={productsTotal}
               isLoading={isProductsLoading}
               isFetching={isProductsFetching}
+              hasLoaded={hasLoaded}
+              isInitialError={isInitialError}
+              pageLoadFailed={pageLoadFailed}
+              loadMore={loadMore}
               sentinelRef={sentinelRef}
+              searchQuery={searchQuery}
               selectedCategory={selectedCategory}
               onBackToCategories={() => onCategorySelect(null)}
             />

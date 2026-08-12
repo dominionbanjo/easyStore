@@ -9,12 +9,6 @@ interface HeritageShowcaseProps {
   quantity: number;
   setQuantity: (q: number) => void;
   liked: boolean;
-  selectedColor: { id: string; name: string; hex: string } | null;
-  setSelectedColor: (
-    color: { id: string; name: string; hex: string } | null,
-  ) => void;
-  selectedSize: string | null;
-  setSelectedSize: (size: string | null) => void;
   addingToCart: boolean;
   displayPrice: number;
   displayOriginalPrice: number | null | undefined;
@@ -32,10 +26,6 @@ export function HeritageShowcase({
   quantity,
   setQuantity,
   liked,
-  selectedColor,
-  setSelectedColor,
-  selectedSize,
-  setSelectedSize,
   addingToCart,
   displayPrice,
   displayOriginalPrice,
@@ -122,52 +112,6 @@ export function HeritageShowcase({
                   </div>
                 </div>
               ))}
-
-            {uiProduct.colors.length > 0 && (
-              <div>
-                <span className="text-sm font-bold text-[#2C2622] dark:text-white block mb-3 uppercase tracking-widest">
-                  Colorways
-                </span>
-                <div className="flex flex-wrap gap-3">
-                  {uiProduct.colors.map((color) => (
-                    <button
-                      key={color.id}
-                      onClick={() => setSelectedColor(color)}
-                      className={`w-12 h-12 rounded-sm border-4 transition-all ${
-                        selectedColor?.id === color.id
-                          ? "border-white dark:border-[#1E1A17] ring-2 ring-[var(--theme-primary)] scale-110 "
-                          : "border-transparent ring-1 ring-[#EADDCE] dark:ring-[#3D352B]"
-                      }`}
-                      style={{ backgroundColor: color.hex }}
-                      aria-label={color.name}
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {uiProduct.sizes.length > 0 && (
-              <div>
-                <span className="text-sm font-bold text-[#2C2622] dark:text-white block mb-3 uppercase tracking-widest">
-                  Proportions
-                </span>
-                <div className="flex flex-wrap gap-2">
-                  {uiProduct.sizes.map((size: string) => (
-                    <button
-                      key={size}
-                      onClick={() => setSelectedSize(size)}
-                      className={`px-6 py-2.5 rounded-sm text-sm font-medium transition-all border ${
-                        selectedSize === size
-                          ? "bg-[var(--theme-primary)] text-white border-[var(--theme-primary)] "
-                          : "bg-[#FAF7F2] dark:bg-[#2C2622] text-[#5C5042] dark:text-[#EAE3DB] border-[#EADDCE] dark:border-[#5C5042] hover:bg-white dark:hover:bg-[#3D352B]"
-                      }`}
-                    >
-                      {size}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
 
           {/* Basket Actions */}
