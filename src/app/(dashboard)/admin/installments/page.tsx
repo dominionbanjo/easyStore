@@ -57,16 +57,7 @@ export default function AdminInstallmentsPage() {
 
   return (
     <div className="p-4 sm:p-6 space-y-6">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-black tracking-tight text-foreground">
-            Installment Plans
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            Partial-payment plans across the platform — monitor, force-complete
-            or refund.
-          </p>
-        </div>
+      <div className="flex items-center justify-end">
         <Button
           variant="outline"
           size="sm"

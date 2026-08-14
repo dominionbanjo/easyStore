@@ -24,6 +24,10 @@ const PAGE_META: Array<{
     meta: { title: "Orders", description: "Track, fulfill, and manage your incoming orders." },
   },
   {
+    test: (path) => path.startsWith("/installments"),
+    meta: { title: "Installments", description: "Buyers paying in parts across your orders — track each plan and its full payment trail." },
+  },
+  {
     test: (path) => path.startsWith("/customers"),
     meta: { title: "Customers", description: "See who's buying from you and grow your customer base." },
   },

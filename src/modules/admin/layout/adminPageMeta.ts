@@ -12,6 +12,10 @@ const PAGE_META: Array<{
     meta: { title: "Order Management", description: "Monitor and manage all orders placed across the platform." },
   },
   {
+    test: (path) => path.startsWith("/installments"),
+    meta: { title: "Installment Plans", description: "Partial-payment plans across the platform — monitor, force-complete or refund." },
+  },
+  {
     test: (path) => path.startsWith("/vendors"),
     meta: { title: "Vendors Management", description: "Approve new vendors, manage store visibility, and control access across the platform." },
   },

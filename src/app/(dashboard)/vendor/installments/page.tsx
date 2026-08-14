@@ -54,74 +54,63 @@ export default function VendorInstallmentsPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-black tracking-tight text-foreground">
-            Installments
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            Buyers paying in parts across your orders — track each plan and its
-            full payment trail.
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant={status !== undefined ? "secondary" : "outline"}
-                className="gap-2 h-9 border-dashed rounded-sm text-[10px] font-black uppercase tracking-widest"
-              >
-                <Filter className="h-3.5 w-3.5" />
-                {statusOptions.find((s) => s.value === status)?.label}
-                <ChevronDown className="h-3.5 w-3.5 opacity-50" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-44 p-1.5 rounded-sm border-border/40" align="end">
-              <div className="space-y-1">
-                {statusOptions.map((option) => (
-                  <Button
-                    key={option.label}
-                    variant={status === option.value ? "secondary" : "ghost"}
-                    size="sm"
-                    className="w-full justify-start text-[10px] font-black uppercase tracking-widest"
-                    onClick={() => {
-                      setStatus(option.value);
-                      setPage(1);
-                    }}
-                  >
-                    {option.label}
-                  </Button>
-                ))}
-              </div>
-            </PopoverContent>
-          </Popover>
-
-          {isFiltered && (
+      {/* Toolbar */}
+      <div className="flex items-center justify-end gap-2">
+        <Popover>
+          <PopoverTrigger asChild>
             <Button
-              variant="ghost"
-              size="sm"
-              className="gap-2 h-9 rounded-sm text-[10px] font-black uppercase tracking-widest"
-              onClick={() => {
-                setStatus(undefined);
-                setPage(1);
-              }}
+              variant={status !== undefined ? "secondary" : "outline"}
+              className="gap-2 h-9 border-dashed rounded-sm text-[10px] font-black uppercase tracking-widest"
             >
-              <X className="h-3.5 w-3.5" />
-              Clear
+              <Filter className="h-3.5 w-3.5" />
+              {statusOptions.find((s) => s.value === status)?.label}
+              <ChevronDown className="h-3.5 w-3.5 opacity-50" />
             </Button>
-          )}
+          </PopoverTrigger>
+          <PopoverContent className="w-44 p-1.5 rounded-sm border-border/40" align="end">
+            <div className="space-y-1">
+              {statusOptions.map((option) => (
+                <Button
+                  key={option.label}
+                  variant={status === option.value ? "secondary" : "ghost"}
+                  size="sm"
+                  className="w-full justify-start text-[10px] font-black uppercase tracking-widest"
+                  onClick={() => {
+                    setStatus(option.value);
+                    setPage(1);
+                  }}
+                >
+                  {option.label}
+                </Button>
+              ))}
+            </div>
+          </PopoverContent>
+        </Popover>
 
+        {isFiltered && (
           <Button
-            variant="outline"
+            variant="ghost"
             size="sm"
-            onClick={() => refetch()}
-            className="h-9 rounded-sm text-[10px] font-black uppercase tracking-widest"
+            className="gap-2 h-9 rounded-sm text-[10px] font-black uppercase tracking-widest"
+            onClick={() => {
+              setStatus(undefined);
+              setPage(1);
+            }}
           >
-            <RefreshCw className="h-3.5 w-3.5 mr-2" />
-            Refresh
+            <X className="h-3.5 w-3.5" />
+            Clear
           </Button>
-        </div>
+        )}
+
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => refetch()}
+          className="h-9 rounded-sm text-[10px] font-black uppercase tracking-widest"
+        >
+          <RefreshCw className="h-3.5 w-3.5 mr-2" />
+          Refresh
+        </Button>
       </div>
 
       {/* Table */}
