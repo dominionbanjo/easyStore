@@ -41,7 +41,7 @@ export default function OrderCard({
     <Card className="overflow-hidden hover: transition-all rounded-sm bg-white">
       <img src={image} alt={name} className="w-full h-48 object-cover" />
       <CardHeader>
-        <CardTitle className="text-lg font-semibold text-center">
+        <CardTitle className="text-lg font-semibold text-center line-clamp-2">
           {name}
         </CardTitle>
       </CardHeader>
