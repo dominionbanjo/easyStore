@@ -115,10 +115,14 @@ export const installmentsApi = apiManager.injectEndpoints({
       invalidatesTags: ["Installments", "User"],
     }),
 
-    getMyInstallmentPlans: builder.query<PaginatedInstallmentPlans, void>({
-      query: () => ({
+    getMyInstallmentPlans: builder.query<
+      PaginatedInstallmentPlans,
+      { page?: number; limit?: number; status?: string } | void
+    >({
+      query: (args) => ({
         url: "installments/mine",
         method: "GET",
+        params: args ?? {},
       }),
       transformResponse: (
         response: unknown,
@@ -167,10 +171,14 @@ export const installmentsApi = apiManager.injectEndpoints({
     }),
 
     /* ───────── VENDOR ───────── */
-    getVendorInstallmentPlans: builder.query<PaginatedInstallmentPlans, void>({
-      query: () => ({
+    getVendorInstallmentPlans: builder.query<
+      PaginatedInstallmentPlans,
+      { page?: number; limit?: number; status?: string } | void
+    >({
+      query: (args) => ({
         url: "admin/vendor/installments",
         method: "GET",
+        params: args ?? {},
       }),
       transformResponse: (
         response: unknown,
@@ -199,6 +207,23 @@ export const installmentsApi = apiManager.injectEndpoints({
         };
       },
       providesTags: ["Installments"],
+    }),
+
+    getVendorInstallmentPlan: builder.query<InstallmentPlanView, string>({
+      query: (planId) => ({
+        url: `admin/vendor/installments/${planId}`,
+        method: "GET",
+      }),
+      transformResponse: (response: unknown): InstallmentPlanView => {
+        const payload =
+          (response as { data?: { data?: InstallmentPlanView } }).data?.data ??
+          (response as { data?: InstallmentPlanView }).data ??
+          response;
+        return payload as InstallmentPlanView;
+      },
+      providesTags: (_result, _error, planId) => [
+        { type: "Installments", id: planId },
+      ],
     }),
 
     /* ───────── ADMIN ───────── */
@@ -276,6 +301,7 @@ export const {
   useGetMyInstallmentPlansQuery,
   useGetMyInstallmentPlanQuery,
   useGetVendorInstallmentPlansQuery,
+  useGetVendorInstallmentPlanQuery,
   useGetAdminInstallmentPlansQuery,
   useGetAdminInstallmentPlanQuery,
   useForceCompletePlanMutation,

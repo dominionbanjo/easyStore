@@ -237,7 +237,6 @@ export default function VerifyPaymentPage() {
 
   /* ───────────────── INSTALLMENT SUCCESS ───────────────── */
   if (isInstallment) {
-    const orderId = data?.data?.order_id;
     return (
       <section className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-emerald-50/30 dark:from-neutral-950 dark:via-neutral-900 dark:to-emerald-950/10 flex items-center justify-center px-4 transition-colors duration-300">
         <Card className="w-full max-w-md text-center rounded-sm border-2 border-emerald-100 dark:border-emerald-950/20 overflow-hidden bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl">
@@ -264,14 +263,7 @@ export default function VerifyPaymentPage() {
             </div>
 
             <div className="space-y-3">
-              <SmartLink
-                to={
-                  orderId
-                    ? `${ACCOUNT_ROUTES.ORDERS}/${orderId}`
-                    : ACCOUNT_ROUTES.ORDERS
-                }
-                className="w-full block"
-              >
+              <SmartLink to={ACCOUNT_ROUTES.INSTALLMENTS} className="w-full block">
                 <Button className="w-full h-14 rounded-sm text-lg font-bold hover:scale-105 active:scale-95 transition-all">
                   <CreditCard className="mr-2 h-5 w-5" />
                   View My Plan

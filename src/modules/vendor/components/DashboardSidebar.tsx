@@ -20,6 +20,7 @@ import {
   Plus,
   ChevronDown,
   GraduationCap,
+  Wallet,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -42,6 +43,7 @@ const preloadMap: Record<string, () => void> = {
   "/": () => { import("@/app/(dashboard)/vendor/page"); },
   "/products": () => { import("@/app/(dashboard)/vendor/products/page"); },
   "/orders": () => { import("@/app/(dashboard)/vendor/orders/page"); },
+  "/installments": () => { import("@/app/(dashboard)/vendor/installments/page"); },
   "/customers": () => { import("@/app/(dashboard)/vendor/customers/page"); },
   "/templates": () => { import("@/app/(dashboard)/vendor/templates/page"); },
   "/settings": () => { import("@/app/(dashboard)/vendor/settings/page"); },
@@ -59,6 +61,7 @@ const allVendorPreloaders: Array<() => void> = [
   () => { import("@/app/(dashboard)/vendor/page"); },
   () => { import("@/app/(dashboard)/vendor/products/page"); },
   () => { import("@/app/(dashboard)/vendor/orders/page"); },
+  () => { import("@/app/(dashboard)/vendor/installments/page"); },
   () => { import("@/app/(dashboard)/vendor/customers/page"); },
   () => { import("@/app/(dashboard)/vendor/templates/page"); },
   () => { import("@/app/(dashboard)/vendor/settings/page"); },
@@ -76,6 +79,7 @@ const menuItems = [
   { label: "Dashboard", icon: LayoutDashboard, to: "/", exact: true },
   { label: "Products", icon: Package, to: "/products" },
   { label: "Orders", icon: ShoppingCart, to: "/orders" },
+  { label: "Installments", icon: Wallet, to: "/installments" },
   { label: "Customers", icon: Users, to: "/customers" },
   { label: "Staff", icon: UserCog, to: "/staff" },
   { label: "Sales Terminal", icon: Receipt, to: "/sales-terminal" },

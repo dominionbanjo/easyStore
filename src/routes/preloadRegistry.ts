@@ -31,10 +31,12 @@ function getRegistry() {
     [ROUTES.ACCOUNT.VERIFY_PAYMENT]: Pages.preloadVerifyPaymentPage,
     [ROUTES.ACCOUNT.WISHLIST]: Pages.preloadWishlistPage,
     [ROUTES.ACCOUNT.ORDERS]: Pages.preloadOrdersPage,
+    [ROUTES.ACCOUNT.INSTALLMENTS]: Pages.preloadInstallmentsPage,
     [ROUTES.AUTH.LOGIN]: Pages.preloadLoginPage,
     [ROUTES.AUTH.SIGNUP]: Pages.preloadSignupPage,
     [ROUTES.VENDOR.PRODUCTS]: Pages.preloadProductsPage,
     [ROUTES.VENDOR.ORDERS]: Pages.preloadVendorOrdersPage,
+    [ROUTES.VENDOR.INSTALLMENTS]: Pages.preloadVendorInstallmentsPage,
     [ROUTES.VENDOR.CUSTOMERS]: Pages.preloadCustomersPage,
   };
 
@@ -63,6 +65,8 @@ export const getPreloadForPath = (path: string) => {
   if (path.startsWith("/categories/")) return Pages.preloadCategoryDetailsPage;
   if (path.startsWith("/product/")) return Pages.preloadProductDetailPage;
   if (path.startsWith("/account/orders/")) return Pages.preloadOrderDetailsPage;
+  if (path.startsWith("/account/installments/"))
+    return Pages.preloadInstallmentDetailsPage;
   if (path.startsWith("/zones")) return Pages.preloadZonesPage;
   if (path.startsWith("/school-zones")) return Pages.preloadZonesPage;
 

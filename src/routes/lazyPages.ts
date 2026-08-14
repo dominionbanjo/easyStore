@@ -91,6 +91,15 @@ export const preloadMessagesPage = MessagesPageImport;
 const SearchResultsPageImport = () => import("@/app/s/page");
 export const SearchResultsPage = lazy(SearchResultsPageImport);
 export const preloadSearchResultsPage = SearchResultsPageImport;
+
+const InstallmentsPageImport = () => import("@/app/account/installments/page");
+export const InstallmentsPage = lazy(InstallmentsPageImport);
+export const preloadInstallmentsPage = InstallmentsPageImport;
+
+const InstallmentDetailsPageImport = () =>
+  import("@/app/account/installments/[id]/page");
+export const InstallmentDetailsPage = lazy(InstallmentDetailsPageImport);
+export const preloadInstallmentDetailsPage = InstallmentDetailsPageImport;
 export const NotFoundPage = lazy(() => import("@/app/not-found/page"));
 export const PrivacyPolicyPage = lazy(
   () => import("@/app/privacy-policy/page"),
@@ -164,6 +173,11 @@ const VendorOrdersPageImport = () =>
   import("@/app/(dashboard)/vendor/orders/page");
 export const VendorOrdersPage = lazy(VendorOrdersPageImport);
 export const preloadVendorOrdersPage = VendorOrdersPageImport;
+
+const VendorInstallmentsPageImport = () =>
+  import("@/app/(dashboard)/vendor/installments/page");
+export const VendorInstallmentsPage = lazy(VendorInstallmentsPageImport);
+export const preloadVendorInstallmentsPage = VendorInstallmentsPageImport;
 
 const ProductsPageImport = () =>
   import("@/app/(dashboard)/vendor/products/page");

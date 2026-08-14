@@ -27,6 +27,7 @@ import {
   Compass,
   MessageSquare,
   BadgeDollarSign,
+  Wallet,
 } from "lucide-react";
 import { useTheme } from "./themeContextCore";
 import {
@@ -361,6 +362,19 @@ export default function Header() {
                             <ShoppingBag className="h-5 w-5" />
                           </div>
                           <span className="text-base font-medium">Orders</span>
+                        </SmartLink>
+
+                        <SmartLink
+                          to={ACCOUNT_ROUTES.INSTALLMENTS}
+                          onClick={() => setMenuOpen(false)}
+                          className="flex items-center gap-4 px-4 py-3 rounded-sm transition-all hover:bg-zinc-100 dark:hover:bg-white/5 group text-foreground"
+                        >
+                          <div className="p-2 rounded-sm bg-zinc-100 dark:bg-white/5 text-zinc-500 dark:text-zinc-400 group-hover:bg-primary/20 group-hover:text-primary transition-all">
+                            <Wallet className="h-5 w-5" />
+                          </div>
+                          <span className="text-base font-medium">
+                            My Installments
+                          </span>
                         </SmartLink>
 
                         <SmartLink
@@ -714,6 +728,15 @@ export default function Header() {
                     >
                       <ShoppingBag className="h-4 w-4" />
                       Orders
+                    </SmartLink>
+
+                    <SmartLink
+                      to={ACCOUNT_ROUTES.INSTALLMENTS}
+                      onClick={() => setProfileOpen(false)}
+                      className="flex items-center gap-3 px-2 py-1.5 text-sm hover:bg-gray-100 dark:hover:bg-neutral-800 rounded-sm transition-colors"
+                    >
+                      <Wallet className="h-4 w-4" />
+                      My Installments
                     </SmartLink>
 
                     <SmartLink

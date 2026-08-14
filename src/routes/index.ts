@@ -44,6 +44,8 @@ export const ACCOUNT_ROUTES = {
   ORDERS: "/account/orders",
   ORDER_DETAILS: "/account/orders/:id",
   MESSAGES: "/account/messages",
+  INSTALLMENTS: "/account/installments",
+  INSTALLMENT_DETAILS: "/account/installments/:id",
 } as const;
 
 // 🧑‍💼 Vendor dashboard routes
@@ -61,6 +63,7 @@ export const VENDOR_ROUTES = {
   // Orders
   ORDERS: "/orders",
   ORDER_DETAILS: "/orders/:id",
+  INSTALLMENTS: "/installments",
 
   // Customers
   CUSTOMERS: "/customers",

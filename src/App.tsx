@@ -112,6 +112,7 @@ export default function App() {
                   <Route index element={<Pages.VendorDashboardPage />} />
                   <Route path="customers" element={<Pages.CustomersPage />} />
                   <Route path="orders" element={<Pages.VendorOrdersPage />} />
+                  <Route path="installments" element={<Pages.VendorInstallmentsPage />} />
                   <Route path="products" element={<Pages.ProductsPage />} />
                   <Route path="products/new" element={<Pages.AddProductPage />} />
                   <Route path="products/:slug/edit" element={<Pages.AddProductPage />} />
@@ -167,6 +168,7 @@ export default function App() {
                 <Route index element={<Pages.VendorDashboardPage />} />
                 <Route path="customers" element={<Pages.CustomersPage />} />
                 <Route path="orders" element={<Pages.VendorOrdersPage />} />
+                <Route path="installments" element={<Pages.VendorInstallmentsPage />} />
                 <Route path="products" element={<Pages.ProductsPage />} />
                 <Route path="products/new" element={<Pages.AddProductPage />} />
                 <Route path="products/:slug/edit" element={<Pages.AddProductPage />} />
@@ -184,7 +186,7 @@ export default function App() {
                 <Route path="school-zones/:id" element={<Pages.VendorSchoolZoneDetailPage />} />
               </Route>
             )}
-
+            
             {!subdomainsDisabled && subdomain === "staff" && (
               <Route path="/" element={<StaffDashboardLayout />}>
                 <Route index element={<Pages.SalesTerminalPage />} />
@@ -291,6 +293,11 @@ export default function App() {
               <Route path="orders" element={<Pages.OrdersPage />} />
               <Route path="orders/:id" element={<Pages.OrderDetailsPage />} />
               <Route path="messages/:id?" element={<Pages.MessagesPage />} />
+              <Route path="installments" element={<Pages.InstallmentsPage />} />
+              <Route
+                path="installments/:id"
+                element={<Pages.InstallmentDetailsPage />}
+              />
             </Route>
 
             {/* ─── AUTH (all) ─── */}
