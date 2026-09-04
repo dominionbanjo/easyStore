@@ -1,7 +1,6 @@
 import { Routes, Route, Outlet } from "react-router-dom";
 import { Suspense, useEffect } from "react";
 // Utils & Components
-import ScrollToTop from "@/utils/ScrollToTop";
 import { getSubdomain, getBaseDomain, areSubdomainsDisabled } from "@/utils/subdomain";
 import ChunkLoadBoundary from "@/components/shared/ChunkLoadBoundary";
 import SEO from "@/components/shared/SEO";
@@ -93,7 +92,6 @@ export default function App() {
   return (
     <>
       <SEO />
-      <ScrollToTop />
 
       {/* ─── GLOBAL SUSPENSE ─── */}
       <ChunkLoadBoundary>
