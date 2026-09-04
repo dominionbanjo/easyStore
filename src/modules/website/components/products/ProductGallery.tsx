@@ -42,6 +42,7 @@ export default function ProductGallery({ images }: ProductGalleryProps) {
 
   const zoomedRef = useRef(false);
   const transformRef = useRef<ReactZoomPanPinchContentRef | null>(null);
+  const savedScrollY = useRef(0);
 
   const watchDrag = useCallback(() => !zoomedRef.current, []);
 
@@ -114,6 +115,10 @@ export default function ProductGallery({ images }: ProductGalleryProps) {
   useEffect(() => {
     if (!isFullScreen) return;
 
+    // Save scroll position before locking body overflow.
+    savedScrollY.current = window.scrollY;
+    document.body.style.overflow = "hidden";
+
     window.history.pushState({ modal: "gallery-fullscreen" }, "");
 
     const handlePopState = () => {
@@ -122,11 +127,11 @@ export default function ProductGallery({ images }: ProductGalleryProps) {
 
     window.addEventListener("popstate", handlePopState);
 
-    document.body.style.overflow = "hidden";
-
     return () => {
       window.removeEventListener("popstate", handlePopState);
       document.body.style.overflow = "unset";
+      // Restore scroll position after unlocking body overflow.
+      window.scrollTo(0, savedScrollY.current);
     };
   }, [isFullScreen]);
 
