@@ -5,7 +5,6 @@ import { LayoutGrid, ArrowRight } from "lucide-react";
 import { useGetAllProductsQuery } from "@/services/productApi";
 import { ProductSection } from "./ProductSection";
 import { selectLocationState } from "@/features/locationSlice";
-import { useInView } from "@/modules/website/hooks/useInView";
 import { WEBSITE_ROUTES } from "@/routes";
 
 const FALLBACK_IMAGE =
@@ -13,24 +12,17 @@ const FALLBACK_IMAGE =
 
 export default function AllProductsSection() {
   const locationState = useSelector(selectLocationState);
-  const { ref: sectionRef, isInView } = useInView<HTMLDivElement>({
-    rootMargin: "800px 0px",
-    once: true,
-  });
 
-  const { data, isLoading, isError } = useGetAllProductsQuery(
-    {
-      page: 1,
-      limit: 20,
-      state: locationState ?? undefined,
-      local: locationState ? true : undefined,
-    },
-    { skip: !isInView },
-  );
+  const { data, isLoading, isError } = useGetAllProductsQuery({
+    page: 1,
+    limit: 20,
+    state: locationState ?? undefined,
+    local: locationState ? true : undefined,
+  });
 
   const products = data?.data.items ?? [];
 
-  const isEmpty = isInView && !products.length && !isLoading && !isError;
+  const isEmpty = !products.length && !isLoading && !isError;
 
   const resolveImage = (image?: string | { url: string } | null): string => {
     if (!image) return FALLBACK_IMAGE;
@@ -39,11 +31,11 @@ export default function AllProductsSection() {
   };
 
   return (
-    <div ref={sectionRef} data-scroll-anchor="marketplace-collective">
+    <div data-scroll-anchor="marketplace-collective">
       <ProductSection
         title="Marketplace Collective"
         subtitle="Explore thousands of unique products from verified local businesses. Everything you need, all in one place."
-        isLoading={!isInView || isLoading}
+        isLoading={isLoading}
         isError={isError}
         isEmpty={isEmpty}
         emptyIcon={LayoutGrid}

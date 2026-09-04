@@ -5,7 +5,6 @@ import { useGetZonesQuery } from "@/services/schoolZoneApi";
 import ZoneCard from "@/components/shared/ZoneCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/shared/EmptyState";
-import { useInView } from "@/modules/website/hooks/useInView";
 
 interface FeaturedZonesSectionProps {
   className?: string;
@@ -14,25 +13,16 @@ interface FeaturedZonesSectionProps {
 export default function FeaturedZonesSection({
   className = "",
 }: FeaturedZonesSectionProps) {
-  const { ref: sectionRef, isInView } = useInView<HTMLElement>({
-    rootMargin: "800px 0px",
-    once: true,
-  });
-
-  const { data, isLoading, isError } = useGetZonesQuery(
-    { page: 1, limit: 12 },
-    { skip: !isInView },
-  );
+  const { data, isLoading, isError } = useGetZonesQuery({ page: 1, limit: 12 });
 
   const zones = data?.data.items ?? [];
-  const showLoading = !isInView || isLoading;
-  const isEmpty = isInView && !isLoading && !isError && zones.length === 0;
+  const showLoading = isLoading;
+  const isEmpty = !isLoading && !isError && zones.length === 0;
 
   return (
     <section
-      ref={sectionRef}
       data-scroll-anchor="featured-zones"
-      className={`ez-cv-section pt-8 md:pt-16 pb-8 md:pb-24 px-1 sm:px-6 overflow-hidden bg-slate-50/50 dark:bg-neutral-950 transition-colors duration-300 [content-visibility:auto] [contain-intrinsic-size:auto_500px] ${className}`}
+      className={`pt-8 md:pt-16 pb-8 md:pb-24 px-1 sm:px-6 overflow-hidden bg-slate-50/50 dark:bg-neutral-950 transition-colors duration-300 ${className}`}
     >
       <div className="w-full mx-auto space-y-6">
         <div className="flex flex-col gap-4 px-1">

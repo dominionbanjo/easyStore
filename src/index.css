@@ -171,14 +171,6 @@
   }
 }
 
-/* --- Scroll restoration: force-render content-visibility sections --- */
-/* During back-navigation restore the browser must lay out every section so
-   the page can grow to its real height (lazy sections otherwise reserve only
-   their intrinsic size and the saved position is unreachable). */
-.ez-restoring .ez-cv-section {
-  content-visibility: visible;
-}
-
 /* Hide horizontal scrollbar but allow scroll */
 .no-scrollbar::-webkit-scrollbar {
   display: none;

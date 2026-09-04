@@ -7,31 +7,23 @@ import { ProductSection } from "./ProductSection";
 import ProductGridCard from "@/components/shared/ProductGridCard";
 import SmartLink from "@/components/shared/SmartLink";
 import { ACCOUNT_ROUTES } from "@/routes";
-import { useInView } from "@/modules/website/hooks/useInView";
 
 export default function ForYouSection() {
   const locationState = useSelector(selectLocationState);
   const isAuthenticated = useSelector(
     (state: RootState) => state.user.isAuthenticated,
   );
-  const { ref: sectionRef, isInView } = useInView<HTMLDivElement>({
-    rootMargin: "800px 0px",
-    once: true,
-  });
 
-  const { data, isLoading, isError } = useGetForYouRecommendationsQuery(
-    {
-      limit: 10,
-      state: locationState ?? undefined,
-    },
-    { skip: !isInView },
-  );
+  const { data, isLoading, isError } = useGetForYouRecommendationsQuery({
+    limit: 10,
+    state: locationState ?? undefined,
+  });
 
   const products = data?.data?.items ?? [];
   const personalized = data?.data?.personalized ?? false;
 
   return (
-    <div ref={sectionRef} data-scroll-anchor="for-you">
+    <div data-scroll-anchor="for-you">
       <ProductSection
       title={personalized ? "Recommended for You" : "Trending Now"}
       subtitle={
@@ -39,9 +31,9 @@ export default function ForYouSection() {
           ? "Picked for you from your preferences, purchases, wishlist and cart."
           : "What shoppers are loving right now — sign in and pick your interests for personalised picks."
       }
-      isLoading={!isInView || isLoading}
+      isLoading={isLoading}
       isError={isError}
-      isEmpty={isInView && !products.length && !isLoading && !isError}
+      isEmpty={!products.length && !isLoading && !isError}
       emptyIcon={personalized ? Sparkles : TrendingUp}
       emptyTitle="Nothing to show yet"
       emptyDescription="New recommendations are on the way. Check back soon!"

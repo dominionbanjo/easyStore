@@ -7,7 +7,6 @@ import StoreCard from "@/components/shared/StoreCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { selectLocationState } from "@/features/locationSlice";
-import { useInView } from "@/modules/website/hooks/useInView";
 
 interface FeaturedStoresSectionProps {
   className?: string;
@@ -17,32 +16,24 @@ export default function FeaturedStoresSection({
   className = "",
 }: FeaturedStoresSectionProps) {
   const locationState = useSelector(selectLocationState);
-  const { ref: sectionRef, isInView } = useInView<HTMLElement>({
-    rootMargin: "800px 0px",
-    once: true,
-  });
 
   // Fetch trending stores (weighted ranking: sales, rating, active products)
-  const { data, isLoading, isError } = useGetStoresQuery(
-    {
-      limit: 12,
-      page: 1,
-      sort: "trending",
-      state: locationState ?? undefined,
-      local: locationState ? true : undefined,
-    },
-    { skip: !isInView },
-  );
+  const { data, isLoading, isError } = useGetStoresQuery({
+    limit: 12,
+    page: 1,
+    sort: "trending",
+    state: locationState ?? undefined,
+    local: locationState ? true : undefined,
+  });
 
   const stores = data?.data.items ?? [];
-  const showLoading = !isInView || isLoading;
-  const isEmpty = isInView && !isLoading && !isError && stores.length === 0;
+  const showLoading = isLoading;
+  const isEmpty = !isLoading && !isError && stores.length === 0;
 
   return (
     <section
-      ref={sectionRef}
       data-scroll-anchor="featured-stores"
-      className={`ez-cv-section pt-8 md:pt-16 pb-8 md:pb-24 px-1 sm:px-6 overflow-hidden bg-slate-50/50 dark:bg-neutral-950 transition-colors duration-300 [content-visibility:auto] [contain-intrinsic-size:auto_500px] ${className}`}
+      className={`pt-8 md:pt-16 pb-8 md:pb-24 px-1 sm:px-6 overflow-hidden bg-slate-50/50 dark:bg-neutral-950 transition-colors duration-300 ${className}`}
     >
       <div className="w-full mx-auto space-y-6">
         <div className="flex flex-col gap-4 px-1">
