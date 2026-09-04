@@ -4,6 +4,7 @@ import { Suspense, useEffect } from "react";
 import { getSubdomain, getBaseDomain, areSubdomainsDisabled } from "@/utils/subdomain";
 import ChunkLoadBoundary from "@/components/shared/ChunkLoadBoundary";
 import SEO from "@/components/shared/SEO";
+import ScrollRestoration from "@/utils/ScrollRestoration";
 // Lazy-loaded Components
 import * as Pages from "@/routes/lazyPages";
 import {
@@ -92,6 +93,7 @@ export default function App() {
   return (
     <>
       <SEO />
+      <ScrollRestoration />
 
       {/* ─── GLOBAL SUSPENSE ─── */}
       <ChunkLoadBoundary>
