@@ -31,32 +31,26 @@ function saveScroll(pathname: string, y: number) {
 /**
  * Minimal scroll restoration for BrowserRouter.
  *
- * - Forward navigation (push): scroll to top
- * - Back / forward (popstate): restore saved position from sessionStorage
- * - Uses a sweep-and-settle retry loop so the page can grow (lazy sections,
- *   Suspense boundaries) before the final scroll position is applied.
- * - Temporarily adds .ez-restoring to force content-visibility:auto sections
- *   to full height during restore.
+ * The critical insight: React Router v7.9.4 wraps every setState in
+ * startTransition, which defers the DOM commit. This means useLayoutEffect
+ * fires AFTER the browser paints — too late to prevent a flash at scrollY=0.
+ *
+ * Fix: Restore scroll directly in the popstate listener via setTimeout(0),
+ * which fires as a macrotask BEFORE the browser paints the deferred commit.
+ *
+ * - Forward navigation (push): scroll to top via useLayoutEffect
+ * - Back / forward (popstate): restore saved position via popstate listener
  */
 export default function ScrollRestoration() {
   const { pathname } = useLocation();
   const lastPathRef = useRef(pathname);
-  const isPopRef = useRef(false);
+  const restoreIdRef = useRef(0);
 
   // Disable the browser's native scroll restoration — it fights with SPA routing.
   useLayoutEffect(() => {
     if ("scrollRestoration" in window.history) {
       window.history.scrollRestoration = "manual";
     }
-  }, []);
-
-  // Detect popstate (browser back / forward).
-  useEffect(() => {
-    const onPop = () => {
-      isPopRef.current = true;
-    };
-    window.addEventListener("popstate", onPop);
-    return () => window.removeEventListener("popstate", onPop);
   }, []);
 
   // Throttled scroll save — keeps the latest position for the current route.
@@ -74,57 +68,82 @@ export default function ScrollRestoration() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // On every route change: save old page position, then restore or scroll to top.
-  useLayoutEffect(() => {
-    const prevPath = lastPathRef.current;
-    const pathChanged = prevPath !== pathname;
+  // Restore scroll on popstate (browser back / forward).
+  // Uses setTimeout(0) to fire BEFORE the browser paints the startTransition-
+  // deferred commit from React Router. The scroll is restored in the same
+  // event loop tick as the popstate, before React even processes the update.
+  useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout>;
+    let currentRestoreId = 0;
 
-    // Only consume isPopRef when the route actually changed.
-    // This prevents stale popstate flags from gallery pushState (which doesn't
-    // change the route pathname) from leaking into the next push navigation.
-    const isPop = pathChanged && isPopRef.current;
-    if (pathChanged) {
-      isPopRef.current = false;
-    }
-
-    // Only save if overflow isn't locked (gallery fullscreen corrupts scrollY).
-    if (document.body.style.overflow !== "hidden") {
-      saveScroll(prevPath, window.scrollY);
-    }
-    lastPathRef.current = pathname;
-
-    if (isPop) {
-      const saved = readSaved(pathname);
-      if (saved !== null) {
-        // Force content-visibility sections to full height so the page grows
-        // to its real size before we apply the final scroll position.
-        document.documentElement.classList.add("ez-restoring");
-
-        let attempts = 0;
-        const restore = () => {
-          window.scrollTo(0, saved);
-          attempts++;
-
-          if (attempts < MAX_RESTORE_ATTEMPTS) {
-            requestAnimationFrame(restore);
-          } else {
-            // Final lock — run the full loop to give lazy content time to load.
-            window.scrollTo(0, saved);
-            document.documentElement.classList.remove("ez-restoring");
-          }
-        };
-        requestAnimationFrame(restore);
-        return;
+    const onPop = () => {
+      // Save current position before restoring the destination.
+      if (document.body.style.overflow !== "hidden") {
+        saveScroll(lastPathRef.current, window.scrollY);
       }
-    }
+
+      // Cancel any in-progress restore from a previous popstate.
+      currentRestoreId++;
+      restoreIdRef.current = currentRestoreId;
+
+      // Schedule restore as a macrotask — fires before browser paints the
+      // startTransition-deferred commit from React Router.
+      timeout = setTimeout(() => {
+        const targetPath = window.location.pathname;
+        lastPathRef.current = targetPath;
+        const saved = readSaved(targetPath);
+
+        if (saved !== null) {
+          document.documentElement.classList.add("ez-restoring");
+          const myId = currentRestoreId;
+
+          // Sweep-and-settle: keep restoring while page grows (lazy sections
+          // loading, Suspense resolving, content-visibility expanding).
+          let attempts = 0;
+          const restore = () => {
+            // Abort if a newer popstate has started.
+            if (restoreIdRef.current !== myId) {
+              document.documentElement.classList.remove("ez-restoring");
+              return;
+            }
+
+            window.scrollTo(0, saved);
+            attempts++;
+
+            if (attempts < MAX_RESTORE_ATTEMPTS) {
+              requestAnimationFrame(restore);
+            } else {
+              window.scrollTo(0, saved);
+              document.documentElement.classList.remove("ez-restoring");
+            }
+          };
+          requestAnimationFrame(restore);
+        }
+      }, 0);
+    };
+
+    window.addEventListener("popstate", onPop);
+    return () => {
+      window.removeEventListener("popstate", onPop);
+      clearTimeout(timeout);
+    };
+  }, []);
+
+  // On every route change via push/replace (not popstate): scroll to top.
+  // This handles forward navigation (clicking links, programmatic navigate).
+  // Popstate-triggered route changes are handled by the listener above.
+  const lastPathnameRef = useRef(pathname);
+  useLayoutEffect(() => {
+    const prevPath = lastPathnameRef.current;
+    lastPathnameRef.current = pathname;
+
+    // Skip if this is the first render (pathname hasn't changed from init).
+    if (prevPath === pathname) return;
+
+    // If a popstate restore is in progress, don't interfere.
+    if (restoreIdRef.current !== 0) return;
 
     window.scrollTo(0, 0);
-
-    // Fallback: after the Suspense boundary resolves and the new page commits,
-    // re-apply scroll-to-top in case the layout shift moved us.
-    requestAnimationFrame(() => {
-      window.scrollTo(0, 0);
-    });
   }, [pathname]);
 
   return null;
