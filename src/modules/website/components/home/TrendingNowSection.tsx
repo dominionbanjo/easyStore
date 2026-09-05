@@ -6,25 +6,33 @@ import { ProductSection } from "./ProductSection";
 import ProductGridCard from "@/components/shared/ProductGridCard";
 import SmartLink from "@/components/shared/SmartLink";
 import { WEBSITE_ROUTES } from "@/routes";
+import { useInView } from "@/modules/website/hooks/useInView";
 
 export default function TrendingNowSection() {
   const locationState = useSelector(selectLocationState);
-
-  const { data, isLoading, isError } = useGetTrendingRecommendationsQuery({
-    limit: 10,
-    state: locationState ?? undefined,
+  const { ref: sectionRef, isInView } = useInView<HTMLDivElement>({
+    rootMargin: "800px 0px",
+    once: true,
   });
+
+  const { data, isLoading, isError } = useGetTrendingRecommendationsQuery(
+    {
+      limit: 10,
+      state: locationState ?? undefined,
+    },
+    { skip: !isInView },
+  );
 
   const products = data?.data?.items ?? [];
 
   return (
-    <div data-scroll-anchor="trending-now">
+    <div ref={sectionRef} data-scroll-anchor="trending-now">
       <ProductSection
       title="Trending Now"
       subtitle="The fastest-moving products across EasyStore this week."
-      isLoading={isLoading}
+      isLoading={!isInView || isLoading}
       isError={isError}
-      isEmpty={!products.length && !isLoading && !isError}
+      isEmpty={isInView && !products.length && !isLoading && !isError}
       emptyIcon={TrendingUp}
       emptyTitle="No trending items yet"
       emptyDescription="Popular products will appear here as shoppers engage."

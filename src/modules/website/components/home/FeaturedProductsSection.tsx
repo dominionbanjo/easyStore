@@ -6,29 +6,37 @@ import { ProductSection } from "./ProductSection";
 import SmartLink from "@/components/shared/SmartLink";
 import { Button } from "@/components/ui/button";
 import { selectLocationState } from "@/features/locationSlice";
+import { useInView } from "@/modules/website/hooks/useInView";
 
 const FALLBACK_IMAGE =
   "https://images.unsplash.com/photo-1580894732444-8ecded7900cd?auto=format&fit=crop&w=1200&q=60";
 
 export default function FeaturedProductsSection() {
   const locationState = useSelector(selectLocationState);
-
-  const { data, isLoading, isError } = useGetFeaturedProductsQuery({
-    limit: 8,
-    state: locationState ?? undefined,
-    local: locationState ? true : undefined,
+  const { ref: sectionRef, isInView } = useInView<HTMLDivElement>({
+    rootMargin: "800px 0px",
+    once: true,
   });
+
+  const { data, isLoading, isError } = useGetFeaturedProductsQuery(
+    {
+      limit: 8,
+      state: locationState ?? undefined,
+      local: locationState ? true : undefined,
+    },
+    { skip: !isInView },
+  );
 
   const products = data?.data?.items ?? [];
 
   return (
-    <div data-scroll-anchor="featured-products">
+    <div ref={sectionRef} data-scroll-anchor="featured-products">
       <ProductSection
       title="Featured Deals"
       subtitle="Handpicked premium selection from our top-rated vendors. Quality meets affordability."
-      isLoading={isLoading}
+      isLoading={!isInView || isLoading}
       isError={isError}
-      isEmpty={!products.length && !isLoading && !isError}
+      isEmpty={isInView && !products.length && !isLoading && !isError}
       emptyIcon={Sparkles}
       emptyTitle="New Deals Coming Soon"
       emptyDescription="We're currently scouting for the best products to feature here. Keep an eye out!"

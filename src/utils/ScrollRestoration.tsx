@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 
 const STORAGE_PREFIX = "ez:scroll:";
 const SAVE_THROTTLE_MS = 300;
+const MAX_RESTORE_ATTEMPTS = 30;
 
 function readSaved(pathname: string): number | null {
   try {
@@ -32,6 +33,10 @@ function saveScroll(pathname: string, y: number) {
  *
  * - Forward navigation (push): scroll to top
  * - Back / forward (popstate): restore saved position from sessionStorage
+ * - Uses a sweep-and-settle retry loop so the page can grow (lazy sections,
+ *   Suspense boundaries) before the final scroll position is applied.
+ * - Temporarily adds .ez-restoring to force content-visibility:auto sections
+ *   to full height during restore.
  */
 export default function ScrollRestoration() {
   const { pathname } = useLocation();
@@ -39,7 +44,6 @@ export default function ScrollRestoration() {
   const isPopRef = useRef(false);
 
   // Disable the browser's native scroll restoration — it fights with SPA routing.
-  // useLayoutEffect so it runs before the browser paints (first render).
   useLayoutEffect(() => {
     if ("scrollRestoration" in window.history) {
       window.history.scrollRestoration = "manual";
@@ -71,8 +75,6 @@ export default function ScrollRestoration() {
   }, []);
 
   // On every route change: save old page position, then restore or scroll to top.
-  // useLayoutEffect fires synchronously after DOM mutations but BEFORE paint,
-  // so the scroll happens in the same frame as the DOM swap.
   useLayoutEffect(() => {
     const prevPath = lastPathRef.current;
     const isPop = isPopRef.current;
@@ -87,7 +89,27 @@ export default function ScrollRestoration() {
     if (isPop) {
       const saved = readSaved(pathname);
       if (saved !== null) {
-        window.scrollTo(0, saved);
+        // Force content-visibility sections to full height so the page grows
+        // to its real size before we apply the final scroll position.
+        document.documentElement.classList.add("ez-restoring");
+
+        let attempts = 0;
+        const restore = () => {
+          window.scrollTo(0, saved);
+          attempts++;
+
+          const pageReady =
+            document.documentElement.scrollHeight >= saved + window.innerHeight;
+
+          if (attempts < MAX_RESTORE_ATTEMPTS && !pageReady) {
+            requestAnimationFrame(restore);
+          } else {
+            // Final lock — page is tall enough or we've exhausted retries.
+            window.scrollTo(0, saved);
+            document.documentElement.classList.remove("ez-restoring");
+          }
+        };
+        requestAnimationFrame(restore);
         return;
       }
     }

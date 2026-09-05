@@ -8,21 +8,30 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/shared/EmptyState";
 import SmartLink from "@/components/shared/SmartLink";
 import { WEBSITE_ROUTES } from "@/routes";
+import { useInView } from "@/modules/website/hooks/useInView";
 
 export default function DealsOfTheDaySection() {
   const locationState = useSelector(selectLocationState);
-
-  const { data, isLoading, isError } = useGetDealRecommendationsQuery({
-    limit: 10,
-    state: locationState ?? undefined,
+  const { ref: sectionRef, isInView } = useInView<HTMLDivElement>({
+    rootMargin: "800px 0px",
+    once: true,
   });
 
+  const { data, isLoading, isError } = useGetDealRecommendationsQuery(
+    {
+      limit: 10,
+      state: locationState ?? undefined,
+    },
+    { skip: !isInView },
+  );
+
   const products = data?.data?.items ?? [];
-  const showLoading = isLoading;
-  const isEmpty = !isLoading && !isError && products.length === 0;
+  const showLoading = !isInView || isLoading;
+  const isEmpty = isInView && !isLoading && !isError && products.length === 0;
 
   return (
     <section
+      ref={sectionRef}
       data-scroll-anchor="deals-of-the-day"
       className="py-10 md:py-14 px-1 sm:px-6 overflow-hidden bg-background dark:bg-neutral-950 transition-colors duration-300"
     >

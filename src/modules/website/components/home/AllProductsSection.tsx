@@ -6,23 +6,31 @@ import { useGetAllProductsQuery } from "@/services/productApi";
 import { ProductSection } from "./ProductSection";
 import { selectLocationState } from "@/features/locationSlice";
 import { WEBSITE_ROUTES } from "@/routes";
+import { useInView } from "@/modules/website/hooks/useInView";
 
 const FALLBACK_IMAGE =
   "https://images.unsplash.com/photo-1580894732444-8ecded7900cd?auto=format&fit=crop&w=1200&q=60";
 
 export default function AllProductsSection() {
   const locationState = useSelector(selectLocationState);
-
-  const { data, isLoading, isError } = useGetAllProductsQuery({
-    page: 1,
-    limit: 20,
-    state: locationState ?? undefined,
-    local: locationState ? true : undefined,
+  const { ref: sectionRef, isInView } = useInView<HTMLDivElement>({
+    rootMargin: "800px 0px",
+    once: true,
   });
+
+  const { data, isLoading, isError } = useGetAllProductsQuery(
+    {
+      page: 1,
+      limit: 20,
+      state: locationState ?? undefined,
+      local: locationState ? true : undefined,
+    },
+    { skip: !isInView },
+  );
 
   const products = data?.data.items ?? [];
 
-  const isEmpty = !products.length && !isLoading && !isError;
+  const isEmpty = isInView && !products.length && !isLoading && !isError;
 
   const resolveImage = (image?: string | { url: string } | null): string => {
     if (!image) return FALLBACK_IMAGE;
@@ -31,11 +39,11 @@ export default function AllProductsSection() {
   };
 
   return (
-    <div data-scroll-anchor="marketplace-collective">
+    <div ref={sectionRef} data-scroll-anchor="marketplace-collective">
       <ProductSection
         title="Marketplace Collective"
         subtitle="Explore thousands of unique products from verified local businesses. Everything you need, all in one place."
-        isLoading={isLoading}
+        isLoading={!isInView || isLoading}
         isError={isError}
         isEmpty={isEmpty}
         emptyIcon={LayoutGrid}

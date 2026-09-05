@@ -36,7 +36,7 @@ export function ProductSection({
 }: ProductSectionProps) {
   return (
     <section
-      className={`py-12 md:py-24 px-1 sm:px-6 overflow-hidden bg-white dark:bg-neutral-950 transition-colors duration-300 ${className}`}
+      className={`ez-cv-section py-12 md:py-24 px-1 sm:px-6 overflow-hidden bg-white dark:bg-neutral-950 transition-colors duration-300 [content-visibility:auto] [contain-intrinsic-size:auto_600px] ${className}`}
     >
       <div className="w-full mx-auto space-y-12">
         <div className="flex flex-col gap-4 px-1">

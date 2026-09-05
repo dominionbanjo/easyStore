@@ -7,6 +7,7 @@ import { EmptyState } from "@/components/shared/EmptyState";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { WEBSITE_ROUTES } from "@/routes";
+import { useInView } from "@/modules/website/hooks/useInView";
 
 interface TopCategoriesSectionProps {
   className?: string;
@@ -27,11 +28,16 @@ const CATEGORY_COLORS = [
 export default function TopCategoriesSection({
   className = "",
 }: TopCategoriesSectionProps) {
-  // Fetch categories - limit to reasonable number for homepage
-  const { data, isLoading, isError } = useGetCategoriesQuery({
-    page: 1,
-    limit: 8,
+  const { ref: sectionRef, isInView } = useInView<HTMLDivElement>({
+    rootMargin: "800px 0px",
+    once: true,
   });
+
+  // Fetch categories - limit to reasonable number for homepage
+  const { data, isLoading, isError } = useGetCategoriesQuery(
+    { page: 1, limit: 8 },
+    { skip: !isInView },
+  );
 
   // Only categories that actually have products, most popular first
   const categories = useMemo(() => {
@@ -42,10 +48,11 @@ export default function TopCategoriesSection({
       .slice(0, 8);
   }, [data]);
 
-  const isEmpty = !isLoading && !isError && categories.length === 0;
+  const isEmpty = isInView && !isLoading && !isError && categories.length === 0;
 
   return (
     <section
+      ref={sectionRef}
       data-scroll-anchor="top-categories"
       className={`py-12 md:py-20 px-1 sm:px-6 overflow-hidden bg-background ${className}`}
     >
