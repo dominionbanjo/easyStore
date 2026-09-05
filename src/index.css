@@ -171,12 +171,22 @@
   }
 }
 
+/* --- Lazy section content-visibility --- */
+/* ProductSection uses this class for CSS-level lazy rendering.
+   .ez-restoring overrides it during scroll restoration so the page
+   grows to its real height before the saved position is applied. */
+.ez-cv-section {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 600px;
+}
+
 /* --- Scroll restoration: force-render content-visibility sections --- */
 /* During back-navigation restore the browser must lay out every section so
    the page can grow to its real height (lazy sections otherwise reserve only
    their intrinsic size and the saved position is unreachable). */
 .ez-restoring .ez-cv-section {
   content-visibility: visible;
+  contain-intrinsic-size: none;
 }
 
 /* Hide horizontal scrollbar but allow scroll */

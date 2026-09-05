@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 
 const STORAGE_PREFIX = "ez:scroll:";
 const SAVE_THROTTLE_MS = 300;
-const MAX_RESTORE_ATTEMPTS = 30;
+const MAX_RESTORE_ATTEMPTS = 40;
 
 function readSaved(pathname: string): number | null {
   try {
@@ -77,8 +77,15 @@ export default function ScrollRestoration() {
   // On every route change: save old page position, then restore or scroll to top.
   useLayoutEffect(() => {
     const prevPath = lastPathRef.current;
-    const isPop = isPopRef.current;
-    isPopRef.current = false;
+    const pathChanged = prevPath !== pathname;
+
+    // Only consume isPopRef when the route actually changed.
+    // This prevents stale popstate flags from gallery pushState (which doesn't
+    // change the route pathname) from leaking into the next push navigation.
+    const isPop = pathChanged && isPopRef.current;
+    if (pathChanged) {
+      isPopRef.current = false;
+    }
 
     // Only save if overflow isn't locked (gallery fullscreen corrupts scrollY).
     if (document.body.style.overflow !== "hidden") {
@@ -98,13 +105,10 @@ export default function ScrollRestoration() {
           window.scrollTo(0, saved);
           attempts++;
 
-          const pageReady =
-            document.documentElement.scrollHeight >= saved + window.innerHeight;
-
-          if (attempts < MAX_RESTORE_ATTEMPTS && !pageReady) {
+          if (attempts < MAX_RESTORE_ATTEMPTS) {
             requestAnimationFrame(restore);
           } else {
-            // Final lock — page is tall enough or we've exhausted retries.
+            // Final lock — run the full loop to give lazy content time to load.
             window.scrollTo(0, saved);
             document.documentElement.classList.remove("ez-restoring");
           }
