@@ -40,7 +40,7 @@ export default function CategoryDetailsPage() {
     (page: number): SearchProductsArgs => ({
       ...mappedArgs,
       q: "",
-      category: slug!,
+      category: slug ?? "",
       page,
     }),
     [mappedArgs, slug],

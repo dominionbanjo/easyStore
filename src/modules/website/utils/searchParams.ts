@@ -26,7 +26,8 @@ export function mapSearchParamsToArgs(
     if (IGNORED_PARAMS.includes(key)) return;
 
     if (NUMERIC_PARAMS.includes(key)) {
-      params[key] = Number(value);
+      const num = Number(value);
+      params[key] = isNaN(num) ? undefined : num;
     } else if (SINGLE_VALUE_PARAMS.includes(key)) {
       params[key] = value;
     } else {
