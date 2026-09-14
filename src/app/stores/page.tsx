@@ -1,5 +1,5 @@
 import { useMemo, useEffect } from "react";
-import { SearchX } from "lucide-react";
+import { SearchX, AlertTriangle, RefreshCw } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 import { FormProvider, useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
@@ -119,6 +119,8 @@ export default function StoresPage() {
     data: listData,
     isLoading: isListLoading,
     isFetching: isListFetching,
+    isError: isListError,
+    refetch: refetchList,
   } = useGetStoresQuery(listArgs, {
     skip: hasSearch,
   });
@@ -127,6 +129,8 @@ export default function StoresPage() {
     data: searchData,
     isLoading: isSearchLoading,
     isFetching: isSearchFetching,
+    isError: isSearchError,
+    refetch: refetchSearch,
   } = useSearchStoresQuery(searchArgs, {
     skip: !hasSearch,
   });
@@ -139,6 +143,8 @@ export default function StoresPage() {
 
   const isLoading = isListLoading || isSearchLoading;
   const isFetching = isListFetching || isSearchFetching;
+  const isError = hasSearch ? isSearchError : isListError;
+  const refetch = hasSearch ? refetchSearch : refetchList;
 
   /* ───────────────── UI ───────────────── */
 
@@ -184,6 +190,26 @@ export default function StoresPage() {
                 </div>
               </div>
             ))}
+          </div>
+        ) : isError ? (
+          <div className="flex flex-col items-center justify-center py-32 text-center max-w-2xl mx-auto bg-white/50 dark:bg-neutral-900/40 backdrop-blur-xl rounded-sm border border-zinc-200 dark:border-white/5 px-8">
+            <div className="w-24 h-24 bg-rose-500/10 dark:bg-rose-500/10 rounded-sm flex items-center justify-center mb-8 ring-8 ring-rose-500/5">
+              <AlertTriangle className="h-12 w-12 text-rose-500" />
+            </div>
+            <h3 className="text-3xl font-black text-foreground mb-3 tracking-tight">
+              Something went wrong
+            </h3>
+            <p className="text-muted-foreground font-medium leading-relaxed max-w-sm mb-10">
+              We couldn't load the stores. Please check your connection and try
+              again.
+            </p>
+            <button
+              onClick={() => refetch()}
+              className="px-8 py-3 bg-primary dark:bg-emerald-500 text-white dark:text-neutral-950 font-black rounded-sm dark:-emerald-500/20 hover:scale-105 transition-all active:scale-95 uppercase tracking-widest text-xs flex items-center gap-2"
+            >
+              <RefreshCw className="w-4 h-4" />
+              Retry
+            </button>
           </div>
         ) : stores.length > 0 ? (
           <>

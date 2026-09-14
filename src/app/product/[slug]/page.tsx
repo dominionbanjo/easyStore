@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
+import { RefreshCw } from "lucide-react";
 
 import { ProductDetailsSkeleton } from "@/components/skeletons/ProductDetailsSkeleton";
 
@@ -22,7 +23,7 @@ export default function ProductDetailsPage() {
 /* ───────────────── INNER ───────────────── */
 
 function ProductDetailsInner({ id }: { id: string }) {
-  const { data, isLoading, isError } = useGetSingleProductQuery(id, {
+  const { data, isLoading, isError, refetch } = useGetSingleProductQuery(id, {
     skip: !id,
   });
 
@@ -36,8 +37,17 @@ function ProductDetailsInner({ id }: { id: string }) {
 
   if (isError || !data?.data?.product) {
     return (
-      <div className="min-h-[60vh] flex items-center justify-center text-red-500">
-        Failed to load product
+      <div className="min-h-[60vh] flex flex-col items-center justify-center text-center p-4">
+        <p className="text-muted-foreground font-medium mb-6">
+          Failed to load product. Please check your connection and try again.
+        </p>
+        <button
+          onClick={() => refetch()}
+          className="px-6 py-2.5 bg-primary dark:bg-emerald-500 text-white dark:text-neutral-950 font-bold rounded-sm hover:scale-105 transition-all active:scale-95 text-sm flex items-center gap-2"
+        >
+          <RefreshCw className="w-4 h-4" />
+          Retry
+        </button>
       </div>
     );
   }

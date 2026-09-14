@@ -89,8 +89,7 @@ export default function StoreDetailsPage() {
 
   // Handle category query param
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const categoryId = params.get("category");
+    const categoryId = searchParams.get("category");
 
     if (categoryId && categories.length > 0) {
       const category = categories.find(
@@ -101,7 +100,7 @@ export default function StoreDetailsPage() {
         setActiveTab("products");
       }
     }
-  }, [categories]);
+  }, [categories, searchParams]);
 
   /* ─── STORE PRODUCTS / SEARCH (high-quality search scoped to store) ─── */
 
